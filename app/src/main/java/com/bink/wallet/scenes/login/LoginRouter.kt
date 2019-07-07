@@ -1,5 +1,12 @@
 package com.bink.wallet.scenes.login
 
+import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+
+//const val NAME = "NAME"
+//const val ADDRESS = "ADDRESS"
+
 interface LoginRoutingLogic
 {
     //fun routeToSomewhere(segue: UIStoryboardSegue?)
@@ -21,32 +28,16 @@ class LoginRouter : ILoginRouter {
 
     // MARK: Routing
 
-    //func routeToSomewhere(segue: UIStoryboardSegue?)
-    //{
-    //  if let segue = segue {
-    //    let destinationVC = segue.destination as! SomewhereViewController
-    //    var destinationDS = destinationVC.router!.dataStore!
-    //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-    //  } else {
-    //    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    //    let destinationVC = storyboard.instantiateViewController(withIdentifier: "SomewhereViewController") as! SomewhereViewController
-    //    var destinationDS = destinationVC.router!.dataStore!
-    //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-    //    navigateToSomewhere(source: viewController!, destination: destinationVC)
-    //  }
-    //}
-
-    // MARK: Navigation
-
-    //func navigateToSomewhere(source: LoginViewController, destination: SomewhereViewController)
-    //{
-    //  source.show(destination, sender: nil)
-    //}
-
-    // MARK: Passing data
-
-    //func passDataToSomewhere(source: LoginDataStore, destination: inout SomewhereDataStore)
-    //{
-    //  destination.name = source.name
-    //}
+    fun routeToSomewhere(nextScreenIntent: Intent)
+    {
+//        val nextScreenIntent = nextScreenIntent.apply {
+//
+//            // Pass data to the destination activity
+//
+//            putExtra(NAME, dataStore.name)
+//            putExtra(ADDRESS, dataStore.address)
+//        }
+//
+//        startActivity(activity as Context, nextScreenIntent, null)
+    }
 }
