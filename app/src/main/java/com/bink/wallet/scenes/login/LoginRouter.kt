@@ -9,7 +9,7 @@ import android.support.v4.content.ContextCompat.startActivity
 
 interface LoginRoutingLogic
 {
-    //fun routeToSomewhere(segue: UIStoryboardSegue?)
+    fun routeToSomewhere(nextScreenIntent: Intent)
 }
 
 interface LoginDataPassing
@@ -28,7 +28,7 @@ class LoginRouter : ILoginRouter {
 
     // MARK: Routing
 
-    fun routeToSomewhere(nextScreenIntent: Intent)
+    override fun routeToSomewhere(nextScreenIntent: Intent)
     {
 //        val nextScreenIntent = nextScreenIntent.apply {
 //
