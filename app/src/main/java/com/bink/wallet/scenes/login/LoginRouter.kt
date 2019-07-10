@@ -30,14 +30,14 @@ class LoginRouter : ILoginRouter {
 
     override fun routeToSomewhere(nextScreenIntent: Intent)
     {
-//        nextScreenIntent.apply {
-//
-//            // Pass data to the destination activity
-//
-//            putExtra(NAME, dataStore.name)
-//            putExtra(ADDRESS, dataStore.address)
-//        }
-//
-//        startActivity(activity as Context, nextScreenIntent, null)
+        nextScreenIntent.apply {
+
+            // Pass data to the destination activity
+
+//            putExtra(NAME, dataStore?.name)
+//            putExtra(ADDRESS, dataStore?.address)
+        }
+
+        startActivity(activity as Context, nextScreenIntent, null)
     }
 }
