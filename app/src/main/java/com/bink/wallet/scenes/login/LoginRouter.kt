@@ -30,7 +30,7 @@ class LoginRouter : ILoginRouter {
 
     override fun routeToSomewhere(nextScreenIntent: Intent)
     {
-//        val nextScreenIntent = nextScreenIntent.apply {
+//        nextScreenIntent.apply {
 //
 //            // Pass data to the destination activity
 //
