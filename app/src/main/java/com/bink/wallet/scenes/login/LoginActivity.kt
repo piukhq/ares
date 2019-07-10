@@ -50,7 +50,7 @@ class LoginActivity : Activity(), LoginDisplayLogic {
         // Called when the activity will start interacting with the user.
     }
 
-    // MARK: Setup
+    // Setup
 
     private fun setup()
     {

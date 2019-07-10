@@ -8,7 +8,7 @@ interface LoginPresentationLogic
 class LoginPresenter : LoginPresentationLogic {
     var activity: LoginDisplayLogic? = null
 
-    // MARK: Do something
+    // Do something
 
     override fun presentSomething(response: Login.Something.Response)
     {

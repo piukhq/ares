@@ -26,7 +26,7 @@ class LoginRouter : ILoginRouter {
     var activity: LoginActivity? = null
     override var dataStore: LoginDataStore? = null
 
-    // MARK: Routing
+    // Routing
 
     override fun routeToSomewhere(nextScreenIntent: Intent)
     {
