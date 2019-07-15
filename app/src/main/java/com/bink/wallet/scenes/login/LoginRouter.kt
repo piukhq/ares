@@ -1,15 +1,11 @@
 package com.bink.wallet.scenes.login
 
-import android.content.Context
-import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
-
 //const val NAME = "NAME"
 //const val ADDRESS = "ADDRESS"
 
 interface LoginRoutingLogic
 {
-    fun routeToSomewhere(nextScreenIntent: Intent)
+    fun routeToSomewhere()
 }
 
 interface LoginDataPassing
@@ -23,21 +19,13 @@ interface ILoginRouter : LoginRoutingLogic, LoginDataPassing {
 
 class LoginRouter : ILoginRouter {
 
-    var activity: LoginActivity? = null
+    var fragment: LoginFragment? = null
     override var dataStore: LoginDataStore? = null
 
     // Routing
 
-    override fun routeToSomewhere(nextScreenIntent: Intent)
+    override fun routeToSomewhere()
     {
-        nextScreenIntent.apply {
-
-            // Pass data to the destination activity
-
-//            putExtra(NAME, dataStore?.name)
-//            putExtra(ADDRESS, dataStore?.address)
-        }
-
-        startActivity(activity as Context, nextScreenIntent, null)
+        // Navigate to the destination fragment, passing data from the dataStore
     }
 }
