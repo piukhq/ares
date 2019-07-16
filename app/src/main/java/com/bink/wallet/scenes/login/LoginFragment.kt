@@ -1,6 +1,6 @@
 package com.bink.wallet.scenes.login
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 interface LoginDisplayLogic {
     fun displaySomething(viewModel: Login.Something.ViewModel)
