@@ -2,17 +2,15 @@ package com.bink.wallet.scenes.login
 
 interface LoginPresentationLogic
 {
-    fun presentSomething(response: Login.Something.Response)
+    fun presentSomething(response: LoginModels.Login.Response)
 }
 
 class LoginPresenter : LoginPresentationLogic {
     var fragment: LoginDisplayLogic? = null
 
-    // Do something
-
-    override fun presentSomething(response: Login.Something.Response)
+    override fun presentSomething(response: LoginModels.Login.Response)
     {
-        val viewModel = Login.Something.ViewModel()
+        val viewModel = LoginModels.Login.ViewModel()
         fragment?.displaySomething(viewModel)
     }
 }

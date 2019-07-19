@@ -1,36 +1,85 @@
 package com.bink.wallet.di
 
+import android.content.Context
+import android.util.Base64
+import android.util.Log
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.LocalStoreUtils
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.security.Key
+import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+
 
 val networkModule = module {
 
-    single { provideDefaultOkhttpClient() }
+    single { provideDefaultOkhttpClient(androidContext()) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 
 }
 
-
-fun provideDefaultOkhttpClient(): OkHttpClient {
+fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
-        //TODO: Add token when available
-        val request = chain.request().url().newBuilder().addQueryParameter("token","").build()
+
+        val header = JSONObject()
+        header.put("alg", "HS512")
+        header.put("typ", "JWT")
+
+        val payload = JSONObject()
+        payload.put("organisation_id", "Loyalty Angels")
+        payload.put("bundle_id", "com.bink.bink20dev")
+        payload.put("user_id", "Bink20iteration1@testbink.com")
+        payload.put("property_id", "Bink2.0")
+        payload.put("iat", System.currentTimeMillis() / 1000)
+
+        val token = "${Base64.encodeToString(
+            header.toString().toByteArray(Charsets.UTF_8),
+            Base64.URL_SAFE
+        )}.${Base64.encodeToString(payload.toString().toByteArray(Charsets.UTF_8), Base64.URL_SAFE)}"
+
+        val hmac = Mac.getInstance("HmacSHA512")
+
+        val secretKey =
+            SecretKeySpec(LocalStoreUtils.getAppSecret(context)?.toByteArray(), "HmacSHA512")
+        hmac.init(secretKey)
+
+        val hash = hmac.doFinal(token.toByteArray(Charsets.UTF_8))
+        val bytes = hmac.doFinal(token.toByteArray(Charsets.UTF_8))
+
+        Log.e("hash", bytes.toString())
+        Log.e("header", header.toString())
+        Log.e("paylaod", payload.toString())
+
+        Log.e("Test", bytes.toString(Charsets.UTF_8))
+        Log.e("token", token)
+
+        val request =
+            chain.request().url().newBuilder().addQueryParameter("Authorization", "Bearer $token.${String(bytes)}").build()
         val newRequest = chain.request().newBuilder().url(request).build()
         chain.proceed(newRequest)
     }
+
 
     val logging = HttpLoggingInterceptor()
     // sets desired log level

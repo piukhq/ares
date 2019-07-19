@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("/service")
+    @GET("/ubiquity/service")
     fun registerCustomer(): Deferred<Response<Any>>
 
 }

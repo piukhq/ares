@@ -21,7 +21,7 @@ class LoginUnitTest {
 
     @Test
     fun registerCustomer(){
-        Mockito.`when`(apiService.registerCustomer())
+        Mockito.`when`(apiService.registerCustomer()).thenReturn()
     }
 
 }

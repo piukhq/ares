@@ -1,8 +1,8 @@
 package com.bink.wallet.scenes.login
 
-class Login {
+class LoginModels {
 
-    class Something {
+    class Login {
 
         class Request {
         }

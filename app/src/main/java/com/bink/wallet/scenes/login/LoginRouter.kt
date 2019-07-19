@@ -1,15 +1,16 @@
 package com.bink.wallet.scenes.login
 
+import androidx.navigation.NavController
+import com.bink.wallet.R
+
 //const val NAME = "NAME"
 //const val ADDRESS = "ADDRESS"
 
-interface LoginRoutingLogic
-{
-    fun routeToSomewhere()
+interface LoginRoutingLogic {
+    fun routeToHome()
 }
 
-interface LoginDataPassing
-{
+interface LoginDataPassing {
     var dataStore: LoginDataStore?
 }
 
@@ -21,11 +22,9 @@ class LoginRouter : ILoginRouter {
 
     var fragment: LoginFragment? = null
     override var dataStore: LoginDataStore? = null
+    var navGraph: NavController? = null
 
-    // Routing
-
-    override fun routeToSomewhere()
-    {
-        // Navigate to the destination fragment, passing data from the dataStore
+    override fun routeToHome() {
+//        navGraph?.navigate(R.id.splash_to_home)
     }
 }
