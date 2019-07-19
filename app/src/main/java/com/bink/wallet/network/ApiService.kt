@@ -1,12 +1,14 @@
 package com.bink.wallet.network
 
-import kotlinx.coroutines.Deferred
-import retrofit2.Response
-import retrofit2.http.GET
+import com.bink.wallet.scenes.login.LoginBody
+import com.bink.wallet.scenes.login.LoginResponse
+import retrofit2.Call
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
 
 interface ApiService {
-
-    @GET("/ubiquity/service")
-    fun registerCustomer(): Deferred<Response<Any>>
-
+    @POST("/ubiquity/service")
+    @FormUrlEncoded
+    fun loginOrRegister(@Field("consent") loginResponse: LoginBody): Call<LoginResponse>
 }
