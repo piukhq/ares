@@ -8,15 +8,17 @@ interface LoginBusinessLogic
 
 interface LoginDataStore
 {
-    //var name: String
+//    var name: String
+//    var address: String
 }
 
 class LoginInteractor: LoginBusinessLogic, LoginDataStore {
     var presenter: LoginPresentationLogic? = null
     var worker: LoginWorker? = null
-    //var name: String = ""
+//    override var name: String = ""
+//    override var address: String = ""
 
-    // MARK: Do something
+    // Do something
 
     override fun doSomething(request: Login.Something.Request)
     {
