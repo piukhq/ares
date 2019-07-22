@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 
 interface LoyaltyWalletDisplayLogic {
     fun displaySomething(viewModel: LoyaltyWalletModels.Something.ViewModel)
@@ -24,6 +27,11 @@ class LoyaltyWalletFragment : Fragment(), LoyaltyWalletDisplayLogic {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setup()
+
+        loyalty_wallet_list.apply {
+            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL ,false)
+            adapter = LoyaltyWalletAdapter()
+        }
     }
 
     // Object lifecycle
