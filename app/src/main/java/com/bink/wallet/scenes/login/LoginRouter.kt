@@ -1,8 +1,6 @@
 package com.bink.wallet.scenes.login
 
-import android.content.Context
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 
 //const val NAME = "NAME"
 //const val ADDRESS = "ADDRESS"
