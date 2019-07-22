@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/loyalty_wallet_navigation"
+            app:startDestination="@id/loyalty_wallet_fragment">
+
+        <fragment android:id="@+id/loyalty_wallet_fragment"
+            android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment"/>
+
+</navigation>

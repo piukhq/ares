@@ -10,6 +10,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:name="androidx.navigation.fragment.NavHostFragment"
-            android:id="@+id/main_fragment"/>
+            app:defaultNavHost="true"
+            android:id="@+id/main_fragment"
+            app:navGraph="@navigation/loyalty_wallet_navigation"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
