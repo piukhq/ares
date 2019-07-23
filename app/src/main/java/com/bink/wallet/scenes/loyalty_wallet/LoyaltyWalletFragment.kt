@@ -61,6 +61,8 @@ class LoyaltyWalletFragment : Fragment(), LoyaltyWalletDisplayLogic {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL ,false)
             adapter = LoyaltyWalletAdapter()
             ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)).attachToRecyclerView(this)
+            ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(this)
+
         }
 
 

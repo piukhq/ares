@@ -50,7 +50,7 @@ class RecyclerItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listene
         val foregroundView = (viewHolder as LoyaltyWalletAdapter.MyViewHolder).mainLayout
 
         getDefaultUIUtil().onDraw(
-            c, recyclerView, foregroundView, dX, dY,
+            c, recyclerView, foregroundView, dX/3, dY,
             actionState, isCurrentlyActive
         )
     }
