@@ -1,8 +1,12 @@
 package com.bink.wallet
 
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.scenes.login.LoginBody
+import com.bink.wallet.scenes.login.LoginResponse
+import com.bink.wallet.scenes.login.LoginWorker
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 
 /**
@@ -15,13 +19,22 @@ class LoginUnitTest {
     lateinit var apiService: ApiService
 
     @Before
-    fun setUp(){
+    fun setUp() {
         apiService = Mockito.mock(ApiService::class.java)
     }
 
     @Test
-    fun registerCustomer(){
-        Mockito.`when`(apiService.registerCustomer()).thenReturn()
+    fun testWorker() {
+        Mockito.`when`(apiService.loginOrRegister(ArgumentMatchers.any(LoginBody::class.java))).thenAnswer {
+            LoginResponse(
+                LoginBody(
+                    1517549941,
+                    "launchpad@bink.com"
+                )
+            )
+        }
+
+        val worker = LoginWorker(apiService)
     }
 
 }
