@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import com.bink.wallet.R
 
 
@@ -30,9 +32,13 @@ class LoyaltyWalletAdapter : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHol
     inner class MyViewHolder(inflater: LayoutInflater, parent: ViewGroup) : RecyclerView.ViewHolder(inflater.inflate(R.layout.loyalty_wallet_item, parent, false)) {
 
         private var text: TextView? = null
+        var mainLayout: LinearLayout? = null
 
         init {
+
+            mainLayout = itemView.findViewById(R.id.main_layout)
             text = itemView.findViewById(R.id.item_name)
+
         }
 
         fun bind(txt: String) {
