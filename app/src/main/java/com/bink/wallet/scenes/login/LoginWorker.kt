@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.login
 
+import android.util.Log
 import com.bink.wallet.network.ApiService
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -11,8 +12,8 @@ class LoginWorker(apiService: ApiService) {
 
     var apiService: ApiService = apiService
 
-    fun doAuthenticationWork(request: LoginBody) {
-        apiService.loginOrRegister(request).enqueue(object : Callback<LoginResponse> {
+    fun doAuthenticationWork() {
+        apiService.loginOrRegister().enqueue(object : Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 TODO("not implemented")
             }
@@ -23,7 +24,7 @@ class LoginWorker(apiService: ApiService) {
                     val moshi: Moshi = Moshi.Builder().build()
                     val adapter: JsonAdapter<LoginResponse> = moshi.adapter(LoginResponse::class.java)
                     val loginResponse = adapter.fromJson(responseBody)
-                    TODO("Send response to interactor ")
+                    Log.e("","Yesy")
                 }
             }
 

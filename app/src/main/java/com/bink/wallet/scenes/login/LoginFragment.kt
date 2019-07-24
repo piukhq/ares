@@ -41,7 +41,7 @@ class LoginFragment : Fragment(), LoginDisplayLogic {
         // Setup the interactor, presenter, router and wire everything together
 
         val fragment = this
-        val interactor = LoginInteractor()
+        val interactor = LoginInteractor(apiService)
         val presenter = LoginPresenter()
         val router = LoginRouter()
         fragment.interactor = interactor
