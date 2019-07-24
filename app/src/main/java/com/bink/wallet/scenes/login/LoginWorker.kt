@@ -1,34 +1,34 @@
 package com.bink.wallet.scenes.login
 
-import android.util.Log
 import com.bink.wallet.network.ApiService
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class LoginWorker(apiService: ApiService) {
+class LoginWorker(apiService: ApiService, loginInteractor: LoginInteractor) {
 
     var apiService: ApiService = apiService
+    var loginInteractor: LoginInteractor = loginInteractor
 
-    fun doAuthenticationWork() {
-        apiService.loginOrRegister().enqueue(object : Callback<LoginResponse> {
-            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                TODO("not implemented")
-            }
-
-            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                if (response.isSuccessful()) {
+    fun doAuthenticationWork(requestBody: LoginBody) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val registerRequest = apiService.loginOrRegister(requestBody)
+            try {
+                val response = registerRequest.await()
+                if (response.isSuccessful) {
                     val responseBody = response.body()!!.toString()
                     val moshi: Moshi = Moshi.Builder().build()
                     val adapter: JsonAdapter<LoginResponse> = moshi.adapter(LoginResponse::class.java)
                     val loginResponse = adapter.fromJson(responseBody)
-                    Log.e("","Yesy")
+                    loginInteractor.successfulResponse(loginResponse!!.consent)
+                } else {
+                    loginInteractor.showErrorMessage("Some relevant Error message")
                 }
+            } catch (exception: Exception) {
+                loginInteractor.showErrorMessage(exception.message!!)
             }
-
-        })
-        val response = "{\"consent\":{\"email\":\"launchpad@bink.com\",\"timestamp\":1517549941}}"
+        }
     }
 }
