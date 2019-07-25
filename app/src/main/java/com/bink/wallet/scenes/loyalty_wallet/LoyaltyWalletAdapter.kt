@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.Context
+import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -33,10 +34,15 @@ class LoyaltyWalletAdapter : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHol
 
         private var text: TextView? = null
         var mainLayout: LinearLayout? = null
+        private var deleteLayout: RelativeLayout? = null
+        private var barcodeLayout: RelativeLayout? = null
 
         init {
 
             mainLayout = itemView.findViewById(R.id.main_layout)
+            deleteLayout = itemView.findViewById(R.id.delete_layout)
+            barcodeLayout = itemView.findViewById(R.id.barcode_layout)
+
             text = itemView.findViewById(R.id.item_name)
 
         }

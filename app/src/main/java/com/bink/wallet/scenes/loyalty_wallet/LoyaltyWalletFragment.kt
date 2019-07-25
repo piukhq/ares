@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet;
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,27 +33,16 @@ class LoyaltyWalletFragment : Fragment(), LoyaltyWalletDisplayLogic {
         setup()
 
         val listener: RecyclerItemTouchHelperListener = object : RecyclerItemTouchHelperListener {
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
                 if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
-                    /*// get the removed item name to display it in snack bar
-                    val name = cartList.get(viewHolder.adapterPosition).getName()
 
-                    // backup of removed item for undo purpose
-                    val deletedItem = cartList.get(viewHolder.adapterPosition)
-                    val deletedIndex = viewHolder.adapterPosition
+                    if (direction == ItemTouchHelper.RIGHT){
+                        Log.i("LoyaltyWalletAdapter","right swipe : barcode " + position)
+                    } else {
+                        Log.i("LoyaltyWalletAdapter","left swipe : delete " + position)
+                    }
 
-                    // remove the item from recycler view
-                    mAdapter.removeItem(viewHolder.adapterPosition)
-
-                    // showing snack bar with Undo option
-                    val snackbar = Snackbar
-                        .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG)
-                    snackbar.setAction("UNDO", View.OnClickListener {
-                        // undo is selected, restore the deleted item
-                        mAdapter.restoreItem(deletedItem, deletedIndex)
-                    })
-                    snackbar.setActionTextColor(Color.YELLOW)
-                    snackbar.show()*/
                 }
             }
         }
@@ -60,11 +50,13 @@ class LoyaltyWalletFragment : Fragment(), LoyaltyWalletDisplayLogic {
         loyalty_wallet_list.apply {
             layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL ,false)
             adapter = LoyaltyWalletAdapter()
-            ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)).attachToRecyclerView(this)
+
+            var helperListener:RecyclerItemTouchHelper = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+            ItemTouchHelper(helperListener).attachToRecyclerView(this)
             ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(this)
 
         }
-
 
     }
 
