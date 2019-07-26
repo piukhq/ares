@@ -5,7 +5,7 @@
 
     <fragment
             android:id="@+id/splash"
-            android:name="com.bink.wallet.SplahFragment">
+            android:name="com.bink.wallet.SplashFragment">
         <action
                 android:id="@+id/splash_to_home"
                 app:destination="@id/login_fragment"
