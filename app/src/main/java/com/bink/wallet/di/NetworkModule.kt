@@ -43,7 +43,7 @@ fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
         payload.put("property_id", "not currently used for authentication")
         payload.put("iat", System.currentTimeMillis() / 1000)
 
-        var token = "${Base64.encodeToString(
+        val token = "${Base64.encodeToString(
             header.toString().toByteArray(), Base64.URL_SAFE
         )}.${Base64.encodeToString(payload.toString().toByteArray(), Base64.URL_SAFE)}".replace("=", "")
             .replace("\n", "")

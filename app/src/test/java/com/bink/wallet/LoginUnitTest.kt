@@ -53,7 +53,7 @@ class LoginUnitTest {
         `when`(apiService.loginOrRegister(loginBody)).thenReturn(CompletableDeferred(response))
 
         val worker = LoginWorker(apiService, loginInteractor)
-        worker.doAuthenticationWork(loginBody)
+        worker.doAuthenticationWork()
 
         verify(loginInteractor, never()).showErrorMessage(anyString())
         verify(loginInteractor, times(1)).successfulResponse(com.nhaarman.mockitokotlin2.any())

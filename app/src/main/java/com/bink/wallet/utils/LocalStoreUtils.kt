@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 
 object LocalStoreUtils {
 
-    private val PREF_FILE_NAME = "com.bink.wallet"
-    private val KEY_SECRET = "api_secret"
+    private const val PREF_FILE_NAME = "com.bink.wallet"
+    private const val KEY_SECRET = "api_secret"
 
     fun setAppSecret(secret: String, context: Context) {
         try {
