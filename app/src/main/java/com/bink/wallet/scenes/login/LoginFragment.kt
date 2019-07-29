@@ -19,13 +19,13 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.loginData.observe(this, Observer {
-//            findNavController().navigate(R.id.whatever_route)
+            findNavController().navigate(R.id.login_to_home)
         })
     }
 }
