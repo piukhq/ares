@@ -1,14 +1,15 @@
 package com.bink.wallet.network
 
-import kotlinx.coroutines.Deferred
-import retrofit2.Response
+import com.bink.wallet.scenes.login.LoginResponse
+import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.POST
 
 interface ApiService {
+    @GET("/ubiquity/service")
+    fun checkRegisteredUser(): Call<LoginResponse>
 
-    //TODO: Add the path
-    @GET("/")
-    fun getPopularMovieAsync(@Query("page") page: Int): Deferred<Response<Any>>
-
+    @POST("/ubiquity/service")
+    fun loginOrRegister(@Body loginResponse: LoginResponse): Call<LoginResponse>
 }

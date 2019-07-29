@@ -1,72 +1,31 @@
 package com.bink.wallet.scenes.login
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.bink.wallet.R
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-interface LoginDisplayLogic {
-    fun displaySomething(viewModel: Login.Something.ViewModel)
-}
+class LoginFragment : Fragment() {
 
-class LoginFragment : Fragment(), LoginDisplayLogic {
+    private val viewModel: LoginViewModel by viewModel()
 
-    lateinit var interactor: LoginBusinessLogic
-    lateinit var router: ILoginRouter
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-    init {
-        setup()
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
-    // Object lifecycle
-
-    override fun onStart() {
-        super.onStart()
-        // Called when the Fragment is visible to the user.
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // Called when the Fragment is no longer started.
-    }
-
-    override fun onPause() {
-        super.onPause()
-        // Called when the Fragment is no longer resumed.
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Called when the fragment is visible to the user and actively running.
-    }
-
-    // Setup
-
-    private fun setup()
-    {
-        // Setup the interactor, presenter, router and wire everything together
-
-        val fragment = this
-        val interactor = LoginInteractor()
-        val presenter = LoginPresenter()
-        val router = LoginRouter()
-        fragment.interactor = interactor
-        fragment.router = router
-        interactor.presenter = presenter
-        presenter.fragment = fragment
-        router.fragment = fragment
-        router.dataStore = interactor
-    }
-
-    // Routing
-
-    // View lifecycle
-
-    // Do something
-
-    fun doSomething()
-    {
-        val request = Login.Something.Request()
-        interactor?.doSomething(request)
-    }
-
-    override  fun displaySomething(viewModel: Login.Something.ViewModel) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.loginData.observe(this, Observer {
+//            findNavController().navigate(R.id.whatever_route)
+        })
     }
 }
