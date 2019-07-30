@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.R
 import kotlinx.android.synthetic.main.home_fragment.*
 
@@ -34,7 +35,7 @@ class HomeFragment : Fragment() {
         bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
-                R.id.add_menu_item -> Log.e(TAG, "Add tab")
+                R.id.add_menu_item -> findNavController().navigate(R.id.home_to_add)
                 R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
             }
             true
