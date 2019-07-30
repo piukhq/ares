@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">binkapp</string>
+    <string name="add_button_description">Add button</string>
 </resources>
