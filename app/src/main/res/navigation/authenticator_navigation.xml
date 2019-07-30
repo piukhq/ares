@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/authenticator_navigation" app:startDestination="@id/splash">
+
+    <fragment
+            android:id="@+id/splash"
+            android:name="com.bink.wallet.SplashFragment">
+        <action
+                android:id="@+id/splash_to_home"
+                app:destination="@id/login_fragment"
+                app:popUpTo="@id/splash"
+                app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment android:id="@+id/home_fragment"
+              android:name="com.bink.wallet.scenes.home.HomeFragment">
+    </fragment>
+
+    <fragment android:id="@+id/login_fragment"
+              android:name="com.bink.wallet.scenes.login.LoginFragment">
+
+        <action
+                android:id="@+id/login_to_home"
+                app:destination="@id/home_fragment"
+                app:popUpToInclusive="false"/>
+
+    </fragment>
+
+</navigation>
