@@ -1,59 +1,87 @@
 package com.bink.wallet
 
-import com.bink.wallet.network.ApiService
+import android.content.Context
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.bink.wallet.di.networkModule
+import com.bink.wallet.di.viewModelModules
 import com.bink.wallet.scenes.login.LoginBody
+import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginResponse
-import kotlinx.coroutines.CompletableDeferred
+import com.bink.wallet.scenes.login.LoginViewModel
+import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
-import retrofit2.Response
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.test.KoinTest
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.MockitoAnnotations
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class LoginUnitTest {
-//
-//    lateinit var apiService: ApiService
-//    lateinit var loginInteractor: LoginInteractor
-//    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
-//
-//    @Before
-//    fun setUp() {
-//        apiService = mock(ApiService::class.java)
-//        loginInteractor = mock(LoginInteractor::class.java)
-//        Dispatchers.setMain(mainThreadSurrogate)
-//    }
-//
-//    @After
-//    fun tearDown() {
-//        Dispatchers.resetMain()
-//        mainThreadSurrogate.close()
-//    }
-//
-//    @Test
-//    fun testWorker_withValidAnswer() {
-//        val loginBody = LoginBody(
-//            1517549941,
-//            "launchpad@bink.com"
-//        )
-//        val loginResponse = LoginResponse(
-//            loginBody
-//        )
-//        val response = Response.success(loginResponse)
-//        `when`(apiService.loginOrRegister(loginBody)).thenReturn(CompletableDeferred(response))
-//
-//        val worker = LoginWorker(apiService, loginInteractor)
-//        worker.doAuthenticationWork()
-//
-//        verify(loginInteractor, never()).showErrorMessage(anyString())
-//        verify(loginInteractor, times(1)).successfulResponse(com.nhaarman.mockitokotlin2.any())
-//    }
+class LoginUnitTest : KoinTest {
+    @Rule
+    @JvmField
+    val rule = InstantTaskExecutorRule()
+
+    var loginData: MutableLiveData<LoginBody> = MutableLiveData()
+    private val loginRepository: LoginRepository = mock()
+    lateinit var viewModel: LoginViewModel
+    var apiResponseObserver: Observer<LoginBody?> = mock()
+
+    @ObsoleteCoroutinesApi
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+        viewModel = LoginViewModel(loginRepository)
+        viewModel.loginData.observeForever(apiResponseObserver)
+    }
+
+    @ExperimentalCoroutinesApi
+    @ObsoleteCoroutinesApi
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
+    }
+
+    @Test
+    fun `make a test with Koin`() {
+        startKoin {
+            androidContext(mock(Context::class.java))
+            modules(listOf(viewModelModules, networkModule))
+        }
+    }
+
+    @Test
+    fun testLiveDataUpdate() {
+        var loginBody = LoginBody(
+            System.currentTimeMillis() / 1000,
+            "bink20iteration1@testbink.com",
+            0.0,
+            12.345
+        )
+
+        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData)
+
+        loginData.value = loginBody
+        verify(apiResponseObserver).onChanged(
+            LoginBody(
+                System.currentTimeMillis() / 1000,
+                "bink20iteration1@testbink.com",
+                0.0,
+                12.345
+            )
+        )
+    }
 }
