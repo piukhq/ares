@@ -11,21 +11,17 @@ import retrofit2.await
 
 class LoginRepository(private val apiService: ApiService) {
 
-    private var mutableLiveData = MutableLiveData<LoginBody>()
-
-    fun doAuthenticationWork(): MutableLiveData<LoginBody> {
+    fun doAuthenticationWork(loginResponse: LoginResponse, liveData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
-            //TODO Change email when login api is provided
-            val request = apiService.loginOrRegister(LoginResponse(LoginBody(System.currentTimeMillis() / 1000, "Bink20iteration1@testbink.com", 0.0, 12.345)))
+            val request = apiService.loginOrRegister(loginResponse)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    mutableLiveData.value = response.consent
+                    liveData.value = response.consent
                 } catch (e: Throwable) {
                     Log.e(LoginRepository::class.simpleName, e.toString())
                 }
             }
         }
-        return mutableLiveData
     }
 }
