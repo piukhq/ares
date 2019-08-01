@@ -6,21 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoyaltyWalletFragment : Fragment() {
     companion object {
         fun newInstance() = LoyaltyWalletFragment()
     }
 
-    private lateinit var viewModel: LoyaltyViewModel
+    private var TAG = LoyaltyWalletFragment::class.simpleName
 
+    private val viewModel: LoyaltyViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,7 +33,6 @@ class LoyaltyWalletFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(LoyaltyViewModel::class.java)
         super.onActivityCreated(savedInstanceState)
 
         val listener: RecyclerItemTouchHelperListener = object :
@@ -42,23 +44,40 @@ class LoyaltyWalletFragment : Fragment() {
                     if (direction == ItemTouchHelper.RIGHT) {
                         Log.i("LoyaltyWalletAdapter", "right swipe : barcode $position")
                     } else {
-                        Log.i("LoyaltyWalletAdapter", "left swipe : delete $position")
+                        viewModel.deleteCard()
                     }
 
                 }
             }
         }
 
-        loyalty_wallet_list.apply {
-            layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            adapter = LoyaltyWalletAdapter()
+        viewModel.deleteCard.observe(this, Observer {
 
-            var helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+            Log.e("Tag", "Deleted!")
 
-            ItemTouchHelper(helperListener).attachToRecyclerView(this)
-            ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(this)
+        })
 
-        }
+        viewModel.loginData.observe(this, Observer {
+            loyalty_wallet_list.apply {
+                layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+                adapter = LoyaltyWalletAdapter()
+
+                var helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+                ItemTouchHelper(helperListener).attachToRecyclerView(this)
+                ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(this)
+            }
+
+            bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
+                    R.id.add_menu_item -> findNavController().navigate(R.id.home_to_add)
+                    R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
+                }
+                true
+            }
+        })
     }
+
 
 }
