@@ -57,7 +57,9 @@ class LoyaltyWalletFragment : Fragment() {
 
         })
 
-        viewModel.loginData.observe(this, Observer {
+        viewModel.fetchMembershipCards()
+
+        viewModel.membershipCardData.observe(this, Observer {
             loyalty_wallet_list.apply {
                 layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
                 adapter = LoyaltyWalletAdapter()

@@ -72,7 +72,7 @@ class LoginUnitTest : KoinTest {
             12.345
         )
 
-        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData)
+        loginRepository.doAuthenticationWork(LoginResponse(loginBody))
 
         loginData.value = loginBody
         verify(apiResponseObserver).onChanged(
