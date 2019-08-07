@@ -4,9 +4,9 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class CardImages(
-    var id: String,
-    var url: String,
-    var type: Int,
-    var description: String,
-    var encoding: String
+    var id: String?,
+    var url: String?,
+    var type: Int?,
+    var description: String?,
+    var encoding: String?
 )
