@@ -7,9 +7,10 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 
 
-class LoyaltyWalletAdapter : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
+class LoyaltyWalletAdapter(private val membershipCards : List<MembershipCard>)  : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,11 +21,11 @@ class LoyaltyWalletAdapter : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHol
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind("Number $position")
+        holder.bind("Card $position")
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return membershipCards.size
     }
 
     inner class MyViewHolder(inflater: LayoutInflater, parent: ViewGroup) :

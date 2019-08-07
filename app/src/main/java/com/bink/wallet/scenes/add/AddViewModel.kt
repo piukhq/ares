@@ -1,7 +1,7 @@
-package com.bink.wallet.scenes.home
+package com.bink.wallet.scenes.add
 
 import androidx.lifecycle.ViewModel;
 
-class HomeViewModel : ViewModel() {
+class AddViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }

@@ -13,16 +13,32 @@
                 app:popUpToInclusive="true"/>
     </fragment>
 
-    <fragment android:id="@+id/home_fragment"
-              android:name="com.bink.wallet.scenes.home.HomeFragment">
+    <fragment android:id="@+id/loyalty_fragment"
+              android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment">
+
+        <action
+                android:id="@+id/home_to_add"
+                app:destination="@id/add_fragment"
+                app:popUpToInclusive="false"/>
+
     </fragment>
 
     <fragment android:id="@+id/login_fragment"
               android:name="com.bink.wallet.scenes.login.LoginFragment">
 
         <action
-                android:id="@+id/login_to_home"
-                app:destination="@id/home_fragment"
+                android:id="@+id/login_to_loyalty"
+                app:destination="@id/loyalty_fragment"
+                app:popUpToInclusive="false"/>
+
+    </fragment>
+
+    <fragment android:id="@+id/add_fragment"
+              android:name="com.bink.wallet.scenes.add.AddFragment">
+
+        <action
+                android:id="@+id/add_to_loyalty"
+                app:destination="@id/loyalty_fragment"
                 app:popUpToInclusive="false"/>
 
     </fragment>
