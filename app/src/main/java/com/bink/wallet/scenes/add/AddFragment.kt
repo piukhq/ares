@@ -30,7 +30,7 @@ class AddFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
 
-        cancel_button.setOnClickListener { findNavController().navigate(R.id.add_to_home) }
+        cancel_button.setOnClickListener { findNavController().navigate(R.id.add_to_loyalty) }
     }
 
 }

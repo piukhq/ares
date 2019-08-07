@@ -1,16 +1,22 @@
 package com.bink.wallet.network
 
 import com.bink.wallet.scenes.login.LoginResponse
+import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import kotlinx.coroutines.Deferred
-import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import okhttp3.ResponseBody
+import retrofit2.http.*
 
 interface ApiService {
     @GET("/ubiquity/service")
-    fun checkRegisteredUser(): Call<LoginResponse>
+    fun checkRegisteredUser(): Deferred<LoginResponse>
 
     @POST("/ubiquity/service")
-    fun loginOrRegister(@Body loginResponse: LoginResponse): Deferred<LoginResponse>
+    fun loginOrRegisterAsync(@Body loginResponse: LoginResponse): Deferred<LoginResponse>
+
+
+    @GET("/ubiquity/membership_cards?fields=id,membership_plan,status,payment_cards,card,account,balances,images")
+    fun getMembershipCards(): Deferred<List<MembershipCard>>
+
+    @DELETE("/ubiquity/membership_card/{card_id}")
+    fun deleteCard(@Path("card_id") cardId: String): Deferred<ResponseBody>
 }
