@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,36 +12,31 @@ import kotlinx.coroutines.withContext
 
 class LoyaltyWalletRepository(private val apiService: ApiService) {
 
-    private var mutableMembershipCard: MutableLiveData<List<MembershipCard>> = MutableLiveData()
-    private var mutableDeleteCard: MutableLiveData<Any> = MutableLiveData()
-
-    fun retrieveMembershipCards(): MutableLiveData<List<MembershipCard>> {
+    fun retrieveMembershipCards(mutableMembershipCard: MutableLiveData<List<MembershipCard>>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipCards()
+            val request = apiService.getMembershipCardsAsync()
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
                     mutableMembershipCard.value = response.toMutableList()
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString())
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
-        return mutableMembershipCard
     }
 
-    fun deleteMembershipCard(): MutableLiveData<Any> {
+    fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipCards()
+            val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    mutableDeleteCard.value = response
+                    request?.await()
+                    mutableDeleteCard.value = id
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString())
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
-        return mutableDeleteCard
     }
 }
