@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    
+    <!-- General dimensions -->
+    <dimen name="first_keyline">16dp</dimen>
+
+    <!-- Barcode Screen -->
+    <dimen name="button_margin_start">48dp</dimen>
+    <dimen name="button_margin_end">@dimen/button_margin_start</dimen>
+    <dimen name="button_margin_bottom">68dp</dimen>
+    <dimen name="barcode_height">80dp</dimen>
+    <dimen name="barcode_margin_top">36dp</dimen>
+    <dimen name="label_margin_top">68dp</dimen>
+    <dimen name="number_margin_top">4dp</dimen>
+    <dimen name="description_margin_top">24dp</dimen>
+    <dimen name="date_margin_top">12dp</dimen>
 
     <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
 
