@@ -41,6 +41,13 @@
                 app:destination="@id/loyalty_fragment"
                 app:popUpToInclusive="false"/>
 
+        <action
+                android:id="@+id/add_to_browse"
+                app:destination="@id/browse_brands"
+                app:popUpToInclusive="false"/>
+
     </fragment>
+
+    <fragment android:id="@+id/browse_brands" android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment"/>
 
 </navigation>

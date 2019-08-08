@@ -1,5 +1,6 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 import com.bink.wallet.scenes.login.LoginResponse
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import kotlinx.coroutines.Deferred
@@ -19,4 +20,8 @@ interface ApiService {
 
     @DELETE("/ubiquity/membership_card/{card_id}")
     fun deleteCard(@Path("card_id") cardId: String): Deferred<ResponseBody>
+
+    @GET("/ubiquity/membership_plans?fields=id,status,feature_set,account,images,balances")
+    fun getMembershipPlans(): Deferred<List<MembershipPlan>>
+
 }
