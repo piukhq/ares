@@ -33,12 +33,12 @@ class AddJoinFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (args.currentMembershipPlan.feature_set?.linking_support?.filter { it == "REGISTRATION" }?.size!! > 0) {
+        if (args.currentMembershipPlan.feature_set?.linking_support?.filter { it == "REGISTRATION" }?.size!! == 0) {
             add_join_view_image.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_view_inactive))
             add_join_view_description.text = getString(R.string.add_join_inactive_view_description)
         }
 
-        if (args.currentMembershipPlan.feature_set?.linking_support?.filter { it == "ENROL" }?.size!! > 0) {
+        if (args.currentMembershipPlan.feature_set?.linking_support?.filter { it == "ENROL" }?.size!! == 0) {
             add_join_link_image.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
             add_join_link_description.text = getString(R.string.add_join_inactive_link_description)
         }
