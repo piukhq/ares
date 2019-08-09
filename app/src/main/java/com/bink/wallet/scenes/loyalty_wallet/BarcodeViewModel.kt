@@ -1,6 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
-import androidx.lifecycle.ViewModel
+import com.bink.wallet.BaseViewModel
 
-class BarcodeViewModel: ViewModel() {
+class BarcodeViewModel: BaseViewModel() {
 }

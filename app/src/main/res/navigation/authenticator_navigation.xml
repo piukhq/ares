@@ -14,12 +14,15 @@
     </fragment>
 
     <fragment android:id="@+id/loyalty_fragment"
+              android:label="@string/root"
               android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment">
 
         <action
                 android:id="@+id/home_to_add"
                 app:destination="@id/add_fragment"
                 app:popUpToInclusive="false"/>
+
+        <action android:id="@+id/home_to_barcode" app:destination="@+id/barcode_fragment"/>
 
     </fragment>
 
@@ -49,5 +52,7 @@
     </fragment>
 
     <fragment android:id="@+id/browse_brands" android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment"/>
+
+    <fragment android:id="@+id/barcode_fragment" android:name="com.bink.wallet.scenes.loyalty_wallet.BarcodeFragment"/>
 
 </navigation>

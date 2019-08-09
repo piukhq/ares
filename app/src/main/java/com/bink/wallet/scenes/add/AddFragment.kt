@@ -1,33 +1,26 @@
 package com.bink.wallet.scenes.add
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.databinding.AddFragmentBinding
 import kotlinx.android.synthetic.main.add_fragment.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddFragment : Fragment() {
+class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     companion object {
         fun newInstance() = AddFragment()
     }
 
-    private lateinit var viewModel: AddViewModel
+    override val layoutRes: Int
+        get() = R.layout.add_fragment
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.add_fragment, container, false)
-    }
+    override val viewModel: AddViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
 
         cancel_button.setOnClickListener { findNavController().navigate(R.id.add_to_loyalty) }
         browse_brands_container.setOnClickListener { findNavController().navigate(R.id.add_to_browse) }
