@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.browse_brands.model
 
+import android.os.Parcelable
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class MembershipPlan (
 
@@ -11,4 +14,4 @@ data class MembershipPlan (
 	val account : Account?,
 	val images : List<Images>?,
 	val balances : List<Balances>?
-)
+): Parcelable

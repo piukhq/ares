@@ -1,4 +1,27 @@
 <resources>
     <string name="app_name">binkapp</string>
     <string name="add_button_description">Add button</string>
+    <string name="add_join_screen_reward_info">Rewards info ></string>
+    <string name="add_join_inactive_view_description">You cannot see your live points balance and transaction history
+        for this card in Bink.
+    </string>
+    <string name="add_join_inactive_link_description">You cannot link this card to your payment cards yet</string>
+    <string name="add_join_active_link_description">You can link this card to your bank cards and automatically collect
+        points when you pay
+    </string>
+    <string name="add_join_link_title">Link</string>
+    <string name="add_join__inactive_view_description">You can see your live points balance and transactions history for
+        this card in Bink.
+    </string>
+    <string name="add_join_view_title">View</string>
+    <string name="add_join_store_description">You can add this card to Bink and show the onscreen barcode at the till to
+        collect points.
+    </string>
+    <string name="add_join_store_title">Store</string>
+    <string name="delete_text">Delete</string>
+    <string name="barcode_text">Barcode</string>
+    <string name="loayalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
+    <string name="loayalty_wallet_dialog_description">Delete card was canceled</string>
+    <string name="yes_text">YES</string>
+    <string name="cancel_text">CANCEL</string>
 </resources>

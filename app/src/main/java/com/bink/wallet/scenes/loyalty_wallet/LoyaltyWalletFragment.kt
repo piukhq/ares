@@ -3,12 +3,11 @@ package com.bink.wallet.scenes.loyalty_wallet;
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import androidx.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -38,7 +37,7 @@ class LoyaltyWalletFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_loyalty_wallet, container, false )
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_loyalty_wallet, container, false)
         return binding.root
     }
 
@@ -97,18 +96,18 @@ class LoyaltyWalletFragment : Fragment() {
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
         if (builder != null) {
-            builder.setTitle("Are you sure you want to delete this card?")
+            builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> viewModel.deleteCard(membershipCard.id)
                     DialogInterface.BUTTON_NEUTRAL -> Log.d(
                         LoyaltyWalletFragment::class.java.simpleName,
-                        "Delete card was canceled"
+                        getString(R.string.loayalty_wallet_dialog_description)
                     )
                 }
             }
-            builder.setPositiveButton("YES", dialogClickListener)
-            builder.setNeutralButton("CANCEL", dialogClickListener)
+            builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
+            builder.setNeutralButton(getString(R.string.cancel_text), dialogClickListener)
             dialog = builder.create()
             dialog.show()
         }

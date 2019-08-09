@@ -7,12 +7,22 @@ import com.bink.wallet.databinding.BrandListItemBinding
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 
 
-class BrowseBrandsAdapter(private val brands: List<MembershipPlan>) :
+class BrowseBrandsAdapter(
+    private val brands: List<MembershipPlan>,
+    val itemClickListener: (MembershipPlan) -> Unit = {}
+) :
     RecyclerView.Adapter<BrowseBrandsAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = BrandListItemBinding.inflate(inflater)
+        binding.apply {
+            root.setOnClickListener {
+                item?.apply {
+                    itemClickListener(this)
+                }
+            }
+        }
         return MyViewHolder(binding)
     }
 
