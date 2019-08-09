@@ -20,4 +20,8 @@
     <string name="add_join_store_title">Store</string>
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
+    <string name="loayalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
+    <string name="loayalty_wallet_dialog_description">Delete card was canceled</string>
+    <string name="yes_text">YES</string>
+    <string name="cancel_text">CANCEL</string>
 </resources>
