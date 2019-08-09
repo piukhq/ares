@@ -8,13 +8,13 @@ import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) : BaseViewModel() {
 
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
-    var deleteCard: MutableLiveData<Any> = MutableLiveData()
+    var deleteCard: MutableLiveData<String> = MutableLiveData()
 
-    fun deleteCard(){
-        deleteCard = loyaltyWalletRepository.deleteMembershipCard()
+    fun deleteCard(id: String?) {
+        loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
     }
 
     fun fetchMembershipCards(){
-        membershipCardData = loyaltyWalletRepository.retrieveMembershipCards()
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 }

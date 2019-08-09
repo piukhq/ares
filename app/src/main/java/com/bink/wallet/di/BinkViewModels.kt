@@ -2,6 +2,7 @@ package com.bink.wallet.di
 
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
+import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsRepository
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.login.LoginRepository
@@ -27,6 +28,7 @@ val viewModelModules = module {
 
     viewModel { AddViewModel() }
 
+    viewModel { AddJoinViewModel() }
 }
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository = LoginRepository(restApiService)
