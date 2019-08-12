@@ -19,7 +19,7 @@ val viewModelModules = module {
     viewModel { LoginViewModel(get()) }
 
     single { provideLoyaltyCardRepository(get()) }
-    viewModel { LoyaltyViewModel(get()) }
+    viewModel { LoyaltyViewModel(get(), get()) }
 
     single { provideBrowseBrandsRepository(get()) }
     viewModel { BrowseBrandsViewModel(get()) }

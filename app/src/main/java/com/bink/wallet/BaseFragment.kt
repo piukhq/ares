@@ -12,7 +12,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 
-abstract class BaseFragment<VM: BaseViewModel, DB: ViewDataBinding>: Fragment() {
+abstract class BaseFragment<VM: BaseViewModel?, DB: ViewDataBinding>: Fragment() {
 
     @get:LayoutRes
     abstract val layoutRes: Int

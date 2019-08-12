@@ -3,12 +3,7 @@ package com.bink.wallet.scenes.loyalty_wallet;
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,7 +14,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
-import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -48,8 +42,16 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
                 if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
                     if (direction == ItemTouchHelper.RIGHT) {
-                        findNavController().navigate(R.id.home_to_barcode)
-                        Log.i("LoyaltyWalletAdapter", "right swipe : barcode $position")
+                        val card = viewModel.membershipCardData.value?.get(position)
+                        if(viewModel.membershipPlanData.value != null) {
+                            for (plan in viewModel.membershipPlanData.value!!) {
+                                if (plan.id.toString() == card?.membership_plan) {
+                                    val directions =
+                                        LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode)
+                                    findNavController().navigate(directions)
+                                }
+                            }
+                        }
                     } else {
                         viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
                     }
@@ -67,10 +69,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.fetchMembershipCards()
+        viewModel.fetchMembershipPlans()
 
 
         viewModel.membershipCardData.observe(this, Observer {
-            loyalty_wallet_list.apply {
+            binding.loyaltyWalletList.apply {
                 layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
                 adapter = LoyaltyWalletAdapter(it, itemDeleteListener = { })
 
@@ -81,7 +84,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         })
 
-        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
                 R.id.add_menu_item -> findNavController().navigate(R.id.home_to_add)

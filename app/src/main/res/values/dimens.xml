@@ -14,6 +14,7 @@
     <dimen name="number_margin_top">4dp</dimen>
     <dimen name="description_margin_top">24dp</dimen>
     <dimen name="date_margin_top">12dp</dimen>
+    <dimen name="title_margin">8dp</dimen>
 
     <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
 

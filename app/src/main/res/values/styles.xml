@@ -5,7 +5,7 @@
     </style>
 
     <style name="RoundedGradientButton" parent="TextAppearance.AppCompat.Button">
-        <item name="android:background">@drawable/ic_rounded_gradient_button</item>
+        <item name="android:background">@drawable/rounded_corners_gradient_button</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
