@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
         <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/card_background_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -27,13 +27,93 @@
                 android:background="@drawable/bg_round_background" />
 
         <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/card_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="-60dp"
                 android:background="@drawable/bg_round_rectangle" />
 
+        <TextView
+                android:id="@+id/company_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="30dp"
+                android:text="Harvey Nichols"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16.2dp"
+                android:layout_marginEnd="18dp"
+                android:visibility="gone">
+
+                <TextView
+                        android:id="@+id/loyalty_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16.2sp"
+                        android:textColor="@android:color/white"
+                        android:letterSpacing="0.01"
+                        android:lineSpacingExtra="-3.6sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="end"
+                        android:text="415"/>
+
+                <TextView
+                        android:id="@+id/loyalty_value_extra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13.5sp"
+                        android:textColor="@android:color/white"
+                        android:letterSpacing="0.01"
+                        android:lineSpacingExtra="-0.9sp"
+                        android:layout_gravity="end"
+                        android:text="Points"/>
+
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/card_login"
+                android:layout_width="89dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_login"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16.2dp"
+                android:layout_marginEnd="10dp"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="16.2dp"
+                android:layout_marginEnd="18dp">
+
+                <TextView
+                        android:id="@+id/link_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13.5sp"
+                        android:textColor="@android:color/white"
+                        android:lineSpacingExtra="1.8sp"
+                        android:gravity="end"
+                        android:text="Linked"/>
+
+                <ImageView
+                        android:id="@+id/link_status_img"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_linked"
+                        android:layout_marginStart="5dp"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
