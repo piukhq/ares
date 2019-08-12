@@ -6,7 +6,7 @@
     <item >
 
         <rotate
-                android:fromDegrees="-50"
+                android:fromDegrees="-45"
                 android:pivotX="30%"
                 android:pivotY="20%">
 

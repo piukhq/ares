@@ -7,8 +7,8 @@
 
         <rotate
                 android:fromDegrees="-20"
-                android:pivotX="40%"
-                android:pivotY="-10%">
+                android:pivotX="35%"
+                android:pivotY="-12%">
 
             <shape android:shape="rectangle">
                 <size android:width="440dp"
