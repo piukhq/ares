@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">binkapp</string>
+
     <string name="add_button_description">Add button</string>
     <string name="add_join_screen_reward_info">Rewards info ></string>
     <string name="add_join_inactive_view_description">You cannot see your live points balance and transaction history
@@ -24,4 +25,14 @@
     <string name="loayalty_wallet_dialog_description">Delete card was canceled</string>
     <string name="yes_text">YES</string>
     <string name="cancel_text">CANCEL</string>
+
+    <string name="root">root</string>
+
+
+    <!-- Barcode Screen -->
+    <string name="barcode_maximize">Maximize barcode</string>
+    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind some scanners cannot read from screens.</string>
+    <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
+    <string name="barcode_card_number">Card number:</string>
+    <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
 </resources>
