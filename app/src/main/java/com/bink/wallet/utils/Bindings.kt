@@ -30,7 +30,9 @@ fun View.setVisible(isVisible: Boolean){
 fun ImageView.loadBarcode(barcode: String?){
     if(!barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
-        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode, BarcodeFormat.CODE_128, context.toPixelFromDip(720f).toInt(), context.toPixelFromDip(180f).toInt())
+        val heightPx = context.toPixelFromDip(80f)
+        val widthPx = context.toPixelFromDip(320f)
+        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode, BarcodeFormat.CODE_128, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)

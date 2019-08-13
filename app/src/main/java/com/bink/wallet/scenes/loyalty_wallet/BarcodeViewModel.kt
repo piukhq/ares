@@ -8,4 +8,5 @@ class BarcodeViewModel : BaseViewModel() {
     var membershipPlan = MutableLiveData<MembershipPlan>()
     var barcode = MutableLiveData<String>()
     var isBarcodeAvailable = MutableLiveData<Boolean>()
+    var isMaximized = MutableLiveData<Boolean>()
 }

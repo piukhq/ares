@@ -13,7 +13,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     override val layoutRes: Int
         get() = R.layout.barcode_fragment
 
-    private var isMaximized = false
     private var initialConstraints = ConstraintSet()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -28,7 +27,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         }
 
         binding.barcodeImage.setOnClickListener {
-            if(isMaximized){
+            if(viewModel.isMaximized.value == true){
                 unMaximizeBarcode()
             } else {
                 maximizeBarcode()
@@ -46,7 +45,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         binding.viewModel=  viewModel
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         binding.toolbar.setNavigationOnClickListener {
-            if(isMaximized){
+            if(viewModel.isMaximized.value == true){
                 unMaximizeBarcode()
             } else {
                 activity?.onBackPressed()
@@ -62,7 +61,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         binding.barcodeDescription.visibility = View.GONE
         binding.cardNumber.visibility = View.GONE
         binding.cardNumberLabel.visibility = View.GONE
-        isMaximized = true
+        viewModel.isMaximized.value = true
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(binding.screen)
@@ -79,7 +78,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         binding.barcodeDescription.visibility = View.VISIBLE
         binding.cardNumber.visibility = View.VISIBLE
         binding.cardNumberLabel.visibility = View.VISIBLE
-        isMaximized = false
+        viewModel.isMaximized.value = false
         initialConstraints.applyTo(binding.screen)
     }
 
