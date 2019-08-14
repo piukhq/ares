@@ -24,7 +24,8 @@
                    android:layout_marginTop="24dp"
                    app:layout_constraintTop_toTopOf="parent"
                    app:imageUrl="@{item}"
-                   android:layout_marginEnd="8dp"/>
+                   android:layout_marginEnd="8dp"
+                   tools:ignore="ContentDescription"/>
 
         <TextView android:layout_width="0dp"
                   android:layout_height="wrap_content"
@@ -58,7 +59,8 @@
                        android:layout_marginTop="8dp"
                        android:scaleType="centerInside"
                        app:layout_constraintTop_toTopOf="parent"
-                       android:layout_marginStart="16dp"/>
+                       android:layout_marginStart="16dp"
+                       tools:ignore="ContentDescription"/>
             <TextView android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:text="@string/add_join_store_title"
@@ -103,7 +105,8 @@
                        android:layout_marginTop="8dp"
                        android:scaleType="centerInside"
                        app:layout_constraintTop_toTopOf="parent"
-                       android:layout_marginStart="16dp"/>
+                       android:layout_marginStart="16dp"
+                       tools:ignore="ContentDescription"/>
             <TextView android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:text="@string/add_join_view_title"
@@ -147,7 +150,8 @@
                        android:scaleType="centerInside"
                        android:layout_marginTop="8dp"
                        app:layout_constraintTop_toTopOf="parent"
-                       android:layout_marginStart="16dp"/>
+                       android:layout_marginStart="16dp"
+                       tools:ignore="ContentDescription"/>
             <TextView android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:text="@string/add_join_link_title"

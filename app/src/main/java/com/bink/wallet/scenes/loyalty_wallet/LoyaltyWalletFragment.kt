@@ -43,7 +43,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
                     if (direction == ItemTouchHelper.RIGHT) {
                         val card = viewModel.membershipCardData.value?.get(position)
-                        if(viewModel.membershipPlanData.value != null) {
+                        if (viewModel.membershipPlanData.value != null) {
                             for (plan in viewModel.membershipPlanData.value!!) {
                                 if (plan.id.toString() == card?.membership_plan) {
                                     val directions =
@@ -101,11 +101,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
-                    DialogInterface.BUTTON_POSITIVE -> viewModel.deleteCard(membershipCard.id)
-                    DialogInterface.BUTTON_NEUTRAL -> Log.d(
-                        LoyaltyWalletFragment::class.java.simpleName,
-                        getString(R.string.loayalty_wallet_dialog_description)
-                    )
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        viewModel.deleteCard(membershipCard.id)
+                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+                    }
+                    DialogInterface.BUTTON_NEUTRAL -> {
+                        Log.d(
+                            LoyaltyWalletFragment::class.java.simpleName,
+                            getString(R.string.loayalty_wallet_dialog_description)
+                        )
+                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+                    }
+
                 }
             }
             builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
