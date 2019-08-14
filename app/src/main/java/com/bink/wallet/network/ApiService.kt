@@ -22,6 +22,6 @@ interface ApiService {
     fun deleteCardAsync(@Path("card_id") cardId: String): Deferred<ResponseBody>
 
     @GET("/ubiquity/membership_plans?fields=id,status,feature_set,account,images,balances")
-    fun getMembershipPlans(): Deferred<List<MembershipPlan>>
+    fun getMembershipPlansAsync(): Deferred<List<MembershipPlan>>
 
 }

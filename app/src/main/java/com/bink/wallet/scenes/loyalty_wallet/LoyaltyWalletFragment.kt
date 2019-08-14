@@ -70,6 +70,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.fetchMembershipCards()
         viewModel.fetchMembershipPlans()
+        viewModel.fetchLocalMembershipPlans()
 
 
         viewModel.membershipCardData.observe(this, Observer {

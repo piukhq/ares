@@ -23,7 +23,6 @@ val networkModule = module {
     single { provideDefaultOkhttpClient(androidContext()) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
-
 }
 
 fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
@@ -88,3 +87,5 @@ fun provideRetrofit(client: OkHttpClient): Retrofit {
 }
 
 fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+
+

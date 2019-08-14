@@ -9,6 +9,6 @@ class BrowseBrandsViewModel(private val browseBrandsRepository: BrowseBrandsRepo
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
 
     fun fetchMembershipPlans() {
-        membershipPlanData = browseBrandsRepository.fetchMembershipPlans()
+        membershipPlanData = browseBrandsRepository.getStoredMembershipPlans()
     }
 }
