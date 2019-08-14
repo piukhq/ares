@@ -17,13 +17,80 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        applicationVariants.all {
-            buildConfigField("String", "BASE_URL", "\"https://api.bink-dev.com\"")
-        }
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+        }
+//        qa {
+//            resValue "string", "app_name", "Bink"
+//            debuggable false
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            android.applicationVariants.all { variant ->
+//                variant.outputs.all {
+//                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+//                }
+//            }
+//        }
+        beta {
+            debuggable true
+            applicationIdSuffix ".beta"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+        }
+        gamma {
+            applicationIdSuffix ".gamma"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+        }
+        external {
+            applicationIdSuffix ".external"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+        }
+        mr {
+            debuggable true
+            applicationIdSuffix ".mr"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+        }
+        nightly {
+            debuggable true
+            applicationIdSuffix ".nightly"
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
         }
     }
 
