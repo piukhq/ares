@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -28,6 +29,8 @@ class LoyaltyWalletAdapter(private val membershipCards : List<MembershipCard>,  
     override fun getItemCount(): Int {
         return membershipCards.size
     }
+
+    fun getItem(position: Int) = membershipCards[position]
 
     inner class MyViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.loyalty_wallet_item, parent, false)) {
