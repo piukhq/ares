@@ -1,7 +1,7 @@
 package com.bink.wallet.scenes.add
 
-import androidx.lifecycle.ViewModel;
+import com.bink.wallet.BaseViewModel
 
-class AddViewModel : ViewModel() {
+class AddViewModel : BaseViewModel() {
     // TODO: Implement the ViewModel
 }

@@ -1,9 +1,9 @@
 package com.bink.wallet.scenes.login
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import com.bink.wallet.BaseViewModel
 
-class LoginViewModel constructor(loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel constructor(loginRepository: LoginRepository) : BaseViewModel() {
     var loginData: LiveData<LoginBody> = loginRepository.doAuthenticationWork(
         LoginResponse(
             LoginBody(

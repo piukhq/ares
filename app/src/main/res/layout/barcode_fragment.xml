@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel" type="com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/screen"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+                android:id="@+id/title"
+                android:text="@{viewModel.membershipPlan.account.plan_name}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/size_sub_headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintStart_toStartOf="@+id/toolbar"
+                android:layout_marginStart="@dimen/title_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/title_margin"
+                android:layout_marginBottom="@dimen/title_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"/>
+
+        <ImageView android:id="@+id/barcode_image"
+                   android:layout_width="0dp"
+                   android:layout_height="@dimen/barcode_height"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   android:layout_marginEnd="@dimen/first_keyline"
+                   app:layout_constraintStart_toStartOf="parent"
+                   android:layout_marginStart="@dimen/first_keyline"
+                   android:adjustViewBounds="true"
+                   tools:src="@android:drawable/ic_menu_always_landscape_portrait"
+                   android:layout_marginTop="@dimen/barcode_margin_top"
+                   bind:barcode="@{viewModel.barcode}"
+                   bind:isVisible="@{viewModel.isBarcodeAvailable}"
+                   app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                   tools:ignore="ContentDescription"/>
+
+        <TextView android:id="@+id/card_number_label" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/barcode_card_number"
+                  android:textColor="@android:color/black"
+                  android:textSize="@dimen/size_headline"
+                  android:textStyle="bold"
+                  app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="@dimen/first_keyline"
+                  android:layout_marginTop="@dimen/label_margin_top"
+                  bind:isVisible="@{viewModel.isBarcodeAvailable}"
+                  app:layout_constraintTop_toBottomOf="@+id/barcode_image"/>
+
+        <TextView android:id="@+id/card_number" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  tools:text="1234 5678 9101"
+                  android:textSize="@dimen/size_sub_headline"
+                  android:text="@{viewModel.barcode}"
+                  android:textColor="@color/blue_accent"
+                  android:textStyle="bold"
+                  app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="@dimen/first_keyline"
+                  android:layout_marginTop="@dimen/number_margin_top"
+                  bind:isVisible="@{viewModel.isBarcodeAvailable}"
+                  app:layout_constraintTop_toBottomOf="@+id/card_number_label"/>
+
+        <TextView android:id="@+id/barcode_description" android:text="@string/barcode_description"
+                  android:layout_width="0dp" android:layout_height="wrap_content"
+                  app:layout_constraintStart_toStartOf="parent"
+                  android:textSize="@dimen/size_sub_headline"
+                  android:layout_marginStart="@dimen/first_keyline" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="@dimen/first_keyline"
+                  android:layout_marginTop="@dimen/description_margin_top"
+                  bind:isVisible="@{viewModel.isBarcodeAvailable}"
+                  app:layout_constraintTop_toBottomOf="@+id/card_number"/>
+
+        <TextView android:id="@+id/barcode_added_date" android:text="@string/barcode_mock_date"
+                  android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  app:layout_constraintStart_toStartOf="parent"
+                  android:textSize="@dimen/size_body"
+                  bind:isVisible="@{viewModel.isBarcodeAvailable}"
+                  android:layout_marginStart="@dimen/first_keyline" android:layout_marginTop="@dimen/date_margin_top"
+                  app:layout_constraintTop_toBottomOf="@+id/barcode_description"/>
+
+        <Button
+                style="@style/RoundedGradientButton"
+                android:id="@+id/button_maximize"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/barcode_maximize"
+                android:layout_marginBottom="@dimen/button_margin_bottom"
+                android:layout_marginEnd="@dimen/button_margin_end"
+                bind:isVisible="@{viewModel.isBarcodeAvailable}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/button_margin_start"
+                android:layout_width="0dp"/>
+
+        <TextView
+                android:id="@+id/barcode_unavailable_description"
+                android:layout_width="0dp"
+                android:text="@string/barcode_unavailable"
+                android:layout_height="wrap_content"
+                bind:isVisible="@{!viewModel.isBarcodeAvailable}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/first_keyline"
+                android:layout_marginEnd="@dimen/first_keyline"
+                android:layout_marginBottom="@dimen/title_margin"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="@dimen/title_margin"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
