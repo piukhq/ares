@@ -6,10 +6,16 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
 }
 
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.bink.wallet"
+        applicationId "com.bink.wallet.neo"
         minSdkVersion(21)
         targetSdkVersion(29)
         versionCode(1)
@@ -172,4 +178,7 @@ dependencies {
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation group: 'android.arch.core', name: 'core-testing', version: '1.1.1'
     testImplementation 'org.koin:koin-test:2.0.1'
-}
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+        transitive = true;
+    }}
