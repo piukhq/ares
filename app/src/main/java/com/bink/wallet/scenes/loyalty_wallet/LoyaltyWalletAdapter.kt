@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -10,10 +11,11 @@ import com.bink.wallet.R
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 
 
-class LoyaltyWalletAdapter(private val membershipCards : List<MembershipCard>)  : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
+class LoyaltyWalletAdapter(private val membershipCards : List<MembershipCard>,  val itemDeleteListener: (MembershipCard) -> Unit = {})  : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+
         return MyViewHolder(
             inflater,
             parent
@@ -21,12 +23,14 @@ class LoyaltyWalletAdapter(private val membershipCards : List<MembershipCard>)  
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind("Card $position")
+        holder.bind(membershipCards[position])
     }
 
     override fun getItemCount(): Int {
         return membershipCards.size
     }
+
+    fun getItem(position: Int) = membershipCards[position]
 
     inner class MyViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.loyalty_wallet_item, parent, false)) {
@@ -44,8 +48,9 @@ class LoyaltyWalletAdapter(private val membershipCards : List<MembershipCard>)  
             text = itemView.findViewById(R.id.item_name)
         }
 
-        fun bind(txt: String) {
-            text?.text = txt
+        fun bind(item: MembershipCard) {
+            text?.text = item.id
+            deleteLayout?.setOnClickListener { itemDeleteListener(item) }
         }
 
     }

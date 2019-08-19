@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.loyalty_wallet.model
 
+import android.os.Parcelable
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class CardBalance(
     var value: String?,
@@ -9,4 +12,4 @@ data class CardBalance(
     var prefix: String?,
     var suffix: String?,
     var updated_at: Int?
-)
+):Parcelable
