@@ -40,22 +40,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             RecyclerItemTouchHelperListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-                if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
-                    if (direction == ItemTouchHelper.RIGHT) {
-                        val card = viewModel.membershipCardData.value?.get(position)
-                        if(viewModel.membershipPlanData.value != null) {
-                            for (plan in viewModel.membershipPlanData.value!!) {
-                                if (plan.id.toString() == card?.membership_plan) {
-                                    val directions =
-                                        LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode)
-                                    findNavController().navigate(directions)
-                                }
+                val card = viewModel.membershipCardData.value?.get(position)
+                val membershipPlanId = card?.membership_plan
+                if (direction == ItemTouchHelper.RIGHT) {
+                    for (plan in viewModel.membershipPlanData.value!!) {
+                        if (plan.id.toString() == membershipPlanId) {
+                            if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
+                                val directions =
+                                    LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode)
+                                findNavController().navigate(directions)
                             }
                         }
+                    }
                     } else {
                         viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
                     }
-                }
             }
         }
 
@@ -70,8 +69,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.fetchMembershipCards()
         viewModel.fetchMembershipPlans()
-        viewModel.fetchLocalMembershipPlans()
-
 
         viewModel.membershipCardData.observe(this, Observer {
             binding.loyaltyWalletList.apply {
@@ -88,7 +85,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
-                R.id.add_menu_item -> findNavController().navigate(R.id.home_to_add)
+                R.id.add_menu_item -> {
+                    val directions = viewModel.membershipPlanData.value?.toTypedArray()?.let {
+                        LoyaltyWalletFragmentDirections.homeToAdd(
+                            it
+                        )
+                    }
+                    directions?.let { findNavController().navigate(it) }
+                }
                 R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
             }
             true

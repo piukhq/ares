@@ -20,14 +20,14 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.fetchMembershipPlans()
-
-        viewModel.membershipPlanData.observe(this, Observer {
+        arguments?.let {
+            val plans = BrowseBrandsFragmentArgs.fromBundle(it).membershipPlans
             browse_brands_container.apply {
                 layoutManager = GridLayoutManager(activity, 1)
-                adapter = BrowseBrandsAdapter(it, itemClickListener = { toAddJoinScreen(it) })
+                adapter = BrowseBrandsAdapter(plans.toList(), itemClickListener = { toAddJoinScreen(it) })
             }
-        })
+        }
+
     }
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {

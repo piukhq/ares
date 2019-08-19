@@ -23,7 +23,13 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         cancel_button.setOnClickListener { findNavController().navigate(R.id.add_to_loyalty) }
-        browse_brands_container.setOnClickListener { findNavController().navigate(R.id.add_to_browse) }
+        browse_brands_container.setOnClickListener {
+            arguments?.let {
+                val plans = AddFragmentArgs.fromBundle(it).membershipPlans
+                val directions = AddFragmentDirections.addToBrowse(plans)
+                findNavController().navigate(directions)
+            }
+        }
     }
 
 }

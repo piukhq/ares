@@ -1,11 +1,10 @@
 package com.bink.wallet.di
 
-import com.bink.wallet.data.BinkDatabase
+import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
-import com.bink.wallet.scenes.browse_brands.BrowseBrandsRepository
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
@@ -20,11 +19,10 @@ val viewModelModules = module {
     single { provideLoginRepository(get()) }
     viewModel { LoginViewModel(get()) }
 
-    single { provideLoyaltyCardRepository(get()) }
-    viewModel { LoyaltyViewModel(get(), get()) }
+    single { provideLoyaltyCardRepository(get(), get(), get()) }
+    viewModel { LoyaltyViewModel(get()) }
 
-    single { provideBrowseBrandsRepository(get(), get()) }
-    viewModel { BrowseBrandsViewModel(get()) }
+    viewModel { BrowseBrandsViewModel() }
 
     viewModel { BarcodeViewModel() }
 
@@ -35,7 +33,5 @@ val viewModelModules = module {
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository = LoginRepository(restApiService)
 
-fun provideLoyaltyCardRepository(restApiService: ApiService): LoyaltyWalletRepository =
-    LoyaltyWalletRepository(restApiService)
-
-fun provideBrowseBrandsRepository(restApiService: ApiService, planDao: MembershipPlanDao): BrowseBrandsRepository = BrowseBrandsRepository(restApiService, planDao)
+fun provideLoyaltyCardRepository(restApiService: ApiService, membershipPlanDao: MembershipPlanDao, membershipCardDao: MembershipCardDao): LoyaltyWalletRepository =
+    LoyaltyWalletRepository(restApiService,membershipCardDao, membershipPlanDao )

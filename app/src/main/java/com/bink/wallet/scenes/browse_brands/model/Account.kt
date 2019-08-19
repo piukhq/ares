@@ -7,7 +7,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Account (
-
 	val plan_name : String?,
 	val plan_name_card : String?,
 	val plan_url : String?,

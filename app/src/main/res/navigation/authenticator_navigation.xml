@@ -45,17 +45,19 @@
                 android:id="@+id/add_to_browse"
                 app:destination="@id/browse_brands"
                 app:popUpToInclusive="false"/>
+        <argument
+                android:name="membershipPlans"
+                app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan[]"/>
     </fragment>
 
     <fragment android:id="@+id/browse_brands"
               android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment">
-
-
         <action android:id="@+id/browse_to_add_join"
                 app:destination="@id/add_join"
-                app:popUpToInclusive="false">
-
-        </action>
+                app:popUpToInclusive="false"/>
+        <argument
+                android:name="membershipPlans"
+                app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan[]"/>
     </fragment>
 
     <fragment android:id="@+id/add_join"
