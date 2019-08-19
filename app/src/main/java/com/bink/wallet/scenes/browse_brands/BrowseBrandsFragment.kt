@@ -28,6 +28,11 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 adapter = BrowseBrandsAdapter(it, itemClickListener = { toAddJoinScreen(it) })
             }
         })
+
+        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+        binding.toolbar.setNavigationOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {

@@ -35,4 +35,8 @@
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
+
+    <!--Browse Brands -->
+    <string name="browse_brands">Browse Brands</string>
+    <string name="filter">Filters</string>
 </resources>
