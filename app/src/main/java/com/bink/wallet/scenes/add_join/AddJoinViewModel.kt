@@ -1,7 +1,7 @@
 package com.bink.wallet.scenes.add_join
 
-import androidx.lifecycle.ViewModel;
+import com.bink.wallet.BaseViewModel
 
-class AddJoinViewModel : ViewModel() {
+class AddJoinViewModel : BaseViewModel() {
     // TODO: Implement the ViewModel
 }
