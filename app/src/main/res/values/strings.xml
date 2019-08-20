@@ -23,6 +23,7 @@
     <!--Browse Brands -->
     <string name="browse_brands">Browse Brands</string>
     <string name="filter">Filters</string>
+    <string name="search">Search</string>
 
     <!-- Add Join -->
     <string name="add_join_screen_reward_info">Rewards info ></string>
