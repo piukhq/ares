@@ -47,8 +47,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             for (plan in viewModel.membershipPlanData.value!!) {
                                 if (plan.id.toString() == card?.membership_plan) {
                                     val directions =
-                                        LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode)
-                                    findNavController().navigate(directions)
+                                        card.card?.barcode_type?.let {
+                                            LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode,
+                                                it
+                                            )
+                                        }
+                                    directions?.let { findNavController().navigate(it) }
                                 }
                             }
                         }

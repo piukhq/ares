@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
+import com.bink.wallet.utils.BarcodeWrapper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
@@ -21,7 +22,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         arguments?.let {
            BarcodeFragmentArgs.fromBundle(it).apply {
                viewModel.membershipPlan.value = currentMembershipPlan
-               viewModel.barcode.value = barcode
+               viewModel.barcode.value = BarcodeWrapper(barcode, barcodeType)
                viewModel.isBarcodeAvailable.value = !barcode.isNullOrEmpty()
            }
         }
