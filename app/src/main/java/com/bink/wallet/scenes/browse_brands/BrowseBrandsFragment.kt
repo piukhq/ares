@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.utils.navigateIfAdded
 import kotlinx.android.synthetic.main.browse_brands_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,6 +38,6 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {
         val action = BrowseBrandsFragmentDirections.browseToAddJoin(membershipPlan)
-        findNavController().navigate(action)
+        findNavController().navigateIfAdded(this, action)
     }
 }

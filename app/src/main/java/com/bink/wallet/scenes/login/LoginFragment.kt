@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
+import com.bink.wallet.utils.navigateIfAdded
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
@@ -19,7 +20,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.loginData.observe(this, Observer {
-            findNavController().navigate(R.id.login_to_loyalty)
+            findNavController().navigateIfAdded(this, R.id.login_to_loyalty)
         })
     }
 }

@@ -6,6 +6,7 @@ import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
+import com.bink.wallet.utils.navigateIfAdded
 import kotlinx.android.synthetic.main.add_join_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,7 +38,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.close.setOnClickListener {
-            findNavController().navigate(R.id.add_join_to_home)
+            findNavController().navigateIfAdded(this, R.id.add_join_to_home)
         }
     }
 

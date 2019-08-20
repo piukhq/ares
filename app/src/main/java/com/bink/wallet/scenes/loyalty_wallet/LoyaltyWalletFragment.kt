@@ -14,6 +14,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.utils.navigateIfAdded
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -52,7 +53,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                                 it
                                             )
                                         }
-                                    directions?.let { findNavController().navigate(it) }
+                                    directions?.let { findNavController().navigateIfAdded(this@LoyaltyWalletFragment, it) }
                                 }
                             }
                         }
@@ -91,7 +92,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
-                R.id.add_menu_item -> findNavController().navigate(R.id.home_to_add)
+                R.id.add_menu_item -> findNavController().navigateIfAdded(this, R.id.home_to_add)
                 R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
             }
             true
