@@ -20,11 +20,7 @@
         <TextView
                 android:id="@+id/title"
                 android:text="@{viewModel.membershipPlan.account.plan_name}"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/size_sub_headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
+                style="@style/TitleTextView"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="@+id/toolbar"
                 android:layout_marginStart="@dimen/title_margin"

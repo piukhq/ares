@@ -2,7 +2,7 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.util.Base64
-import com.bink.wallet.BuildConfig
+import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -79,7 +79,7 @@ fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
 
 fun provideRetrofit(client: OkHttpClient): Retrofit {
     return Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(client)
         .addCallAdapterFactory(CoroutineCallAdapterFactory())

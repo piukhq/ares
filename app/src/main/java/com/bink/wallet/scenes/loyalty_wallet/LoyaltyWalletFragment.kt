@@ -106,11 +106,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
-                    DialogInterface.BUTTON_POSITIVE -> viewModel.deleteCard(membershipCard.id)
-                    DialogInterface.BUTTON_NEUTRAL -> Log.d(
-                        LoyaltyWalletFragment::class.java.simpleName,
-                        getString(R.string.loayalty_wallet_dialog_description)
-                    )
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        viewModel.deleteCard(membershipCard.id)
+                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+                    }
+                    DialogInterface.BUTTON_NEUTRAL -> {
+                        Log.d(
+                            LoyaltyWalletFragment::class.java.simpleName,
+                            getString(R.string.loayalty_wallet_dialog_description)
+                        )
+                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+                    }
+
                 }
             }
             builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)

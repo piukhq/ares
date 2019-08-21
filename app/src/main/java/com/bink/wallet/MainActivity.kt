@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.utils.LocalStoreUtils
 import java.io.UnsupportedEncodingException
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
         storeSecret()
     }
