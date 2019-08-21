@@ -3,6 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:id="@+id/main_layout"
+        android:background="@android:color/white"
         android:layout_height="110dp">
 
     <ImageView
@@ -20,18 +22,18 @@
 
         <com.bink.wallet.CardView
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="0dp"
+                android:id="@+id/card_view"
                 android:layout_width="match_parent"/>
 
         <TextView
                 android:id="@+id/company_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:textStyle="bold"
+                android:textColor="@android:color/white"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="30dp"
-                android:text="Harvey Nichols"/>
+                android:layout_marginStart="30dp"/>
 
         <LinearLayout
                 android:layout_width="wrap_content"
@@ -40,30 +42,29 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="16.2dp"
                 android:layout_marginEnd="18dp"
+                android:id="@+id/value_wrapper"
                 android:visibility="gone">
 
-                <TextView
-                        android:id="@+id/loyalty_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16.2sp"
-                        android:textColor="@android:color/white"
-                        android:letterSpacing="0.01"
-                        android:lineSpacingExtra="-3.6sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="end"
-                        android:text="415"/>
+            <TextView
+                    android:id="@+id/loyalty_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16.2sp"
+                    android:letterSpacing="0.01"
+                    android:lineSpacingExtra="-3.6sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:layout_gravity="end"/>
 
-                <TextView
-                        android:id="@+id/loyalty_value_extra"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13.5sp"
-                        android:textColor="@android:color/white"
-                        android:letterSpacing="0.01"
-                        android:lineSpacingExtra="-0.9sp"
-                        android:layout_gravity="end"
-                        android:text="Points"/>
+            <TextView
+                    android:id="@+id/loyalty_value_extra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13.5sp"
+                    android:textColor="@android:color/white"
+                    android:letterSpacing="0.01"
+                    android:lineSpacingExtra="-0.9sp"
+                    android:layout_gravity="end"/>
 
         </LinearLayout>
 
@@ -83,24 +84,25 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="16.2dp"
-                android:layout_marginEnd="18dp">
+                android:id="@+id/link_status_wrapper"
+                android:layout_marginEnd="18dp"
+                android:visibility="gone">
 
-                <TextView
-                        android:id="@+id/link_status_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="13.5sp"
-                        android:textColor="@android:color/white"
-                        android:lineSpacingExtra="1.8sp"
-                        android:gravity="end"
-                        android:text="Linked"/>
+            <TextView
+                    android:id="@+id/link_status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13.5sp"
+                    android:lineSpacingExtra="1.8sp"
+                    android:gravity="end"
+                    android:text="Linked"/>
 
-                <ImageView
-                        android:id="@+id/link_status_img"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_linked"
-                        android:layout_marginStart="5dp"/>
+            <ImageView
+                    android:id="@+id/link_status_img"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_linked"
+                    android:layout_marginStart="5dp"/>
 
         </LinearLayout>
 

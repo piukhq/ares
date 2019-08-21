@@ -12,14 +12,12 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 
 @BindingAdapter("bind:imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
-    Glide.with(context)
-        .load(item.images?.filter { it.type == 3 }?.get(0)?.url)
-        .into(this)
+    Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
 }
 
 @BindingAdapter("bind:isVisible")
-fun View.setVisible(isVisible: Boolean){
-    visibility = if(isVisible){
+fun View.setVisible(isVisible: Boolean) {
+    visibility = if (isVisible) {
         View.VISIBLE
     } else {
         View.GONE
@@ -27,12 +25,13 @@ fun View.setVisible(isVisible: Boolean){
 }
 
 @BindingAdapter("bind:barcode")
-fun ImageView.loadBarcode(barcode: String?){
-    if(!barcode.isNullOrEmpty()) {
+fun ImageView.loadBarcode(barcode: String?) {
+    if (!barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
-        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode, BarcodeFormat.CODE_128, widthPx.toInt(), heightPx.toInt())
+        val bitMatrix: BitMatrix =
+            multiFormatWriter.encode(barcode, BarcodeFormat.CODE_128, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)

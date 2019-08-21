@@ -33,5 +33,9 @@ val viewModelModules = module {
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository = LoginRepository(restApiService)
 
-fun provideLoyaltyCardRepository(restApiService: ApiService, membershipPlanDao: MembershipPlanDao, membershipCardDao: MembershipCardDao): LoyaltyWalletRepository =
-    LoyaltyWalletRepository(restApiService,membershipCardDao, membershipPlanDao )
+fun provideLoyaltyCardRepository(
+    restApiService: ApiService,
+    membershipPlanDao: MembershipPlanDao,
+    membershipCardDao: MembershipCardDao
+): LoyaltyWalletRepository =
+    LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao)

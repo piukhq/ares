@@ -26,7 +26,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 layoutManager = GridLayoutManager(activity, 1)
                 adapter = BrowseBrandsAdapter(plans.toList(), itemClickListener = { toAddJoinScreen(it) })
             }
-        })
+        }
 
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         binding.toolbar.setNavigationOnClickListener {

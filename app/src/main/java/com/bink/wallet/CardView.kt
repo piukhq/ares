@@ -11,8 +11,8 @@ import com.bink.wallet.utils.CardViewStyleKit
  * TODO: document your custom view class.
  */
 class CardView : View {
-    private var firstColor: Int = 11
-    private var secondColor: Int = 164
+    private var firstColor: Int = 0
+    private var secondColor: Int = 0
 
     constructor(context: Context) : super(context) {
         init(null, 0)

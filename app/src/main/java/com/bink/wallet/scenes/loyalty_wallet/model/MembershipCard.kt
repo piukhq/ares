@@ -13,8 +13,8 @@ import kotlinx.android.parcel.Parcelize
 data class MembershipCard(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
-    @ColumnInfo(name = "card_status") var cardStatus: CardStatus?,
+    @ColumnInfo(name = "card_status") var status: CardStatus?,
     @ColumnInfo(name = "card") var card: Card?,
     @ColumnInfo(name = "card_images") var images: MutableList<CardImages>?,
-    @ColumnInfo(name = "card_balances") var cardBalances: MutableList<CardBalance>?
+    @ColumnInfo(name = "card_balances") var balances: MutableList<CardBalance>?
 ) : Parcelable

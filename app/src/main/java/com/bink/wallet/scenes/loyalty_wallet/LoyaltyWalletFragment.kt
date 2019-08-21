@@ -52,9 +52,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             }
                         }
                     }
-                    } else {
-                        viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
-                    }
+                } else {
+                    viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
+                }
             }
         }
 
@@ -67,21 +67,25 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             it.actionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        viewModel.fetchMembershipCards()
         viewModel.fetchMembershipPlans()
+        viewModel.fetchMembershipCards()
 
-        viewModel.membershipCardData.observe(this, Observer {
-            binding.loyaltyWalletList.apply {
-                layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-                adapter = LoyaltyWalletAdapter(it, itemDeleteListener = { })
+        viewModel.membershipPlanData.observe(this, Observer { plans ->
+            viewModel.membershipCardData.observe(this, Observer { cards ->
+                binding.loyaltyWalletList.apply {
+                    layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+                    adapter = LoyaltyWalletAdapter(plans, cards, itemDeleteListener = { })
 
-                val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+                    val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
 
-                ItemTouchHelper(helperListener).attachToRecyclerView(this)
-                ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(this)
-            }
+                    ItemTouchHelper(helperListener).attachToRecyclerView(this)
+                    ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(
+                        this
+                    )
+                }
+            })
         })
-
+        
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
