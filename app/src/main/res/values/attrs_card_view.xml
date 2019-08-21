@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="CardView">
+        <attr name="firstColor" format="integer"/>
+        <attr name="secondColor" format="integer"/>
+    </declare-styleable>
+</resources>
