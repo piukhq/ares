@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">binkapp</string>
+    <string name="ok">OK</string>
 
     <string name="add_button_description">Add button</string>
 
@@ -54,5 +55,9 @@
     <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
     <string name="scan_a_card_you_already_have">Scan a card you already have</string>
     <string name="add_loyalty_card">Add loyalty card</string>
+
+    <!-- Brand Header -->
+    <string name="loyalty_info"> %1$s info &gt;</string>
+    <string name="plan_description">Plan Description</string>
 
 </resources>
