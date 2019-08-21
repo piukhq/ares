@@ -30,6 +30,7 @@
     <!-- Brand Header -->
     <dimen name="brand_image_height">98dp</dimen>
 
-    <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
+    <dimen name="bottom_navigation_icon_size" tools:override="true">30dp</dimen>
+    <dimen name="add_button_size">42dp</dimen>
 
 </resources>
