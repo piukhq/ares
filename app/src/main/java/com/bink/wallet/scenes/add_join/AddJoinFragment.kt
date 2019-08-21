@@ -25,11 +25,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         val currentMembershipPlan = args.currentMembershipPlan
         binding.item = currentMembershipPlan
 
-        when (currentMembershipPlan.account?.plan_name_card.isNullOrEmpty()) {
-            false -> add_join_reward.text =
-                currentMembershipPlan.account?.plan_name_card.plus(" " + getString(R.string.plan_name_card_extra))
-            true -> add_join_reward.visibility = View.GONE
-        }
         if (args.currentMembershipPlan.feature_set?.linking_support?.filter { it == "REGISTRATION" }?.size!! == 0) {
             add_join_view_image.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_view_inactive))
             add_join_view_description.text = getString(R.string.add_join_inactive_view_description)
