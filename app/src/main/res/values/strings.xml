@@ -48,5 +48,11 @@
     <string name="add_join_store_title">Store</string>
     <string name="add_join_add_card">Add my card</string>
     <string name="add_join_get_new_card">Get a new card</string>
+    <string name="add_payment_card">Add payment card</string>
+    <string name="scan_and_link_your_payment_card">Scan and link your payment card</string>
+    <string name="browse_brands_text">Browse brands</string>
+    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
+    <string name="scan_a_card_you_already_have">Scan a card you already have</string>
+    <string name="add_loyalty_card">Add loyalty card</string>
 
 </resources>
