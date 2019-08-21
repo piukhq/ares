@@ -13,7 +13,4 @@ class ModalBrandHeader @JvmOverloads constructor(context: Context, attrs: Attrib
     var binding: ModalBrandHeaderBinding =
         DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.modal_brand_header, this, true)
 
-    init {
-        
-    }
 }

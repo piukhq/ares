@@ -42,31 +42,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:context=".scenes.add_join.AddJoinFragment">
-
-                <ImageView android:layout_width="0dp"
-                           android:layout_height="@dimen/logo_height"
-                           android:id="@+id/add_join_logo"
-                           app:layout_constraintEnd_toEndOf="parent"
-                           app:layout_constraintStart_toStartOf="parent"
-                           android:layout_marginStart="@dimen/size_half_keyline"
-                           app:imageUrl="@{item}"
-                           app:layout_constraintTop_toTopOf="parent"
-                           android:layout_marginEnd="@dimen/size_half_keyline"
-                           tools:ignore="ContentDescription"/>
-
-                <TextView android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/add_join_reward"
-                          app:layout_constraintEnd_toEndOf="parent"
-                          android:textAlignment="center"
-                          android:text="@string/add_join_screen_reward_info"
-                          android:textSize="@dimen/size_body"
-                          android:textColor="@color/blue_accent"
-                          android:layout_marginEnd="@dimen/first_keyline"
-                          app:layout_constraintTop_toBottomOf="@+id/add_join_logo"
-                          android:layout_marginTop="8dp"
-                          app:layout_constraintStart_toStartOf="parent"
-                          android:layout_marginStart="16dp"/>
+                <com.bink.wallet.ModalBrandHeader
+                        android:layout_width="wrap_content"
+                        android:id="@+id/add_join_reward"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:membershipPlan="@{item}"
+                        android:layout_marginEnd="@dimen/size_half_keyline"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginStart="@dimen/size_half_keyline"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"

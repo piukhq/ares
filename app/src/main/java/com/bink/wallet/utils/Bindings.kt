@@ -3,6 +3,8 @@ package com.bink.wallet.utils
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.bink.wallet.ModalBrandHeader
+import com.bink.wallet.R
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
@@ -52,3 +54,22 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
         setImageBitmap(bitmap)
     }
 }
+
+@BindingAdapter("bind:membershipPlan")
+fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
+    binding.brandImage.loadImage(plan)
+    binding.brandImage.setOnClickListener {
+        context.displayModalPopup(
+            plan, resources.getString(R.string.plan_description),
+            plan.account?.plan_description.toString()
+        )
+    }
+    binding.loyaltyScheme.setOnClickListener {
+        context.displayModalPopup(
+            plan, resources.getString(R.string.plan_description),
+            plan.account?.plan_description.toString()
+        )
+    }
+    binding.loyaltyScheme.text = resources.getString(R.string.loyalty_info, plan.account?.plan_name)
+}
+
