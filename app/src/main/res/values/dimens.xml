@@ -27,6 +27,9 @@
     <dimen name="title_image_size">32dp</dimen>
     <dimen name="button_margin">48dp</dimen>
 
+    <!-- Brand Header -->
+    <dimen name="brand_image_height">98dp</dimen>
+
     <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
 
 </resources>
