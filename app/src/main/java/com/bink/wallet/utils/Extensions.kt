@@ -29,7 +29,7 @@ fun NavController.navigateIfAdded(fragment: Fragment, navDirections: NavDirectio
     }
 }
 
-fun Context.displayModalPopup(membershipPlan: MembershipPlan, title: String, message: String) {
+fun Context.displayModalPopup(title: String, message: String) {
     val builder = AlertDialog.Builder(this)
     builder.setTitle(title)
     builder.setMessage(message)

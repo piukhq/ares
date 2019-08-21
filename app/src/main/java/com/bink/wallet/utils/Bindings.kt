@@ -59,14 +59,12 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
     binding.brandImage.setOnClickListener {
-        context.displayModalPopup(
-            plan, resources.getString(R.string.plan_description),
+        context.displayModalPopup(resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
     binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(
-            plan, resources.getString(R.string.plan_description),
+        context.displayModalPopup(resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
