@@ -5,6 +5,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
+import com.bink.wallet.utils.navigateIfAdded
 import kotlinx.android.synthetic.main.add_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,13 +22,12 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        cancel_button.setOnClickListener { findNavController().navigate(R.id.add_to_loyalty) }
+        cancel_button.setOnClickListener { findNavController().navigateIfAdded(this, R.id.add_to_loyalty) }
         browse_brands_container.setOnClickListener {
             arguments?.let {
                 val plans = AddFragmentArgs.fromBundle(it).membershipPlans
                 val directions = AddFragmentDirections.addToBrowse(plans)
-                findNavController().navigate(directions)
+                findNavController().navigateIfAdded(this, directions)
             }
         }
     }

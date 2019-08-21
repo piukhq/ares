@@ -14,6 +14,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.utils.navigateIfAdded
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -40,20 +41,25 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             RecyclerItemTouchHelperListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-                val card = viewModel.membershipCardData.value?.get(position)
-                val membershipPlanId = card?.membership_plan
-                if (direction == ItemTouchHelper.RIGHT) {
-                    for (plan in viewModel.membershipPlanData.value!!) {
-                        if (plan.id.toString() == membershipPlanId) {
-                            if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
-                                val directions =
-                                    LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode)
-                                findNavController().navigate(directions)
+                if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
+                    if (direction == ItemTouchHelper.RIGHT) {
+                        val card = viewModel.membershipCardData.value?.get(position)
+                        if (viewModel.membershipPlanData.value != null) {
+                            for (plan in viewModel.membershipPlanData.value!!) {
+                                if (plan.id.toString() == card?.membership_plan) {
+                                    val directions =
+                                        card.card?.barcode_type?.let {
+                                            LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode,
+                                                it
+                                            )
+                                        }
+                                    directions?.let { findNavController().navigateIfAdded(this@LoyaltyWalletFragment, it) }
+                                }
                             }
                         }
+                    } else {
+                        viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
                     }
-                } else {
-                    viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
                 }
             }
         }
@@ -85,7 +91,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             })
         })
-        
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
@@ -95,7 +101,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             it
                         )
                     }
-                    directions?.let { findNavController().navigate(it) }
+                    directions?.let { findNavController().navigateIfAdded(this, it) }
                 }
                 R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
             }

@@ -3,6 +3,8 @@
     
     <!-- General dimensions -->
     <dimen name="first_keyline">16dp</dimen>
+    <dimen name="size_half_keyline">8dp</dimen>
+    <dimen name="quarter_keyline">4dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -18,6 +20,12 @@
 
     <!-- Browse Brands Screen -->
     <dimen name="list_margin">64dp</dimen>
+    <dimen name="search_bar_height">42dp</dimen>
+    
+    <!-- Add Join Screen -->
+    <dimen name="logo_height">98dp</dimen>
+    <dimen name="title_image_size">32dp</dimen>
+    <dimen name="button_margin">48dp</dimen>
 
     <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
 

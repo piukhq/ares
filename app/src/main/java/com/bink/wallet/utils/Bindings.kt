@@ -24,14 +24,27 @@ fun View.setVisible(isVisible: Boolean) {
     }
 }
 
+data class BarcodeWrapper(val barcode: String?, val barcodeType: Int)
+
 @BindingAdapter("bind:barcode")
-fun ImageView.loadBarcode(barcode: String?) {
-    if (!barcode.isNullOrEmpty()) {
+fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
+    if (!barcode.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
-        val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(barcode, BarcodeFormat.CODE_128, widthPx.toInt(), heightPx.toInt())
+        var format: BarcodeFormat? = null
+        when (barcode.barcodeType) {
+            0 -> format = BarcodeFormat.CODE_128
+            1 -> format = BarcodeFormat.QR_CODE
+            2 -> format = BarcodeFormat.AZTEC
+            3 -> format = BarcodeFormat.PDF_417
+            4 -> format = BarcodeFormat.EAN_13
+            5 -> format = BarcodeFormat.DATA_MATRIX
+            6 -> format = BarcodeFormat.ITF
+            7 -> format = BarcodeFormat.CODE_39
+        }
+
+        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)

@@ -65,6 +65,8 @@
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan"/>
+        <action android:id="@+id/add_join_to_home"
+                app:destination="@id/loyalty_fragment"/>
 
     </fragment>
 
@@ -77,8 +79,11 @@
             android:name="barcode"
             android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-        />
+            app:nullable="true"/>
+
+        <argument
+            android:name="barcodeType"
+            app:argType="integer"/>
 
     </fragment>
 
