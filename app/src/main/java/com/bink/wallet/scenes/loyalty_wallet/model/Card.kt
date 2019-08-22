@@ -8,7 +8,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-@Entity(tableName = "card")
 data class Card(
     @ColumnInfo(name = "barcode") var barcode: String?,
     @ColumnInfo(name = "barcode_type") var barcode_type: Int?,

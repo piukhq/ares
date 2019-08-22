@@ -12,6 +12,8 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    var localPlansReceived = MutableLiveData<Boolean>()
+    var localCardsReceived = MutableLiveData<Boolean>()
 
     fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)

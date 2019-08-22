@@ -10,58 +10,58 @@ import com.google.gson.reflect.TypeToken
 
 class MembershipCardConverters {
     @TypeConverter
-    fun fromCardBalanceList(value: List<CardBalance>): String {
+    fun fromCardBalanceList(value: List<CardBalance?>?): String? {
         val gson = Gson()
-        val type = object : TypeToken<List<CardBalance>>() {}.type
+        val type = object : TypeToken<List<CardBalance?>?>() {}.type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
-    fun toCardBalanceList(value: String): List<CardBalance> {
+    fun toCardBalanceList(value: String): List<CardBalance?>? {
         val gson = Gson()
         val type = object : TypeToken<List<CardBalance>>() {}.type
         return gson.fromJson(value, type)
     }
 
     @TypeConverter
-    fun fromCardImageList(value: List<CardImages>): String {
+    fun fromCardImageList(value: List<CardImages?>?): String? {
         val gson = Gson()
         val type = object : TypeToken<List<CardImages>>() {}.type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
-    fun toCardImageList(value: String): List<CardImages> {
+    fun toCardImageList(value: String): List<CardImages?>? {
         val gson = Gson()
-        val type = object : TypeToken<List<CardImages>>() {}.type
+        val type = object : TypeToken<List<CardImages?>?>() {}.type
         return gson.fromJson(value, type)
     }
 
     @TypeConverter
-    fun fromCard(value: Card): String {
+    fun fromCard(value: Card?): String? {
         val gson = Gson()
-        val type = object : TypeToken<Card>() {}.type
+        val type = object : TypeToken<Card?>() {}.type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
-    fun toCard(value: String): Card {
+    fun toCard(value: String?): Card? {
         val gson = Gson()
-        val type = object : TypeToken<Card>() {}.type
+        val type = object : TypeToken<Card?>() {}.type
         return gson.fromJson(value, type)
     }
 
     @TypeConverter
-    fun fromCardStatus(value: CardStatus): String {
+    fun fromCardStatus(value: CardStatus?): String? {
         val gson = Gson()
-        val type = object : TypeToken<CardStatus>() {}.type
+        val type = object : TypeToken<CardStatus?>() {}.type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
-    fun toCardStatus(value: String): CardStatus {
+    fun toCardStatus(value: String?): CardStatus? {
         val gson = Gson()
-        val type = object : TypeToken<CardStatus>() {}.type
+        val type = object : TypeToken<CardStatus?>() {}.type
         return gson.fromJson(value, type)
     }
 }

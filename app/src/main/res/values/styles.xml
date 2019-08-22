@@ -26,4 +26,10 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="ProgressSpinner" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:tint">@color/blue_accent</item>
+    </style>
 </resources>
