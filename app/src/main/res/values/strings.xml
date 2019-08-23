@@ -46,4 +46,11 @@
     <string name="add_join_add_card">Add my card</string>
     <string name="add_join_get_new_card">Get a new card</string>
 
+    <!-- PLL empty -->
+    <string name="link_payment_cards">Link to payment cards</string>
+    <string name="link_payment_card_text">You have not added any payment cards yet.
+        Add them to link to this card and others. </string>
+    <string name="done_button">Done</string>
+    <string name="add_payment_cards">Add payment cards</string>
+
 </resources>
