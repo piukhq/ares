@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 class LoyaltyWalletAdapter(
     private val membershipPlans: List<MembershipPlan>,
     private val membershipCards: List<MembershipCard>,
+    val onClickListener: (MembershipCard) -> Unit = {},
     val itemDeleteListener: (MembershipCard) -> Unit = {}
 ) : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
 
@@ -81,6 +82,7 @@ class LoyaltyWalletAdapter(
                 Glide.with(text?.context!!).load(currentMembershipPlan.images?.first { it.type == 3 }?.url)
                     .into(itemView.findViewById(R.id.company_logo))
                 deleteLayout?.setOnClickListener { itemDeleteListener(item) }
+                mainLayout?.setOnClickListener { onClickListener(item) }
 
                 when (item.status?.state) {
                     CardStatus.AUTHORISED.status -> {

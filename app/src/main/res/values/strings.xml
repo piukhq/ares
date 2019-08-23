@@ -60,4 +60,18 @@
     <string name="loyalty_info"> %1$s info &gt;</string>
     <string name="plan_description">Plan Description</string>
 
+    <!-- Loyalty Card Details -->
+    <string name="view_history">View History</string>
+    <string name="balance_placeholder">$3.50</string>
+    <string name="status_placeholder">Linked</string>
+    <string name="status_number_placeholder">To 2 of 6 cards</string>
+    <string name="about_membership">About membership</string>
+    <string name="learn_more">Learn more about how it works</string>
+    <string name="chevron">&gt;</string>
+    <string name="security_privacy">Security and privacy</string>
+    <string name="how_we_protect">How we protect your data</string>
+    <string name="delete_card">Delete this card</string>
+    <string name="remove_card">Remove this card from Bink</string>
+    <string name="tap_card">Tap card to show barcode</string>
+
 </resources>

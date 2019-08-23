@@ -112,7 +112,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
             viewModel.localPlansReceived.observeNonNull(this) { plansReceived ->
                 if (cardsReceived && plansReceived) {
-
                     binding.progressSpinner.visibility = View.GONE
                     binding.loyaltyWalletList.apply {
                         layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -120,7 +119,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             LoyaltyWalletAdapter(
                                 viewModel.localMembershipPlanData.value!!,
                                 viewModel.localMembershipCardData.value!!,
-                                itemDeleteListener = { })
+                                itemDeleteListener = { }, onClickListener = {
+                                    findNavController().navigateIfAdded(
+                                        this@LoyaltyWalletFragment,
+                                        R.id.home_to_detail
+                                    )
+                                })
 
                         val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
 

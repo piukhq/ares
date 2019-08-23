@@ -25,6 +25,10 @@
         <action android:id="@+id/home_to_barcode"
                 app:destination="@+id/barcode_fragment"/>
 
+        <action
+                android:id="@+id/home_to_detail"
+                app:destination="@+id/loyalty_card_detail_fragment" />
+
     </fragment>
 
     <fragment android:id="@+id/login_fragment"
@@ -84,6 +88,12 @@
         <argument
             android:name="barcodeType"
             app:argType="integer"/>
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/loyalty_card_detail_fragment"
+            android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment">
 
     </fragment>
 

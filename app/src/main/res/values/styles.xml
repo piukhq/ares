@@ -32,4 +32,21 @@
         <item name="android:layout_width">48dp</item>
         <item name="android:tint">@color/blue_accent</item>
     </style>
+
+    <style name="SubtitleTextView"
+            parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/size_medium</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DescriptionTextView"
+            parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/size_medium</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>
