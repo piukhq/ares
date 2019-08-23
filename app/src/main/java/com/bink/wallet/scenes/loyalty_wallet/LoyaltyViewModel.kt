@@ -14,6 +14,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     var localPlansReceived = MutableLiveData<Boolean>()
     var localCardsReceived = MutableLiveData<Boolean>()
+    var fetchedPlanById = MutableLiveData<MembershipPlan>()
 
     fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
@@ -33,5 +34,9 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
 
     fun fetchLocalMembershipPlans() {
         loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
+    }
+
+    fun fetchPlanById(id: String){
+        loyaltyWalletRepository.retrievePlanById(fetchedPlanById, id)
     }
 }

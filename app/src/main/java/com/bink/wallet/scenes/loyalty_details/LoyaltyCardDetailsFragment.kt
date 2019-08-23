@@ -21,6 +21,10 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             activity?.onBackPressed()
         }
 
+        arguments?.let {
+            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+        }
+
         binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
     }

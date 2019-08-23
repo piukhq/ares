@@ -46,6 +46,19 @@ class LoyaltyWalletRepository(
         }
     }
 
+    fun retrievePlanById(membershipPlan: MutableLiveData<MembershipPlan>, id: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipPlan.value = membershipPlanDao.getPlanById(id)
+                    println("Vla")
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
     fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipPlansAsync()

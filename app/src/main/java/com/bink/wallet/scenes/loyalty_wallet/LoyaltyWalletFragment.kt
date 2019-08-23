@@ -120,10 +120,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 viewModel.localMembershipPlanData.value!!,
                                 viewModel.localMembershipCardData.value!!,
                                 itemDeleteListener = { }, onClickListener = {
-                                    findNavController().navigateIfAdded(
-                                        this@LoyaltyWalletFragment,
-                                        R.id.home_to_detail
-                                    )
+                                    viewModel.fetchPlanById(it.membership_plan.toString())
+                                    viewModel.fetchedPlanById.observeNonNull(this@LoyaltyWalletFragment) {
+                                        val directions =
+                                            LoyaltyWalletFragmentDirections.homeToDetail(viewModel.fetchedPlanById.value!!)
+                                        findNavController().navigateIfAdded(
+                                            this@LoyaltyWalletFragment,
+                                            directions
+                                        )
+                                    }
+                                    if(viewModel.fetchedPlanById.hasActiveObservers()){
+                                        viewModel.fetchedPlanById.removeObservers(this@LoyaltyWalletFragment)
+                                    }
                                 })
 
                         val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)

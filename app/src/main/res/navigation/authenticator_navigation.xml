@@ -94,6 +94,9 @@
     <fragment
             android:id="@+id/loyalty_card_detail_fragment"
             android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan" />
 
     </fragment>
 
