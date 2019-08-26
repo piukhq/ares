@@ -1,7 +1,7 @@
 package com.bink.wallet.data
 
 import androidx.room.*
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.model.response.membership_card.MembershipCard
 
 @Dao
 interface MembershipCardDao {

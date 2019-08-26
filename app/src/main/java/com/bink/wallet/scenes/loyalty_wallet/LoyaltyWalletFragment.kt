@@ -13,7 +13,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

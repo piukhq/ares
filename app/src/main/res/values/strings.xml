@@ -59,5 +59,6 @@
     <!-- Brand Header -->
     <string name="loyalty_info"> %1$s info &gt;</string>
     <string name="plan_description">Plan Description</string>
+    <string name="button_text_log_in">Log in</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.browse_brands.model
+package com.bink.wallet.model.response.membership_plan
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass

@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.CardView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.enums.CardStatus
 import com.bumptech.glide.Glide
 

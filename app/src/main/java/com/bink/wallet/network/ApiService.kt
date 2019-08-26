@@ -1,8 +1,9 @@
 package com.bink.wallet.network
 
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginResponse
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import kotlinx.coroutines.Deferred
 import okhttp3.ResponseBody
 import retrofit2.http.*
@@ -24,4 +25,6 @@ interface ApiService {
     @GET("/ubiquity/membership_plans?fields=id,status,feature_set,account,images,balances")
     fun getMembershipPlansAsync(): Deferred<List<MembershipPlan>>
 
+    @POST("/ubiquity/membership_card")
+    fun createMembershipCardAsync(@Body membershipCardRequest: MembershipCardRequest): Deferred<MembershipCard>
 }

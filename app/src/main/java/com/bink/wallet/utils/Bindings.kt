@@ -1,11 +1,13 @@
 package com.bink.wallet.utils
 
 import android.view.View
-import android.widget.ImageView
+import android.widget.*
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.AddFields
+import com.bink.wallet.model.response.membership_plan.AuthoriseFields
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -57,15 +59,36 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
     binding.brandImage.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
+        context.displayModalPopup(
+            resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
     binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
+        context.displayModalPopup(
+            resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
     binding.loyaltyScheme.text = resources.getString(R.string.loyalty_info, plan.account?.plan_name)
 }
 
+
+@BindingAdapter("bind:addField", "bind:authField")
+fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+    if (!addFields?.column.isNullOrEmpty()) {
+        this.text = addFields?.column
+    }
+    if (!authoriseFields?.column.isNullOrEmpty()) {
+        this.text = authoriseFields?.column
+    }
+
+}
+
+@BindingAdapter("bind:addField", "bind:authField")
+fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+    if (addFields != null && !addFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(this.context, android.R.layout.simple_spinner_dropdown_item, addFields.choice)
+    if (authoriseFields != null && !authoriseFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(this.context, android.R.layout.simple_spinner_dropdown_item, authoriseFields.choice)
+}

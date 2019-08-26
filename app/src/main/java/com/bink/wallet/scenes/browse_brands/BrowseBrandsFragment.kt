@@ -1,13 +1,12 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.navigateIfAdded
 import kotlinx.android.synthetic.main.browse_brands_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel

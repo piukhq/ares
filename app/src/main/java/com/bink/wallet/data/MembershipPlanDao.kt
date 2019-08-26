@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
 @Dao
 interface MembershipPlanDao {

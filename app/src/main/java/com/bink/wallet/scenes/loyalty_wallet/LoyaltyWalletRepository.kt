@@ -4,9 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,6 +83,23 @@ class LoyaltyWalletRepository(
                 try {
                     request?.await()
                     mutableDeleteCard.value = id
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    fun createMembershipCard(
+        membershipCardRequest: MembershipCardRequest,
+        mutableMembershipCard: MutableLiveData<MembershipCard>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.createMembershipCardAsync(membershipCardRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    mutableMembershipCard.value = response
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }

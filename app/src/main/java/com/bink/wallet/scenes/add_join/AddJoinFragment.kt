@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
-import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -42,6 +41,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.close.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.add_join_to_home)
+        }
+
+        binding.addCardButton.setOnClickListener {
+            val action = AddJoinFragmentDirections.addJoinToAddAuth(currentMembershipPlan)
+            findNavController().navigateIfAdded(this, action)
         }
     }
 
