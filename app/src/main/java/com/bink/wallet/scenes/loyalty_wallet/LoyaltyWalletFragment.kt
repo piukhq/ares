@@ -17,6 +17,7 @@ import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerIte
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -119,15 +120,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             LoyaltyWalletAdapter(
                                 viewModel.localMembershipPlanData.value!!,
                                 viewModel.localMembershipCardData.value!!,
-                                itemDeleteListener = { }, onClickListener = {
-                                    viewModel.fetchPlanById(it.membership_plan.toString())
-                                    viewModel.fetchedPlanById.observeNonNull(this@LoyaltyWalletFragment) {
-                                        val directions =
-                                            LoyaltyWalletFragmentDirections.homeToDetail(viewModel.fetchedPlanById.value!!)
-                                        findNavController().navigateIfAdded(
-                                            this@LoyaltyWalletFragment,
-                                            directions
-                                        )
+                                itemDeleteListener = { }, onClickListener = { card ->
+                                    runBlocking {
+                                        viewModel.fetchPlanById(card.membership_plan.toString())
+                                        viewModel.fetchedPlanById.observeNonNull(this@LoyaltyWalletFragment) {
+                                            val directions =
+                                                LoyaltyWalletFragmentDirections.homeToDetail(viewModel.fetchedPlanById.value!!, card)
+                                            findNavController().navigateIfAdded(
+                                                this@LoyaltyWalletFragment,
+                                                directions
+                                            )
+                                        }
                                     }
                                     if(viewModel.fetchedPlanById.hasActiveObservers()){
                                         viewModel.fetchedPlanById.removeObservers(this@LoyaltyWalletFragment)

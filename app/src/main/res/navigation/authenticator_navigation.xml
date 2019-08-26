@@ -97,6 +97,9 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan" />
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard" />
 
     </fragment>
 

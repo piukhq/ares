@@ -9,6 +9,7 @@
     <string name="loayalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
     <string name="loayalty_wallet_dialog_description">Delete card was canceled</string>
     <string name="yes_text">YES</string>
+    <string name="no_text">NO</string>
     <string name="cancel_text">CANCEL</string>
 
     <string name="root">root</string>
@@ -73,5 +74,12 @@
     <string name="delete_card">Delete this card</string>
     <string name="remove_card">Remove this card from Bink</string>
     <string name="tap_card">Tap card to show barcode</string>
+    <string name="security_modal_title">Is my Data Secure?</string>
+    <string name="security_modal_body_1">We take security very seriously and keeping your personal details safe is very important to us.\n</string>
+    <string name="security_modal_body_2">We are a PCI certified service provider which means that we meet the highest level of security standards set by the payment card industry. This certification requires us to employ a wide range of measures designed to protect the security of your information. We recommend that you secure your app with Touch ID and/or a passcode for an extra layer of security.\n</string>
+    <string name="security_modal_body_3">We carefully check all the parties who we share your personal information with. To find out more you can see our Privacy Policy here.</string>
+    <string name="hyperlink_text">here</string>
+    <string name="security_modal_body">%1$s%2$s</string>
+    <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
 
 </resources>

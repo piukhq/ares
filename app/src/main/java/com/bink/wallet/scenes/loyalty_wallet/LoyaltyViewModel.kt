@@ -36,7 +36,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
     }
 
-    fun fetchPlanById(id: String){
+    suspend fun fetchPlanById(id: String){
         loyaltyWalletRepository.retrievePlanById(fetchedPlanById, id)
     }
 }

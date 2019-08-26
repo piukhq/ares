@@ -55,32 +55,60 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     }
 
     private fun maximizeBarcode(){
-        initialConstraints.clone(binding.screen)
+        if (viewModel.isBarcodeAvailable.value == true) {
+            initialConstraints.clone(binding.screen)
 
-        binding.buttonMaximize.visibility = View.GONE
-        binding.barcodeAddedDate.visibility = View.GONE
-        binding.barcodeDescription.visibility = View.GONE
-        binding.cardNumber.visibility = View.GONE
-        binding.cardNumberLabel.visibility = View.GONE
-        viewModel.isMaximized.value = true
+            binding.buttonMaximize.visibility = View.GONE
+            binding.barcodeAddedDate.visibility = View.GONE
+            binding.barcodeDescription.visibility = View.GONE
+            binding.cardNumber.visibility = View.GONE
+            binding.cardNumberLabel.visibility = View.GONE
+            viewModel.isMaximized.value = true
 
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.screen)
-        constraintSet.connect(binding.barcodeImage.id, ConstraintSet.TOP, binding.screen.id, ConstraintSet.TOP, 0)
-        constraintSet.connect(binding.barcodeImage.id, ConstraintSet.BOTTOM, binding.screen.id, ConstraintSet.BOTTOM, 0)
-        constraintSet.connect(binding.barcodeImage.id, ConstraintSet.START, binding.screen.id, ConstraintSet.START, 0)
-        constraintSet.connect(binding.barcodeImage.id, ConstraintSet.END, binding.screen.id, ConstraintSet.END, 0)
-        constraintSet.applyTo(binding.screen)
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.screen)
+            constraintSet.connect(
+                binding.barcodeImage.id,
+                ConstraintSet.TOP,
+                binding.screen.id,
+                ConstraintSet.TOP,
+                0
+            )
+            constraintSet.connect(
+                binding.barcodeImage.id,
+                ConstraintSet.BOTTOM,
+                binding.screen.id,
+                ConstraintSet.BOTTOM,
+                0
+            )
+            constraintSet.connect(
+                binding.barcodeImage.id,
+                ConstraintSet.START,
+                binding.screen.id,
+                ConstraintSet.START,
+                0
+            )
+            constraintSet.connect(
+                binding.barcodeImage.id,
+                ConstraintSet.END,
+                binding.screen.id,
+                ConstraintSet.END,
+                0
+            )
+            constraintSet.applyTo(binding.screen)
+        }
     }
 
     private fun unMaximizeBarcode(){
-        binding.buttonMaximize.visibility = View.VISIBLE
-        binding.barcodeAddedDate.visibility = View.VISIBLE
-        binding.barcodeDescription.visibility = View.VISIBLE
-        binding.cardNumber.visibility = View.VISIBLE
-        binding.cardNumberLabel.visibility = View.VISIBLE
-        viewModel.isMaximized.value = false
-        initialConstraints.applyTo(binding.screen)
+        if (viewModel.isBarcodeAvailable.value == true) {
+            binding.buttonMaximize.visibility = View.VISIBLE
+            binding.barcodeAddedDate.visibility = View.VISIBLE
+            binding.barcodeDescription.visibility = View.VISIBLE
+            binding.cardNumber.visibility = View.VISIBLE
+            binding.cardNumberLabel.visibility = View.VISIBLE
+            viewModel.isMaximized.value = false
+            initialConstraints.applyTo(binding.screen)
+        }
     }
 
 }
