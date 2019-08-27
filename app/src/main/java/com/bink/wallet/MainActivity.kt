@@ -3,11 +3,10 @@ package com.bink.wallet
 import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import com.bink.wallet.utils.LocalStoreUtils
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import java.io.UnsupportedEncodingException
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
 class MainActivity : AppCompatActivity() {
 

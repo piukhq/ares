@@ -3,5 +3,6 @@
 
     <dimen name="size_headline">25sp</dimen>
     <dimen name="size_sub_headline">18sp</dimen>
+    <dimen name="size_medium">16sp</dimen>
     <dimen name="size_body">14sp</dimen>
 </resources>

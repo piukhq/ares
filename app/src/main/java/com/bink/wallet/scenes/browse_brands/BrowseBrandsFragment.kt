@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.utils.navigateIfAdded
 import kotlinx.android.synthetic.main.browse_brands_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,14 +21,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.fetchMembershipPlans()
-
-        viewModel.membershipPlanData.observe(this, Observer {
+        arguments?.let {
+            val plans = BrowseBrandsFragmentArgs.fromBundle(it).membershipPlans
             browse_brands_container.apply {
                 layoutManager = GridLayoutManager(activity, 1)
-                adapter = BrowseBrandsAdapter(it, itemClickListener = { toAddJoinScreen(it) })
+                adapter = BrowseBrandsAdapter(plans.toList(), itemClickListener = { toAddJoinScreen(it) })
             }
-        })
+        }
 
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         binding.toolbar.setNavigationOnClickListener {
@@ -37,6 +37,6 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {
         val action = BrowseBrandsFragmentDirections.browseToAddJoin(membershipPlan)
-        findNavController().navigate(action)
+        findNavController().navigateIfAdded(this, action)
     }
 }
