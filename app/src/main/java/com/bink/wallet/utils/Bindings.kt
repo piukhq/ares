@@ -66,6 +66,9 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
             plan.account?.plan_description.toString()
         )
     }
-    binding.loyaltyScheme.text = resources.getString(R.string.loyalty_info, plan.account?.plan_name)
+    plan.account?.plan_name_card?.let {
+        binding.loyaltyScheme.text =
+            resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
+    }
 }
 
