@@ -39,6 +39,10 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
 
         arguments?.let {
             viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            val tiles = arrayListOf<String>()
+            viewModel.membershipPlan.value?.images?.filter { image -> image.type == 2 }
+                ?.forEach { image -> tiles.add(image.url.toString()) }
+            viewModel.tiles.value = tiles
             membershipCard = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
