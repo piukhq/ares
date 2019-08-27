@@ -11,14 +11,6 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var deletedCard = MutableLiveData<String>()
     var deleteError = MutableLiveData<String>()
 
-    init {
-        // TODO replace tiles with real image links
-        val tileItems = ArrayList<String>()
-        tileItems.add("bla")
-        tiles.value = tileItems
-    }
-
-
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, deleteError)
     }
