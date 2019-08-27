@@ -17,7 +17,6 @@ import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerIte
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -121,20 +120,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 viewModel.localMembershipPlanData.value!!,
                                 viewModel.localMembershipCardData.value!!,
                                 itemDeleteListener = { }, onClickListener = { card ->
-                                    runBlocking {
-                                        viewModel.fetchPlanById(card.membership_plan.toString())
-                                        viewModel.fetchedPlanById.observeNonNull(this@LoyaltyWalletFragment) {
+                                    for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
+                                        if (card.membership_plan == membershipPlan.id) {
                                             val directions =
-                                                LoyaltyWalletFragmentDirections.homeToDetail(viewModel.fetchedPlanById.value!!, card)
+                                                LoyaltyWalletFragmentDirections.homeToDetail(
+                                                    membershipPlan,
+                                                    card
+                                                )
                                             findNavController().navigateIfAdded(
                                                 this@LoyaltyWalletFragment,
                                                 directions
                                             )
                                         }
-                                    }
-                                    if(viewModel.fetchedPlanById.hasActiveObservers()){
-                                        viewModel.fetchedPlanById.removeObservers(this@LoyaltyWalletFragment)
-                                    }
+                                        }
                                 })
 
                         val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)

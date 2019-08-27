@@ -8,6 +8,7 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
@@ -16,6 +17,7 @@ import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
@@ -106,7 +108,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 }
                 viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
                     dialog?.dismiss()
-                    activity?.onBackPressed()
+                    findNavController().navigateIfAdded(this, R.id.detail_to_home)
                 }
             }
             dialog = builder.create()
