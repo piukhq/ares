@@ -7,6 +7,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class CardStatus(
-    var reason_codes: MutableList<String>?,
+    var reason_codes: List<String>?,
     var state: String?
 ) : Parcelable

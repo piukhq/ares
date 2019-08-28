@@ -15,6 +15,6 @@ data class MembershipCard(
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
     @ColumnInfo(name = "card_status") var status: CardStatus?,
     @ColumnInfo(name = "card") var card: Card?,
-    @ColumnInfo(name = "card_images") var images: MutableList<CardImages>?,
-    @ColumnInfo(name = "card_balances") var balances: MutableList<CardBalance>?
+    @ColumnInfo(name = "card_images") var images: List<CardImages>?,
+    @ColumnInfo(name = "balances") var balances: List<CardBalance>?
 ) : Parcelable

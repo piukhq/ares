@@ -19,8 +19,9 @@ import com.bumptech.glide.Glide
 
 
 class LoyaltyWalletAdapter(
-    private val membershipPlan: List<MembershipPlan>,
+    private val membershipPlans: List<MembershipPlan>,
     private val membershipCards: List<MembershipCard>,
+    val onClickListener: (MembershipCard) -> Unit = {},
     val itemDeleteListener: (MembershipCard) -> Unit = {}
 ) : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
 
@@ -75,45 +76,48 @@ class LoyaltyWalletAdapter(
         }
 
         fun bind(item: MembershipCard) {
-            val currentMembershipPlan = membershipPlan.first { it.id == item.membership_plan }
-            text?.text = currentMembershipPlan.account?.company_name
-            Glide.with(text?.context!!).load(currentMembershipPlan.images?.first { it.type == 3 }?.url)
-                .into(itemView.findViewById(R.id.company_logo))
-            deleteLayout?.setOnClickListener { itemDeleteListener(item) }
+            if (!membershipPlans.isNullOrEmpty()) {
+                val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
+                text?.text = currentMembershipPlan.account?.company_name
+                Glide.with(text?.context!!).load(currentMembershipPlan.images?.first { it.type == 3 }?.url)
+                    .into(itemView.findViewById(R.id.company_logo))
+                deleteLayout?.setOnClickListener { itemDeleteListener(item) }
+                mainLayout?.setOnClickListener { onClickListener(item) }
 
-            when (item.status?.state) {
-                CardStatus.AUTHORISED.status -> {
-                    logInImage?.visibility = View.GONE
-                    valueWrapper?.visibility = View.VISIBLE
-                    val balance = item.balances?.first()
-                    when (!balance?.prefix.isNullOrEmpty()) {
-                        true -> textValue?.text = balance?.prefix?.plus(balance.value)
-                        else -> {
-                            textValue?.text = balance?.value
-                            textValueSuffix?.text = balance?.suffix
+                when (item.status?.state) {
+                    CardStatus.AUTHORISED.status -> {
+                        logInImage?.visibility = View.GONE
+                        valueWrapper?.visibility = View.VISIBLE
+                        val balance = item.balances?.first()!!
+                        when (!balance.prefix.isNullOrEmpty()) {
+                            true -> textValue?.text = balance.prefix?.plus(balance.value)
+                            else -> {
+                                textValue?.text = balance.value
+                                textValueSuffix?.text = balance.suffix
+                            }
+                        }
+                    }
+                    CardStatus.PENDING.status -> {
+                        valueWrapper?.visibility = View.VISIBLE
+                        logInImage?.visibility = View.GONE
+                        textValue?.text = textValue?.context?.getString(R.string.card_status_pending)
+                    }
+                }
+
+                when (currentMembershipPlan.feature_set?.card_type) {
+                    2 -> when (item.status?.state) {
+                        CardStatus.AUTHORISED.status -> linkStatusWrapper?.visibility = View.VISIBLE
+                        CardStatus.UNAUTHORISED.status -> {
+                            linkStatusWrapper?.visibility = View.VISIBLE
+                            linkStatusText?.text = linkStatusText?.context?.getString(R.string.link_status_cannot_link)
+                            linkStatusImage?.setImageResource(R.drawable.ic_unlinked)
                         }
                     }
                 }
-                CardStatus.PENDING.status -> {
-                    valueWrapper?.visibility = View.VISIBLE
-                    logInImage?.visibility = View.GONE
-                    textValue?.text = textValue?.context?.getString(R.string.card_status_pending)
-                }
+                //TODO: Put the first color when available
+                cardView?.setFirstColor(Color.parseColor("#888888"))
+                cardView?.setSecondColor(Color.parseColor(item.card?.colour))
             }
-
-            when (currentMembershipPlan.feature_set?.card_type) {
-                2 -> when (item.status?.state) {
-                    CardStatus.AUTHORISED.status -> linkStatusWrapper?.visibility = View.VISIBLE
-                    CardStatus.UNAUTHORISED.status -> {
-                        linkStatusWrapper?.visibility = View.VISIBLE
-                        linkStatusText?.text = linkStatusText?.context?.getString(R.string.link_status_cannot_link)
-                        linkStatusImage?.setImageResource(R.drawable.ic_unlinked)
-                    }
-                }
-            }
-            //TODO: Put the first color when available
-            cardView?.setFirstColor(Color.parseColor("#888888"))
-            cardView?.setSecondColor(Color.parseColor(item.card?.colour))
         }
 
     }

@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_card.MembershipCard
 
-@Database(entities = [MembershipCard::class, MembershipPlan::class], version = 1)
+@Database(entities = [MembershipCard::class, MembershipPlan::class], version = 4)
 @TypeConverters(MembershipCardConverters::class, MembershipPlanConverters::class)
 abstract class BinkDatabase : RoomDatabase() {
     abstract fun membershipCardDao(): MembershipCardDao

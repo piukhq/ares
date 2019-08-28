@@ -26,8 +26,8 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    storeMembershipCards(response)
                     mutableMembershipCards.value = response.toMutableList()
-                    membershipCardDao.storeAll(response)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -39,8 +39,19 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    val response = membershipCardDao.getAllAsync()
-                    localMembershipCards.value = response.toMutableList()
+                    localMembershipCards.value = membershipCardDao.getAllAsync()
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    suspend fun retrievePlanById(membershipPlan: MutableLiveData<MembershipPlan>, id: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipPlan.value = membershipPlanDao.getPlanById(id)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -54,8 +65,8 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    storeMembershipPlans(response)
                     mutableMembershipPlans.value = response.toMutableList()
-                    membershipPlanDao.storeAll(response)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -68,7 +79,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = membershipPlanDao.getAllAsync()
-                    localMembershipPlans.value = response.toMutableList()
+                    localMembershipPlans.value = response
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -83,6 +94,30 @@ class LoyaltyWalletRepository(
                 try {
                     request?.await()
                     mutableDeleteCard.value = id
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    private fun storeMembershipPlans(plans: List<MembershipPlan>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipPlanDao.storeAll(plans)
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    private fun storeMembershipCards(cards: List<MembershipCard>){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipCardDao.storeAll(cards)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
