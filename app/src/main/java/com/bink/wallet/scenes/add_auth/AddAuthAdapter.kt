@@ -4,6 +4,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Spinner
+import android.widget.Switch
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -65,9 +67,13 @@ class AddAuthAdapter(
         BaseViewHolder<AddFields>(binding) {
 
         private var text: AppCompatEditText? = null
+        private var switch: Switch? = null
+        private var spinner: Spinner? = null
 
         init {
             text = itemView.findViewById(R.id.content_add_auth_text)
+            switch = itemView.findViewById(R.id.content_add_auth_switch)
+            spinner = itemView.findViewById(R.id.content_add_auth_spinner)
         }
 
         override fun bind(item: AddFields) {

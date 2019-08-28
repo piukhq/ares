@@ -12,7 +12,7 @@ interface MembershipPlanDao {
     suspend fun getAllAsync(): List<MembershipPlan>
 
     @Query("SELECT * FROM membership_plan WHERE id= :id ")
-    suspend fun getPlanById(id:String): MembershipPlan
+    suspend fun getPlanById(id: String): MembershipPlan
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun storeAll(plans: List<MembershipPlan>)

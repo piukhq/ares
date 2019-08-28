@@ -1,16 +1,11 @@
 package com.bink.wallet.utils
 
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.AddFields
@@ -25,7 +20,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 
 @BindingAdapter("bind:imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
-    Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
+    if (item.images != null && item.images.isNotEmpty())
+        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
 }
 
 @BindingAdapter("bind:isVisible")

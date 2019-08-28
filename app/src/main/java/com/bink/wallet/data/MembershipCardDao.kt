@@ -9,7 +9,7 @@ interface MembershipCardDao {
     @Query("SELECT * FROM membership_card")
     suspend fun getAllAsync(): List<MembershipCard>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun storeAll(membershipCards: List<MembershipCard>?)
 
     @Query("DELETE FROM membership_card WHERE id = :membershipCardId")
