@@ -9,4 +9,4 @@ import kotlinx.android.parcel.Parcelize
 data class CardStatus(
     var reason_codes: MutableList<String>?,
     var state: String?
-):Parcelable
+) : Parcelable

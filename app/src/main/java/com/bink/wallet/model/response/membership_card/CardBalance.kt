@@ -12,4 +12,4 @@ data class CardBalance(
     var prefix: String?,
     var suffix: String?,
     var updated_at: Int?
-):Parcelable
+) : Parcelable

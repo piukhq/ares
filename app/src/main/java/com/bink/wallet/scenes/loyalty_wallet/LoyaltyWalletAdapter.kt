@@ -85,12 +85,12 @@ class LoyaltyWalletAdapter(
                 CardStatus.AUTHORISED.status -> {
                     logInImage?.visibility = View.GONE
                     valueWrapper?.visibility = View.VISIBLE
-                    val balance = item.balances?.first()!!
-                    when (!balance.prefix.isNullOrEmpty()) {
-                        true -> textValue?.text = balance.prefix?.plus(balance.value)
+                    val balance = item.balances?.first()
+                    when (!balance?.prefix.isNullOrEmpty()) {
+                        true -> textValue?.text = balance?.prefix?.plus(balance.value)
                         else -> {
-                            textValue?.text = balance.value
-                            textValueSuffix?.text = balance.suffix
+                            textValue?.text = balance?.value
+                            textValueSuffix?.text = balance?.suffix
                         }
                     }
                 }

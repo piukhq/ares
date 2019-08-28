@@ -1,8 +1,16 @@
 package com.bink.wallet.utils
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.AddFields
@@ -13,6 +21,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
+
 
 @BindingAdapter("bind:imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
@@ -48,7 +57,8 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
             7 -> format = BarcodeFormat.CODE_39
         }
 
-        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
+        val bitMatrix: BitMatrix =
+            multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)
@@ -82,13 +92,20 @@ fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
     if (!authoriseFields?.column.isNullOrEmpty()) {
         this.text = authoriseFields?.column
     }
-
 }
 
 @BindingAdapter("bind:addField", "bind:authField")
 fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
     if (addFields != null && !addFields.choice.isNullOrEmpty())
-        this.adapter = ArrayAdapter(this.context, android.R.layout.simple_spinner_dropdown_item, addFields.choice)
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            addFields.choice
+        )
     if (authoriseFields != null && !authoriseFields.choice.isNullOrEmpty())
-        this.adapter = ArrayAdapter(this.context, android.R.layout.simple_spinner_dropdown_item, authoriseFields.choice)
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            authoriseFields.choice
+        )
 }

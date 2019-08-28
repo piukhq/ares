@@ -12,4 +12,4 @@ data class CardImages(
     var type: Int?,
     var description: String?,
     var encoding: String?
-): Parcelable
+) : Parcelable

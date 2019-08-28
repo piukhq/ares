@@ -25,6 +25,6 @@ interface ApiService {
     @GET("/ubiquity/membership_plans?fields=id,status,feature_set,account,images,balances")
     fun getMembershipPlansAsync(): Deferred<List<MembershipPlan>>
 
-    @POST("/ubiquity/membership_card")
+    @POST("/ubiquity/membership_cards")
     fun createMembershipCardAsync(@Body membershipCardRequest: MembershipCardRequest): Deferred<MembershipCard>
 }

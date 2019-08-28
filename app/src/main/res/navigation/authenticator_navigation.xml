@@ -95,7 +95,8 @@
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan"/>
-
+        <action android:id="@+id/add_auth_to_home"
+                app:destination="@id/loyalty_fragment"/>
     </fragment>
 
 </navigation>
