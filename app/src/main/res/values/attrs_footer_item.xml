@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FooterItem">
+        <attr name="type" format="enum">
+            <enum name="about" value="0" />
+            <enum name="security" value="1" />
+            <enum name="delete" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

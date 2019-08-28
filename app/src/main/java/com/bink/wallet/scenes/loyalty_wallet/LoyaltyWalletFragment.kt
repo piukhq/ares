@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_wallet;
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -42,18 +45,22 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
                 if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
                     if (direction == ItemTouchHelper.RIGHT) {
-                        val card = viewModel.membershipCardData.value?.get(position)
-                        if (viewModel.membershipPlanData.value != null) {
-                            for (plan in viewModel.membershipPlanData.value!!) {
-                                if (plan.id.toString() == card?.membership_plan) {
+                        val card = viewModel.localMembershipCardData.value?.get(position)
+                        if (viewModel.localMembershipPlanData.value != null) {
+                            for (plan in viewModel.localMembershipPlanData.value!!) {
+                                if (plan.id == card?.membership_plan) {
                                     val directions =
-                                        LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode)
-                                    findNavController().navigate(directions)
+                                        card.card?.barcode_type?.let {
+                                            LoyaltyWalletFragmentDirections.homeToBarcode(plan, card.card?.barcode,
+                                                it
+                                            )
+                                        }
+                                    directions?.let { findNavController().navigateIfAdded(this@LoyaltyWalletFragment, it) }
                                 }
                             }
                         }
                     } else {
-                        viewModel.membershipCardData.value?.get(position)?.let { deleteDialog(it) }
+                        viewModel.localMembershipCardData.value?.get(position)?.let { deleteDialog(it) }
                     }
                 }
             }
@@ -68,26 +75,97 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             it.actionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        viewModel.fetchMembershipCards()
-        viewModel.fetchMembershipPlans()
-
-
-        viewModel.membershipCardData.observe(this, Observer {
-            binding.loyaltyWalletList.apply {
-                layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-                adapter = LoyaltyWalletAdapter(it, itemDeleteListener = { })
-
-                val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-                ItemTouchHelper(helperListener).attachToRecyclerView(this)
-                ItemTouchHelper(RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)).attachToRecyclerView(this)
+        if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
+            binding.progressSpinner.visibility = View.VISIBLE
+            viewModel.fetchMembershipPlans()
+            viewModel.membershipPlanData.observeNonNull(this) {
+                viewModel.fetchMembershipCards()
+                binding.swipeLayout.isRefreshing = false
             }
-        })
+
+            viewModel.membershipCardData.observeNonNull(this) {
+                viewModel.fetchLocalMembershipPlans()
+            }
+
+            viewModel.localMembershipPlanData.observeNonNull(this) {
+                if (it.isNotEmpty()) {
+                    viewModel.fetchLocalMembershipCards()
+                    viewModel.localPlansReceived.value = true
+                }
+            }
+
+
+            viewModel.localMembershipCardData.observeNonNull(this) {
+                if (it.isNotEmpty()) {
+                    viewModel.localCardsReceived.value = true
+                }
+            }
+        }
+
+        binding.swipeLayout.setOnRefreshListener {
+            viewModel.localCardsReceived.value = true
+            viewModel.localPlansReceived.value = true
+            viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipCards()
+        }
+
+        viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
+            viewModel.localPlansReceived.observeNonNull(this) { plansReceived ->
+                if (cardsReceived && plansReceived) {
+                    binding.progressSpinner.visibility = View.GONE
+                    binding.loyaltyWalletList.apply {
+                        layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+                        adapter =
+                            LoyaltyWalletAdapter(
+                                viewModel.localMembershipPlanData.value!!,
+                                viewModel.localMembershipCardData.value!!,
+                                itemDeleteListener = { }, onClickListener = { card ->
+                                    for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
+                                        if (card.membership_plan == membershipPlan.id) {
+                                            val directions =
+                                                LoyaltyWalletFragmentDirections.homeToDetail(
+                                                    membershipPlan,
+                                                    card
+                                                )
+                                            findNavController().navigateIfAdded(
+                                                this@LoyaltyWalletFragment,
+                                                directions
+                                            )
+                                        }
+                                        }
+                                })
+
+                        val helperListener = RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+                        ItemTouchHelper(helperListener).attachToRecyclerView(this)
+                        ItemTouchHelper(
+                            RecyclerItemTouchHelper(
+                                0,
+                                ItemTouchHelper.RIGHT,
+                                listener
+                            )
+                        ).attachToRecyclerView(
+                            this
+                        )
+                    }
+                }
+            }
+        }
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
-                R.id.add_menu_item -> findNavController().navigate(R.id.home_to_add)
+                R.id.add_menu_item -> {
+                    viewModel.localMembershipPlanData.observe(this, Observer {
+                        val directions = it?.toTypedArray()?.let { plans ->
+                            LoyaltyWalletFragmentDirections.homeToAdd(
+                                plans
+                            )
+                        }
+                        directions?.let { findNavController().navigateIfAdded(this, it) }
+                    })
+
+                }
                 R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
             }
             true

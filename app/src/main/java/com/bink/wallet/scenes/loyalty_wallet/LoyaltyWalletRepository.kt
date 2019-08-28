@@ -2,7 +2,10 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.bink.wallet.data.MembershipCardDao
+import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,15 +13,72 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class LoyaltyWalletRepository(private val apiService: ApiService) {
+class LoyaltyWalletRepository(
+    private val apiService: ApiService,
+    private val membershipCardDao: MembershipCardDao,
+    private val membershipPlanDao: MembershipPlanDao
+) {
 
-    fun retrieveMembershipCards(mutableMembershipCard: MutableLiveData<List<MembershipCard>>) {
+    fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipCardsAsync()
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    mutableMembershipCard.value = response.toMutableList()
+                    storeMembershipCards(response)
+                    mutableMembershipCards.value = response.toMutableList()
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    fun retrieveStoredMembershipCards(localMembershipCards: MutableLiveData<List<MembershipCard>>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    localMembershipCards.value = membershipCardDao.getAllAsync()
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    suspend fun retrievePlanById(membershipPlan: MutableLiveData<MembershipPlan>, id: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipPlan.value = membershipPlanDao.getPlanById(id)
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.getMembershipPlansAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    storeMembershipPlans(response)
+                    mutableMembershipPlans.value = response.toMutableList()
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    fun retrieveStoredMembershipPlans(localMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = membershipPlanDao.getAllAsync()
+                    localMembershipPlans.value = response
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -33,6 +93,30 @@ class LoyaltyWalletRepository(private val apiService: ApiService) {
                 try {
                     request?.await()
                     mutableDeleteCard.value = id
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    private fun storeMembershipPlans(plans: List<MembershipPlan>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipPlanDao.storeAll(plans)
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    private fun storeMembershipCards(cards: List<MembershipCard>){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipCardDao.storeAll(cards)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }

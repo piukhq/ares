@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".scenes.browse_brands.BrowseBrandsFragment">
 
+        <Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/search_bar_height"
+                android:layout_marginTop="@dimen/size_half_keyline"
+                android:background="@drawable/rounded_corners_edit_text"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/first_keyline"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/first_keyline"
+                android:inputType="text"
+                android:hint="@string/search"
+                android:drawablePadding="@dimen/quarter_keyline"
+                android:paddingStart="@dimen/size_half_keyline"
+                android:paddingEnd="@dimen/size_half_keyline"
+                android:cursorVisible="false"
+                android:drawableStart="@drawable/ic_search_inactive"
+                tools:ignore="Autofill,LabelFor"/>
+
+        <TextView
+                android:id="@+id/title"
+                android:text="@string/browse_brands"
+                style="@style/TitleTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/title_margin"
+                app:layout_constraintStart_toStartOf="@+id/toolbar"
+                android:layout_marginStart="@dimen/title_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                android:layout_marginTop="@dimen/title_margin"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"/>
+
+        <TextView android:id="@+id/menu_title"
+                  android:text="@string/filter"
+                  style="@style/MenuTextAppearance"
+                  app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                  android:layout_marginEnd="@dimen/first_keyline"
+                  android:clickable="true"
+                  android:focusable="true"
+                  android:background="?android:attr/selectableItemBackgroundBorderless"
+                  android:layout_marginTop="@dimen/title_margin"
+                  app:layout_constraintTop_toTopOf="@+id/toolbar"
+                  android:layout_marginBottom="@dimen/size_half_keyline"
+                  app:layout_constraintBottom_toTopOf="@+id/search_bar"/>
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/browse_brands_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/title_margin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_bar"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

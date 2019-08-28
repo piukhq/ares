@@ -3,6 +3,8 @@
     
     <!-- General dimensions -->
     <dimen name="first_keyline">16dp</dimen>
+    <dimen name="size_half_keyline">8dp</dimen>
+    <dimen name="quarter_keyline">4dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -16,6 +18,26 @@
     <dimen name="date_margin_top">12dp</dimen>
     <dimen name="title_margin">8dp</dimen>
 
+    <!-- Browse Brands Screen -->
+    <dimen name="list_margin">64dp</dimen>
+    <dimen name="search_bar_height">42dp</dimen>
+    
+    <!-- Add Join Screen -->
+    <dimen name="logo_height">98dp</dimen>
+    <dimen name="title_image_size">32dp</dimen>
+    <dimen name="button_margin">48dp</dimen>
+
+    <!-- Brand Header -->
+    <dimen name="brand_image_height">98dp</dimen>
+
     <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
+
+    <!-- Loyalty Card Details Screen -->
+    <dimen name="loyalty_details_brand_image_height">204dp</dimen>
+    <dimen name="background_height">164dp</dimen>
+    <dimen name="loyalty_details_margin_top">32dp</dimen>
+    <dimen name="linked_icon_margin_end">112dp</dimen>
+    <dimen name="active_icon_margin_start">24dp</dimen>
+    <dimen name="footer_margin_bottom">24dp</dimen>
 
 </resources>

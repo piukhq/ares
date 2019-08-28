@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.utils.navigateIfAdded
 
 class SplashFragment: Fragment() {
 
@@ -17,7 +18,7 @@ class SplashFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        findNavController().navigate(R.id.splash_to_home)
+        findNavController().navigateIfAdded(this, R.id.splash_to_home)
     }
 
 }

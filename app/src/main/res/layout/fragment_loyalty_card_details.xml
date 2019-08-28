@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/background_height"
+                    android:background="@drawable/ic_bkgr"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/brand_image"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/loyalty_details_brand_image_height"
+                    android:layout_marginStart="@dimen/first_keyline"
+                    android:layout_marginEnd="@dimen/first_keyline"
+                    app:cardBackgroundColor="@android:color/holo_blue_bright"
+                    app:cardCornerRadius="@dimen/quarter_keyline"
+                    app:cardElevation="@dimen/size_half_keyline"
+                    app:cardPreventCornerOverlap="false"
+                    app:cardUseCompatPadding="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+            <TextView
+                    android:id="@+id/tap_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/first_keyline"
+                    android:text="@string/tap_card"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/size_sub_headline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/brand_image" />
+
+            <ImageView
+                    android:id="@+id/active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/active_icon_margin_start"
+                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                    android:src="@drawable/ic_active"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tap_card"
+                    tools:ignore="ContentDescription" />
+
+            <TextView
+                    android:id="@+id/balance"
+                    style="@style/SubtitleTextView"
+                    android:layout_marginTop="@dimen/size_half_keyline"
+                    android:text="@string/balance_placeholder"
+                    app:layout_constraintStart_toStartOf="@+id/active"
+                    app:layout_constraintTop_toBottomOf="@+id/active" />
+
+            <TextView
+                    android:id="@+id/view_history"
+                    style="@style/DescriptionTextView"
+                    android:text="@string/view_history"
+                    app:layout_constraintStart_toStartOf="@+id/balance"
+                    app:layout_constraintTop_toBottomOf="@+id/balance" />
+
+            <ImageView
+                    android:id="@+id/active_linked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                    android:layout_marginEnd="@dimen/linked_icon_margin_end"
+                    android:src="@drawable/ic_active_linked"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tap_card"
+                    tools:ignore="ContentDescription" />
+
+            <TextView
+                    android:id="@+id/link_status_text"
+                    style="@style/SubtitleTextView"
+                    android:layout_marginTop="@dimen/size_half_keyline"
+                    android:text="@string/status_placeholder"
+                    app:layout_constraintStart_toStartOf="@+id/active_linked"
+                    app:layout_constraintTop_toBottomOf="@+id/active_linked" />
+
+            <TextView
+                    android:id="@+id/link_cards_number"
+                    style="@style/DescriptionTextView"
+                    android:text="@string/status_number_placeholder"
+                    app:layout_constraintStart_toStartOf="@+id/link_status_text"
+                    app:layout_constraintTop_toBottomOf="@+id/link_status_text" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/offer_tiles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/first_keyline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_history" />
+
+            <com.bink.wallet.FooterItem
+                    android:id="@+id/footer_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/first_keyline"
+                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/offer_tiles"
+                    app:type="about" />
+
+            <com.bink.wallet.FooterItem
+                    android:id="@+id/footer_security"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/first_keyline"
+                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_about"
+                    app:type="security" />
+
+            <com.bink.wallet.FooterItem
+                    android:id="@+id/footer_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/first_keyline"
+                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                    android:layout_marginBottom="@dimen/footer_margin_bottom"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_security"
+                    app:type="delete" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
