@@ -3,6 +3,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel" />
+    </data>
 
     <ScrollView
             android:layout_width="match_parent"
@@ -29,32 +34,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                    android:id="@+id/brand_image"
+            <com.bink.wallet.LoyaltyCardHeader
+                    android:id="@+id/card_header"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/loyalty_details_brand_image_height"
-                    android:layout_marginStart="@dimen/first_keyline"
-                    android:layout_marginEnd="@dimen/first_keyline"
-                    app:cardBackgroundColor="@android:color/holo_blue_bright"
-                    app:cardCornerRadius="@dimen/quarter_keyline"
-                    app:cardElevation="@dimen/size_half_keyline"
-                    app:cardPreventCornerOverlap="false"
-                    app:cardUseCompatPadding="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-            <TextView
-                    android:id="@+id/tap_card"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/first_keyline"
-                    android:text="@string/tap_card"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/size_sub_headline"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/brand_image" />
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:membershipCard="@{viewModel.membershipCard}" />
 
             <ImageView
                     android:id="@+id/active"
@@ -64,7 +51,7 @@
                     android:layout_marginTop="@dimen/loyalty_details_margin_top"
                     android:src="@drawable/ic_active"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tap_card"
+                    app:layout_constraintTop_toBottomOf="@+id/card_header"
                     tools:ignore="ContentDescription" />
 
             <TextView
@@ -90,7 +77,7 @@
                     android:layout_marginEnd="@dimen/linked_icon_margin_end"
                     android:src="@drawable/ic_active_linked"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tap_card"
+                    app:layout_constraintTop_toBottomOf="@+id/card_header"
                     tools:ignore="ContentDescription" />
 
             <TextView
