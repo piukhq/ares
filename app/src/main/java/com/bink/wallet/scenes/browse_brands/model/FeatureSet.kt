@@ -7,7 +7,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class FeatureSet (
-
 	val authorisation_required : Boolean?,
 	val transactions_available : Boolean?,
 	val digital_only : Boolean?,

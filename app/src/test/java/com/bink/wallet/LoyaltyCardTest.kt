@@ -3,6 +3,7 @@ package com.bink.wallet
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
@@ -58,27 +59,55 @@ class LoyaltyCardTest {
 
     @Test
     fun fetchMembershipCards_success() {
-        Mockito.`when`(loyaltyWalletRepository.retrieveMembershipCards()).thenReturn(
-            MutableLiveData<List<MembershipCard>>().apply {
-                postValue(
-                    asList(
-                        MembershipCard(
-                            "1234",
-                            "plan",
-                            null,
-                            null,
-                            null,
-                            null
+        Mockito.`when`(loyaltyWalletRepository.retrieveMembershipCards(viewModel.membershipCardData)).then {
+            (
+                    MutableLiveData<List<MembershipCard>>().apply {
+                        postValue(
+                            asList(
+                                MembershipCard(
+                                    "1234",
+                                    "plan",
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                )
+                            )
                         )
+                    }
                     )
-                )
-            }
-        )
 
-        val observer = mock(Observer::class.java) as Observer<List<MembershipCard>>
-        viewModel.membershipCardData.observeForever(observer)
-        viewModel.fetchMembershipCards()
-        assertNotNull(viewModel.membershipCardData.value)
+            val observer = mock(Observer::class.java) as Observer<List<MembershipCard>>
+            viewModel.membershipCardData.observeForever(observer)
+            viewModel.fetchMembershipCards()
+            assertNotNull(viewModel.membershipCardData.value)
+        }
     }
 
+    @Test
+    fun fetchMembershipPlans_success() {
+        Mockito.`when`(loyaltyWalletRepository.retrieveMembershipPlans(viewModel.membershipPlanData)).then {
+            (
+                    viewModel.membershipPlanData.apply {
+                        postValue(
+                            asList(
+                                MembershipPlan(
+                                    1234,
+                                    "plan",
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                )
+                            )
+                        )
+                    }
+                    )
+            val observer = mock(Observer::class.java) as Observer<List<MembershipPlan>>
+            viewModel.membershipPlanData.observeForever(observer)
+            viewModel.fetchMembershipPlans()
+            assertNotNull(viewModel.membershipPlanData.value)
+        }
+
+    }
 }

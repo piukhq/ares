@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/title"
+                style="@style/Theme.AppCompat.DayNight.Dialog.Alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/description_margin_top"
+                android:text="@string/security_modal_title"
+                android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/pre_body"
+                style="@style/Theme.AppCompat.DayNight.Dialog.Alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/first_keyline"
+                android:layout_marginTop="@dimen/first_keyline"
+                android:layout_marginEnd="@dimen/first_keyline"
+                android:padding="@dimen/first_keyline"
+                android:textSize="@dimen/size_body"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+                android:id="@+id/body"
+                style="@style/Theme.AppCompat.DayNight.Dialog.Alert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/first_keyline"
+                android:layout_marginEnd="@dimen/first_keyline"
+                android:paddingStart="@dimen/first_keyline"
+                android:paddingEnd="@dimen/first_keyline"
+                android:textSize="@dimen/size_body"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pre_body" />
+
+        <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_half_keyline"
+                android:layout_marginBottom="@dimen/first_keyline"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/ok"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/body" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

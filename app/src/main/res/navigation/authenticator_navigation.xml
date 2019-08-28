@@ -25,6 +25,10 @@
         <action android:id="@+id/home_to_barcode"
                 app:destination="@+id/barcode_fragment"/>
 
+        <action
+                android:id="@+id/home_to_detail"
+                app:destination="@+id/loyalty_card_detail_fragment" />
+
     </fragment>
 
     <fragment android:id="@+id/login_fragment"
@@ -45,15 +49,19 @@
                 android:id="@+id/add_to_browse"
                 app:destination="@id/browse_brands"
                 app:popUpToInclusive="false"/>
+        <argument
+                android:name="membershipPlans"
+                app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan[]"/>
     </fragment>
 
     <fragment android:id="@+id/browse_brands"
               android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment">
-
         <action android:id="@+id/browse_to_add_join"
                 app:destination="@id/add_join"
-                app:popUpToInclusive="false">
-        </action>
+                app:popUpToInclusive="false"/>
+        <argument
+                android:name="membershipPlans"
+                app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan[]"/>
     </fragment>
 
     <fragment android:id="@+id/add_join"
@@ -80,6 +88,20 @@
         <argument
             android:name="barcodeType"
             app:argType="integer"/>
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/loyalty_card_detail_fragment"
+            android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.scenes.browse_brands.model.MembershipPlan" />
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard" />
+        <action android:id="@+id/detail_to_home"
+            app:destination="@+id/loyalty_fragment"/>
 
     </fragment>
 

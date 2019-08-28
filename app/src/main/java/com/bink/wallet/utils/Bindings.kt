@@ -3,6 +3,8 @@ package com.bink.wallet.utils
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.bink.wallet.ModalBrandHeader
+import com.bink.wallet.R
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
@@ -12,14 +14,12 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 
 @BindingAdapter("bind:imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
-    Glide.with(context)
-        .load(item.images?.filter { it.type == 3 }?.get(0)?.url)
-        .into(this)
+    Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
 }
 
 @BindingAdapter("bind:isVisible")
-fun View.setVisible(isVisible: Boolean){
-    visibility = if(isVisible){
+fun View.setVisible(isVisible: Boolean) {
+    visibility = if (isVisible) {
         View.VISIBLE
     } else {
         View.GONE
@@ -52,3 +52,23 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
         setImageBitmap(bitmap)
     }
 }
+
+@BindingAdapter("bind:membershipPlan")
+fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
+    binding.brandImage.loadImage(plan)
+    binding.brandImage.setOnClickListener {
+        context.displayModalPopup(resources.getString(R.string.plan_description),
+            plan.account?.plan_description.toString()
+        )
+    }
+    binding.loyaltyScheme.setOnClickListener {
+        context.displayModalPopup(resources.getString(R.string.plan_description),
+            plan.account?.plan_description.toString()
+        )
+    }
+    plan.account?.plan_name_card?.let {
+        binding.loyaltyScheme.text =
+            resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
+    }
+}
+
