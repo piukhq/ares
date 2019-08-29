@@ -14,7 +14,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 
 @BindingAdapter("bind:imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
-    Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
+    if (item.images != null && item.images.isNotEmpty()) {
+        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
+    }
 }
 
 @BindingAdapter("bind:isVisible")
@@ -57,9 +59,12 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
     binding.brandImage.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
+        plan.account?.plan_description?.let {
+            context.displayModalPopup(
+                resources.getString(R.string.plan_description),
+                plan.account.plan_description.toString()
+            )
+        }
     }
     binding.loyaltyScheme.setOnClickListener {
         context.displayModalPopup(resources.getString(R.string.plan_description),
