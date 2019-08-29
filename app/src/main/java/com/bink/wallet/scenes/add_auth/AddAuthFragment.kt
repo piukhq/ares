@@ -41,8 +41,22 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         val addAuthFields: MutableList<Any>? = mutableListOf()
 
-        currentMembershipPlan.account?.add_fields?.map { addAuthFields?.add(it) }
-        currentMembershipPlan.account?.authorise_fields?.map { addAuthFields?.add(it) }
+        val addAuthBoolean: MutableList<Any>? = mutableListOf()
+
+        currentMembershipPlan.account?.add_fields?.map {
+            if (it.type == 3) addAuthBoolean?.add(it)
+
+        }
+        currentMembershipPlan.account?.authorise_fields?.map {
+            if (it.type == 3) addAuthBoolean?.add(it)
+        }
+
+        currentMembershipPlan.account?.add_fields?.map { if (it.type != 3) addAuthFields?.add(it) }
+        currentMembershipPlan.account?.authorise_fields?.map {
+            if (it.type != 3) addAuthFields?.add(it)
+        }
+
+        addAuthBoolean?.map { addAuthFields?.add(it) }
 
         val addAuthFieldsRequest = Account(ArrayList(), ArrayList())
 
@@ -63,9 +77,21 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             )
         }
 
-        viewModel.membershipCardData.observe(this, Observer {
-            findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
-        })
+        if (viewModel.membershipCardData.hasActiveObservers())
+            viewModel.membershipCardData.removeObservers(this)
+        else
+            viewModel.membershipCardData.observe(this, Observer {
+                when (currentMembershipPlan.feature_set?.card_type) {
+
+                    0, 1 -> {
+                        val directions =
+                            AddAuthFragmentDirections.addAuthToDetails(
+                                currentMembershipPlan, it
+                            )
+                        findNavController().navigateIfAdded(this, directions)
+                    }
+                }
+            })
     }
 
 }

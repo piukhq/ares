@@ -45,7 +45,7 @@
 
         <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="@{`Please enter your ` + item.account.plan_name_card + ` details below to add this card to your wallet`}"
+                  android:text="@{`Please enter your ` + item.account.plan_name + ` details below to add this card to your wallet`}"
                   android:id="@+id/textView"
                   android:textSize="18sp"
                   android:letterSpacing="0"

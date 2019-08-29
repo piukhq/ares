@@ -35,7 +35,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
+            findNavController().navigateIfAdded(this, R.id.detail_to_home)
         }
 
         arguments?.let {
@@ -54,8 +54,6 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 )
             }
         }
-
-
 
         binding.footerSecurity.setOnClickListener {
             val stringToSpan = resources.getString(R.string.security_modal_body_3)
