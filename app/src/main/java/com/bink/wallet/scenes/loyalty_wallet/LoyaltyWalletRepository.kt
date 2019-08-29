@@ -47,19 +47,8 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun retrievePlanById(membershipPlan: MutableLiveData<MembershipPlan>, id: String){
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    membershipPlan.value = membershipPlanDao.getPlanById(id)
-                } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
-        }
-    }
 
-    fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipPlansAsync()
             withContext(Dispatchers.Main) {
@@ -87,13 +76,14 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
+    suspend  fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
                 try {
                     request?.await()
                     mutableDeleteCard.value = id
+                    membershipCardDao.deleteCard(id.toString())
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
