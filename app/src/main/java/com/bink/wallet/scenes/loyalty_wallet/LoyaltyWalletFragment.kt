@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -85,6 +86,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
             binding.progressSpinner.visibility = View.VISIBLE
+            swipe_layout.isEnabled = false
             runBlocking {
                 viewModel.fetchMembershipPlans()
                 viewModel.membershipPlanData.observeNonNull(this@LoyaltyWalletFragment) {
@@ -124,6 +126,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
             viewModel.localPlansReceived.observeNonNull(this) { plansReceived ->
+                swipe_layout.isEnabled = true
                 if (cardsReceived && plansReceived) {
                     binding.progressSpinner.visibility = View.GONE
                     binding.loyaltyWalletList.apply {
