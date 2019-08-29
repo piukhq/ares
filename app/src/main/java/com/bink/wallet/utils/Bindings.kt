@@ -1,12 +1,14 @@
 package com.bink.wallet.utils
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import com.bink.wallet.CardView
+import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -78,5 +80,15 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
         binding.loyaltyScheme.text =
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
     }
+}
+
+@BindingAdapter("bind:membershipCard")
+fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
+    if (!card?.getHeroImage()?.url.isNullOrEmpty()) {
+        binding.image.setImage(card?.getHeroImage()?.url.toString())
+    } else {
+        binding.image.setBackgroundColor(Color.GREEN)
+    }
+    binding.tapCard.setVisible(card?.card?.barcode != null)
 }
 
