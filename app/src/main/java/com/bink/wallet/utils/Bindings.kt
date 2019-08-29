@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.bink.wallet.CardView
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
@@ -16,6 +17,13 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 fun ImageView.loadImage(item: MembershipPlan) {
     Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
 }
+
+
+@BindingAdapter("bind:image")
+fun ImageView.setImage(url: String) {
+    Glide.with(context).load(url).into(this)
+}
+
 
 @BindingAdapter("bind:isVisible")
 fun View.setVisible(isVisible: Boolean) {
