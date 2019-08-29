@@ -1,12 +1,12 @@
 package com.bink.wallet.scenes.loyalty_details
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DetailTileItemBinding
+
 
 class LoyaltyDetailsTilesAdapter(var tiles: List<String>) :
     RecyclerView.Adapter<LoyaltyDetailsTilesAdapter.LoyaltyDetailsTileViewHolder>() {
@@ -21,13 +21,13 @@ class LoyaltyDetailsTilesAdapter(var tiles: List<String>) :
     override fun getItemCount() = tiles.size
 
     override fun onBindViewHolder(holder: LoyaltyDetailsTileViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(position, tiles)
     }
 
     class LoyaltyDetailsTileViewHolder(var binding: DetailTileItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
-            binding.tileItem.setCardBackgroundColor(Color.GREEN)
+        fun bind(position: Int, tiles: List<String>) {
+            binding.imageUrl = tiles[position]
         }
     }
 }
