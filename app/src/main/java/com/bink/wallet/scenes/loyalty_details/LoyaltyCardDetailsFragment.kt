@@ -29,7 +29,6 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
-    var membershipCard: MembershipCard? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -40,7 +39,13 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
 
         arguments?.let {
             viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-            membershipCard = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            val tiles = arrayListOf<String>()
+            viewModel.membershipPlan.value?.images?.filter { image -> image.type == 2 }
+                ?.forEach { image -> tiles.add(image.url.toString()) }
+            viewModel.tiles.value = tiles
+            viewModel.membershipCard.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            binding.viewModel = viewModel
         }
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -54,6 +59,22 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 )
             }
         }
+
+        if (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+            binding.cardHeader.setOnClickListener {
+                val directions = viewModel.membershipCard.value?.card?.barcode_type?.let { type ->
+                    viewModel.membershipPlan.value?.let { plan ->
+                        LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                            plan, viewModel.membershipCard.value?.card?.barcode,
+                            type
+                        )
+                    }
+                }
+
+                directions?.let { findNavController().navigateIfAdded(this, it) }
+            }
+        }
+
 
         binding.footerSecurity.setOnClickListener {
             val stringToSpan = resources.getString(R.string.security_modal_body_3)
@@ -99,7 +120,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
                 runBlocking {
-                    viewModel.deleteCard(membershipCard?.id)
+                    viewModel.deleteCard(viewModel.membershipCard.value?.id)
                 }
                 viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
                     Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
