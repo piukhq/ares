@@ -40,5 +40,6 @@
     <dimen name="linked_icon_margin_end">112dp</dimen>
     <dimen name="active_icon_margin_start">24dp</dimen>
     <dimen name="footer_margin_bottom">24dp</dimen>
+    <dimen name="item_separator_line_height">1dp</dimen>
 
 </resources>

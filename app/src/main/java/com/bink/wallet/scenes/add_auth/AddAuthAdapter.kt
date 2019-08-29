@@ -2,8 +2,11 @@ package com.bink.wallet.scenes.add_auth
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Spinner
 import android.widget.Switch
 import androidx.appcompat.widget.AppCompatEditText
@@ -17,6 +20,7 @@ import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
+import com.bink.wallet.utils.UtilFunctions
 
 
 class AddAuthAdapter(
@@ -59,7 +63,6 @@ class AddAuthAdapter(
         return when (brands[position]) {
             is AddFields -> (brands[position] as AddFields).type!!
             else -> (brands[position] as AuthoriseFields).type!! + 5
-
         }
     }
 
@@ -77,35 +80,64 @@ class AddAuthAdapter(
         }
 
         override fun bind(item: AddFields) {
+            val currentAddField =
+                com.bink.wallet.model.request.membership_card.AddFields(item.column, "")
             when (binding) {
                 is AddAuthTextItemBinding -> {
-                    val currentAddField =
-                        com.bink.wallet.model.request.membership_card.AddFields(item.column, "")
                     binding.addFields = item
-                    binding.addFieldsRequest = currentAddField
 
-                    account.add_fields?.add(currentAddField)
+                    text?.hint = item.description
 
                     text?.addTextChangedListener(object : TextWatcher {
                         override fun afterTextChanged(p0: Editable?) {
                         }
 
                         override fun beforeTextChanged(
-                            p0: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
+                            p0: CharSequence?, p1: Int, p2: Int, p3: Int
                         ) {
                         }
 
                         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                             currentAddField.value = p0.toString()
+
                         }
                     })
                 }
-                is AddAuthSpinnerItemBinding -> binding.addFields = item
-                is AddAuthSwitchItemBinding -> binding.addFields = item
+                is AddAuthSpinnerItemBinding -> {
+                    binding.addFields = item
+
+                    currentAddField.value = item.choice?.get(0)
+
+                    spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                        }
+
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            currentAddField.value = item.choice?.get(position)
+                        }
+
+                    }
+                }
+                is AddAuthSwitchItemBinding -> {
+                    binding.addFields = item
+
+                    switch?.text = item.description
+
+                    currentAddField.value = "false"
+
+                    switch?.setOnCheckedChangeListener { _, isChecked ->
+                        currentAddField.value = isChecked.toString()
+                    }
+
+                }
             }
+            account.add_fields?.add(currentAddField)
 
             binding.executePendingBindings()
         }
@@ -113,24 +145,27 @@ class AddAuthAdapter(
 
     class AuthFieldHolder(val binding: ViewDataBinding, val account: Account) :
         BaseViewHolder<AuthoriseFields>(binding) {
+
         private var text: AppCompatEditText? = null
+        private var switch: Switch? = null
+        private var spinner: Spinner? = null
 
         init {
             text = itemView.findViewById(R.id.content_add_auth_text)
+            switch = itemView.findViewById(R.id.content_add_auth_switch)
+            spinner = itemView.findViewById(R.id.content_add_auth_spinner)
         }
 
         override fun bind(item: AuthoriseFields) {
+            val currentAuthoriseField =
+                com.bink.wallet.model.request.membership_card.AuthoriseFields(
+                    item.column, ""
+                )
             when (binding) {
                 is AddAuthTextItemBinding -> {
-                    val currentAuthotiseField =
-                        com.bink.wallet.model.request.membership_card.AuthoriseFields(
-                            item.column, ""
-                        )
-                    binding.authFields = item
-                    binding.authFieldsRequest =
-                        currentAuthotiseField
-                    account.authorise_fields?.add(currentAuthotiseField)
 
+                    binding.authFields = item
+                    text?.hint = item.description
                     text?.addTextChangedListener(object : TextWatcher {
                         override fun afterTextChanged(p0: Editable?) {
                         }
@@ -144,13 +179,60 @@ class AddAuthAdapter(
                         }
 
                         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                            currentAuthotiseField.value = p0.toString()
+                            currentAuthoriseField.value = p0.toString()
                         }
                     })
+
+
+                    text?.setOnFocusChangeListener { _, b ->
+                        if (!b)
+                            try {
+
+
+                                if (!UtilFunctions.isValidField(
+                                        item.validation, currentAuthoriseField.value
+                                    )
+                                )
+                                    text?.error = "Invalid ${item.column}"
+                            } catch (ex: Exception) {
+                                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+                            }
+                    }
                 }
-                is AddAuthSpinnerItemBinding -> binding.authFields = item
-                is AddAuthSwitchItemBinding -> binding.authFields = item
+
+
+                is AddAuthSpinnerItemBinding -> {
+                    binding.authFields = item
+                    currentAuthoriseField.value = item.choice?.get(0)
+                    spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                        }
+
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            currentAuthoriseField.value = item.choice?.get(position)
+                        }
+
+                    }
+                }
+                is AddAuthSwitchItemBinding -> {
+                    binding.authFields = item
+
+                    currentAuthoriseField.value = "false"
+
+                    switch?.text = item.description
+
+                    switch?.setOnCheckedChangeListener { _, isChecked ->
+                        currentAuthoriseField.value = isChecked.toString()
+                    }
+                }
             }
+            account.authorise_fields?.add(currentAuthoriseField)
             binding.executePendingBindings()
         }
     }
