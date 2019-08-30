@@ -82,13 +82,21 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         else
             viewModel.membershipCardData.observe(this, Observer {
                 when (currentMembershipPlan.feature_set?.card_type) {
-
-                    0, 1 -> {
-                        val directions =
-                            AddAuthFragmentDirections.addAuthToDetails(
-                                currentMembershipPlan, it
-                            )
-                        findNavController().navigateIfAdded(this, directions)
+//                    0, 1 -> {
+//                        val directions =
+//                            AddAuthFragmentDirections.addAuthToDetails(
+//                                currentMembershipPlan, it
+//                            )
+//                        findNavController().navigateIfAdded(this, directions)
+//                    }
+                    0, 1, 2 -> {
+                        if (it.membership_transactions.isEmpty()) {
+                            val directions =
+                                AddAuthFragmentDirections.addAuthToPllEmpty(
+                                    currentMembershipPlan, it
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
             })

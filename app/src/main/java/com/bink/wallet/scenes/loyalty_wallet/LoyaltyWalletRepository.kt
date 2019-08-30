@@ -107,6 +107,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
+                    membershipCardDao.deleteAllCards()
                     membershipCardDao.storeAll(cards)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
