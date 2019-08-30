@@ -33,11 +33,6 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
 
         }
 
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
-        }
-
         binding.buttonDone.setOnClickListener {
 
             val directions =

@@ -159,7 +159,9 @@
 
         <action
                 android:id="@+id/pll_empty_to_detail"
-                app:destination="@+id/loyalty_card_detail_fragment" />
+                app:destination="@+id/loyalty_card_detail_fragment"
+                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpToInclusive="true"/>
 
     </fragment>
 
