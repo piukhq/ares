@@ -60,6 +60,7 @@
     <!-- Brand Header -->
     <string name="loyalty_info"> %1$s info &gt;</string>
     <string name="plan_description">Plan Description</string>
+    <string name="button_text_log_in">Log in</string>
 
     <!-- Loyalty Card Details -->
     <string name="view_history">View History</string>
@@ -81,6 +82,7 @@
     <string name="hyperlink_text">here</string>
     <string name="security_modal_body">%1$s%2$s</string>
     <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
+    <string name="card_item_linked">Linked</string>
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>

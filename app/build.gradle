@@ -4,9 +4,8 @@ plugins {
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("io.fabric")
 }
-
-apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -126,6 +125,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    kapt("androidx.lifecycle:lifecycle-compiler:2.0.0")
+    kapt("com.github.bumptech.glide:compiler:4.9.0")
 
     // common
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

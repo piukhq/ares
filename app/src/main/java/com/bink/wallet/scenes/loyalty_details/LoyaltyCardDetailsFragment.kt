@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -28,18 +29,23 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
-    var membershipCard: MembershipCard? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
+            findNavController().navigateIfAdded(this, R.id.detail_to_home)
         }
 
         arguments?.let {
             viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-            membershipCard = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            val tiles = arrayListOf<String>()
+            viewModel.membershipPlan.value?.images?.filter { image -> image.type == 2 }
+                ?.forEach { image -> tiles.add(image.url.toString()) }
+            viewModel.tiles.value = tiles
+            viewModel.membershipCard.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            binding.viewModel = viewModel
         }
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -54,6 +60,20 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             }
         }
 
+        if (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+            binding.cardHeader.setOnClickListener {
+                val directions = viewModel.membershipCard.value?.card?.barcode_type?.let { type ->
+                    viewModel.membershipPlan.value?.let { plan ->
+                        LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                            plan, viewModel.membershipCard.value?.card?.barcode,
+                            type
+                        )
+                    }
+                }
+
+                directions?.let { findNavController().navigateIfAdded(this, it) }
+            }
+        }
 
 
         binding.footerSecurity.setOnClickListener {
@@ -100,7 +120,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
                 runBlocking {
-                    viewModel.deleteCard(membershipCard?.id)
+                    viewModel.deleteCard(viewModel.membershipCard.value?.id)
                 }
                 viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
                     Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
