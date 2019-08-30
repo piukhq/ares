@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.browse_brands.model
+package com.bink.wallet.model.response.membership_plan
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
@@ -6,11 +6,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class EnrolFields (
+data class Images (
 
-	val column : String?,
-	val validation : String?,
-	val common_name : String?,
+	val id : Int?,
 	val type : Int?,
-	val choice : List<String>?
+	val url : String?,
+	val description : String?,
+	val encoding : String?
 ) : Parcelable

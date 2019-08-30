@@ -2,22 +2,30 @@ package com.bink.wallet.utils
 
 import android.graphics.Color
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.model.response.membership_plan.AddFields
+import com.bink.wallet.model.response.membership_plan.AuthoriseFields
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
+
 @BindingAdapter("bind:imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
-    Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
+    if (item.images != null && item.images.isNotEmpty())
+        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
 }
 
 
@@ -56,7 +64,8 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
             7 -> format = BarcodeFormat.CODE_39
         }
 
-        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
+        val bitMatrix: BitMatrix =
+            multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)
@@ -67,12 +76,14 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
     binding.brandImage.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
+        context.displayModalPopup(
+            resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
     binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
+        context.displayModalPopup(
+            resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
@@ -92,3 +103,29 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     binding.tapCard.setVisible(card?.card?.barcode != null)
 }
 
+
+@BindingAdapter("bind:addField", "bind:authField")
+fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+    if (!addFields?.column.isNullOrEmpty()) {
+        this.text = addFields?.column
+    }
+    if (!authoriseFields?.column.isNullOrEmpty()) {
+        this.text = authoriseFields?.column
+    }
+}
+
+@BindingAdapter("bind:addField", "bind:authField")
+fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+    if (addFields != null && !addFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            addFields.choice
+        )
+    if (authoriseFields != null && !authoriseFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            authoriseFields.choice
+        )
+}

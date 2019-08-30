@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet.model
+package com.bink.wallet.model.response.membership_card
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
@@ -9,4 +9,4 @@ import kotlinx.android.parcel.Parcelize
 data class CardStatus(
     var reason_codes: List<String>?,
     var state: String?
-):Parcelable
+) : Parcelable

@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet.model
+package com.bink.wallet.model.response.membership_card
 
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
@@ -12,4 +12,4 @@ data class CardBalance(
     var prefix: String?,
     var suffix: String?,
     var updated_at: Int?
-):Parcelable
+) : Parcelable
