@@ -14,6 +14,7 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.pll.PllViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,9 +38,12 @@ val viewModelModules = module {
 
     single { provideLoyaltyCardDetailsRepository(get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
+
+    viewModel { PllViewModel() }
 }
 
-fun provideLoginRepository(restApiService: ApiService): LoginRepository = LoginRepository(restApiService)
+fun provideLoginRepository(restApiService: ApiService): LoginRepository =
+    LoginRepository(restApiService)
 
 fun provideLoyaltyCardRepository(
     restApiService: ApiService,
@@ -48,4 +52,7 @@ fun provideLoyaltyCardRepository(
 ): LoyaltyWalletRepository =
     LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao)
 
-fun provideLoyaltyCardDetailsRepository(restApiService: ApiService, membershipCardDao: MembershipCardDao): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+fun provideLoyaltyCardDetailsRepository(
+    restApiService: ApiService,
+    membershipCardDao: MembershipCardDao
+): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)

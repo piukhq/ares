@@ -16,7 +16,8 @@ class MembershipCard(
     @ColumnInfo(name = "card_status") var status: CardStatus?,
     @ColumnInfo(name = "card") var card: Card?,
     @ColumnInfo(name = "card_images") var images: List<CardImages>?,
-    @ColumnInfo(name = "balances") var balances: List<CardBalance>?
+    @ColumnInfo(name = "balances") var balances: List<CardBalance>?,
+    @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>
 ) : Parcelable {
 
     fun getHeroImage(): CardImages? {

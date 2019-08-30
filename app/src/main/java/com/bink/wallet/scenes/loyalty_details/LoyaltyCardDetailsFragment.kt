@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +15,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
-import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -24,7 +22,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
+class LoyaltyCardDetailsFragment :
+    BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -38,7 +37,8 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
         }
 
         arguments?.let {
-            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            viewModel.membershipPlan.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
             val tiles = arrayListOf<String>()
             viewModel.membershipPlan.value?.images?.filter { image -> image.type == 2 }
                 ?.forEach { image -> tiles.add(image.url.toString()) }
@@ -48,7 +48,8 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             binding.viewModel = viewModel
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.offerTiles.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         binding.footerAbout.setOnClickListener {

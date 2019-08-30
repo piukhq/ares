@@ -10,7 +10,7 @@
         <action
                 android:id="@+id/splash_to_home"
                 app:destination="@id/login_fragment"
-                app:popUpTo="@id/splash"
+                app:popUpTo="@id/loyalty_fragment"
                 app:popUpToInclusive="true" />
     </fragment>
 
@@ -20,8 +20,7 @@
             android:label="@string/root">
         <action
                 android:id="@+id/home_to_add"
-                app:destination="@id/add_fragment"
-                app:popUpToInclusive="false" />
+                app:destination="@id/add_fragment" />
 
         <action
                 android:id="@+id/home_to_barcode"
@@ -38,8 +37,7 @@
             android:name="com.bink.wallet.scenes.login.LoginFragment">
         <action
                 android:id="@+id/login_to_loyalty"
-                app:destination="@id/loyalty_fragment"
-                app:popUpToInclusive="false" />
+                app:destination="@id/loyalty_fragment" />
     </fragment>
 
     <fragment
@@ -47,12 +45,10 @@
             android:name="com.bink.wallet.scenes.add.AddFragment">
         <action
                 android:id="@+id/add_to_loyalty"
-                app:destination="@id/loyalty_fragment"
-                app:popUpToInclusive="false" />
+                app:destination="@id/loyalty_fragment" />
         <action
                 android:id="@+id/add_to_browse"
-                app:destination="@id/browse_brands"
-                app:popUpToInclusive="false" />
+                app:destination="@id/browse_brands" />
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -63,8 +59,7 @@
             android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment">
         <action
                 android:id="@+id/browse_to_add_join"
-                app:destination="@id/add_join"
-                app:popUpToInclusive="false" />
+                app:destination="@id/add_join" />
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -116,6 +111,10 @@
                 app:destination="@id/loyalty_fragment" />
 
         <action
+                android:id="@+id/add_auth_to_pll_empty"
+                app:destination="@id/pll_empty_fragment" />
+
+        <action
                 android:id="@+id/add_auth_to_details"
                 app:destination="@id/loyalty_card_detail_fragment"
                 app:popUpTo="@+id/loyalty_fragment"
@@ -135,8 +134,29 @@
         <action
                 android:id="@+id/detail_to_home"
                 app:destination="@+id/loyalty_fragment" />
-                app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard" />
-        <action android:id="@+id/detail_to_barcode" app:destination="@+id/barcode_fragment"/>
+        <action
+                android:id="@+id/detail_to_barcode"
+                app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard"
+                app:destination="@+id/barcode_fragment" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/pll_empty_fragment"
+            android:name="com.bink.wallet.scenes.pll.PllEmptyFragment">
+
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
+        <action
+                android:id="@+id/pll_empty_to_detail"
+                app:destination="@+id/loyalty_card_detail_fragment"
+                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpToInclusive="true" />
 
     </fragment>
 

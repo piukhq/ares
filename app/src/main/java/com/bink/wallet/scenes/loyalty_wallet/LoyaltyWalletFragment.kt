@@ -139,7 +139,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
                                         if (card.membership_plan == membershipPlan.id) {
                                             val directions =
-                                                LoyaltyWalletFragmentDirections.homeToDetail(membershipPlan, card)
+                                                LoyaltyWalletFragmentDirections.homeToDetail(
+                                                    membershipPlan,
+                                                    card
+                                                )
                                             findNavController().navigateIfAdded(
                                                 this@LoyaltyWalletFragment,
                                                 directions
@@ -176,7 +179,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 plans
                             )
                         }
+                        viewModel.localMembershipPlanData.removeObservers(this)
                         directions?.let { findNavController().navigateIfAdded(this, it) }
+
                     })
 
                 }
