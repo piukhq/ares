@@ -1,10 +1,10 @@
 package com.bink.wallet.data
 
 import androidx.room.TypeConverter
-import com.bink.wallet.scenes.browse_brands.model.Account
-import com.bink.wallet.scenes.browse_brands.model.Balances
-import com.bink.wallet.scenes.browse_brands.model.FeatureSet
-import com.bink.wallet.scenes.browse_brands.model.Images
+import com.bink.wallet.model.response.membership_plan.Account
+import com.bink.wallet.model.response.membership_plan.Balances
+import com.bink.wallet.model.response.membership_plan.FeatureSet
+import com.bink.wallet.model.response.membership_plan.Images
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

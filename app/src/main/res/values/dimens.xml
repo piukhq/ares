@@ -30,7 +30,8 @@
     <!-- Brand Header -->
     <dimen name="brand_image_height">98dp</dimen>
 
-    <dimen name="bottom_navigation_icon_size" tools:override="true">42dp</dimen>
+    <dimen name="bottom_navigation_icon_size" tools:override="true">30dp</dimen>
+    <dimen name="add_button_size">42dp</dimen>
 
     <!-- Loyalty Card Details Screen -->
     <dimen name="loyalty_details_brand_image_height">204dp</dimen>
@@ -39,6 +40,7 @@
     <dimen name="linked_icon_margin_end">112dp</dimen>
     <dimen name="active_icon_margin_start">24dp</dimen>
     <dimen name="footer_margin_bottom">24dp</dimen>
+    <dimen name="item_separator_line_height">1dp</dimen>
     <dimen name="tile_dimension">328dp</dimen>
 
 </resources>
