@@ -26,7 +26,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         const val STATUS_SIGN_UP_FAILED= 1.8
         const val STATUS_SIGN_UP_PENDING = 1.9
         const val STATUS_REGISTER_GHOST_CARD_FAILED = 1.10
-        const val STATUS_STATUS_REGISTER_GHOST_CARD_PENDING = 1.11
+        const val STATUS_REGISTER_GHOST_CARD_PENDING = 1.11
         const val STATUS_1_12 = 1.12
 
         const val STATUS_AUTHORISED = "authorised"

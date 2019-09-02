@@ -44,7 +44,7 @@
                     app:membershipCard="@{viewModel.membershipCard}" />
 
             <ImageView
-                    android:id="@+id/active"
+                    android:id="@+id/points_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/active_icon_margin_start"
@@ -55,19 +55,17 @@
                     tools:ignore="ContentDescription" />
 
             <TextView
-                    android:id="@+id/balance"
+                    android:id="@+id/points_text"
                     style="@style/SubtitleTextView"
                     android:layout_marginTop="@dimen/size_half_keyline"
-                    android:text="@string/balance_placeholder"
-                    app:layout_constraintStart_toStartOf="@+id/active"
-                    app:layout_constraintTop_toBottomOf="@+id/active" />
+                    app:layout_constraintStart_toStartOf="@+id/points_image"
+                    app:layout_constraintTop_toBottomOf="@+id/points_image" />
 
             <TextView
-                    android:id="@+id/view_history"
+                    android:id="@+id/points_description"
                     style="@style/DescriptionTextView"
-                    android:text="@string/view_history"
-                    app:layout_constraintStart_toStartOf="@+id/balance"
-                    app:layout_constraintTop_toBottomOf="@+id/balance" />
+                    app:layout_constraintStart_toStartOf="@+id/points_text"
+                    app:layout_constraintTop_toBottomOf="@+id/points_text" />
 
             <ImageView
                     android:id="@+id/active_linked"
@@ -102,7 +100,7 @@
                     android:layout_marginTop="@dimen/first_keyline"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_history" />
+                    app:layout_constraintTop_toBottomOf="@+id/points_description" />
 
             <com.bink.wallet.FooterItem
                     android:id="@+id/footer_about"
