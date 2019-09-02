@@ -19,11 +19,13 @@ import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
+class LoyaltyCardDetailsFragment :
+    BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -38,11 +40,13 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
         }
 
         arguments?.let {
-            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            viewModel.membershipPlan.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
             membershipCard = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.offerTiles.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         binding.footerAbout.setOnClickListener {
@@ -53,8 +57,6 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 )
             }
         }
-
-
 
         binding.footerSecurity.setOnClickListener {
             val stringToSpan = resources.getString(R.string.security_modal_body_3)
@@ -99,20 +101,30 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                runBlocking {
-                    viewModel.deleteCard(membershipCard?.id)
-                }
-                viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                    Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
-                    dialog?.dismiss()
-                }
-                viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                    dialog?.dismiss()
-                    findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                if (verifyAvailableNetwork(activity!!)) {
+                    runBlocking {
+                        viewModel.deleteCard(membershipCard?.id)
+                    }
+                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
+                        dialog?.dismiss()
+                    }
+                    viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
+                        dialog?.dismiss()
+                        findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                    }
+                } else {
+                    showNoInternetConnectionDialog()
                 }
             }
             dialog = builder.create()
             dialog.show()
         }
+    }
+
+    private fun showNoInternetConnectionDialog() {
+        AlertDialog.Builder(context).setMessage(R.string.no_internet_connection_dialog_message)
+            .setNeutralButton(R.string.ok) { _, _ -> }
+            .create().show()
     }
 }
