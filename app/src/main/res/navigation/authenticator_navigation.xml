@@ -138,6 +138,9 @@
                 android:id="@+id/detail_to_barcode"
                 app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard"
                 app:destination="@+id/barcode_fragment" />
+        <action
+                android:id="@+id/detail_to_transactions"
+                app:destination="@+id/transactions_fragment" />
 
     </fragment>
 
@@ -157,6 +160,19 @@
                 app:destination="@+id/loyalty_card_detail_fragment"
                 app:popUpTo="@+id/loyalty_fragment"
                 app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/transactions_fragment"
+            android:name="com.bink.wallet.scenes.transactions_screen.TransactionsFragment">
+
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
 
     </fragment>
 
