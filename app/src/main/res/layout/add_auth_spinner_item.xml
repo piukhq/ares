@@ -22,28 +22,42 @@
                 android:id="@+id/title_add_auth_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:textSize="15sp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
                 android:id="@+id/content_add_auth_spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:spinnerMode="dropdown"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
-                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
-                android:layout_marginTop="8dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
+
+        <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/item_separator_line_height"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:alpha="0.3"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/content_add_auth_spinner" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

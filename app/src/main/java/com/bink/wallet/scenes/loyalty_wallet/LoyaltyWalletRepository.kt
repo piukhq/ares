@@ -76,7 +76,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend  fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
+    suspend fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
@@ -107,6 +107,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
+                    membershipCardDao.deleteAllCards()
                     membershipCardDao.storeAll(cards)
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())

@@ -21,20 +21,20 @@ import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 
-@BindingAdapter("bind:imageUrl")
+@BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
     if (item.images != null && item.images.isNotEmpty())
         Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
 }
 
 
-@BindingAdapter("bind:image")
+@BindingAdapter("image")
 fun ImageView.setImage(url: String) {
     Glide.with(context).load(url).into(this)
 }
 
 
-@BindingAdapter("bind:isVisible")
+@BindingAdapter("isVisible")
 fun View.setVisible(isVisible: Boolean) {
     visibility = if (isVisible) {
         View.VISIBLE
@@ -45,7 +45,7 @@ fun View.setVisible(isVisible: Boolean) {
 
 data class BarcodeWrapper(val barcode: String?, val barcodeType: Int)
 
-@BindingAdapter("bind:barcode")
+@BindingAdapter("barcode")
 fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
     if (!barcode.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
@@ -71,7 +71,7 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
     }
 }
 
-@BindingAdapter("bind:membershipPlan")
+@BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
     binding.brandImage.setOnClickListener {
@@ -92,7 +92,8 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     }
 }
 
-@BindingAdapter("bind:membershipCard")
+
+@BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     if (!card?.getHeroImage()?.url.isNullOrEmpty()) {
         binding.image.setImage(card?.getHeroImage()?.url.toString())
@@ -103,7 +104,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
 }
 
 
-@BindingAdapter("bind:addField", "bind:authField")
+@BindingAdapter("addField", "authField")
 fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
     if (!addFields?.column.isNullOrEmpty()) {
         this.text = addFields?.column
@@ -113,7 +114,7 @@ fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
     }
 }
 
-@BindingAdapter("bind:addField", "bind:authField")
+@BindingAdapter("addField", "authField")
 fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
     if (addFields != null && !addFields.choice.isNullOrEmpty())
         this.adapter = ArrayAdapter(

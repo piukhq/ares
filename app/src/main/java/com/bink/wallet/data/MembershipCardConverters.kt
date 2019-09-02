@@ -1,10 +1,7 @@
 package com.bink.wallet.data
 
 import androidx.room.TypeConverter
-import com.bink.wallet.model.response.membership_card.Card
-import com.bink.wallet.model.response.membership_card.CardBalance
-import com.bink.wallet.model.response.membership_card.CardImages
-import com.bink.wallet.model.response.membership_card.CardStatus
+import com.bink.wallet.model.response.membership_card.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -62,6 +59,20 @@ class MembershipCardConverters {
     fun toCardStatus(value: String?): CardStatus? {
         val gson = Gson()
         val type = object : TypeToken<CardStatus?>() {}.type
+        return gson.fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromMembershipTransactionList(value: List<MembershipTransactions?>?): String? {
+        val gson = Gson()
+        val type = object : TypeToken<List<MembershipTransactions?>?>() {}.type
+        return gson.toJson(value, type)
+    }
+
+    @TypeConverter
+    fun toMembershipTransactionList(value: String): List<MembershipTransactions?>? {
+        val gson = Gson()
+        val type = object : TypeToken<List<MembershipTransactions>>() {}.type
         return gson.fromJson(value, type)
     }
 }

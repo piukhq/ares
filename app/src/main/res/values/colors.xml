@@ -18,4 +18,5 @@
     <color name="grey_20">#cccccc</color>
     <color name="grey_10">#e5e5e5</color>
     <color name="green_ok">#00c176</color>
+    <color name="black">#000000</color>
 </resources>

@@ -33,21 +33,24 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
+            findNavController().navigateIfAdded(this, R.id.detail_to_home)
         }
 
         arguments?.let {
-            viewModel.membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+            viewModel.membershipPlan.value =
+                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
             val tiles = arrayListOf<String>()
             viewModel.membershipPlan.value?.images?.filter { image -> image.type == 2 }
                 ?.forEach { image -> tiles.add(image.url.toString()) }
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            binding.viewModel = viewModel
             viewModel.setAccountStatus()
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.offerTiles.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         binding.footerAbout.setOnClickListener {

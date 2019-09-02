@@ -14,4 +14,7 @@ interface MembershipCardDao {
 
     @Query("DELETE FROM membership_card WHERE id = :membershipCardId")
     suspend fun deleteCard(membershipCardId: String)
+
+    @Query("DELETE FROM membership_card ")
+    suspend fun deleteAllCards()
 }

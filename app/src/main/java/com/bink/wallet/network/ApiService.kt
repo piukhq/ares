@@ -16,13 +16,13 @@ interface ApiService {
     fun loginOrRegisterAsync(@Body loginResponse: LoginResponse): Deferred<LoginResponse>
 
 
-    @GET("/ubiquity/membership_cards?fields=id,membership_plan,status,payment_cards,card,account,balances,images")
+    @GET("/ubiquity/membership_cards")
     fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
 
     @DELETE("/ubiquity/membership_card/{card_id}")
     fun deleteCardAsync(@Path("card_id") cardId: String): Deferred<ResponseBody>
 
-    @GET("/ubiquity/membership_plans?fields=id,status,feature_set,account,images,balances")
+    @GET("/ubiquity/membership_plans")
     fun getMembershipPlansAsync(): Deferred<List<MembershipPlan>>
 
     @POST("/ubiquity/membership_cards")
