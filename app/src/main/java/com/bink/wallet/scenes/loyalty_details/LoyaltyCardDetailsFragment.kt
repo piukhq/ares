@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +15,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
-import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGGED_IN_HISTORY_AVAILABLE
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -45,7 +44,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            binding.viewModel = viewModel
+            viewModel.setAccountStatus()
         }
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -62,12 +61,14 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
 
         if (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
             binding.cardHeader.setOnClickListener {
-                val directions = viewModel.membershipCard.value?.card?.barcode_type?.let { type ->
+                val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
-                        LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                            plan, viewModel.membershipCard.value?.card?.barcode,
-                            type
-                        )
+                        type?.let { it1 ->
+                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                plan, viewModel.membershipCard.value?.card?.barcode,
+                                it1
+                            )
+                        }
                     }
                 }
 
@@ -110,6 +111,14 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             }
             dialog.show()
 
+        }
+
+        viewModel.accountStatus.observeNonNull(this) { status ->
+            when (status) {
+                STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
+
+                }
+            }
         }
 
 

@@ -127,10 +127,8 @@
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
         <action
                 android:id="@+id/detail_to_home"
-                app:destination="@+id/loyalty_fragment" />
-                app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard" />
-        <action android:id="@+id/detail_to_home"
-            app:destination="@+id/loyalty_fragment"/>
+                app:destination="@+id/loyalty_fragment" 
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
         <action android:id="@+id/detail_to_barcode" app:destination="@+id/barcode_fragment"/>
 
     </fragment>

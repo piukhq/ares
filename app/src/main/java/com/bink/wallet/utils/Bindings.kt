@@ -10,8 +10,7 @@ import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
