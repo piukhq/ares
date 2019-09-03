@@ -17,6 +17,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_CARD_ALREADY_EXISTS
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGGED_IN_HISTORY_AVAILABLE
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGIN_FAILED
@@ -29,6 +30,7 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Compan
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_SIGN_UP_FAILED
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_SIGN_UP_PENDING
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.google.android.material.snackbar.Snackbar
@@ -61,6 +63,15 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
+        }
+
+        viewModel.updatedMembershipCard.observeNonNull(this) {
+            viewModel.membershipCard.value = it
+            viewModel.setAccountStatus()
+        }
+
+        viewModel.membershipCard.observeNonNull(this){
+            binding.swipeLayout.isRefreshing = false
         }
 
         binding.offerTiles.layoutManager =
@@ -153,10 +164,18 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
 
-                    val time = balance?.updated_at?.toLong()?.let { Date(it) }
-                    binding.pointsDescription.text =
-                        SimpleDateFormat("ddMMyyyy", Locale.getDefault()).toLocalizedPattern()
-                            .format(time)
+                    val updateTime = balance?.updated_at?.toLong()
+                    val currentTime = Calendar.getInstance().timeInMillis / 1000
+                    updateTime?.let {
+                        val timeSinceUpdate = currentTime - it
+                        binding.pointsDescription.text =
+                            timeSinceUpdate.getElapsedTime(requireContext())
+                        binding.swipeLayout.setOnRefreshListener {
+                            runBlocking {
+                                viewModel.updateMembershipCard()
+                            }
+                        }
+                    }
                 }
                 STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
@@ -252,6 +271,17 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     binding.pointsText.text = resources.getString(R.string.points_registering_card)
                     binding.pointsDescription.text =
                         resources.getString(R.string.description_please_wait)
+                }
+
+                STATUS_CARD_ALREADY_EXISTS -> {
+                    binding.pointsImage.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_points_login
+                        )
+                    )
+                    binding.pointsText.text = resources.getString(R.string.points_login)
+                    binding.pointsDescription.text = resources.getString(R.string.description_see_history)
                 }
             }
         }

@@ -11,6 +11,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var tiles = MutableLiveData<List<String>>()
     var membershipPlan = MutableLiveData<MembershipPlan>()
     var membershipCard = MutableLiveData<MembershipCard>()
+    var updatedMembershipCard = MutableLiveData<MembershipCard>()
     var deletedCard = MutableLiveData<String>()
     var deleteError = MutableLiveData<String>()
     var accountStatus = MutableLiveData<Double>()
@@ -27,7 +28,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         const val STATUS_SIGN_UP_PENDING = 1.9
         const val STATUS_REGISTER_GHOST_CARD_FAILED = 1.10
         const val STATUS_REGISTER_GHOST_CARD_PENDING = 1.11
-        const val STATUS_1_12 = 1.12
+        const val STATUS_CARD_ALREADY_EXISTS = 1.12
 
         const val STATUS_AUTHORISED = "authorised"
         const val STATUS_PENDING = "pending"
@@ -36,6 +37,10 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     }
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, deleteError)
+    }
+
+    suspend fun updateMembershipCard(){
+        membershipCard.value?.id?.let { repository.refreshMembershipCard(it, updatedMembershipCard) }
     }
 
     fun setAccountStatus() {
@@ -56,16 +61,40 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                     }
                 }
                 STATUS_PENDING -> {
-                    when (membershipCard.value?.status?.reason_codes){
-                        listOf("X200") -> accountStatus.value = STATUS_SIGN_UP_PENDING
-                        listOf("X000", "X301") -> accountStatus.value = STATUS_LOGIN_PENDING
+                    if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X200")) != null) {
+                        accountStatus.value = STATUS_SIGN_UP_PENDING
+                    }
+                    if (membershipCard.value?.status?.reason_codes?.intersect(
+                            listOf(
+                                "X100",
+                                "X301"
+                            )
+                        ) != null
+                    ) {
+                        accountStatus.value = STATUS_LOGIN_FAILED
                     }
                 }
 
                 STATUS_FAILED -> {
-                    when (membershipCard.value?.status?.reason_codes) {
-                        listOf("X201") -> accountStatus.value = STATUS_SIGN_UP_FAILED
-                        listOf("X101","X102","X103","X104","X302","X303","X304") -> STATUS_LOGIN_FAILED
+                    if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X201")) != null) {
+                        accountStatus.value = STATUS_SIGN_UP_FAILED
+                    }
+                    if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X202")) != null) {
+                        accountStatus.value = STATUS_CARD_ALREADY_EXISTS
+                    }
+                    if (membershipCard.value?.status?.reason_codes?.intersect(
+                            listOf(
+                                "X101",
+                                "X102",
+                                "X103",
+                                "X104",
+                                "X302",
+                                "X303",
+                                "X304"
+                            )
+                        ) != null
+                    ) {
+                        accountStatus.value = STATUS_LOGIN_FAILED
                     }
                 }
             }

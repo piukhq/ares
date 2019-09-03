@@ -86,7 +86,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
             binding.progressSpinner.visibility = View.VISIBLE
-            swipe_layout.isEnabled = false
+            binding.swipeLayout.isEnabled = false
             runBlocking {
                 viewModel.fetchMembershipPlans()
                 viewModel.membershipPlanData.observeNonNull(this@LoyaltyWalletFragment) {

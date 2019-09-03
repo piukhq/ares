@@ -85,6 +85,8 @@
              <!-- 1.1 -->
             <string name="points_prefix_or_suffix">%1$s%2$s</string>
             <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
+            <!-- 1.2 -->
+            <string name="description_last_checked">Last checked %1$s %2$s ago</string>
             <!-- 1.3 -->
             <string name="points_login">Log in</string>
             <string name="description_see_history">To see history</string>
