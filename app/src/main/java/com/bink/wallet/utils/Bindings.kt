@@ -1,16 +1,19 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.text.format.DateFormat
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -19,6 +22,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import java.util.*
 
 
 @BindingAdapter("imageUrl")
@@ -127,4 +131,59 @@ fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) 
             android.R.layout.simple_spinner_dropdown_item,
             authoriseFields.choice
         )
+}
+
+@BindingAdapter("transactionValue")
+fun TextView.setValue(membershipTransactions: MembershipTransactions) {
+    val value = membershipTransactions.amounts?.get(0)?.value!!
+    val sign: String
+
+    when {
+        value < 0 -> {
+            sign = "-"
+            this.setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+        value == 0.0 -> {
+            sign = " "
+            this.setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+        }
+        else -> {
+            sign = "+"
+            this.setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+        }
+    }
+
+    if (value > 0)
+        if (membershipTransactions.amounts[0].prefix != null)
+            this.text =
+                "$sign ${membershipTransactions.amounts[0].prefix}${membershipTransactions.amounts[0].value}"
+        else if (membershipTransactions.amounts[0].suffix != null)
+            this.text =
+                "$sign ${membershipTransactions.amounts[0].value} ${membershipTransactions.amounts[0].suffix}"
+}
+
+@BindingAdapter("transactionTime")
+fun TextView.setTimestamp(timeStamp: Long) {
+    val cal = Calendar.getInstance(Locale.ENGLISH)
+    cal.timeInMillis = timeStamp
+    this.text = DateFormat.format("dd/MM/yyyy", cal).toString()
+}
+
+@BindingAdapter("transactionArrow")
+fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
+    val value = membershipTransactions.amounts?.get(0)?.value!!
+
+    when {
+        value < 0 -> {
+            this.setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+        value == 0.0 -> {
+            this.setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+            this.text = context.getString(R.string.arrow_left)
+        }
+        else -> {
+            this.setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+            this.text = context.getString(R.string.up_arrow)
+        }
+    }
 }
