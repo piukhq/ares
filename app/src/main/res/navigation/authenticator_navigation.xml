@@ -142,6 +142,10 @@
                 android:id="@+id/detail_to_transactions"
                 app:destination="@+id/transactions_fragment" />
 
+        <action
+                android:id="@+id/detail_to_not_supported_transactions"
+                app:destination="@+id/transactions_not_supported" />
+
     </fragment>
 
     <fragment
@@ -174,6 +178,15 @@
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
 
+    </fragment>
+
+    <fragment
+            android:id="@+id/transactions_not_supported"
+            android:name="com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedFragment">
+
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
     </fragment>
 
 </navigation>

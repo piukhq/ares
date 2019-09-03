@@ -76,9 +76,18 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
+        binding.active.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(viewModel.membershipCard.value!!)
+            findNavController().navigateIfAdded(this, action)
+        }
+
         binding.viewHistory.setOnClickListener {
             val action =
-                LoyaltyCardDetailsFragmentDirections.detailToTransactions(viewModel.membershipCard.value!!, viewModel.membershipPlan.value!!)
+                LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                    viewModel.membershipCard.value!!,
+                    viewModel.membershipPlan.value!!
+                )
             findNavController().navigateIfAdded(this, action)
 
         }

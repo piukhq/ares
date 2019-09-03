@@ -51,7 +51,7 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:id="@+id/brands_arrow"
-                  android:text="&#x3e;"
+                  android:text="@string/right_arrow"
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintTop_toTopOf="parent"
                   android:layout_marginEnd="24dp"

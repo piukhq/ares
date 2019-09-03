@@ -95,5 +95,9 @@
     <string name="arrow_down">▼</string>
     <string name="points_history">Points History</string>
     <string name="recent_history_text">Your recent transaction history</string>
-
+    <string name="right_arrow">></string>
+    <string name="transaction_not_supported_title">Transaction history not supported</string>
+    <string name="transaction_not_supported_description">Points updated %1$s %2$s ago.
+Text explaining to the user that history is not
+supported for this brand yet.</string>
 </resources>

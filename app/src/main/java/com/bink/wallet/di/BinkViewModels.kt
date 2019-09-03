@@ -15,6 +15,7 @@ import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -43,6 +44,8 @@ val viewModelModules = module {
     viewModel { PllViewModel() }
 
     viewModel { TransactionViewModel() }
+
+    viewModel { TransactionsNotSupportedViewModel() }
 }
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository =

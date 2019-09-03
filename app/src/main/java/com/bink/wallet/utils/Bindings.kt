@@ -24,6 +24,12 @@ import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.util.*
 
+const val MINUTES = "minutes"
+const val HOURS = "hours"
+const val DAYS = "days"
+const val WEEKS = "weeks"
+const val MONTHS = "months"
+const val YEARS = "years"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
@@ -187,3 +193,35 @@ fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
         }
     }
 }
+
+@BindingAdapter("cardTimestamp")
+fun TextView.timeElapsed(card: MembershipCard) {
+    var elapsed = (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / 60
+    var suffix = MINUTES
+    if (elapsed >= 60) {
+        elapsed /= 60
+        suffix = HOURS
+        if (elapsed >= 24) {
+            elapsed /= 24
+            suffix = DAYS
+            if (elapsed >= 7) {
+                elapsed /= 7
+                suffix = WEEKS
+                if (elapsed >= 5) {
+                    elapsed /= 5
+                    suffix = MONTHS
+                    if (elapsed >= 12) {
+                        elapsed /= 12
+                        suffix = YEARS
+                    }
+                }
+            }
+        }
+    }
+    this.text = this.context.getString(
+        R.string.transaction_not_supported_description,
+        elapsed.toInt().toString(),
+        suffix
+    )
+}
+
