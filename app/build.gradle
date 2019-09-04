@@ -4,9 +4,8 @@ plugins {
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("io.fabric")
 }
-
-apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -18,8 +17,8 @@ android {
         applicationId "com.bink.wallet.neo"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode(1)
-        versionName("1.0")
+        versionCode(1000000002)
+        versionName("1.0 (2)")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -120,12 +119,17 @@ android {
 
     repositories {
         mavenCentral()
-        maven { url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/" }
+        maven {
+            url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/"
+        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    kapt("androidx.lifecycle:lifecycle-compiler:2.0.0")
+    kapt("com.github.bumptech.glide:compiler:4.9.0")
 
     // common
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

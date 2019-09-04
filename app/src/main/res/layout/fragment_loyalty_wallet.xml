@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_layout"
@@ -13,16 +15,21 @@
             <android.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_marginEnd="@dimen/first_keyline"
-                    android:background="?android:attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_settings"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/first_keyline"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_settings"
                     app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-                    app:layout_constraintEnd_toEndOf="@+id/toolbar" app:layout_constraintTop_toTopOf="@+id/toolbar"
-                    tools:ignore="ContentDescription"/>
+                    app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                    app:layout_constraintTop_toTopOf="@+id/toolbar"
+                    tools:ignore="ContentDescription" />
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/loyalty_wallet_list"
@@ -32,7 +39,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
             <ProgressBar
                     android:id="@+id/progress_spinner"
@@ -65,8 +72,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/size_half_keyline">
 
-                    <ImageView android:layout_width="@dimen/bottom_navigation_icon_size"
-                            android:layout_height="@dimen/bottom_navigation_icon_size"
+                    <ImageView
+                            android:layout_width="@dimen/add_button_size"
+                            android:layout_height="@dimen/add_button_size"
                             android:layout_marginStart="@dimen/size_half_keyline"
                             android:layout_marginEnd="@dimen/size_half_keyline"
                             android:contentDescription="@string/add_button_description"
@@ -74,7 +82,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

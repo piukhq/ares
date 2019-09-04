@@ -6,29 +6,29 @@ import android.content.SharedPreferences
 object LocalStoreUtils {
 
     private const val PREF_FILE_NAME = "com.bink.wallet"
-    private const val KEY_SECRET = "api_secret"
+    const val KEY_SECRET = "api_secret"
+    const val KEY_JWT = "kwt_token"
 
-    fun setAppSecret(secret: String, context: Context) {
+    fun setAppSharedPref(secretKey: String, secret: String, context: Context) {
         try {
             val editor = getSharedEditor(context)
-            editor.putString(KEY_SECRET, secret)
+            editor.putString(secretKey, secret)
             editor.commit()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun getAppSecret(context: Context): String? {
+    fun getAppSharedPref(secretKey: String, context: Context): String? {
         try {
             val pref = getSharedPreference(context)
-            return pref.getString(KEY_SECRET, null)
+            return pref.getString(secretKey, null)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         return null
     }
 
-    @Throws(Exception::class)
     private fun getSharedEditor(context: Context?): SharedPreferences.Editor {
         if (context == null) {
             throw Exception("Context null Exception")
@@ -36,7 +36,6 @@ object LocalStoreUtils {
         return getSharedPreference(context).edit()
     }
 
-    @Throws(Exception::class)
     private fun getSharedPreference(context: Context?): SharedPreferences {
         if (context == null) {
             throw Exception("Context null Exception")

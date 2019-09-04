@@ -3,6 +3,7 @@ package com.bink.wallet
 import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
+import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
@@ -28,7 +29,9 @@ class MainActivity : AppCompatActivity() {
     private fun storeSecret() {
         val data = Base64.decode(getNativeKey(), Base64.URL_SAFE)
         try {
-            LocalStoreUtils.setAppSecret(String(data), this)
+            LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECRET, String(data), this)
+            val currentToken = JwtCreator.createJwt(this)
+            LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_JWT, currentToken, this)
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
         }

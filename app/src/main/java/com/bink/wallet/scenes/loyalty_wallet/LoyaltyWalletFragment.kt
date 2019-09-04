@@ -13,19 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
-import com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.verifyAvailableNetwork
+import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
-    companion object {
-        fun newInstance() = LoyaltyWalletFragment()
-    }
-
     private var TAG = LoyaltyWalletFragment::class.simpleName
 
     override val viewModel: LoyaltyViewModel by viewModel()
@@ -77,7 +75,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
         }
-
         viewModel.deleteCard.observe(this, Observer { id ->
             viewModel.membershipCardData.value =
                 viewModel.membershipCardData.value?.filter { it.id != id }
@@ -90,18 +87,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
             binding.progressSpinner.visibility = View.VISIBLE
-            if (verifyAvailableNetwork(activity!!)) {
-                viewModel.fetchMembershipPlans()
-            } else {
-                showNoInternetConnectionDialog()
-            }
-            viewModel.membershipPlanData.observeNonNull(this) {
+            swipe_layout.isEnabled = false
+            runBlocking {
                 if (verifyAvailableNetwork(activity!!)) {
-                    viewModel.fetchMembershipCards()
+                    viewModel.fetchMembershipPlans()
                 } else {
                     showNoInternetConnectionDialog()
                 }
-                binding.swipeLayout.isRefreshing = false
+                viewModel.membershipPlanData.observeNonNull(this@LoyaltyWalletFragment) {
+                    if (verifyAvailableNetwork(activity!!)) {
+                        viewModel.fetchMembershipCards()
+                    } else {
+                        showNoInternetConnectionDialog()
+                    }
+                    binding.swipeLayout.isRefreshing = false
+                }
             }
 
             viewModel.membershipCardData.observeNonNull(this) {
@@ -127,8 +127,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.localCardsReceived.value = true
             viewModel.localPlansReceived.value = true
             if (verifyAvailableNetwork(activity!!)) {
-                viewModel.fetchMembershipPlans()
-                viewModel.fetchMembershipCards()
+                runBlocking {
+                    viewModel.fetchMembershipPlans()
+                    viewModel.fetchMembershipCards()
+                }
             } else {
                 showNoInternetConnectionDialog()
             }
@@ -136,6 +138,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
             viewModel.localPlansReceived.observeNonNull(this) { plansReceived ->
+                swipe_layout.isEnabled = true
                 if (cardsReceived && plansReceived) {
                     binding.progressSpinner.visibility = View.GONE
                     binding.loyaltyWalletList.apply {
@@ -188,7 +191,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 plans
                             )
                         }
+                        viewModel.localMembershipPlanData.removeObservers(this)
                         directions?.let { findNavController().navigateIfAdded(this, it) }
+
                     })
 
                 }
@@ -207,7 +212,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (verifyAvailableNetwork(activity!!)) {
-                            viewModel.deleteCard(membershipCard.id)
+                            runBlocking {
+                                viewModel.deleteCard(membershipCard.id)
+                            }
                         } else {
                             showNoInternetConnectionDialog()
                         }

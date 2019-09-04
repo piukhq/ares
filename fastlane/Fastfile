@@ -235,7 +235,7 @@ platform :android do
       channel: "android-jenkins",
       attachment_properties: {
         title: message,
-        title_link: "https://gitlab.com/hellobink/Pantheon/Android/venus/merge_requests/#{merge_id}",
+        title_link: "https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/#{merge_id}",
         author_name: last_git_commit[:author],
         fields: [
           {title: "Source", value: source_branch, short: true},

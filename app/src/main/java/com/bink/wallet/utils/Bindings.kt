@@ -1,23 +1,44 @@
 package com.bink.wallet.utils
 
+import android.graphics.Color
+import android.text.format.DateFormat
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_card.MembershipTransactions
+import com.bink.wallet.model.response.membership_plan.AddFields
+import com.bink.wallet.model.response.membership_plan.AuthoriseFields
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import java.util.*
 
-@BindingAdapter("bind:imageUrl")
+
+@BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
-    Glide.with(context).load(item.images?.first { it.type == 3 }?.url).into(this)
+    if (item.images != null && item.images.isNotEmpty())
+        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
 }
 
-@BindingAdapter("bind:isVisible")
+
+@BindingAdapter("image")
+fun ImageView.setImage(url: String) {
+    Glide.with(context).load(url).into(this)
+}
+
+
+@BindingAdapter("isVisible")
 fun View.setVisible(isVisible: Boolean) {
     visibility = if (isVisible) {
         View.VISIBLE
@@ -28,7 +49,7 @@ fun View.setVisible(isVisible: Boolean) {
 
 data class BarcodeWrapper(val barcode: String?, val barcodeType: Int)
 
-@BindingAdapter("bind:barcode")
+@BindingAdapter("barcode")
 fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
     if (!barcode.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
@@ -46,23 +67,26 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
             7 -> format = BarcodeFormat.CODE_39
         }
 
-        val bitMatrix: BitMatrix = multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
+        val bitMatrix: BitMatrix =
+            multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)
     }
 }
 
-@BindingAdapter("bind:membershipPlan")
+@BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
     binding.brandImage.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
+        context.displayModalPopup(
+            resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
     binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(resources.getString(R.string.plan_description),
+        context.displayModalPopup(
+            resources.getString(R.string.plan_description),
             plan.account?.plan_description.toString()
         )
     }
@@ -72,3 +96,94 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     }
 }
 
+@BindingAdapter("membershipCard")
+fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
+    if (!card?.getHeroImage()?.url.isNullOrEmpty()) {
+        binding.image.setImage(card?.getHeroImage()?.url.toString())
+    } else {
+        binding.image.setBackgroundColor(Color.GREEN)
+    }
+    binding.tapCard.setVisible(card?.card?.barcode != null)
+}
+
+
+@BindingAdapter("addField", "authField")
+fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+    if (!addFields?.column.isNullOrEmpty()) {
+        this.text = addFields?.column
+    }
+    if (!authoriseFields?.column.isNullOrEmpty()) {
+        this.text = authoriseFields?.column
+    }
+}
+
+@BindingAdapter("addField", "authField")
+fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+    if (addFields != null && !addFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            addFields.choice
+        )
+    if (authoriseFields != null && !authoriseFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            authoriseFields.choice
+        )
+}
+
+@BindingAdapter("transactionValue")
+fun TextView.setValue(membershipTransactions: MembershipTransactions) {
+    val value = membershipTransactions.amounts?.get(0)?.value!!
+    val sign: String
+
+    when {
+        value < 0 -> {
+            sign = "-"
+            this.setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+        value == 0.0 -> {
+            sign = " "
+            this.setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+        }
+        else -> {
+            sign = "+"
+            this.setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+        }
+    }
+
+    if (value > 0)
+        if (membershipTransactions.amounts[0].prefix != null)
+            this.text =
+                "$sign ${membershipTransactions.amounts[0].prefix}${membershipTransactions.amounts[0].value}"
+        else if (membershipTransactions.amounts[0].suffix != null)
+            this.text =
+                "$sign ${membershipTransactions.amounts[0].value} ${membershipTransactions.amounts[0].suffix}"
+}
+
+@BindingAdapter("transactionTime")
+fun TextView.setTimestamp(timeStamp: Long) {
+    val cal = Calendar.getInstance(Locale.ENGLISH)
+    cal.timeInMillis = timeStamp
+    this.text = DateFormat.format("dd/MM/yyyy", cal).toString()
+}
+
+@BindingAdapter("transactionArrow")
+fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
+    val value = membershipTransactions.amounts?.get(0)?.value!!
+
+    when {
+        value < 0 -> {
+            this.setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+        value == 0.0 -> {
+            this.setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+            this.text = context.getString(R.string.arrow_left)
+        }
+        else -> {
+            this.setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+            this.text = context.getString(R.string.up_arrow)
+        }
+    }
+}

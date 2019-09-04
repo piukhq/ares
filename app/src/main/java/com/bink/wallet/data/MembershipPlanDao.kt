@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bink.wallet.scenes.browse_brands.model.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
 @Dao
 interface MembershipPlanDao {
@@ -12,7 +12,7 @@ interface MembershipPlanDao {
     suspend fun getAllAsync(): List<MembershipPlan>
 
     @Query("SELECT * FROM membership_plan WHERE id= :id ")
-    suspend fun getPlanById(id:String): MembershipPlan
+    suspend fun getPlanById(id: String): MembershipPlan
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun storeAll(plans: List<MembershipPlan>)
