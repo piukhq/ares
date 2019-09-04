@@ -96,6 +96,10 @@
                 android:name="barcodeType"
                 app:argType="integer" />
 
+        <action
+                android:id="@+id/barcode_to_maximised"
+                app:destination="@id/maximised_barcode_fragment" />
+
     </fragment>
 
     <fragment
@@ -174,6 +178,17 @@
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
 
+    </fragment>
+
+    <fragment
+            android:id="@+id/maximised_barcode_fragment"
+            android:name="com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeFragment">
+        <argument
+                android:name="currentMembershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="barcode"
+                app:argType="com.bink.wallet.utils.BarcodeWrapper" />
     </fragment>
 
 </navigation>

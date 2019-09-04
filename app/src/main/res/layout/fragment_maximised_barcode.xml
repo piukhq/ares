@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/title"
+                android:text="@{viewModel.membershipPlan.account.plan_name}"
+                style="@style/TitleTextView"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintStart_toStartOf="@+id/toolbar"
+                android:layout_marginStart="@dimen/title_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/title_margin"
+                android:layout_marginBottom="@dimen/title_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"/>
+
+        <ImageView
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/first_keyline"
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                tools:ignore="ContentDescription" />
+
+        <ImageView
+                android:id="@+id/barcode"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/maximized_barcode_height"
+                android:layout_marginStart="@dimen/first_keyline"
+                android:layout_marginTop="@dimen/barcode_top_margin"
+                android:layout_marginEnd="@dimen/first_keyline"
+                app:barcode="@{viewModel.barcodeWrapper}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                tools:ignore="ContentDescription" />
+
+        <TextView
+                android:id="@+id/card_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/barcode_side_margin"
+                android:layout_marginTop="@dimen/barcode_top_margin"
+                android:layout_marginEnd="@dimen/barcode_side_margin"
+                android:text="@{viewModel.barcodeWrapper.barcode}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_headline"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/barcode"
+                app:layout_constraintStart_toStartOf="@+id/barcode"
+                app:layout_constraintTop_toBottomOf="@+id/barcode" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
