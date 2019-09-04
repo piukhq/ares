@@ -117,7 +117,6 @@
     <string name="arrow_left">&#9664;</string>
     <string name="up_arrow">&#9650;</string>
     <string name="arrow_down">▼</string>
-    <string name="points_history">Points History</string>
     <string name="recent_history_text">Your recent transaction history</string>
 
 </resources>
