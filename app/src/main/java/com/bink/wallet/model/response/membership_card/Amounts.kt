@@ -9,5 +9,6 @@ import kotlinx.android.parcel.Parcelize
 data class Amounts(
     val value: Double?,
     val currency: String?,
-    val suffix: String?
+    val suffix: String?,
+    val prefix: String?
 ) : Parcelable

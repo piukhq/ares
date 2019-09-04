@@ -104,6 +104,12 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             }
         }
 
+        binding.viewHistory.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToTransactions(viewModel.membershipCard.value!!, viewModel.membershipPlan.value!!)
+            findNavController().navigateIfAdded(this, action)
+
+        }
 
         binding.footerSecurity.setOnClickListener {
             val stringToSpan = resources.getString(R.string.security_modal_body_3)

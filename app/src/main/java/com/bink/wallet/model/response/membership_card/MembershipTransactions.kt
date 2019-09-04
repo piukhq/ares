@@ -8,6 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class MembershipTransactions (
 	val description : String?,
-	val timestamp : Int?,
+	val timestamp : Long?,
 	val amounts : List<Amounts>?
 ) : Parcelable
