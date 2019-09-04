@@ -11,132 +11,140 @@
                 type="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-            <View
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/background_height"
-                    android:background="@drawable/ic_bkgr"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/background_height"
+                        android:background="@drawable/ic_bkgr"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.bink.wallet.LoyaltyCardHeader
-                    android:id="@+id/card_header"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                    app:membershipCard="@{viewModel.membershipCard}" />
+                <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                    android:id="@+id/active"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/active_icon_margin_start"
-                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                    android:src="@drawable/ic_active"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_header"
-                    tools:ignore="ContentDescription" />
+                <com.bink.wallet.LoyaltyCardHeader
+                        android:id="@+id/card_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                        app:membershipCard="@{viewModel.membershipCard}" />
 
-            <TextView
-                    android:id="@+id/balance"
-                    style="@style/SubtitleTextView"
-                    android:layout_marginTop="@dimen/size_half_keyline"
-                    android:text="@string/balance_placeholder"
-                    app:layout_constraintStart_toStartOf="@+id/active"
-                    app:layout_constraintTop_toBottomOf="@+id/active" />
+                <ImageView
+                        android:id="@+id/points_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/active_icon_margin_start"
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        android:src="@drawable/ic_active"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/card_header"
+                        tools:ignore="ContentDescription" />
 
-            <TextView
-                    android:id="@+id/view_history"
-                    style="@style/DescriptionTextView"
-                    android:text="@string/view_history"
-                    app:layout_constraintStart_toStartOf="@+id/balance"
-                    app:layout_constraintTop_toBottomOf="@+id/balance" />
+                <TextView
+                        android:id="@+id/points_text"
+                        style="@style/SubtitleTextView"
+                        android:layout_marginTop="@dimen/size_half_keyline"
+                        app:layout_constraintStart_toStartOf="@+id/points_image"
+                        app:layout_constraintTop_toBottomOf="@+id/points_image" />
 
-            <ImageView
-                    android:id="@+id/active_linked"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                    android:layout_marginEnd="@dimen/linked_icon_margin_end"
-                    android:src="@drawable/ic_active_linked"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_header"
-                    tools:ignore="ContentDescription" />
+                <TextView
+                        android:id="@+id/points_description"
+                        style="@style/DescriptionTextView"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="64dp"
+                        app:layout_constraintEnd_toStartOf="@+id/link_cards_number"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/points_text" />
 
-            <TextView
-                    android:id="@+id/link_status_text"
-                    style="@style/SubtitleTextView"
-                    android:layout_marginTop="@dimen/size_half_keyline"
-                    android:text="@string/status_placeholder"
-                    app:layout_constraintStart_toStartOf="@+id/active_linked"
-                    app:layout_constraintTop_toBottomOf="@+id/active_linked" />
+                <ImageView
+                        android:id="@+id/active_linked"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        android:layout_marginEnd="@dimen/linked_icon_margin_end"
+                        android:src="@drawable/ic_active_linked"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/card_header"
+                        tools:ignore="ContentDescription" />
 
-            <TextView
-                    android:id="@+id/link_cards_number"
-                    style="@style/DescriptionTextView"
-                    android:text="@string/status_number_placeholder"
-                    app:layout_constraintStart_toStartOf="@+id/link_status_text"
-                    app:layout_constraintTop_toBottomOf="@+id/link_status_text" />
+                <TextView
+                        android:id="@+id/link_status_text"
+                        style="@style/SubtitleTextView"
+                        android:layout_marginTop="@dimen/size_half_keyline"
+                        android:text="@string/status_placeholder"
+                        app:layout_constraintStart_toStartOf="@+id/active_linked"
+                        app:layout_constraintTop_toBottomOf="@+id/active_linked" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/offer_tiles"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/first_keyline"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_history" />
+                <TextView
+                        android:id="@+id/link_cards_number"
+                        style="@style/DescriptionTextView"
+                        android:text="@string/status_number_placeholder"
+                        app:layout_constraintStart_toStartOf="@+id/link_status_text"
+                        app:layout_constraintTop_toBottomOf="@+id/link_status_text" />
 
-            <com.bink.wallet.FooterItem
-                    android:id="@+id/footer_about"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/first_keyline"
-                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/offer_tiles"
-                    app:type="about" />
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/offer_tiles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/first_keyline"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/points_description" />
 
-            <com.bink.wallet.FooterItem
-                    android:id="@+id/footer_security"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/first_keyline"
-                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/footer_about"
-                    app:type="security" />
+                <com.bink.wallet.FooterItem
+                        android:id="@+id/footer_about"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/first_keyline"
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/offer_tiles"
+                        app:type="about" />
 
-            <com.bink.wallet.FooterItem
-                    android:id="@+id/footer_delete"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/first_keyline"
-                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                    android:layout_marginBottom="@dimen/footer_margin_bottom"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/footer_security"
-                    app:type="delete" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+                <com.bink.wallet.FooterItem
+                        android:id="@+id/footer_security"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/first_keyline"
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/footer_about"
+                        app:type="security" />
+
+                <com.bink.wallet.FooterItem
+                        android:id="@+id/footer_delete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/first_keyline"
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        android:layout_marginBottom="@dimen/footer_margin_bottom"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/footer_security"
+                        app:type="delete" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

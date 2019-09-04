@@ -102,6 +102,7 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     }
 }
 
+
 @BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     if (!card?.getHeroImage()?.url.isNullOrEmpty()) {
