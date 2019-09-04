@@ -24,8 +24,8 @@ class MaximisedBarcodeFragment: BaseFragment<MaximisedBarcodeViewModel, Fragment
             }
         }
         binding.close.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             activity?.onBackPressed()
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
 }
