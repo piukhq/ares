@@ -11,7 +11,9 @@ import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import kotlinx.android.synthetic.main.add_auth_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -60,7 +62,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         val addAuthFieldsRequest = Account(ArrayList(), ArrayList())
 
-        auth_add_fields.apply {
+        binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
             adapter = AddAuthAdapter(
                 addAuthFields?.toList()!!,
@@ -68,7 +70,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             )
         }
 
-        add_card_button.setOnClickListener {
+        binding.addCardButton.setOnClickListener {
             viewModel.createMembershipCard(
                 MembershipCardRequest(
                     addAuthFieldsRequest,
@@ -100,6 +102,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
             })
+        viewModel.createCardError.observeNonNull(this){
+            requireContext().displayModalPopup(getString(R.string.add_card_error_title), getString(R.string.add_card_error_message))
+        }
     }
 
 }
