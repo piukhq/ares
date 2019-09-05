@@ -82,24 +82,28 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = false
+            binding.swipeLayout.isRefreshing = false
+            viewModel.fetchMembershipCards()
             runBlocking {
                 viewModel.fetchMembershipPlans()
-                viewModel.fetchMembershipCards()
-                binding.swipeLayout.isRefreshing = false
             }
 
-
             viewModel.membershipCardData.observeNonNull(this) {
+                runBlocking {
+                    viewModel.fetchMembershipPlans()
+                }
+            }
+
+            viewModel.membershipPlanData.observeNonNull(this){
                 viewModel.fetchLocalMembershipPlans()
             }
 
             viewModel.localMembershipPlanData.observeNonNull(this) {
                 if (it.isNotEmpty()) {
-                    viewModel.fetchLocalMembershipCards()
                     viewModel.localPlansReceived.value = true
+                    viewModel.fetchLocalMembershipCards()
                 }
             }
-
 
             viewModel.localMembershipCardData.observeNonNull(this) {
                 if (it.isNotEmpty()) {

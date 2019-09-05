@@ -194,7 +194,7 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
     when (loginStatus) {
         LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-            if (card != null) {
+            if (card != null && card.balances.isNullOrEmpty()) {
                 var elapsed =
                     (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / 60
                 var suffix = MINUTES
