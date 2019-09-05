@@ -20,11 +20,13 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         if (verifyAvailableNetwork(activity!!)) {
             viewModel.authenticate()
         } else {
             showNoInternetConnectionDialog()
         }
+
         viewModel.loginData.observe(this, Observer {
             findNavController().navigateIfAdded(this, R.id.login_to_loyalty)
         })
