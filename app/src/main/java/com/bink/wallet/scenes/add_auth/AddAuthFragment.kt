@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_auth
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.android.synthetic.main.add_auth_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -69,12 +71,16 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         add_card_button.setOnClickListener {
-            viewModel.createMembershipCard(
-                MembershipCardRequest(
-                    addAuthFieldsRequest,
-                    currentMembershipPlan.id
+            if (verifyAvailableNetwork(activity!!)) {
+                viewModel.createMembershipCard(
+                    MembershipCardRequest(
+                        addAuthFieldsRequest,
+                        currentMembershipPlan.id
+                    )
                 )
-            )
+            } else {
+                showNoInternetConnectionDialog()
+            }
         }
 
         if (viewModel.membershipCardData.hasActiveObservers())
@@ -102,4 +108,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             })
     }
 
+    private fun showNoInternetConnectionDialog() {
+        AlertDialog.Builder(context).setMessage(R.string.no_internet_connection_dialog_message)
+            .setNeutralButton(R.string.ok) { _, _ -> }
+            .create().show()
+    }
 }
