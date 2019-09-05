@@ -1,0 +1,214 @@
+{
+  "project_info": {
+    "project_number": "533502740079",
+    "firebase_url": "https://bink-android-v2.firebaseio.com",
+    "project_id": "bink-android-v2",
+    "storage_bucket": "bink-android-v2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:3fdaef7b84bbb343",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:5528f3811a606ebe7daf9a",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:65d24fc926afd80b7daf9a",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:45055c82c0892a267daf9a",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo.external"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:511d7535a1360c7f7daf9a",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo.gamma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:8cac06b8024cc8377daf9a",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo.mr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533502740079:android:27f591e54aea02c17daf9a",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.neo.nightly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEqM0pOaUnFy-wtkOOq682ny97Bk-hlyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533502740079-s22a3d3er6cmj54jp04nos0teqgnaqlh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
