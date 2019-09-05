@@ -110,6 +110,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     getString(R.string.add_card_error_title),
                     getString(R.string.add_card_error_message)
                 )
+                viewModel.createCardError.value = null
             }
         }
     }
