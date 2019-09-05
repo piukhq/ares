@@ -82,31 +82,31 @@
     <string name="security_modal_body">%1$s%2$s</string>
     <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
     <string name="card_item_linked">Linked</string>
-             <!-- 1.1 -->
-            <string name="points_prefix_or_suffix">%1$s%2$s</string>
-            <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
-            <!-- 1.2 -->
-            <string name="description_last_checked">Last checked %1$s %2$s ago</string>
-            <!-- 1.3 -->
-            <string name="points_login">Log in</string>
-            <string name="description_see_history">To see history</string>
-            <!-- 1.5 -->
-            <string name="points_history">History</string>
-            <string name="description_not_available">Not available</string>
-            <!-- 1.6 -->
-            <string name="points_retry_login">Retry login</string>
-            <!-- 1.7 -->
-            <string name="points_logging_in">Logging in</string>
-            <string name="description_please_wait">Please wait</string>
-            <!-- 1.8 -->
-            <string name="points_sign_up_failed">Sign up failed</string>
-            <string name="description_please_try_again">Please try again</string>
-            <!-- 1.9 -->
-            <string name="points_signing_up">Signing up</string>
-            <!-- 1.10 -->
-            <string name="points_registration_failed">Registration fail</string>
-            <!-- 1.11 -->
-            <string name="points_registering_card">Registering card</string>
+    <!-- 1.1 -->
+    <string name="points_prefix_or_suffix">%1$s%2$s</string>
+    <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
+    <!-- 1.2 -->
+    <string name="description_last_checked">Last checked %1$s %2$s ago</string>
+    <!-- 1.3 -->
+    <string name="points_login">Log in</string>
+    <string name="description_see_history">To see history</string>
+    <!-- 1.5 -->
+    <string name="points_history">History</string>
+    <string name="description_not_available">Not available</string>
+    <!-- 1.6 -->
+    <string name="points_retry_login">Retry login</string>
+    <!-- 1.7 -->
+    <string name="points_logging_in">Logging in</string>
+    <string name="description_please_wait">Please wait</string>
+    <!-- 1.8 -->
+    <string name="points_sign_up_failed">Sign up failed</string>
+    <string name="description_please_try_again">Please try again</string>
+    <!-- 1.9 -->
+    <string name="points_signing_up">Signing up</string>
+    <!-- 1.10 -->
+    <string name="points_registration_failed">Registration fail</string>
+    <!-- 1.11 -->
+    <string name="points_registering_card">Registering card</string>
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
@@ -123,4 +123,10 @@
     <string name="transaction_not_supported_description">Points updated %1$s %2$s ago.
 Text explaining to the user that history is not
 supported for this brand yet.</string>
+    <string name="log_in_pending">Log in pending</string>
+    <string name="transaction_history_not_supported">Transaction history not supported</string>
+    <string name="sign_up_pending">Sign up pending</string>
+    <string name="register_gc_pending">Register GC pending</string>
+    <string name="description_login_unavailable"> Text explaining to the user: \n - that points are not supported for this brand yet \n - that history is not supported for this brand yet</string>
+    <string name="description_text"> "  Text explaining to the user that it sometimes takes a while to log in with the merchant.\n   In the meantime they should not attempt to log in again, but they can use their card and receive their benefits as usual.\n   After the log in they will be able to see their points balance." </string>
 </resources>

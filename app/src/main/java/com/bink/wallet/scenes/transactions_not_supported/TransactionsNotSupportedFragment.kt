@@ -21,6 +21,8 @@ class TransactionsNotSupportedFragment :
         arguments?.let {
             viewModel.membershipCard.value =
                 TransactionsNotSupportedFragmentArgs.fromBundle(it).membershipCard
+
+            viewModel.logInType.value = TransactionsNotSupportedFragmentArgs.fromBundle(it).loginStatus
             binding.card = viewModel.membershipCard.value
         }
 
@@ -28,5 +30,7 @@ class TransactionsNotSupportedFragment :
         binding.toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()
         }
+
+
     }
 }

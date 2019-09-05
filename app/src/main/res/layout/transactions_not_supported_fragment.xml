@@ -8,6 +8,10 @@
         <variable
                 name="card"
                 type="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
+        <variable
+                name="loginStatus"
+                type="com.bink.wallet.utils.enums.LoginStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,10 +34,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/transaction_not_supported_title"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 android:textStyle="bold"
+                app:loginStatus="@{loginStatus}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -48,6 +52,7 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:cardTimestamp="@{card}"
+                app:loginStatus="@{loginStatus}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/not_supported_transaction_title" />

@@ -190,6 +190,11 @@
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
+        <argument
+                android:name="loginStatus"
+                app:argType="com.bink.wallet.utils.enums.LoginStatus" />
+
     </fragment>
 
 </navigation>
