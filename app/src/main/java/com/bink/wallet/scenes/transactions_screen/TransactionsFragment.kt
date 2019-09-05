@@ -31,10 +31,11 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
         }
 
         viewModel.membershipCard.observeForever {
-            transactions_list.apply {
-                layoutManager = GridLayoutManager(activity, 1)
-                adapter = TransactionAdapter(it.membership_transactions)
-            }
+            if (it.membership_transactions != null)
+                transactions_list.apply {
+                    layoutManager = GridLayoutManager(activity, 1)
+                    adapter = TransactionAdapter(it.membership_transactions!!)
+                }
         }
     }
 

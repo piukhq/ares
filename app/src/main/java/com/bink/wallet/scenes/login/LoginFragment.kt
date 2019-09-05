@@ -19,6 +19,9 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.authenticate()
+
         viewModel.loginData.observe(this, Observer {
             findNavController().navigateIfAdded(this, R.id.login_to_loyalty)
         })
