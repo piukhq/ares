@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.verifyAvailableNetwork
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
@@ -20,10 +21,21 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.authenticate()
+        if (verifyAvailableNetwork(activity!!)) {
+            viewModel.authenticate()
+        } else {
+            showNoInternetConnectionDialog()
+        }
 
         viewModel.loginData.observe(this, Observer {
             findNavController().navigateIfAdded(this, R.id.login_to_loyalty)
         })
+    }
+
+    private fun showNoInternetConnectionDialog() {
+        android.app.AlertDialog.Builder(context)
+            .setMessage(R.string.no_internet_connection_dialog_message)
+            .setNeutralButton(R.string.ok) { _, _ -> }
+            .create().show()
     }
 }
