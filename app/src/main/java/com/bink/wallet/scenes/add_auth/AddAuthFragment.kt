@@ -96,7 +96,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 //                        findNavController().navigateIfAdded(this, directions)
 //                    }
                     0, 1, 2 -> {
-                        if (it.membership_transactions.isEmpty()) {
+                        if (it.membership_transactions != null && it.membership_transactions?.isEmpty()!!) {
                             val directions =
                                 AddAuthFragmentDirections.addAuthToPllEmpty(
                                     currentMembershipPlan, it

@@ -3,7 +3,6 @@ package com.bink.wallet
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.bink.wallet.di.networkModule
 import com.bink.wallet.di.viewModelModules
 import com.bink.wallet.scenes.login.LoginBody
@@ -16,15 +15,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.test.KoinTest
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
 class LoginUnitTest : KoinTest {
@@ -34,8 +29,7 @@ class LoginUnitTest : KoinTest {
 
     var loginData: MutableLiveData<LoginBody> = MutableLiveData()
     private val loginRepository: LoginRepository = mock()
-    lateinit var viewModel: LoginViewModel
-    var apiResponseObserver: Observer<LoginBody?> = mock()
+    var viewModel: LoginViewModel = mock()
 
     @ObsoleteCoroutinesApi
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
@@ -44,7 +38,6 @@ class LoginUnitTest : KoinTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
         viewModel = LoginViewModel(loginRepository)
-        viewModel.loginData.observeForever(apiResponseObserver)
     }
 
     @ExperimentalCoroutinesApi
@@ -65,23 +58,19 @@ class LoginUnitTest : KoinTest {
 
     @Test
     fun testLiveDataUpdate() {
-        var loginBody = LoginBody(
+        val loginBody = LoginBody(
             System.currentTimeMillis() / 1000,
             "bink20iteration1@testbink.com",
             0.0,
             12.345
         )
 
-        loginRepository.doAuthenticationWork(LoginResponse(loginBody))
+        loginData
+            .observeForever {
+                Assert.assertEquals(loginBody, it)
+            }
 
-        loginData.value = loginBody
-        verify(apiResponseObserver).onChanged(
-            LoginBody(
-                System.currentTimeMillis() / 1000,
-                "bink20iteration1@testbink.com",
-                0.0,
-                12.345
-            )
-        )
+        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData)
+
     }
 }
