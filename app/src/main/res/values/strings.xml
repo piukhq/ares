@@ -96,6 +96,6 @@
     <string name="points_history">Points History</string>
     <string name="recent_history_text">Your recent transaction history</string>
 
-    <string name="add_card_error_title">Can&#39;t add card</string>
+    <string name="add_card_error_title">Cannot add card</string>
     <string name="add_card_error_message">Please try again!</string>
 </resources>
