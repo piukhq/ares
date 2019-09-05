@@ -41,9 +41,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(findNavController(R.id.barcode).currentDestination?.id == R.id.maximised_barcode_fragment){
-            findNavController(R.id.barcode).popBackStack()
+        if(findNavController(R.id.main_fragment).currentDestination?.id == R.id.maximised_barcode_fragment){
+            findNavController(R.id.main_fragment).popBackStack()
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            super.onBackPressed()
         }
     }
 }
