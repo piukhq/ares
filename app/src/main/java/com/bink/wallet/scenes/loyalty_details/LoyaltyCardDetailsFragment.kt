@@ -22,6 +22,7 @@ import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -297,16 +298,20 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                runBlocking {
-                    viewModel.deleteCard(viewModel.membershipCard.value?.id)
-                }
-                viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                    Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
-                    dialog?.dismiss()
-                }
-                viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                    dialog?.dismiss()
-                    findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                if (verifyAvailableNetwork(activity!!)) {
+                    runBlocking {
+                        viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                    }
+                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
+                        dialog?.dismiss()
+                    }
+                    viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
+                        dialog?.dismiss()
+                        findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                    }
+                } else {
+                    showNoInternetConnectionDialog()
                 }
             }
             dialog = builder.create()
@@ -334,5 +339,11 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     resources.getString(R.string.points_prefix_or_suffix, balance.value, suffix)
             }
         }
+    }
+
+    private fun showNoInternetConnectionDialog() {
+        AlertDialog.Builder(context).setMessage(R.string.no_internet_connection_dialog_message)
+            .setNeutralButton(R.string.ok) { _, _ -> }
+            .create().show()
     }
 }
