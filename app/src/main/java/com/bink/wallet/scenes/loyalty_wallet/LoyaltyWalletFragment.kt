@@ -80,62 +80,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             it.actionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
-            binding.progressSpinner.visibility = View.VISIBLE
-            binding.swipeLayout.isEnabled = false
-            binding.swipeLayout.isRefreshing = false
-            viewModel.fetchMembershipCards()
-            runBlocking {
-                if (verifyAvailableNetwork(activity!!)) {
-                    viewModel.fetchMembershipPlans()
-                } else {
-                    showNoInternetConnectionDialog()
-                }
-                viewModel.membershipPlanData.observeNonNull(this@LoyaltyWalletFragment) {
-                    if (verifyAvailableNetwork(activity!!)) {
-                        viewModel.fetchMembershipCards()
-                    } else {
-                        showNoInternetConnectionDialog()
-                    }
-                    binding.swipeLayout.isRefreshing = false
-                }
-            }
-
-            viewModel.membershipCardData.observeNonNull(this) {
-                runBlocking {
-                    viewModel.fetchMembershipPlans()
-                }
-            }
-
-            viewModel.membershipPlanData.observeNonNull(this){
-                viewModel.fetchLocalMembershipPlans()
-            }
-
-            viewModel.localMembershipPlanData.observeNonNull(this) {
-                if (it.isNotEmpty()) {
-                    viewModel.localPlansReceived.value = true
-                    viewModel.fetchLocalMembershipCards()
-                }
-            }
-
-            viewModel.localMembershipCardData.observeNonNull(this) {
-                if (it.isNotEmpty()) {
-                    viewModel.localCardsReceived.value = true
-                }
-            }
-        }
-
-        binding.swipeLayout.setOnRefreshListener {
-            if (verifyAvailableNetwork(activity!!)) {
-                runBlocking {
-                    viewModel.fetchMembershipPlans()
-                    viewModel.fetchMembershipCards()
-                }
-            } else {
-                showNoInternetConnectionDialog()
-            }
-        }
-
         viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
             viewModel.localPlansReceived.observeNonNull(this) { plansReceived ->
                 binding.swipeLayout.isRefreshing = false
@@ -167,6 +111,48 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         )
                     }
                 }
+            }
+        }
+
+        if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
+            binding.progressSpinner.visibility = View.VISIBLE
+            binding.swipeLayout.isEnabled = false
+            binding.swipeLayout.isRefreshing = false
+            runBlocking {
+                if (verifyAvailableNetwork(activity!!)) {
+                    viewModel.fetchMembershipPlans()
+                } else {
+                    showNoInternetConnectionDialog()
+                }
+            }
+
+            viewModel.membershipCardData.observeNonNull(this) {
+                viewModel.fetchLocalMembershipCards()
+            }
+
+            viewModel.membershipPlanData.observeNonNull(this) {
+                viewModel.fetchLocalMembershipPlans()
+            }
+
+            viewModel.localMembershipPlanData.observeNonNull(this) {
+                viewModel.fetchMembershipCards()
+            }
+
+            viewModel.localMembershipCardData.observeNonNull(this) {
+                if (it.isNotEmpty()) {
+                    viewModel.localPlansReceived.value = true
+                    viewModel.localCardsReceived.value = true
+                }
+            }
+        }
+
+        binding.swipeLayout.setOnRefreshListener {
+            if (verifyAvailableNetwork(activity!!)) {
+                runBlocking {
+                    viewModel.fetchMembershipPlans()
+                }
+            } else {
+                showNoInternetConnectionDialog()
             }
         }
 
