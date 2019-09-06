@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.add_auth
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,7 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.verifyAvailableNetwork
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
@@ -89,6 +91,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             } else {
                 showNoInternetConnectionDialog()
             }
+            binding.progressSpinner.visibility = View.VISIBLE
             binding.addCardButton.isEnabled = false
         }
 
@@ -115,11 +118,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
             })
+
+
         viewModel.createCardError.observeNonNull(this) {
             requireContext().displayModalPopup(
                 getString(R.string.add_card_error_title),
                 getString(R.string.add_card_error_message)
             )
+            binding.progressSpinner.visibility = View.GONE
             viewModel.createCardError.value = null
             binding.addCardButton.isEnabled = true
         }
