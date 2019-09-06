@@ -33,6 +33,7 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -102,6 +103,16 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
 
                 directions?.let { findNavController().navigateIfAdded(this, it) }
             }
+        }
+
+        binding.viewHistory.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                    viewModel.membershipCard.value!!,
+                    viewModel.membershipPlan.value!!
+                )
+            findNavController().navigateIfAdded(this, action)
+
         }
 
         binding.footerSecurity.setOnClickListener {
@@ -292,16 +303,20 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                runBlocking {
-                    viewModel.deleteCard(viewModel.membershipCard.value?.id)
-                }
-                viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                    Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
-                    dialog?.dismiss()
-                }
-                viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                    dialog?.dismiss()
-                    findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                if (verifyAvailableNetwork(activity!!)) {
+                    runBlocking {
+                        viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                    }
+                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
+                        dialog?.dismiss()
+                    }
+                    viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
+                        dialog?.dismiss()
+                        findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                    }
+                } else {
+                    showNoInternetConnectionDialog()
                 }
             }
             dialog = builder.create()

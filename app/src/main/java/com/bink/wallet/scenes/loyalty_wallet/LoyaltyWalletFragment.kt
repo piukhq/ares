@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -88,13 +89,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = false
             runBlocking {
-                viewModel.fetchMembershipPlans()
+                if (verifyAvailableNetwork(activity!!)) {
+                    viewModel.fetchMembershipPlans()
+                } else {
+                    showNoInternetConnectionDialog()
+                }
                 viewModel.membershipPlanData.observeNonNull(this@LoyaltyWalletFragment) {
-                    viewModel.fetchMembershipCards()
+                    if (verifyAvailableNetwork(activity!!)) {
+                        viewModel.fetchMembershipCards()
+                    } else {
+                        showNoInternetConnectionDialog()
+                    }
                     binding.swipeLayout.isRefreshing = false
                 }
             }
-
 
             viewModel.membershipCardData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipPlans()
@@ -118,9 +126,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             viewModel.localCardsReceived.value = true
             viewModel.localPlansReceived.value = true
-            runBlocking {
-                viewModel.fetchMembershipPlans()
-                viewModel.fetchMembershipCards()
+            if (verifyAvailableNetwork(activity!!)) {
+                runBlocking {
+                    viewModel.fetchMembershipPlans()
+                    viewModel.fetchMembershipCards()
+                }
+            } else {
+                showNoInternetConnectionDialog()
             }
         }
 
@@ -199,8 +211,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        runBlocking {
-                            viewModel.deleteCard(membershipCard.id)
+                        if (verifyAvailableNetwork(activity!!)) {
+                            runBlocking {
+                                viewModel.deleteCard(membershipCard.id)
+                            }
+                        } else {
+                            showNoInternetConnectionDialog()
                         }
                         binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
                     }
@@ -219,5 +235,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             dialog = builder.create()
             dialog.show()
         }
+    }
+
+    private fun showNoInternetConnectionDialog() {
+        android.app.AlertDialog.Builder(context)
+            .setMessage(R.string.no_internet_connection_dialog_message)
+            .setNeutralButton(R.string.ok) { _, _ -> }
+            .create().show()
     }
 }
