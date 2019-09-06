@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.add_auth
 import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -38,6 +37,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         binding.toolbar.setNavigationOnClickListener {
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
             activity?.onBackPressed()
         }
 
@@ -87,12 +89,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             } else {
                 showNoInternetConnectionDialog()
             }
+            binding.addCardButton.isEnabled = false
+        }
 
-            if (viewModel.membershipCardData.hasActiveObservers())
-                viewModel.membershipCardData.removeObservers(this)
-            else
-                viewModel.membershipCardData.observe(this, Observer {
-                    when (currentMembershipPlan.feature_set?.card_type) {
+        if (viewModel.membershipCardData.hasActiveObservers())
+            viewModel.membershipCardData.removeObservers(this)
+        else
+            viewModel.membershipCardData.observe(this, Observer {
+                when (currentMembershipPlan.feature_set?.card_type) {
 //                    0, 1 -> {
 //                        val directions =
 //                            AddAuthFragmentDirections.addAuthToDetails(
@@ -100,24 +104,24 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 //                            )
 //                        findNavController().navigateIfAdded(this, directions)
 //                    }
-                        0, 1, 2 -> {
-                            if (it.membership_transactions.isEmpty()) {
-                                val directions =
-                                    AddAuthFragmentDirections.addAuthToPllEmpty(
-                                        currentMembershipPlan, it
-                                    )
-                                findNavController().navigateIfAdded(this, directions)
-                            }
+                    0, 1, 2 -> {
+                        if (it.membership_transactions.isEmpty()) {
+                            val directions =
+                                AddAuthFragmentDirections.addAuthToPllEmpty(
+                                    currentMembershipPlan, it
+                                )
+                            findNavController().navigateIfAdded(this, directions)
                         }
                     }
-                })
-            viewModel.createCardError.observeNonNull(this) {
-                requireContext().displayModalPopup(
-                    getString(R.string.add_card_error_title),
-                    getString(R.string.add_card_error_message)
-                )
-                viewModel.createCardError.value = null
-            }
+                }
+            })
+        viewModel.createCardError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                getString(R.string.add_card_error_title),
+                getString(R.string.add_card_error_message)
+            )
+            viewModel.createCardError.value = null
+            binding.addCardButton.isEnabled = true
         }
     }
 }
