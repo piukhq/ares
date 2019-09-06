@@ -81,18 +81,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            if (verifyAvailableNetwork(activity!!)) {
-                viewModel.createMembershipCard(
-                    MembershipCardRequest(
-                        addAuthFieldsRequest,
-                        currentMembershipPlan.id
+            if(viewModel.createCardError.value == null) {
+                if (verifyAvailableNetwork(requireActivity())) {
+                    viewModel.createMembershipCard(
+                        MembershipCardRequest(
+                            addAuthFieldsRequest,
+                            currentMembershipPlan.id
+                        )
                     )
-                )
-            } else {
-                showNoInternetConnectionDialog()
+                } else {
+                    showNoInternetConnectionDialog()
+                }
+                binding.addCardButton.isEnabled = false
+                binding.progressSpinner.visibility = View.VISIBLE
             }
-            binding.progressSpinner.visibility = View.VISIBLE
-            binding.addCardButton.isEnabled = false
         }
 
         if (viewModel.membershipCardData.hasActiveObservers())
@@ -117,6 +119,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     }
                 }
+                binding.progressSpinner.visibility = View.GONE
+                viewModel.createCardError.value = null
+                binding.addCardButton.isEnabled = true
             })
 
 
