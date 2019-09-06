@@ -37,7 +37,6 @@ import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -105,7 +104,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             }
         }
 
-        binding.viewHistory.setOnClickListener {
+        binding.pointsDescription.setOnClickListener {
             val action =
                 LoyaltyCardDetailsFragmentDirections.detailToTransactions(
                     viewModel.membershipCard.value!!,
@@ -344,5 +343,11 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     resources.getString(R.string.points_prefix_or_suffix, balance.value, suffix)
             }
         }
+    }
+
+    private fun showNoInternetConnectionDialog() {
+        AlertDialog.Builder(context).setMessage(R.string.no_internet_connection_dialog_message)
+            .setNeutralButton(R.string.ok) { _, _ -> }
+            .create().show()
     }
 }
