@@ -1,10 +1,12 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.BrandListItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.enums.CardType
 
 
 class BrowseBrandsAdapter(
@@ -40,6 +42,12 @@ class BrowseBrandsAdapter(
         fun bind(item: MembershipPlan) {
             binding.item = item
             binding.executePendingBindings()
+
+            if (item.getCardType() == CardType.PLL) {
+                binding.browseBrandsDescription.visibility = View.VISIBLE
+            } else {
+                binding.browseBrandsDescription.visibility = View.INVISIBLE
+            }
         }
     }
 }
