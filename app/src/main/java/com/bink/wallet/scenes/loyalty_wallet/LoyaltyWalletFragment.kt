@@ -87,7 +87,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         if (viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true) {
             binding.progressSpinner.visibility = View.VISIBLE
-            swipe_layout.isEnabled = false
+            binding.swipeLayout.isEnabled = false
             runBlocking {
                 if (verifyAvailableNetwork(activity!!)) {
                     viewModel.fetchMembershipPlans()
@@ -235,12 +235,5 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             dialog = builder.create()
             dialog.show()
         }
-    }
-
-    private fun showNoInternetConnectionDialog() {
-        android.app.AlertDialog.Builder(context)
-            .setMessage(R.string.no_internet_connection_dialog_message)
-            .setNeutralButton(R.string.ok) { _, _ -> }
-            .create().show()
     }
 }

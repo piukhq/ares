@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
-
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.utils.displayModalPopup
 
 abstract class BaseFragment<VM: BaseViewModel?, DB: ViewDataBinding>: Fragment() {
 
@@ -46,5 +46,12 @@ abstract class BaseFragment<VM: BaseViewModel?, DB: ViewDataBinding>: Fragment()
                 }
             }
         })
+    }
+
+    fun showNoInternetConnectionDialog() {
+        requireContext().displayModalPopup(
+            null,
+            getString(R.string.no_internet_connection_dialog_message)
+        )
     }
 }

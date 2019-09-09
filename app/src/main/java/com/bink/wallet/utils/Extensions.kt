@@ -26,10 +26,14 @@ fun NavController.navigateIfAdded(fragment: Fragment, navDirections: NavDirectio
     }
 }
 
-fun Context.displayModalPopup(title: String, message: String) {
+fun Context.displayModalPopup(title: String?, message: String?) {
     val builder = AlertDialog.Builder(this)
-    builder.setTitle(title)
-    builder.setMessage(message)
+    title?.let {
+        builder.setTitle(title)
+    }
+    message?.let {
+        builder.setMessage(message)
+    }
     builder.setNeutralButton(R.string.ok) { _, _ -> }
     builder.create().show()
 }
@@ -38,4 +42,30 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
     this.observe(owner, Observer {
         it?.let(observer)
     })
+}
+
+fun Long.getElapsedTime(context: Context): String {
+    var elapsed = this / 60
+    var suffix = MINUTES
+    if (elapsed >= 60) {
+        elapsed /= 60
+        suffix = HOURS
+        if (elapsed >= 24) {
+            elapsed /= 24
+            suffix = DAYS
+            if (elapsed >= 7) {
+                elapsed /= 7
+                suffix = WEEKS
+                if (elapsed >= 5) {
+                    elapsed /= 5
+                    suffix = MONTHS
+                    if (elapsed >= 12) {
+                        elapsed /= 12
+                        suffix = YEARS
+                    }
+                }
+            }
+        }
+    }
+    return context.getString(R.string.description_last_checked, elapsed.toInt().toString(), suffix)
 }

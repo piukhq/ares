@@ -14,6 +14,7 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -41,6 +42,8 @@ val viewModelModules = module {
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
     viewModel { PllViewModel() }
+
+    viewModel { MaximisedBarcodeViewModel() }
 
     viewModel { TransactionViewModel() }
 }
