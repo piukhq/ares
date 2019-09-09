@@ -17,19 +17,15 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.model.response.membership_card.CardBalance
-import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.getElapsedTime
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
-class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
+class LoyaltyCardDetailsFragment :
+    BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -60,7 +56,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             viewModel.setAccountStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this){
+        viewModel.membershipCard.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = false
         }
 
@@ -93,21 +89,22 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 directions?.let { findNavController().navigateIfAdded(this, it) }
             }
         }
-
-        binding.pointsImage.setOnClickListener {
-            val action =
-                LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(viewModel.membershipCard.value!!, viewModel.accountStatus.value!!)
-            findNavController().navigateIfAdded(this, action)
-        }
-
-        binding.pointsDescription.setOnClickListener {
-            val action =
-                LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                    viewModel.membershipCard.value!!,
-                    viewModel.membershipPlan.value!!
-                )
-            findNavController().navigateIfAdded(this, action)
-
+        binding.pointsWrapper.setOnClickListener {
+            if (viewModel.accountStatus.value == LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE) {
+                val action =
+                    LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                        viewModel.membershipCard.value!!,
+                        viewModel.membershipPlan.value!!
+                    )
+                findNavController().navigateIfAdded(this, action)
+            } else {
+                val action =
+                    LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
+                        viewModel.membershipCard.value!!,
+                        viewModel.accountStatus.value!!
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
         }
 
         binding.footerSecurity.setOnClickListener {
@@ -286,7 +283,8 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         )
                     )
                     binding.pointsText.text = resources.getString(R.string.points_login)
-                    binding.pointsDescription.text = resources.getString(R.string.description_see_history)
+                    binding.pointsDescription.text =
+                        resources.getString(R.string.description_see_history)
                 }
             }
         }
