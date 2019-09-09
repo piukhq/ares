@@ -21,6 +21,8 @@ class MembershipCard(
 ) : Parcelable {
 
     fun getHeroImage(): CardImages? {
-        return images?.first { image -> image.type == 0 }
+        return if (!images.isNullOrEmpty()) {
+            images?.first { image -> image.type == 0 }
+        } else null
     }
 }
