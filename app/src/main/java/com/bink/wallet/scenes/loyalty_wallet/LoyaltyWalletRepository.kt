@@ -119,7 +119,8 @@ class LoyaltyWalletRepository(
 
     fun createMembershipCard(
         membershipCardRequest: MembershipCardRequest,
-        mutableMembershipCard: MutableLiveData<MembershipCard>
+        mutableMembershipCard: MutableLiveData<MembershipCard>,
+        createError: MutableLiveData<String>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
@@ -128,6 +129,7 @@ class LoyaltyWalletRepository(
                     val response = request.await()
                     mutableMembershipCard.value = response
                 } catch (e: Throwable) {
+                    createError.value = e.localizedMessage
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

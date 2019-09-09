@@ -131,4 +131,6 @@ supported for this brand yet.</string>
     <string name="description_text"> "  Text explaining to the user that it sometimes takes a while to log in with the merchant.\n   In the meantime they should not attempt to log in again, but they can use their card and receive their benefits as usual.\n   After the log in they will be able to see their points balance." </string>
     <string name="no_internet_connection_dialog_message">Your selected activity cannot be performed at this time due to a connection issue</string>
 
+    <string name="add_card_error_title">Cannot add card</string>
+    <string name="add_card_error_message">Please try again!</string>
 </resources>

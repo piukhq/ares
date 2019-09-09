@@ -42,6 +42,5 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
 
             findNavController().navigateIfAdded(this, directions)
         }
-
     }
 }
