@@ -160,6 +160,9 @@
                 app:destination="@+id/loyalty_card_detail_fragment"
                 app:popUpTo="@+id/loyalty_fragment"
                 app:popUpToInclusive="true" />
+                app:destination="@+id/loyalty_fragment"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+        <action android:id="@+id/detail_to_barcode" app:destination="@+id/barcode_fragment"/>
 
     </fragment>
 
