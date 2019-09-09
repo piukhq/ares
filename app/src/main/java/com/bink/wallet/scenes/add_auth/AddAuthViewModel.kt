@@ -9,9 +9,9 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) : BaseViewModel() {
 
     var membershipCardData: MutableLiveData<MembershipCard> = MutableLiveData()
+    val createCardError = MutableLiveData<String>()
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
-        loyaltyWalletRepository.createMembershipCard(membershipCardRequest, membershipCardData)
+        loyaltyWalletRepository.createMembershipCard(membershipCardRequest, membershipCardData, createCardError)
     }
-
 }

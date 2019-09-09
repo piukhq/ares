@@ -53,9 +53,23 @@
                   android:textColor="@android:color/black"
                   app:layout_constraintTop_toBottomOf="@+id/add_join_reward"
                   app:layout_constraintStart_toStartOf="parent"
-                  android:layout_marginStart="16dp"
+                  android:layout_marginStart="@dimen/first_keyline"
                   app:layout_constraintEnd_toEndOf="parent"
-                  android:layout_marginEnd="16dp"/>
+                  android:layout_marginEnd="@dimen/first_keyline"/>
+
+        <ProgressBar
+                android:id="@+id/progress_spinner"
+                style="@style/ProgressSpinner"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/size_half_keyline"
+                android:layout_marginTop="@dimen/size_half_keyline"
+                android:layout_marginBottom="@dimen/size_half_keyline"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/auth_add_fields"

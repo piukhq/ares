@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.os.Parcelable
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.ArrayAdapter
@@ -22,6 +23,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 
@@ -46,17 +48,17 @@ fun View.setVisible(isVisible: Boolean) {
         View.GONE
     }
 }
-
-data class BarcodeWrapper(val barcode: String?, val barcodeType: Int)
+@Parcelize
+data class BarcodeWrapper(val barcode: String?, val barcodeType: Int): Parcelable
 
 @BindingAdapter("barcode")
-fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
-    if (!barcode.barcode.isNullOrEmpty()) {
+fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
+    if (!barcode?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
-        when (barcode.barcodeType) {
+        when (barcode?.barcodeType) {
             0 -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
             2 -> format = BarcodeFormat.AZTEC
@@ -68,7 +70,7 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
         }
 
         val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
+            multiFormatWriter.encode(barcode?.barcode, format, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)

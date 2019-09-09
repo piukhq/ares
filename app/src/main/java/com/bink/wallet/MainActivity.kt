@@ -1,8 +1,11 @@
 package com.bink.wallet
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
@@ -34,6 +37,19 @@ class MainActivity : AppCompatActivity() {
             LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_JWT, currentToken, this)
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
+        }
+    }
+
+    override fun onBackPressed() {
+        when {
+            findNavController(R.id.main_fragment).currentDestination?.id == R.id.maximised_barcode_fragment -> {
+                findNavController(R.id.main_fragment).popBackStack()
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+            findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_empty_fragment -> {
+                //do nothing (back button action is prohibited here)
+            }
+            else -> super.onBackPressed()
         }
     }
 }
