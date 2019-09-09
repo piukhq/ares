@@ -338,10 +338,4 @@ class LoyaltyCardDetailsFragment :
             }
         }
     }
-
-    private fun showNoInternetConnectionDialog() {
-        AlertDialog.Builder(context).setMessage(R.string.no_internet_connection_dialog_message)
-            .setNeutralButton(R.string.ok) { _, _ -> }
-            .create().show()
-    }
 }
