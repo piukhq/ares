@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.add_auth
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -36,6 +37,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val currentMembershipPlan = args.currentMembershipPlan
 
         binding.item = currentMembershipPlan
+
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         binding.toolbar.setNavigationIcon(R.drawable.ic_back)
         binding.toolbar.setNavigationOnClickListener {
