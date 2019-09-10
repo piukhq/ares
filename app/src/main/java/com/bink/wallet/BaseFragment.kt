@@ -58,7 +58,7 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ToolbarManager(builder(), view).prepareToolbar()
+        ToolbarManager(builder()).prepareToolbar()
     }
 
     protected abstract fun builder(): FragmentToolbar
