@@ -18,6 +18,7 @@ import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
@@ -141,6 +142,22 @@ class LoyaltyCardDetailsFragment :
             }
             dialog.show()
 
+        }
+
+        viewModel.linkStatus.observeNonNull(this) { status ->
+            when(status){
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
+
+                }
+
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
+
+                }
+
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
+
+                }
+            }
         }
 
         viewModel.accountStatus.observeNonNull(this) { status ->

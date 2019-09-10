@@ -3,6 +3,7 @@ package com.bink.wallet.network
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.login.LoginResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.ResponseBody
@@ -18,6 +19,9 @@ interface ApiService {
 
     @GET("/ubiquity/membership_cards")
     fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
+
+    @GET("/ubiquity/payment_cards")
+    fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
     @DELETE("/ubiquity/membership_card/{card_id}")
     fun deleteCardAsync(@Path("card_id") cardId: String): Deferred<ResponseBody>

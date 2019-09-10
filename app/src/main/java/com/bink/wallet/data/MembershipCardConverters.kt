@@ -21,6 +21,21 @@ class MembershipCardConverters {
     }
 
     @TypeConverter
+    fun fromPaymentCardList(value: List<String>?): String? {
+        val gson = Gson()
+        val type = object : TypeToken<List<String?>?>() {}.type
+        return gson.toJson(value, type)
+    }
+
+    @TypeConverter
+    fun toPaymentCardList(value: String): List<String?>? {
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(value, type)
+    }
+
+
+    @TypeConverter
     fun fromCardImageList(value: List<CardImages?>?): String? {
         val gson = Gson()
         val type = object : TypeToken<List<CardImages>>() {}.type

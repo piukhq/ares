@@ -14,6 +14,7 @@ class MembershipCard(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
     @ColumnInfo(name = "card_status") var status: CardStatus?,
+    @ColumnInfo(name = "payment_cards") var payment_cards: List<String>,
     @ColumnInfo(name = "card") var card: Card?,
     @ColumnInfo(name = "card_images") var images: List<CardImages>?,
     @ColumnInfo(name = "balances") var balances: List<CardBalance>?,

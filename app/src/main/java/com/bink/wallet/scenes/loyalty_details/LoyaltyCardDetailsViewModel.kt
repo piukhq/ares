@@ -4,6 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.enums.CardStatus
+import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 
 
@@ -16,13 +19,8 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var deletedCard = MutableLiveData<String>()
     var deleteError = MutableLiveData<String>()
     var accountStatus = MutableLiveData<LoginStatus>()
+    var linkStatus = MutableLiveData<LinkStatus>()
 
-    companion object {
-        const val STATUS_AUTHORISED = "authorised"
-        const val STATUS_PENDING = "pending"
-        const val STATUS_FAILED = "failed"
-        const val STATUS_UNAUTHORISED = "unauthorised"
-    }
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, deleteError)
     }
@@ -34,21 +32,21 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     fun setAccountStatus() {
         if(membershipPlan.value?.feature_set?.has_points == true || membershipPlan.value?.feature_set?.transactions_available == true) {
             when(membershipCard.value?.status?.state){
-                STATUS_AUTHORISED -> {
+                CardStatus.AUTHORISED.status -> {
                     if (membershipPlan.value?.feature_set?.transactions_available == true) {
                         accountStatus.value = LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE
                     } else {
                         accountStatus.value = LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE
                     }
                 }
-                STATUS_UNAUTHORISED -> {
+                CardStatus.UNAUTHORISED.status -> {
                     if (membershipPlan.value?.feature_set?.transactions_available == true) {
                         accountStatus.value = LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE
                     } else {
                         accountStatus.value = LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE
                     }
                 }
-                STATUS_PENDING -> {
+                CardStatus.PENDING.status -> {
                     if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X200")) != null) {
                         accountStatus.value = LoginStatus.STATUS_SIGN_UP_PENDING
                     }
@@ -63,7 +61,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                     }
                 }
 
-                STATUS_FAILED -> {
+                CardStatus.FAILED.status -> {
                     if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X201")) != null) {
                         accountStatus.value = LoginStatus.STATUS_SIGN_UP_FAILED
                     }
@@ -89,6 +87,31 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         } else {
             accountStatus.value = LoginStatus.STATUS_LOGIN_UNAVAILABLE
         }
+    }
+
+    fun setLinkStatus() {
+        when (membershipPlan.value?.feature_set?.card_type) {
+            CardType.PLL.type -> {
+                when(membershipCard.value?.status?.state) {
+                    CardStatus.AUTHORISED.status -> {
+
+                    }
+                    CardStatus.UNAUTHORISED.status -> {
+                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH
+                    }
+                    CardStatus.PENDING.status -> {
+                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
+                    }
+                    CardStatus.FAILED.status -> {
+                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
+                    }
+                }
+            }
+            CardType.VIEW.type, CardType.STORE.type -> {
+                linkStatus.value = LinkStatus.STATUS_UNLINKABLE
+            }
+        }
+
     }
 
 }

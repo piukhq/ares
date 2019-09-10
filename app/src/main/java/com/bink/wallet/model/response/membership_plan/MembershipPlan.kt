@@ -22,7 +22,7 @@ class MembershipPlan(
 
     fun getCardType(): CardType? {
         return when (feature_set?.card_type) {
-            0 -> CardType.BASIC
+            0 -> CardType.STORE
             1 -> CardType.VIEW
             2 -> CardType.PLL
             else -> null
