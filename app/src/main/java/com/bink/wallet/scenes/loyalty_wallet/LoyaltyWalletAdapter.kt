@@ -41,6 +41,10 @@ class LoyaltyWalletAdapter(
         return membershipCards.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
     inner class MyViewHolder(val binding: LoyaltyWalletItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

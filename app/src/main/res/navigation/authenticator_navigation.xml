@@ -146,6 +146,10 @@
                 android:id="@+id/detail_to_transactions"
                 app:destination="@+id/transactions_fragment" />
 
+        <action
+                android:id="@+id/detail_to_not_supported_transactions"
+                app:destination="@+id/transactions_not_supported" />
+
     </fragment>
 
     <fragment
@@ -164,9 +168,10 @@
                 app:destination="@+id/loyalty_card_detail_fragment"
                 app:popUpTo="@+id/loyalty_fragment"
                 app:popUpToInclusive="true" />
-                app:destination="@+id/loyalty_fragment"
-                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
-        <action android:id="@+id/detail_to_barcode" app:destination="@+id/barcode_fragment"/>
+
+        <action
+                android:id="@+id/detail_to_barcode"
+                app:destination="@+id/barcode_fragment" />
 
     </fragment>
 
@@ -192,6 +197,20 @@
         <argument
                 android:name="barcode"
                 app:argType="com.bink.wallet.utils.BarcodeWrapper" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/transactions_not_supported"
+            android:name="com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedFragment">
+
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
+        <argument
+                android:name="loginStatus"
+                app:argType="com.bink.wallet.utils.enums.LoginStatus" />
+
     </fragment>
 
 </navigation>

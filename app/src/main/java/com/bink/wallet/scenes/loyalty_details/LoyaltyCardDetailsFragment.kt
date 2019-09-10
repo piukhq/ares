@@ -17,29 +17,21 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.model.response.membership_card.CardBalance
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_CARD_ALREADY_EXISTS
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGGED_IN_HISTORY_AVAILABLE
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGIN_FAILED
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGIN_PENDING
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_LOGIN_UNAVAILABLE
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_REGISTER_GHOST_CARD_FAILED
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_REGISTER_GHOST_CARD_PENDING
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_SIGN_UP_FAILED
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel.Companion.STATUS_SIGN_UP_PENDING
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.getElapsedTime
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.verifyAvailableNetwork
+import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
+class LoyaltyCardDetailsFragment :
+    BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .withId(FragmentToolbar.NO_TOOLBAR)
+            .build()
+    }
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -70,7 +62,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
             viewModel.setAccountStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this){
+        viewModel.membershipCard.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = false
         }
 
@@ -103,15 +95,22 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                 directions?.let { findNavController().navigateIfAdded(this, it) }
             }
         }
-
-        binding.pointsDescription.setOnClickListener {
-            val action =
-                LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                    viewModel.membershipCard.value!!,
-                    viewModel.membershipPlan.value!!
-                )
-            findNavController().navigateIfAdded(this, action)
-
+        binding.pointsWrapper.setOnClickListener {
+            if (viewModel.accountStatus.value == LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE) {
+                val action =
+                    LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                        viewModel.membershipCard.value!!,
+                        viewModel.membershipPlan.value!!
+                    )
+                findNavController().navigateIfAdded(this, action)
+            } else {
+                val action =
+                    LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
+                        viewModel.membershipCard.value!!,
+                        viewModel.accountStatus.value!!
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
         }
 
         binding.footerSecurity.setOnClickListener {
@@ -152,7 +151,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
 
         viewModel.accountStatus.observeNonNull(this) { status ->
             when (status) {
-                STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -163,7 +162,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
                 }
-                STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -186,8 +185,8 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         }
                     }
                 }
-                STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
-                STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     binding.pointsText.text = resources.getString(R.string.points_login)
                     binding.pointsDescription.text =
                         resources.getString(R.string.description_see_history)
@@ -198,7 +197,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         )
                     )
                 }
-                STATUS_LOGIN_UNAVAILABLE -> {
+                LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
                     binding.pointsText.text = resources.getString(R.string.points_history)
                     binding.pointsDescription.text =
                         resources.getString(R.string.description_not_available)
@@ -210,7 +209,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     )
                 }
 
-                STATUS_LOGIN_FAILED -> {
+                LoginStatus.STATUS_LOGIN_FAILED -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -222,7 +221,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         resources.getString(R.string.description_see_history)
                 }
 
-                STATUS_LOGIN_PENDING -> {
+                LoginStatus.STATUS_LOGIN_PENDING -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -234,7 +233,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         resources.getString(R.string.description_please_wait)
                 }
 
-                STATUS_SIGN_UP_FAILED -> {
+                LoginStatus.STATUS_SIGN_UP_FAILED -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -246,7 +245,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         resources.getString(R.string.description_please_try_again)
                 }
 
-                STATUS_SIGN_UP_PENDING -> {
+                LoginStatus.STATUS_SIGN_UP_PENDING -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -258,7 +257,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         resources.getString(R.string.description_please_wait)
                 }
 
-                STATUS_REGISTER_GHOST_CARD_FAILED -> {
+                LoginStatus.STATUS_REGISTER_GHOST_CARD_FAILED -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -270,7 +269,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                     binding.pointsDescription.text =
                         resources.getString(R.string.description_please_try_again)
                 }
-                STATUS_REGISTER_GHOST_CARD_PENDING -> {
+                LoginStatus.STATUS_REGISTER_GHOST_CARD_PENDING -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -282,7 +281,7 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         resources.getString(R.string.description_please_wait)
                 }
 
-                STATUS_CARD_ALREADY_EXISTS -> {
+                LoginStatus.STATUS_CARD_ALREADY_EXISTS -> {
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -290,7 +289,8 @@ class LoyaltyCardDetailsFragment: BaseFragment<LoyaltyCardDetailsViewModel, Frag
                         )
                     )
                     binding.pointsText.text = resources.getString(R.string.points_login)
-                    binding.pointsDescription.text = resources.getString(R.string.description_see_history)
+                    binding.pointsDescription.text =
+                        resources.getString(R.string.description_see_history)
                 }
             }
         }

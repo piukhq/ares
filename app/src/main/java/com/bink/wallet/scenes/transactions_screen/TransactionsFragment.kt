@@ -5,10 +5,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.TransactionFragmentBinding
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.transaction_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .build()
+    }
 
     override val layoutRes: Int
         get() = R.layout.transaction_fragment
@@ -23,11 +29,6 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
             viewModel.membershipPlan.value =
                 TransactionsFragmentArgs.fromBundle(it).membershipPlan
             binding.viewModel = viewModel
-        }
-
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
         }
 
         viewModel.membershipCard.observeForever {

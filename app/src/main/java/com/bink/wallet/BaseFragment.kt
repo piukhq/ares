@@ -11,8 +11,10 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.toolbar.ToolbarManager
 
-abstract class BaseFragment<VM: BaseViewModel?, DB: ViewDataBinding>: Fragment() {
+abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragment() {
 
     @get:LayoutRes
     abstract val layoutRes: Int
@@ -27,7 +29,11 @@ abstract class BaseFragment<VM: BaseViewModel?, DB: ViewDataBinding>: Fragment()
 
     open fun init() {}
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         init(inflater, container!!)
         init()
         return binding.root
@@ -37,16 +43,25 @@ abstract class BaseFragment<VM: BaseViewModel?, DB: ViewDataBinding>: Fragment()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (findNavController().currentDestination?.label != getString(R.string.root)) {
-                    findNavController().popBackStack()
-                } else {
-                    activity?.finish()
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (findNavController().currentDestination?.label != getString(R.string.root)) {
+                        findNavController().popBackStack()
+                    } else {
+                        activity?.finish()
+                    }
                 }
-            }
-        })
+            })
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ToolbarManager(builder()).prepareToolbar()
+    }
+
+    protected abstract fun builder(): FragmentToolbar
 
     fun showNoInternetConnectionDialog() {
         requireContext().displayModalPopup(
