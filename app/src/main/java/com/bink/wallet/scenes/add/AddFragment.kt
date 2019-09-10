@@ -6,10 +6,16 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.add_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .withId(FragmentToolbar.NO_TOOLBAR)
+            .build()
+    }
 
     companion object {
         fun newInstance() = AddFragment()
