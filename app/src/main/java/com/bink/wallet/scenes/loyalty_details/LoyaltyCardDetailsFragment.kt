@@ -96,6 +96,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
+
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     val action =
@@ -108,7 +109,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE, LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE, LoginStatus.STATUS_LOGIN_FAILED -> {
                     val action =
                         LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                            viewModel.membershipPlan.value!!
+                            viewModel.membershipPlan.value!!, viewModel.membershipCard.value!!
                         )
                     findNavController().navigateIfAdded(this, action)
                 }

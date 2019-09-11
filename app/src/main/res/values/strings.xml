@@ -123,6 +123,7 @@
     <string name="transaction_not_supported_description">Points updated %1$s %2$s ago.
 Text explaining to the user that history is not
 supported for this brand yet.</string>
+
     <string name="log_in_pending">Log in pending</string>
     <string name="transaction_history_not_supported">Transaction history not supported</string>
     <string name="sign_up_pending">Sign up pending</string>
@@ -133,4 +134,8 @@ supported for this brand yet.</string>
 
     <string name="add_card_error_title">Cannot add card</string>
     <string name="add_card_error_message">Please try again!</string>
+    <string name="sign_up_text">Sign up</string>
+    <string name="log_in_text">Log in</string>
+    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance. This is optional</string>
+    <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your points balance. This is optional</string>
 </resources>
