@@ -17,13 +17,20 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
+
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .withId(FragmentToolbar.NO_TOOLBAR)
+            .build()
+    }
+
     private var TAG = LoyaltyWalletFragment::class.simpleName
 
     override val viewModel: LoyaltyViewModel by viewModel()

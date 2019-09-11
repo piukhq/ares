@@ -1,17 +1,23 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
-import androidx.annotation.IntDef
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.add_join_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .withId(FragmentToolbar.NO_TOOLBAR)
+            .build()
+    }
+
     override val layoutRes: Int
         get() = R.layout.add_join_fragment
 
@@ -33,15 +39,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         if (args.currentMembershipPlan.feature_set?.card_type != 2) {
             add_join_link_image.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
             add_join_link_description.text = getString(R.string.add_join_inactive_link_description)
-        }
-
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
-        }
-
-        binding.close.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_join_to_home)
         }
 
         binding.addCardButton.setOnClickListener {

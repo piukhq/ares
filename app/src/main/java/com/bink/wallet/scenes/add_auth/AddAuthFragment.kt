@@ -18,12 +18,17 @@ import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .build()
+    }
 
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
@@ -40,16 +45,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
+        binding.close.setOnClickListener {
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.windowToken, 0)
-            activity?.onBackPressed()
-        }
-
-        binding.close.setOnClickListener {
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
             findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
         }
@@ -84,7 +82,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            if(viewModel.createCardError.value == null) {
+            if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
                     viewModel.createMembershipCard(
                         MembershipCardRequest(
