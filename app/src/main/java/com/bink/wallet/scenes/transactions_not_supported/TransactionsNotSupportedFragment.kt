@@ -4,11 +4,17 @@ import android.os.Bundle
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.TransactionsNotSupportedFragmentBinding
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TransactionsNotSupportedFragment :
     BaseFragment<TransactionsNotSupportedViewModel, TransactionsNotSupportedFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .build()
+    }
 
     override val layoutRes: Int
         get() = R.layout.transactions_not_supported_fragment
@@ -21,16 +27,9 @@ class TransactionsNotSupportedFragment :
         arguments?.let {
             viewModel.membershipCard.value =
                 TransactionsNotSupportedFragmentArgs.fromBundle(it).membershipCard
-
-            viewModel.logInType.value = TransactionsNotSupportedFragmentArgs.fromBundle(it).loginStatus
+            viewModel.logInType.value =
+                TransactionsNotSupportedFragmentArgs.fromBundle(it).loginStatus
             binding.card = viewModel.membershipCard.value
         }
-
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
-        }
-
-
     }
 }

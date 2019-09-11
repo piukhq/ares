@@ -7,9 +7,16 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.utils.BarcodeWrapper
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .build()
+    }
+
     override val viewModel: BarcodeViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.barcode_fragment
@@ -18,11 +25,11 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-           BarcodeFragmentArgs.fromBundle(it).apply {
-               viewModel.membershipPlan.value = currentMembershipPlan
-               viewModel.barcode.value = BarcodeWrapper(barcode, barcodeType)
-               viewModel.isBarcodeAvailable.value = !barcode.isNullOrEmpty()
-           }
+            BarcodeFragmentArgs.fromBundle(it).apply {
+                viewModel.membershipPlan.value = currentMembershipPlan
+                viewModel.barcode.value = BarcodeWrapper(barcode, barcodeType)
+                viewModel.isBarcodeAvailable.value = !barcode.isNullOrEmpty()
+            }
         }
         val directions =
             viewModel.barcode.value?.let { barcode ->
@@ -41,9 +48,5 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         binding.buttonMaximize.setOnClickListener {
             directions?.let { directions -> findNavController().navigateIfAdded(this, directions) }
         }
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-                activity?.onBackPressed()
-            }
     }
 }

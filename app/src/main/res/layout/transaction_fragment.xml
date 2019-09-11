@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             tools:context="com.bink.wallet.scenes.transactions_screen.TransactionsFragment">
 
-        <androidx.appcompat.widget.Toolbar
+        <Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
