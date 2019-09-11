@@ -90,20 +90,30 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
-            if (viewModel.accountStatus.value == LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE) {
-                val action =
-                    LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                        viewModel.membershipCard.value!!,
-                        viewModel.membershipPlan.value!!
-                    )
-                findNavController().navigateIfAdded(this, action)
-            } else {
-                val action =
-                    LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
-                        viewModel.membershipCard.value!!,
-                        viewModel.accountStatus.value!!
-                    )
-                findNavController().navigateIfAdded(this, action)
+            when (viewModel.accountStatus.value) {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.membershipPlan.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE, LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE, LoginStatus.STATUS_LOGIN_FAILED -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                            viewModel.membershipPlan.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
+                else -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.accountStatus.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
             }
         }
 
@@ -234,7 +244,8 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_login
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_sign_up_failed)
+                    binding.pointsText.text =
+                        resources.getString(R.string.points_sign_up_failed)
                     binding.pointsDescription.text =
                         resources.getString(R.string.description_please_try_again)
                 }
@@ -270,7 +281,8 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_pending
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_registering_card)
+                    binding.pointsText.text =
+                        resources.getString(R.string.points_registering_card)
                     binding.pointsDescription.text =
                         resources.getString(R.string.description_please_wait)
                 }

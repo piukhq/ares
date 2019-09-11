@@ -150,6 +150,10 @@
                 android:id="@+id/detail_to_not_supported_transactions"
                 app:destination="@+id/transactions_not_supported" />
 
+        <action
+                android:id="@+id/detail_to_auth"
+                app:destination="@+id/add_auth"/>
+
     </fragment>
 
     <fragment
