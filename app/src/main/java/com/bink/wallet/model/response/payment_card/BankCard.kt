@@ -6,7 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Card(
+data class BankCard(
+    val first_six_digits: String,
     val last_four_digits: String,
     val month: Int,
     val year: Int,

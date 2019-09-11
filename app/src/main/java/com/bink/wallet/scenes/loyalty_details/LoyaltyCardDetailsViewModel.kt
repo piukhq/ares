@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.CardStatus
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LinkStatus
@@ -15,6 +16,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var tiles = MutableLiveData<List<String>>()
     var membershipPlan = MutableLiveData<MembershipPlan>()
     var membershipCard = MutableLiveData<MembershipCard>()
+    var paymentCards = MutableLiveData<List<PaymentCard>>()
     var updatedMembershipCard = MutableLiveData<MembershipCard>()
     var deletedCard = MutableLiveData<String>()
     var deleteError = MutableLiveData<String>()
@@ -27,6 +29,10 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
 
     suspend fun updateMembershipCard(){
         membershipCard.value?.id?.let { repository.refreshMembershipCard(it, updatedMembershipCard) }
+    }
+
+    suspend fun fetchPaymentCards() {
+        repository.getPaymentCards(paymentCards)
     }
 
     fun setAccountStatus() {
@@ -94,7 +100,16 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
             CardType.PLL.type -> {
                 when(membershipCard.value?.status?.state) {
                     CardStatus.AUTHORISED.status -> {
-
+                        if (paymentCards.value.isNullOrEmpty()) {
+                            linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
+                        } else {
+                            if (membershipCard.value?.payment_cards.isNullOrEmpty()) {
+                                linkStatus.value =
+                                    LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
+                            } else {
+                                linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
+                            }
+                        }
                     }
                     CardStatus.UNAUTHORISED.status -> {
                         linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH

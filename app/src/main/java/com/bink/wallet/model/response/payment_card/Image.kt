@@ -6,9 +6,4 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Consent(
-    val type: Int,
-    val latitude: Double,
-    val longitude: Double,
-    val timestamp: Long
-) : Parcelable
+data class Image(val id: Int, val type: Int, val url: String, val description: String, val encoding: String): Parcelable

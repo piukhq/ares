@@ -39,6 +39,14 @@ class LoyaltyCardDetailsFragment :
             findNavController().navigateIfAdded(this, R.id.detail_to_home)
         }
 
+        runBlocking {
+            viewModel.fetchPaymentCards()
+        }
+
+        viewModel.paymentCards.observeNonNull(this) {
+            viewModel.setLinkStatus()
+        }
+
         arguments?.let {
             viewModel.membershipPlan.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
@@ -54,6 +62,7 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
             viewModel.membershipCard.value = it
+            binding.swipeLayout.isRefreshing = false
             viewModel.setAccountStatus()
         }
 
@@ -146,17 +155,125 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.linkStatus.observeNonNull(this) { status ->
             when(status){
-                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
+                LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_active_linked
+                        )
+                    )
+                    //TODO go to PLL screen
+                    binding.linkStatusText.text = resources.getString(R.string.link_status_linked)
+                    binding.linkDescription.text = resources.getString(
+                        R.string.description_linked,
+                        viewModel.membershipCard.value?.payment_cards?.size?.let {
+                            viewModel.paymentCards.value?.size?.minus(
+                                it
+                            )
+                        },
+                        viewModel.membershipCard.value?.payment_cards?.size
+                    )
+                }
+                LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_link_error
+                        )
+                    )
+                    binding.linkDescription.text =
+                        resources.getString(R.string.description_no_cards)
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_linkable_no_cards)
+                    findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
+                }
+                LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_link_error
+                        )
+                    )
+                    binding.linkDescription.text =
+                        resources.getString(R.string.description_no_cards)
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_linkable_no_cards)
+                    //TODO go to PLL screen
 
+                }
+                LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_link_error
+                        )
+                    )
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_link_error)
+                    binding.linkDescription.text = resources.getString(R.string.description_error)
+                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
+                }
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_points_login
+                        )
+                    )
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_requires_auth)
+                    binding.linkDescription.text =
+                        resources.getString(R.string.description_requires_auth)
+                    //TODO go to 1.3, 1.4 and 1.6, 2.5, 2.7 Log in Screen Changes
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
-
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_points_pending
+                        )
+                    )
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_requires_auth_pending)
+                    binding.linkDescription.text =
+                        resources.getString(R.string.description_requires_auth_pending)
+                    //TODO go to 1.7,1.9, 1.11 and 2.6 Log in Pending message for PLL and Points Modules
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
-
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_points_login
+                        )
+                    )
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_auth_failed)
+                    binding.linkDescription.text =
+                        resources.getString(R.string.description_auth_failed)
+                    //TODO go to 1.3, 1.4 and 1.6, 2.5, 2.7 Log in Screen Changes
                 }
+
+                LinkStatus.STATUS_UNLINKABLE -> {
+                    binding.activeLinked.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_lcd_module_icons_link_inactive
+                        )
+                    )
+                    binding.linkStatusText.text =
+                        resources.getString(R.string.link_status_un_linkable)
+                    binding.linkDescription.text =
+                        resources.getString(R.string.description_un_linkable)
+                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
+                }
+            }
+        }
+
+        binding.swipeLayout.setOnRefreshListener {
+            runBlocking {
+                viewModel.updateMembershipCard()
             }
         }
 
@@ -179,7 +296,7 @@ class LoyaltyCardDetailsFragment :
                             requireContext(),
                             R.drawable.ic_active
                         )
-                    )
+                        )
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
 
@@ -189,11 +306,6 @@ class LoyaltyCardDetailsFragment :
                         val timeSinceUpdate = currentTime - it
                         binding.pointsDescription.text =
                             timeSinceUpdate.getElapsedTime(requireContext())
-                        binding.swipeLayout.setOnRefreshListener {
-                            runBlocking {
-                                viewModel.updateMembershipCard()
-                            }
-                        }
                     }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
@@ -313,7 +425,7 @@ class LoyaltyCardDetailsFragment :
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                if (verifyAvailableNetwork(activity!!)) {
+                if (verifyAvailableNetwork(requireActivity())) {
                     runBlocking {
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }

@@ -131,23 +131,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
-        if (!viewModel.membershipCardData.hasObservers())
-            viewModel.membershipCardData.observeNonNull(this) {
+        viewModel.membershipCardData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipCards()
             }
 
-        if (!viewModel.membershipPlanData.hasObservers())
-            viewModel.membershipPlanData.observeNonNull(this) {
+        viewModel.membershipPlanData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipPlans()
             }
 
-        if (!viewModel.localMembershipPlanData.hasObservers())
-            viewModel.localMembershipPlanData.observeNonNull(this) {
+        viewModel.localMembershipPlanData.observeNonNull(this) {
                 viewModel.fetchMembershipCards()
             }
 
-        if (!viewModel.localMembershipCardData.hasObservers())
-            viewModel.localMembershipCardData.observeNonNull(this) {
+        viewModel.localMembershipCardData.observeNonNull(this) {
                 if (it.isNotEmpty()) {
                     viewModel.localPlansReceived.value = true
                     viewModel.localCardsReceived.value = true

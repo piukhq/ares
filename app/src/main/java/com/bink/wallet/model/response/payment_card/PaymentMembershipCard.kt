@@ -6,9 +6,4 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Consent(
-    val type: Int,
-    val latitude: Double,
-    val longitude: Double,
-    val timestamp: Long
-) : Parcelable
+data class PaymentMembershipCard(val id: Int, val active_link: Boolean): Parcelable

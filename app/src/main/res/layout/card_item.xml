@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:lineSpacingExtra="1.8sp"
-                        android:text="@string/card_item_linked"
+                        android:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
                         android:textSize="13.5sp" />
 

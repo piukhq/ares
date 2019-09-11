@@ -81,7 +81,6 @@
     <string name="hyperlink_text">here</string>
     <string name="security_modal_body">%1$s%2$s</string>
     <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
-    <string name="card_item_linked">Linked</string>
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s%2$s</string>
     <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
@@ -107,6 +106,28 @@
     <string name="points_registration_failed">Registration fail</string>
     <!-- 1.11 -->
     <string name="points_registering_card">Registering card</string>
+
+    <!-- 2.1 -->
+    <string name="link_status_linked">Linked</string>
+    <string name="description_linked">To %1$d of %2$d cards</string>
+    <!-- 2.2 -->
+    <string name="link_status_linkable_no_cards">Link</string>
+    <string name="description_no_cards">To payment cards</string>
+    <!-- 2.4 -->
+    <string name="link_status_link_error">Link error</string>
+    <string name="description_error">Error</string>
+    <!-- 2.5 -->
+    <string name="link_status_requires_auth">Log in</string>
+    <string name="description_requires_auth">To link to cards</string>
+    <!-- 2.6 -->
+    <string name="link_status_requires_auth_pending">Pending</string>
+    <string name="description_requires_auth_pending">Please wait</string>
+    <!-- 2.7 -->
+    <string name="link_status_auth_failed">Log in failed</string>
+    <string name="description_auth_failed">Please try again</string>
+    <!-- 2.8 -->
+    <string name="link_status_un_linkable">Linking</string>
+    <string name="description_un_linkable">Not available</string>
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
