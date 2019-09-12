@@ -138,24 +138,32 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
-        viewModel.membershipCardData.observeNonNull(this) {
+        if (!viewModel.membershipCardData.hasObservers()) {
+            viewModel.membershipCardData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipCards()
             }
+        }
 
-        viewModel.membershipPlanData.observeNonNull(this) {
+        if (!viewModel.membershipPlanData.hasObservers()) {
+            viewModel.membershipPlanData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipPlans()
             }
+        }
 
-        viewModel.localMembershipPlanData.observeNonNull(this) {
+        if (!viewModel.localMembershipPlanData.hasObservers()) {
+            viewModel.localMembershipPlanData.observeNonNull(this) {
                 viewModel.fetchMembershipCards()
             }
+        }
 
-        viewModel.localMembershipCardData.observeNonNull(this) {
+        if (!viewModel.localMembershipCardData.hasObservers()) {
+            viewModel.localMembershipCardData.observeNonNull(this) {
                 if (it.isNotEmpty()) {
                     viewModel.localPlansReceived.value = true
                     viewModel.localCardsReceived.value = true
                 }
             }
+        }
 
         binding.swipeLayout.setOnRefreshListener {
             if (verifyAvailableNetwork(activity!!)) {
