@@ -87,20 +87,18 @@ class AddAuthAdapter(
 
                     text?.hint = item.description
 
-                    text?.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(p0: Editable?) {
-                        }
-
-                        override fun beforeTextChanged(
-                            p0: CharSequence?, p1: Int, p2: Int, p3: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                            currentAddField.value = p0.toString()
-
-                        }
-                    })
+                    text?.setOnFocusChangeListener { _, b ->
+                        if (!b)
+                            try {
+                                if (!UtilFunctions.isValidField(
+                                        item.validation, currentAddField.value
+                                    )
+                                )
+                                    text?.error = "Invalid ${item.column}"
+                            } catch (ex: Exception) {
+                                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+                            }
+                    }
                 }
                 is AddAuthSpinnerItemBinding -> {
                     binding.addFields = item
