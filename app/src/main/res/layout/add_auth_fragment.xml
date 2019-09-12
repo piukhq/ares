@@ -33,15 +33,16 @@
                 app:layout_constraintTop_toTopOf="@+id/toolbar"/>
 
         <com.bink.wallet.ModalBrandHeader
-                android:layout_width="wrap_content"
                 android:id="@+id/add_join_reward"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:membershipPlan="@{item}"
+                android:layout_marginStart="@dimen/size_half_keyline"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="@dimen/size_half_keyline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="@dimen/size_half_keyline"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:membershipPlan="@{item}" />
 
         <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
