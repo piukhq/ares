@@ -20,10 +20,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:scrollbars="none"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+                app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -31,6 +31,7 @@
                     tools:context=".scenes.add_join.AddJoinFragment">
 
                 <com.bink.wallet.ModalBrandHeader
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
                         android:id="@+id/add_join_reward"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
