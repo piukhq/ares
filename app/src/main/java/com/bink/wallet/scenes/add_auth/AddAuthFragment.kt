@@ -57,7 +57,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val addAuthBoolean: MutableList<Any>? = mutableListOf()
 
         if (currentMembershipCard != null) {
-            if (currentMembershipPlan.feature_set?.has_points != null && currentMembershipPlan.feature_set.has_points == true && currentMembershipPlan.feature_set.transactions_available != null) {
+            if (currentMembershipPlan.feature_set?.has_points != null &&
+                currentMembershipPlan.feature_set.has_points == true &&
+                currentMembershipPlan.feature_set.transactions_available != null
+            ) {
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
                 if (currentMembershipPlan.feature_set.transactions_available == true) {
@@ -75,24 +78,34 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         } else {
             currentMembershipPlan.account?.add_fields?.map {
-                if (it.type == 3) addAuthBoolean?.add(it)
+                if (it.type == 3) {
+                    addAuthBoolean?.add(it)
+                }
             }
         }
 
         currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type == 3) addAuthBoolean?.add(it)
+            if (it.type == 3) {
+                addAuthBoolean?.add(it)
+            }
         }
 
         if (currentMembershipCard == null)
-            if (currentMembershipPlan.feature_set?.has_points != null && currentMembershipPlan.feature_set.has_points == true && currentMembershipPlan.feature_set.transactions_available != null)
+            if (currentMembershipPlan.feature_set?.has_points != null &&
+                currentMembershipPlan.feature_set.has_points == true &&
+                currentMembershipPlan.feature_set.transactions_available != null
+            ) {
                 currentMembershipPlan.account?.add_fields?.map {
-                    if (it.type != 3) addAuthFields?.add(
-                        it
-                    )
+                    if (it.type != 3) {
+                        addAuthFields?.add(it)
+                    }
                 }
+            }
 
         currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type != 3) addAuthFields?.add(it)
+            if (it.type != 3) {
+                addAuthFields?.add(it)
+            }
         }
 
         addAuthBoolean?.map { addAuthFields?.add(it) }

@@ -22,10 +22,10 @@
                 android:id="@+id/company_logo"
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/size_half_keyline"
-                android:layout_marginTop="@dimen/size_half_keyline"
-                android:layout_marginEnd="@dimen/size_half_keyline"
-                android:layout_marginBottom="@dimen/size_half_keyline"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 app:imageUrl="@{plan}"
                 tools:ignore="ContentDescription" />
 
@@ -115,8 +115,8 @@
 
                 <ImageView
                         android:id="@+id/link_status_img"
-                        android:layout_width="@dimen/first_keyline"
-                        android:layout_height="@dimen/first_keyline"
+                        android:layout_width="@dimen/margin_padding_size_medium"
+                        android:layout_height="@dimen/margin_padding_size_medium"
                         android:layout_marginStart="6dp"
                         android:src="@drawable/ic_linked"
                         tools:ignore="ContentDescription" />
