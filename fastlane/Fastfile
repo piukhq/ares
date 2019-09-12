@@ -88,13 +88,13 @@ platform :android do
       deviceTest: true
     }
 
-#    slack_options = {
-#      build_name: build_name
-#    }
+    slack_options = {
+      build_name: build_name
+    }
 
-#    notifyBuild(notify_options)
+    notifyBuild(notify_options)
     build(build_options)
-#    slackSuccess(slack_options)
+    slackSuccess(slack_options)
   end
 
   desc "Build Bink Gamma"
@@ -230,29 +230,29 @@ platform :android do
        message += " merge request (#{merge_id})"
     end
 
-#    slack(
-#      default_payloads: [],
-#      channel: "android-jenkins",
-#      attachment_properties: {
-#        title: message,
-#        title_link: "https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/#{merge_id}",
-#        author_name: last_git_commit[:author],
-#        fields: [
-#          {title: "Source", value: source_branch, short: true},
-#          {title: "Target", value: target_branch, short: true},
-#          {title: "Title", value: title, short: false}
-#        ],
-#      }
-#    )
+    slack(
+      default_payloads: [],
+      channel: "android-jenkins",
+      attachment_properties: {
+        title: message,
+        title_link: "https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/#{merge_id}",
+        author_name: last_git_commit[:author],
+        fields: [
+          {title: "Source", value: source_branch, short: true},
+          {title: "Target", value: target_branch, short: true},
+          {title: "Title", value: title, short: false}
+        ],
+      }
+    )
   end
 
   private_lane :slackSuccess do |options|
-#    build_name = options[:build_name]
-#    slack(
-#      message: "Bink #{build_name} Successfull :otter-dance:",
-#      default_payloads: [],
-#      channel: "android-jenkins"
-#    )
+    build_name = options[:build_name]
+    slack(
+      message: "Bink #{build_name} Successfull :otter-dance:",
+      default_payloads: [],
+      channel: "android-jenkins"
+    )
   end
 
   private_lane :build do |options|
@@ -270,9 +270,10 @@ platform :android do
       gradle(task: "test")
     end
 
-    if options[:deviceTest]
-      gradle(task: "connectedAndroidTest")
-    end
+### Disabled as there are no Espresso tests in the project, so this will ALWAYS fail at the moment
+#    if options[:deviceTest]
+#      gradle(task: "connectedAndroidTest")
+#    end
 
     if options[:crashlytics_groups]
       crashlytics(
@@ -282,16 +283,16 @@ platform :android do
         groups: options[:crashlytics_groups]
       )
 
-#    slack(
-#        channel: "android-jenkins",
-#        default_payloads: [],
-#        attachment_properties: {
-#        title: "New build available on Fabric for #{options[:build_name]}",
-#        fields: [
-#          {title: "Message", value: buildMessage, short: false}
-#          ],
-#        }
-#    )
+    slack(
+        channel: "android-jenkins",
+        default_payloads: [],
+        attachment_properties: {
+        title: "New build available on Fabric for #{options[:build_name]}",
+        fields: [
+          {title: "Message", value: buildMessage, short: false}
+          ],
+        }
+    )
     end
   end
 
