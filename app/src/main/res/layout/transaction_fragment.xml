@@ -42,7 +42,7 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:text="@string/points_history"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="@dimen/text_size_title_big"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:text="@string/recent_history_text"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/points_history" />

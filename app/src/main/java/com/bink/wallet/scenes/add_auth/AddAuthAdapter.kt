@@ -188,8 +188,6 @@ class AddAuthAdapter(
                     text?.setOnFocusChangeListener { _, b ->
                         if (!b)
                             try {
-
-
                                 if (!UtilFunctions.isValidField(
                                         item.validation, currentAuthoriseField.value
                                     )
