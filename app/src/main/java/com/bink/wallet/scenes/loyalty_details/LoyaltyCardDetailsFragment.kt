@@ -204,6 +204,7 @@ class LoyaltyCardDetailsFragment :
                         resources.getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         resources.getString(R.string.link_status_linkable_no_cards)
+                    findNavController().navigateIfAdded(this, R.id.detail_to_issue)
                     //TODO go to PLL screen
 
                 }

@@ -11,6 +11,7 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
+import com.bink.wallet.scenes.loyalty_details.ModuleIssueViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -49,6 +50,8 @@ val viewModelModules = module {
     viewModel { TransactionViewModel() }
 
     viewModel { TransactionsNotSupportedViewModel() }
+
+    viewModel { ModuleIssueViewModel() }
 }
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository =
