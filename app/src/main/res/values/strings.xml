@@ -138,4 +138,5 @@
     <string name="temporary_log_in_screen_title">Welcome to splash page</string>
     <string name="login_screen_temporary_text">Login screen</string>
     <string name="brand_list_item_description">Can be linked to your payment cards</string>
+    <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
 </resources>

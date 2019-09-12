@@ -64,13 +64,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
                 if (currentMembershipPlan.feature_set.transactions_available == true) {
-                    binding.descriptionAddAuth.text = resources.getString(
+                    binding.descriptionAddAuth.text = getString(
                         R.string.log_in_transaction_available,
                         currentMembershipPlan.account?.plan_name_card
                     )
                 } else {
                     binding.descriptionAddAuth.text =
-                        resources.getString(
+                        getString(
                             R.string.log_in_transaction_unavailable,
                             currentMembershipPlan.account?.plan_name_card
                         )
