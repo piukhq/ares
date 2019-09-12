@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
@@ -48,6 +49,8 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (findNavController().currentDestination?.label != getString(R.string.root)) {
+                        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
                         findNavController().popBackStack()
                     } else {
                         activity?.finish()
@@ -58,7 +61,7 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ToolbarManager(builder()).prepareToolbar()
+        ToolbarManager(builder(), requireActivity()).prepareToolbar()
     }
 
     protected abstract fun builder(): FragmentToolbar

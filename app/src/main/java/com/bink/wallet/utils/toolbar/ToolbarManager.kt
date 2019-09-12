@@ -1,10 +1,12 @@
 package com.bink.wallet.utils.toolbar
 
+import android.app.Activity
 import android.view.MenuItem
+import android.view.WindowManager
 import com.bink.wallet.R
 
 class ToolbarManager constructor(
-    private var builder: FragmentToolbar
+    private var builder: FragmentToolbar, private var activity: Activity
 ) {
     fun prepareToolbar() {
         if (builder.resId != FragmentToolbar.NO_TOOLBAR) {
