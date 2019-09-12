@@ -16,8 +16,8 @@
 
         <ImageView
                 android:id="@+id/brand_logo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/brand_logo_size"
+                android:layout_height="@dimen/brand_logo_size"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="24dp"
@@ -37,7 +37,7 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_small"
                 android:text="@{item.account.company_name}"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_description_medium"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
                 app:layout_constraintStart_toEndOf="@+id/brand_logo"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_padding_size_small"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:text="Can be linked to your payment cards"
+                android:text="@string/brand_list_item_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
                 app:layout_constraintStart_toStartOf="@+id/browse_brands_title"
@@ -62,7 +62,7 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:text="@string/right_arrow"
-                android:textSize="24sp"
+                android:textSize="@dimen/arrow_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
