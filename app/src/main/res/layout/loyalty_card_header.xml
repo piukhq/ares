@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -12,10 +12,10 @@
                 android:id="@+id/brand_image"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/loyalty_details_brand_image_height"
-                android:layout_marginStart="@dimen/first_keyline"
-                android:layout_marginEnd="@dimen/first_keyline"
-                app:cardCornerRadius="@dimen/quarter_keyline"
-                app:cardElevation="@dimen/size_half_keyline"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                app:cardCornerRadius="@dimen/margin_padding_size_extra_small"
+                app:cardElevation="@dimen/margin_padding_size_small"
                 app:cardPreventCornerOverlap="false"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -24,9 +24,9 @@
 
             <ImageView
                     android:id="@+id/image"
-                    android:scaleType="fitXY"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="fitXY"
                     tools:ignore="ContentDescription" />
         </androidx.cardview.widget.CardView>
 
@@ -34,8 +34,8 @@
                 android:id="@+id/tap_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/first_keyline"
-                android:layout_marginBottom="@dimen/size_half_keyline"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:text="@string/tap_card"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/size_sub_headline"
