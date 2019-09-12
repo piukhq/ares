@@ -52,9 +52,9 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@string/sign_up_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="@string/sign_up_text"
                 app:layout_constraintTop_toBottomOf="@+id/add_join_reward" />
 
         <TextView
