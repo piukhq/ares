@@ -61,6 +61,7 @@ android {
         beta {
             debuggable true
             applicationIdSuffix ".beta"
+            // Beta shouldn't need signing or Proguard, so remarking out these lines
             // signingConfig signingConfigs.binkSigningConfig
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
