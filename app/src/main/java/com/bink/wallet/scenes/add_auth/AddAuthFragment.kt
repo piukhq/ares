@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.add_auth
 
-import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -12,12 +15,20 @@ import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
-import kotlinx.android.synthetic.main.add_auth_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .build()
+    }
 
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
@@ -32,12 +43,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = currentMembershipPlan
 
-        binding.toolbar.setNavigationIcon(R.drawable.ic_back)
-        binding.toolbar.setNavigationOnClickListener {
-            activity?.onBackPressed()
-        }
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         binding.close.setOnClickListener {
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
             findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
         }
 
@@ -62,7 +73,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         val addAuthFieldsRequest = Account(ArrayList(), ArrayList())
 
-        auth_add_fields.apply {
+        binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
             adapter = AddAuthAdapter(
                 addAuthFields?.toList()!!,
@@ -70,16 +81,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             )
         }
 
-        add_card_button.setOnClickListener {
-            if (verifyAvailableNetwork(activity!!)) {
-                viewModel.createMembershipCard(
-                    MembershipCardRequest(
-                        addAuthFieldsRequest,
-                        currentMembershipPlan.id
+        binding.addCardButton.setOnClickListener {
+            if (viewModel.createCardError.value == null) {
+                if (verifyAvailableNetwork(requireActivity())) {
+                    viewModel.createMembershipCard(
+                        MembershipCardRequest(
+                            addAuthFieldsRequest,
+                            currentMembershipPlan.id
+                        )
                     )
-                )
-            } else {
-                showNoInternetConnectionDialog()
+                } else {
+                    showNoInternetConnectionDialog()
+                }
+                binding.addCardButton.isEnabled = false
+                binding.progressSpinner.visibility = View.VISIBLE
             }
         }
 
@@ -105,12 +120,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     }
                 }
+                binding.progressSpinner.visibility = View.GONE
+                viewModel.createCardError.value = null
+                binding.addCardButton.isEnabled = true
             })
-    }
 
-    private fun showNoInternetConnectionDialog() {
-        AlertDialog.Builder(context).setMessage(R.string.no_internet_connection_dialog_message)
-            .setNeutralButton(R.string.ok) { _, _ -> }
-            .create().show()
+
+        viewModel.createCardError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                getString(R.string.add_card_error_title),
+                getString(R.string.add_card_error_message)
+            )
+            binding.progressSpinner.visibility = View.GONE
+            viewModel.createCardError.value = null
+            binding.addCardButton.isEnabled = true
+        }
     }
 }

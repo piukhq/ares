@@ -8,10 +8,7 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.network.ApiService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 class LoyaltyWalletRepository(
@@ -95,7 +92,9 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    membershipPlanDao.storeAll(plans)
+                    runBlocking {
+                        membershipPlanDao.storeAll(plans)
+                    }
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -103,12 +102,14 @@ class LoyaltyWalletRepository(
         }
     }
 
-    private fun storeMembershipCards(cards: List<MembershipCard>){
+    private fun storeMembershipCards(cards: List<MembershipCard>) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    membershipCardDao.deleteAllCards()
-                    membershipCardDao.storeAll(cards)
+                    runBlocking {
+                        membershipCardDao.deleteAllCards()
+                        membershipCardDao.storeAll(cards)
+                    }
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -118,7 +119,8 @@ class LoyaltyWalletRepository(
 
     fun createMembershipCard(
         membershipCardRequest: MembershipCardRequest,
-        mutableMembershipCard: MutableLiveData<MembershipCard>
+        mutableMembershipCard: MutableLiveData<MembershipCard>,
+        createError: MutableLiveData<String>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
@@ -127,6 +129,7 @@ class LoyaltyWalletRepository(
                     val response = request.await()
                     mutableMembershipCard.value = response
                 } catch (e: Throwable) {
+                    createError.value = e.localizedMessage
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

@@ -96,6 +96,10 @@
                 android:name="barcodeType"
                 app:argType="integer" />
 
+        <action
+                android:id="@+id/barcode_to_maximised"
+                app:destination="@id/maximised_barcode_fragment" />
+
     </fragment>
 
     <fragment
@@ -142,6 +146,10 @@
                 android:id="@+id/detail_to_transactions"
                 app:destination="@+id/transactions_fragment" />
 
+        <action
+                android:id="@+id/detail_to_not_supported_transactions"
+                app:destination="@+id/transactions_not_supported" />
+
     </fragment>
 
     <fragment
@@ -161,6 +169,10 @@
                 app:popUpTo="@+id/loyalty_fragment"
                 app:popUpToInclusive="true" />
 
+        <action
+                android:id="@+id/detail_to_barcode"
+                app:destination="@+id/barcode_fragment" />
+
     </fragment>
 
     <fragment
@@ -173,6 +185,31 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/maximised_barcode_fragment"
+            android:name="com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeFragment">
+        <argument
+                android:name="currentMembershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="barcode"
+                app:argType="com.bink.wallet.utils.BarcodeWrapper" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/transactions_not_supported"
+            android:name="com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedFragment">
+
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
+        <argument
+                android:name="loginStatus"
+                app:argType="com.bink.wallet.utils.enums.LoginStatus" />
 
     </fragment>
 

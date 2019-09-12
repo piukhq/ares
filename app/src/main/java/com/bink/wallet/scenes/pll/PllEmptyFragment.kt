@@ -8,9 +8,15 @@ import com.bink.wallet.databinding.FragmentPllEmptyBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .withId(FragmentToolbar.NO_TOOLBAR)
+            .build()
+    }
 
     override val layoutRes: Int
         get() = R.layout.fragment_pll_empty
@@ -42,6 +48,5 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
 
             findNavController().navigateIfAdded(this, directions)
         }
-
     }
 }

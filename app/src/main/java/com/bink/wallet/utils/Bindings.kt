@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.os.Parcelable
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.ArrayAdapter
@@ -17,13 +18,14 @@ import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import kotlinx.android.parcel.Parcelize
 import java.util.*
-
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
@@ -46,17 +48,17 @@ fun View.setVisible(isVisible: Boolean) {
         View.GONE
     }
 }
-
-data class BarcodeWrapper(val barcode: String?, val barcodeType: Int)
+@Parcelize
+data class BarcodeWrapper(val barcode: String?, val barcodeType: Int): Parcelable
 
 @BindingAdapter("barcode")
-fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
-    if (!barcode.barcode.isNullOrEmpty()) {
+fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
+    if (!barcode?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
-        when (barcode.barcodeType) {
+        when (barcode?.barcodeType) {
             0 -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
             2 -> format = BarcodeFormat.AZTEC
@@ -68,7 +70,7 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper) {
         }
 
         val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(barcode.barcode, format, widthPx.toInt(), heightPx.toInt())
+            multiFormatWriter.encode(barcode?.barcode, format, widthPx.toInt(), heightPx.toInt())
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)
@@ -95,6 +97,7 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
     }
 }
+
 
 @BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
@@ -187,3 +190,68 @@ fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
         }
     }
 }
+
+@BindingAdapter("cardTimestamp", "loginStatus")
+fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
+
+    when (loginStatus) {
+        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
+            if (card != null && card.balances.isNullOrEmpty()) {
+                var elapsed =
+                    (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / 60
+                var suffix = MINUTES
+                if (elapsed >= 60) {
+                    elapsed /= 60
+                    suffix = HOURS
+                    if (elapsed >= 24) {
+                        elapsed /= 24
+                        suffix = DAYS
+                        if (elapsed >= 7) {
+                            elapsed /= 7
+                            suffix = WEEKS
+                            if (elapsed >= 5) {
+                                elapsed /= 5
+                                suffix = MONTHS
+                                if (elapsed >= 12) {
+                                    elapsed /= 12
+                                    suffix = YEARS
+                                }
+                            }
+                        }
+                    }
+                }
+                this.text = this.context.getString(
+                    R.string.transaction_not_supported_description,
+                    elapsed.toInt().toString(),
+                    suffix
+                )
+            }
+        }
+        LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
+            this.text =
+                this.context.getString(R.string.description_login_unavailable)
+        LoginStatus.STATUS_LOGIN_PENDING ->
+            this.text = this.context.getString(R.string.description_text)
+        LoginStatus.STATUS_SIGN_UP_PENDING ->
+            this.text = this.context.getString(R.string.description_text)
+        else -> this.text = this.context.getString(R.string.description_text)
+    }
+}
+
+@BindingAdapter("loginStatus")
+fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
+
+    when (loginStatus) {
+        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.text =
+            this.context.getString(R.string.transaction_not_supported_title)
+        LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.text =
+            this.context.getString(R.string.transaction_history_not_supported)
+        LoginStatus.STATUS_LOGIN_PENDING -> this.text =
+            this.context.getString(R.string.log_in_pending)
+        LoginStatus.STATUS_SIGN_UP_PENDING -> this.text =
+            this.context.getString(R.string.sign_up_pending)
+        else -> this.text = this.context.getString(R.string.register_gc_pending)
+    }
+}
+
+

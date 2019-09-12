@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
@@ -7,14 +6,18 @@
     <data>
 
         <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.transactions_screen.TransactionViewModel" />
+                name="card"
+                type="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
+        <variable
+                name="loginStatus"
+                type="com.bink.wallet.utils.enums.LoginStatus" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.bink.wallet.scenes.transactions_screen.TransactionsFragment">
+            tools:context="com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedFragment">
 
         <Toolbar
                 android:id="@+id/toolbar"
@@ -24,53 +27,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <com.bink.wallet.ModalBrandHeader
-                android:id="@+id/loyaltyCardHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:membershipPlan="@{viewModel.membershipPlan}" />
-
         <TextView
-                android:id="@+id/points_history"
+                android:id="@+id/not_supported_transaction_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/points_history"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 android:textStyle="bold"
+                app:loginStatus="@{loginStatus}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/loyaltyCardHeader" />
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
-                android:id="@+id/points_description"
+                android:id="@+id/not_supported_transaction_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/recent_history_text"
                 android:textColor="@color/black"
                 android:textSize="18sp"
+                app:cardTimestamp="@{card}"
+                app:loginStatus="@{loginStatus}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/points_history" />
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/transactions_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/points_description" />
+                app:layout_constraintTop_toBottomOf="@+id/not_supported_transaction_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
