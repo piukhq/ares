@@ -270,9 +270,9 @@ platform :android do
       gradle(task: "test")
     end
 
-    # if options[:deviceTest]
-    #   gradle(task: "connectedAndroidTest")
-    # end
+    if options[:deviceTest]
+      gradle(task: "connectedAndroidTest")
+    end
 
     if options[:crashlytics_groups]
       crashlytics(
