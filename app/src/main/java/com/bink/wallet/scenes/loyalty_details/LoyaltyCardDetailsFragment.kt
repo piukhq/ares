@@ -111,7 +111,8 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_FAILED -> {
                     val action =
                         LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                            viewModel.membershipPlan.value!!, viewModel.membershipCard.value!!
+                            viewModel.membershipPlan.value!!,
+                            viewModel.membershipCard.value!!
                         )
                     findNavController().navigateIfAdded(this, action)
                 }
@@ -129,7 +130,7 @@ class LoyaltyCardDetailsFragment :
         binding.footerSecurity.setOnClickListener {
             val stringToSpan = getString(R.string.security_modal_body_3)
             val spannableString = SpannableStringBuilder(stringToSpan)
-            val url = "https://bink.com/terms-and-conditions/#privacy-policy"
+            val url = getString(R.string.terms_and_conditions_url)
             val hyperlinkText = getString(R.string.hyperlink_text)
             spannableString.setSpan(
                 URLSpan(url),
