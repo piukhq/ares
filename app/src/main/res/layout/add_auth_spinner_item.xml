@@ -2,21 +2,25 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
-        <import type="android.text.InputType"/>
+
+        <import type="android.text.InputType" />
+
         <variable
                 name="addFields"
-                type="com.bink.wallet.model.response.membership_plan.AddFields"/>
+                type="com.bink.wallet.model.response.membership_plan.AddFields" />
 
         <variable
                 name="authFields"
-                type="com.bink.wallet.model.response.membership_plan.AuthoriseFields"/>
+                type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
 
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         <TextView
                 android:id="@+id/title_add_auth_text"
@@ -26,7 +30,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:textColor="@android:color/black"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_description_medium"
                 android:textStyle="bold"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"

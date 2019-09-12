@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
                 name="viewModel"
                 type="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel" />
