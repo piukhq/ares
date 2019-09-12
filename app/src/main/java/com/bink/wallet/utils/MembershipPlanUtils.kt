@@ -2,6 +2,7 @@ package com.bink.wallet.utils
 
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.CardStatus.*
 import com.bink.wallet.utils.enums.LoginStatus
 
@@ -30,11 +31,11 @@ object MembershipPlanUtils {
                 }
 
                 PENDING.status -> {
-                    if (membershipCard.status?.reason_codes?.intersect(listOf("X200")) != null) {
+                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X200.code)) != null) {
                         return LoginStatus.STATUS_SIGN_UP_PENDING
                     }
                     if (membershipCard.status?.reason_codes?.intersect(
-                            listOf("X100", "X301")
+                            listOf(CardCodes.X100.code, CardCodes.X301.code)
                         ) != null
                     ) {
                         return LoginStatus.STATUS_LOGIN_FAILED
@@ -42,21 +43,21 @@ object MembershipPlanUtils {
                 }
 
                 FAILED.status -> {
-                    if (membershipCard.status?.reason_codes?.intersect(listOf("X201")) != null) {
+                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)) != null) {
                         return LoginStatus.STATUS_SIGN_UP_FAILED
                     }
-                    if (membershipCard.status?.reason_codes?.intersect(listOf("X202")) != null) {
+                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X202.code)) != null) {
                         return LoginStatus.STATUS_CARD_ALREADY_EXISTS
                     }
                     if (membershipCard.status?.reason_codes?.intersect(
                             listOf(
-                                "X101",
-                                "X102",
-                                "X103",
-                                "X104",
-                                "X302",
-                                "X303",
-                                "X304"
+                                CardCodes.X101.code,
+                                CardCodes.X102.code,
+                                CardCodes.X103.code,
+                                CardCodes.X104.code,
+                                CardCodes.X302.code,
+                                CardCodes.X303.code,
+                                CardCodes.X304.code
                             )
                         ) != null
                     ) {
