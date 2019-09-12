@@ -178,7 +178,7 @@ platform :android do
     gradle(task: "crashlyticsUploadDistributionRelease")
 
     slack(
-        message: "Bink Release Successfull :otter-dance:",
+        message: "Bink Release Successful :otter-dance:",
         default_payloads: [],
         channel: "android-jenkins"
     )
@@ -249,7 +249,7 @@ platform :android do
   private_lane :slackSuccess do |options|
     build_name = options[:build_name]
     slack(
-      message: "Bink #{build_name} Successfull :otter-dance:",
+      message: "Bink #{build_name} Successful :otter-dance:",
       default_payloads: [],
       channel: "android-jenkins"
     )
