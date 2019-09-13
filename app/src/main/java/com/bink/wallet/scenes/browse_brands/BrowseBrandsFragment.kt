@@ -27,12 +27,17 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        arguments?.let {
-            val plans = BrowseBrandsFragmentArgs.fromBundle(it).membershipPlans
+        arguments?.let { brandsList ->
+            val plans = BrowseBrandsFragmentArgs.fromBundle(brandsList).membershipPlans
+
+            val plansList =
+                plans.sortedWith(compareByDescending<MembershipPlan> { it.feature_set?.card_type }
+                    .thenBy { it.account?.company_name })
+
             browse_brands_container.apply {
                 layoutManager = GridLayoutManager(activity, 1)
                 adapter =
-                    BrowseBrandsAdapter(plans.toList(), itemClickListener = { toAddJoinScreen(it) })
+                    BrowseBrandsAdapter(plansList, itemClickListener = { toAddJoinScreen(it) })
             }
         }
     }

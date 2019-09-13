@@ -14,59 +14,82 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
-                android:id="@+id/brand_logo"
-                android:layout_width="@dimen/brand_logo_size"
-                android:layout_height="@dimen/brand_logo_size"
+        <TextView
+                android:id="@+id/section_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/custom_margin_add_fragment"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                app:imageUrl="@{item}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/browse_brands_title"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:text="@string/pll_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_title_big"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-                android:id="@+id/browse_brands_title"
-                android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_small"
-                android:text="@{item.account.company_name}"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_description_medium"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
-                app:layout_constraintStart_toEndOf="@+id/brand_logo"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/section_title">
 
-        <TextView
-                android:id="@+id/browse_brands_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_padding_size_small"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:text="@string/brand_list_item_description"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
-                app:layout_constraintStart_toStartOf="@+id/browse_brands_title"
-                app:layout_constraintTop_toBottomOf="@+id/browse_brands_title" />
+            <ImageView
+                    android:id="@+id/brand_logo"
+                    android:layout_width="@dimen/brand_logo_size"
+                    android:layout_height="@dimen/brand_logo_size"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/custom_margin_add_fragment"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    app:imageUrl="@{item}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/browse_brands_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-                android:id="@+id/brands_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/custom_margin_add_fragment"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:text="@string/right_arrow"
-                android:textSize="@dimen/arrow_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                    android:id="@+id/browse_brands_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small"
+                    android:text="@{item.account.company_name}"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_description_medium"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
+                    app:layout_constraintStart_toEndOf="@+id/brand_logo"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                    android:id="@+id/browse_brands_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:text="@string/brand_list_item_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
+                    app:layout_constraintStart_toStartOf="@+id/browse_brands_title"
+                    app:layout_constraintTop_toBottomOf="@+id/browse_brands_title" />
+
+            <TextView
+                    android:id="@+id/brands_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/custom_margin_add_fragment"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:text="@string/right_arrow"
+                    android:textSize="@dimen/arrow_text_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
