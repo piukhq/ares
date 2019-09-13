@@ -139,4 +139,5 @@
     <string name="login_screen_temporary_text">Login screen</string>
     <string name="brand_list_item_description">Can be linked to your payment cards</string>
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
+    <string name="add_auth_error_message">Invalid %1$s</string>
 </resources>
