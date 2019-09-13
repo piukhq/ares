@@ -29,7 +29,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_description_medium"
                 android:text="@string/cancel_text"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
