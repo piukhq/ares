@@ -89,6 +89,27 @@ class AddAuthAdapter(
                     binding.addFields = item
 
                     text?.hint = item.description
+                    text?.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(p0: Editable?) {
+                        }
+
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            currentText: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                            currentAddField.value = currentText.toString()
+                        }
+                    })
 
                     text?.setOnFocusChangeListener { _, isFocus ->
                         if (!isFocus)
@@ -183,11 +204,15 @@ class AddAuthAdapter(
                         ) {
                         }
 
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                            currentAuthoriseField.value = p0.toString()
+                        override fun onTextChanged(
+                            currentText: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                            currentAuthoriseField.value = currentText.toString()
                         }
                     })
-
 
                     text?.setOnFocusChangeListener { _, isFocus ->
                         if (!isFocus)

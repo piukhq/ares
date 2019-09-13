@@ -29,6 +29,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             .build()
     }
 
+    companion object {
+        const val BARCODE_TEXT = "Barcode"
+    }
+
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
 
@@ -96,14 +100,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 currentMembershipPlan.feature_set.transactions_available != null
             ) {
                 currentMembershipPlan.account?.add_fields?.map {
-                    if (it.type != 3) {
+                    if (it.type != 3 &&
+                        !it.column.equals(BARCODE_TEXT)
+                    ) {
                         addAuthFields?.add(it)
                     }
                 }
             }
 
         currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type != 3) {
+            if (it.type != 3 &&
+                !it.column.equals(BARCODE_TEXT)
+            ) {
                 addAuthFields?.add(it)
             }
         }
