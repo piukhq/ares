@@ -29,6 +29,10 @@ class AddAuthAdapter(
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
+    companion object {
+        const val FALSE_TEXT = "false"
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
@@ -47,7 +51,6 @@ class AddAuthAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-
         when (holder) {
             is AddFieldHolder -> brands[position].let { holder.bind(it as AddFields) }
             is AuthFieldHolder -> brands[position].let { holder.bind(it as AuthoriseFields) }
@@ -87,20 +90,21 @@ class AddAuthAdapter(
 
                     text?.hint = item.description
 
-                    text?.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(p0: Editable?) {
-                        }
-
-                        override fun beforeTextChanged(
-                            p0: CharSequence?, p1: Int, p2: Int, p3: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                            currentAddField.value = p0.toString()
-
-                        }
-                    })
+                    text?.setOnFocusChangeListener { _, isFocus ->
+                        if (!isFocus)
+                            try {
+                                if (!UtilFunctions.isValidField(
+                                        item.validation, currentAddField.value
+                                    )
+                                )
+                                    text?.error = text?.resources?.getString(
+                                        R.string.add_auth_error_message,
+                                        item.column
+                                    )
+                            } catch (ex: Exception) {
+                                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+                            }
+                    }
                 }
                 is AddAuthSpinnerItemBinding -> {
                     binding.addFields = item
@@ -129,7 +133,7 @@ class AddAuthAdapter(
 
                     switch?.text = item.description
 
-                    currentAddField.value = "false"
+                    currentAddField.value = FALSE_TEXT
 
                     switch?.setOnCheckedChangeListener { _, isChecked ->
                         currentAddField.value = isChecked.toString()
@@ -185,14 +189,17 @@ class AddAuthAdapter(
                     })
 
 
-                    text?.setOnFocusChangeListener { _, b ->
-                        if (!b)
+                    text?.setOnFocusChangeListener { _, isFocus ->
+                        if (!isFocus)
                             try {
                                 if (!UtilFunctions.isValidField(
                                         item.validation, currentAuthoriseField.value
                                     )
                                 )
-                                    text?.error = "Invalid ${item.column}"
+                                    text?.error = text?.resources?.getString(
+                                        R.string.add_auth_error_message,
+                                        item.column
+                                    )
                             } catch (ex: Exception) {
                                 Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
                             }
@@ -223,7 +230,7 @@ class AddAuthAdapter(
                 is AddAuthSwitchItemBinding -> {
                     binding.authFields = item
 
-                    currentAuthoriseField.value = "false"
+                    currentAuthoriseField.value = FALSE_TEXT
 
                     switch?.text = item.description
 
