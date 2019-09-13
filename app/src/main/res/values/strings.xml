@@ -10,8 +10,8 @@
     <string name="loayalty_wallet_dialog_description">Delete card was canceled</string>
     <string name="yes_text">YES</string>
     <string name="no_text">NO</string>
-    <string name="cancel_text">CANCEL</string>
-
+    <string name="cancel_text_upper">CANCEL</string>
+    <string name="cancel_text">Cancel</string>
     <string name="root">root</string>
 
 

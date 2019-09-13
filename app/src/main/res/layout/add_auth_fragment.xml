@@ -22,13 +22,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <TextView
                 android:id="@+id/close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:src="@drawable/ic_close"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_medium"
+                android:text="@string/cancel_text"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
                 tools:ignore="ContentDescription" />
