@@ -13,14 +13,6 @@ repositories {
 
 android {
     compileSdkVersion 29
-    defaultConfig {
-        applicationId "com.bink.wallet.neo"
-        minSdkVersion(21)
-        targetSdkVersion(29)
-        versionCode(1000000002)
-        versionName("1.0 (2)")
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
     signingConfigs {
         binkSigningConfig {
             storeFile file('keystore')
@@ -28,6 +20,14 @@ android {
             keyPassword = System.getenv("BINK_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("BINK_KEYSTORE_ALIAS")
         }
+    }
+    defaultConfig {
+        applicationId "com.bink.wallet.neo"
+        minSdkVersion(21)
+        targetSdkVersion(29)
+        versionCode(1000000002)
+        versionName("1.0 (2)")
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -61,9 +61,8 @@ android {
         beta {
             debuggable true
             applicationIdSuffix ".beta"
-            // Beta shouldn't need signing or Proguard, so remarking out these lines
-            // signingConfig signingConfigs.binkSigningConfig
-            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.binkSigningConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
