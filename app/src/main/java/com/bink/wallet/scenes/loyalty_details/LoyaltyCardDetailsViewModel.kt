@@ -105,15 +105,12 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
             CardType.PLL.type -> {
                 when(membershipCard.value?.status?.state) {
                     CardStatus.AUTHORISED.status -> {
-                        if (paymentCards.value.isNullOrEmpty()) {
-                            linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
-                        } else {
-                            if (membershipCard.value?.payment_cards.isNullOrEmpty()) {
-                                linkStatus.value =
-                                    LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
-                            } else {
-                                linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
-                            }
+                        when {
+                            paymentCards.value.isNullOrEmpty() -> linkStatus.value =
+                                LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
+                            membershipCard.value?.payment_cards.isNullOrEmpty() -> linkStatus.value =
+                                LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
+                            else -> linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
                         }
                     }
                     CardStatus.UNAUTHORISED.status -> {

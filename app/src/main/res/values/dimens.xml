@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Card Item -->
+    <dimen name="card_height">112dp</dimen>
+    <dimen name="loyalty_value_margin_end">18dp</dimen>
+    <dimen name="card_login_width">88dp</dimen>
+    <dimen name="card_login_height">@dimen/double_keyline</dimen>
+    <dimen name="card_login_margin_end">12dp</dimen>
+    <dimen name="link_status_wrapper_margin_end">18dp</dimen>
 
     <!-- Margins & Padding -->
     <dimen name="margin_padding_size_extra_small">4dp</dimen>
@@ -40,7 +47,7 @@
     <dimen name="loyalty_details_brand_image_height">204dp</dimen>
     <dimen name="background_height">164dp</dimen>
     <dimen name="loyalty_details_margin_top">32dp</dimen>
-    <dimen name="linked_icon_margin_end">112dp</dimen>
+    <dimen name="linked_icon_margin_end">@dimen/card_height</dimen>
     <dimen name="active_icon_margin_start">24dp</dimen>
     <dimen name="footer_margin_bottom">24dp</dimen>
     <dimen name="item_separator_line_height">1dp</dimen>
@@ -64,6 +71,9 @@
     <dimen name="custom_text_card_margin">30dp</dimen>
     <dimen name="custom_login_image_size">89dp</dimen>
     <dimen name="transaction_arrow_size">30sp</dimen>
+
+    <!--Add Auth Screen -->
+    <dimen name="margin_large">64dp</dimen>
 
     <dimen name="text_size_description_small">13.6sp</dimen>
 </resources>

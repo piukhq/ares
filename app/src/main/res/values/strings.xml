@@ -126,8 +126,8 @@
     <string name="link_status_auth_failed">Log in failed</string>
     <string name="description_auth_failed">Please try again</string>
     <!-- 2.8 -->
-    <string name="link_status_un_linkable">Linking</string>
-    <string name="description_un_linkable">Not available</string>
+    <string name="link_status_unlinkable">Linking</string>
+    <string name="description_unlinkable">Not available</string>
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
