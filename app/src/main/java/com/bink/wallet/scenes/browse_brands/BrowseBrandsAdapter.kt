@@ -10,12 +10,12 @@ import com.bink.wallet.utils.enums.CardType
 
 
 class BrowseBrandsAdapter(
-    private val brands: List<MembershipPlan>,
+    val brands: List<Pair<String?, MembershipPlan>>,
     val itemClickListener: (MembershipPlan) -> Unit = {}
 ) :
-    RecyclerView.Adapter<BrowseBrandsAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BrandsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = BrandListItemBinding.inflate(inflater)
         binding.apply {
@@ -25,29 +25,35 @@ class BrowseBrandsAdapter(
                 }
             }
         }
-        return MyViewHolder(binding)
+        return BrandsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BrandsViewHolder, position: Int) {
         brands[position].let { holder.bind(it) }
     }
 
-    override fun getItemCount(): Int {
-        return brands.size
-    }
+    override fun getItemCount(): Int = brands.size
 
-    class MyViewHolder(val binding: BrandListItemBinding) :
+    class BrandsViewHolder(val binding: BrandListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MembershipPlan) {
-            binding.item = item
+        fun bind(item: Pair<String?, MembershipPlan>) {
+
+            if (item.first != null) {
+                binding.sectionTitle.text = item.first
+                binding.sectionTitle.visibility = View.VISIBLE
+            } else {
+                binding.sectionTitle.visibility = View.GONE
+            }
+
+            binding.item = item.second
             binding.executePendingBindings()
 
-            if (item.getCardType() == CardType.PLL) {
-                binding.browseBrandsDescription.visibility = View.VISIBLE
-            } else {
-                binding.browseBrandsDescription.visibility = View.INVISIBLE
-            }
+            binding.browseBrandsDescription.visibility =
+                when (item.second.getCardType() == CardType.PLL) {
+                    true -> View.VISIBLE
+                    else -> View.INVISIBLE
+                }
         }
     }
 }
