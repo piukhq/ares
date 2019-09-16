@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class EnrolFields (
-
+	val description: String?,
 	val column : String?,
 	val validation : String?,
 	val common_name : String?,

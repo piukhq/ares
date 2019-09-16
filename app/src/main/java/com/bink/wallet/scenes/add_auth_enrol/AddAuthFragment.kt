@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth
+package com.bink.wallet.scenes.add_auth_enrol
 
 import android.content.Context
 import android.os.Bundle
@@ -118,7 +118,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         addAuthBoolean?.map { addAuthFields?.add(it) }
 
-        val addAuthFieldsRequest = Account(ArrayList(), ArrayList())
+        val addAuthFieldsRequest = Account(ArrayList(), ArrayList(), null)
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)

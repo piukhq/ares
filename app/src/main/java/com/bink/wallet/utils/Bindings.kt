@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
+import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
@@ -48,8 +49,9 @@ fun View.setVisible(isVisible: Boolean) {
         View.GONE
     }
 }
+
 @Parcelize
-data class BarcodeWrapper(val barcode: String?, val barcodeType: Int): Parcelable
+data class BarcodeWrapper(val barcode: String?, val barcodeType: Int) : Parcelable
 
 @BindingAdapter("barcode")
 fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
@@ -110,18 +112,29 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
 }
 
 
-@BindingAdapter("addField", "authField")
-fun TextView.title(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+@BindingAdapter("addField", "authField", "enrolField")
+fun TextView.title(
+    addFields: AddFields?,
+    authoriseFields: AuthoriseFields?,
+    enrolFields: EnrolFields?
+) {
     if (!addFields?.column.isNullOrEmpty()) {
         this.text = addFields?.column
     }
     if (!authoriseFields?.column.isNullOrEmpty()) {
         this.text = authoriseFields?.column
     }
+    if (!enrolFields?.column.isNullOrEmpty()) {
+        this.text = enrolFields?.column
+    }
 }
 
-@BindingAdapter("addField", "authField")
-fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) {
+@BindingAdapter("addField", "authField", "enrolField")
+fun Spinner.setValues(
+    addFields: AddFields?,
+    authoriseFields: AuthoriseFields?,
+    enrolFields: EnrolFields?
+) {
     if (addFields != null && !addFields.choice.isNullOrEmpty())
         this.adapter = ArrayAdapter(
             this.context,
@@ -133,6 +146,12 @@ fun Spinner.setValues(addFields: AddFields?, authoriseFields: AuthoriseFields?) 
             this.context,
             android.R.layout.simple_spinner_dropdown_item,
             authoriseFields.choice
+        )
+    if (enrolFields != null && !enrolFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            enrolFields.choice
         )
 }
 

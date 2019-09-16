@@ -142,4 +142,6 @@
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
     <string name="popular_text">Popular</string>
+    <string name="sign_up_enrol">Sign up for a new card</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
 </resources>

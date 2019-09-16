@@ -8,6 +8,10 @@
         <import type="android.text.InputType" />
 
         <variable
+                name="enrolFields"
+                type="com.bink.wallet.model.response.membership_plan.EnrolFields" />
+
+        <variable
                 name="addFields"
                 type="com.bink.wallet.model.response.membership_plan.AddFields" />
 
@@ -34,6 +38,7 @@
                 android:textStyle="bold"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
+                app:enrolField="@{enrolFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -48,6 +53,7 @@
                 android:spinnerMode="dropdown"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
+                app:enrolField="@{enrolFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
