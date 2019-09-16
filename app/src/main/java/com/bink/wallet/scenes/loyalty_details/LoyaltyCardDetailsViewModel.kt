@@ -22,6 +22,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var deleteError = MutableLiveData<String>()
     var accountStatus = MutableLiveData<LoginStatus>()
     var linkStatus = MutableLiveData<LinkStatus>()
+    var errorCodes = MutableLiveData<String>()
 
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, deleteError)
@@ -101,6 +102,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     }
 
     fun setLinkStatus() {
+        var k = ""
         when (membershipPlan.value?.feature_set?.card_type) {
             CardType.PLL.type -> {
                 when(membershipCard.value?.status?.state) {
@@ -127,7 +129,9 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
             CardType.VIEW.type, CardType.STORE.type -> {
                 linkStatus.value = LinkStatus.STATUS_UNLINKABLE
             }
-        }
 
+
+        }
+        membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value+= "$it " }
     }
 }

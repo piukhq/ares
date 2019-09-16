@@ -222,7 +222,9 @@ class LoyaltyCardDetailsFragment :
 
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR)
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                     //TODO go to PLL screen
@@ -240,10 +242,9 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_error)
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR)
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,  viewModel.errorCodes.value.toString())
                         findNavController().navigateIfAdded(this, directions)
                     }
-                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
                 }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
                     binding.activeLinked.setImageDrawable(
@@ -299,7 +300,7 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_unlinkable)
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE)
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,  viewModel.errorCodes.value.toString())
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }

@@ -228,8 +228,7 @@
 
         <action
                 android:id="@+id/detail_to_issue"
-                app:destination="@+id/module_issue" />
-                app:destination="@+id/transactions_not_supported"
+                app:destination="@+id/module_issue"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -320,6 +319,9 @@
         <argument
                 android:name="linkStatus"
                 app:argType="com.bink.wallet.utils.enums.LinkStatus" />
+        <argument
+                android:name="errorCodes"
+                app:argType="string" />
     </fragment>
 
 </navigation>

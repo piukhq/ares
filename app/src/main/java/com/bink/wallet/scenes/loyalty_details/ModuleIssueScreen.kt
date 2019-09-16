@@ -24,12 +24,18 @@ class ModuleIssueScreen: BaseFragment<ModuleIssueViewModel, FragmentModuleIssueB
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
-        arguments?.let {
-            ModuleIssueScreenArgs.fromBundle(it).linkStatus.apply {
+        arguments?.let { bundle ->
+            ModuleIssueScreenArgs.fromBundle(bundle).linkStatus.apply {
                 when(this){
                     LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
                         binding.title.text = getString(R.string.title_2_4)
                         viewModel.firstTextLine.set(getString(R.string.text_2_4_1, LinkStatus.STATUS_LINKABLE_GENERIC_ERROR.name))
+                        viewModel.secondTextLine.set(
+                            getString(
+                                R.string.text_2_4_2,
+                                ModuleIssueScreenArgs.fromBundle(bundle).errorCodes
+                            )
+                        )
                     }
                     LinkStatus.STATUS_UNLINKABLE -> {
                         binding.title.text = getString(R.string.title_2_8)
