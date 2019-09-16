@@ -14,7 +14,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
-import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -30,10 +29,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             .build()
     }
 
+    companion object {
+        const val BARCODE_TEXT = "Barcode"
+    }
+
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
 
-    private val args: AddJoinFragmentArgs by navArgs()
+    private val args: AddAuthFragmentArgs by navArgs()
 
     override val viewModel: AddAuthViewModel by viewModel()
 
@@ -46,6 +49,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val currentMembershipPlan = args.currentMembershipPlan
+        val currentMembershipCard = args.membershipCard
 
         binding.item = currentMembershipPlan
 
@@ -67,17 +71,60 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         val addAuthBoolean: MutableList<Any>? = mutableListOf()
 
-        currentMembershipPlan.account?.add_fields?.map {
-            if (it.type == 3) addAuthBoolean?.add(it)
-
+        if (currentMembershipCard != null) {
+            if (currentMembershipPlan.feature_set?.has_points != null &&
+                currentMembershipPlan.feature_set.has_points == true &&
+                currentMembershipPlan.feature_set.transactions_available != null
+            ) {
+                binding.titleAddAuthText.text = getString(R.string.log_in_text)
+                binding.addCardButton.text = getString(R.string.log_in_text)
+                if (currentMembershipPlan.feature_set.transactions_available == true) {
+                    binding.descriptionAddAuth.text = getString(
+                        R.string.log_in_transaction_available,
+                        currentMembershipPlan.account?.plan_name_card
+                    )
+                } else {
+                    binding.descriptionAddAuth.text =
+                        getString(
+                            R.string.log_in_transaction_unavailable,
+                            currentMembershipPlan.account?.plan_name_card
+                        )
+                }
+            }
+        } else {
+            currentMembershipPlan.account?.add_fields?.map {
+                if (it.type == 3) {
+                    addAuthBoolean?.add(it)
+                }
+            }
         }
+
         currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type == 3) addAuthBoolean?.add(it)
+            if (it.type == 3) {
+                addAuthBoolean?.add(it)
+            }
         }
 
-        currentMembershipPlan.account?.add_fields?.map { if (it.type != 3) addAuthFields?.add(it) }
+        if (currentMembershipCard == null)
+            if (currentMembershipPlan.feature_set?.has_points != null &&
+                currentMembershipPlan.feature_set.has_points == true &&
+                currentMembershipPlan.feature_set.transactions_available != null
+            ) {
+                currentMembershipPlan.account?.add_fields?.map {
+                    if (it.type != 3 &&
+                        !it.column.equals(BARCODE_TEXT)
+                    ) {
+                        addAuthFields?.add(it)
+                    }
+                }
+            }
+
         currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type != 3) addAuthFields?.add(it)
+            if (it.type != 3 &&
+                !it.column.equals(BARCODE_TEXT)
+            ) {
+                addAuthFields?.add(it)
+            }
         }
 
         addAuthBoolean?.map { addAuthFields?.add(it) }
@@ -114,6 +161,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         else
             viewModel.membershipCardData.observe(this, Observer {
                 when (currentMembershipPlan.feature_set?.card_type) {
+                    //TODO The condition is temporary removed for testing regarding to AB20-35(comment section)
 //                    0, 1 -> {
 //                        val directions =
 //                            AddAuthFragmentDirections.addAuthToDetails(

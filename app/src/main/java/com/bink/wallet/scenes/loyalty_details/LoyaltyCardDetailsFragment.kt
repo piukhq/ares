@@ -106,28 +106,42 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
-            if (viewModel.accountStatus.value == LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE) {
-                val action =
-                    LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                        viewModel.membershipCard.value!!,
-                        viewModel.membershipPlan.value!!
-                    )
-                findNavController().navigateIfAdded(this, action)
-            } else {
-                val action =
-                    LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
-                        viewModel.membershipCard.value!!,
-                        viewModel.accountStatus.value!!
-                    )
-                findNavController().navigateIfAdded(this, action)
+
+            when (viewModel.accountStatus.value) {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.membershipPlan.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE,
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
+                LoginStatus.STATUS_LOGIN_FAILED -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                            viewModel.membershipPlan.value!!,
+                            viewModel.membershipCard.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
+                else -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.accountStatus.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
             }
         }
 
         binding.footerSecurity.setOnClickListener {
-            val stringToSpan = resources.getString(R.string.security_modal_body_3)
+            val stringToSpan = getString(R.string.security_modal_body_3)
             val spannableString = SpannableStringBuilder(stringToSpan)
-            val url = "https://bink.com/terms-and-conditions/#privacy-policy"
-            val hyperlinkText = resources.getString(R.string.hyperlink_text)
+            val url = getString(R.string.terms_and_conditions_url)
+            val hyperlinkText = getString(R.string.hyperlink_text)
             spannableString.setSpan(
                 URLSpan(url),
                 stringToSpan.indexOf(hyperlinkText),
@@ -310,7 +324,7 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_active
                         )
                     )
-                    binding.pointsDescription.text = resources.getText(R.string.view_history)
+                    binding.pointsDescription.text = getText(R.string.view_history)
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
                 }
@@ -334,9 +348,9 @@ class LoyaltyCardDetailsFragment :
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                    binding.pointsText.text = resources.getString(R.string.points_login)
+                    binding.pointsText.text = getString(R.string.points_login)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_see_history)
+                        getString(R.string.description_see_history)
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -345,9 +359,9 @@ class LoyaltyCardDetailsFragment :
                     )
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    binding.pointsText.text = resources.getString(R.string.points_history)
+                    binding.pointsText.text = getString(R.string.points_history)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_not_available)
+                        getString(R.string.description_not_available)
                     binding.pointsImage.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -363,9 +377,9 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_login
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_retry_login)
+                    binding.pointsText.text = getString(R.string.points_retry_login)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_see_history)
+                        getString(R.string.description_see_history)
                 }
 
                 LoginStatus.STATUS_LOGIN_PENDING -> {
@@ -375,9 +389,9 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_pending
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_logging_in)
+                    binding.pointsText.text = getString(R.string.points_logging_in)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_please_wait)
+                        getString(R.string.description_please_wait)
                 }
 
                 LoginStatus.STATUS_SIGN_UP_FAILED -> {
@@ -387,9 +401,10 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_login
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_sign_up_failed)
+                    binding.pointsText.text =
+                        getString(R.string.points_sign_up_failed)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_please_try_again)
+                        getString(R.string.description_please_try_again)
                 }
 
                 LoginStatus.STATUS_SIGN_UP_PENDING -> {
@@ -399,9 +414,9 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_pending
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_signing_up)
+                    binding.pointsText.text = getString(R.string.points_signing_up)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_please_wait)
+                        getString(R.string.description_please_wait)
                 }
 
                 LoginStatus.STATUS_REGISTER_GHOST_CARD_FAILED -> {
@@ -412,9 +427,9 @@ class LoyaltyCardDetailsFragment :
                         )
                     )
                     binding.pointsText.text =
-                        resources.getString(R.string.points_registration_failed)
+                        getString(R.string.points_registration_failed)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_please_try_again)
+                        getString(R.string.description_please_try_again)
                 }
                 LoginStatus.STATUS_REGISTER_GHOST_CARD_PENDING -> {
                     binding.pointsImage.setImageDrawable(
@@ -423,9 +438,10 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_pending
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_registering_card)
+                    binding.pointsText.text =
+                        getString(R.string.points_registering_card)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_please_wait)
+                        getString(R.string.description_please_wait)
                 }
 
                 LoginStatus.STATUS_CARD_ALREADY_EXISTS -> {
@@ -435,9 +451,9 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_lcd_module_icons_points_login
                         )
                     )
-                    binding.pointsText.text = resources.getString(R.string.points_login)
+                    binding.pointsText.text = getString(R.string.points_login)
                     binding.pointsDescription.text =
-                        resources.getString(R.string.description_see_history)
+                        getString(R.string.description_see_history)
                 }
             }
         }
@@ -474,9 +490,9 @@ class LoyaltyCardDetailsFragment :
         balance?.prefix?.let { prefix ->
             if (balance.suffix.isNullOrEmpty()) {
                 binding.pointsText.text =
-                    resources.getString(R.string.points_prefix_or_suffix, prefix, balance.value)
+                    getString(R.string.points_prefix_or_suffix, prefix, balance.value)
             } else {
-                binding.pointsText.text = resources.getString(
+                binding.pointsText.text = getString(
                     R.string.points_prefix_and_suffix,
                     prefix,
                     balance.value,
@@ -487,7 +503,7 @@ class LoyaltyCardDetailsFragment :
         balance?.suffix?.let { suffix ->
             if (balance.prefix.isNullOrEmpty()) {
                 binding.pointsText.text =
-                    resources.getString(R.string.points_prefix_or_suffix, balance.value, suffix)
+                    getString(R.string.points_prefix_or_suffix, balance.value, suffix)
             }
         }
     }

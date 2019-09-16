@@ -243,7 +243,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
             builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
-            builder.setNeutralButton(getString(R.string.cancel_text), dialogClickListener)
+            builder.setNeutralButton(getString(R.string.cancel_text_upper), dialogClickListener)
             dialog = builder.create()
             dialog.show()
         }
