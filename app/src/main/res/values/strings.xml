@@ -154,4 +154,15 @@ supported for this brand yet.</string>
 
     <string name="add_card_error_title">Cannot add card</string>
     <string name="add_card_error_message">Please try again!</string>
+
+
+    <!-- Catch all module issue -->
+    <!-- 2.4 -->
+    <string name="title_2_4">Error</string>
+    <string name="text_2_4_1">Status: %1$s</string>
+    <string name="text_2_4_2">Error codes: %1$s</string>
+    <!-- 2.8 -->
+    <string name="title_2_8">Payment Linked Loyalty unavailable</string>
+    <string name="text_2_8_1">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
+    <string name="text_2_8_2">This is currently not available for this merchant</string>
 </resources>

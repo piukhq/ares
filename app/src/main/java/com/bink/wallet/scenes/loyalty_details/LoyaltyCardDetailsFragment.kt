@@ -191,7 +191,12 @@ class LoyaltyCardDetailsFragment :
                         resources.getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         resources.getString(R.string.link_status_linkable_no_cards)
-                    findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
+                    binding.activeLinked.setOnClickListener {
+                        findNavController().navigateIfAdded(
+                            this,
+                            R.id.detail_to_pll_empty
+                        )
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
                     binding.activeLinked.setImageDrawable(
@@ -204,7 +209,11 @@ class LoyaltyCardDetailsFragment :
                         resources.getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         resources.getString(R.string.link_status_linkable_no_cards)
-                    findNavController().navigateIfAdded(this, R.id.detail_to_issue)
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR)
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                     //TODO go to PLL screen
 
                 }
@@ -218,7 +227,11 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         resources.getString(R.string.link_status_link_error)
                     binding.linkDescription.text = resources.getString(R.string.description_error)
-                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR)
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
                     binding.activeLinked.setImageDrawable(
@@ -273,7 +286,11 @@ class LoyaltyCardDetailsFragment :
                         resources.getString(R.string.link_status_un_linkable)
                     binding.linkDescription.text =
                         resources.getString(R.string.description_un_linkable)
-                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE)
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
             }
         }

@@ -221,6 +221,10 @@
 
     <fragment
             android:id="@+id/module_issue"
-            android:name="com.bink.wallet.scenes.loyalty_details.ModuleIssueScreen" />
+            android:name="com.bink.wallet.scenes.loyalty_details.ModuleIssueScreen">
+        <argument
+                android:name="linkStatus"
+                app:argType="com.bink.wallet.utils.enums.LinkStatus" />
+    </fragment>
 
 </navigation>
