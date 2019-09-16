@@ -5,6 +5,15 @@
     <dimen name="first_keyline">16dp</dimen>
     <dimen name="size_half_keyline">8dp</dimen>
     <dimen name="quarter_keyline">4dp</dimen>
+    <dimen name="double_keyline">32dp</dimen>
+
+    <!-- Card Item -->
+    <dimen name="card_height">112dp</dimen>
+    <dimen name="loyalty_value_margin_end">18dp</dimen>
+    <dimen name="card_login_width">88dp</dimen>
+    <dimen name="card_login_height">@dimen/double_keyline</dimen>
+    <dimen name="card_login_margin_end">12dp</dimen>
+    <dimen name="link_status_wrapper_margin_end">18dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -37,7 +46,7 @@
     <dimen name="loyalty_details_brand_image_height">204dp</dimen>
     <dimen name="background_height">164dp</dimen>
     <dimen name="loyalty_details_margin_top">32dp</dimen>
-    <dimen name="linked_icon_margin_end">112dp</dimen>
+    <dimen name="linked_icon_margin_end">@dimen/card_height</dimen>
     <dimen name="active_icon_margin_start">24dp</dimen>
     <dimen name="footer_margin_bottom">24dp</dimen>
     <dimen name="item_separator_line_height">1dp</dimen>
@@ -47,5 +56,8 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
+    
+    <!--Add Auth Screen -->
+    <dimen name="margin_large">64dp</dimen>
 
 </resources>

@@ -150,7 +150,8 @@
                 android:id="@+id/detail_to_not_supported_transactions"
                 app:destination="@+id/transactions_not_supported" />
         <action
-            android:id="@+id/detail_to_pll_empty" app:destination="@+id/pll_empty_fragment"/>
+                android:id="@+id/detail_to_pll_empty"
+                app:destination="@+id/pll_empty_fragment" />
 
     </fragment>
 
