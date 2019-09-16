@@ -7,6 +7,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.browse_brands_fragment.*
@@ -39,8 +40,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             plansList.add(Pair(getString(R.string.pll_text), plans[0]))
 
             for (position in 1 until plans.size) {
-                if (plans[position - 1].feature_set?.card_type == 2 &&
-                    plans[position].feature_set?.card_type != 2
+                if (plans[position - 1].getCardType() == CardType.PLL &&
+                    plans[position].getCardType() != CardType.PLL
                 ) {
                     plansList.add(Pair(getString(R.string.popular_text), plans[position]))
                 } else {
