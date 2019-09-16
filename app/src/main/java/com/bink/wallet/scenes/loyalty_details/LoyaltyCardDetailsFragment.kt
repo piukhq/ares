@@ -238,6 +238,11 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         getString(R.string.link_status_link_error)
                     binding.linkDescription.text = getString(R.string.description_error)
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR)
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                     //TODO go to Catch All Module Issue Screen (2.4. 2.8)
                 }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
@@ -291,13 +296,12 @@ class LoyaltyCardDetailsFragment :
                     )
                     binding.linkStatusText.text =
                         getString(R.string.link_status_unlinkable)
-                    binding.linkDescription.text = getString(R.string.description_un_linkable)
+                    binding.linkDescription.text = getString(R.string.description_unlinkable)
                     binding.activeLinked.setOnClickListener {
                         val directions =
                             LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE)
                         findNavController().navigateIfAdded(this, directions)
                     }
-                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
                 }
             }
         }

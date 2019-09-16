@@ -15,6 +15,7 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragment() {
 
@@ -25,7 +26,7 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
 
     open lateinit var binding: DB
 
-    open val windowFullscreenHandler: WindowFullscreenHandler by inject()
+    open val windowFullscreenHandler: WindowFullscreenHandler by inject { parametersOf(requireActivity())}
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
