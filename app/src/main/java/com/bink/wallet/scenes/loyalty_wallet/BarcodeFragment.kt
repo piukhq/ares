@@ -42,9 +42,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             }
 
         binding.viewModel = viewModel
-        binding.barcodeImage.setOnClickListener {
-            directions?.let { directions -> findNavController().navigateIfAdded(this, directions) }
-        }
         binding.buttonMaximize.setOnClickListener {
             directions?.let { directions -> findNavController().navigateIfAdded(this, directions) }
         }
