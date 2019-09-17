@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
@@ -107,27 +106,41 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
-            if (viewModel.accountStatus.value == LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE) {
-                val action =
-                    LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                        viewModel.membershipCard.value!!,
-                        viewModel.membershipPlan.value!!
-                    )
-                findNavController().navigateIfAdded(this, action)
-            } else {
-                val action =
-                    LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
-                        viewModel.membershipCard.value!!,
-                        viewModel.accountStatus.value!!
-                    )
-                findNavController().navigateIfAdded(this, action)
+
+            when (viewModel.accountStatus.value) {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.membershipPlan.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE,
+                LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
+                LoginStatus.STATUS_LOGIN_FAILED -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                            viewModel.membershipPlan.value!!,
+                            viewModel.membershipCard.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
+                else -> {
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToNotSupportedTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.accountStatus.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
+                }
             }
         }
 
         binding.footerSecurity.setOnClickListener {
             val stringToSpan = getString(R.string.security_modal_body_3)
             val spannableString = SpannableStringBuilder(stringToSpan)
-            val url = "https://bink.com/terms-and-conditions/#privacy-policy"
+            val url = getString(R.string.terms_and_conditions_url)
             val hyperlinkText = getString(R.string.hyperlink_text)
             spannableString.setSpan(
                 URLSpan(url),

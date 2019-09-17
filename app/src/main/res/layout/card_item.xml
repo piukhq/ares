@@ -22,10 +22,10 @@
                 android:id="@+id/company_logo"
                 android:layout_width="@dimen/card_height"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/size_half_keyline"
-                android:layout_marginTop="@dimen/size_half_keyline"
-                android:layout_marginEnd="@dimen/size_half_keyline"
-                android:layout_marginBottom="@dimen/size_half_keyline"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 app:imageUrl="@{plan}"
                 tools:ignore="ContentDescription" />
 
@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/double_keyline"
+                    android:layout_marginStart="@dimen/custom_text_card_margin"
                     android:text="@{plan.account.company_name}"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
@@ -80,8 +80,8 @@
 
             <ImageView
                     android:id="@+id/card_login"
-                    android:layout_width="@dimen/card_login_width"
-                    android:layout_height="@dimen/card_login_height"
+                    android:layout_width="@dimen/custom_login_image_size"
+                    android:layout_height="@dimen/custom_text_card_margin"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/first_keyline"
                     android:layout_marginEnd="@dimen/card_login_margin_end"
@@ -110,9 +110,9 @@
 
                 <ImageView
                         android:id="@+id/link_status_img"
-                        android:layout_width="@dimen/first_keyline"
-                        android:layout_height="@dimen/first_keyline"
-                        android:layout_marginStart="@dimen/size_half_keyline"
+                        android:layout_width="@dimen/margin_padding_size_medium"
+                        android:layout_height="@dimen/margin_padding_size_medium"
+                        android:layout_marginStart="6dp"
                         android:src="@drawable/ic_linked"
                         tools:ignore="ContentDescription" />
 

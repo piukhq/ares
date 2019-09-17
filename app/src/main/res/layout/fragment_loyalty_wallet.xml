@@ -23,7 +23,7 @@
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/first_keyline"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_settings"
                     app:layout_constraintBottom_toBottomOf="@+id/toolbar"
@@ -35,7 +35,7 @@
                     android:id="@+id/loyalty_wallet_list"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/size_half_keyline"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
                     app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -45,9 +45,9 @@
                     android:id="@+id/progress_spinner"
                     style="@style/ProgressSpinner"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginStart="@dimen/size_half_keyline"
-                    android:layout_marginTop="@dimen/size_half_keyline"
-                    android:layout_marginBottom="@dimen/size_half_keyline"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/loyalty_wallet_list"
@@ -70,13 +70,13 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/size_half_keyline">
+                        android:layout_marginTop="@dimen/margin_padding_size_small">
 
                     <ImageView
                             android:layout_width="@dimen/add_button_size"
                             android:layout_height="@dimen/add_button_size"
-                            android:layout_marginStart="@dimen/size_half_keyline"
-                            android:layout_marginEnd="@dimen/size_half_keyline"
+                            android:layout_marginStart="@dimen/margin_padding_size_small"
+                            android:layout_marginEnd="@dimen/margin_padding_size_small"
                             android:contentDescription="@string/add_button_description"
                             android:src="@drawable/ic_add"
                             app:layout_constraintBottom_toBottomOf="parent"

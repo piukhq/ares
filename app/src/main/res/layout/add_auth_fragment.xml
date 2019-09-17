@@ -4,9 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
                 name="item"
-                type="com.bink.wallet.model.response.membership_plan.MembershipPlan"/>
+                type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,54 +18,69 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <TextView
                 android:id="@+id/close"
-                android:src="@drawable/ic_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_medium"
+                android:text="@string/cancel_text"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
-                android:layout_marginEnd="@dimen/first_keyline"
-                tools:ignore="ContentDescription"
-                android:layout_marginTop="@dimen/first_keyline"
-                app:layout_constraintTop_toTopOf="@+id/toolbar"/>
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                tools:ignore="ContentDescription" />
 
         <com.bink.wallet.ModalBrandHeader
                 android:id="@+id/add_join_reward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_half_keyline"
-                android:layout_marginTop="@dimen/double_keyline"
-                android:layout_marginEnd="@dimen/size_half_keyline"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:membershipPlan="@{item}" />
 
-        <TextView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="@{`Please enter your ` + item.account.plan_name + ` details below to add this card to your wallet`}"
-                  android:id="@+id/textView"
-                  android:textSize="@dimen/size_sub_headline"
-                  android:letterSpacing="0"
-                  android:layout_marginTop="@dimen/size_half_keyline"
-                  android:textColor="@android:color/black"
-                  app:layout_constraintTop_toBottomOf="@+id/add_join_reward"
-                  app:layout_constraintStart_toStartOf="parent"
-                  android:layout_marginStart="@dimen/first_keyline"
-                  app:layout_constraintEnd_toEndOf="parent"
-                  android:layout_marginEnd="@dimen/first_keyline"/>
+        <TextView
+                android:id="@+id/title_add_auth_text"
+                style="@style/TitleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@string/sign_up_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_join_reward" />
+
+        <TextView
+                android:id="@+id/description_add_auth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:letterSpacing="0"
+                android:text="@{`Please enter your ` + item.account.plan_name + ` details below to add this card to your wallet`}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_description_big"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
 
         <ProgressBar
                 android:id="@+id/progress_spinner"
                 style="@style/ProgressSpinner"
                 android:layout_centerHorizontal="true"
-                android:layout_marginStart="@dimen/size_half_keyline"
-                android:layout_marginTop="@dimen/size_half_keyline"
-                android:layout_marginBottom="@dimen/size_half_keyline"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,22 +92,23 @@
                 android:id="@+id/auth_add_fields"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/size_half_keyline"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toTopOf="@+id/add_card_button"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                android:layout_marginTop="@dimen/size_half_keyline"/>
+                app:layout_constraintTop_toBottomOf="@+id/description_add_auth" />
 
-        <Button android:id="@+id/add_card_button"
+        <Button
+                android:id="@+id/add_card_button"
                 style="@style/RoundedGradientButton"
-                android:text="@string/button_text_log_in"
                 android:layout_width="0dp"
-                android:layout_marginBottom="@dimen/double_keyline"
+                android:layout_marginStart="@dimen/margin_padding_size_extra_large"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
+                android:layout_marginBottom="@dimen/margin_padding_size_large"
+                android:text="@string/sign_up_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="@dimen/margin_large"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_marginTop="@dimen/size_half_keyline"
-                app:layout_constraintTop_toBottomOf="@+id/auth_add_fields"/>
+                app:layout_constraintTop_toBottomOf="@+id/auth_add_fields" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

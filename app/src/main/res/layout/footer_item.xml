@@ -12,23 +12,23 @@
         <TextView
                 android:id="@+id/title"
                 style="@style/SubtitleTextView"
-                android:layout_marginStart="@dimen/first_keyline"
-                tools:text="@string/about_membership"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/about_membership" />
 
         <TextView
                 android:id="@+id/description"
                 style="@style/DescriptionTextView"
-                tools:text="@string/learn_more"
                 app:layout_constraintStart_toStartOf="@+id/title"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                tools:text="@string/learn_more" />
 
         <TextView
                 android:id="@+id/chevron"
                 style="@style/DescriptionTextView"
                 android:layout_width="0dp"
-                android:layout_marginEnd="@dimen/first_keyline"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:text="@string/chevron"
                 app:layout_constraintBottom_toBottomOf="@+id/description"
                 app:layout_constraintEnd_toEndOf="parent"
