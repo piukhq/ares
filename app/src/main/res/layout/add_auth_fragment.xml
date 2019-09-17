@@ -67,7 +67,6 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:letterSpacing="0"
-                android:text="@{`Please enter your ` + item.account.plan_name + ` details below to add this card to your wallet`}"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"

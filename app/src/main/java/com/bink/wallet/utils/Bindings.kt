@@ -3,7 +3,6 @@ package com.bink.wallet.utils
 import android.graphics.Color
 import android.os.Parcelable
 import android.text.format.DateFormat
-import android.text.format.DateUtils
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView

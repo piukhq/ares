@@ -46,6 +46,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val currentMembershipCard = args.membershipCard
 
         binding.item = currentMembershipPlan
+        binding.descriptionAddAuth.text =
+            getString(R.string.add_auth_description, currentMembershipPlan.account?.company_name)
 
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 

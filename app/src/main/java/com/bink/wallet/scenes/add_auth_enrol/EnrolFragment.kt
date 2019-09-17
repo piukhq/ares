@@ -1,8 +1,10 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -40,10 +42,18 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
 
         binding.item = currentMembershipPlan
         binding.titleAddAuthText.text = getString(R.string.sign_up_enrol)
-        binding.descriptionAddAuth.text = getString(R.string.enrol_description)
+        binding.descriptionAddAuth.text =
+            getString(R.string.enrol_description, currentMembershipPlan.account?.company_name)
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         val enrolFields: MutableList<Any>? = mutableListOf()
+
+        binding.close.setOnClickListener {
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            findNavController().navigateIfAdded(this, R.id.enrol_to_home)
+        }
 
         currentMembershipPlan.account?.enrol_fields?.map {
             if (it.type != 3 &&

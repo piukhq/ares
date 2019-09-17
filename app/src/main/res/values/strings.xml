@@ -144,4 +144,5 @@
     <string name="popular_text">Popular</string>
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
+    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
 </resources>
