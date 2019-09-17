@@ -46,7 +46,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         RecyclerItemTouchHelperListener {
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-            if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
+            if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
                 if (direction == ItemTouchHelper.RIGHT) {
                     val card = viewModel.localMembershipCardData.value?.get(position)
                     if (viewModel.localMembershipPlanData.value != null) {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import com.bink.wallet.databinding.FooterItemBinding
+import com.bink.wallet.utils.enums.FooterType
 
 class FooterItem @JvmOverloads constructor(
     context: Context,
@@ -18,11 +19,6 @@ class FooterItem @JvmOverloads constructor(
     private val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.FooterItem, 0, 0)
     private val footerType = attributes.getString(R.styleable.FooterItem_type)
 
-    companion object {
-        private const val ABOUT = "0"
-        private const val SECURITY = "1"
-        private const val DELETE = "2"
-    }
 
     init {
         footerType?.let { populateItem(it) }
@@ -31,17 +27,17 @@ class FooterItem @JvmOverloads constructor(
 
     private fun populateItem(type: String) {
         when (type) {
-            ABOUT -> {
+            FooterType.ABOUT.type -> {
                 binding.title.text = resources.getText(R.string.about_membership)
                 binding.description.text = resources.getText(R.string.learn_more)
             }
 
-            SECURITY -> {
+            FooterType.SECURITY.type -> {
                 binding.title.text = resources.getText(R.string.security_privacy)
                 binding.description.text = resources.getText(R.string.how_we_protect)
             }
 
-            DELETE -> {
+            FooterType.DELETE.type -> {
                 binding.title.text = resources.getText(R.string.delete_card)
                 binding.description.text = resources.getText(R.string.remove_card)
             }
