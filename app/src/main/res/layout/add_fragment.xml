@@ -44,7 +44,7 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_small"
                         android:text="@string/add_loyalty_card"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/loyalty_card_description"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -57,7 +57,7 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/scan_a_card_you_already_have"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -99,7 +99,7 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_small"
                         android:text="@string/browse_brands_text"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/browse_brands_description"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -112,7 +112,7 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/find_and_join_loyalty_schemes"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -187,7 +187,7 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_small"
                         android:text="@string/add_payment_card"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/payment_card_description"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -200,7 +200,7 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/scan_and_link_your_payment_card"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,7 +24,7 @@ class MembershipCard(
 
     fun getHeroImage(): CardImages? {
         return if (!images.isNullOrEmpty()) {
-            images?.first { image -> image.type == 0 }
+            images?.firstOrNull { image -> image.type == 0 }
         } else null
     }
 }

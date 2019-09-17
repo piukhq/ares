@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Card Item -->
-    <dimen name="card_height">112dp</dimen>
-    <dimen name="loyalty_value_margin_end">18dp</dimen>
-    <dimen name="card_login_width">88dp</dimen>
-    <dimen name="card_login_height">@dimen/double_keyline</dimen>
-    <dimen name="card_login_margin_end">12dp</dimen>
-    <dimen name="link_status_wrapper_margin_end">18dp</dimen>
-
     <!-- Margins & Padding -->
-    <dimen name="margin_padding_size_extra_small">8dp</dimen>
+    <dimen name="margin_padding_size_extra_small">4dp</dimen>
     <dimen name="margin_padding_size_small">8dp</dimen>
     <dimen name="margin_padding_size_medium">16dp</dimen>
     <dimen name="margin_padding_size_large">32dp</dimen>
     <dimen name="margin_padding_size_extra_large">64dp</dimen>
 
+    <!-- Card Item -->
+    <dimen name="card_height">112dp</dimen>
+    <dimen name="loyalty_value_margin_end">18dp</dimen>
+    <dimen name="card_login_width">88dp</dimen>
+    <dimen name="card_login_height">@dimen/margin_padding_size_large</dimen>
+    <dimen name="card_login_margin_end">12dp</dimen>
+    <dimen name="link_status_wrapper_margin_end">18dp</dimen>
+
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
     <dimen name="button_margin_end">@dimen/button_margin_start</dimen>
     <dimen name="button_margin_bottom">68dp</dimen>
-    <dimen name="barcode_height">80dp</dimen>
+    <dimen name="barcode_height">82dp</dimen>
     <dimen name="barcode_margin_top">36dp</dimen>
     <dimen name="label_margin_top">68dp</dimen>
     <dimen name="number_margin_top">4dp</dimen>
@@ -57,23 +57,16 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
-    <dimen name="text_size_title_big">25sp</dimen>
-    <dimen name="text_size_description_big">18sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
-    <dimen name="text_size_description_medium">15sp</dimen>
-    <dimen name="custom_add_fragment_image_size">31dp</dimen>
+    <dimen name="custom_add_fragment_image_size">32dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
     <dimen name="cancel_button_size">54dp</dimen>
-    <dimen name="brand_logo_size">50dp</dimen>
-    <dimen name="arrow_text_size">24sp</dimen>
-    <dimen name="card_height">110dp</dimen>
-    <dimen name="custom_text_card_margin">30dp</dimen>
-    <dimen name="custom_login_image_size">89dp</dimen>
-    <dimen name="transaction_arrow_size">30sp</dimen>
+    <dimen name="brand_logo_size">52dp</dimen>
+    <dimen name="custom_text_card_margin">32dp</dimen>
+    <dimen name="custom_login_image_size">88dp</dimen>
+    <dimen name="transaction_arrow_size">32sp</dimen>
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
-
-    <dimen name="text_size_description_small">13.6sp</dimen>
 </resources>
