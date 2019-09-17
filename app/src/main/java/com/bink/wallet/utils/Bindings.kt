@@ -199,6 +199,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
         }
     }
 
+    // TODO replace logic
     @BindingAdapter("cardTimestamp", "loginStatus")
     fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         when (loginStatus) {
