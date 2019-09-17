@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.graphics.Color
 import android.os.Parcelable
 import android.text.format.DateFormat
+import android.text.format.DateUtils
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -26,7 +27,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan) {
@@ -103,8 +104,8 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
 
 @BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
-    if (!card?.getHeroImage()?.url.isNullOrEmpty()) {
-        binding.image.setImage(card?.getHeroImage()?.url.toString())
+    if (card?.getHeroImage() != null && card.getHeroImage()?.url != null) {
+        binding.image.setImage(card.getHeroImage()?.url.toString())
     } else {
         binding.image.setBackgroundColor(Color.GREEN)
     }
@@ -175,20 +176,19 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
         }
     }
 
-    if (value > 0)
-        if (membershipTransactions.amounts[0].prefix != null)
-            this.text =
-                "$sign ${membershipTransactions.amounts[0].prefix}${membershipTransactions.amounts[0].value}"
-        else if (membershipTransactions.amounts[0].suffix != null)
-            this.text =
-                "$sign ${membershipTransactions.amounts[0].value} ${membershipTransactions.amounts[0].suffix}"
+    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue
+
+    if (membershipTransactions.amounts[0].prefix != null)
+        this.text =
+            "$sign ${membershipTransactions.amounts[0].prefix} $currentValue"
+    else if (membershipTransactions.amounts[0].suffix != null)
+        this.text =
+            "$sign $currentValue ${membershipTransactions.amounts[0].suffix}"
 }
 
 @BindingAdapter("transactionTime")
 fun TextView.setTimestamp(timeStamp: Long) {
-    val cal = Calendar.getInstance(Locale.ENGLISH)
-    cal.timeInMillis = timeStamp
-    this.text = DateFormat.format("dd/MM/yyyy", cal).toString()
+    this.text = DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
 }
 
 @BindingAdapter("transactionArrow")

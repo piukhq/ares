@@ -3,6 +3,8 @@ package com.bink.wallet.scenes.add_auth_enrol
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -10,6 +12,9 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,6 +86,31 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
                 binding.addCardButton.isEnabled = false
                 binding.progressSpinner.visibility = View.VISIBLE
             }
+        }
+
+        if (viewModel.membershipCardData.hasActiveObservers())
+            viewModel.membershipCardData.removeObservers(this)
+        else
+            viewModel.membershipCardData.observe(this, Observer {
+                val directions =
+                    EnrolFragmentDirections.enrolToDetails(
+                        currentMembershipPlan, it
+                    )
+                findNavController().navigateIfAdded(this, directions)
+                binding.progressSpinner.visibility = View.GONE
+                viewModel.createCardError.value = null
+                binding.addCardButton.isEnabled = true
+            })
+
+
+        viewModel.createCardError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                getString(R.string.add_card_error_title),
+                getString(R.string.add_card_error_message)
+            )
+            binding.progressSpinner.visibility = View.GONE
+            viewModel.createCardError.value = null
+            binding.addCardButton.isEnabled = true
         }
     }
 }
