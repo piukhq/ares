@@ -158,99 +158,103 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
 
     if (value > 0)
         if (membershipTransactions.amounts[0].prefix != null)
-            this.text =
-                "$sign ${membershipTransactions.amounts[0].prefix}${membershipTransactions.amounts[0].value}"
+            text = resources.getString(
+                R.string.transactions_prefix,
+                sign,
+                membershipTransactions.amounts[0].prefix,
+                membershipTransactions.amounts[0].value.toString()
+            )
         else if (membershipTransactions.amounts[0].suffix != null)
-            this.text =
-                "$sign ${membershipTransactions.amounts[0].value} ${membershipTransactions.amounts[0].suffix}"
-}
+            text = resources.getString(
+                R.string.transactions_suffix,
+                sign,
+                membershipTransactions.amounts[0].value.toString(),
+                membershipTransactions.amounts[0].suffix
+            )
 
-@BindingAdapter("transactionTime")
-fun TextView.setTimestamp(timeStamp: Long) {
-    val cal = Calendar.getInstance(Locale.ENGLISH)
-    cal.timeInMillis = timeStamp
-    this.text = DateFormat.format("dd/MM/yyyy", cal).toString()
-}
 
-@BindingAdapter("transactionArrow")
-fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
-    val value = membershipTransactions.amounts?.get(0)?.value!!
+    @BindingAdapter("transactionTime")
+    fun TextView.setTimestamp(timeStamp: Long) {
+        val cal = Calendar.getInstance(Locale.ENGLISH)
+        cal.timeInMillis = timeStamp
+        this.text = DateFormat.format("dd/MM/yyyy", cal).toString()
+    }
 
-    when {
-        value < 0 -> {
-            this.setTextColor(ContextCompat.getColor(context, R.color.black))
-        }
-        value == 0.0 -> {
-            this.setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
-            this.text = context.getString(R.string.arrow_left)
-        }
-        else -> {
-            this.setTextColor(ContextCompat.getColor(context, R.color.green_ok))
-            this.text = context.getString(R.string.up_arrow)
+    @BindingAdapter("transactionArrow")
+    fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
+        val value = membershipTransactions.amounts?.get(0)?.value!!
+
+        when {
+            value < 0 -> {
+                this.setTextColor(ContextCompat.getColor(context, R.color.black))
+            }
+            value == 0.0 -> {
+                this.setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+                this.text = context.getString(R.string.arrow_left)
+            }
+            else -> {
+                this.setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+                this.text = context.getString(R.string.up_arrow)
+            }
         }
     }
-}
 
-@BindingAdapter("cardTimestamp", "loginStatus")
-fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
+    @BindingAdapter("cardTimestamp", "loginStatus")
+    fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
-    when (loginStatus) {
-        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-            if (card != null && card.balances.isNullOrEmpty()) {
-                var elapsed =
-                    (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / 60
-                var suffix = MINUTES
-                if (elapsed >= 60) {
-                    elapsed /= 60
-                    suffix = HOURS
-                    if (elapsed >= 24) {
-                        elapsed /= 24
-                        suffix = DAYS
-                        if (elapsed >= 7) {
-                            elapsed /= 7
-                            suffix = WEEKS
-                            if (elapsed >= 5) {
-                                elapsed /= 5
-                                suffix = MONTHS
-                                if (elapsed >= 12) {
-                                    elapsed /= 12
-                                    suffix = YEARS
+        when (loginStatus) {
+            LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
+                if (card != null && card.balances.isNullOrEmpty()) {
+                    var elapsed =
+                        (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / 60
+                    var suffix = MINUTES
+                    if (elapsed >= 60) {
+                        elapsed /= 60
+                        suffix = HOURS
+                        if (elapsed >= 24) {
+                            elapsed /= 24
+                            suffix = DAYS
+                            if (elapsed >= 7) {
+                                elapsed /= 7
+                                suffix = WEEKS
+                                if (elapsed >= 5) {
+                                    elapsed /= 5
+                                    suffix = MONTHS
+                                    if (elapsed >= 12) {
+                                        elapsed /= 12
+                                        suffix = YEARS
+                                    }
                                 }
                             }
                         }
                     }
+                    this.text = this.context.getString(
+                        R.string.transaction_not_supported_description,
+                        elapsed.toInt().toString(),
+                        suffix
+                    )
                 }
-                this.text = this.context.getString(
-                    R.string.transaction_not_supported_description,
-                    elapsed.toInt().toString(),
-                    suffix
-                )
             }
+            LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
+                this.text =
+                    this.context.getString(R.string.description_login_unavailable)
+            LoginStatus.STATUS_LOGIN_PENDING ->
+                this.text = this.context.getString(R.string.description_text)
+            LoginStatus.STATUS_SIGN_UP_PENDING ->
+                this.text = this.context.getString(R.string.description_text)
+            else -> this.text = this.context.getString(R.string.description_text)
         }
-        LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
-            this.text =
-                this.context.getString(R.string.description_login_unavailable)
-        LoginStatus.STATUS_LOGIN_PENDING ->
-            this.text = this.context.getString(R.string.description_text)
-        LoginStatus.STATUS_SIGN_UP_PENDING ->
-            this.text = this.context.getString(R.string.description_text)
-        else -> this.text = this.context.getString(R.string.description_text)
     }
-}
 
-@BindingAdapter("loginStatus")
-fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
-
-    when (loginStatus) {
-        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.text =
-            this.context.getString(R.string.transaction_not_supported_title)
-        LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.text =
-            this.context.getString(R.string.transaction_history_not_supported)
-        LoginStatus.STATUS_LOGIN_PENDING -> this.text =
-            this.context.getString(R.string.log_in_pending)
-        LoginStatus.STATUS_SIGN_UP_PENDING -> this.text =
-            this.context.getString(R.string.sign_up_pending)
-        else -> this.text = this.context.getString(R.string.register_gc_pending)
+    @BindingAdapter("loginStatus")
+    fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
+        text = when (loginStatus) {
+            LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
+            LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
+            LoginStatus.STATUS_LOGIN_PENDING -> this.context.getString(R.string.log_in_pending)
+            LoginStatus.STATUS_SIGN_UP_PENDING -> this.context.getString(R.string.sign_up_pending)
+            else -> this.context.getString(R.string.register_gc_pending)
+        }
     }
 }
 

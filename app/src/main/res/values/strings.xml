@@ -163,4 +163,8 @@
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
     <string name="popular_text">Popular</string>
+
+    <!-- Transaction Screen -->
+    <string name="transactions_prefix">%1$s %2$s%3$s</string>
+    <string name="transactions_suffix">%1$s%2$s %3$s</string>
 </resources>
