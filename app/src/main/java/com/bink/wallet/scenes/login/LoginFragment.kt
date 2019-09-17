@@ -34,7 +34,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             showNoInternetConnectionDialog()
         }
 
-        viewModel.loginData.observe(this, Observer {
+        viewModel.loginBody.observe(this, Observer {
             findNavController().navigateIfAdded(this, R.id.login_to_loyalty)
         })
     }

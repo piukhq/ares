@@ -2,21 +2,33 @@ package com.bink.wallet.scenes.login
 
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.LoginData
 
 class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseViewModel() {
 
-    var loginData: MutableLiveData<LoginBody> = MutableLiveData()
+    var loginBody = MutableLiveData<LoginBody>()
+    var loginData = MutableLiveData<LoginData>()
+//    var loginEmail = "Bink20iteration1@testbink.com"
+    var loginEmail = "mwoodhams@testbink.com"
 
     fun authenticate() {
         loginRepository.doAuthenticationWork(
             LoginResponse(
                 LoginBody(
                     System.currentTimeMillis() / 1000,
-                    "Bink20iteration1@testbink.com",
+                    loginEmail,
                     0.0,
                     12.345
                 )
-            ), loginData
+            ), loginBody
         )
+    }
+
+    fun retrieveStoredLoginData() {
+        loginRepository.retrieveStoredLoginData(loginData)
+        if (!loginData.value!!.email.isNullOrEmpty() &&
+            !loginData.value!!.email.equals(loginEmail)) {
+            loginEmail = loginData.value!!.email!!
+        }
     }
 }

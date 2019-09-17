@@ -1,5 +1,6 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.network.ApiService
@@ -23,7 +24,7 @@ import org.koin.dsl.module
 
 val viewModelModules = module {
 
-    single { provideLoginRepository(get()) }
+    single { provideLoginRepository(get(), get()) }
     viewModel { LoginViewModel(get()) }
 
     single { provideLoyaltyCardRepository(get(), get(), get()) }
@@ -51,8 +52,11 @@ val viewModelModules = module {
     viewModel { TransactionsNotSupportedViewModel() }
 }
 
-fun provideLoginRepository(restApiService: ApiService): LoginRepository =
-    LoginRepository(restApiService)
+fun provideLoginRepository(
+    restApiService: ApiService,
+    loginDataDao: LoginDataDao
+): LoginRepository =
+    LoginRepository(restApiService, loginDataDao)
 
 fun provideLoyaltyCardRepository(
     restApiService: ApiService,
@@ -64,4 +68,5 @@ fun provideLoyaltyCardRepository(
 fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
     membershipCardDao: MembershipCardDao
-): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+): LoyaltyCardDetailsRepository =
+    LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
