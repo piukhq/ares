@@ -11,11 +11,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
-import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
-import com.bink.wallet.utils.*
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -152,12 +147,27 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
-                    viewModel.createMembershipCard(
-                        MembershipCardRequest(
-                            addAuthFieldsRequest,
-                            currentMembershipPlan.id
-                        )
+
+                    val currentRequest = MembershipCardRequest(
+                        addAuthFieldsRequest,
+                        currentMembershipPlan.id
                     )
+
+                    if (currentMembershipCard != null &&
+                        MembershipPlanUtils.getAccountStatus(
+                            currentMembershipPlan,
+                            currentMembershipCard
+                        ) == LoginStatus.STATUS_LOGIN_FAILED
+                    ) {
+                        viewModel.updateMembershipCard(
+                            currentMembershipCard,
+                            currentRequest
+                        )
+                    } else {
+                        viewModel.createMembershipCard(
+                            currentRequest
+                        )
+                    }
                 } else {
                     showNoInternetConnectionDialog()
                 }
@@ -189,9 +199,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     }
                 }
-                binding.progressSpinner.visibility = View.GONE
-                viewModel.createCardError.value = null
-                binding.addCardButton.isEnabled = true
+                hideLoadingViews()
             })
 
 
@@ -200,9 +208,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 getString(R.string.add_card_error_title),
                 getString(R.string.add_card_error_message)
             )
-            binding.progressSpinner.visibility = View.GONE
-            viewModel.createCardError.value = null
-            binding.addCardButton.isEnabled = true
+            hideLoadingViews()
         }
+    }
+
+    private fun hideLoadingViews() {
+        binding.progressSpinner.visibility = View.GONE
+        viewModel.createCardError.value = null
+        binding.addCardButton.isEnabled = true
     }
 }

@@ -31,4 +31,10 @@ interface ApiService {
 
     @POST("/ubiquity/membership_cards")
     fun createMembershipCardAsync(@Body membershipCardRequest: MembershipCardRequest): Deferred<MembershipCard>
+
+    @PUT("/ubiquity/membership_card/{card_id}")
+    fun updateMembershipCardAsync(
+        @Path("card_id") cardId: String,
+        @Body membershipCardRequest: MembershipCardRequest
+    ): Deferred<MembershipCard>
 }
