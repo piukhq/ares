@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth
+package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
 import android.view.View
@@ -51,6 +51,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val currentMembershipCard = args.membershipCard
 
         binding.item = currentMembershipPlan
+        binding.descriptionAddAuth.text =
+            getString(R.string.add_auth_description, currentMembershipPlan.account?.company_name)
 
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
@@ -124,7 +126,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         addAuthBoolean?.map { addAuthFields?.add(it) }
 
-        val addAuthFieldsRequest = Account(ArrayList(), ArrayList())
+        val addAuthFieldsRequest = Account(ArrayList(), ArrayList(), null)
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)

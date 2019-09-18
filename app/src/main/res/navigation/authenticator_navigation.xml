@@ -118,6 +118,14 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
 
+        <action
+                android:id="@+id/add_join_to_enrol"
+                app:destination="@id/enrol_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -147,8 +155,35 @@
     </fragment>
 
     <fragment
+            android:id="@+id/enrol_fragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.EnrolFragment">
+
+        <argument
+                android:name="currentMembershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <action
+                android:id="@+id/enrol_to_details"
+                app:destination="@id/loyalty_card_detail_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpToInclusive="true" />
+
+        <action
+                android:id="@+id/enrol_to_home"
+                app:destination="@id/loyalty_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
             android:id="@+id/add_auth"
-            android:name="com.bink.wallet.scenes.add_auth.AddAuthFragment">
+            android:name="com.bink.wallet.scenes.add_auth_enrol.AddAuthFragment">
 
         <argument
                 android:name="currentMembershipPlan"
