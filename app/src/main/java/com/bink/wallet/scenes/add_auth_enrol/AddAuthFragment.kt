@@ -12,11 +12,11 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
-import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 

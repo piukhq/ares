@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.CardStatus
 import com.bink.wallet.utils.enums.CardType
@@ -23,6 +22,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var deleteError = MutableLiveData<String>()
     var accountStatus = MutableLiveData<LoginStatus>()
     var linkStatus = MutableLiveData<LinkStatus>()
+    var errorCodes = MutableLiveData<String>()
 
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, deleteError)
@@ -129,7 +129,8 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                 linkStatus.value = LinkStatus.STATUS_UNLINKABLE
             }
         }
-
+        errorCodes.value = null
+        membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value+= "$it " }
     }
-
 }
+
