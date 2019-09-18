@@ -12,7 +12,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
             LoginResponse(
                 LoginBody(
                     System.currentTimeMillis() / 1000,
-                    "mwoodhams@testbink.com", // ""Bink20iteration1@testbink.com",
+                    "stagingQA_sri@testbink.com",
                     0.0,
                     12.345
                 )

@@ -16,7 +16,7 @@ object JwtCreator {
         val payload = JSONObject()
         payload.put("organisation_id", "Loyalty Angels")
         payload.put("bundle_id", "com.bink.bink20dev")
-        payload.put("user_id", "Bink20iteration1@testbink.com")
+        payload.put("user_id", "stagingQA_sri@testbink.com")
         payload.put("property_id", "not currently used for authentication")
         payload.put("iat", System.currentTimeMillis() / 1000)
 

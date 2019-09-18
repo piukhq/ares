@@ -60,7 +60,7 @@ class LoginUnitTest : KoinTest {
     fun testLiveDataUpdate() {
         val loginBody = LoginBody(
             System.currentTimeMillis() / 1000,
-            "bink20iteration1@testbink.com",
+            "stagingQA_sri@testbink.com",
             0.0,
             12.345
         )
