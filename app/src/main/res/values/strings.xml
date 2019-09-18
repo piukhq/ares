@@ -174,4 +174,8 @@
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
     <string name="text_2_8_1">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
     <string name="text_2_8_2">This is currently not available for this merchant</string>
+
+    <!-- Transaction Screen -->
+    <string name="transactions_prefix">%1$s %2$s%3$s</string>
+    <string name="transactions_suffix">%1$s%2$s %3$s</string>
 </resources>

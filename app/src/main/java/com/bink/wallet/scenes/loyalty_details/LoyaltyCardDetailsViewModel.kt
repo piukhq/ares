@@ -102,7 +102,6 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     }
 
     fun setLinkStatus() {
-        var k = ""
         when (membershipPlan.value?.feature_set?.card_type) {
             CardType.PLL.type -> {
                 when(membershipCard.value?.status?.state) {
@@ -129,9 +128,9 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
             CardType.VIEW.type, CardType.STORE.type -> {
                 linkStatus.value = LinkStatus.STATUS_UNLINKABLE
             }
-
-
         }
+        errorCodes.value = null
         membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value+= "$it " }
     }
 }
+

@@ -219,14 +219,6 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-
-                    binding.activeLinked.setOnClickListener {
-                        val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,
-                                viewModel.errorCodes.value.toString()
-                            )
-                        findNavController().navigateIfAdded(this, directions)
-                    }
                     //TODO go to PLL screen
 
                 }

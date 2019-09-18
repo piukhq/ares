@@ -12,7 +12,7 @@ class TransactionsNotSupportedFragment :
     BaseFragment<TransactionsNotSupportedViewModel, TransactionsNotSupportedFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 

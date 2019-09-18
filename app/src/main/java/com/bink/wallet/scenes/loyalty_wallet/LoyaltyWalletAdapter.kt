@@ -18,9 +18,9 @@ class LoyaltyWalletAdapter(
     private val membershipCards: List<MembershipCard>,
     val onClickListener: (MembershipCard) -> Unit = {},
     val itemDeleteListener: (MembershipCard) -> Unit = {}
-) : RecyclerView.Adapter<LoyaltyWalletAdapter.MyViewHolder>() {
+) : RecyclerView.Adapter<LoyaltyWalletAdapter.LoyaltyWalletViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoyaltyWalletViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate<LoyaltyWalletItemBinding>(
             inflater,
@@ -28,12 +28,12 @@ class LoyaltyWalletAdapter(
             parent,
             false
         )
-        return MyViewHolder(
+        return LoyaltyWalletViewHolder(
             binding
         )
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LoyaltyWalletViewHolder, position: Int) {
         holder.bind(membershipCards[position])
     }
 
@@ -45,7 +45,7 @@ class LoyaltyWalletAdapter(
         return position.toLong()
     }
 
-    inner class MyViewHolder(val binding: LoyaltyWalletItemBinding) :
+    inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MembershipCard) {
