@@ -57,64 +57,104 @@
                         app:layout_constraintTop_toBottomOf="@+id/toolbar"
                         app:membershipCard="@{viewModel.membershipCard}" />
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.cardview.widget.CardView
                         android:id="@+id/points_wrapper"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small"
+                        app:cardElevation="@dimen/margin_padding_size_extra_small"
                         app:layout_constraintEnd_toStartOf="@+id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/card_header">
 
-                    <ImageView
-                            android:id="@+id/points_image"
-                            android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_padding_size_large"
-                            android:layout_marginTop="@dimen/margin_padding_size_large"
-                            android:src="@drawable/ic_active"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="ContentDescription" />
+                            app:layout_constraintTop_toBottomOf="@+id/card_header">
 
-                    <TextView
-                            android:id="@+id/points_text"
-                            style="@style/SubtitleTextView"
-                            android:layout_marginTop="@dimen/margin_padding_size_small"
-                            app:layout_constraintStart_toStartOf="@+id/points_image"
-                            app:layout_constraintTop_toBottomOf="@+id/points_image" />
+                        <ImageView
+                                android:id="@+id/points_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                                android:src="@drawable/ic_active"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="ContentDescription" />
 
-                    <TextView
-                            android:id="@+id/points_description"
-                            style="@style/DescriptionTextView"
-                            android:layout_width="wrap_content"
-                            app:layout_constraintStart_toStartOf="@+id/points_image"
-                            app:layout_constraintTop_toBottomOf="@+id/points_text" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                                android:id="@+id/points_text"
+                                style="@style/SubtitleTextView"
+                                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                                android:layout_marginTop="@dimen/margin_padding_size_small"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/points_image" />
 
-                <ImageView
-                        android:id="@+id/active_linked"
-                        android:layout_width="wrap_content"
+                        <TextView
+                                android:id="@+id/points_description"
+                                style="@style/DescriptionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                                android:layout_marginTop="@dimen/margin_padding_size_small"
+                                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/points_text" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                        android:id="@+id/linked_wrapper"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_large"
-                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                        app:layout_constraintStart_toStartOf="@+id/guideline"
-                        app:layout_constraintTop_toBottomOf="@+id/card_header"
-                        tools:ignore="ContentDescription" />
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        app:cardElevation="@dimen/margin_padding_size_extra_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/points_wrapper"
+                        app:layout_constraintTop_toBottomOf="@+id/card_header">
 
-                <TextView
-                        android:id="@+id/link_status_text"
-                        style="@style/SubtitleTextView"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:text="@string/status_placeholder"
-                        app:layout_constraintStart_toStartOf="@+id/active_linked"
-                        app:layout_constraintTop_toBottomOf="@+id/active_linked" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                <TextView
-                        android:id="@+id/link_description"
-                        style="@style/DescriptionTextView"
-                        app:layout_constraintStart_toStartOf="@+id/link_status_text"
-                        app:layout_constraintTop_toBottomOf="@+id/link_status_text" />
+                        <ImageView
+                                android:id="@+id/active_linked"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="ContentDescription" />
+
+                        <TextView
+                                android:id="@+id/link_description"
+                                style="@style/DescriptionTextView"
+                                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                                android:layout_marginTop="@dimen/margin_padding_size_small"
+                                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/link_status_text" />
+
+                        <TextView
+                                android:id="@+id/link_status_text"
+                                style="@style/SubtitleTextView"
+                                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                                android:layout_marginTop="@dimen/margin_padding_size_small"
+                                android:text="@string/status_placeholder"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/active_linked" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/offer_tiles"
@@ -127,6 +167,14 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/points_wrapper" />
 
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_separator_line_height"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintTop_toBottomOf="@+id/offer_tiles"
+                        tools:layout_editor_absoluteX="-15dp" />
+
                 <com.bink.wallet.FooterItem
                         android:id="@+id/footer_about"
                         android:layout_width="match_parent"
@@ -138,15 +186,39 @@
                         app:layout_constraintTop_toBottomOf="@+id/offer_tiles"
                         app:type="about" />
 
+                <View
+                        android:id="@+id/about_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_separator_line_height"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/footer_about" />
+
                 <com.bink.wallet.FooterItem
                         android:id="@+id/footer_security"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/footer_about"
+                        app:layout_constraintTop_toBottomOf="@+id/about_separator"
                         app:type="security" />
+
+                <View
+                        android:id="@+id/security_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/item_separator_line_height"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:background="@android:color/darker_gray"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/footer_security" />
 
                 <com.bink.wallet.FooterItem
                         android:id="@+id/footer_delete"
@@ -154,6 +226,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_large"
+                        android:layout_marginBottom="@dimen/margin_padding_size_small"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/footer_security"
                         app:type="delete" />

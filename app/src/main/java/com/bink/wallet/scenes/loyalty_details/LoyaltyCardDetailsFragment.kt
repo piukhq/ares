@@ -79,7 +79,11 @@ class LoyaltyCardDetailsFragment :
 
         binding.offerTiles.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
+
+        //TODO for testing purposes only - remove when tiles provided
+        val tiles = arrayListOf<String>()
+        tiles.add("placeholder")
+        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
 
         binding.footerAbout.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
