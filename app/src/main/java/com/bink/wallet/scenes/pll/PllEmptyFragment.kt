@@ -30,22 +30,17 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         arguments.let {
-
             currentMembershipCard =
                 it?.let { it }?.let { it1 -> PllEmptyFragmentArgs.fromBundle(it1).membershipCard }!!
-
             currentMembershipPlan =
                 it.let { it }.let { it1 -> PllEmptyFragmentArgs.fromBundle(it1).membershipPlan }
-
         }
 
         binding.buttonDone.setOnClickListener {
-
             val directions =
                 PllEmptyFragmentDirections.pllEmptyToDetail(
                     currentMembershipPlan, currentMembershipCard
                 )
-
             findNavController().navigateIfAdded(this, directions)
         }
     }

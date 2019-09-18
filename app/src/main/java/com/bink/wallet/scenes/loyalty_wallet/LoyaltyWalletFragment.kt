@@ -46,7 +46,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         RecyclerItemTouchHelperListener {
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-            if (viewHolder is LoyaltyWalletAdapter.MyViewHolder) {
+            if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
                 if (direction == ItemTouchHelper.RIGHT) {
                     val card = viewModel.localMembershipCardData.value?.get(position)
                     if (viewModel.localMembershipPlanData.value != null) {
@@ -138,28 +138,32 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
-        if (!viewModel.membershipCardData.hasObservers())
+        if (!viewModel.membershipCardData.hasObservers()) {
             viewModel.membershipCardData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipCards()
             }
+        }
 
-        if (!viewModel.membershipPlanData.hasObservers())
+        if (!viewModel.membershipPlanData.hasObservers()) {
             viewModel.membershipPlanData.observeNonNull(this) {
                 viewModel.fetchLocalMembershipPlans()
             }
+        }
 
-        if (!viewModel.localMembershipPlanData.hasObservers())
+        if (!viewModel.localMembershipPlanData.hasObservers()) {
             viewModel.localMembershipPlanData.observeNonNull(this) {
                 viewModel.fetchMembershipCards()
             }
+        }
 
-        if (!viewModel.localMembershipCardData.hasObservers())
+        if (!viewModel.localMembershipCardData.hasObservers()) {
             viewModel.localMembershipCardData.observeNonNull(this) {
                 if (it.isNotEmpty()) {
                     viewModel.localPlansReceived.value = true
                     viewModel.localCardsReceived.value = true
                 }
             }
+        }
 
         binding.swipeLayout.setOnRefreshListener {
             if (verifyAvailableNetwork(activity!!)) {

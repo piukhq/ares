@@ -1,10 +1,8 @@
 package com.bink.wallet.scenes.add_auth
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,8 +15,10 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -40,6 +40,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override val viewModel: AddAuthViewModel by viewModel()
 
+    override fun onResume() {
+        super.onResume()
+        windowFullscreenHandler.toFullscreen()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val currentMembershipPlan = args.currentMembershipPlan
@@ -47,12 +52,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = currentMembershipPlan
 
-        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
+        binding.toolbar.setNavigationOnClickListener {
+            windowFullscreenHandler.toNormalScreen()
+            activity?.onBackPressed()
+        }
         binding.close.setOnClickListener {
-            val imm =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            view?.hideKeyboard()
+            windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
         }
 
