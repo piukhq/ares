@@ -178,20 +178,20 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
     val currentValue = membershipTransactions.amounts[0].value?.absoluteValue
 
     if (membershipTransactions.amounts[0].prefix != null)
-        this.text =
+        text =
             resources.getString(
                 R.string.transactions_prefix,
                 sign,
                 membershipTransactions.amounts[0].prefix,
-                currentValue
+                currentValue.toString()
             )
     else if (membershipTransactions.amounts[0].suffix != null)
-        this.text =
-            text = resources.getString(
+        text = resources.getString(
             R.string.transactions_suffix,
             sign,
-            currentValue,
+            currentValue.toString(),
             membershipTransactions.amounts[0].suffix
+        )
 }
 
 @BindingAdapter("transactionTime")
@@ -199,82 +199,82 @@ fun TextView.setTimestamp(timeStamp: Long) {
     this.text = DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
 }
 
-    @BindingAdapter("transactionArrow")
-    fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
-        val value = membershipTransactions.amounts?.get(0)?.value!!
+@BindingAdapter("transactionArrow")
+fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
+    val value = membershipTransactions.amounts?.get(0)?.value!!
 
-        when {
-            value < 0 -> {
-                setTextColor(ContextCompat.getColor(context, R.color.black))
-            }
-            value == 0.0 -> {
-                setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
-                text = context.getString(R.string.arrow_left)
-            }
-            else -> {
-                setTextColor(ContextCompat.getColor(context, R.color.green_ok))
-                text = context.getString(R.string.up_arrow)
-            }
+    when {
+        value < 0 -> {
+            setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+        value == 0.0 -> {
+            setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+            text = context.getString(R.string.arrow_left)
+        }
+        else -> {
+            setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+            text = context.getString(R.string.up_arrow)
         }
     }
+}
 
-    // TODO replace logic
-    @BindingAdapter("cardTimestamp", "loginStatus")
-    fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
-        when (loginStatus) {
-            LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                if (card != null && card.balances.isNullOrEmpty()) {
-                    var elapsed =
-                        (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / NUMBER_SECONDS_IN_MINUTE
-                    var suffix = MINUTES
-                    if (elapsed >= NUMBER_MINUTES_IN_HOUR) {
-                        elapsed /= NUMBER_MINUTES_IN_HOUR
-                        suffix = HOURS
-                        if (elapsed >= NUMBER_HOURS_IN_DAY) {
-                            elapsed /= NUMBER_HOURS_IN_DAY
-                            suffix = DAYS
-                            if (elapsed >= NUMBER_DAYS_IN_WEEK) {
-                                elapsed /= NUMBER_DAYS_IN_WEEK
-                                suffix = WEEKS
-                                if (elapsed >= NUMBER_WEEKS_IN_MONTH) {
-                                    elapsed /= NUMBER_WEEKS_IN_MONTH
-                                    suffix = MONTHS
-                                    if (elapsed >= NUMBER_MONTHS_IN_YEAR) {
-                                        elapsed /= NUMBER_MONTHS_IN_YEAR
-                                        suffix = YEARS
-                                    }
+// TODO replace logic
+@BindingAdapter("cardTimestamp", "loginStatus")
+fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
+    when (loginStatus) {
+        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
+            if (card != null && card.balances.isNullOrEmpty()) {
+                var elapsed =
+                    (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / NUMBER_SECONDS_IN_MINUTE
+                var suffix = MINUTES
+                if (elapsed >= NUMBER_MINUTES_IN_HOUR) {
+                    elapsed /= NUMBER_MINUTES_IN_HOUR
+                    suffix = HOURS
+                    if (elapsed >= NUMBER_HOURS_IN_DAY) {
+                        elapsed /= NUMBER_HOURS_IN_DAY
+                        suffix = DAYS
+                        if (elapsed >= NUMBER_DAYS_IN_WEEK) {
+                            elapsed /= NUMBER_DAYS_IN_WEEK
+                            suffix = WEEKS
+                            if (elapsed >= NUMBER_WEEKS_IN_MONTH) {
+                                elapsed /= NUMBER_WEEKS_IN_MONTH
+                                suffix = MONTHS
+                                if (elapsed >= NUMBER_MONTHS_IN_YEAR) {
+                                    elapsed /= NUMBER_MONTHS_IN_YEAR
+                                    suffix = YEARS
                                 }
                             }
                         }
                     }
-                    text = this.context.getString(
-                        R.string.transaction_not_supported_description,
-                        elapsed.toInt().toString(),
-                        suffix
-                    )
                 }
+                text = this.context.getString(
+                    R.string.transaction_not_supported_description,
+                    elapsed.toInt().toString(),
+                    suffix
+                )
             }
-            LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
-                text =
-                    this.context.getString(R.string.description_login_unavailable)
-            LoginStatus.STATUS_LOGIN_PENDING ->
-                text = this.context.getString(R.string.description_text)
-            LoginStatus.STATUS_SIGN_UP_PENDING ->
-                text = this.context.getString(R.string.description_text)
-            else -> text = this.context.getString(R.string.description_text)
         }
+        LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
+            text =
+                this.context.getString(R.string.description_login_unavailable)
+        LoginStatus.STATUS_LOGIN_PENDING ->
+            text = this.context.getString(R.string.description_text)
+        LoginStatus.STATUS_SIGN_UP_PENDING ->
+            text = this.context.getString(R.string.description_text)
+        else -> text = this.context.getString(R.string.description_text)
     }
+}
 
-    @BindingAdapter("loginStatus")
-    fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
-        text = when (loginStatus) {
-            LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
-            LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
-            LoginStatus.STATUS_LOGIN_PENDING -> this.context.getString(R.string.log_in_pending)
-            LoginStatus.STATUS_SIGN_UP_PENDING -> this.context.getString(R.string.sign_up_pending)
-            else -> this.context.getString(R.string.register_gc_pending)
-        }
+@BindingAdapter("loginStatus")
+fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
+    text = when (loginStatus) {
+        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
+        LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
+        LoginStatus.STATUS_LOGIN_PENDING -> this.context.getString(R.string.log_in_pending)
+        LoginStatus.STATUS_SIGN_UP_PENDING -> this.context.getString(R.string.sign_up_pending)
+        else -> this.context.getString(R.string.register_gc_pending)
     }
+}
 
 
 
