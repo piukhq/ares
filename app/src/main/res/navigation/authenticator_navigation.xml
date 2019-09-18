@@ -260,7 +260,10 @@
         <action
                 android:id="@+id/detail_to_pll_empty"
                 app:destination="@+id/pll_empty_fragment" />
-                app:destination="@+id/transactions_not_supported"
+
+        <action
+                android:id="@+id/detail_to_issue"
+                app:destination="@+id/module_issue"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -343,6 +346,17 @@
                 android:name="loginStatus"
                 app:argType="com.bink.wallet.utils.enums.LoginStatus" />
 
+    </fragment>
+
+    <fragment
+            android:id="@+id/module_issue"
+            android:name="com.bink.wallet.scenes.loyalty_details.ModuleIssueScreen">
+        <argument
+                android:name="linkStatus"
+                app:argType="com.bink.wallet.utils.enums.LinkStatus" />
+        <argument
+                android:name="errorCodes"
+                app:argType="string" />
     </fragment>
 
 </navigation>
