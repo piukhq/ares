@@ -33,7 +33,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_description_medium"
+                android:textSize="@dimen/size_medium"
                 android:textStyle="bold"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"

@@ -29,7 +29,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_medium"
+                android:textSize="@dimen/size_medium"
                 android:text="@string/cancel_text"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
@@ -68,7 +68,7 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:letterSpacing="0"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_description_big"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />

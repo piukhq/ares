@@ -9,16 +9,16 @@ import com.bink.wallet.model.response.membership_card.MembershipTransactions
 class TransactionAdapter(
     private val transactions: List<MembershipTransactions>
 ) :
-    RecyclerView.Adapter<TransactionAdapter.MyViewHolder>() {
+    RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = TransactionItemBinding.inflate(inflater)
 
-        return MyViewHolder(binding)
+        return TransactionViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         transactions[position].let { holder.bind(it) }
     }
 
@@ -26,7 +26,7 @@ class TransactionAdapter(
         return transactions.size
     }
 
-    class MyViewHolder(val binding: TransactionItemBinding) :
+    class TransactionViewHolder(val binding: TransactionItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MembershipTransactions) {

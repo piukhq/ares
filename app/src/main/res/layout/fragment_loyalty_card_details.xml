@@ -98,7 +98,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_large"
                         android:layout_marginTop="@dimen/loyalty_details_margin_top"
-                        android:src="@drawable/ic_active_linked"
                         app:layout_constraintStart_toStartOf="@+id/guideline"
                         app:layout_constraintTop_toBottomOf="@+id/card_header"
                         tools:ignore="ContentDescription" />
@@ -112,9 +111,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/active_linked" />
 
                 <TextView
-                        android:id="@+id/link_cards_number"
+                        android:id="@+id/link_description"
                         style="@style/DescriptionTextView"
-                        android:text="@string/status_number_placeholder"
                         app:layout_constraintStart_toStartOf="@+id/link_status_text"
                         app:layout_constraintTop_toBottomOf="@+id/link_status_text" />
 
@@ -154,7 +152,7 @@
                         android:id="@+id/footer_delete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_large"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/footer_security"

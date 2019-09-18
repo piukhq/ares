@@ -3,6 +3,7 @@ package com.bink.wallet
 import android.app.Application
 import com.bink.wallet.di.dataModule
 import com.bink.wallet.di.networkModule
+import com.bink.wallet.di.utilsModule
 import com.bink.wallet.di.viewModelModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -13,7 +14,7 @@ class MainApplication : Application() {
 
         startKoin {
             androidContext(this@MainApplication)
-            modules(listOf(viewModelModules, networkModule, dataModule))
+            modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
         }
     }
 }

@@ -28,8 +28,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cancel_button.setOnClickListener { findNavController().navigateIfAdded(this, R.id.add_to_loyalty) }
-        browse_brands_container.setOnClickListener {
+        binding.cancelButton.setOnClickListener { findNavController().navigateIfAdded(this, R.id.add_to_loyalty) }
+        binding.browseBrandsContainer.setOnClickListener {
             arguments?.let {
                 val plans = AddFragmentArgs.fromBundle(it).membershipPlans
                 val directions = AddFragmentDirections.addToBrowse(plans)

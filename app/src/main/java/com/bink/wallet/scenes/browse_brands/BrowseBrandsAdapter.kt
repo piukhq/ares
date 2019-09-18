@@ -10,7 +10,7 @@ import com.bink.wallet.utils.enums.CardType
 
 
 class BrowseBrandsAdapter(
-    val brands: List<Pair<String?, MembershipPlan>>,
+    private val brands: List<Pair<String?, MembershipPlan>>,
     val itemClickListener: (MembershipPlan) -> Unit = {}
 ) :
     RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {

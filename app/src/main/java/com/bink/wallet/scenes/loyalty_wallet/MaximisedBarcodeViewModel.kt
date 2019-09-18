@@ -6,7 +6,6 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.BarcodeWrapper
 
 class MaximisedBarcodeViewModel : BaseViewModel() {
-
     var membershipPlan = MutableLiveData<MembershipPlan>()
     var barcodeWrapper = MutableLiveData<BarcodeWrapper>()
 }

@@ -23,8 +23,24 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/title_add_auth_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/size_medium"
+                android:textStyle="bold"
+                app:addField="@{addFields}"
+                app:authField="@{authFields}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
                 android:id="@+id/content_add_auth_switch"
@@ -34,7 +50,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:textColor="@color/cool_grey"
-                android:textSize="@dimen/text_size_description_big"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
