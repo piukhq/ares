@@ -35,7 +35,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
 
         viewModel.loginData.observe(this, Observer {
-            findNavController().navigateIfAdded(this, R.id.login_to_loyalty)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         })
     }
 }

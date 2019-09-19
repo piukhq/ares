@@ -4,6 +4,16 @@
         android:id="@+id/authenticator_navigation"
         app:startDestination="@id/splash">
 
+    <action
+            android:id="@+id/global_to_home"
+            app:destination="@id/loyalty_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/loyalty_fragment"
+            app:popUpToInclusive="true" />
+
     <fragment
             android:id="@+id/splash"
             android:name="com.bink.wallet.SplashFragment">
@@ -50,26 +60,11 @@
 
     <fragment
             android:id="@+id/login_fragment"
-            android:name="com.bink.wallet.scenes.login.LoginFragment">
-        <action
-                android:id="@+id/login_to_loyalty"
-                app:destination="@id/loyalty_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
+            android:name="com.bink.wallet.scenes.login.LoginFragment" />
 
     <fragment
             android:id="@+id/add_fragment"
             android:name="com.bink.wallet.scenes.add.AddFragment">
-        <action
-                android:id="@+id/add_to_loyalty"
-                app:destination="@id/loyalty_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/add_to_browse"
                 app:destination="@id/browse_brands"
@@ -103,13 +98,7 @@
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
-        <action
-                android:id="@+id/add_join_to_home"
-                app:destination="@id/loyalty_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/add_join_to_add_auth"
                 app:destination="@id/add_auth"
@@ -151,7 +140,6 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
-
     </fragment>
 
     <fragment
@@ -171,14 +159,6 @@
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpTo="@+id/loyalty_fragment"
                 app:popUpToInclusive="true" />
-
-        <action
-                android:id="@+id/enrol_to_home"
-                app:destination="@id/loyalty_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -193,14 +173,6 @@
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard"
                 app:nullable="true" />
-
-        <action
-                android:id="@+id/add_auth_to_home"
-                app:destination="@id/loyalty_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
 
         <action
                 android:id="@+id/add_auth_to_pll_empty"
@@ -219,7 +191,6 @@
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpTo="@+id/loyalty_fragment"
                 app:popUpToInclusive="true" />
-
     </fragment>
 
     <fragment
@@ -256,10 +227,18 @@
 
         <action
                 android:id="@+id/detail_to_not_supported_transactions"
-                app:destination="@+id/transactions_not_supported" />
+                app:destination="@+id/transactions_not_supported"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/detail_to_pll_empty"
-                app:destination="@+id/pll_empty_fragment" />
+                app:destination="@+id/pll_empty_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
 
         <action
                 android:id="@+id/detail_to_issue"

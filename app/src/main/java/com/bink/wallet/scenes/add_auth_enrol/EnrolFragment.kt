@@ -52,7 +52,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
-            findNavController().navigateIfAdded(this, R.id.enrol_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         currentMembershipPlan.account?.enrol_fields?.map {

@@ -56,7 +56,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.close.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
-            findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         val addAuthFields: MutableList<Any>? = mutableListOf()
