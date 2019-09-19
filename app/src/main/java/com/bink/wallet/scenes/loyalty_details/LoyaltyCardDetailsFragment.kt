@@ -81,8 +81,7 @@ class LoyaltyCardDetailsFragment :
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         //TODO for testing purposes only - remove when tiles provided
-        val tiles = arrayListOf<String>()
-        tiles.add("placeholder")
+        val tiles = arrayListOf("placeholder")
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
 
         binding.footerAbout.setOnClickListener {
