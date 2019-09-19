@@ -5,6 +5,7 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.enums.CardStatus
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LinkStatus
@@ -42,69 +43,14 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     }
 
     fun setAccountStatus() {
-        if(membershipPlan.value?.feature_set?.has_points == true || membershipPlan.value?.feature_set?.transactions_available == true) {
-            when(membershipCard.value?.status?.state){
-                CardStatus.AUTHORISED.status -> {
-                    if (membershipPlan.value?.feature_set?.transactions_available == true) {
-                        accountStatus.value = LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE
-                    } else {
-                        accountStatus.value = LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE
-                    }
-                }
-                CardStatus.UNAUTHORISED.status -> {
-                    if (membershipPlan.value?.feature_set?.transactions_available == true) {
-                        accountStatus.value = LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE
-                    } else {
-                        accountStatus.value = LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE
-                    }
-                }
-                CardStatus.PENDING.status -> {
-                    if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X200")) != null) {
-                        accountStatus.value = LoginStatus.STATUS_SIGN_UP_PENDING
-                    }
-                    if (membershipCard.value?.status?.reason_codes?.intersect(
-                            listOf(
-                                "X100",
-                                "X301"
-                            )
-                        ) != null
-                    ) {
-                        accountStatus.value = LoginStatus.STATUS_LOGIN_FAILED
-                    }
-                }
-
-                CardStatus.FAILED.status -> {
-                    if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X201")) != null) {
-                        accountStatus.value = LoginStatus.STATUS_SIGN_UP_FAILED
-                    }
-                    if (membershipCard.value?.status?.reason_codes?.intersect(listOf("X202")) != null) {
-                        accountStatus.value = LoginStatus.STATUS_CARD_ALREADY_EXISTS
-                    }
-                    if (membershipCard.value?.status?.reason_codes?.intersect(
-                            listOf(
-                                "X101",
-                                "X102",
-                                "X103",
-                                "X104",
-                                "X302",
-                                "X303",
-                                "X304"
-                            )
-                        ) != null
-                    ) {
-                        accountStatus.value = LoginStatus.STATUS_LOGIN_FAILED
-                    }
-                }
-            }
-        } else {
-            accountStatus.value = LoginStatus.STATUS_LOGIN_UNAVAILABLE
-        }
+        accountStatus.value =
+            MembershipPlanUtils.getAccountStatus(membershipPlan.value!!, membershipCard.value!!)
     }
 
     fun setLinkStatus() {
         when (membershipPlan.value?.feature_set?.card_type) {
             CardType.PLL.type -> {
-                when(membershipCard.value?.status?.state) {
+                when (membershipCard.value?.status?.state) {
                     CardStatus.AUTHORISED.status -> {
                         when {
                             paymentCards.value.isNullOrEmpty() -> linkStatus.value =
