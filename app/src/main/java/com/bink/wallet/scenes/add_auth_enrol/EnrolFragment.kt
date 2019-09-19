@@ -39,7 +39,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
 
         binding.item = currentMembershipPlan
         binding.titleAddAuthText.text = getString(R.string.sign_up_enrol)
-        binding.addCardButton.text = getString(R.string.log_in_text)
+        binding.addCardButton.text = getString(R.string.sign_up_text)
         binding.descriptionAddAuth.text =
             getString(R.string.enrol_description, currentMembershipPlan.account?.company_name)
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
