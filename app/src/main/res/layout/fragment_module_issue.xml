@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.loyalty_details.ModuleIssueViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+        </Toolbar>
+
+        <TextView
+                android:id="@+id/title"
+                style="@style/TitleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_large"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_large"
+                android:maxLines="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <TextView
+                android:id="@+id/text_line_1"
+                style="@style/DescriptionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_large"
+                android:layout_marginTop="@dimen/margin_padding_size_triple_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_large"
+                android:text="@{viewModel.firstTextLine}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+                android:id="@+id/text_line_2"
+                style="@style/DescriptionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_large"
+                android:layout_marginTop="@dimen/margin_padding_size_triple_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_large"
+                android:text="@{viewModel.secondTextLine}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_line_1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
