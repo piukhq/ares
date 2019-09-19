@@ -5,6 +5,7 @@
     <dimen name="margin_padding_size_extra_small">4dp</dimen>
     <dimen name="margin_padding_size_small">8dp</dimen>
     <dimen name="margin_padding_size_medium">16dp</dimen>
+    <dimen name="margin_padding_size_medium_large">24dp</dimen>
     <dimen name="margin_padding_size_large">32dp</dimen>
     <dimen name="margin_padding_size_extra_large">64dp</dimen>
 
@@ -69,5 +70,8 @@
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
-    <dimen name="title_margin_top">24dp</dimen>
+
+    <!--Pll Screen -->
+    <dimen name="title_margin_top">@dimen/margin_padding_size_medium_large</dimen>
+    <dimen name="toggle_width">42dp</dimen>
 </resources>

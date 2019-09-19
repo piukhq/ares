@@ -14,11 +14,11 @@
 
         <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_width="@dimen/margin_padding_size_extra_large"
+                android:layout_height="@dimen/margin_padding_size_extra_large"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -30,8 +30,8 @@
                 style="@style/TitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_large"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Business" />
@@ -40,8 +40,8 @@
                 android:id="@+id/card_digits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginBottom="@dimen/margin_padding_size_large"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/card_title"
@@ -49,9 +49,10 @@
 
         <Switch
                 android:id="@+id/toggle"
-                android:layout_width="42dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="@dimen/toggle_width"
+                android:layout_height="@dimen/margin_padding_size_medium_large"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                style="@style/GradientSwitch"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
