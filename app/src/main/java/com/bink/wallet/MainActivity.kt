@@ -6,6 +6,7 @@ import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
+import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
@@ -27,10 +28,11 @@ class MainActivity : AppCompatActivity() {
         storeSecret()
     }
 
-    private external fun getNativeKey(): String
+    private external fun getNativeKey(url: String): String
 
     private fun storeSecret() {
-        val data = Base64.decode(getNativeKey(), Base64.URL_SAFE)
+        val key = getNativeKey(ApiConstants.BASE_URL)
+        val data = Base64.decode(getNativeKey(ApiConstants.BASE_URL), Base64.URL_SAFE)
         try {
             LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECRET, String(data), this)
             val currentToken = JwtCreator.createJwt(this)
