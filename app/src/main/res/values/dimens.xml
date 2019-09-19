@@ -69,4 +69,5 @@
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
+    <dimen name="title_margin_top">24dp</dimen>
 </resources>

@@ -14,7 +14,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .withId(FragmentToolbar.NO_TOOLBAR)
+            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 

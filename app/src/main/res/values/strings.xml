@@ -167,4 +167,7 @@
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
     <string name="transactions_suffix">%1$s%2$s %3$s</string>
+    
+    <!-- Pll Screen -->
+    <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
 </resources>
