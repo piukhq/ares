@@ -256,6 +256,10 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
 
+        <action
+                android:id="@+id/detail_to_pll"
+                app:destination="@id/pll_fragment" />
+
     </fragment>
 
     <fragment
@@ -336,6 +340,17 @@
         <argument
                 android:name="errorCodes"
                 app:argType="string" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/pll_fragment"
+            android:name="com.bink.wallet.scenes.pll.PllFragment">
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </fragment>
 
 </navigation>

@@ -5,7 +5,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+    <variable
+            name="paymentCard"
+            type="com.bink.wallet.model.response.payment_card.PaymentCard" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +24,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:image="@{paymentCard}"
                 tools:ignore="ContentDescription"
                 tools:src="@tools:sample/avatars" />
 
@@ -30,8 +33,9 @@
                 style="@style/TitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/margin_padding_size_large"
+                android:text="@{paymentCard.card.name_on_card}"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Business" />
@@ -40,8 +44,9 @@
                 android:id="@+id/card_digits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="@dimen/margin_padding_size_large"
+                android:text="@{String.format(@string/pll_last_digits, paymentCard.card.last_four_digits)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/card_title"
@@ -49,13 +54,23 @@
 
         <Switch
                 android:id="@+id/toggle"
-                android:layout_width="@dimen/toggle_width"
+                style="@style/GradientSwitch"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/margin_padding_size_medium_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_small"
-                style="@style/GradientSwitch"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                tools:layout_editor_absoluteX="43dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

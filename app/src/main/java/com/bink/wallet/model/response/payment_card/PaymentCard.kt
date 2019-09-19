@@ -10,7 +10,7 @@ data class PaymentCard(
     val id: Int?,
     val membership_cards: List<PaymentMembershipCard>?,
     val status: String?,
-    val bankCard: BankCard?,
+    val card: BankCard?,
     val images: List<Image>?,
     val account: Account?
 ) : Parcelable

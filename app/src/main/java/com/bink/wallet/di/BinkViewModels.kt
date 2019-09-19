@@ -17,6 +17,8 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
+import com.bink.wallet.scenes.pll.PllRepository
+import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -52,6 +54,9 @@ val viewModelModules = module {
     viewModel { TransactionsNotSupportedViewModel() }
 
     viewModel { ModuleIssueViewModel() }
+
+    single { providePllRepository(get()) }
+    viewModel { PllViewModel(get()) }
 }
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository =
@@ -68,3 +73,5 @@ fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
     membershipCardDao: MembershipCardDao
 ): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+
+fun providePllRepository(restApiService: ApiService): PllRepository = PllRepository(restApiService)

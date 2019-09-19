@@ -184,4 +184,7 @@
 
     <!-- Pll Screen -->
     <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
+    <string name="pll_linked_title">Link to payment cards</string>
+    <string name="pll_unlinked_title">Add card</string>
+    <string name="pll_last_digits">Card ending in %1$s</string>
 </resources>

@@ -183,7 +183,6 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_active_linked
                         )
                     )
-                    //TODO go to PLL screen
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
@@ -194,6 +193,18 @@ class LoyaltyCardDetailsFragment :
                         },
                         viewModel.membershipCard.value?.payment_cards?.size
                     )
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            viewModel.membershipCard.value?.let { it1 ->
+                                viewModel.membershipPlan.value?.let { it2 ->
+                                    LoyaltyCardDetailsFragmentDirections.detailToPll(
+                                        it1, it2
+                                    )
+                                }
+
+                            }
+                        directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
                     binding.activeLinked.setImageDrawable(
@@ -206,7 +217,9 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-                    findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
+                    binding.activeLinked.setOnClickListener {
+                        findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
                     binding.activeLinked.setImageDrawable(
@@ -219,7 +232,18 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-                    //TODO go to PLL screen
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            viewModel.membershipCard.value?.let { it1 ->
+                                viewModel.membershipPlan.value?.let { it2 ->
+                                    LoyaltyCardDetailsFragmentDirections.detailToPll(
+                                        it1, it2
+                                    )
+                                }
+
+                            }
+                        directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+                    }
 
                 }
                 LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
