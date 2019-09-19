@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 class LoginRepository(private val apiService: ApiService,
                       private val loginDataDao: LoginDataDao
 ) {
+    var loginEmail: String = "mwoodhams@testbink.com"//"Bink20iteration1@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -30,7 +31,12 @@ class LoginRepository(private val apiService: ApiService,
             withContext(Dispatchers.Main) {
                 try {
                     val response = loginDataDao.getLoginData()
-                    localLoginData.value = response
+                    if (response != null && localLoginData.value != null) {
+                        localLoginData.value = response
+                        loginEmail = response.email!!
+                    } else {
+                        localLoginData.value = LoginData("0", loginEmail)
+                    }
                 } catch (e: Throwable) {
                     Log.e(LoginRepository::class.simpleName, e.toString())
                 }
@@ -38,13 +44,18 @@ class LoginRepository(private val apiService: ApiService,
         }
     }
 
-    private fun storeMembershipCards(loginData: LoginData) {
+    fun storeLoginData(email: String) {
+        storeLoginData(LoginData("0", email))
+    }
+    fun storeLoginData(loginData: LoginData) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     runBlocking {
                         loginDataDao.deleteEmails()
                         loginDataDao.store(loginData)
+
+                        loginEmail = loginData.email!!
                     }
                 } catch (e: Throwable) {
                     Log.e(LoginDataDao::class.simpleName, e.toString())

@@ -2,13 +2,16 @@ package com.bink.wallet.utils
 
 import android.content.Context
 import android.util.Base64
+import com.bink.wallet.scenes.login.LoginRepository
 import org.json.JSONObject
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-object JwtCreator {
+class JwtCreator(private val repo: LoginRepository) {
 
     fun createJwt(context: Context): String {
+        val email = repo.loginEmail
+
         val header = JSONObject()
         header.put("alg", "HS512")
         header.put("typ", "JWT")
@@ -16,7 +19,7 @@ object JwtCreator {
         val payload = JSONObject()
         payload.put("organisation_id", "Loyalty Angels")
         payload.put("bundle_id", "com.bink.bink20dev")
-        payload.put("user_id", "jwt-test@testbink.com")//""Bink20iteration1@testbink.com")
+        payload.put("user_id", email)//""Bink20iteration1@testbink.com")
         payload.put("property_id", "not currently used for authentication")
         payload.put("iat", System.currentTimeMillis() / 1000)
 
