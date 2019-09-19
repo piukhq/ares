@@ -7,8 +7,8 @@
     <data>
 
         <variable
-                name="membershipPlan"
-                type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+                name="viewModel"
+                type="com.bink.wallet.scenes.pll.PllViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +32,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:membershipPlan="@{membershipPlan}" />
+                app:membershipPlan="@{viewModel.membershipPlan}" />
 
         <TextView
                 android:id="@+id/title"
