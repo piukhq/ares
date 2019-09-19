@@ -11,5 +11,5 @@ data class CardBalance(
     var curency: String?,
     var prefix: String?,
     var suffix: String?,
-    var updated_at: Int?
+    var updated_at: Long?
 ) : Parcelable

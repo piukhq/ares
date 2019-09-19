@@ -1,8 +1,7 @@
-package com.bink.wallet.scenes.add_auth
+package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -12,20 +11,16 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.scenes.add_join.AddJoinFragmentArgs
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -51,6 +46,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val currentMembershipCard = args.membershipCard
 
         binding.item = currentMembershipPlan
+        binding.descriptionAddAuth.text =
+            getString(R.string.add_auth_description, currentMembershipPlan.account?.company_name)
 
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
@@ -59,7 +56,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.close.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
-            findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         val addAuthFields: MutableList<Any>? = mutableListOf()
@@ -71,8 +68,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 currentMembershipPlan.feature_set.has_points == true &&
                 currentMembershipPlan.feature_set.transactions_available != null
             ) {
-                binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                binding.addCardButton.text = getString(R.string.log_in_text)
                 if (currentMembershipPlan.feature_set.transactions_available == true) {
                     binding.descriptionAddAuth.text = getString(
                         R.string.log_in_transaction_available,
@@ -85,6 +80,17 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             currentMembershipPlan.account?.plan_name_card
                         )
                 }
+            }
+
+            if (MembershipPlanUtils.getAccountStatus(
+                    currentMembershipPlan,
+                    currentMembershipCard
+                ) == LoginStatus.STATUS_LOGIN_FAILED
+            ) {
+                binding.descriptionAddAuth.text = getString(
+                    R.string.log_in_transaction_available,
+                    currentMembershipPlan.account?.plan_name_card
+                )
             }
         } else {
             currentMembershipPlan.account?.add_fields?.map {
@@ -124,7 +130,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         addAuthBoolean?.map { addAuthFields?.add(it) }
 
-        val addAuthFieldsRequest = Account(ArrayList(), ArrayList())
+        val addAuthFieldsRequest = Account(ArrayList(), ArrayList(), null)
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
@@ -137,12 +143,27 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
-                    viewModel.createMembershipCard(
-                        MembershipCardRequest(
-                            addAuthFieldsRequest,
-                            currentMembershipPlan.id
-                        )
+
+                    val currentRequest = MembershipCardRequest(
+                        addAuthFieldsRequest,
+                        currentMembershipPlan.id
                     )
+
+                    if (currentMembershipCard != null &&
+                        MembershipPlanUtils.getAccountStatus(
+                            currentMembershipPlan,
+                            currentMembershipCard
+                        ) == LoginStatus.STATUS_LOGIN_FAILED
+                    ) {
+                        viewModel.updateMembershipCard(
+                            currentMembershipCard,
+                            currentRequest
+                        )
+                    } else {
+                        viewModel.createMembershipCard(
+                            currentRequest
+                        )
+                    }
                 } else {
                     showNoInternetConnectionDialog()
                 }
@@ -174,9 +195,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     }
                 }
-                binding.progressSpinner.visibility = View.GONE
-                viewModel.createCardError.value = null
-                binding.addCardButton.isEnabled = true
+                hideLoadingViews()
             })
 
 
@@ -185,9 +204,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 getString(R.string.add_card_error_title),
                 getString(R.string.add_card_error_message)
             )
-            binding.progressSpinner.visibility = View.GONE
-            viewModel.createCardError.value = null
-            binding.addCardButton.isEnabled = true
+            hideLoadingViews()
         }
+    }
+
+    private fun hideLoadingViews() {
+        binding.progressSpinner.visibility = View.GONE
+        viewModel.createCardError.value = null
+        binding.addCardButton.isEnabled = true
     }
 }
