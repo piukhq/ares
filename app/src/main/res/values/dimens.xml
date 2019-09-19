@@ -9,6 +9,7 @@
     <dimen name="margin_padding_size_triple_small">24dp</dimen>
     <dimen name="margin_padding_size_large">32dp</dimen>
     <dimen name="margin_padding_size_extra_large">64dp</dimen>
+    <dimen name="item_separator_line_height">1dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
@@ -52,7 +53,6 @@
     <dimen name="linked_icon_margin_end">@dimen/card_height</dimen>
     <dimen name="active_icon_margin_start">24dp</dimen>
     <dimen name="footer_margin_bottom">24dp</dimen>
-    <dimen name="item_separator_line_height">1dp</dimen>
     <dimen name="tile_dimension">328dp</dimen>
 
     <!-- Maximised Barcode -->

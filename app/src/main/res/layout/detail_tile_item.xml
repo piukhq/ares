@@ -15,8 +15,8 @@
             android:id="@+id/tile_item"
             android:layout_width="@dimen/tile_dimension"
             android:layout_height="@dimen/tile_dimension"
-            app:cardCornerRadius="@dimen/margin_padding_size_large"
-            app:cardElevation="@dimen/margin_padding_size_small"
+            app:cardCornerRadius="@dimen/margin_padding_size_medium"
+            app:cardBackgroundColor="@color/green_blue"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="false">
 
