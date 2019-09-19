@@ -56,7 +56,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.close.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
-            findNavController().navigateIfAdded(this, R.id.add_auth_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         val addAuthFields: MutableList<Any>? = mutableListOf()
@@ -68,8 +68,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 currentMembershipPlan.feature_set.has_points == true &&
                 currentMembershipPlan.feature_set.transactions_available != null
             ) {
-                binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                binding.addCardButton.text = getString(R.string.log_in_text)
                 if (currentMembershipPlan.feature_set.transactions_available == true) {
                     binding.descriptionAddAuth.text = getString(
                         R.string.log_in_transaction_available,
@@ -89,8 +87,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     currentMembershipCard
                 ) == LoginStatus.STATUS_LOGIN_FAILED
             ) {
-                binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                binding.addCardButton.text = getString(R.string.log_in_text)
                 binding.descriptionAddAuth.text = getString(
                     R.string.log_in_transaction_available,
                     currentMembershipPlan.account?.plan_name_card

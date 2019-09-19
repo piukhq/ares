@@ -39,6 +39,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
 
         binding.item = currentMembershipPlan
         binding.titleAddAuthText.text = getString(R.string.sign_up_enrol)
+        binding.addCardButton.text = getString(R.string.sign_up_text)
         binding.descriptionAddAuth.text =
             getString(R.string.enrol_description, currentMembershipPlan.account?.company_name)
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -51,7 +52,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
-            findNavController().navigateIfAdded(this, R.id.enrol_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         currentMembershipPlan.account?.enrol_fields?.map {
