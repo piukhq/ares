@@ -11,7 +11,7 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
+class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -24,7 +24,7 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
     private lateinit var currentMembershipCard: MembershipCard
     private lateinit var currentMembershipPlan: MembershipPlan
 
-    override val viewModel: PllViewModel by viewModel()
+    override val viewModel: PllEmptyViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
