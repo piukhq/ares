@@ -15,7 +15,6 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 app:cardCornerRadius="@dimen/margin_padding_size_extra_small"
-                app:cardElevation="@dimen/margin_padding_size_small"
                 app:cardPreventCornerOverlap="false"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
