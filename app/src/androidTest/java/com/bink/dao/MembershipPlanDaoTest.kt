@@ -5,22 +5,19 @@ import androidx.test.InstrumentationRegistry
 import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.assertThat
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.hamcrest.CoreMatchers.`is` as Is
 
 @RunWith(JUnit4::class)
 class MembershipPlanDaoTest {
-    companion object {
-        var plan1 = MembershipPlan("123")
-        var plan2 = MembershipPlan("321")
-    }
-
     lateinit var database: BinkDatabase
     lateinit var plansDB: MembershipPlanDao
 
@@ -41,32 +38,38 @@ class MembershipPlanDaoTest {
     @Test
     fun insertCards() {
 
-        val plansList = ArrayList<MembershipPlan>()
-
-        plansList.add(plan1)
-        plansList.add(plan2)
+        val plansList = getPlansFromJon()
 
         runBlocking {
             plansDB.storeAll(plansList)
 
-            assertThat(plansDB.getAllAsync().size, Is(2))
+            assertEquals(plansDB.getAllAsync().size, 6)
         }
     }
 
     @Test
     fun getPlan() {
-        val plansList = ArrayList<MembershipPlan>()
-
-        plansList.add(plan1)
-        plansList.add(plan2)
+        val plansList = getPlansFromJon()
 
         runBlocking {
             plansDB.storeAll(plansList)
 
-            assertThat(plansDB.getAllAsync().size, Is(2))
+            assertEquals(plansDB.getAllAsync().size, 6)
 
-            assertThat(plansDB.getPlanById("123").id, Is("123"))
+            assertEquals(plansDB.getPlanById("194").id, "194")
         }
 
+    }
+
+    private fun getPlansFromJon(): List<MembershipPlan> {
+        val moshi = Moshi.Builder().build()
+        val listType = Types.newParameterizedType(List::class.java, MembershipPlan::class.java)
+        val adapter: JsonAdapter<List<MembershipPlan>> = moshi.adapter(listType)
+        val json =
+            InstrumentationRegistry.getContext().resources.assets.open("membershipPlans.json")
+                .bufferedReader().use {
+                    it.readText()
+                }
+        return adapter.fromJson(json)!!
     }
 }
