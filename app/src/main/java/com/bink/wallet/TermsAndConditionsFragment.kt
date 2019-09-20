@@ -39,13 +39,18 @@ class TermsAndConditionsFragment :
         binding.toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()
         }
-        terms_and_conditions_title.viewTreeObserver.addOnScrollChangedListener(scrollChangeListener)
         accept_button.setOnClickListener {
 
         }
         decline_button.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.terms_to_home)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        terms_and_conditions_title.viewTreeObserver.addOnScrollChangedListener(scrollChangeListener)
     }
 
     override fun onStop() {
