@@ -135,4 +135,24 @@ class LoyaltyWalletRepository(
             }
         }
     }
+
+    fun updateMembershipCard(
+        cardId: String,
+        membershipCardRequest: MembershipCardRequest,
+        membershipCardData: MutableLiveData<MembershipCard>,
+        createCardError: MutableLiveData<String>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    membershipCardData.value = response
+                } catch (e: Throwable) {
+                    createCardError.value = e.localizedMessage
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
 }

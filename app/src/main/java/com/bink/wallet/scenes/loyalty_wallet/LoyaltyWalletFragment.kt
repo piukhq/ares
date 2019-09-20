@@ -251,7 +251,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onPause() {
         binding.progressSpinner.visibility = View.INVISIBLE
-        binding.swipeLayout.isEnabled = false
         binding.swipeLayout.isRefreshing = false
         super.onPause()
 

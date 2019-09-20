@@ -45,6 +45,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             val action = AddJoinFragmentDirections.addJoinToAddAuth(currentMembershipPlan, null)
             findNavController().navigateIfAdded(this, action)
         }
+
+        binding.getCardButton.setOnClickListener {
+            val action = AddJoinFragmentDirections.addJoinToEnrol(currentMembershipPlan)
+            findNavController().navigateIfAdded(this, action)
+        }
     }
 
 }

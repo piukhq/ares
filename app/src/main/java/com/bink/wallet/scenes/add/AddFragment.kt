@@ -30,7 +30,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         binding.cancelButton.setOnClickListener {
             findNavController().navigateIfAdded(
                 this,
-                R.id.add_to_loyalty
+                R.id.global_to_home
             )
         }
         binding.browseBrandsContainer.setOnClickListener {

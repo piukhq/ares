@@ -164,9 +164,23 @@
     <string name="pll_text">PLL</string>
     <string name="popular_text">Popular</string>
 
+
+    <!-- Catch all module issue -->
+    <!-- 2.4 -->
+    <string name="title_2_4">Error</string>
+    <string name="text_2_4_1">Status: %1$s</string>
+    <string name="text_2_4_2">Error codes: %1$s</string>
+    <!-- 2.8 -->
+    <string name="title_2_8">Payment Linked Loyalty unavailable</string>
+    <string name="text_2_8_1">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
+    <string name="text_2_8_2">This is currently not available for this merchant</string>
+
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
     <string name="transactions_suffix">%1$s%2$s %3$s</string>
+    <string name="sign_up_enrol">Sign up for a new card</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
+    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
 
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident</string>

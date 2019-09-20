@@ -79,7 +79,10 @@ class LoyaltyCardDetailsFragment :
 
         binding.offerTiles.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
+
+        //TODO for testing purposes only - remove when tiles provided
+        val tiles = arrayListOf("placeholder")
+        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
 
         binding.footerAbout.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
@@ -232,7 +235,11 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         getString(R.string.link_status_link_error)
                     binding.linkDescription.text = getString(R.string.description_error)
-                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,  viewModel.errorCodes.value.toString())
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH -> {
                     binding.activeLinked.setImageDrawable(
@@ -285,9 +292,12 @@ class LoyaltyCardDetailsFragment :
                     )
                     binding.linkStatusText.text =
                         getString(R.string.link_status_unlinkable)
-                    binding.linkDescription.text =
-                        getString(R.string.description_unlinkable)
-                    //TODO go to Catch All Module Issue Screen (2.4. 2.8)
+                    binding.linkDescription.text = getString(R.string.description_unlinkable)
+                    binding.activeLinked.setOnClickListener {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,  viewModel.errorCodes.value.toString())
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
             }
         }
