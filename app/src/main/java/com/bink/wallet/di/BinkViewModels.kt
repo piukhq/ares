@@ -1,5 +1,7 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.TermsAndConditionsRepository
+import com.bink.wallet.TermsAndConditionsViewModel
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.network.ApiService
@@ -49,7 +51,13 @@ val viewModelModules = module {
     viewModel { TransactionViewModel() }
 
     viewModel { TransactionsNotSupportedViewModel() }
+
+    single { provideTermsAndConditionsRepository(get()) }
+    viewModel { TermsAndConditionsViewModel(provideTermsAndConditionsRepository(get())) }
 }
+
+fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
+    TermsAndConditionsRepository(restApiService)
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository =
     LoginRepository(restApiService)

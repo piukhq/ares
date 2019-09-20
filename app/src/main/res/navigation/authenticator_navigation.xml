@@ -77,6 +77,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/add_to_terms_and_conditions"
+                app:destination="@+id/terms_and_conditions"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -225,11 +232,11 @@
         <action
                 android:id="@+id/detail_to_pll_empty"
                 app:destination="@+id/pll_empty_fragment" />
-                app:destination="@+id/transactions_not_supported"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+        app:destination="@+id/transactions_not_supported"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 
         <action
                 android:id="@+id/detail_to_auth"
@@ -308,6 +315,21 @@
                 android:name="loginStatus"
                 app:argType="com.bink.wallet.utils.enums.LoginStatus" />
 
+    </fragment>
+
+    <fragment
+            android:id="@+id/terms_and_conditions"
+            android:name="com.bink.wallet.TermsAndConditionsFragment">
+
+        <action
+                android:id="@+id/terms_to_home"
+                app:destination="@+id/loyalty_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/add_fragment"
+                app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>
