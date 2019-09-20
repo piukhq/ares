@@ -28,7 +28,6 @@
                         android:id="@+id/terms_and_conditions_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:text="@string/terms_and_conditions_title"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -37,6 +36,7 @@
                         android:id="@+id/terms_and_conditions_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="160dp"
                         android:text="@string/terms_and_conditions_text"
                         android:textSize="16sp" />
@@ -47,9 +47,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_alignParentBottom="true"
-                android:gravity="center"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/transparent_gradient"
+                android:gravity="center"
                 android:orientation="vertical">
 
             <TextView
@@ -57,11 +57,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_corners_gradient_button"
                     android:paddingStart="100dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="100dp"
-                    android:layout_marginBottom="20dp"
                     android:paddingBottom="10dp"
                     android:text="@string/accept_button_text"
                     android:textColor="@color/pale_grey"
@@ -70,10 +70,10 @@
             <TextView
                     android:id="@+id/decline_button"
                     android:layout_width="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/decline_button_text"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
