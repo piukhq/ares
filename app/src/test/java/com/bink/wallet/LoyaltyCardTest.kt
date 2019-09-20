@@ -65,7 +65,7 @@ class LoyaltyCardTest {
                 (
                         MutableLiveData<List<MembershipCard>>().apply {
                             postValue(
-                                asList(
+                                listOf(
                                     MembershipCard(
                                         "1234",
                                         "plan",
