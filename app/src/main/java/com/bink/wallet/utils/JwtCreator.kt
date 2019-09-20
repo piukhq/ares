@@ -10,8 +10,6 @@ import javax.crypto.spec.SecretKeySpec
 class JwtCreator(private val repo: LoginRepository) {
 
     fun createJwt(context: Context): String {
-        val email = repo.loginEmail
-
         val header = JSONObject()
         header.put("alg", "HS512")
         header.put("typ", "JWT")
@@ -19,7 +17,7 @@ class JwtCreator(private val repo: LoginRepository) {
         val payload = JSONObject()
         payload.put("organisation_id", "Loyalty Angels")
         payload.put("bundle_id", "com.bink.bink20dev")
-        payload.put("user_id", email)//""Bink20iteration1@testbink.com")
+        payload.put("user_id", "Bink20iteration1@testbink.com")
         payload.put("property_id", "not currently used for authentication")
         payload.put("iat", System.currentTimeMillis() / 1000)
 
