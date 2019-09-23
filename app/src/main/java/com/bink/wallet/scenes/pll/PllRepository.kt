@@ -25,4 +25,37 @@ class PllRepository(private val apiService: ApiService) {
             }
         }
     }
+
+    suspend fun linkPaymentCard(
+        membershipCardId: String,
+        paymentCardId: String,
+        paymentCard: MutableLiveData<PaymentCard>, linkError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    paymentCard.value = response
+                } catch (e: Throwable) {
+                    linkError.value = e
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    suspend fun unlinkPaymentCard(paymentCardId: String, membershipCardId: String, unlinkError: MutableLiveData<Throwable>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                } catch (e: Throwable) {
+                    unlinkError.value = e
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
 }

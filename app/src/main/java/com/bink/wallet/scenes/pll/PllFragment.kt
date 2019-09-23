@@ -1,10 +1,15 @@
 package com.bink.wallet.scenes.pll
 
+import android.app.AlertDialog
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentPllBinding
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.isLinkedToMembershipCard
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -36,13 +41,55 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
         runBlocking {
             viewModel.getPaymentCards()
         }
-        val adapter = PllPaymentCardAdapter()
+        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
         binding.paymentCards.adapter = adapter
-        binding.paymentCards.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.paymentCards.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         viewModel.paymentCards.observeNonNull(this) {
-            adapter.paymentCards = it
+            val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
+            it.forEach { card -> listPaymentCards.add(PllPaymentCardWrapper(card)) }
+            adapter.paymentCards = listPaymentCards
             adapter.notifyDataSetChanged()
 
+        }
+
+        binding.buttonDone.setOnClickListener {
+            adapter.paymentCards?.forEach { card ->
+                if (card.isSelected && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                    runBlocking {
+                        viewModel.membershipCard.value?.id?.toInt()?.let { it1 ->
+                            card.paymentCard.id?.let { it2 ->
+                                viewModel.linkPaymentCard(
+                                    it1.toString(), it2.toString()
+                                )
+                            }
+                        }
+                    }
+                } else if (!card.isSelected && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                    runBlocking {
+                        viewModel.unlinkPaymentCard(
+                            card.paymentCard.id.toString(),
+                            viewModel.membershipCard.value!!.id
+                        )
+                    }
+                } else {
+                    activity?.onBackPressed()
+                }
+            }
+        }
+
+        viewModel.linkError.observeNonNull(this) {
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.description_error))
+                .setMessage(it.toString())
+                .setPositiveButton(
+                    getString(R.string.ok)
+                ) { _, _ -> findNavController().navigateIfAdded(this@PllFragment, R.id.pll_to_lcd) }
+                .show()
+        }
+
+        viewModel.unlinkError.observeNonNull(this) {
+            requireContext().displayModalPopup(getString(R.string.description_error), it.toString())
         }
     }
 }

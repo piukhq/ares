@@ -196,7 +196,7 @@ class LoyaltyCardDetailsFragment :
                         },
                         viewModel.membershipCard.value?.payment_cards?.size
                     )
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         val directions =
                             viewModel.membershipCard.value?.let { it1 ->
                                 viewModel.membershipPlan.value?.let { it2 ->
@@ -220,7 +220,7 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
                     }
                 }
@@ -235,7 +235,7 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         val directions =
                             viewModel.membershipCard.value?.let { it1 ->
                                 viewModel.membershipPlan.value?.let { it2 ->
@@ -259,7 +259,7 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         getString(R.string.link_status_link_error)
                     binding.linkDescription.text = getString(R.string.description_error)
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         val directions =
                             LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,  viewModel.errorCodes.value.toString())
                         findNavController().navigateIfAdded(this, directions)
@@ -317,7 +317,7 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         getString(R.string.link_status_unlinkable)
                     binding.linkDescription.text = getString(R.string.description_unlinkable)
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         val directions =
                             LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,  viewModel.errorCodes.value.toString())
                         findNavController().navigateIfAdded(this, directions)
@@ -355,7 +355,7 @@ class LoyaltyCardDetailsFragment :
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
 
-                    val updateTime = balance?.updated_at?.toLong()
+                    val updateTime = balance?.updated_at
                     val currentTime = Calendar.getInstance().timeInMillis / 1000
                     updateTime?.let {
                         val timeSinceUpdate = currentTime - it

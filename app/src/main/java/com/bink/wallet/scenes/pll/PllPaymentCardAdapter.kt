@@ -6,9 +6,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
-import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.utils.isLinkedToMembershipCard
 
-class PllPaymentCardAdapter(var paymentCards: List<PaymentCard>? = null) :
+class PllPaymentCardAdapter(
+    var membershipCard: MembershipCard?,
+    var paymentCards: List<PllPaymentCardWrapper>? = null
+) :
     RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PllPaymentCardViewHolder {
@@ -25,12 +29,19 @@ class PllPaymentCardAdapter(var paymentCards: List<PaymentCard>? = null) :
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
         paymentCards?.get(position).let { it?.let { it1 -> holder.bindCard(it1) } }
+
     }
 
     inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindCard(paymentCard: PaymentCard) {
+        fun bindCard(paymentCard: PllPaymentCardWrapper) {
             binding.paymentCard = paymentCard
+            binding.toggle.isChecked =
+                paymentCard.paymentCard.isLinkedToMembershipCard(membershipCard!!)
+            paymentCard.isSelected = binding.toggle.isChecked
+            binding.toggle.setOnCheckedChangeListener { _, isChecked ->
+                paymentCard.isSelected = isChecked
+            }
         }
     }
 }

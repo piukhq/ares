@@ -7,7 +7,7 @@
     <data>
     <variable
             name="paymentCard"
-            type="com.bink.wallet.model.response.payment_card.PaymentCard" />
+            type="com.bink.wallet.scenes.pll.PllPaymentCardWrapper" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:image="@{paymentCard}"
+                app:image="@{paymentCard.paymentCard}"
                 tools:ignore="ContentDescription"
                 tools:src="@tools:sample/avatars" />
 
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/margin_padding_size_large"
-                android:text="@{paymentCard.card.name_on_card}"
+                android:text="@{paymentCard.paymentCard.card.name_on_card}"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Business" />
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="@dimen/margin_padding_size_large"
-                android:text="@{String.format(@string/pll_last_digits, paymentCard.card.last_four_digits)}"
+                android:text="@{String.format(@string/pll_last_digits, paymentCard.paymentCard.card.last_four_digits)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/card_title"
@@ -54,10 +54,10 @@
 
         <Switch
                 android:id="@+id/toggle"
-                style="@style/GradientSwitch"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/margin_padding_size_medium_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_small"
+                android:theme="@style/SwitchCompatTheme"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

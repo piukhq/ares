@@ -351,6 +351,14 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <action
+                android:id="@+id/pll_to_lcd"
+                app:destination="@+id/loyalty_card_detail_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

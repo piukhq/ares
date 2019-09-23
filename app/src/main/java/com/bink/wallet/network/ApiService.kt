@@ -23,6 +23,12 @@ interface ApiService {
     @GET("/ubiquity/payment_cards")
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
+    @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
+    fun linkToPaymentCardAsync(@Path("membershipCardId") membershipCardId: String, @Path("paymentCardId") paymentCardId: String): Deferred<PaymentCard>
+
+    @DELETE("ubiquity/payment_card/{paymentCardId}/membership_card/{membershipCardId}")
+    fun unlinkFromPaymentCardAsync(@Path("paymentCardId") paymentCardId: String, @Path("membershipCardId") membershipCardId: String): Deferred<ResponseBody>
+
     @DELETE("/ubiquity/membership_card/{card_id}")
     fun deleteCardAsync(@Path("card_id") cardId: String): Deferred<ResponseBody>
 
