@@ -25,6 +25,25 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     override val viewModel: BrowseBrandsViewModel by viewModel()
 
+    private fun isPlanPLL(membershipPlan: MembershipPlan): Boolean {
+        return membershipPlan.getCardType() == CardType.PLL
+    }
+
+    private fun comparePlans(
+        membershipPlan1: MembershipPlan,
+        membershipPlan2: MembershipPlan
+    ): Int {
+        return when {
+            (isPlanPLL(membershipPlan1) || isPlanPLL(membershipPlan2)) &&
+                    (membershipPlan1.getCardType()?.type!! >
+                            membershipPlan2.getCardType()?.type!!) -> -1
+            (isPlanPLL(membershipPlan1) || isPlanPLL(membershipPlan2)) &&
+                    (membershipPlan1.getCardType()?.type!! <
+                            membershipPlan2.getCardType()?.type!!) -> 1
+            else -> 0
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -35,20 +54,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
             plans =
                 plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
-
-                    when {
-                        (membershipPlan1.getCardType() == CardType.PLL ||
-                                membershipPlan2.getCardType() == CardType.PLL) &&
-                                (membershipPlan1.getCardType()?.type!! >
-                                        membershipPlan2.getCardType()?.type!!) -> -1
-                        (membershipPlan1.getCardType() == CardType.PLL ||
-                                membershipPlan2.getCardType() == CardType.PLL) &&
-                                (membershipPlan1.getCardType()?.type!! <
-                                        membershipPlan2.getCardType()?.type!!) -> 1
-                        else -> 0
-                    }
-                }
-                    .thenBy { it.account?.company_name }).toTypedArray()
+                    comparePlans(membershipPlan1, membershipPlan2)
+                }.thenBy { it.account?.company_name }).toTypedArray()
 
             plansList.add(Pair(getString(R.string.pll_text), plans[0]))
 
