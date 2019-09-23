@@ -88,6 +88,16 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/item_separator_line_height"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:background="@color/grey_20"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

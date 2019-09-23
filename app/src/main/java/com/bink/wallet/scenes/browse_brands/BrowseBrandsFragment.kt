@@ -34,7 +34,20 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             val plansList = ArrayList<Pair<String?, MembershipPlan>>()
 
             plans =
-                plans.sortedWith(compareByDescending<MembershipPlan> { it.feature_set?.card_type }
+                plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
+
+                    when {
+                        (membershipPlan1.getCardType() == CardType.PLL ||
+                                membershipPlan2.getCardType() == CardType.PLL) &&
+                                (membershipPlan1.getCardType()?.type!! >
+                                        membershipPlan2.getCardType()?.type!!) -> -1
+                        (membershipPlan1.getCardType() == CardType.PLL ||
+                                membershipPlan2.getCardType() == CardType.PLL) &&
+                                (membershipPlan1.getCardType()?.type!! <
+                                        membershipPlan2.getCardType()?.type!!) -> 1
+                        else -> 0
+                    }
+                }
                     .thenBy { it.account?.company_name }).toTypedArray()
 
             plansList.add(Pair(getString(R.string.pll_text), plans[0]))
@@ -43,7 +56,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 if (plans[position - 1].getCardType() == CardType.PLL &&
                     plans[position].getCardType() != CardType.PLL
                 ) {
-                    plansList.add(Pair(getString(R.string.popular_text), plans[position]))
+                    plansList.add(Pair(getString(R.string.all_text), plans[position]))
                 } else {
                     plansList.add(Pair(null, plans[position]))
                 }
