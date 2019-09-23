@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.databinding.TermsAndConditionsFragmentBinding
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.terms_and_conditions_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -22,8 +21,8 @@ class TermsAndConditionsFragment :
 
     private val scrollChangeListener = ViewTreeObserver.OnScrollChangedListener {
         val scrollBounds = Rect()
-        screen_scroll_view.getHitRect(scrollBounds)
-        if (terms_and_conditions_title.getLocalVisibleRect(scrollBounds)) {
+        binding.screenScrollView.getHitRect(scrollBounds)
+        if (binding.termsAndConditionsTitle.getLocalVisibleRect(scrollBounds)) {
             binding.toolbar.title = ""
         } else {
             binding.toolbar.title = getString(R.string.terms_and_conditions_title)
@@ -39,22 +38,24 @@ class TermsAndConditionsFragment :
         binding.toolbar.setNavigationOnClickListener {
             activity?.onBackPressed()
         }
-        accept_button.setOnClickListener {
+        binding.acceptButton.setOnClickListener {
 
         }
-        decline_button.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.terms_to_home)
+        binding.declineButton.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
     }
 
     override fun onStart() {
         super.onStart()
 
-        terms_and_conditions_title.viewTreeObserver.addOnScrollChangedListener(scrollChangeListener)
+        binding.termsAndConditionsTitle.viewTreeObserver.addOnScrollChangedListener(
+            scrollChangeListener
+        )
     }
 
     override fun onStop() {
-        terms_and_conditions_title.viewTreeObserver.removeOnScrollChangedListener(
+        binding.termsAndConditionsTitle.viewTreeObserver.removeOnScrollChangedListener(
             scrollChangeListener
         )
 
