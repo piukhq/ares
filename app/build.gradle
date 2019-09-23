@@ -34,7 +34,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode buildNumber
-        versionName "1.0 ($buildNumber)"
+        versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -77,7 +77,7 @@ android {
                 }
             }
             ext.betaDistributionReleaseNotesFilePath="app/beta_release_notes.txt"
-            ext.betaDistributionEmails="philip.r.j.arnold@gmail.com"
+            ext.betaDistributionEmailsFilePath="app/beta_release_emails.txt"
             ext.betaDistributionNotifications = true
         }
         gamma {
