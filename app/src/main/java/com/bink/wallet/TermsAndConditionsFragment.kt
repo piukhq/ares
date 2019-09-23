@@ -39,7 +39,7 @@ class TermsAndConditionsFragment :
             activity?.onBackPressed()
         }
         binding.acceptButton.setOnClickListener {
-
+            //TODO: Create the payment card when structure and API calls are ready.
         }
         binding.declineButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
