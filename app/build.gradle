@@ -74,6 +74,7 @@ android {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
                 }
             }
+            ext.betaDistributionNotifications = true
         }
         gamma {
             applicationIdSuffix ".gamma"
