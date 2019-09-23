@@ -189,12 +189,8 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
-                        viewModel.membershipCard.value?.payment_cards?.size?.let {
-                            viewModel.paymentCards.value?.size?.minus(
-                                it
-                            )
-                        },
-                        viewModel.membershipCard.value?.payment_cards?.size
+                        viewModel.membershipCard.value?.payment_cards?.size,
+                        viewModel.paymentCards.value?.size
                     )
                     binding.linkedWrapper.setOnClickListener {
                         val directions =
