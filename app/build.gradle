@@ -74,7 +74,7 @@ android {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
                 }
             }
-            ext.betaDistributionReleaseNotes="This is a test, please ignore these emails"
+            ext.betaDistributionEmailsFilePath="beta_release_notes.txt"
             ext.betaDistributionEmails="philip.r.j.arnold@gmail.com"
             ext.betaDistributionNotifications = true
         }
