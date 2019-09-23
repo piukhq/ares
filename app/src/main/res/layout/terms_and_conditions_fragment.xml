@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bottom_layout_height"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
+                android:paddingBottom="@dimen/margin_padding_size_small"
                 android:background="@drawable/transparent_gradient"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     android:background="@drawable/rounded_corners_gradient_button"
                     android:paddingStart="@dimen/horizontal_button_padding"
                     android:paddingTop="@dimen/margin_padding_size_small"
