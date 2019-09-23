@@ -16,12 +16,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/toolbar"
-                android:layout_margin="8dp"
-                android:paddingTop="10dp">
+                android:paddingTop="@dimen/margin_padding_size_small">
 
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:orientation="vertical">
 
                 <TextView
@@ -29,25 +30,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/terms_and_conditions_title"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold" />
 
                 <TextView
                         android:id="@+id/terms_and_conditions_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="160dp"
+                        android:layout_marginBottom="@dimen/bottom_layout_height"
+                        android:paddingTop="@dimen/margin_padding_size_extra_small"
                         android:text="@string/terms_and_conditions_text"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/size_sub_headline" />
             </LinearLayout>
         </ScrollView>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="@dimen/bottom_layout_height"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:background="@drawable/transparent_gradient"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -59,24 +60,24 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_corners_gradient_button"
-                    android:paddingStart="100dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="100dp"
-                    android:paddingBottom="10dp"
+                    android:paddingStart="@dimen/horizontal_button_padding"
+                    android:paddingTop="@dimen/margin_padding_size_small"
+                    android:paddingEnd="@dimen/horizontal_button_padding"
+                    android:paddingBottom="@dimen/margin_padding_size_small"
                     android:text="@string/accept_button_text"
                     android:textColor="@color/pale_grey"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/size_sub_headline" />
 
             <TextView
                     android:id="@+id/decline_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:paddingTop="@dimen/margin_padding_size_small"
+                    android:paddingBottom="@dimen/margin_padding_size_small"
                     android:text="@string/decline_button_text"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/size_sub_headline" />
         </LinearLayout>
     </RelativeLayout>
 </layout>
