@@ -19,7 +19,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
                     System.currentTimeMillis() / 1000,
                     loginEmail,
                     0.0,
-                    12.345
+                    0.0
                 )
             ), loginBody
         )
