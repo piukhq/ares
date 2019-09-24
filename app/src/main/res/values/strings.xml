@@ -142,4 +142,10 @@
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
     <string name="popular_text">Popular</string>
+    <string name="debug_menu">Debug menu</string>
+    <string name="tools">Tools</string>
+    <string name="current_version">Current version</string>
+    <string name="version_name_format">%s build %d</string>
+    <string name="environment_base_url">Environment Base URL</string>
+    <string name="current_email_address">Current email address</string>
 </resources>

@@ -306,4 +306,10 @@
 
     </fragment>
 
+    <fragment
+            android:id="@+id/settings_screen"
+            android:name="com.bink.wallet.scenes.settings.SettingsFragment">
+
+    </fragment>
+
 </navigation>
