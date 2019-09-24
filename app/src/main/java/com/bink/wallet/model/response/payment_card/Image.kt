@@ -6,4 +6,4 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Image(val id: Int, val type: Int, val url: String, val description: String, val encoding: String): Parcelable
+data class Image(val id: Int?, val type: Int?, val url: String?, val description: String?, val encoding: String?): Parcelable

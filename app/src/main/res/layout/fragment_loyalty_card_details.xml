@@ -111,18 +111,20 @@
                 <androidx.cardview.widget.CardView
                         android:id="@+id/linked_wrapper"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         app:cardElevation="@dimen/margin_padding_size_extra_small"
+                        app:layout_constraintBottom_toTopOf="@+id/offer_tiles"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/points_wrapper"
                         app:layout_constraintTop_toBottomOf="@+id/card_header">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="match_parent">
 
                         <ImageView
                                 android:id="@+id/active_linked"
@@ -149,7 +151,6 @@
                                 style="@style/SubtitleTextView"
                                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                                 android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:text="@string/status_placeholder"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/active_linked" />
                     </androidx.constraintlayout.widget.ConstraintLayout>

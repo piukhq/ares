@@ -190,12 +190,8 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
-                        viewModel.membershipCard.value?.payment_cards?.size?.let {
-                            viewModel.paymentCards.value?.size?.minus(
-                                it
-                            )
-                        },
-                        viewModel.membershipCard.value?.payment_cards?.size
+                        viewModel.membershipCard.value?.payment_cards?.size,
+                        viewModel.paymentCards.value?.size
                     )
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
@@ -331,7 +327,7 @@ class LoyaltyCardDetailsFragment :
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
 
-                    val updateTime = balance?.updated_at?.toLong()
+                    val updateTime = balance?.updated_at
                     val currentTime = Calendar.getInstance().timeInMillis / 1000
                     updateTime?.let {
                         val timeSinceUpdate = currentTime - it
