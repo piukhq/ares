@@ -9,5 +9,8 @@ class SettingsViewModel  constructor(var settingsRepository: SettingsRepository)
 
     var loginData = MutableLiveData<LoginData>()
 
+    fun retrieveStoredLoginData() {
+        settingsRepository.retrieveStoredLoginData(loginData)
+    }
 
 }

@@ -31,7 +31,7 @@ class LoginRepository(private val apiService: ApiService,
             withContext(Dispatchers.Main) {
                 try {
                     val response = loginDataDao.getLoginData()
-                    if (response != null && localLoginData.value != null) {
+                    if (localLoginData.value != null) {
                         localLoginData.value = response
                         loginEmail = response.email!!
                     } else {

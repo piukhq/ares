@@ -148,4 +148,6 @@
     <string name="version_name_format">%s build %d</string>
     <string name="environment_base_url">Environment Base URL</string>
     <string name="current_email_address">Current email address</string>
+    <string name="edit_email_address">Edit Email Address</string>
+    <string name="edit_email_description">This will overwrite the current logged in email address and reboot the app.</string>
 </resources>

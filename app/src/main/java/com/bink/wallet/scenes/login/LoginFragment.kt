@@ -28,6 +28,13 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel.retrieveStoredLoginData()
+        viewModel.loginData.observe(this, Observer {
+            if (!loginData.value!!.email.equals(viewModel.loginEmail)) {
+                viewModel.loginEmail = loginData.value!!.email
+            }
+        })
+
         if (verifyAvailableNetwork(activity!!)) {
             viewModel.authenticate()
         } else {

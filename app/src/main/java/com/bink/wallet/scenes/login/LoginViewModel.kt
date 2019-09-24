@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.login
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
 
@@ -27,9 +28,5 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
 
     fun retrieveStoredLoginData() {
         loginRepository.retrieveStoredLoginData(loginData)
-        if (!loginData.value!!.email.isNullOrEmpty() &&
-            !loginData.value!!.email.equals(loginEmail)) {
-            loginEmail = loginData.value!!.email!!
-        }
     }
 }
