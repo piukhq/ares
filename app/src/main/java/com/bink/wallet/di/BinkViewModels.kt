@@ -56,11 +56,8 @@ val viewModelModules = module {
     viewModel { ModuleIssueViewModel() }
 
     single { provideTermsAndConditionsRepository(get()) }
-    viewModel { TermsAndConditionsViewModel(provideTermsAndConditionsRepository(get())) }
+    viewModel { TermsAndConditionsViewModel(get()) }
 }
-
-fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
-    TermsAndConditionsRepository(restApiService)
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository =
     LoginRepository(restApiService)
@@ -76,3 +73,6 @@ fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
     membershipCardDao: MembershipCardDao
 ): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+
+fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
+    TermsAndConditionsRepository(restApiService)
