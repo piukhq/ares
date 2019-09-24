@@ -190,7 +190,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 )
             }
             viewModel.localMembershipPlanData.removeObservers(this)
-            viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true
             directions?.let { nestedNavController.navigateIfAdded(this, it) }
             this@LoyaltyWalletFragment.onDestroy()
         })
