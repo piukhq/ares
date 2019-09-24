@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
+import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -29,6 +32,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
+    }
+
+    private lateinit var nestedNavController: NavController
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        nestedNavController = Navigation.findNavController(view)
     }
 
     private var TAG = LoyaltyWalletFragment::class.simpleName
@@ -56,7 +66,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                         val directions =
                             card?.card?.barcode_type?.let {
-                                LoyaltyWalletFragmentDirections.homeToBarcode(
+                                WalletsFragmentDirections.homeToBarcode(
                                     plan, card.card?.barcode, it
                                 )
                             }
@@ -82,11 +92,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.membershipCardData.value =
                 viewModel.membershipCardData.value?.filter { it.id != id }
         })
-
-        activity?.let {
-            it.setActionBar(binding.toolbar)
-            it.actionBar?.setDisplayShowTitleEnabled(false)
-        }
 
 
         if (!viewModel.localPlansReceived.hasObservers())
@@ -175,34 +180,27 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.loyalty_menu_item -> Log.e(TAG, "Loyalty tab")
-                R.id.add_menu_item -> {
-                    viewModel.localMembershipPlanData.observe(this, Observer {
-                        val directions = it?.toTypedArray()?.let { plans ->
-                            LoyaltyWalletFragmentDirections.homeToAdd(
-                                plans
-                            )
-                        }
-                        viewModel.localMembershipPlanData.removeObservers(this)
-                        viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true
-                        directions?.let { findNavController().navigateIfAdded(this, it) }
-                        this@LoyaltyWalletFragment.onDestroy()
-                    })
+    }
 
-                }
-                R.id.payment_menu_item -> Log.e(TAG, "Payment tab")
+    fun changeScreen() {
+        viewModel.localMembershipPlanData.observe(this, Observer {
+            val directions = it?.toTypedArray()?.let { plans ->
+                WalletsFragmentDirections.homeToAdd(
+                    plans
+                )
             }
-            true
-        }
+            viewModel.localMembershipPlanData.removeObservers(this)
+            viewModel.localCardsReceived.value != true || viewModel.localPlansReceived.value != true
+            directions?.let { nestedNavController.navigateIfAdded(this, it) }
+            this@LoyaltyWalletFragment.onDestroy()
+        })
     }
 
     private fun onCardClicked(card: MembershipCard) {
         for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
             if (card.membership_plan == membershipPlan.id) {
                 val directions =
-                    LoyaltyWalletFragmentDirections.homeToDetail(
+                    WalletsFragmentDirections.homeToDetail(
                         membershipPlan,
                         card
                     )
