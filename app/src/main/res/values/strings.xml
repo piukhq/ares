@@ -162,7 +162,7 @@
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
-    <string name="popular_text">Popular</string>
+    <string name="all_text">All</string>
 
 
     <!-- Catch all module issue -->
@@ -181,6 +181,8 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
+    <string name="missing_destination_dialog_title">Missing destination</string>
+    <string name="not_implemented_yet_text">Not implemented yet</string>
 
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident</string>
