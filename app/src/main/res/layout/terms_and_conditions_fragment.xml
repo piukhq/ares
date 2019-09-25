@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+                android:id="@+id/screen_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:paddingTop="@dimen/margin_padding_size_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/terms_and_conditions_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/terms_and_conditions_title"
+                        android:textSize="@dimen/size_headline"
+                        android:textStyle="bold" />
+
+                <TextView
+                        android:id="@+id/terms_and_conditions_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/bottom_layout_height"
+                        android:paddingTop="@dimen/margin_padding_size_extra_small"
+                        android:text="@string/terms_and_conditions_text"
+                        android:textSize="@dimen/size_sub_headline" />
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bottom_layout_height"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/transparent_gradient"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/margin_padding_size_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                    android:id="@+id/accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    android:background="@drawable/rounded_corners_gradient_button"
+                    android:paddingStart="@dimen/horizontal_button_padding"
+                    android:paddingTop="@dimen/margin_padding_size_small"
+                    android:paddingEnd="@dimen/horizontal_button_padding"
+                    android:paddingBottom="@dimen/margin_padding_size_small"
+                    android:text="@string/accept_button_text"
+                    android:textColor="@color/pale_grey"
+                    android:textSize="@dimen/size_sub_headline" />
+
+            <TextView
+                    android:id="@+id/decline_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="@dimen/margin_padding_size_small"
+                    android:paddingBottom="@dimen/margin_padding_size_small"
+                    android:text="@string/decline_button_text"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_sub_headline" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

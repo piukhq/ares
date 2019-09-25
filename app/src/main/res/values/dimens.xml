@@ -70,4 +70,8 @@
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
+
+    <!--T&C Screen -->
+    <dimen name="bottom_layout_height">160dp</dimen>
+    <dimen name="horizontal_button_padding">100dp</dimen>
 </resources>
