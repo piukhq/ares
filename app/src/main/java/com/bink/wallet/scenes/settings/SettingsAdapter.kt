@@ -20,14 +20,14 @@ class SettingsAdapter(
     ): SettingsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = SettingsItemBinding.inflate(inflater)
-        binding.apply {
-            root.setOnClickListener {
-                item?.apply {
-                    itemClickListener(this)
-                }
-            }
-        }
-        return SettingsViewHolder(binding)
+//        binding.apply {
+//            root.setOnClickListener {
+//                item?.apply {
+//                    itemClickListener(this)
+//                }
+//            }
+//        }
+        return SettingsViewHolder(binding, itemClickListener)
     }
 
     override fun getItemCount(): Int = items.size
@@ -36,11 +36,6 @@ class SettingsAdapter(
         items[position].let { holder.bind(it) }
     }
 
-    fun setItems(newItems: ArrayList<SettingsItem>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
-    }
     fun setEmail(newEmail: String) {
         val item = items[2]
         val newItem = SettingsItem(item.title, newEmail, item.type)
@@ -48,7 +43,8 @@ class SettingsAdapter(
         notifyItemChanged(2)
     }
 
-    class SettingsViewHolder(val binding: SettingsItemBinding) :
+    class SettingsViewHolder(val binding: SettingsItemBinding,
+                             val itemClickListener: (SettingsItem) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SettingsItem) {
@@ -59,6 +55,7 @@ class SettingsAdapter(
                     View.VISIBLE
                 else
                     View.GONE
+            binding.root.setOnClickListener { itemClickListener(item) }
             binding.executePendingBindings()
         }
     }

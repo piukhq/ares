@@ -47,7 +47,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             getString(R.string.current_email_address),
             email,
             SettingsItemType.EMAIL_ADDRESS))
-        val settingsAdapter = SettingsAdapter(itemsList, itemClickListener = { openEmailDialog(it) })
+        val settingsAdapter = SettingsAdapter(
+            itemsList,
+            itemClickListener = { openEmailDialog(it) })
 
         settings_container.apply {
             layoutManager = LinearLayoutManager(activity)
