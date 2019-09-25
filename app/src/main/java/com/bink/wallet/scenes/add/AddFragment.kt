@@ -40,6 +40,9 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 findNavController().navigateIfAdded(this, directions)
             }
         }
+        binding.paymentCardContainer.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
+        }
     }
 
 }
