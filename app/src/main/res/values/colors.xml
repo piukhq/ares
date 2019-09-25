@@ -8,7 +8,7 @@
     <color name="pale_grey">#e9ecf6</color>
     <color name="cool_grey">#99a7ae</color>
     <color name="green_blue">#00c176</color>
-    <color name="light_urple">#b46fea</color>
+    <color name="light_purple">#b46fea</color>
     <color name="blue_accent">#4371fe</color>
     <color name="blue_inactive">#b1c2cb</color>
     <color name="grey_50">#7f7f7f</color>
@@ -19,4 +19,6 @@
     <color name="grey_10">#e5e5e5</color>
     <color name="green_ok">#00c176</color>
     <color name="black">#000000</color>
+    <color name="white_transparent">#00ffffff</color>
+    <color name="white">#ffffffff</color>
 </resources>

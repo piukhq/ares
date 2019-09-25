@@ -79,6 +79,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/add_to_terms_and_conditions"
+                app:destination="@+id/terms_and_conditions"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -345,6 +352,9 @@
                 app:argType="string" />
     </fragment>
 
+    <fragment
+            android:id="@+id/terms_and_conditions"
+            android:name="com.bink.wallet.TermsAndConditionsFragment" />
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment" />

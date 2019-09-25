@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Margins & Padding -->
+    <!-- Margins & Padd
+    ing -->
     <dimen name="margin_padding_size_extra_small">4dp</dimen>
     <dimen name="margin_padding_size_small">8dp</dimen>
     <dimen name="margin_padding_size_medium">16dp</dimen>
@@ -70,4 +71,8 @@
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
+
+    <!--T&C Screen -->
+    <dimen name="bottom_layout_height">160dp</dimen>
+    <dimen name="horizontal_button_padding">100dp</dimen>
 </resources>

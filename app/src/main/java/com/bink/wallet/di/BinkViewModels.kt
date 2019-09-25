@@ -1,5 +1,7 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.TermsAndConditionsRepository
+import com.bink.wallet.TermsAndConditionsViewModel
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.network.ApiService
@@ -54,6 +56,9 @@ val viewModelModules = module {
 
     viewModel { ModuleIssueViewModel() }
 
+    single { provideTermsAndConditionsRepository(get()) }
+    viewModel { TermsAndConditionsViewModel(get()) }
+
     viewModel { AddPaymentCardViewModel() }
 }
 
@@ -71,3 +76,6 @@ fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
     membershipCardDao: MembershipCardDao
 ): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+
+fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
+    TermsAndConditionsRepository(restApiService)
