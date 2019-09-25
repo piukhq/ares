@@ -7,8 +7,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class Consent(
-    val type: Int,
-    val latitude: Float,
-    val longitude: Float,
-    val timestamp: Long
+    val type: Int?,
+    val latitude: Float?,
+    val longitude: Float?,
+    val timestamp: Long?
 ) : Parcelable

@@ -6,4 +6,4 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Account(val verification_in_progress: Boolean, val status: Int, val consents: List<Consent>): Parcelable
+data class Account(val verification_in_progress: Boolean?, val status: Int, val consents: List<Consent>?): Parcelable
