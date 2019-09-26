@@ -11,6 +11,8 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
+def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
     compileSdkVersion 29
     signingConfigs {
@@ -31,8 +33,8 @@ android {
         applicationId "com.bink.wallet.neo"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode(1000000002)
-        versionName("1.0 (2)")
+        versionCode buildNumber
+        versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -74,6 +76,9 @@ android {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
                 }
             }
+            ext.betaDistributionReleaseNotesFilePath="app/beta_release_notes.txt"
+            ext.betaDistributionGroupAliases="internal-testing"
+            ext.betaDistributionNotifications = true
         }
         gamma {
             applicationIdSuffix ".gamma"
