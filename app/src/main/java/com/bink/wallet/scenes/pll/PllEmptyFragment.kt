@@ -37,8 +37,6 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
                 it.let { it }.let { it1 -> PllEmptyFragmentArgs.fromBundle(it1).membershipPlan }
         }
 
-        binding.membershipPlan = currentMembershipPlan
-
         binding.buttonDone.setOnClickListener {
             val directions =
                 PllEmptyFragmentDirections.pllEmptyToDetail(
