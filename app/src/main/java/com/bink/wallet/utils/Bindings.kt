@@ -82,17 +82,13 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
-    binding.brandImage.setOnClickListener {
-        context.displayModalPopup(
-            resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
-    }
-    binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(
-            resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
+    if (plan.account?.plan_description != null) {
+        binding.headerWrapper.setOnClickListener {
+            context.displayModalPopup(
+                resources.getString(R.string.plan_description),
+                plan.account.plan_description.toString()
+            )
+        }
     }
     plan.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =
