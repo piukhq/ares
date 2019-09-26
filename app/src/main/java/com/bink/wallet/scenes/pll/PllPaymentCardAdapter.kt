@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.pll
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +44,9 @@ class PllPaymentCardAdapter(
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 paymentCard.isSelected = isChecked
                 binding.toggle.displayCustomSwitch(isChecked)
+            }
+            if (paymentCards?.last() == paymentCard) {
+                binding.view.visibility = View.GONE
             }
         }
     }
