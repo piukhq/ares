@@ -38,8 +38,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
             ?.commit()
 
-
-
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {

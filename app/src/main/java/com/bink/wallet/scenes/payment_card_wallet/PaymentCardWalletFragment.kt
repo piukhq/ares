@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
@@ -24,9 +25,18 @@ class PaymentCardWalletFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.paymentCardRecycler.apply {
-            //TODO adapter
+
+        viewModel.localMembershipCardData.observeForever { cards ->
+            viewModel.localMembershipPlanData.observeForever { plans ->
+                binding.paymentCardRecycler.apply {
+                    layoutManager = GridLayoutManager(activity, 1)
+                    adapter =
+                        LinkedCardsAdapter(cards, plans, itemClickListener = { })
+                }
+            }
         }
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalMembershipPlans()
     }
 
 }

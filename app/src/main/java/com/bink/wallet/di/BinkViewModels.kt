@@ -18,6 +18,7 @@ import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
@@ -57,6 +58,8 @@ val viewModelModules = module {
 
     single { provideTermsAndConditionsRepository(get()) }
     viewModel { TermsAndConditionsViewModel(get()) }
+
+    viewModel { PaymentCardWalletViewModel(get()) }
 }
 
 fun provideLoginRepository(restApiService: ApiService): LoginRepository =

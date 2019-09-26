@@ -34,6 +34,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             .build()
     }
 
+    private var onChange: (ArrayList<MembershipCard>) -> Unit = {}
+
     private lateinit var nestedNavController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,6 +52,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+    fun setChangeAction(onChange: (ArrayList<MembershipCard>) -> Unit) {
+        this.onChange = onChange
     }
 
     val listener: RecyclerItemTouchHelperListener = object :

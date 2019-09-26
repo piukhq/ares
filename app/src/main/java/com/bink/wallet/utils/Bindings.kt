@@ -111,6 +111,16 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     binding.tapCard.setVisible(card?.card?.barcode != null)
 }
 
+@BindingAdapter("textBalance")
+fun TextView.textBalance(card: MembershipCard?) {
+    val balance = card?.balances?.first()
+    text = when (balance?.prefix != null) {
+        true -> balance?.prefix?.plus(balance.value)
+        else -> {
+            balance?.value.plus(balance?.suffix)
+        }
+    }
+}
 
 @BindingAdapter("addField", "authField", "enrolField")
 fun TextView.title(
