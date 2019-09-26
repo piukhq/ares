@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 
 class PllRepository(private val apiService: ApiService) {
 
@@ -45,12 +46,13 @@ class PllRepository(private val apiService: ApiService) {
         }
     }
 
-    suspend fun unlinkPaymentCard(paymentCardId: String, membershipCardId: String, unlinkError: MutableLiveData<Throwable>) {
+    suspend fun unlinkPaymentCard(paymentCardId: String, membershipCardId: String, unlinkError: MutableLiveData<Throwable>, unlinkedBody: MutableLiveData<ResponseBody>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    unlinkedBody.value = response
                 } catch (e: Throwable) {
                     unlinkError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())

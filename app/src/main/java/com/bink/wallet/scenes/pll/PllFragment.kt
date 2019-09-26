@@ -34,13 +34,14 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
                 viewModel.title.set(getString(R.string.pll_unlinked_title)).takeIf { membershipCard.payment_cards?.isNullOrEmpty()!! }
-                    ?: viewModel.title.set(getString(R.string.pll_unlinked_title))
+                    ?: viewModel.title.set(getString(R.string.pll_linked_title))
 
             }
         }
         runBlocking {
             viewModel.getPaymentCards()
         }
+
         val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
@@ -52,6 +53,15 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             adapter.notifyDataSetChanged()
 
         }
+
+        val directions =
+            viewModel.membershipCard.value?.let { it1 ->
+                viewModel.membershipPlan.value?.let { it2 ->
+                    PllFragmentDirections.pllToLcd(
+                        it2, it1
+                    )
+                }
+            }
 
         binding.buttonDone.setOnClickListener {
             adapter.paymentCards?.forEach { card ->
@@ -72,11 +82,17 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                             viewModel.membershipCard.value!!.id
                         )
                     }
-                } else {
-                    activity?.onBackPressed()
+                }
+                if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                    directions?.let { it1 ->
+                        findNavController().navigateIfAdded(
+                            this@PllFragment,
+                            it1
+                        )
+                    }
+                }
                 }
             }
-        }
 
         viewModel.linkError.observeNonNull(this) {
             AlertDialog.Builder(requireContext())
@@ -84,7 +100,15 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 .setMessage(it.toString())
                 .setPositiveButton(
                     getString(R.string.ok)
-                ) { _, _ -> findNavController().navigateIfAdded(this@PllFragment, R.id.pll_to_lcd) }
+                ) { _, _ ->
+                    if (findNavController().currentDestination?.id == R.id.pll_fragment)
+                        directions?.let { it1 ->
+                            findNavController().navigateIfAdded(
+                                this@PllFragment,
+                                it1
+                            )
+                        }
+                }
                 .show()
         }
 

@@ -187,9 +187,11 @@ class LoyaltyCardDetailsFragment :
                         )
                     )
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
+                    var linkedCards = 0
+                    viewModel.membershipCard.value?.payment_cards?.forEach { if(it.active_link) linkedCards++ }
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
-                        viewModel.membershipCard.value?.payment_cards?.size,
+                        linkedCards,
                         viewModel.paymentCards.value?.size
                     )
                     binding.linkedWrapper.setOnClickListener {

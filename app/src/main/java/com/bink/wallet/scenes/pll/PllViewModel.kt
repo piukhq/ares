@@ -6,6 +6,7 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import okhttp3.ResponseBody
 
 class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
     var membershipCard = MutableLiveData<MembershipCard>()
@@ -13,6 +14,7 @@ class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
     var paymentCards = MutableLiveData<List<PaymentCard>>()
     var title = ObservableField<String>()
     var linkedPaymentCard = MutableLiveData<PaymentCard>()
+    var unlinkedRequestBody = MutableLiveData<ResponseBody>()
     var linkError = MutableLiveData<Throwable>()
     var unlinkError = MutableLiveData<Throwable>()
 
@@ -25,6 +27,6 @@ class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
     }
 
     suspend fun unlinkPaymentCard(paymentCardId: String, cardId: String) {
-        pllRepository.unlinkPaymentCard(paymentCardId, cardId, unlinkError)
+        pllRepository.unlinkPaymentCard(paymentCardId, cardId, unlinkError, unlinkedRequestBody)
     }
 }
