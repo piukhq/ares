@@ -30,16 +30,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         viewModel.retrieveStoredLoginData()
         viewModel.loginData.observe(this, Observer {
-            if (!loginData.value!!.email.equals(viewModel.loginEmail)) {
-                viewModel.loginEmail = loginData.value!!.email
+            if (verifyAvailableNetwork(activity!!)) {
+                viewModel.authenticate()
+            } else {
+                showNoInternetConnectionDialog()
             }
         })
-
-        if (verifyAvailableNetwork(activity!!)) {
-            viewModel.authenticate()
-        } else {
-            showNoInternetConnectionDialog()
-        }
 
         viewModel.loginBody.observe(this, Observer {
             findNavController().navigateIfAdded(this, R.id.login_to_loyalty)

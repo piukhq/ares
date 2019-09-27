@@ -1,15 +1,15 @@
 package com.bink.wallet.scenes.login
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
+import kotlinx.coroutines.launch
 
 class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseViewModel() {
 
     var loginBody = MutableLiveData<LoginBody>()
     var loginData = MutableLiveData<LoginData>()
-//    var loginEmail = "Bink20iteration1@testbink.com"
     var loginEmail = loginRepository.loginEmail
 
 
@@ -26,7 +26,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
         )
     }
 
-    fun retrieveStoredLoginData() {
+    fun retrieveStoredLoginData() = viewModelScope.launch {
         loginRepository.retrieveStoredLoginData(loginData)
     }
 }

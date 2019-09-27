@@ -150,4 +150,5 @@
     <string name="current_email_address">Current email address</string>
     <string name="edit_email_address">Edit Email Address</string>
     <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
+    <string name="please_enter_valid_email">Please enter a valid email address</string>
 </resources>

@@ -17,7 +17,6 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
-import com.bink.wallet.scenes.settings.SettingsRepository
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
@@ -53,8 +52,8 @@ val viewModelModules = module {
 
     viewModel { TransactionsNotSupportedViewModel() }
 
-    single { provideSettingsRepository(get()) }
-    viewModel{ SettingsViewModel(get()) }
+//    single { provideSettingsRepository(get()) }
+    viewModel { SettingsViewModel(get()) }
 }
 
 fun provideLoginRepository(
@@ -76,7 +75,7 @@ fun provideLoyaltyCardDetailsRepository(
 ): LoyaltyCardDetailsRepository =
     LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
 
-fun provideSettingsRepository(
-    loginDataDao: LoginDataDao
-): SettingsRepository =
-    SettingsRepository(loginDataDao)
+//fun provideSettingsRepository(
+//    loginDataDao: LoginDataDao
+//): SettingsRepository =
+//    SettingsRepository(loginDataDao)

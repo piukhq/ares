@@ -9,10 +9,10 @@ import com.bink.wallet.model.LoginData
 @Dao
 interface LoginDataDao {
     @Query("SELECT * FROM login_data")
-    suspend fun getLoginData(): LoginData
+    fun getLoginData(): LoginData
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun store(loginData: LoginData?)
+    suspend fun store(loginData: LoginData?): Long
 
     @Query("DELETE FROM login_data")
     suspend fun deleteEmails()

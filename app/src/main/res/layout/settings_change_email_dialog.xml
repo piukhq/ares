@@ -15,36 +15,27 @@
                 android:layout_margin="@dimen/margin_padding_size_small"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_contraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 />
-        <EditText
-                android:id="@+id/email"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_padding_size_small"
-                android:inputType="textEmailAddress"
-                android:imeOptions="actionDone"
-                android:autofillHints="email"
-                android:hint="@string/edit_email_address"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_contraintTop_toBottomOf="@id/message"
-                />
-        <Button
-                android:id="@+id/okButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ok"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_contraintTop_toBottomOf="@id/email"
-                />
-        <Button
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@id/okButton"
-                app:layout_contraintTop_toBottomOf="@id/email"
-                />
+                app:layout_constraintTop_toBottomOf="@id/message"
+                app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_padding_size_small"
+                    android:inputType="textEmailAddress"
+                    android:imeOptions="actionDone"
+                    android:autofillHints="email"
+                    android:hint="@string/edit_email_address"
+                    />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

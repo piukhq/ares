@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 class LoginRepository(private val apiService: ApiService,
                       private val loginDataDao: LoginDataDao
 ) {
-    var loginEmail: String = "mwoodhams@testbink.com"//"Bink20iteration1@testbink.com"
+    var loginEmail: String = "Bink20iteration1@testbink.com"// "automatedbuilds@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -26,36 +26,43 @@ class LoginRepository(private val apiService: ApiService,
         }
     }
 
-    fun retrieveStoredLoginData(localLoginData: MutableLiveData<LoginData>) {
+    fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
+                liveData.value = loginData
+            }
+        }
+    }
+
+    suspend fun retrieveStoredLoginData(loginData: MutableLiveData<LoginData>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Default) {
                 try {
                     val response = loginDataDao.getLoginData()
-                    if (localLoginData.value != null) {
-                        localLoginData.value = response
+                    if (loginData.value != null) {
                         loginEmail = response.email!!
+                        updateLiveData(loginData, response)
                     } else {
-                        localLoginData.value = LoginData("0", loginEmail)
+                        updateLiveData(loginData, LoginData("0", loginEmail))
+                        storeLoginData(loginEmail, loginData)
                     }
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString())
+                    Log.e(LoginRepository::class.simpleName, e.localizedMessage, e)
                 }
             }
         }
     }
 
-    fun storeLoginData(email: String) {
-        storeLoginData(LoginData("0", email))
-    }
-    fun storeLoginData(loginData: LoginData) {
+    fun storeLoginData(email: String, loginData: MutableLiveData<LoginData>) {
         CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Default) {
                 try {
                     runBlocking {
-                        loginDataDao.deleteEmails()
-                        loginDataDao.store(loginData)
-
-                        loginEmail = loginData.email!!
+                        var pos = loginDataDao.store(LoginData("0", email))
+                        if (pos >= 0) {
+                            updateLiveData(loginData, LoginData("0", email))
+                            loginEmail = email
+                        }
                     }
                 } catch (e: Throwable) {
                     Log.e(LoginDataDao::class.simpleName, e.toString())
