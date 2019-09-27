@@ -14,8 +14,6 @@ import androidx.navigation.findNavController
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.scenes.login.LoginRepository
-import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics

@@ -7,10 +7,8 @@ import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_card.MembershipCard
 
-@Database(entities = [MembershipCard::class, MembershipPlan::class, LoginData::class], version = 8, exportSchema = false)
+@Database(entities = [MembershipCard::class, MembershipPlan::class, LoginData::class], version = 9, exportSchema = false)
 @TypeConverters(MembershipCardConverters::class, MembershipPlanConverters::class, LoginDataConverters::class)
-@Database(entities = [MembershipCard::class, MembershipPlan::class], version = 7, exportSchema = false)
-@TypeConverters(MembershipCardConverters::class, MembershipPlanConverters::class)
 abstract class BinkDatabase : RoomDatabase() {
     abstract fun membershipCardDao(): MembershipCardDao
     abstract fun membershipPlanDao(): MembershipPlanDao

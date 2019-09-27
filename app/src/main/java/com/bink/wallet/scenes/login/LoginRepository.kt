@@ -39,7 +39,9 @@ class LoginRepository(private val apiService: ApiService,
             withContext(Dispatchers.Default) {
                 try {
                     val response = loginDataDao.getLoginData()
-                    if (response.email != null) {
+                    // Note: the AS hint says that response should never be null,
+                    // but it appears it can be during runtime... go figure!
+                    if (response != null && response.email != null) {
                         loginEmail = response.email
                         updateLiveData(loginData, response)
                     } else {
