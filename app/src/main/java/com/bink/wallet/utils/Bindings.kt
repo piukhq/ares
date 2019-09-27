@@ -1,13 +1,13 @@
 package com.bink.wallet.utils
 
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.text.format.DateFormat
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import android.view.ViewTreeObserver
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
@@ -21,6 +21,8 @@ import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
@@ -103,12 +105,34 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
 
 @BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
-    if (card?.getHeroImage() != null && card.getHeroImage()?.url != null) {
-        binding.image.setImage(card.getHeroImage()?.url.toString())
-    } else {
-        binding.image.setBackgroundColor(Color.GREEN)
-    }
-    binding.tapCard.setVisible(card?.card?.barcode != null)
+    binding.image.viewTreeObserver.addOnGlobalLayoutListener(object :
+        ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            binding.image.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            if (card?.getHeroImage() != null && card.getHeroImage()?.url != null) {
+                Glide.with(context).asBitmap().load(card.getHeroImage()?.url)
+                    .into(object : CustomTarget<Bitmap>() {
+                        override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: Transition<in Bitmap>?
+                        ) {
+                            val heightRatio =
+                                (binding.image.width * resource.height.toFloat() / resource.width.toFloat()).toInt()
+                            val layoutParams =
+                                FrameLayout.LayoutParams(binding.image.width, heightRatio)
+
+                            binding.image.layoutParams = layoutParams
+                            binding.image.setImageBitmap(resource)
+                        }
+
+                        override fun onLoadCleared(placeholder: Drawable?) {}
+                    })
+            } else {
+                binding.image.setBackgroundColor(Color.GREEN)
+            }
+            binding.tapCard.setVisible(card?.card?.barcode != null)
+        }
+    })
 }
 
 
