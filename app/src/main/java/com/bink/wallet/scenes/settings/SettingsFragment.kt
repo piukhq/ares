@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -95,9 +96,10 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         }
     }
 
-    fun setEmail(email: String): Boolean {
+    private fun setEmail(email: String): Boolean {
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            if (!email.equals(viewModel.loginData.value!!.email)) {
+            if (email != viewModel.loginData.value!!.email) {
+                progress_spinner.visibility = View.VISIBLE
 
                 val data = MutableLiveData<LoginData>()
                 data.value = LoginData("0", email)
