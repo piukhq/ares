@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 class LoginRepository(private val apiService: ApiService,
                       private val loginDataDao: LoginDataDao
 ) {
-    var loginEmail: String = "Bink20iteration1@testbink.com"// "automatedbuilds@testbink.com"
+    var loginEmail: String = "Bink20iteration1@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -26,7 +26,7 @@ class LoginRepository(private val apiService: ApiService,
         }
     }
 
-    fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
+    private fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 liveData.value = loginData
@@ -39,8 +39,8 @@ class LoginRepository(private val apiService: ApiService,
             withContext(Dispatchers.Default) {
                 try {
                     val response = loginDataDao.getLoginData()
-                    if (loginData.value != null) {
-                        loginEmail = response.email!!
+                    if (response.email != null) {
+                        loginEmail = response.email
                         updateLiveData(loginData, response)
                     } else {
                         updateLiveData(loginData, LoginData("0", loginEmail))
