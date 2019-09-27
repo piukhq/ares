@@ -86,12 +86,13 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                     if (setEmail(editText.text.toString())) {
                         dialogInterface.dismiss()
                     } else {
-                        val textInputLayout = dialogLayout.findViewById<TextInputLayout>(R.id.text_input_layout)
+                        val textInputLayout =
+                            dialogLayout.findViewById<TextInputLayout>(R.id.text_input_layout)
                         textInputLayout.error = getString(R.string.please_enter_valid_email)
                     }
                 }
             builder.setNegativeButton(getString(R.string.cancel_text))
-                { dialogInterface, i -> dialogInterface.dismiss() }
+                { dialogInterface, _ -> dialogInterface.dismiss() }
             builder.show()
         }
     }
@@ -115,7 +116,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         return false
     }
 
-    fun restartApp() {
+    private fun restartApp() {
+        // wait 3 seconds before kicking the app
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 delay(3000)
