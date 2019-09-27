@@ -20,9 +20,18 @@ class MembershipPlan(
     @ColumnInfo(name = "balances") val balances: List<Balances>?
 ) : Parcelable {
 
+    constructor(id: String) : this(
+        id,
+        null,
+        null,
+        null,
+        null,
+        null
+    )
+
     fun getCardType(): CardType? {
         return when (feature_set?.card_type) {
-            0 -> CardType.BASIC
+            0 -> CardType.STORE
             1 -> CardType.VIEW
             2 -> CardType.PLL
             else -> null

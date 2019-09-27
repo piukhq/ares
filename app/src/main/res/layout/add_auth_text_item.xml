@@ -16,19 +16,13 @@
                 type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
 
         <variable
-                name="addFieldsRequest"
-                type="com.bink.wallet.model.request.membership_card.AddFields" />
-
-        <variable
-                name="authFieldsRequest"
-                type="com.bink.wallet.model.request.membership_card.AuthoriseFields" />
-
+                name="enrolFields"
+                type="com.bink.wallet.model.response.membership_plan.EnrolFields" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:orientation="vertical">
 
         <TextView
@@ -39,10 +33,11 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_description_medium"
+                android:textSize="@dimen/size_medium"
                 android:textStyle="bold"
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
+                app:enrolField="@{enrolFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +50,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:background="@android:color/transparent"
-                android:inputType='@{(addFields.type == 1 || authFields.type == 1) ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }'
+                android:inputType='@{(addFields.type == 1 || authFields.type == 1 || enrolFields.type == 1) ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }'
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />

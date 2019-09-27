@@ -1,17 +1,20 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.data.LoginDataDao
+import com.bink.wallet.TermsAndConditionsRepository
+import com.bink.wallet.TermsAndConditionsViewModel
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
-import com.bink.wallet.scenes.add_auth.AddAuthViewModel
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
+import com.bink.wallet.scenes.loyalty_details.ModuleIssueViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -52,7 +55,11 @@ val viewModelModules = module {
 
     viewModel { TransactionsNotSupportedViewModel() }
 
-//    single { provideSettingsRepository(get()) }
+    viewModel { ModuleIssueViewModel() }
+
+    single { provideTermsAndConditionsRepository(get()) }
+    viewModel { TermsAndConditionsViewModel(get()) }
+
     viewModel { SettingsViewModel(get()) }
 }
 
@@ -75,7 +82,5 @@ fun provideLoyaltyCardDetailsRepository(
 ): LoyaltyCardDetailsRepository =
     LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
 
-//fun provideSettingsRepository(
-//    loginDataDao: LoginDataDao
-//): SettingsRepository =
-//    SettingsRepository(loginDataDao)
+fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
+    TermsAndConditionsRepository(restApiService)

@@ -1,1 +1,2 @@
+AB20-151 - deployment code to Crashlytics
 AB20-152 - build against staging and notify users

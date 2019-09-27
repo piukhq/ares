@@ -8,6 +8,10 @@
         <import type="android.text.InputType" />
 
         <variable
+                name="enrolFields"
+                type="com.bink.wallet.model.response.membership_plan.EnrolFields" />
+
+        <variable
                 name="addFields"
                 type="com.bink.wallet.model.response.membership_plan.AddFields" />
 
@@ -22,45 +26,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <TextView
-                android:id="@+id/title_add_auth_text"
-                android:layout_width="0dp"
+        <CheckBox
+                android:id="@+id/content_add_auth_switch"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/text_size_description_medium"
-                android:textStyle="bold"
-                app:addField="@{addFields}"
-                app:authField="@{authFields}"
+                android:textColor="@color/cool_grey"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-        <CheckBox
-                android:id="@+id/content_add_auth_switch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:textColor="@color/cool_grey"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
-
-        <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/item_separator_line_height"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:alpha="0.3"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content_add_auth_switch" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

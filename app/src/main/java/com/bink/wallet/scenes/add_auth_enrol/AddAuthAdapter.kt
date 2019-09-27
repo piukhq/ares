@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth
+package com.bink.wallet.scenes.add_auth_enrol
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,7 +20,10 @@ import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
+import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.FieldViewType
 
 
 class AddAuthAdapter(
@@ -38,15 +41,17 @@ class AddAuthAdapter(
 
         val binding: ViewDataBinding
 
-        binding = when (viewType) {
-            0, 1, 5, 6 -> AddAuthTextItemBinding.inflate(inflater)
-            2, 7 -> AddAuthSpinnerItemBinding.inflate(inflater)
+        binding = when (viewType % 10) {
+            FieldType.TEXT.type,
+            FieldType.PASSWORD.type -> AddAuthTextItemBinding.inflate(inflater)
+            FieldType.SPINNER.type -> AddAuthSpinnerItemBinding.inflate(inflater)
             else -> AddAuthSwitchItemBindingImpl.inflate(inflater)
         }
 
-        return when (viewType < 5) {
-            true -> AddFieldHolder(binding, account)
-            false -> AuthFieldHolder(binding, account)
+        return when (viewType / 10) {
+            FieldViewType.ADD.type -> AddFieldHolder(binding, account)
+            FieldViewType.AUTH.type -> AuthFieldHolder(binding, account)
+            else -> EnrolFieldHolder(binding, account)
         }
     }
 
@@ -54,6 +59,7 @@ class AddAuthAdapter(
         when (holder) {
             is AddFieldHolder -> brands[position].let { holder.bind(it as AddFields) }
             is AuthFieldHolder -> brands[position].let { holder.bind(it as AuthoriseFields) }
+            is EnrolFieldHolder -> brands[position].let { holder.bind(it as EnrolFields) }
         }
     }
 
@@ -63,8 +69,9 @@ class AddAuthAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (brands[position]) {
-            is AddFields -> (brands[position] as AddFields).type!!
-            else -> (brands[position] as AuthoriseFields).type!! + 5
+            is AddFields -> FieldViewType.ADD.type * 10 + (brands[position] as AddFields).type!!
+            is AuthoriseFields -> FieldViewType.AUTH.type * 10 + (brands[position] as AuthoriseFields).type!!
+            else -> FieldViewType.ENROL.type * 10 + (brands[position] as EnrolFields).type!!
         }
     }
 
@@ -168,6 +175,108 @@ class AddAuthAdapter(
             binding.executePendingBindings()
         }
     }
+
+    class EnrolFieldHolder(val binding: ViewDataBinding, val account: Account) :
+        BaseViewHolder<EnrolFields>(binding) {
+
+        private var text: AppCompatEditText? = null
+        private var switch: CheckBox? = null
+        private var spinner: Spinner? = null
+
+        init {
+            text = itemView.findViewById(R.id.content_add_auth_text)
+            switch = itemView.findViewById(R.id.content_add_auth_switch)
+            spinner = itemView.findViewById(R.id.content_add_auth_spinner)
+        }
+
+        override fun bind(item: EnrolFields) {
+            val currentEnrolField =
+                com.bink.wallet.model.request.membership_card.EnrolFields(item.column, "")
+            when (binding) {
+                is AddAuthTextItemBinding -> {
+                    binding.enrolFields = item
+
+                    text?.hint = item.description
+                    text?.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(p0: Editable?) {
+                        }
+
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            currentText: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                            currentEnrolField.value = currentText.toString()
+                        }
+                    })
+
+                    text?.setOnFocusChangeListener { _, isFocus ->
+                        if (!isFocus)
+                            try {
+                                if (!UtilFunctions.isValidField(
+                                        item.validation, currentEnrolField.value
+                                    )
+                                )
+                                    text?.error = text?.resources?.getString(
+                                        R.string.add_auth_error_message,
+                                        item.column
+                                    )
+                            } catch (ex: Exception) {
+                                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+                            }
+                    }
+                }
+                is AddAuthSpinnerItemBinding -> {
+                    binding.enrolFields = item
+
+                    currentEnrolField.value = item.choice?.get(0)
+
+                    spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                        }
+
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            currentEnrolField.value = item.choice?.get(position)
+                        }
+
+                    }
+                    spinner?.isFocusable = false
+                }
+                is AddAuthSwitchItemBinding -> {
+                    binding.enrolFields = item
+
+                    switch?.text = item.description
+
+                    currentEnrolField.value = FALSE_TEXT
+
+                    switch?.setOnCheckedChangeListener { _, isChecked ->
+                        currentEnrolField.value = isChecked.toString()
+                    }
+                    switch?.isFocusable = false
+
+                }
+            }
+            account.enrol_fields?.add(currentEnrolField)
+
+            binding.executePendingBindings()
+        }
+    }
+
 
     class AuthFieldHolder(val binding: ViewDataBinding, val account: Account) :
         BaseViewHolder<AuthoriseFields>(binding) {

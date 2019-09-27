@@ -54,8 +54,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="16.2dp"
-                    android:layout_marginEnd="18dp"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/loyalty_value_margin_end"
                     android:orientation="vertical"
                     android:visibility="gone">
 
@@ -64,10 +64,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:letterSpacing="0.01"
-                        android:lineSpacingExtra="-3.6sp"
                         android:textColor="@android:color/white"
-                        android:textSize="16.2sp"
+                        android:textSize="@dimen/size_medium"
                         android:textStyle="bold" />
 
                 <TextView
@@ -75,10 +73,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:letterSpacing="0.01"
-                        android:lineSpacingExtra="-0.9sp"
                         android:textColor="@android:color/white"
-                        android:textSize="13.5sp" />
+                        android:textSize="@dimen/size_body" />
 
             </LinearLayout>
 
@@ -87,8 +83,8 @@
                     android:layout_width="@dimen/custom_login_image_size"
                     android:layout_height="@dimen/custom_text_card_margin"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="16.2dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/card_login_margin_end"
                     android:src="@drawable/ic_login"
                     tools:ignore="ContentDescription" />
 
@@ -98,8 +94,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginBottom="16.2dp"
+                    android:layout_marginEnd="@dimen/link_status_wrapper_margin_end"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -108,10 +104,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:lineSpacingExtra="1.8sp"
-                        android:text="@string/card_item_linked"
+                        android:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
-                        android:textSize="@dimen/text_size_description_medium" />
+                        android:textSize="@dimen/size_body" />
 
                 <ImageView
                         android:id="@+id/link_status_img"

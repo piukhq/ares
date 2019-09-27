@@ -80,7 +80,7 @@ public class CardViewStyleKit {
     }
 
     // Resizing Behavior
-    public static void resizingBehaviorApply(ResizingBehavior behavior, RectF rect, RectF target, RectF result) {
+    private static void resizingBehaviorApply(ResizingBehavior behavior, RectF rect, RectF target, RectF result) {
         if (rect.equals(target) || target == null) {
             result.set(rect);
             return;
