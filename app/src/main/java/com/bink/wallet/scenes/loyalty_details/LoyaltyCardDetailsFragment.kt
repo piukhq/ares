@@ -71,6 +71,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.membershipCard.value = it
             binding.swipeLayout.isRefreshing = false
             viewModel.setAccountStatus()
+            viewModel.setLinkStatus()
         }
 
         viewModel.membershipCard.observeNonNull(this) {
@@ -110,7 +111,6 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
-
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     val action =

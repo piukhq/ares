@@ -2,6 +2,7 @@ package com.bink.wallet.di
 
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
@@ -55,7 +56,7 @@ val viewModelModules = module {
 
     viewModel { ModuleIssueViewModel() }
 
-    single { providePllRepository(get()) }
+    single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
 }
 
@@ -74,4 +75,4 @@ fun provideLoyaltyCardDetailsRepository(
     membershipCardDao: MembershipCardDao
 ): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
 
-fun providePllRepository(restApiService: ApiService): PllRepository = PllRepository(restApiService)
+fun providePllRepository(restApiService: ApiService, paymentCardDao: PaymentCardDao): PllRepository = PllRepository(restApiService, paymentCardDao)

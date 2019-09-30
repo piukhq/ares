@@ -42,18 +42,22 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             viewModel.getPaymentCards()
         }
 
+        viewModel.paymentCards.observeNonNull(this) {
+            runBlocking {
+                viewModel.getLocalPaymentCards()
+            }
+        }
         val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        viewModel.paymentCards.observeNonNull(this) {
+        viewModel.localPaymentCards.observeNonNull(this) {
             val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
             it.forEach { card -> listPaymentCards.add(PllPaymentCardWrapper(card)) }
             adapter.paymentCards = listPaymentCards
             adapter.notifyDataSetChanged()
 
         }
-
         val directions =
             viewModel.membershipCard.value?.let { it1 ->
                 viewModel.membershipPlan.value?.let { it2 ->

@@ -1,16 +1,20 @@
 package com.bink.wallet.model.response.payment_card
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
+@Entity(tableName = "payment_card")
 data class PaymentCard(
-    val id: Int?,
-    val membership_cards: List<PaymentMembershipCard>?,
-    val status: String?,
-    val card: BankCard?,
-    val images: List<Image>?,
-    val account: Account?
+    @PrimaryKey @ColumnInfo(name = "id") val id: Int?,
+    @ColumnInfo(name = "membership_cards") val membership_cards: List<PaymentMembershipCard>?,
+    @ColumnInfo(name = "status") val status: String?,
+    @ColumnInfo(name = "card") val card: BankCard?,
+    @ColumnInfo(name = "image") val images: List<Image>?,
+    @ColumnInfo(name = "account") val account: Account?
 ) : Parcelable

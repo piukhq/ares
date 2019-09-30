@@ -12,6 +12,7 @@ class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
     var membershipCard = MutableLiveData<MembershipCard>()
     var membershipPlan = MutableLiveData<MembershipPlan>()
     var paymentCards = MutableLiveData<List<PaymentCard>>()
+    var localPaymentCards = MutableLiveData<List<PaymentCard>>()
     var title = ObservableField<String>()
     var linkedPaymentCard = MutableLiveData<PaymentCard>()
     var unlinkedRequestBody = MutableLiveData<ResponseBody>()
@@ -28,5 +29,9 @@ class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
 
     suspend fun unlinkPaymentCard(paymentCardId: String, cardId: String) {
         pllRepository.unlinkPaymentCard(paymentCardId, cardId, unlinkError, unlinkedRequestBody)
+    }
+
+    suspend fun getLocalPaymentCards() {
+        pllRepository.getLocalPaymentCards(localPaymentCards)
     }
 }
