@@ -179,10 +179,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 showNoInternetConnectionDialog()
             }
         }
-        binding.settingsButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.settings_screen)
-        }
-
     }
 
     fun changeScreen() {

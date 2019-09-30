@@ -81,7 +81,9 @@ class MainActivity : AppCompatActivity() {
         val startActivity = Intent(this, MainActivity::class.java)
         val pendingIntentId = 123456
         val pendingIntent = PendingIntent.getActivity(
-            this, pendingIntentId, startActivity,
+            this,
+            pendingIntentId,
+            startActivity,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
         val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager

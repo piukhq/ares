@@ -7,10 +7,6 @@
                 name="item"
                 type="com.bink.wallet.model.SettingsItem"
                 />
-        <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.settings.SettingsViewModel"
-                />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
