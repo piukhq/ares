@@ -35,10 +35,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             it.actionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
+
         fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
             ?.commit()
-
-
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
