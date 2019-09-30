@@ -45,11 +45,11 @@
                 android:layout_marginTop="@dimen/barcode_margin_top"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:adjustViewBounds="true"
-                app:barcode="@{viewModel.barcode}"
                 app:isVisible="@{viewModel.isBarcodeAvailable}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:membershipCard="@{viewModel.barcode}"
                 tools:ignore="ContentDescription"
                 tools:src="@android:drawable/ic_menu_always_landscape_portrait" />
 
@@ -63,7 +63,6 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/size_headline"
                 android:textStyle="bold"
-                app:isVisible="@{viewModel.isBarcodeAvailable}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barcode_image" />
 
@@ -73,11 +72,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/number_margin_top"
-                android:text="@{viewModel.barcode.barcode}"
+                android:text="@{viewModel.barcode.membershipCard.card.membership_id}"
                 android:textColor="@color/blue_accent"
                 android:textSize="@dimen/size_sub_headline"
                 android:textStyle="bold"
-                app:isVisible="@{viewModel.isBarcodeAvailable}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_number_label"
                 tools:text="1234 5678 9101" />

@@ -131,8 +131,7 @@
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
-    <string name="link_payment_card_text">You have not added any payment cards yet.
-        Add them to link to this card and others. </string>
+    <string name="link_payment_card_text">"You have not added any payment cards yet.\nAdd them to link to this card and others.\nUse this screen for more messaging about importance of adding payment cards, and utility of PLL.\nOptionally, also use info tiles on this screen."</string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>

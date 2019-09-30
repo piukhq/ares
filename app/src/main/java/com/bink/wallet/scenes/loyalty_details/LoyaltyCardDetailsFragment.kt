@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -33,6 +34,10 @@ class LoyaltyCardDetailsFragment :
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
+    }
+
+    companion object {
+        val PLACEHOLDER = "placeholder"
     }
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
@@ -80,10 +85,14 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        //TODO for testing purposes only - remove when tiles provided
-        val tiles = arrayListOf("placeholder")
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
+        val tiles = ArrayList<String>()
 
+        if (viewModel.tiles.value.isNullOrEmpty()) {
+            tiles.add(PLACEHOLDER)
+        }
+
+        binding.offerTiles.adapter =
+            viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
         binding.footerAbout.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
                 context?.displayModalPopup(
@@ -97,10 +106,9 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
-                        type?.let { it1 ->
+                        type?.let {
                             LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                plan, viewModel.membershipCard.value?.card?.barcode,
-                                it1
+                                plan, viewModel.membershipCard.value!!
                             )
                         }
                     }
@@ -178,7 +186,7 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
-            when(status){
+            when (status) {
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
                     binding.activeLinked.setImageDrawable(
                         ContextCompat.getDrawable(
@@ -233,7 +241,10 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_error)
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,  viewModel.errorCodes.value.toString())
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(
+                                LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }
@@ -291,7 +302,10 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_unlinkable)
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,  viewModel.errorCodes.value.toString())
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(
+                                LinkStatus.STATUS_UNLINKABLE,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }
