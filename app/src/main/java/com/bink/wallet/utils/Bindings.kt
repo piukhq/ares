@@ -59,16 +59,16 @@ fun View.setVisible(isVisible: Boolean) {
 }
 
 @Parcelize
-data class BarcodeWrapper(val barcode: String?, val barcodeType: Int) : Parcelable
+data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
-@BindingAdapter("barcode")
-fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
-    if (!barcode?.barcode.isNullOrEmpty()) {
+@BindingAdapter("membershipCard")
+fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
+    if (!membershipCard?.membershipCard?.card?.membership_id.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
-        when (barcode?.barcodeType) {
+        when (membershipCard?.membershipCard?.card?.barcode_type) {
             0 -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
             2 -> format = BarcodeFormat.AZTEC
@@ -80,7 +80,12 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
         }
 
         val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(barcode?.barcode, format, widthPx.toInt(), heightPx.toInt())
+            multiFormatWriter.encode(
+                membershipCard?.membershipCard?.card?.membership_id,
+                format,
+                widthPx.toInt(),
+                heightPx.toInt()
+            )
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)
@@ -90,17 +95,13 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
     binding.brandImage.loadImage(plan)
-    binding.brandImage.setOnClickListener {
-        context.displayModalPopup(
-            resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
-    }
-    binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(
-            resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
+    if (plan.account?.plan_description != null) {
+        binding.headerWrapper.setOnClickListener {
+            context.displayModalPopup(
+                resources.getString(R.string.plan_description),
+                plan.account.plan_description.toString()
+            )
+        }
     }
     plan.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =

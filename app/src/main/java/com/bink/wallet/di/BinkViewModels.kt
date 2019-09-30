@@ -1,5 +1,7 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.TermsAndConditionsRepository
+import com.bink.wallet.TermsAndConditionsViewModel
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
@@ -7,6 +9,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
+import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
@@ -46,6 +49,8 @@ val viewModelModules = module {
     single { provideLoyaltyCardDetailsRepository(get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
+    viewModel { PllViewModel() }
+
     viewModel { PllEmptyViewModel() }
 
     viewModel { MaximisedBarcodeViewModel() }
@@ -55,6 +60,11 @@ val viewModelModules = module {
     viewModel { TransactionsNotSupportedViewModel() }
 
     viewModel { ModuleIssueViewModel() }
+
+    single { provideTermsAndConditionsRepository(get()) }
+    viewModel { TermsAndConditionsViewModel(get()) }
+
+    viewModel { AddPaymentCardViewModel() }
 
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
@@ -74,5 +84,8 @@ fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
     membershipCardDao: MembershipCardDao
 ): LoyaltyCardDetailsRepository = LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+
+fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
+    TermsAndConditionsRepository(restApiService)
 
 fun providePllRepository(restApiService: ApiService, paymentCardDao: PaymentCardDao): PllRepository = PllRepository(restApiService, paymentCardDao)

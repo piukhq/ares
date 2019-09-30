@@ -27,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -51,7 +52,6 @@ class LoyaltyCardDetailsFragment :
 
         runBlocking {
             viewModel.fetchPaymentCards()
-            viewModel.updateMembershipCard()
         }
 
         viewModel.paymentCards.observeNonNull(this) {
@@ -102,10 +102,9 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
-                        type?.let { it1 ->
+                        type?.let {
                             LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                plan, viewModel.membershipCard.value?.card?.barcode,
-                                it1
+                                plan, viewModel.membershipCard.value!!
                             )
                         }
                     }
@@ -266,7 +265,10 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_error)
                     binding.linkedWrapper.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,  viewModel.errorCodes.value.toString())
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(
+                                LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }
@@ -324,7 +326,10 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_unlinkable)
                     binding.linkedWrapper.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,  viewModel.errorCodes.value.toString())
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(
+                                LinkStatus.STATUS_UNLINKABLE,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }

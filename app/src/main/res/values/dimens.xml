@@ -75,4 +75,8 @@
     <!--Pll Screen -->
     <dimen name="title_margin_top">@dimen/margin_padding_size_medium_large</dimen>
     <dimen name="toggle_width">42dp</dimen>
+
+    <!--T&C Screen -->
+    <dimen name="bottom_layout_height">160dp</dimen>
+    <dimen name="horizontal_button_padding">100dp</dimen>
 </resources>
