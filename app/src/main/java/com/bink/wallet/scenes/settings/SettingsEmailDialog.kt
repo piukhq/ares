@@ -15,8 +15,12 @@ class SettingsEmailDialog(context: Context, private val initialEmail: String):
 
     init {
         val inflater = layoutInflater
-        val binding: SettingsChangeEmailDialogBinding = DataBindingUtil.inflate(inflater,
-            R.layout.settings_change_email_dialog, null, false)
+        val binding: SettingsChangeEmailDialogBinding =
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.settings_change_email_dialog,
+                null,
+                false)
 
         setCancelable(true)
         setTitle(context.getString(R.string.edit_email_address))
