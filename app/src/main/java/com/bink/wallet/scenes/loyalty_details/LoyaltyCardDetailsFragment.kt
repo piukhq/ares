@@ -82,7 +82,8 @@ class LoyaltyCardDetailsFragment :
 
         //TODO for testing purposes only - remove when tiles provided
         val tiles = arrayListOf("placeholder")
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
+        binding.offerTiles.adapter =
+            viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
 
         binding.footerAbout.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
@@ -97,10 +98,9 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
-                        type?.let { it1 ->
+                        type?.let {
                             LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                plan, viewModel.membershipCard.value?.card?.barcode,
-                                it1
+                                plan, viewModel.membershipCard.value!!
                             )
                         }
                     }
@@ -178,7 +178,7 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
-            when(status){
+            when (status) {
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
                     binding.activeLinked.setImageDrawable(
                         ContextCompat.getDrawable(
@@ -233,7 +233,10 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_error)
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,  viewModel.errorCodes.value.toString())
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(
+                                LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }
@@ -291,7 +294,10 @@ class LoyaltyCardDetailsFragment :
                     binding.linkDescription.text = getString(R.string.description_unlinkable)
                     binding.activeLinked.setOnClickListener {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToIssue(LinkStatus.STATUS_UNLINKABLE,  viewModel.errorCodes.value.toString())
+                            LoyaltyCardDetailsFragmentDirections.detailToIssue(
+                                LinkStatus.STATUS_UNLINKABLE,
+                                viewModel.errorCodes.value.toString()
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }

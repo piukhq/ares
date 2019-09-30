@@ -131,14 +131,8 @@
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
         <argument
-                android:name="barcode"
-                android:defaultValue="@null"
-                app:argType="string"
-                app:nullable="true" />
-
-        <argument
-                android:name="barcodeType"
-                app:argType="integer" />
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
 
         <action
                 android:id="@+id/barcode_to_maximised"
