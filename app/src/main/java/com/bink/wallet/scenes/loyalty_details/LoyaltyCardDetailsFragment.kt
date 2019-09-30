@@ -348,7 +348,7 @@ class LoyaltyCardDetailsFragment :
                     )
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    binding.pointsText.text = getString(R.string.points_history)
+                    binding.pointsText.text = getString(R.string.history_text)
                     binding.pointsDescription.text =
                         getString(R.string.description_not_available)
                     binding.pointsImage.setImageDrawable(
