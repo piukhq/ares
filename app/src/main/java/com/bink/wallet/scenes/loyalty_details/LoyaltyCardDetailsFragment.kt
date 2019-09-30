@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -33,6 +34,10 @@ class LoyaltyCardDetailsFragment :
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
+    }
+
+    companion object {
+        val PLACEHOLDER = "placeholder"
     }
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
@@ -80,11 +85,14 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        //TODO for testing purposes only - remove when tiles provided
-        val tiles = arrayListOf("placeholder")
+        val tiles = ArrayList<String>()
+
+        if (viewModel.tiles.value.isNullOrEmpty()) {
+            tiles.add(PLACEHOLDER)
+        }
+
         binding.offerTiles.adapter =
             viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
-
         binding.footerAbout.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
                 context?.displayModalPopup(
