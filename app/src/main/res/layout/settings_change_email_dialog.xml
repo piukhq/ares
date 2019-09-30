@@ -2,6 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="email" type="String" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             tools:context=".scenes.settings.SettingsFragment"
@@ -26,7 +29,7 @@
                 app:layout_constraintTop_toBottomOf="@id/message"
                 app:errorEnabled="true">
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email"
+                    android:id="@+id/email_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_padding_size_small"
@@ -34,6 +37,7 @@
                     android:imeOptions="actionDone"
                     android:autofillHints="email"
                     android:hint="@string/edit_email_address"
+                    android:text="@={email}"
                     />
         </com.google.android.material.textfield.TextInputLayout>
 

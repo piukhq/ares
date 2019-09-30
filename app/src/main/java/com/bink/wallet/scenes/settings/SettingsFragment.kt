@@ -74,26 +74,23 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     fun openEmailDialog(item: SettingsItem) {
         if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-            val builder = AlertDialog.Builder(context)
-            val inflater = layoutInflater
-            builder.setTitle(getString(R.string.edit_email_address))
-            val dialogLayout = inflater.inflate(R.layout.settings_change_email_dialog, null)
-            val editText  = dialogLayout.findViewById<EditText>(R.id.email)
-            editText.setText(viewModel.loginData.value!!.email)
-            builder.setView(dialogLayout)
-            builder.setPositiveButton(getString(R.string.ok))
-                { dialogInterface, _ ->
-                    if (setEmail(editText.text.toString())) {
-                        dialogInterface.dismiss()
-                    } else {
-                        val textInputLayout =
-                            dialogLayout.findViewById<TextInputLayout>(R.id.text_input_layout)
-                        textInputLayout.error = getString(R.string.please_enter_valid_email)
+            val dialog = SettingsEmailDialog(context!!, viewModel.loginData.value!!.email!!)
+            dialog.newEmail.observe(this, Observer {
+                dialog.dismiss()
+                val email = dialog.newEmail.value!!
+
+                progress_spinner.visibility = View.VISIBLE
+
+                val data = MutableLiveData<LoginData>()
+                data.value = LoginData("0", email)
+                viewModel.storeLoginData(email)
+                viewModel.loginData.observe(this, Observer {
+                    if (viewModel.loginData.value!!.email.equals(email)) {
+                        restartApp()
                     }
-                }
-            builder.setNegativeButton(getString(R.string.cancel_text))
-                { dialogInterface, _ -> dialogInterface.dismiss() }
-            builder.show()
+                })
+            })
+            dialog.show()
         }
     }
 
