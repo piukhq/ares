@@ -20,7 +20,7 @@ class LoginRepository(private val apiService: ApiService,
                     val response = request.await()
                     loginData.value = response.consent
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString())
+                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
                 }
             }
         }
@@ -67,7 +67,7 @@ class LoginRepository(private val apiService: ApiService,
                         }
                     }
                 } catch (e: Throwable) {
-                    Log.e(LoginDataDao::class.simpleName, e.toString())
+                    Log.e(LoginDataDao::class.simpleName, e.toString(), e)
                 }
             }
         }

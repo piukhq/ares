@@ -7,17 +7,22 @@
                 name="item"
                 type="com.bink.wallet.model.SettingsItem"
                 />
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.settings.SettingsViewModel"
+                />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
         <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/current_version"
+                android:text="@{item.title}"
                 android:textSize="@dimen/text_size_description_big"
                 android:paddingStart="@dimen/margin_padding_size_small"
                 android:paddingEnd="@dimen/margin_padding_size_small"
@@ -29,6 +34,7 @@
                 android:id="@+id/value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{item.value}"
                 android:textSize="@dimen/text_size_description_medium"
                 android:paddingStart="@dimen/margin_padding_size_small"
                 android:paddingEnd="@dimen/margin_padding_size_small"
@@ -43,7 +49,7 @@
                 android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:text="@string/right_arrow"
-                android:textSize="@dimen/arrow_text_size"
+                android:textSize="@dimen/transaction_arrow_size"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

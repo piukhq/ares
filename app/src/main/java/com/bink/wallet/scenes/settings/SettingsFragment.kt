@@ -1,10 +1,7 @@
 package com.bink.wallet.scenes.settings
 
-import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
-import android.widget.EditText
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,57 +13,91 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.settings_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
+import com.bink.wallet.model.ListHolder
 import kotlinx.coroutines.*
-import kotlin.collections.ArrayList
 
-class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding>() {
+class SettingsFragment :
+    BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
+    Observer<ListHolder<SettingsItem>> {
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(activity!!)
             .build()
     }
 
+    private val buildTypes: List<String> = listOf("debug", "beta", "mr", "nightly")
+
     override val layoutRes: Int
         get() = R.layout.settings_fragment
+
     override val viewModel: SettingsViewModel by viewModel()
+
+    override fun onChanged(value: ListHolder<SettingsItem>?) {
+        settings_container.adapter?.let {
+            value?.applyChange(it)
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.toolbar.title = getString(R.string.debug_menu)
+        if (buildTypes.contains(BuildConfig.BUILD_TYPE)) {
+            viewModel.itemsList.value = ListHolder()
+            viewModel.itemsList.addItem(
+                SettingsItem(
+                    getString(R.string.current_version),
+                    versionName(),
+                    SettingsItemType.VERSION_NUMBER
+                )
+            )
+            viewModel.itemsList.addItem(
+                SettingsItem(
+                    getString(R.string.environment_base_url),
+                    ApiConstants.BASE_URL,
+                    SettingsItemType.BASE_URL
+                )
+            )
+            viewModel.itemsList.addItem(
+                SettingsItem(
+                    getString(R.string.current_email_address),
+                    "",
+                    SettingsItemType.EMAIL_ADDRESS
+                )
+            )
 
-        val itemsList: ArrayList<SettingsItem> = ArrayList()
+            binding.toolbar.title = getString(R.string.debug_menu)
 
-        itemsList.add(SettingsItem(
-            getString(R.string.current_version),
-            versionName(),
-            SettingsItemType.VERSION_NUMBER))
-        itemsList.add(SettingsItem(
-            getString(R.string.environment_base_url),
-            ApiConstants.BASE_URL,
-            SettingsItemType.BASE_URL))
-        itemsList.add(SettingsItem(
-            getString(R.string.current_email_address),
-            "",
-            SettingsItemType.EMAIL_ADDRESS))
-        val settingsAdapter = SettingsAdapter(
-            itemsList,
-            itemClickListener = { openEmailDialog(it) })
+            val settingsAdapter = SettingsAdapter(
+                viewModel.itemsList,
+                itemClickListener = { openEmailDialog(it) })
 
-        settings_container.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = settingsAdapter
+            settings_container.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = settingsAdapter
+            }
+
+            viewModel.retrieveStoredLoginData()
+            viewModel.loginData.observe(this, Observer {
+                val items = viewModel.itemsList.value!!
+                for (i in 0 until items.list.size) {
+                    val item = items.list[i]
+                    if (item.type == SettingsItemType.EMAIL_ADDRESS) {
+                        val newItem =
+                            SettingsItem(
+                                item.title,
+                                viewModel.loginData.value!!.email!!,
+                                item.type)
+                        viewModel.itemsList.setItem(i, newItem)
+                    }
+                }
+            })
+            viewModel.itemsList.observe(this, this)
         }
-
-        viewModel.retrieveStoredLoginData()
-        viewModel.loginData.observe(this, Observer {
-            settingsAdapter.setEmail(it.email!!)
-        })
     }
 
     fun versionName(): String =
@@ -92,25 +123,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             })
             dialog.show()
         }
-    }
-
-    private fun setEmail(email: String): Boolean {
-        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            if (email != viewModel.loginData.value!!.email) {
-                progress_spinner.visibility = View.VISIBLE
-
-                val data = MutableLiveData<LoginData>()
-                data.value = LoginData("0", email)
-                viewModel.storeLoginData(email)
-                viewModel.loginData.observe(this, Observer {
-                    if (viewModel.loginData.value!!.email.equals(email)) {
-                        restartApp()
-                    }
-                })
-            }
-            return true
-        }
-        return false
     }
 
     private fun restartApp() {
