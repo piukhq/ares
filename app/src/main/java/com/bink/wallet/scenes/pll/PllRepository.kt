@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.pll
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -20,6 +21,7 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    paymentCardDao.deleteAll()
                     paymentCardDao.storeAll(response)
                     paymentCards.value = response
                 } catch (e: Throwable) {

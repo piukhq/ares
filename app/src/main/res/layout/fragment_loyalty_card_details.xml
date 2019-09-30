@@ -234,11 +234,12 @@
                         app:layout_constraintTop_toBottomOf="@+id/footer_security"
                         app:type="delete" />
 
-                <Spinner
+                <ProgressBar
                         android:id="@+id/loading_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="visible"
+                        android:visibility="gone"
+                        style="@style/ProgressSpinner"
                         app:layout_constraintBottom_toBottomOf="@+id/points_wrapper"
                         app:layout_constraintEnd_toEndOf="@+id/linked_wrapper"
                         app:layout_constraintStart_toStartOf="parent"

@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -46,8 +47,11 @@ class LoyaltyCardDetailsFragment :
             findNavController().navigateIfAdded(this, R.id.detail_to_home)
         }
 
+        setLoadingState(true)
+
         runBlocking {
             viewModel.fetchPaymentCards()
+            viewModel.updateMembershipCard()
         }
 
         viewModel.paymentCards.observeNonNull(this) {
@@ -63,6 +67,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            runBlocking { viewModel.updateMembershipCard() }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
         }
@@ -81,9 +86,8 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        //TODO for testing purposes only - remove when tiles provided
-        val tiles = arrayListOf("placeholder")
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
+
+        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         binding.footerAbout.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
@@ -178,6 +182,9 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
+            if (viewModel.accountStatus.value != null) {
+                setLoadingState(false)
+            }
             when(status){
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
                     binding.activeLinked.setImageDrawable(
@@ -519,5 +526,22 @@ class LoyaltyCardDetailsFragment :
                     getString(R.string.points_prefix_or_suffix, balance.value, suffix)
             }
         }
+    }
+
+    private fun setLoadingState(isLoading: Boolean) {
+        if (isLoading) {
+            binding.loadingIndicator.visibility = View.VISIBLE
+            binding.linkedWrapper.visibility = View.INVISIBLE
+            binding.pointsWrapper.visibility = View.INVISIBLE
+        } else {
+            binding.loadingIndicator.visibility = View.GONE
+            binding.linkedWrapper.visibility = View.VISIBLE
+            binding.pointsWrapper.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.paymentCards.value = null
     }
 }

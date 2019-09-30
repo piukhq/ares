@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -26,6 +27,9 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             .build()
     }
 
+    private var directions: NavDirections? = null
+
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
@@ -38,6 +42,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
             }
         }
+
         runBlocking {
             viewModel.getPaymentCards()
         }
@@ -58,14 +63,17 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             adapter.notifyDataSetChanged()
 
         }
-        val directions =
-            viewModel.membershipCard.value?.let { it1 ->
-                viewModel.membershipPlan.value?.let { it2 ->
-                    PllFragmentDirections.pllToLcd(
-                        it2, it1
-                    )
+
+        viewModel.membershipCard.observeNonNull(this) {
+            directions =
+                viewModel.membershipCard.value?.let { it1 ->
+                    viewModel.membershipPlan.value?.let { it2 ->
+                        PllFragmentDirections.pllToLcd(
+                            it2, it1
+                        )
+                    }
                 }
-            }
+        }
 
         binding.buttonDone.setOnClickListener {
             adapter.paymentCards?.forEach { card ->
@@ -87,6 +95,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                         )
                     }
                 }
+
                 if (findNavController().currentDestination?.id == R.id.pll_fragment) {
                     directions?.let { it1 ->
                         findNavController().navigateIfAdded(
