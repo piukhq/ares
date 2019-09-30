@@ -116,6 +116,9 @@ android {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
                 }
             }
+            ext.betaDistributionReleaseNotesFilePath="app/beta_release_notes.txt"
+            ext.betaDistributionGroupAliases="internal-testing"
+            ext.betaDistributionNotifications = true
         }
     }
 
