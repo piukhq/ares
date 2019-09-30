@@ -77,6 +77,13 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
         <action
+                android:id="@+id/add_to_pcd"
+                app:destination="@id/add_payment_card"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
                 android:id="@+id/add_to_terms_and_conditions"
                 app:destination="@+id/terms_and_conditions"
                 app:enterAnim="@anim/slide_in_right"
@@ -135,14 +142,8 @@
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
         <argument
-                android:name="barcode"
-                android:defaultValue="@null"
-                app:argType="string"
-                app:nullable="true" />
-
-        <argument
-                android:name="barcodeType"
-                app:argType="integer" />
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
 
         <action
                 android:id="@+id/barcode_to_maximised"
@@ -352,4 +353,7 @@
     <fragment
             android:id="@+id/terms_and_conditions"
             android:name="com.bink.wallet.TermsAndConditionsFragment" />
+    <fragment
+            android:id="@+id/add_payment_card"
+            android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment" />
 </navigation>

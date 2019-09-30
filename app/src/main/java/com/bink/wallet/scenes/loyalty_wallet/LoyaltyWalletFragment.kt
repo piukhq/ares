@@ -66,8 +66,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                         val directions =
                             card?.card?.barcode_type?.let {
-                                WalletsFragmentDirections.homeToBarcode(
-                                    plan, card.card?.barcode, it
+                                LoyaltyWalletFragmentDirections.homeToBarcode(
+                                    plan, card
                                 )
                             }
                         directions?.let {

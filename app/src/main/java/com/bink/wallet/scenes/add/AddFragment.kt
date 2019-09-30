@@ -41,7 +41,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             }
         }
         binding.paymentCardContainer.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_to_terms_and_conditions)
+            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
         }
     }
 }

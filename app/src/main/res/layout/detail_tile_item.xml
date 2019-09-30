@@ -13,10 +13,11 @@
 
     <androidx.cardview.widget.CardView
             android:id="@+id/tile_item"
-            android:layout_width="@dimen/tile_dimension"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/tile_dimension"
-            app:cardCornerRadius="@dimen/margin_padding_size_medium"
+            android:layout_margin="@dimen/margin_padding_size_small"
             app:cardBackgroundColor="@color/green_blue"
+            app:cardCornerRadius="@dimen/margin_padding_size_medium"
             app:cardPreventCornerOverlap="false"
             app:cardUseCompatPadding="false">
 
