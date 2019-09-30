@@ -41,8 +41,10 @@ class PllPaymentCardAdapter(
                 binding.toggle.isChecked =
                     paymentCard.paymentCard.isLinkedToMembershipCard(membershipCard!!)
                 paymentCard.isSelected = binding.toggle.isChecked
-                binding.toggle.displayCustomSwitch(paymentCard.isSelected)
+                binding.toggle.displayCustomSwitch(paymentCard.isSelected!!)
             } else {
+                binding.toggle.isChecked = true
+                paymentCard.isSelected = true
                 binding.toggle.displayCustomSwitch(true)
             }
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->

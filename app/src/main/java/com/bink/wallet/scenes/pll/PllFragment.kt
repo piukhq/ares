@@ -63,7 +63,14 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         viewModel.localPaymentCards.observeNonNull(this) {
             val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
-            it.forEach { card -> listPaymentCards.add(PllPaymentCardWrapper(card)) }
+            it.forEach { card ->
+                listPaymentCards.add(
+                    PllPaymentCardWrapper(
+                        card,
+                        card.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                    )
+                )
+            }
             adapter.paymentCards = listPaymentCards
             adapter.notifyDataSetChanged()
 
@@ -82,7 +89,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         binding.buttonDone.setOnClickListener {
             adapter.paymentCards?.forEach { card ->
-                if (card.isSelected && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                if (card.isSelected == true && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
                     runBlocking {
                         viewModel.membershipCard.value?.id?.toInt()?.let { it1 ->
                             card.paymentCard.id?.let { it2 ->
@@ -92,7 +99,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                             }
                         }
                     }
-                } else if (!card.isSelected && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                } else if (card.isSelected == false && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
                     runBlocking {
                         viewModel.unlinkPaymentCard(
                             card.paymentCard.id.toString(),
