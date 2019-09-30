@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.isLinkedToMembershipCard
@@ -28,7 +29,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
     }
 
     private var directions: NavDirections? = null
-
+    private var isAddJourney = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -39,7 +40,11 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 viewModel.membershipCard.value = membershipCard
                 viewModel.title.set(getString(R.string.pll_unlinked_title)).takeIf { membershipCard.payment_cards?.isNullOrEmpty()!! }
                     ?: viewModel.title.set(getString(R.string.pll_linked_title))
-
+                if (isAddJourney) {
+                    this@PllFragment.isAddJourney = isAddJourney
+                    binding.toolbar.navigationIcon = null
+                }
+                SharedPreferenceManager.isAddJourney = isAddJourney
             }
         }
 
@@ -52,7 +57,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 viewModel.getLocalPaymentCards()
             }
         }
-        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
+        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null, isAddJourney)
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

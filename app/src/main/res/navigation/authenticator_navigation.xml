@@ -372,6 +372,9 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="isAddJourney"
+                app:argType="boolean" />
         <action
                 android:id="@+id/pll_to_lcd"
                 app:destination="@+id/loyalty_card_detail_fragment"

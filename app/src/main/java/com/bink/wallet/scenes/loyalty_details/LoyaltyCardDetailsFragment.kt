@@ -27,7 +27,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -194,7 +193,7 @@ class LoyaltyCardDetailsFragment :
                     )
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
                     var linkedCards = 0
-                    viewModel.membershipCard.value?.payment_cards?.forEach { if(it.active_link) linkedCards++ }
+                    viewModel.membershipCard.value?.payment_cards?.forEach { if (it.active_link == true) linkedCards++ }
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
                         linkedCards,
@@ -205,7 +204,7 @@ class LoyaltyCardDetailsFragment :
                             viewModel.membershipCard.value?.let { it1 ->
                                 viewModel.membershipPlan.value?.let { it2 ->
                                     LoyaltyCardDetailsFragmentDirections.detailToPll(
-                                        it1, it2
+                                        it1, it2, false
                                     )
                                 }
 
@@ -244,7 +243,7 @@ class LoyaltyCardDetailsFragment :
                             viewModel.membershipCard.value?.let { it1 ->
                                 viewModel.membershipPlan.value?.let { it2 ->
                                     LoyaltyCardDetailsFragmentDirections.detailToPll(
-                                        it1, it2
+                                        it1, it2, false
                                     )
                                 }
 

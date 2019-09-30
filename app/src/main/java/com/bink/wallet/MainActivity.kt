@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
 import com.bink.wallet.network.ApiConstants
+import com.bink.wallet.scenes.pll.PllFragment
+import com.bink.wallet.scenes.pll.PllFragmentArgs
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
@@ -49,6 +52,11 @@ class MainActivity : AppCompatActivity() {
             }
             findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
+            }
+            findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_fragment -> {
+                if(!SharedPreferenceManager.isAddJourney){
+                    findNavController(R.id.main_fragment).popBackStack()
+                }
             }
             else -> super.onBackPressed()
         }

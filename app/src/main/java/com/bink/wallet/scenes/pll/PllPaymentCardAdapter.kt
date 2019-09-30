@@ -12,7 +12,7 @@ import com.bink.wallet.utils.isLinkedToMembershipCard
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
-    var paymentCards: List<PllPaymentCardWrapper>? = null
+    var paymentCards: List<PllPaymentCardWrapper>? = null, var isAddJourney: Boolean?
 ) :
     RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
 
@@ -37,10 +37,14 @@ class PllPaymentCardAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bindCard(paymentCard: PllPaymentCardWrapper) {
             binding.paymentCard = paymentCard
-            binding.toggle.isChecked =
-                paymentCard.paymentCard.isLinkedToMembershipCard(membershipCard!!)
-            paymentCard.isSelected = binding.toggle.isChecked
-            binding.toggle.displayCustomSwitch(paymentCard.isSelected)
+            if(isAddJourney == false) {
+                binding.toggle.isChecked =
+                    paymentCard.paymentCard.isLinkedToMembershipCard(membershipCard!!)
+                paymentCard.isSelected = binding.toggle.isChecked
+                binding.toggle.displayCustomSwitch(paymentCard.isSelected)
+            } else {
+                binding.toggle.displayCustomSwitch(true)
+            }
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 paymentCard.isSelected = isChecked
                 binding.toggle.displayCustomSwitch(isChecked)

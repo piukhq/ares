@@ -49,8 +49,6 @@ val viewModelModules = module {
     single { provideLoyaltyCardDetailsRepository(get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
-    viewModel { PllViewModel() }
-
     viewModel { PllEmptyViewModel() }
 
     viewModel { MaximisedBarcodeViewModel() }
