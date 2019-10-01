@@ -91,6 +91,7 @@ android {
         }
         external {
             applicationIdSuffix ".external"
+            signingConfig signingConfigs.binkSigningConfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -101,6 +102,7 @@ android {
         mr {
             debuggable true
             applicationIdSuffix ".mr"
+            signingConfig signingConfigs.binkSigningConfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -111,6 +113,8 @@ android {
         nightly {
             debuggable true
             applicationIdSuffix ".nightly"
+            signingConfig signingConfigs.binkSigningConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
