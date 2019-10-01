@@ -42,16 +42,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             }
         }
         binding.paymentCardContainer.setOnClickListener {
-            val action = AddFragmentDirections.addToTermsAndConditions(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    getString(R.string.terms_and_conditions_title),
-                    getString(R.string.terms_and_conditions_text),
-                    getString(R.string.accept_button_text),
-                    getString(R.string.decline_button_text)
-                )
-            )
-            findNavController().navigateIfAdded(this, action)
+            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
         }
     }
 }

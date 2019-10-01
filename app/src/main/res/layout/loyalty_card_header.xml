@@ -11,7 +11,7 @@
         <androidx.cardview.widget.CardView
                 android:id="@+id/brand_image"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/loyalty_details_brand_image_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 app:cardCornerRadius="@dimen/margin_padding_size_extra_small"
@@ -24,7 +24,7 @@
             <ImageView
                     android:id="@+id/image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:scaleType="fitXY"
                     tools:ignore="ContentDescription" />
         </androidx.cardview.widget.CardView>
