@@ -6,10 +6,7 @@ import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
 import com.bink.wallet.network.ApiConstants
-import com.bink.wallet.scenes.pll.PllFragment
-import com.bink.wallet.scenes.pll.PllFragmentArgs
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics

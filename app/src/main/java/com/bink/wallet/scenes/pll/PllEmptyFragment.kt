@@ -22,8 +22,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     override val layoutRes: Int
         get() = R.layout.fragment_pll_empty
 
-    private lateinit var currentMembershipCard: MembershipCard
-    private lateinit var currentMembershipPlan: MembershipPlan
+    private var currentMembershipCard: MembershipCard? = null
+    private var currentMembershipPlan: MembershipPlan? = null
 
     override val viewModel: PllEmptyViewModel by viewModel()
 
@@ -31,30 +31,40 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         super.onActivityCreated(savedInstanceState)
 
         arguments.let {
-            currentMembershipCard =
-                it?.let { it }?.let { it1 -> PllEmptyFragmentArgs.fromBundle(it1).membershipCard }!!
-            currentMembershipPlan =
-                it.let { it }.let { it1 -> PllEmptyFragmentArgs.fromBundle(it1).membershipPlan }
-        }
+            if (it?.let { it1 ->
+                    PllEmptyFragmentArgs.fromBundle(it1).membershipCard
+                } != null) {
+                currentMembershipCard =
+                    it.let { it }.let { it1 ->
+                        PllEmptyFragmentArgs.fromBundle(it1).membershipCard
+                    }
+                currentMembershipPlan =
+                    it.let { it }.let { it1 -> PllEmptyFragmentArgs.fromBundle(it1).membershipPlan }
+            }
 
-        binding.membershipPlan = currentMembershipPlan
+            binding.membershipPlan = currentMembershipPlan
 
-        binding.buttonDone.setOnClickListener {
-            val directions =
-                PllEmptyFragmentDirections.pllEmptyToDetail(
-                    currentMembershipPlan, currentMembershipCard
+            binding.buttonDone.setOnClickListener {
+                val directions =
+                    currentMembershipCard?.let { it1 ->
+                        currentMembershipPlan?.let { it2 ->
+                            PllEmptyFragmentDirections.pllEmptyToDetail(
+                                it2, it1
+                            )
+                        }
+                    }
+                directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+            }
+
+            binding.buttonAddPaymentCard.setOnClickListener {
+
+                //TODO PCD is not implemented yet, for moment a dialog is displayed -> AB20-35(CTA change)
+
+                context?.displayModalPopup(
+                    getString(R.string.missing_destination_dialog_title),
+                    getString(R.string.not_implemented_yet_text)
                 )
-            findNavController().navigateIfAdded(this, directions)
-        }
-
-        binding.buttonAddPaymentCard.setOnClickListener {
-
-            //TODO PCD is not implemented yet, for moment a dialog is displayed -> AB20-35(CTA change)
-
-            context?.displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            }
         }
     }
 }

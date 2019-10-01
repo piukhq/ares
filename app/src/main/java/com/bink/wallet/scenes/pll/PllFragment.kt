@@ -52,24 +52,42 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             viewModel.getPaymentCards()
         }
 
+        binding.toolbar.setNavigationOnClickListener {
+            val directions = viewModel.membershipCard.value?.let { it1 ->
+                viewModel.membershipPlan.value?.let { it2 ->
+                    PllFragmentDirections.pllToLcd(
+                        it2,
+                        it1
+                    )
+                }
+            }
+            directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+        }
+
         viewModel.paymentCards.observeNonNull(this) {
             runBlocking {
                 viewModel.getLocalPaymentCards()
             }
         }
-        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null, isAddJourney)
+        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null)
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         viewModel.localPaymentCards.observeNonNull(this) {
             val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
             it.forEach { card ->
+                val isSelected = if (isAddJourney) {
+                    true
+                } else {
+                    card.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                }
                 listPaymentCards.add(
                     PllPaymentCardWrapper(
                         card,
-                        card.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                        isSelected
                     )
                 )
+
             }
             adapter.paymentCards = listPaymentCards
             adapter.notifyDataSetChanged()

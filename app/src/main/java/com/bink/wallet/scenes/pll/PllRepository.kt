@@ -53,7 +53,6 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCardDao.updatePaymentCard(paymentCardDao.findPaymentCardById(paymentCardId))
                     paymentCard.value = response
                 } catch (e: Throwable) {
                     linkError.value = e
@@ -69,7 +68,6 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCardDao.updatePaymentCard(paymentCardDao.findPaymentCardById(paymentCardId))
                     unlinkedBody.value = response
                 } catch (e: Throwable) {
                     unlinkError.value = e

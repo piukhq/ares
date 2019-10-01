@@ -31,4 +31,5 @@ object SharedPreferenceManager {
             it.putBoolean(IS_ADD_JOURNEY.first, value)
         }
 
+
 }

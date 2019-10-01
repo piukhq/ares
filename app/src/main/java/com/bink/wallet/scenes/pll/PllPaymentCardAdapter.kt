@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.utils.isLinkedToMembershipCard
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
-    var paymentCards: List<PllPaymentCardWrapper>? = null, var isAddJourney: Boolean?
+    var paymentCards: List<PllPaymentCardWrapper>? = null
 ) :
     RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
 
@@ -37,16 +36,10 @@ class PllPaymentCardAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bindCard(paymentCard: PllPaymentCardWrapper) {
             binding.paymentCard = paymentCard
-            if(isAddJourney == false) {
-                binding.toggle.isChecked =
-                    paymentCard.paymentCard.isLinkedToMembershipCard(membershipCard!!)
-                paymentCard.isSelected = binding.toggle.isChecked
+
+            binding.toggle.isChecked = paymentCard.isSelected!!
                 binding.toggle.displayCustomSwitch(paymentCard.isSelected!!)
-            } else {
-                binding.toggle.isChecked = true
-                paymentCard.isSelected = true
-                binding.toggle.displayCustomSwitch(true)
-            }
+
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 paymentCard.isSelected = isChecked
                 binding.toggle.displayCustomSwitch(isChecked)

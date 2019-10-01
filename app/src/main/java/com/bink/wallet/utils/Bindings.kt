@@ -30,8 +30,8 @@ import kotlinx.android.parcel.Parcelize
 import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(item: MembershipPlan) {
-    if (item.images != null && item.images.isNotEmpty())
+fun ImageView.loadImage(item: MembershipPlan?) {
+    if (item?.images != null && item.images.isNotEmpty())
         Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
 }
 
@@ -93,9 +93,9 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
 }
 
 @BindingAdapter("membershipPlan")
-fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
+fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     binding.brandImage.loadImage(plan)
-    if (plan.account?.plan_description != null) {
+    if (plan?.account?.plan_description != null) {
         binding.headerWrapper.setOnClickListener {
             context.displayModalPopup(
                 resources.getString(R.string.plan_description),
@@ -103,7 +103,7 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
             )
         }
     }
-    plan.account?.plan_name_card?.let {
+    plan?.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
     }

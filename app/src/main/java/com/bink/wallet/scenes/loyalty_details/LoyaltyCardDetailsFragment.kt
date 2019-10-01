@@ -27,6 +27,10 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import android.R.attr.button
+import android.os.CountDownTimer
+
+
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -180,8 +184,12 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
-            if (viewModel.accountStatus.value != null) {
+            if (viewModel.accountStatus.value != null && viewModel.paymentCards.value != null) {
                 setLoadingState(false)
+            } else {
+                runBlocking {
+                    viewModel.fetchPaymentCards()
+                }
             }
             when(status){
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
@@ -238,6 +246,7 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
+
                     binding.linkedWrapper.setOnClickListener {
                         val directions =
                             viewModel.membershipCard.value?.let { it1 ->
