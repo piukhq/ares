@@ -10,8 +10,10 @@ import kotlinx.coroutines.*
 class LoginRepository(private val apiService: ApiService,
                       private val loginDataDao: LoginDataDao
 ) {
+    companion object {
+        val DEFAULT_LOGIN_ID = "0"
+    }
     var loginEmail: String = "Bink20iteration1@testbink.com"
-    private val DEFAULT_LOGIN_ID = "0"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {

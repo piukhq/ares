@@ -17,6 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.utils.ENVIRONMENTS_TO_DEBUG
 import com.bink.wallet.utils.observeNonNull
 import kotlinx.coroutines.*
@@ -114,7 +115,7 @@ class SettingsFragment :
                 binding.progressSpinner.visibility = View.VISIBLE
 
                 val data = MutableLiveData<LoginData>()
-                data.value = LoginData("0", email)
+                data.value = LoginData(DEFAULT_LOGIN_ID, email)
                 viewModel.storeLoginData(email)
                 viewModel.loginData.observe(this, Observer {
                     if (viewModel.loginData.value!!.email.equals(email)) {
