@@ -9,13 +9,13 @@ import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.observeNonNull
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kotlinx.coroutines.CoroutineScope
@@ -47,18 +47,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun storeSecret() {
         val data = Base64.decode(getNativeKey(ApiConstants.BASE_URL), Base64.URL_SAFE)
+        val loginData = MutableLiveData<LoginData>()
         try {
-            val loginData = MutableLiveData<LoginData>()
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     loginRepository.retrieveStoredLoginData(loginData)
                 }
             }
-            loginData.observe(this, Observer {
+            loginData.observeNonNull(this) {
                 LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECRET, String(data), this)
                 val currentToken = JwtCreator(loginRepository).createJwt(this)
                 LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_JWT, currentToken, this)
-            })
+            }
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
         }

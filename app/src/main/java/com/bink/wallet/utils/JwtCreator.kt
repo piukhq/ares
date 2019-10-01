@@ -11,33 +11,43 @@ class JwtCreator(private val repo: LoginRepository) {
 
     fun createJwt(context: Context): String {
         val header = JSONObject()
-        header.put("alg", "HS512")
-        header.put("typ", "JWT")
+        header.put(JWT_HEADER_NAME_ALGORYTHM, JWT_HEADER_VALUE_ALGORYTHM)
+        header.put(JWT_HEADER_NAME_TYPE,      JWT_HEADER_VALUE_TYPE)
 
         val payload = JSONObject()
-        payload.put("organisation_id", "Loyalty Angels")
-        payload.put("bundle_id", "com.bink.bink20dev")
-        payload.put("user_id", repo.loginEmail)
-        payload.put("property_id", "not currently used for authentication")
-        payload.put("iat", System.currentTimeMillis() / 1000)
+        payload.put(JWT_PAYLOAD_TYPE_ORGANISATION, JWT_PAYLOAD_VALUE_ORGANISATION)
+        payload.put(JWT_PAYLOAD_TYPE_BUNDLE,       JWT_PAYLOAD_VALUE_BUNDLE)
+        payload.put(JWT_PAYLOAD_TYPE_USER,         repo.loginEmail)
+        payload.put(JWT_PAYLOAD_TYPE_PROPERTY,     JWT_PAYLOAD_VALUE_PROPERTY)
+        payload.put(JWT_PAYLOAD_TYPE_TIME,         System.currentTimeMillis() / 1000)
 
-        val token = "${Base64.encodeToString(
-            header.toString().toByteArray(), Base64.URL_SAFE
-        )}.${Base64.encodeToString(payload.toString().toByteArray(), Base64.URL_SAFE)}".replace("=", "")
-            .replace("\n", "")
+        val token = String.format("%s.%s",
+            Base64.encodeToString(
+                header.toString().toByteArray(),
+                Base64.URL_SAFE
+            ),
+            Base64.encodeToString(
+                payload.toString().toByteArray(),
+                Base64.URL_SAFE))
+            .headerTidy()
 
-        val hmac = Mac.getInstance("HmacSHA512")
+        val hmac = Mac.getInstance(HMAC_TYPE)
 
         val secretKey = SecretKeySpec(
-            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_SECRET, context)?.toByteArray(),
-            "HmacSHA512"
+            LocalStoreUtils.getAppSharedPref(
+                LocalStoreUtils.KEY_SECRET,
+                context)?.toByteArray(),
+            HMAC_TYPE
         )
 
         hmac.init(secretKey)
 
         val signature =
-            Base64.encodeToString(hmac.doFinal(token.toByteArray()), Base64.URL_SAFE).replace("=", "").replace("\n", "")
+            Base64.encodeToString(
+                hmac.doFinal(token.toByteArray()),
+                Base64.URL_SAFE)
+                .headerTidy()
 
-        return "Bearer $token.$signature".replace("=", "").replace("\n", "")
+        return "Bearer $token.$signature".headerTidy()
     }
 }

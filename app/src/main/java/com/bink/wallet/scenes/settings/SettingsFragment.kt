@@ -17,6 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.utils.ENVIRONMENTS_TO_DEBUG
 import com.bink.wallet.utils.observeNonNull
 import kotlinx.coroutines.*
 
@@ -30,7 +31,7 @@ class SettingsFragment :
             .build()
     }
 
-    private val buildTypes: List<String> = listOf("debug", "beta", "mr", "nightly")
+    private val buildTypes: List<String> = ENVIRONMENTS_TO_DEBUG
 
     override val layoutRes: Int
         get() = R.layout.settings_fragment
@@ -106,7 +107,7 @@ class SettingsFragment :
     fun openEmailDialog(item: SettingsItem) {
         if (item.type == SettingsItemType.EMAIL_ADDRESS) {
             val dialog = SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
-            dialog.newEmail.observe(this, Observer {
+            dialog.newEmail.observeNonNull(this) {
                 dialog.dismiss()
                 val email = dialog.newEmail.value!!
 
@@ -120,7 +121,7 @@ class SettingsFragment :
                         restartApp()
                     }
                 })
-            })
+            }
             dialog.show()
         }
     }
