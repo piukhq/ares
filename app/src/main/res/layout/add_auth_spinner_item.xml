@@ -19,6 +19,10 @@
                 name="authFields"
                 type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
 
+        <variable
+                name="registrationFields"
+                type="com.bink.wallet.model.response.membership_plan.RegistrationFields" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +43,7 @@
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
                 app:enrolField="@{enrolFields}"
+                app:registrationField="@{registrationFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -54,6 +59,7 @@
                 app:addField="@{addFields}"
                 app:authField="@{authFields}"
                 app:enrolField="@{enrolFields}"
+                app:registrationField="@{registrationFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />

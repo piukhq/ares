@@ -15,10 +15,7 @@ import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
-import com.bink.wallet.model.response.membership_plan.AddFields
-import com.bink.wallet.model.response.membership_plan.AuthoriseFields
-import com.bink.wallet.model.response.membership_plan.EnrolFields
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.*
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
@@ -113,11 +110,12 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
 }
 
 
-@BindingAdapter("addField", "authField", "enrolField")
+@BindingAdapter("addField", "authField", "enrolField", "registrationField")
 fun TextView.title(
     addFields: AddFields?,
     authoriseFields: AuthoriseFields?,
-    enrolFields: EnrolFields?
+    enrolFields: EnrolFields?,
+    registrationFields: RegistrationFields?
 ) {
     if (!addFields?.column.isNullOrEmpty()) {
         text = addFields?.column
@@ -128,13 +126,17 @@ fun TextView.title(
     if (!enrolFields?.column.isNullOrEmpty()) {
         this.text = enrolFields?.column
     }
+    if (!registrationFields?.column.isNullOrEmpty()) {
+        this.text = registrationFields?.column
+    }
 }
 
-@BindingAdapter("addField", "authField", "enrolField")
+@BindingAdapter("addField", "authField", "enrolField", "registrationField")
 fun Spinner.setValues(
     addFields: AddFields?,
     authoriseFields: AuthoriseFields?,
-    enrolFields: EnrolFields?
+    enrolFields: EnrolFields?,
+    registrationFields: RegistrationFields?
 ) {
     if (addFields != null && !addFields.choice.isNullOrEmpty())
         adapter = ArrayAdapter(
@@ -153,6 +155,12 @@ fun Spinner.setValues(
             this.context,
             android.R.layout.simple_spinner_dropdown_item,
             enrolFields.choice
+        )
+    if (registrationFields != null && !registrationFields.choice.isNullOrEmpty())
+        this.adapter = ArrayAdapter(
+            this.context,
+            android.R.layout.simple_spinner_dropdown_item,
+            registrationFields.choice
         )
 }
 

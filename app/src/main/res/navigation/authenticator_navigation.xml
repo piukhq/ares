@@ -129,6 +129,29 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
 
+        <action
+                android:id="@+id/add_join_to_ghost"
+                app:destination="@id/ghost_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/ghost_fragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.GhostCardFragment">
+
+        <argument
+                android:name="currentMembershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard"
+                app:nullable="true" />
+
     </fragment>
 
     <fragment

@@ -6,11 +6,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class RegistrationFields (
-
-	val column : String?,
-	val validation : String?,
-	val common_name : String?,
-	val type : Int?,
-	val choice : List<String>?
+data class RegistrationFields(
+    val column: String?,
+    val validation: String?,
+    val common_name: String?,
+    val type: Int?,
+    val choice: List<String>?,
+    val description: String?
 ) : Parcelable

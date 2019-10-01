@@ -19,6 +19,10 @@
                 name="authFields"
                 type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
 
+        <variable
+                name="registrationFields"
+                type="com.bink.wallet.model.response.membership_plan.RegistrationFields" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

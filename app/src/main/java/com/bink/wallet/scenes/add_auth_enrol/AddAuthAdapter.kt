@@ -21,6 +21,7 @@ import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.EnrolFields
+import com.bink.wallet.model.response.membership_plan.RegistrationFields
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.FieldViewType
@@ -51,6 +52,7 @@ class AddAuthAdapter(
         return when (viewType / 10) {
             FieldViewType.ADD.type -> AddFieldHolder(binding, account)
             FieldViewType.AUTH.type -> AuthFieldHolder(binding, account)
+            FieldViewType.REGISTER.type -> RegistrationHolder(binding, account)
             else -> EnrolFieldHolder(binding, account)
         }
     }
@@ -60,6 +62,7 @@ class AddAuthAdapter(
             is AddFieldHolder -> brands[position].let { holder.bind(it as AddFields) }
             is AuthFieldHolder -> brands[position].let { holder.bind(it as AuthoriseFields) }
             is EnrolFieldHolder -> brands[position].let { holder.bind(it as EnrolFields) }
+            is RegistrationHolder -> brands[position].let { holder.bind(it as RegistrationFields) }
         }
     }
 
@@ -71,7 +74,109 @@ class AddAuthAdapter(
         return when (brands[position]) {
             is AddFields -> FieldViewType.ADD.type * 10 + (brands[position] as AddFields).type!!
             is AuthoriseFields -> FieldViewType.AUTH.type * 10 + (brands[position] as AuthoriseFields).type!!
+            is RegistrationFields -> FieldViewType.REGISTER.type * 10 + (brands[position] as RegistrationFields).type!!
             else -> FieldViewType.ENROL.type * 10 + (brands[position] as EnrolFields).type!!
+        }
+    }
+
+    class RegistrationHolder(val binding: ViewDataBinding, val account: Account) :
+        BaseViewHolder<RegistrationFields>(binding) {
+
+        private var text: AppCompatEditText? = null
+        private var switch: CheckBox? = null
+        private var spinner: Spinner? = null
+
+        init {
+            text = itemView.findViewById(R.id.content_add_auth_text)
+            switch = itemView.findViewById(R.id.content_add_auth_switch)
+            spinner = itemView.findViewById(R.id.content_add_auth_spinner)
+        }
+
+        override fun bind(item: RegistrationFields) {
+            val currentAddField =
+                com.bink.wallet.model.request.membership_card.AddFields(item.column, "")
+            when (binding) {
+                is AddAuthTextItemBinding -> {
+                    binding.registrationFields = item
+
+                    text?.hint = item.description
+                    text?.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(p0: Editable?) {
+                        }
+
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(
+                            currentText: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                            currentAddField.value = currentText.toString()
+                        }
+                    })
+
+                    text?.setOnFocusChangeListener { _, isFocus ->
+                        if (!isFocus)
+                            try {
+                                if (!UtilFunctions.isValidField(
+                                        item.validation, currentAddField.value
+                                    )
+                                )
+                                    text?.error = text?.resources?.getString(
+                                        R.string.add_auth_error_message,
+                                        item.column
+                                    )
+                            } catch (ex: Exception) {
+                                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+                            }
+                    }
+                }
+                is AddAuthSpinnerItemBinding -> {
+                    binding.registrationFields = item
+
+                    currentAddField.value = item.choice?.get(0)
+
+                    spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                        }
+
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            currentAddField.value = item.choice?.get(position)
+                        }
+
+                    }
+                    spinner?.isFocusable = false
+                }
+                is AddAuthSwitchItemBinding -> {
+                    binding.registrationFields = item
+
+                    switch?.text = item.description
+
+                    currentAddField.value = FALSE_TEXT
+
+                    switch?.setOnCheckedChangeListener { _, isChecked ->
+                        currentAddField.value = isChecked.toString()
+                    }
+                    switch?.isFocusable = false
+
+                }
+            }
+            account.add_fields?.add(currentAddField)
+
+            binding.executePendingBindings()
         }
     }
 
