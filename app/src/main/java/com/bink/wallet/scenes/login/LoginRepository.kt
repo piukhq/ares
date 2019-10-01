@@ -11,6 +11,7 @@ class LoginRepository(private val apiService: ApiService,
                       private val loginDataDao: LoginDataDao
 ) {
     var loginEmail: String = "Bink20iteration1@testbink.com"
+    private val DEFAULT_LOGIN_ID = "0"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -45,7 +46,7 @@ class LoginRepository(private val apiService: ApiService,
                         loginEmail = response.email
                         updateLiveData(loginData, response)
                     } else {
-                        updateLiveData(loginData, LoginData("0", loginEmail))
+                        updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, loginEmail))
                         storeLoginData(loginEmail, loginData)
                     }
                 } catch (e: Throwable) {
@@ -60,9 +61,9 @@ class LoginRepository(private val apiService: ApiService,
             withContext(Dispatchers.Default) {
                 try {
                     runBlocking {
-                        var pos = loginDataDao.store(LoginData("0", email))
+                        val pos = loginDataDao.store(LoginData(DEFAULT_LOGIN_ID, email))
                         if (pos >= 0) {
-                            updateLiveData(loginData, LoginData("0", email))
+                            updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, email))
                             loginEmail = email
                         }
                     }

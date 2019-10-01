@@ -28,8 +28,7 @@ class SettingsEmailDialog(context: Context, private val initialEmail: String):
         setView(binding.root)
         setButton(BUTTON_POSITIVE, context.getString(R.string.ok))
             { _, _ ->
-                val newEmail = binding.email
-                if (!setEmail(newEmail!!)) {
+                if (!setEmail(binding.email!!)) {
                     binding.textInputLayout.error =
                         context.getString(R.string.please_enter_valid_email)
                 }

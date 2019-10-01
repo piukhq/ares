@@ -30,7 +30,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         viewModel.retrieveStoredLoginData()
         viewModel.loginData.observe(this, Observer {
-            if (verifyAvailableNetwork(activity!!)) {
+            if (verifyAvailableNetwork(requireActivity())) {
                 viewModel.authenticate()
             } else {
                 showNoInternetConnectionDialog()

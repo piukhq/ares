@@ -13,11 +13,11 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.settings_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.utils.observeNonNull
 import kotlinx.coroutines.*
 
 class SettingsFragment :
@@ -38,7 +38,7 @@ class SettingsFragment :
     override val viewModel: SettingsViewModel by viewModel()
 
     override fun onChanged(value: ListHolder<SettingsItem>?) {
-        settings_container.adapter?.let {
+        binding.settingsContainer.adapter?.let {
             value?.applyChange(it)
         }
     }
@@ -76,13 +76,13 @@ class SettingsFragment :
                 viewModel.itemsList,
                 itemClickListener = { openEmailDialog(it) })
 
-            settings_container.apply {
+            binding.settingsContainer.apply {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = settingsAdapter
             }
 
             viewModel.retrieveStoredLoginData()
-            viewModel.loginData.observe(this, Observer {
+            viewModel.loginData.observeNonNull(this) {
                 val items = viewModel.itemsList.value!!
                 for (i in 0 until items.list.size) {
                     val item = items.list[i]
@@ -90,12 +90,12 @@ class SettingsFragment :
                         val newItem =
                             SettingsItem(
                                 item.title,
-                                viewModel.loginData.value!!.email!!,
+                                it.email!!,
                                 item.type)
                         viewModel.itemsList.setItem(i, newItem)
                     }
                 }
-            })
+            }
             viewModel.itemsList.observe(this, this)
         }
     }
@@ -110,7 +110,7 @@ class SettingsFragment :
                 dialog.dismiss()
                 val email = dialog.newEmail.value!!
 
-                progress_spinner.visibility = View.VISIBLE
+                binding.progressSpinner.visibility = View.VISIBLE
 
                 val data = MutableLiveData<LoginData>()
                 data.value = LoginData("0", email)
