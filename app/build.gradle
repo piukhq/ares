@@ -111,6 +111,7 @@ android {
         nightly {
             debuggable true
             applicationIdSuffix ".nightly"
+            signingConfig signingConfigs.binkSigningConfig
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"

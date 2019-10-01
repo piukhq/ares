@@ -105,7 +105,7 @@ class SettingsFragment :
 
     fun openEmailDialog(item: SettingsItem) {
         if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-            val dialog = SettingsEmailDialog(context!!, viewModel.loginData.value!!.email!!)
+            val dialog = SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
             dialog.newEmail.observe(this, Observer {
                 dialog.dismiss()
                 val email = dialog.newEmail.value!!
