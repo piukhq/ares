@@ -22,7 +22,6 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
-import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -99,7 +98,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (!viewModel.localCardsReceived.hasObservers())
                     viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
                         binding.swipeLayout.isRefreshing = false
-                        swipe_layout.isEnabled = true
+                        binding.swipeLayout.isEnabled = true
                         if (cardsReceived && plansReceived) {
                             binding.progressSpinner.visibility = View.GONE
                             binding.loyaltyWalletList.apply {
