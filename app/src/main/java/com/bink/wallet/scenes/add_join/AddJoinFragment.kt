@@ -32,16 +32,17 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         val currentMembershipPlan = args.currentMembershipPlan
         binding.item = currentMembershipPlan
 
-        if (args.currentMembershipPlan.feature_set?.card_type == 0) {
-            binding.addJoinViewImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_view_inactive))
-            binding.addJoinViewDescription.text =
-                getString(R.string.add_join_inactive_view_description)
-        }
-
-        if (args.currentMembershipPlan.feature_set?.card_type != 2) {
-            binding.addJoinLinkImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
-            binding.addJoinLinkDescription.text =
-                getString(R.string.add_join_inactive_link_description)
+        when (currentMembershipPlan.feature_set?.card_type) {
+            0 -> {
+                binding.addJoinViewImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_view_inactive))
+                binding.addJoinViewDescription.text =
+                    getString(R.string.add_join_inactive_view_description)
+            }
+            2 -> {
+                binding.addJoinLinkImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
+                binding.addJoinLinkDescription.text =
+                    getString(R.string.add_join_inactive_link_description)
+            }
         }
 
         binding.addCardButton.setOnClickListener {
@@ -71,5 +72,4 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             findNavController().navigateIfAdded(this, action)
         }
     }
-
 }
