@@ -4,12 +4,12 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.GenericModalFragmentBinding
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,19 +48,11 @@ open class GenericModalFragment :
             onSecondButtonClicked()
         }
 
-        if (viewModel.destinationLiveData.hasActiveObservers()) {
-            viewModel.destinationLiveData.removeObservers(this)
-        } else {
-            viewModel.destinationLiveData.observe(this, Observer {
-                goTo(it)
-            })
+        viewModel.destinationLiveData.observeNonNull(this) {
+            goTo(it)
         }
-        if (viewModel.toolbarIconLiveData.hasActiveObservers()) {
-            viewModel.toolbarIconLiveData.removeObservers(this)
-        } else {
-            viewModel.toolbarIconLiveData.observe(this, Observer {
-                binding.toolbar.setNavigationIcon(it)
-            })
+        viewModel.toolbarIconLiveData.observeNonNull(this) {
+            binding.toolbar.setNavigationIcon(it)
         }
     }
 
