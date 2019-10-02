@@ -30,6 +30,4 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putBoolean(IS_ADD_JOURNEY.first, value)
         }
-
-
 }

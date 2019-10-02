@@ -93,10 +93,10 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         binding.footerAbout.setOnClickListener {
-            viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
+            viewModel.membershipPlan.value?.account?.plan_description?.let { membershipPlan ->
                 context?.displayModalPopup(
                     "",
-                    it1
+                    membershipPlan
                 )
             }
         }
@@ -209,10 +209,10 @@ class LoyaltyCardDetailsFragment :
                     )
                     binding.linkedWrapper.setOnClickListener {
                         val directions =
-                            viewModel.membershipCard.value?.let { it1 ->
-                                viewModel.membershipPlan.value?.let { it2 ->
+                            viewModel.membershipCard.value?.let { membershipCard ->
+                                viewModel.membershipPlan.value?.let { membershipPlan ->
                                     LoyaltyCardDetailsFragmentDirections.detailToPll(
-                                        it1, it2, false
+                                        membershipCard, membershipPlan, false
                                     )
                                 }
 
@@ -249,10 +249,10 @@ class LoyaltyCardDetailsFragment :
 
                     binding.linkedWrapper.setOnClickListener {
                         val directions =
-                            viewModel.membershipCard.value?.let { it1 ->
-                                viewModel.membershipPlan.value?.let { it2 ->
+                            viewModel.membershipCard.value?.let { membershipCard ->
+                                viewModel.membershipPlan.value?.let { membershipPlan ->
                                     LoyaltyCardDetailsFragmentDirections.detailToPll(
-                                        it1, it2, false
+                                        membershipCard, membershipPlan, false
                                     )
                                 }
 

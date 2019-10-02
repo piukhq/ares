@@ -53,15 +53,15 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            val directions = viewModel.membershipCard.value?.let { it1 ->
-                viewModel.membershipPlan.value?.let { it2 ->
+            val directions = viewModel.membershipCard.value?.let { membershipCard ->
+                viewModel.membershipPlan.value?.let { membershipPlan ->
                     PllFragmentDirections.pllToLcd(
-                        it2,
-                        it1
+                        membershipPlan,
+                        membershipCard
                     )
                 }
             }
-            directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+            directions?.let { directtions -> findNavController().navigateIfAdded(this, directions) }
         }
 
         viewModel.paymentCards.observeNonNull(this) {
@@ -96,10 +96,10 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         viewModel.membershipCard.observeNonNull(this) {
             directions =
-                viewModel.membershipCard.value?.let { it1 ->
-                    viewModel.membershipPlan.value?.let { it2 ->
+                viewModel.membershipCard.value?.let { membershipCard ->
+                    viewModel.membershipPlan.value?.let { membershipPlan ->
                         PllFragmentDirections.pllToLcd(
-                            it2, it1
+                            membershipPlan, membershipCard
                         )
                     }
                 }
@@ -109,15 +109,15 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             adapter.paymentCards?.forEach { card ->
                 if (card.isSelected == true && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
                     runBlocking {
-                        viewModel.membershipCard.value?.id?.toInt()?.let { it1 ->
-                            card.paymentCard.id?.let { it2 ->
+                        viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
+                            card.paymentCard.id?.let { paymentCard ->
                                 viewModel.linkPaymentCard(
-                                    it1.toString(), it2.toString()
+                                    membershipCard.toString(), paymentCard.toString()
                                 )
                             }
                         }
                     }
-                } else if (card.isSelected == false && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                } else if (viewModel.membershipCard.value != null && card.isSelected == false && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
                     runBlocking {
                         viewModel.unlinkPaymentCard(
                             card.paymentCard.id.toString(),
@@ -127,10 +127,10 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
 
                 if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                    directions?.let { it1 ->
+                    directions?.let { directions ->
                         findNavController().navigateIfAdded(
                             this@PllFragment,
-                            it1
+                            directions
                         )
                     }
                 }
@@ -145,10 +145,10 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                     getString(R.string.ok)
                 ) { _, _ ->
                     if (findNavController().currentDestination?.id == R.id.pll_fragment)
-                        directions?.let { it1 ->
+                        directions?.let { directions ->
                             findNavController().navigateIfAdded(
                                 this@PllFragment,
-                                it1
+                                directions
                             )
                         }
                 }
