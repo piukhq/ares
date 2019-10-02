@@ -62,16 +62,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
+            <Button
                     android:id="@+id/first_button"
-                    style="@style/StandardModalButton"
+                    style="@style/RoundedGradientButton"
+                    android:layout_width="match_parent"
                     android:background="@drawable/rounded_corners_gradient_button"
                     android:text="@string/accept_button_text"
                     android:textColor="@color/pale_grey" />
 
-            <TextView
+            <Button
                     android:id="@+id/second_button"
-                    style="@style/StandardModalButton"
+                    style="@style/RoundedGradientButton"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:background="@color/white_transparent"
                     android:text="@string/decline_button_text"
                     android:textColor="@color/black" />
         </LinearLayout>

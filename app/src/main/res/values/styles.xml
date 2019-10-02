@@ -9,6 +9,8 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_padding_size_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_padding_size_extra_large</item>
     </style>
 
     <style name="CustomTextView" parent="Widget.AppCompat.TextView">
