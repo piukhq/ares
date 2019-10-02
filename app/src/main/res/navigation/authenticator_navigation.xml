@@ -194,7 +194,7 @@
 
     <fragment
             android:id="@+id/add_auth"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.AddAuthFragment">
+            android:name="com.bink.wallet.scenes.add_auth_enrol.SignUpFragment">
 
         <argument
                 android:name="currentMembershipPlan"

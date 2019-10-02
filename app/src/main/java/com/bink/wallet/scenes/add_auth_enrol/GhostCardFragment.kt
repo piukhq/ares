@@ -11,13 +11,15 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
+class GhostCardFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(requireActivity())
@@ -31,9 +33,9 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
 
-    private val args: AddAuthFragmentArgs by navArgs()
+    private val args: SignUpFragmentArgs by navArgs()
 
-    override val viewModel: AddAuthViewModel by viewModel()
+    override val viewModel: SignUpViewModel by viewModel()
 
     override fun onResume() {
         super.onResume()
@@ -59,9 +61,11 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        val addAuthFields: MutableList<Any>? = mutableListOf()
+        val addAuthFields: MutableList<Pair<PlanFields, com.bink.wallet.model.request.membership_card.PlanFields>>? =
+            mutableListOf()
 
-        val addAuthBoolean: MutableList<Any>? = mutableListOf()
+        val addAuthBoolean: MutableList<Pair<PlanFields, com.bink.wallet.model.request.membership_card.PlanFields>>? =
+            mutableListOf()
 
         if (currentMembershipCard != null) {
             if (currentMembershipPlan.feature_set?.has_points != null &&
@@ -94,15 +98,29 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
             }
         } else {
             currentMembershipPlan.account?.add_fields?.map {
+                it.typeOfField = TypeOfField.ADD
                 if (it.type == 3) {
-                    addAuthBoolean?.add(it)
+                    addAuthBoolean?.add(
+                        Pair(
+                            it, com.bink.wallet.model.request.membership_card.PlanFields(
+                                it.column, ""
+                            )
+                        )
+                    )
                 }
             }
         }
 
         currentMembershipPlan.account?.registration_fields?.map {
+            it.typeOfField = TypeOfField.REGISTRATION
             if (it.type == 3) {
-                addAuthBoolean?.add(it)
+                addAuthBoolean?.add(
+                    Pair(
+                        it, com.bink.wallet.model.request.membership_card.PlanFields(
+                            it.column, ""
+                        )
+                    )
+                )
             }
         }
 
@@ -115,7 +133,13 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
                     if (it.type != 3 &&
                         !it.column.equals(BARCODE_TEXT)
                     ) {
-                        addAuthFields?.add(it)
+                        addAuthFields?.add(
+                            Pair(
+                                it, com.bink.wallet.model.request.membership_card.PlanFields(
+                                    it.column, ""
+                                )
+                            )
+                        )
                     }
                 }
             }
@@ -124,19 +148,35 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
             if (it.type != 3 &&
                 !it.column.equals(BARCODE_TEXT)
             ) {
-                addAuthFields?.add(it)
+                addAuthFields?.add(
+                    Pair(
+                        it, com.bink.wallet.model.request.membership_card.PlanFields(
+                            it.column, ""
+                        )
+                    )
+                )
             }
         }
 
         addAuthBoolean?.map { addAuthFields?.add(it) }
 
-        val addRegisterFieldsRequest = Account(ArrayList(), ArrayList(), null)
+        val addRegisterFieldsRequest = Account()
+
+        addAuthBoolean?.map {
+
+            when (it.first.typeOfField) {
+                TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
+                TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
+                TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
+                else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+            }
+
+        }
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = AddAuthAdapter(
-                addAuthFields?.toList()!!,
-                addRegisterFieldsRequest
+            adapter = SignUpAdapter(
+                addAuthFields?.toList()!!
             )
         }
 
@@ -155,8 +195,7 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
                             currentMembershipCard
                         ) == LoginStatus.STATUS_LOGIN_FAILED
                     ) {
-                        viewModel.updateMembershipCard(
-                            currentMembershipCard,
+                        viewModel.createMembershipCard(
                             currentRequest
                         )
                     } else {
@@ -176,6 +215,22 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
             viewModel.membershipCardData.removeObservers(this)
         else
             viewModel.membershipCardData.observe(this, Observer {
+
+                val currentRequest = MembershipCardRequest(
+                    Account(
+                        null,
+                        null,
+                        null,
+                        addRegisterFieldsRequest.registration_fields
+                    ),
+                    currentMembershipPlan.id
+                )
+
+                viewModel.ghostMembershipCard(
+                    it,
+                    currentRequest
+                )
+
                 when (currentMembershipPlan.feature_set?.card_type) {
                     //TODO The condition is temporary removed for testing regarding to AB20-35(comment section)
 //                    0, 1 -> {
@@ -188,7 +243,7 @@ class GhostCardFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>
                     0, 1, 2 -> {
                         if (it.membership_transactions != null && it.membership_transactions?.isEmpty()!!) {
                             val directions =
-                                AddAuthFragmentDirections.addAuthToPllEmpty(
+                                SignUpFragmentDirections.addAuthToPllEmpty(
                                     currentMembershipPlan, it
                                 )
                             findNavController().navigateIfAdded(this, directions)

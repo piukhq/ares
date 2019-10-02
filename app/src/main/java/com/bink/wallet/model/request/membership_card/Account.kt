@@ -4,7 +4,15 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Account(
-    var add_fields: MutableList<AddFields>?,
-    var authorise_fields: MutableList<AuthoriseFields>?,
-    var enrol_fields: MutableList<EnrolFields>?
-)
+    var add_fields: MutableList<PlanFields>?,
+    var authorise_fields: MutableList<PlanFields>?,
+    var enrol_fields: MutableList<PlanFields>?,
+    var registration_fields: MutableList<PlanFields>?
+) {
+    constructor() : this(
+        ArrayList(),
+        ArrayList(),
+        ArrayList(),
+        ArrayList()
+    )
+}

@@ -14,11 +14,12 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
+class EnrolFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -28,7 +29,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
 
     private val args: EnrolFragmentArgs by navArgs()
 
-    override val viewModel: AddAuthViewModel by viewModel()
+    override val viewModel: SignUpViewModel by viewModel()
 
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
@@ -44,7 +45,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
             getString(R.string.enrol_description, currentMembershipPlan.account?.company_name)
         activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        val enrolFields: MutableList<Any>? = mutableListOf()
+        val enrolFields: MutableList<PlanFields>? = mutableListOf()
 
         binding.close.setOnClickListener {
             view?.hideKeyboard()
@@ -57,7 +58,7 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
 
         currentMembershipPlan.account?.enrol_fields?.map {
             if (it.type != 3 &&
-                !it.column.equals(AddAuthFragment.BARCODE_TEXT)
+                !it.column.equals(SignUpFragment.BARCODE_TEXT)
             ) {
                 enrolFields?.add(it)
             }
@@ -65,17 +66,17 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
 
         currentMembershipPlan.account?.enrol_fields?.map {
             if (it.type == 3 &&
-                !it.column.equals(AddAuthFragment.BARCODE_TEXT)
+                !it.column.equals(SignUpFragment.BARCODE_TEXT)
             ) {
                 enrolFields?.add(it)
             }
         }
 
-        val enrolFieldsRequest = Account(null, null, ArrayList())
+        val enrolFieldsRequest = Account(null, null, ArrayList(), null)
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = AddAuthAdapter(
+            adapter = SignUpAdapter(
                 enrolFields?.toList()!!,
                 enrolFieldsRequest
             )

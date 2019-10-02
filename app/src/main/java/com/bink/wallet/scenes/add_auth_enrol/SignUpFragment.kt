@@ -11,13 +11,14 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
+class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(requireActivity())
@@ -31,9 +32,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
 
-    private val args: AddAuthFragmentArgs by navArgs()
+    private val args: SignUpFragmentArgs by navArgs()
 
-    override val viewModel: AddAuthViewModel by viewModel()
+    override val viewModel: SignUpViewModel by viewModel()
 
     override fun onResume() {
         super.onResume()
@@ -59,9 +60,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        val addAuthFields: MutableList<Any>? = mutableListOf()
+        val planFields: MutableList<PlanFields>? = mutableListOf()
 
-        val addAuthBoolean: MutableList<Any>? = mutableListOf()
+        val planBooleanFields: MutableList<PlanFields>? = mutableListOf()
+
+
 
         if (currentMembershipCard != null) {
             if (currentMembershipPlan.feature_set?.has_points != null &&
@@ -95,14 +98,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         } else {
             currentMembershipPlan.account?.add_fields?.map {
                 if (it.type == 3) {
-                    addAuthBoolean?.add(it)
+                    planBooleanFields?.add(it)
                 }
             }
         }
 
         currentMembershipPlan.account?.authorise_fields?.map {
             if (it.type == 3) {
-                addAuthBoolean?.add(it)
+                planBooleanFields?.add(it)
             }
         }
 
@@ -115,7 +118,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     if (it.type != 3 &&
                         !it.column.equals(BARCODE_TEXT)
                     ) {
-                        addAuthFields?.add(it)
+                        planFields?.add(it)
                     }
                 }
             }
@@ -124,18 +127,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             if (it.type != 3 &&
                 !it.column.equals(BARCODE_TEXT)
             ) {
-                addAuthFields?.add(it)
+                planFields?.add(it)
             }
         }
 
-        addAuthBoolean?.map { addAuthFields?.add(it) }
+        planBooleanFields?.map { planFields?.add(it) }
 
-        val addAuthFieldsRequest = Account(ArrayList(), ArrayList(), null)
+        val addAuthFieldsRequest = Account(ArrayList(), ArrayList(), null, null)
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = AddAuthAdapter(
-                addAuthFields?.toList()!!,
+            adapter = SignUpAdapter(
+                planFields?.toList()!!,
                 addAuthFieldsRequest
             )
         }
@@ -188,7 +191,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     0, 1, 2 -> {
                         if (it.membership_transactions != null && it.membership_transactions?.isEmpty()!!) {
                             val directions =
-                                AddAuthFragmentDirections.addAuthToPllEmpty(
+                                SignUpFragmentDirections.addAuthToPllEmpty(
                                     currentMembershipPlan, it
                                 )
                             findNavController().navigateIfAdded(this, directions)

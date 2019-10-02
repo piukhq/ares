@@ -8,20 +8,8 @@
         <import type="android.text.InputType" />
 
         <variable
-                name="addFields"
-                type="com.bink.wallet.model.response.membership_plan.AddFields" />
-
-        <variable
-                name="authFields"
-                type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
-
-        <variable
-                name="enrolFields"
-                type="com.bink.wallet.model.response.membership_plan.EnrolFields" />
-
-        <variable
-                name="registrationFields"
-                type="com.bink.wallet.model.response.membership_plan.RegistrationFields" />
+                name="planField"
+                type="com.bink.wallet.model.response.membership_plan.PlanFields" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,13 +27,10 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/size_medium"
                 android:textStyle="bold"
-                app:addField="@{addFields}"
-                app:authField="@{authFields}"
-                app:enrolField="@{enrolFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:registrationField="@{registrationFields}" />
+                app:planField="@{planField}" />
 
         <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/content_add_auth_text"
@@ -55,7 +40,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:background="@android:color/transparent"
-                android:inputType='@{(addFields.type == 1 || authFields.type == 1 || enrolFields.type == 1 || registrationFields.type == 1) ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }'
+                android:inputType='@{(planField.type == 1 ) ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }'
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
