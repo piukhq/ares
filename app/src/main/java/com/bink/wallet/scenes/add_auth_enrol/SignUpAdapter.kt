@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.CheckBox
-import android.widget.Spinner
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -17,14 +15,14 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBindingImpl
 import com.bink.wallet.databinding.AddAuthTextItemBinding
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
-import com.bink.wallet.utils.enums.TypeOfField
 
 
 class SignUpAdapter(
-    private val brands: List<Pair<PlanFields, com.bink.wallet.model.request.membership_card.PlanFields>>
+    val brands: List<Pair<PlanFields, PlanFieldsRequest>>
 ) :
     RecyclerView.Adapter<SignUpAdapter.CardFieldHolder>() {
 
@@ -55,60 +53,80 @@ class SignUpAdapter(
         return brands.size
     }
 
-    class CardFieldHolder(val binding: ViewDataBinding) :
+    inner class CardFieldHolder(val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private var text: AppCompatEditText? = null
-        private var switch: CheckBox? = null
-        private var spinner: Spinner? = null
+        private val textWatcher = object : TextWatcher {
 
-        init {
-            text = itemView.findViewById(R.id.content_add_auth_text)
-            switch = itemView.findViewById(R.id.content_add_auth_switch)
-            spinner = itemView.findViewById(R.id.content_add_auth_spinner)
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                currentText: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+                brands[adapterPosition].second.value = currentText.toString()
+            }
         }
 
-        fun bind(item: Pair<PlanFields, com.bink.wallet.model.request.membership_card.PlanFields>) {
-            val currentAuthoriseField = item.second
+        private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                brands[adapterPosition].second.value =
+                    brands[adapterPosition].first.choice?.get(position)
+            }
+
+        }
+
+        private fun checkIfError(item: PlanFields, text: AppCompatEditText) {
+
+            if (!UtilFunctions.isValidField(
+                    brands[adapterPosition].first.validation, brands[adapterPosition].second.value
+                )
+            )
+                text.error = text.resources?.getString(
+                    R.string.add_auth_error_message,
+                    item.column
+                )
+        }
+
+        fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+
 
             when (binding) {
                 is AddAuthTextItemBinding -> {
                     binding.planField = item.first
+                    val text = binding.contentAddAuthText
                     text?.hint = item.first.description
-
-                    text?.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(p0: Editable?) {
-                        }
-
-                        override fun beforeTextChanged(
-                            p0: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(
-                            currentText: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
-                        ) {
-                            currentAuthoriseField.value = currentText.toString()
-                        }
-                    })
+                    text?.setText(item.second.value)
+                    text?.addTextChangedListener(textWatcher)
+                    if (brands[adapterPosition].second.value.isNullOrBlank())
+                        text?.error = null
+                    else
+                        checkIfError(brands[adapterPosition].first, text)
 
                     text?.setOnFocusChangeListener { _, isFocus ->
                         if (!isFocus)
                             try {
-                                if (!UtilFunctions.isValidField(
-                                        item.first.validation, currentAuthoriseField.value
-                                    )
-                                )
-                                    text?.error = text?.resources?.getString(
-                                        R.string.add_auth_error_message,
-                                        item.first.column
-                                    )
+                                checkIfError(brands[adapterPosition].first, text)
                             } catch (ex: Exception) {
                                 Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
                             }
@@ -117,46 +135,25 @@ class SignUpAdapter(
 
 
                 is AddAuthSpinnerItemBinding -> {
+                    val spinner = binding.contentAddAuthSpinner
                     binding.planField = item.first
-                    currentAuthoriseField.value = item.first.choice?.get(0)
+                    brands[adapterPosition].second.value = item.first.choice?.get(0)
                     spinner?.isFocusable = false
-                    spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                        }
-
-                        override fun onItemSelected(
-                            parent: AdapterView<*>?,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            currentAuthoriseField.value = item.first.choice?.get(position)
-                        }
-
-                    }
+                    spinner?.onItemSelectedListener = itemSelectedListener
                 }
                 is AddAuthSwitchItemBinding -> {
+                    val switch = binding.contentAddAuthSwitch
                     binding.planField = item.first
-
-                    currentAuthoriseField.value = FALSE_TEXT
-
+                    brands[adapterPosition].second.value = FALSE_TEXT
                     switch?.text = item.first.description
 
                     switch?.setOnCheckedChangeListener { _, isChecked ->
-                        currentAuthoriseField.value = isChecked.toString()
+                        brands[adapterPosition].second.value = isChecked.toString()
                     }
 
                     switch?.isFocusable = false
                 }
             }
-
-//            when (item.first.typeOfField) {
-//                TypeOfField.ADD -> account.add_fields?.add(currentAuthoriseField)
-//                TypeOfField.AUTH -> account.authorise_fields?.add(currentAuthoriseField)
-//                TypeOfField.ENROL -> account.enrol_fields?.add(currentAuthoriseField)
-//                TypeOfField.REGISTRATION -> account.registration_fields?.add(currentAuthoriseField)
-//            }
 
             binding.executePendingBindings()
         }

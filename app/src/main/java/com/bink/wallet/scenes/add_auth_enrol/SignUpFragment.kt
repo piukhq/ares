@@ -137,10 +137,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = SignUpAdapter(
-                planFields?.toList()!!,
-                addAuthFieldsRequest
-            )
+//            adapter = SignUpAdapter(
+//                planFields?.toList()!!,
+//                addAuthFieldsRequest
+//            )
         }
 
         binding.addCardButton.setOnClickListener {

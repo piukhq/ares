@@ -11,8 +11,10 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -42,6 +44,33 @@ class GhostCardFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>(
         windowFullscreenHandler.toFullscreen()
     }
 
+    private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+        mutableListOf()
+
+    private val planBooleanFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+        mutableListOf()
+
+    private fun addFieldToList(planField: PlanFields) {
+        if (planField.type == FieldType.BOOLEAN.type) {
+            planBooleanFieldsList?.add(
+                Pair(
+                    planField, PlanFieldsRequest(
+                        planField.column, ""
+                    )
+                )
+            )
+        } else {
+            if (!planField.column.equals(BARCODE_TEXT))
+                planFieldsList?.add(
+                    Pair(
+                        planField, PlanFieldsRequest(
+                            planField.column, ""
+                        )
+                    )
+                )
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val currentMembershipPlan = args.currentMembershipPlan
@@ -60,12 +89,6 @@ class GhostCardFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>(
             windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
-
-        val addAuthFields: MutableList<Pair<PlanFields, com.bink.wallet.model.request.membership_card.PlanFields>>? =
-            mutableListOf()
-
-        val addAuthBoolean: MutableList<Pair<PlanFields, com.bink.wallet.model.request.membership_card.PlanFields>>? =
-            mutableListOf()
 
         if (currentMembershipCard != null) {
             if (currentMembershipPlan.feature_set?.has_points != null &&
@@ -99,29 +122,13 @@ class GhostCardFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>(
         } else {
             currentMembershipPlan.account?.add_fields?.map {
                 it.typeOfField = TypeOfField.ADD
-                if (it.type == 3) {
-                    addAuthBoolean?.add(
-                        Pair(
-                            it, com.bink.wallet.model.request.membership_card.PlanFields(
-                                it.column, ""
-                            )
-                        )
-                    )
-                }
+                addFieldToList(it)
             }
         }
 
         currentMembershipPlan.account?.registration_fields?.map {
             it.typeOfField = TypeOfField.REGISTRATION
-            if (it.type == 3) {
-                addAuthBoolean?.add(
-                    Pair(
-                        it, com.bink.wallet.model.request.membership_card.PlanFields(
-                            it.column, ""
-                        )
-                    )
-                )
-            }
+            addFieldToList(it)
         }
 
         if (currentMembershipCard == null)
@@ -130,39 +137,19 @@ class GhostCardFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>(
                 currentMembershipPlan.feature_set.transactions_available != null
             ) {
                 currentMembershipPlan.account?.add_fields?.map {
-                    if (it.type != 3 &&
-                        !it.column.equals(BARCODE_TEXT)
-                    ) {
-                        addAuthFields?.add(
-                            Pair(
-                                it, com.bink.wallet.model.request.membership_card.PlanFields(
-                                    it.column, ""
-                                )
-                            )
-                        )
-                    }
+                    addFieldToList(it)
                 }
             }
 
         currentMembershipPlan.account?.registration_fields?.map {
-            if (it.type != 3 &&
-                !it.column.equals(BARCODE_TEXT)
-            ) {
-                addAuthFields?.add(
-                    Pair(
-                        it, com.bink.wallet.model.request.membership_card.PlanFields(
-                            it.column, ""
-                        )
-                    )
-                )
-            }
+            addFieldToList(it)
         }
 
-        addAuthBoolean?.map { addAuthFields?.add(it) }
+        planBooleanFieldsList?.map { planFieldsList?.add(it) }
 
         val addRegisterFieldsRequest = Account()
 
-        addAuthBoolean?.map {
+        planFieldsList?.map {
 
             when (it.first.typeOfField) {
                 TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
@@ -176,7 +163,7 @@ class GhostCardFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>(
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
             adapter = SignUpAdapter(
-                addAuthFields?.toList()!!
+                planFieldsList?.toList()!!
             )
         }
 

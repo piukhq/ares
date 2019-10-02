@@ -76,10 +76,9 @@ class EnrolFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = SignUpAdapter(
-                enrolFields?.toList()!!,
-                enrolFieldsRequest
-            )
+//            adapter = SignUpAdapter(
+//                enrolFields?.toList()!!
+//            )
         }
 
         binding.addCardButton.setOnClickListener {
