@@ -80,13 +80,13 @@ open class GenericModalFragment :
         binding.toolbar.setNavigationIcon(parameters.topBarIconId)
         binding.title.text = parameters.title
         binding.description.text = parameters.description
-        if (parameters.firstButtonText.isNotEmpty()) {
+        if (parameters.firstButtonText!!.isNotEmpty()) {
             binding.firstButton.visibility = View.VISIBLE
             binding.firstButton.text = parameters.firstButtonText
         } else {
             binding.firstButton.visibility = View.GONE
         }
-        if (parameters.secondButtonText.isNotEmpty()) {
+        if (parameters.secondButtonText!!.isNotEmpty()) {
             binding.secondButton.visibility = View.VISIBLE
             binding.secondButton.text = parameters.secondButtonText
         } else {
