@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
+import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
@@ -61,7 +62,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                     )
                 }
             }
-            directions?.let { directtions -> findNavController().navigateIfAdded(this, directions) }
+            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
         viewModel.paymentCards.observeNonNull(this) {
@@ -87,11 +88,9 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                         isSelected
                     )
                 )
-
             }
             adapter.paymentCards = listPaymentCards
             adapter.notifyDataSetChanged()
-
         }
 
         viewModel.membershipCard.observeNonNull(this) {
@@ -107,7 +106,9 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         binding.buttonDone.setOnClickListener {
             adapter.paymentCards?.forEach { card ->
-                if (card.isSelected == true && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                if (card.isSelected
+                    && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                ) {
                     runBlocking {
                         viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
                             card.paymentCard.id?.let { paymentCard ->
@@ -117,7 +118,10 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                             }
                         }
                     }
-                } else if (viewModel.membershipCard.value != null && card.isSelected == false && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)) {
+                } else if (viewModel.membershipCard.value != null
+                    && !card.isSelected
+                    && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                ) {
                     runBlocking {
                         viewModel.unlinkPaymentCard(
                             card.paymentCard.id.toString(),
@@ -134,8 +138,8 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                         )
                     }
                 }
-                }
             }
+        }
 
         viewModel.linkError.observeNonNull(this) {
             AlertDialog.Builder(requireContext())

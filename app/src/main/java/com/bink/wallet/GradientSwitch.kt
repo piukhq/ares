@@ -11,13 +11,13 @@ class GradientSwitch @JvmOverloads constructor(
 ) : SwitchCompat(context, attrs) {
 
     fun displayCustomSwitch(isEnabled: Boolean) {
-        if (isEnabled) displaySwitchEnabled() else displaySwitchDisabled()
+        if (isEnabled) displaySwitchEnabled()
+        else displaySwitchDisabled()
     }
 
     private fun displaySwitchEnabled() {
         setThumbResource(R.drawable.gradient_switch_thumb)
         setTrackResource(R.drawable.gradient_switch_track)
-
     }
 
     private fun displaySwitchDisabled() {

@@ -86,9 +86,7 @@ class LoyaltyCardDetailsFragment :
             binding.swipeLayout.isRefreshing = false
         }
 
-        binding.offerTiles.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
 
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
@@ -113,7 +111,7 @@ class LoyaltyCardDetailsFragment :
                     }
                 }
 
-                directions?.let { findNavController().navigateIfAdded(this, it) }
+                directions?.let { findNavController().navigateIfAdded(this, directions) }
             }
         }
         binding.pointsWrapper.setOnClickListener {
@@ -217,7 +215,7 @@ class LoyaltyCardDetailsFragment :
                                 }
 
                             }
-                        directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+                        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
@@ -257,7 +255,7 @@ class LoyaltyCardDetailsFragment :
                                 }
 
                             }
-                        directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
+                        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
                     }
 
                 }

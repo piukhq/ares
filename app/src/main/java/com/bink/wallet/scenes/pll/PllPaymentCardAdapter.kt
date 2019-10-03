@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
@@ -21,15 +22,13 @@ class PllPaymentCardAdapter(
         return PllPaymentCardViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return if(!paymentCards.isNullOrEmpty()){
+    override fun getItemCount(): Int = if (!paymentCards.isNullOrEmpty()) {
             paymentCards?.size!!
         } else 0
-    }
+
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
         paymentCards?.get(position).let { it?.let { it1 -> holder.bindCard(it1) } }
-
     }
 
     inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
@@ -37,8 +36,8 @@ class PllPaymentCardAdapter(
         fun bindCard(paymentCard: PllPaymentCardWrapper) {
             binding.paymentCard = paymentCard
 
-            binding.toggle.isChecked = paymentCard.isSelected!!
-                binding.toggle.displayCustomSwitch(paymentCard.isSelected!!)
+            binding.toggle.isChecked = paymentCard.isSelected
+            binding.toggle.displayCustomSwitch(paymentCard.isSelected)
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 paymentCard.isSelected = isChecked

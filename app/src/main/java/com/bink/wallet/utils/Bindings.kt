@@ -37,7 +37,7 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 
 @BindingAdapter("image")
 fun ImageView.setPaymentCardImage(item:PaymentCard) {
-    if(!item.images.isNullOrEmpty()){
+    if (!item.images.isNullOrEmpty()){
         Glide.with(context).load(item.images.first().url).into(this)
     }
 }

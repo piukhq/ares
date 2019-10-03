@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.pll
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -46,7 +45,8 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
     suspend fun linkPaymentCard(
         membershipCardId: String,
         paymentCardId: String,
-        paymentCard: MutableLiveData<PaymentCard>, linkError: MutableLiveData<Throwable>
+        paymentCard: MutableLiveData<PaymentCard>,
+        linkError: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
@@ -62,7 +62,12 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
         }
     }
 
-    suspend fun unlinkPaymentCard(paymentCardId: String, membershipCardId: String, unlinkError: MutableLiveData<Throwable>, unlinkedBody: MutableLiveData<ResponseBody>) {
+    suspend fun unlinkPaymentCard(
+        paymentCardId: String,
+        membershipCardId: String,
+        unlinkError: MutableLiveData<Throwable>,
+        unlinkedBody: MutableLiveData<ResponseBody>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
             withContext(Dispatchers.Main) {
