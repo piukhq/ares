@@ -54,7 +54,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.getCardButton.setOnClickListener {
             val action = AddJoinFragmentDirections.addJoinToGhost(
-                SignUpFormType.GHOST,
+                SignUpFormType.ENROL,
                 currentMembershipPlan,
                 null
             )
