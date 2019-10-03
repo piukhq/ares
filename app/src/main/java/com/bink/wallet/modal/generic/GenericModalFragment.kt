@@ -77,16 +77,18 @@ open class GenericModalFragment :
     }
 
     protected fun setupUi(parameters: GenericModalParameters) {
-        binding.toolbar.setNavigationIcon(parameters.topBarIconId)
+        if (parameters.topBarIconId != 0) {
+            binding.toolbar.setNavigationIcon(parameters.topBarIconId)
+        }
         binding.title.text = parameters.title
         binding.description.text = parameters.description
-        if (parameters.firstButtonText!!.isNotEmpty()) {
+        if (parameters.firstButtonText.isNotEmpty()) {
             binding.firstButton.visibility = View.VISIBLE
             binding.firstButton.text = parameters.firstButtonText
         } else {
             binding.firstButton.visibility = View.GONE
         }
-        if (parameters.secondButtonText!!.isNotEmpty()) {
+        if (parameters.secondButtonText.isNotEmpty()) {
             binding.secondButton.visibility = View.VISIBLE
             binding.secondButton.text = parameters.secondButtonText
         } else {
@@ -95,14 +97,10 @@ open class GenericModalFragment :
     }
 
     protected fun onNavigationButtonClicked() {
-        activity?.onBackPressed()
+        requireActivity().onBackPressed()
     }
 
-    protected open fun onFirstButtonClicked() {
-        viewModel.onFirstButtonClicked()
-    }
+    protected open fun onFirstButtonClicked() {}
 
-    protected fun onSecondButtonClicked() {
-        viewModel.onSecondButtonClicked()
-    }
+    protected open fun onSecondButtonClicked() {}
 }

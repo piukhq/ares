@@ -51,7 +51,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.getCardButton.setOnClickListener {
-            val currentMembershipPlan = args.currentMembershipPlan
             val action: NavDirections
             if (currentMembershipPlan.account?.enrol_fields!!.isEmpty()) {
                 val genericModalParameters = GenericModalParameters(

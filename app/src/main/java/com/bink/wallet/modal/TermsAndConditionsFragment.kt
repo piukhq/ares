@@ -1,6 +1,7 @@
 package com.bink.wallet.modal
 
 import android.os.Bundle
+import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -16,5 +17,9 @@ class TermsAndConditionsFragment : GenericModalFragment() {
                 setupUi(this.genericModalParameters)
             }
         }
+    }
+    override fun onSecondButtonClicked() {
+        super.onSecondButtonClicked()
+        viewModel.destinationLiveData.value = R.id.global_to_home
     }
 }

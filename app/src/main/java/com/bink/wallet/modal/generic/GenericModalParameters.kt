@@ -6,10 +6,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class GenericModalParameters(
-    @DrawableRes var topBarIconId: Int,
+    @DrawableRes var topBarIconId: Int = 0,
     var title: String,
     var description: String,
-    var firstButtonText: String? = "",
-    var secondButtonText: String? = "",
-    var joinUnavailableLink: String? = ""
+    var firstButtonText: String = "",
+    var secondButtonText: String = "",
+    var joinUnavailableLink: String = ""
 ) : Parcelable
