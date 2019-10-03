@@ -1,3 +1,4 @@
+AB20-155 new icons for debug, beta, MR & nightly
 AB20-154 debug menu and change email address option
 AB20-88  PCD screen
 AB20-161 change barcode layout
