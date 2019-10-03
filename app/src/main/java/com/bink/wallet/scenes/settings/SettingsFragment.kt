@@ -28,7 +28,7 @@ class SettingsFragment :
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -102,10 +102,10 @@ class SettingsFragment :
         }
     }
 
-    fun versionName(): String =
+    private fun versionName(): String =
         getString(R.string.version_name_format, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
 
-    fun openEmailDialog(item: SettingsItem) {
+    private fun openEmailDialog(item: SettingsItem) {
         if (item.type == SettingsItemType.EMAIL_ADDRESS) {
             val dialog = SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
             dialog.newEmail.observeNonNull(this) {
