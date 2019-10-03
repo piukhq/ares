@@ -142,11 +142,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         viewModel.linkError.observeNonNull(this) {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.description_error))
-                .setMessage(it.toString())
-                .setPositiveButton(
-                    getString(R.string.ok)
+            AlertDialog.Builder(requireContext()).setTitle(getString(R.string.description_error)).setMessage(it.toString()).setPositiveButton(getString(R.string.ok)
                 ) { _, _ ->
                     if (findNavController().currentDestination?.id == R.id.pll_fragment)
                         directions?.let { directions ->
