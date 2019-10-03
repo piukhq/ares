@@ -28,6 +28,13 @@ android {
                 keyAlias = System.getenv("BINK_KEYSTORE_ALIAS")
             }
         }
+
+        betaConfigs {
+            storeFile file("/home/mara/AndroidStudioProjects/binkapp/betapath3.jks")
+            keyAlias 'key1'
+            keyPassword 'betakey1'
+            storePassword 'betakey1'
+        }
     }
     defaultConfig {
         applicationId "com.bink.wallet.neo"
@@ -69,7 +76,8 @@ android {
         beta {
             debuggable true
             applicationIdSuffix ".beta"
-            signingConfig signingConfigs.binkSigningConfig
+//            signingConfig signingConfigs.binkSigningConfig
+            signingConfig signingConfigs.betaConfigs
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
