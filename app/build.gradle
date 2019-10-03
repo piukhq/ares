@@ -31,8 +31,8 @@ android {
     }
     defaultConfig {
         applicationId "com.bink.wallet.neo"
-        minSdkVersion(21)
-        targetSdkVersion(29)
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode buildNumber
         versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -111,6 +111,7 @@ android {
         nightly {
             debuggable true
             applicationIdSuffix ".nightly"
+            signingConfig signingConfigs.binkSigningConfig
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"

@@ -473,7 +473,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
+                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT).show()
                         dialog?.dismiss()
                     }
                     viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
