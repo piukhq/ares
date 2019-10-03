@@ -11,9 +11,13 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,10 +45,38 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         windowFullscreenHandler.toFullscreen()
     }
 
+    private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+        mutableListOf()
+
+    private val planBooleanFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+        mutableListOf()
+
+    private fun addFieldToList(planField: PlanFields) {
+        if (planField.type == FieldType.BOOLEAN.type) {
+            planBooleanFieldsList?.add(
+                Pair(
+                    planField, PlanFieldsRequest(
+                        planField.column, ""
+                    )
+                )
+            )
+        } else {
+            if (!planField.column.equals(BARCODE_TEXT))
+                planFieldsList?.add(
+                    Pair(
+                        planField, PlanFieldsRequest(
+                            planField.column, ""
+                        )
+                    )
+                )
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val currentMembershipPlan = args.currentMembershipPlan
         val currentMembershipCard = args.membershipCard
+        val signUpFormType = args.signUpFormType
 
         binding.item = currentMembershipPlan
         binding.descriptionAddAuth.text =
@@ -60,113 +92,146 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        val planFields: MutableList<PlanFields>? = mutableListOf()
+        when (signUpFormType) {
+            SignUpFormType.ADD_AUTH -> {
+                if (currentMembershipCard != null) {
+                    if (currentMembershipPlan.feature_set?.has_points != null &&
+                        currentMembershipPlan.feature_set.has_points == true &&
+                        currentMembershipPlan.feature_set.transactions_available != null
+                    ) {
+                        if (currentMembershipPlan.feature_set.transactions_available == true) {
+                            binding.descriptionAddAuth.text = getString(
+                                R.string.log_in_transaction_available,
+                                currentMembershipPlan.account?.plan_name_card
+                            )
+                        } else {
+                            binding.descriptionAddAuth.text =
+                                getString(
+                                    R.string.log_in_transaction_unavailable,
+                                    currentMembershipPlan.account?.plan_name_card
+                                )
+                        }
+                    }
 
-        val planBooleanFields: MutableList<PlanFields>? = mutableListOf()
-
-
-
-        if (currentMembershipCard != null) {
-            if (currentMembershipPlan.feature_set?.has_points != null &&
-                currentMembershipPlan.feature_set.has_points == true &&
-                currentMembershipPlan.feature_set.transactions_available != null
-            ) {
-                if (currentMembershipPlan.feature_set.transactions_available == true) {
-                    binding.descriptionAddAuth.text = getString(
-                        R.string.log_in_transaction_available,
-                        currentMembershipPlan.account?.plan_name_card
-                    )
-                } else {
-                    binding.descriptionAddAuth.text =
-                        getString(
-                            R.string.log_in_transaction_unavailable,
+                    if (MembershipPlanUtils.getAccountStatus(
+                            currentMembershipPlan,
+                            currentMembershipCard
+                        ) == LoginStatus.STATUS_LOGIN_FAILED
+                    ) {
+                        binding.descriptionAddAuth.text = getString(
+                            R.string.log_in_transaction_available,
                             currentMembershipPlan.account?.plan_name_card
                         )
-                }
-            }
-
-            if (MembershipPlanUtils.getAccountStatus(
-                    currentMembershipPlan,
-                    currentMembershipCard
-                ) == LoginStatus.STATUS_LOGIN_FAILED
-            ) {
-                binding.descriptionAddAuth.text = getString(
-                    R.string.log_in_transaction_available,
-                    currentMembershipPlan.account?.plan_name_card
-                )
-            }
-        } else {
-            currentMembershipPlan.account?.add_fields?.map {
-                if (it.type == 3) {
-                    planBooleanFields?.add(it)
-                }
-            }
-        }
-
-        currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type == 3) {
-                planBooleanFields?.add(it)
-            }
-        }
-
-        if (currentMembershipCard == null)
-            if (currentMembershipPlan.feature_set?.has_points != null &&
-                currentMembershipPlan.feature_set.has_points == true &&
-                currentMembershipPlan.feature_set.transactions_available != null
-            ) {
-                currentMembershipPlan.account?.add_fields?.map {
-                    if (it.type != 3 &&
-                        !it.column.equals(BARCODE_TEXT)
-                    ) {
-                        planFields?.add(it)
+                    }
+                } else {
+                    currentMembershipPlan.account?.add_fields?.map {
+                        it.typeOfField = TypeOfField.ADD
+                        addFieldToList(it)
                     }
                 }
-            }
 
-        currentMembershipPlan.account?.authorise_fields?.map {
-            if (it.type != 3 &&
-                !it.column.equals(BARCODE_TEXT)
-            ) {
-                planFields?.add(it)
+                currentMembershipPlan.account?.authorise_fields?.map {
+                    it.typeOfField = TypeOfField.AUTH
+                    addFieldToList(it)
+                }
+
+            }
+            SignUpFormType.ENROL -> {
+                currentMembershipPlan.account?.enrol_fields?.map {
+                    it.typeOfField = TypeOfField.ENROL
+                    addFieldToList(it)
+                }
+            }
+            SignUpFormType.GHOST -> {
+                currentMembershipPlan.account?.add_fields?.map {
+                    it.typeOfField = TypeOfField.ADD
+                    addFieldToList(it)
+                }
+
+                currentMembershipPlan.account?.registration_fields?.map {
+                    it.typeOfField = TypeOfField.REGISTRATION
+                    addFieldToList(it)
+                }
             }
         }
 
-        planBooleanFields?.map { planFields?.add(it) }
 
-        val addAuthFieldsRequest = Account(ArrayList(), ArrayList(), null, null)
+        planBooleanFieldsList?.map { planFieldsList?.add(it) }
+
+        val addRegisterFieldsRequest = Account()
+
+        planFieldsList?.map {
+
+            when (it.first.typeOfField) {
+                TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
+                TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
+                TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
+                else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+            }
+
+        }
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-//            adapter = SignUpAdapter(
-//                planFields?.toList()!!,
-//                addAuthFieldsRequest
-//            )
+            adapter = SignUpAdapter(
+                planFieldsList?.toList()!!
+            )
         }
 
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
 
-                    val currentRequest = MembershipCardRequest(
-                        addAuthFieldsRequest,
-                        currentMembershipPlan.id
-                    )
+                    when (signUpFormType) {
+                        SignUpFormType.ADD_AUTH -> {
+                            val currentRequest = MembershipCardRequest(
+                                addRegisterFieldsRequest,
+                                currentMembershipPlan.id
+                            )
 
-                    if (currentMembershipCard != null &&
-                        MembershipPlanUtils.getAccountStatus(
-                            currentMembershipPlan,
-                            currentMembershipCard
-                        ) == LoginStatus.STATUS_LOGIN_FAILED
-                    ) {
-                        viewModel.updateMembershipCard(
-                            currentMembershipCard,
-                            currentRequest
-                        )
-                    } else {
-                        viewModel.createMembershipCard(
-                            currentRequest
-                        )
+                            if (currentMembershipCard != null &&
+                                MembershipPlanUtils.getAccountStatus(
+                                    currentMembershipPlan,
+                                    currentMembershipCard
+                                ) == LoginStatus.STATUS_LOGIN_FAILED
+                            ) {
+                                viewModel.updateMembershipCard(
+                                    currentMembershipCard,
+                                    currentRequest
+                                )
+                            } else {
+                                viewModel.createMembershipCard(
+                                    currentRequest
+                                )
+                            }
+                        }
+                        SignUpFormType.GHOST -> {
+                            val currentRequest = MembershipCardRequest(
+                                Account(
+                                    addRegisterFieldsRequest.add_fields,
+                                    null,
+                                    null,
+                                    null
+                                ),
+                                currentMembershipPlan.id
+                            )
+
+                            viewModel.createMembershipCard(
+                                currentRequest
+                            )
+                        }
+
+                        SignUpFormType.ENROL -> {
+                            viewModel.createMembershipCard(
+                                MembershipCardRequest(
+                                    addRegisterFieldsRequest,
+                                    currentMembershipPlan.id
+                                )
+                            )
+                        }
                     }
+
+
                 } else {
                     showNoInternetConnectionDialog()
                 }
@@ -178,7 +243,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         if (viewModel.membershipCardData.hasActiveObservers())
             viewModel.membershipCardData.removeObservers(this)
         else
-            viewModel.membershipCardData.observe(this, Observer {
+            viewModel
+                .membershipCardData.observe(this, Observer {
+
+                if (signUpFormType == SignUpFormType.GHOST) {
+                    val currentRequest = MembershipCardRequest(
+                        Account(null, null, null, addRegisterFieldsRequest.registration_fields),
+                        currentMembershipPlan.id
+                    )
+
+                    viewModel.ghostMembershipCard(
+                        it,
+                        currentRequest
+                    )
+                }
+
                 when (currentMembershipPlan.feature_set?.card_type) {
                     //TODO The condition is temporary removed for testing regarding to AB20-35(comment section)
 //                    0, 1 -> {
@@ -191,7 +270,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     0, 1, 2 -> {
                         if (it.membership_transactions != null && it.membership_transactions?.isEmpty()!!) {
                             val directions =
-                                SignUpFragmentDirections.addAuthToPllEmpty(
+                                SignUpFragmentDirections.signUpToDetails(
                                     currentMembershipPlan, it
                                 )
                             findNavController().navigateIfAdded(this, directions)

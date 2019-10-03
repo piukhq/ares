@@ -45,6 +45,13 @@ class SignUpAdapter(
         return CardFieldHolder(binding)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        if (brands[position].first.type != null)
+            return brands[position].first.type!!
+        return 0
+    }
+
+
     override fun onBindViewHolder(holder: CardFieldHolder, position: Int) {
         brands[position].let { holder.bind(it) }
     }
@@ -110,7 +117,6 @@ class SignUpAdapter(
 
         fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
 
-
             when (binding) {
                 is AddAuthTextItemBinding -> {
                     binding.planField = item.first
@@ -132,7 +138,6 @@ class SignUpAdapter(
                             }
                     }
                 }
-
 
                 is AddAuthSpinnerItemBinding -> {
                     val spinner = binding.contentAddAuthSpinner
