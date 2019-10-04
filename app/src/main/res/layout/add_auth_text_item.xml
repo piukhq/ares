@@ -7,6 +7,8 @@
 
         <import type="android.text.InputType" />
 
+        <import type="com.bink.wallet.utils.enums.FieldType" />
+
         <variable
                 name="planField"
                 type="com.bink.wallet.model.response.membership_plan.PlanFields" />
@@ -40,7 +42,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:background="@android:color/transparent"
-                android:inputType='@{(planField.type == 1 ) ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }'
+                android:inputType='@{(planField.type == FieldType.PASSWORD.type ) ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }'
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
