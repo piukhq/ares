@@ -24,6 +24,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
@@ -38,7 +39,7 @@ fun ImageView.loadImage(item: MembershipPlan?) {
         try {
             Glide.with(context)
                 .load(item.images.first { it.type == ImageType.ICON.type }.url)
-                .onlyRetrieveFromCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
