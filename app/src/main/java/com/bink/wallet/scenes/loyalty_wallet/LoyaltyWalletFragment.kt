@@ -88,6 +88,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.deleteCard.observe(this, Observer { id ->
             viewModel.membershipCardData.value =
                 viewModel.membershipCardData.value?.filter { it.id != id }
+            (binding.loyaltyWalletList.adapter as LoyaltyWalletAdapter).deleteCard(id)
         })
 
         if (!viewModel.localPlansReceived.hasObservers())
@@ -222,14 +223,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         } else {
                             showNoInternetConnectionDialog()
                         }
-                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(
                             LoyaltyWalletFragment::class.java.simpleName,
                             getString(R.string.loayalty_wallet_dialog_description)
                         )
-                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
                     }
 
                 }

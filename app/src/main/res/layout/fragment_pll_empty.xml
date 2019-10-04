@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <data>
-
         <variable
                 name="membershipPlan"
                 type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
@@ -28,7 +26,6 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-
         <TextView
                 android:id="@+id/pll_empty_title"
                 style="@style/HeaderTextView"
@@ -44,7 +41,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/header" />
 
-
         <TextView
                 android:id="@+id/pll_empty_description"
                 style="@style/CustomTextView"
@@ -57,7 +53,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pll_empty_title" />
-
 
         <Button
                 android:id="@+id/button_done"
@@ -87,5 +82,4 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
