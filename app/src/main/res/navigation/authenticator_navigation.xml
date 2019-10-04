@@ -132,6 +132,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/add_join_to_join_unavailable"
+                app:destination="@+id/join_unavailable"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -391,7 +398,20 @@
 
     <fragment
             android:id="@+id/terms_and_conditions"
-            android:name="com.bink.wallet.TermsAndConditionsFragment" />
+            android:name="com.bink.wallet.modal.TermsAndConditionsFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/join_unavailable"
+            android:name="com.bink.wallet.modal.JoinUnavailableFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment" />
