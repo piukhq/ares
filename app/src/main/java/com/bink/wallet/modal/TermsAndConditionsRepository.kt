@@ -1,4 +1,4 @@
-package com.bink.wallet
+package com.bink.wallet.modal
 
 import com.bink.wallet.network.ApiService
 

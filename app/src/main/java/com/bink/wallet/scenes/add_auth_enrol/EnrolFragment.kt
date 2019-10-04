@@ -98,10 +98,10 @@ class EnrolFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
             }
         }
 
-        if (viewModel.membershipCardData.hasActiveObservers())
-            viewModel.membershipCardData.removeObservers(this)
+        if (viewModel.newMembershipCard.hasActiveObservers())
+            viewModel.newMembershipCard.removeObservers(this)
         else
-            viewModel.membershipCardData.observe(this, Observer {
+            viewModel.newMembershipCard.observe(this, Observer {
                 val directions =
                     EnrolFragmentDirections.enrolToDetails(
                         currentMembershipPlan, it

@@ -39,7 +39,9 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        init(inflater, container!!)
+        container?.let {
+            init(inflater, container)
+        }
         init()
         return binding.root
     }

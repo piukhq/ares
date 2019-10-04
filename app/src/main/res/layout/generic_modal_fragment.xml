@@ -32,7 +32,7 @@
                     android:orientation="vertical">
 
                 <TextView
-                        android:id="@+id/terms_and_conditions_title"
+                        android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/terms_and_conditions_title"
@@ -40,7 +40,7 @@
                         android:textStyle="bold" />
 
                 <TextView
-                        android:id="@+id/terms_and_conditions_text"
+                        android:id="@+id/description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/bottom_layout_height"
@@ -62,31 +62,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                    android:id="@+id/accept_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+            <Button
+                    android:id="@+id/first_button"
+                    style="@style/RoundedGradientButton"
+                    android:layout_width="match_parent"
                     android:background="@drawable/rounded_corners_gradient_button"
-                    android:paddingStart="@dimen/horizontal_button_padding"
-                    android:paddingTop="@dimen/margin_padding_size_small"
-                    android:paddingEnd="@dimen/horizontal_button_padding"
-                    android:paddingBottom="@dimen/margin_padding_size_small"
                     android:text="@string/accept_button_text"
-                    android:textColor="@color/pale_grey"
-                    android:textSize="@dimen/size_sub_headline" />
+                    android:textColor="@color/pale_grey" />
 
-            <TextView
-                    android:id="@+id/decline_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingTop="@dimen/margin_padding_size_small"
-                    android:paddingBottom="@dimen/margin_padding_size_small"
+            <Button
+                    android:id="@+id/second_button"
+                    style="@style/RoundedGradientButton"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:background="@color/white_transparent"
                     android:text="@string/decline_button_text"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/size_sub_headline" />
+                    android:textColor="@color/black" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

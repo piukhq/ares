@@ -19,6 +19,8 @@ import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
@@ -29,9 +31,16 @@ import kotlinx.android.parcel.Parcelize
 import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(item: MembershipPlan) {
-    if (item.images != null && item.images.isNotEmpty())
-        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
+fun ImageView.loadImage(item: MembershipPlan?) {
+    if (item?.images != null && item.images.isNotEmpty())
+        Glide.with(context).load(item.images.first { it.type == ImageType.ICON.type }.url).into(this)
+}
+
+@BindingAdapter("image")
+fun ImageView.setPaymentCardImage(item:PaymentCard) {
+    if (!item.images.isNullOrEmpty()){
+        Glide.with(context).load(item.images.first().url).into(this)
+    }
 }
 
 
@@ -51,16 +60,16 @@ fun View.setVisible(isVisible: Boolean) {
 }
 
 @Parcelize
-data class BarcodeWrapper(val barcode: String?, val barcodeType: Int) : Parcelable
+data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
-@BindingAdapter("barcode")
-fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
-    if (!barcode?.barcode.isNullOrEmpty()) {
+@BindingAdapter("membershipCard")
+fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
+    if (!membershipCard?.membershipCard?.card?.membership_id.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
-        when (barcode?.barcodeType) {
+        when (membershipCard?.membershipCard?.card?.barcode_type) {
             0 -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
             2 -> format = BarcodeFormat.AZTEC
@@ -72,7 +81,12 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
         }
 
         val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(barcode?.barcode, format, widthPx.toInt(), heightPx.toInt())
+            multiFormatWriter.encode(
+                membershipCard?.membershipCard?.card?.membership_id,
+                format,
+                widthPx.toInt(),
+                heightPx.toInt()
+            )
         val barcodeEncoder = BarcodeEncoder()
         val bitmap = barcodeEncoder.createBitmap(bitMatrix)
         setImageBitmap(bitmap)
@@ -80,21 +94,17 @@ fun ImageView.loadBarcode(barcode: BarcodeWrapper?) {
 }
 
 @BindingAdapter("membershipPlan")
-fun ModalBrandHeader.linkPlan(plan: MembershipPlan) {
+fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     binding.brandImage.loadImage(plan)
-    binding.brandImage.setOnClickListener {
-        context.displayModalPopup(
-            resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
+    if (plan?.account?.plan_description != null) {
+        binding.headerWrapper.setOnClickListener {
+            context.displayModalPopup(
+                resources.getString(R.string.plan_description),
+                plan.account.plan_description.toString()
+            )
+        }
     }
-    binding.loyaltyScheme.setOnClickListener {
-        context.displayModalPopup(
-            resources.getString(R.string.plan_description),
-            plan.account?.plan_description.toString()
-        )
-    }
-    plan.account?.plan_name_card?.let {
+    plan?.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
     }

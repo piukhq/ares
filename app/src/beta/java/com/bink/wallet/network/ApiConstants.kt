@@ -6,6 +6,6 @@ package com.bink.wallet.network
 class ApiConstants {
 
     companion object {
-        val BASE_URL = "https://api.bink-dev.com"
+        const val BASE_URL = "https://api.bink-staging.com"
     }
 }

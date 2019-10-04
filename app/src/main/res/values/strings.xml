@@ -182,6 +182,12 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
+
+    <!-- Pll Screen -->
+    <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
+    <string name="pll_linked_title">Link to payment cards</string>
+    <string name="pll_unlinked_title">Add card</string>
+    <string name="pll_last_digits">Card ending in %1$s</string>
     <string name="missing_destination_dialog_title">Missing destination</string>
     <string name="not_implemented_yet_text">Not implemented yet</string>
 
@@ -190,4 +196,19 @@
     <string name="terms_and_conditions_title">Terms and conditions</string>
     <string name="accept_button_text">Accept</string>
     <string name="decline_button_text">Decline</string>
+    <string name="popular_text">Popular</string>
+    <string name="debug_menu">Debug menu</string>
+    <string name="tools">Tools</string>
+    <string name="current_version">Current version</string>
+    <string name="version_name_format">%s build %d</string>
+    <string name="environment_base_url">Environment Base URL</string>
+    <string name="current_email_address">Current email address</string>
+    <string name="edit_email_address">Edit Email Address</string>
+    <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
+    <string name="please_enter_valid_email">Please enter a valid email address</string>
+
+    <!-- Native Join Unavailable-->
+    <string name="native_join_unavailable_title">Native join unavailable</string>
+    <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
+    <string name="native_join_unavailable_button_text">Go to merchant site</string>
 </resources>
