@@ -51,22 +51,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         mutableListOf()
 
     private fun addFieldToList(planField: PlanFields) {
+
+        val pairPlanField = Pair(
+            planField, PlanFieldsRequest(
+                planField.column, ""
+            )
+        )
+
         if (planField.type == FieldType.BOOLEAN.type) {
             planBooleanFieldsList?.add(
-                Pair(
-                    planField, PlanFieldsRequest(
-                        planField.column, ""
-                    )
-                )
+                pairPlanField
             )
         } else {
             if (!planField.column.equals(BARCODE_TEXT))
                 planFieldsList?.add(
-                    Pair(
-                        planField, PlanFieldsRequest(
-                            planField.column, ""
-                        )
-                    )
+                    pairPlanField
                 )
         }
     }

@@ -102,22 +102,25 @@ class SignUpAdapter(
         override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
             binding.planField = item.first
             val text = binding.contentAddAuthText
-            text?.hint = item.first.description
-            text?.setText(item.second.value)
-            text?.addTextChangedListener(textWatcher)
-            if (brands[adapterPosition].second.value.isNullOrBlank())
-                text?.error = null
-            else
-                checkIfError(brands[adapterPosition].first, adapterPosition, text)
+            with(text) {
+                this?.hint = item.first.description
+                this?.setText(item.second.value)
+                this?.addTextChangedListener(textWatcher)
+                if (brands[adapterPosition].second.value.isNullOrBlank())
+                    this?.error = null
+                else
+                    checkIfError(brands[adapterPosition].first, adapterPosition, this)
 
-            text?.setOnFocusChangeListener { _, isFocus ->
-                if (!isFocus)
-                    try {
-                        checkIfError(brands[adapterPosition].first, adapterPosition, text)
-                    } catch (ex: Exception) {
-                        Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
-                    }
+                this?.setOnFocusChangeListener { _, isFocus ->
+                    if (!isFocus)
+                        try {
+                            checkIfError(brands[adapterPosition].first, adapterPosition, this)
+                        } catch (ex: Exception) {
+                            Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
+                        }
+                }
             }
+
             binding.executePendingBindings()
         }
     }
@@ -146,8 +149,11 @@ class SignUpAdapter(
             val spinner = binding.contentAddAuthSpinner
             binding.planField = item.first
             brands[adapterPosition].second.value = item.first.choice?.get(0)
-            spinner?.isFocusable = false
-            spinner?.onItemSelectedListener = itemSelectedListener
+            with(spinner) {
+                this?.isFocusable = false
+                this?.onItemSelectedListener = itemSelectedListener
+            }
+
             binding.executePendingBindings()
         }
     }
@@ -160,13 +166,13 @@ class SignUpAdapter(
             val switch = binding.contentAddAuthSwitch
             binding.planField = item.first
             brands[adapterPosition].second.value = FALSE_TEXT
-            switch?.text = item.first.description
-
-            switch?.setOnCheckedChangeListener { _, isChecked ->
-                brands[adapterPosition].second.value = isChecked.toString()
+            with(switch) {
+                this?.text = item.first.description
+                this?.setOnCheckedChangeListener { _, isChecked ->
+                    brands[adapterPosition].second.value = isChecked.toString()
+                }
+                this?.isFocusable = false
             }
-
-            switch?.isFocusable = false
             binding.executePendingBindings()
         }
     }
