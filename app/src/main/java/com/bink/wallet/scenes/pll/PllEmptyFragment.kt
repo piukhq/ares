@@ -33,10 +33,9 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
         arguments.let { bundle ->
             if (bundle != null) {
                 currentMembershipCard = PllEmptyFragmentArgs.fromBundle(bundle).membershipCard
-
                 currentMembershipPlan = PllEmptyFragmentArgs.fromBundle(bundle).membershipPlan
             }
-            }
+        }
 
 
         currentMembershipPlan?.let {
