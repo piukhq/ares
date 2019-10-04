@@ -1,10 +1,11 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.data.LoginDataDao
-import com.bink.wallet.TermsAndConditionsRepository
-import com.bink.wallet.TermsAndConditionsViewModel
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.modal.TermsAndConditionsRepository
+import com.bink.wallet.modal.TermsAndConditionsViewModel
+import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
@@ -65,6 +66,8 @@ val viewModelModules = module {
     viewModel { TermsAndConditionsViewModel(get()) }
 
     viewModel { AddPaymentCardViewModel() }
+
+    viewModel { BaseModalViewModel() }
 
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
