@@ -59,15 +59,18 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
+    <dimen name="text_size_title_big">25sp</dimen>
+    <dimen name="text_size_description_big">18sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
-    <dimen name="custom_add_fragment_image_size">32dp</dimen>
+    <dimen name="text_size_description_medium">15sp</dimen>
+    <dimen name="custom_add_fragment_image_size">31dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
     <dimen name="cancel_button_size">54dp</dimen>
-    <dimen name="brand_logo_size">52dp</dimen>
-    <dimen name="custom_text_card_margin">32dp</dimen>
-    <dimen name="custom_login_image_size">88dp</dimen>
-    <dimen name="transaction_arrow_size">32sp</dimen>
+    <dimen name="brand_logo_size">50dp</dimen>
+    <dimen name="custom_text_card_margin">30dp</dimen>
+    <dimen name="custom_login_image_size">89dp</dimen>
+    <dimen name="transaction_arrow_size">30sp</dimen>
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>

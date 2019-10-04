@@ -6,40 +6,21 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@android:color/background_light">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-            <android.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/loyalty_wallet_list"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_settings"
-                    app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-                    app:layout_constraintEnd_toEndOf="@+id/toolbar"
-                    app:layout_constraintTop_toTopOf="@+id/toolbar"
-                    tools:ignore="ContentDescription" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/loyalty_wallet_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/margin_padding_size_small"
-                    app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
             <ProgressBar
                     android:id="@+id/progress_spinner"
@@ -52,41 +33,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/loyalty_wallet_list"
                     app:layout_constraintStart_toStartOf="@+id/loyalty_wallet_list"
-                    app:layout_constraintTop_toTopOf="@+id/toolbar"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:visibility="visible" />
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                    android:id="@+id/bottom_navigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:background="@android:color/white"
-                    app:itemIconSize="@dimen/bottom_navigation_icon_size"
-                    app:itemIconTint="@color/bottom_nav_color"
-                    app:itemTextColor="@android:color/black"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:menu="@menu/bottom_navigation_menu">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/margin_padding_size_small">
-
-                    <ImageView
-                            android:layout_width="@dimen/add_button_size"
-                            android:layout_height="@dimen/add_button_size"
-                            android:layout_marginStart="@dimen/margin_padding_size_small"
-                            android:layout_marginEnd="@dimen/margin_padding_size_small"
-                            android:contentDescription="@string/add_button_description"
-                            android:src="@drawable/ic_add"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.bottomnavigation.BottomNavigationView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

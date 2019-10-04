@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -500,7 +499,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT)
+                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT).show()
                         dialog?.dismiss()
                     }
                     viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
