@@ -8,12 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBinding
-import com.bink.wallet.databinding.AddAuthSwitchItemBindingImpl
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanFields
@@ -24,25 +22,33 @@ import com.bink.wallet.utils.enums.FieldType
 class SignUpAdapter(
     val brands: List<Pair<PlanFields, PlanFieldsRequest>>
 ) :
-    RecyclerView.Adapter<SignUpAdapter.CardFieldHolder>() {
+    RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
         const val FALSE_TEXT = "false"
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardFieldHolder {
+    private fun checkIfError(item: PlanFields, position: Int, text: AppCompatEditText) {
+
+        if (!UtilFunctions.isValidField(
+                brands[position].first.validation, brands[position].second.value
+            )
+        )
+            text.error = text.resources?.getString(
+                R.string.add_auth_error_message,
+                item.column
+            )
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
-        val binding: ViewDataBinding
-
-        binding = when (viewType) {
+        return when (viewType) {
             FieldType.TEXT.type,
-            FieldType.PASSWORD.type -> AddAuthTextItemBinding.inflate(inflater)
-            FieldType.SPINNER.type -> AddAuthSpinnerItemBinding.inflate(inflater)
-            else -> AddAuthSwitchItemBindingImpl.inflate(inflater)
+            FieldType.PASSWORD.type -> TextFieldHolder(AddAuthTextItemBinding.inflate(inflater))
+            FieldType.SPINNER.type -> SpinnerViewHolder(AddAuthSpinnerItemBinding.inflate(inflater))
+            else -> CheckBoxHolder(AddAuthSwitchItemBinding.inflate(inflater))
         }
-
-        return CardFieldHolder(binding)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -52,16 +58,23 @@ class SignUpAdapter(
     }
 
 
-    override fun onBindViewHolder(holder: CardFieldHolder, position: Int) {
-        brands[position].let { holder.bind(it) }
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        brands[position].let {
+            when (holder) {
+                is TextFieldHolder -> holder.bind(it)
+                is SpinnerViewHolder -> holder.bind(it)
+                is CheckBoxHolder -> holder.bind(it)
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
         return brands.size
     }
 
-    inner class CardFieldHolder(val binding: ViewDataBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class TextFieldHolder(val binding: AddAuthTextItemBinding) :
+        BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
 
         private val textWatcher = object : TextWatcher {
 
@@ -86,6 +99,32 @@ class SignUpAdapter(
             }
         }
 
+        override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+            binding.planField = item.first
+            val text = binding.contentAddAuthText
+            text?.hint = item.first.description
+            text?.setText(item.second.value)
+            text?.addTextChangedListener(textWatcher)
+            if (brands[adapterPosition].second.value.isNullOrBlank())
+                text?.error = null
+            else
+                checkIfError(brands[adapterPosition].first, adapterPosition, text)
+
+            text?.setOnFocusChangeListener { _, isFocus ->
+                if (!isFocus)
+                    try {
+                        checkIfError(brands[adapterPosition].first, adapterPosition, text)
+                    } catch (ex: Exception) {
+                        Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
+                    }
+            }
+            binding.executePendingBindings()
+        }
+    }
+
+    inner class SpinnerViewHolder(val binding: AddAuthSpinnerItemBinding) :
+        BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
+
         private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -103,63 +142,31 @@ class SignUpAdapter(
 
         }
 
-        private fun checkIfError(item: PlanFields, text: AppCompatEditText) {
-
-            if (!UtilFunctions.isValidField(
-                    brands[adapterPosition].first.validation, brands[adapterPosition].second.value
-                )
-            )
-                text.error = text.resources?.getString(
-                    R.string.add_auth_error_message,
-                    item.column
-                )
+        override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+            val spinner = binding.contentAddAuthSpinner
+            binding.planField = item.first
+            brands[adapterPosition].second.value = item.first.choice?.get(0)
+            spinner?.isFocusable = false
+            spinner?.onItemSelectedListener = itemSelectedListener
+            binding.executePendingBindings()
         }
+    }
 
-        fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
 
-            when (binding) {
-                is AddAuthTextItemBinding -> {
-                    binding.planField = item.first
-                    val text = binding.contentAddAuthText
-                    text?.hint = item.first.description
-                    text?.setText(item.second.value)
-                    text?.addTextChangedListener(textWatcher)
-                    if (brands[adapterPosition].second.value.isNullOrBlank())
-                        text?.error = null
-                    else
-                        checkIfError(brands[adapterPosition].first, text)
+    inner class CheckBoxHolder(val binding: AddAuthSwitchItemBinding) :
+        BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
 
-                    text?.setOnFocusChangeListener { _, isFocus ->
-                        if (!isFocus)
-                            try {
-                                checkIfError(brands[adapterPosition].first, text)
-                            } catch (ex: Exception) {
-                                Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
-                            }
-                    }
-                }
+        override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+            val switch = binding.contentAddAuthSwitch
+            binding.planField = item.first
+            brands[adapterPosition].second.value = FALSE_TEXT
+            switch?.text = item.first.description
 
-                is AddAuthSpinnerItemBinding -> {
-                    val spinner = binding.contentAddAuthSpinner
-                    binding.planField = item.first
-                    brands[adapterPosition].second.value = item.first.choice?.get(0)
-                    spinner?.isFocusable = false
-                    spinner?.onItemSelectedListener = itemSelectedListener
-                }
-                is AddAuthSwitchItemBinding -> {
-                    val switch = binding.contentAddAuthSwitch
-                    binding.planField = item.first
-                    brands[adapterPosition].second.value = FALSE_TEXT
-                    switch?.text = item.first.description
-
-                    switch?.setOnCheckedChangeListener { _, isChecked ->
-                        brands[adapterPosition].second.value = isChecked.toString()
-                    }
-
-                    switch?.isFocusable = false
-                }
+            switch?.setOnCheckedChangeListener { _, isChecked ->
+                brands[adapterPosition].second.value = isChecked.toString()
             }
 
+            switch?.isFocusable = false
             binding.executePendingBindings()
         }
     }

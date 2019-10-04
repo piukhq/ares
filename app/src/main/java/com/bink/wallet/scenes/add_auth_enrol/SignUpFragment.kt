@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -244,7 +243,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             viewModel.membershipCardData.removeObservers(this)
         else
             viewModel
-                .membershipCardData.observe(this, Observer {
+                .membershipCardData.observeNonNull(this) {
 
                 if (signUpFormType == SignUpFormType.GHOST) {
                     val currentRequest = MembershipCardRequest(
@@ -260,13 +259,13 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
                 when (currentMembershipPlan.feature_set?.card_type) {
                     //TODO The condition is temporary removed for testing regarding to AB20-35(comment section)
-//                    0, 1 -> {
-//                        val directions =
-//                            AddAuthFragmentDirections.addAuthToDetails(
-//                                currentMembershipPlan, it
-//                            )
-//                        findNavController().navigateIfAdded(this, directions)
-//                    }
+                    //                    0, 1 -> {
+                    //                        val directions =
+                    //                            AddAuthFragmentDirections.addAuthToDetails(
+                    //                                currentMembershipPlan, it
+                    //                            )
+                    //                        findNavController().navigateIfAdded(this, directions)
+                    //                    }
                     0, 1, 2 -> {
                         if (it.membership_transactions != null && it.membership_transactions?.isEmpty()!!) {
                             val directions =
@@ -278,7 +277,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     }
                 }
                 hideLoadingViews()
-            })
+            }
 
 
         viewModel.createCardError.observeNonNull(this) {
