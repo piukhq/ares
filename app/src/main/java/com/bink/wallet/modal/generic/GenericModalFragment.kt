@@ -22,7 +22,7 @@ open class GenericModalFragment :
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
     }
-
+    
     private val scrollChangeListener = ViewTreeObserver.OnScrollChangedListener {
         val scrollBounds = Rect()
         binding.screenScrollView.getHitRect(scrollBounds)
@@ -68,7 +68,6 @@ open class GenericModalFragment :
         binding.title.viewTreeObserver.removeOnScrollChangedListener(
             scrollChangeListener
         )
-
         super.onStop()
     }
 
