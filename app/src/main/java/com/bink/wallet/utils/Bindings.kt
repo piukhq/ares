@@ -20,6 +20,7 @@ import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
@@ -32,7 +33,7 @@ import kotlin.math.absoluteValue
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
     if (item?.images != null && item.images.isNotEmpty())
-        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
+        Glide.with(context).load(item.images.first { it.type == ImageType.ICON.type }.url).into(this)
 }
 
 @BindingAdapter("image")
