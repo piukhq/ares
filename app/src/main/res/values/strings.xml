@@ -90,7 +90,8 @@
     <string name="points_login">Log in</string>
     <string name="description_see_history">To see history</string>
     <!-- 1.5 -->
-    <string name="points_history">History</string>
+    <string name="points_history">Points History</string>
+    <string name="history_text">History</string>
     <string name="description_not_available">Not available</string>
     <!-- 1.6 -->
     <string name="points_retry_login">Retry login</string>
@@ -131,7 +132,8 @@
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
-    <string name="link_payment_card_text">"You have not added any payment cards yet.\nAdd them to link to this card and others.\nUse this screen for more messaging about importance of adding payment cards, and utility of PLL.\nOptionally, also use info tiles on this screen."</string>
+    <string name="link_payment_card_text">You have not added any payment cards yet.
+        Add them to link to this card and others. </string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
@@ -180,6 +182,12 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
+
+    <!-- Pll Screen -->
+    <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
+    <string name="pll_linked_title">Link to payment cards</string>
+    <string name="pll_unlinked_title">Add card</string>
+    <string name="pll_last_digits">Card ending in %1$s</string>
     <string name="missing_destination_dialog_title">Missing destination</string>
     <string name="not_implemented_yet_text">Not implemented yet</string>
 
@@ -198,4 +206,9 @@
     <string name="edit_email_address">Edit Email Address</string>
     <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
     <string name="please_enter_valid_email">Please enter a valid email address</string>
+
+    <!-- Native Join Unavailable-->
+    <string name="native_join_unavailable_title">Native join unavailable</string>
+    <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
+    <string name="native_join_unavailable_button_text">Go to merchant site</string>
 </resources>

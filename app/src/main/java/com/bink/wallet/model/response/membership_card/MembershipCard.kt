@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
@@ -14,7 +15,7 @@ import kotlinx.android.parcel.Parcelize
 data class MembershipCard(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
-    @ColumnInfo(name = "payment_cards") var payment_cards: List<PaymentCard>?,
+    @ColumnInfo(name = "payment_cards") var payment_cards: List<PaymentMembershipCard>?,
     @ColumnInfo(name = "card_status") var status: CardStatus?,
     @ColumnInfo(name = "bankCard") var card: Card?,
     @ColumnInfo(name = "card_images") var images: List<CardImages>?,

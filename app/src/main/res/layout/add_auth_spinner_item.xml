@@ -8,16 +8,8 @@
         <import type="android.text.InputType" />
 
         <variable
-                name="enrolFields"
-                type="com.bink.wallet.model.response.membership_plan.EnrolFields" />
-
-        <variable
-                name="addFields"
-                type="com.bink.wallet.model.response.membership_plan.AddFields" />
-
-        <variable
-                name="authFields"
-                type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
+                name="planField"
+                type="com.bink.wallet.model.response.membership_plan.PlanFields" />
 
     </data>
 
@@ -36,12 +28,10 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/size_medium"
                 android:textStyle="bold"
-                app:addField="@{addFields}"
-                app:authField="@{authFields}"
-                app:enrolField="@{enrolFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:planField="@{planField}" />
 
         <Spinner
                 android:id="@+id/content_add_auth_spinner"
@@ -51,12 +41,10 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:spinnerMode="dropdown"
-                app:addField="@{addFields}"
-                app:authField="@{authFields}"
-                app:enrolField="@{enrolFields}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
+                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
+                app:planField="@{planField}" />
 
         <View
                 android:layout_width="0dp"

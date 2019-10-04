@@ -1,6 +1,7 @@
 package com.bink.wallet
 
 import android.app.Application
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.dataModule
 import com.bink.wallet.di.networkModule
 import com.bink.wallet.di.utilsModule
@@ -15,6 +16,7 @@ class MainApplication : Application() {
         startKoin {
             androidContext(this@MainApplication)
             modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
+            SharedPreferenceManager.init(this@MainApplication)
         }
     }
 }
