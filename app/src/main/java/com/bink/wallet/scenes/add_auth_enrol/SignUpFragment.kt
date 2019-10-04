@@ -228,8 +228,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             )
                         }
                     }
-
-
+                    
                 } else {
                     showNoInternetConnectionDialog()
                 }
