@@ -209,6 +209,11 @@ platform :android do
       deviceTest: true
     }
 
+    crashlytics(
+        api_token: '40cef155d89af567c87c555814e62cfe337bbd7e',
+        build_secret: 'b72403c35bb540ca189ec017811929fb7c8b513c3ec50f53f8922e62459eeed1'
+    )
+
     slack_options = {
       build_name: build_name
     }
