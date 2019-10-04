@@ -24,7 +24,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@id/loyalty_fragment"
+                app:popUpTo="@id/home_wallet"
                 app:popUpToInclusive="true" />
     </fragment>
 
@@ -176,7 +176,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpTo="@+id/home_wallet"
                 app:popUpToInclusive="true" />
     </fragment>
 
@@ -208,7 +208,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpTo="@+id/home_wallet"
                 app:popUpToInclusive="true" />
     </fragment>
 
@@ -223,7 +223,7 @@
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
         <action
                 android:id="@+id/detail_to_home"
-                app:destination="@+id/loyalty_fragment"
+                app:destination="@+id/home_wallet"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -295,7 +295,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpTo="@+id/home_wallet"
                 app:popUpToInclusive="true" />
 
         <action
@@ -376,4 +376,8 @@
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment" />
+    <fragment
+            android:id="@+id/settings_screen"
+            android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
+
 </navigation>

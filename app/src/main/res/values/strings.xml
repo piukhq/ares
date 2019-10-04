@@ -188,6 +188,16 @@
     <string name="terms_and_conditions_title">Terms and conditions</string>
     <string name="accept_button_text">Accept</string>
     <string name="decline_button_text">Decline</string>
+    <string name="popular_text">Popular</string>
+    <string name="debug_menu">Debug menu</string>
+    <string name="tools">Tools</string>
+    <string name="current_version">Current version</string>
+    <string name="version_name_format">%s build %d</string>
+    <string name="environment_base_url">Environment Base URL</string>
+    <string name="current_email_address">Current email address</string>
+    <string name="edit_email_address">Edit Email Address</string>
+    <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
+    <string name="please_enter_valid_email">Please enter a valid email address</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Native join unavailable</string>
