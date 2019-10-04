@@ -7,5 +7,6 @@ AB20-178 PLL empty layout issue
 AB20-174 brand header not visible when no data
 AB20-89  add payment card enabled
 AB20-176 LCD loyalty card image display update
+AB20-34 PLL
 AB20-183 LCD Error Message Not Displayed
 ab20-167 Bink Beta Release Crashes
