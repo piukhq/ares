@@ -36,8 +36,7 @@ class PllEmptyFragment : BaseFragment<PllViewModel, FragmentPllEmptyBinding>() {
                 currentMembershipPlan = PllEmptyFragmentArgs.fromBundle(bundle).membershipPlan
             }
         }
-
-
+        
         currentMembershipPlan?.let {
             binding.membershipPlan = currentMembershipPlan
         }
