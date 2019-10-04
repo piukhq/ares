@@ -103,11 +103,11 @@ class SignUpAdapter(
             binding.planField = item.first
             val text = binding.contentAddAuthText
             with(text) {
-                this?.hint = item.first.description
-                this?.setText(item.second.value)
-                this?.addTextChangedListener(textWatcher)
+                this.hint = item.first.description
+                this.setText(item.second.value)
+                this.addTextChangedListener(textWatcher)
                 if (brands[adapterPosition].second.value.isNullOrBlank())
-                    this?.error = null
+                    this.error = null
                 else
                     checkIfError(brands[adapterPosition].first, adapterPosition, this)
 
@@ -150,8 +150,8 @@ class SignUpAdapter(
             binding.planField = item.first
             brands[adapterPosition].second.value = item.first.choice?.get(0)
             with(spinner) {
-                this?.isFocusable = false
-                this?.onItemSelectedListener = itemSelectedListener
+                this.isFocusable = false
+                this.onItemSelectedListener = itemSelectedListener
             }
 
             binding.executePendingBindings()
@@ -167,11 +167,11 @@ class SignUpAdapter(
             binding.planField = item.first
             brands[adapterPosition].second.value = FALSE_TEXT
             with(switch) {
-                this?.text = item.first.description
-                this?.setOnCheckedChangeListener { _, isChecked ->
+                this.text = item.first.description
+                this.setOnCheckedChangeListener { _, isChecked ->
                     brands[adapterPosition].second.value = isChecked.toString()
                 }
-                this?.isFocusable = false
+                this.isFocusable = false
             }
             binding.executePendingBindings()
         }
