@@ -30,14 +30,18 @@ class SignUpAdapter(
 
     private fun checkIfError(item: PlanFields, position: Int, text: AppCompatEditText) {
 
+        val currentItem = brands[position]
+
         if (!UtilFunctions.isValidField(
-                brands[position].first.validation, brands[position].second.value
+                currentItem.first.validation,
+                currentItem.second.value
             )
-        )
+        ) {
             text.error = text.resources?.getString(
                 R.string.add_auth_error_message,
                 item.column
             )
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
@@ -66,7 +70,6 @@ class SignUpAdapter(
                 is CheckBoxHolder -> holder.bind(it)
             }
         }
-
     }
 
     override fun getItemCount(): Int {

@@ -159,14 +159,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         val addRegisterFieldsRequest = Account()
 
         planFieldsList?.map {
-
             when (it.first.typeOfField) {
                 TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
                 TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
                 TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
                 else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
             }
-
         }
 
         binding.authAddFields.apply {
@@ -279,8 +277,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             }
 
 
-        viewModel.createCardError.observeNonNull(this)
-        {
+        viewModel.createCardError.observeNonNull(this) {
             requireContext().displayModalPopup(
                 getString(R.string.add_card_error_title),
                 getString(R.string.add_card_error_message)
