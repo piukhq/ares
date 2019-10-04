@@ -12,6 +12,7 @@ import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,12 +43,15 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val currentMembershipPlan = args.currentMembershipPlan
-        val currentMembershipCard = args.membershipCard
+        viewModel.currentMembershipPlan.value = args.currentMembershipPlan
+        viewModel.currentMembershipCard.value = args.membershipCard
 
-        binding.item = currentMembershipPlan
+        binding.item = viewModel.currentMembershipPlan.value
         binding.descriptionAddAuth.text =
-            getString(R.string.add_auth_description, currentMembershipPlan.account?.company_name)
+            getString(
+                R.string.add_auth_description,
+                viewModel.currentMembershipPlan.value!!.account?.company_name
+            )
 
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
@@ -63,55 +67,55 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         val addAuthBoolean: MutableList<Any>? = mutableListOf()
 
-        if (currentMembershipCard != null) {
-            if (currentMembershipPlan.feature_set?.has_points != null &&
-                currentMembershipPlan.feature_set.has_points == true &&
-                currentMembershipPlan.feature_set.transactions_available != null
+        if (viewModel.currentMembershipCard.value != null && viewModel.currentMembershipPlan.value != null) {
+            if (viewModel.currentMembershipPlan.value!!.feature_set?.has_points != null &&
+                viewModel.currentMembershipPlan.value!!.feature_set?.has_points == true &&
+                viewModel.currentMembershipPlan.value!!.feature_set?.transactions_available != null
             ) {
-                if (currentMembershipPlan.feature_set.transactions_available == true) {
+                if (viewModel.currentMembershipPlan.value!!.feature_set?.transactions_available == true) {
                     binding.descriptionAddAuth.text = getString(
                         R.string.log_in_transaction_available,
-                        currentMembershipPlan.account?.plan_name_card
+                        viewModel.currentMembershipPlan.value!!.account?.plan_name_card
                     )
                 } else {
                     binding.descriptionAddAuth.text =
                         getString(
                             R.string.log_in_transaction_unavailable,
-                            currentMembershipPlan.account?.plan_name_card
+                            viewModel.currentMembershipPlan.value!!.account?.plan_name_card
                         )
                 }
             }
 
             if (MembershipPlanUtils.getAccountStatus(
-                    currentMembershipPlan,
-                    currentMembershipCard
+                    viewModel.currentMembershipPlan.value!!,
+                    viewModel.currentMembershipCard.value!!
                 ) == LoginStatus.STATUS_LOGIN_FAILED
             ) {
                 binding.descriptionAddAuth.text = getString(
                     R.string.log_in_transaction_available,
-                    currentMembershipPlan.account?.plan_name_card
+                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
                 )
             }
         } else {
-            currentMembershipPlan.account?.add_fields?.map {
+            viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                 if (it.type == 3) {
                     addAuthBoolean?.add(it)
                 }
             }
         }
 
-        currentMembershipPlan.account?.authorise_fields?.map {
+        viewModel.currentMembershipPlan.value!!.account?.authorise_fields?.map {
             if (it.type == 3) {
                 addAuthBoolean?.add(it)
             }
         }
 
-        if (currentMembershipCard == null)
-            if (currentMembershipPlan.feature_set?.has_points != null &&
-                currentMembershipPlan.feature_set.has_points == true &&
-                currentMembershipPlan.feature_set.transactions_available != null
+        if (viewModel.currentMembershipCard.value == null && viewModel.currentMembershipPlan.value != null)
+            if (viewModel.currentMembershipPlan.value!!.feature_set?.has_points != null &&
+                viewModel.currentMembershipPlan.value!!.feature_set?.has_points == true &&
+                viewModel.currentMembershipPlan.value!!.feature_set?.transactions_available != null
             ) {
-                currentMembershipPlan.account?.add_fields?.map {
+                viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                     if (it.type != 3 &&
                         !it.column.equals(BARCODE_TEXT)
                     ) {
@@ -120,7 +124,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
             }
 
-        currentMembershipPlan.account?.authorise_fields?.map {
+        viewModel.currentMembershipPlan.value!!.account?.authorise_fields?.map {
             if (it.type != 3 &&
                 !it.column.equals(BARCODE_TEXT)
             ) {
@@ -146,17 +150,17 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
                     val currentRequest = MembershipCardRequest(
                         addAuthFieldsRequest,
-                        currentMembershipPlan.id
+                        viewModel.currentMembershipPlan.value!!.id
                     )
 
-                    if (currentMembershipCard != null &&
+                    if (viewModel.currentMembershipCard.value != null &&
                         MembershipPlanUtils.getAccountStatus(
-                            currentMembershipPlan,
-                            currentMembershipCard
+                            viewModel.currentMembershipPlan.value!!,
+                            viewModel.currentMembershipCard.value!!
                         ) == LoginStatus.STATUS_LOGIN_FAILED
                     ) {
                         viewModel.updateMembershipCard(
-                            currentMembershipCard,
+                            viewModel.currentMembershipCard.value!!,
                             currentRequest
                         )
                     } else {
@@ -172,25 +176,26 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         }
 
-        if (viewModel.membershipCardData.hasActiveObservers())
-            viewModel.membershipCardData.removeObservers(this)
+        if (viewModel.newMembershipCard.hasActiveObservers())
+            viewModel.newMembershipCard.removeObservers(this)
         else
-            viewModel.membershipCardData.observe(this, Observer {
-                when (currentMembershipPlan.feature_set?.card_type) {
-                    //TODO The condition is temporary removed for testing regarding to AB20-35(comment section)
-//                    0, 1 -> {
-//                        val directions =
-//                            AddAuthFragmentDirections.addAuthToDetails(
-//                                currentMembershipPlan, it
-//                            )
-//                        findNavController().navigateIfAdded(this, directions)
-//                    }
-                    0, 1, 2 -> {
+            viewModel.newMembershipCard.observe(this, Observer {
+                when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
+
+                    CardType.VIEW.type, CardType.STORE.type -> {
+                        val directions =
+                            AddAuthFragmentDirections.addAuthToDetails(
+                                viewModel.currentMembershipPlan.value!!, it
+                            )
+                        findNavController().navigateIfAdded(this, directions)
+                    }
+                    CardType.PLL.type -> {
                         if (it.membership_transactions != null && it.membership_transactions?.isEmpty()!!) {
-                            val directions =
-                                AddAuthFragmentDirections.addAuthToPllEmpty(
-                                    currentMembershipPlan, it
-                                )
+                            val directions = AddAuthFragmentDirections.addAuthToPll(
+                                it,
+                                viewModel.currentMembershipPlan.value!!, true
+
+                            )
                             findNavController().navigateIfAdded(this, directions)
                         }
                     }

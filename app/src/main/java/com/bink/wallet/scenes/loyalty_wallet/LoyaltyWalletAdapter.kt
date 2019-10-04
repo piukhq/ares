@@ -45,6 +45,15 @@ class LoyaltyWalletAdapter(
         return position.toLong()
     }
 
+    private fun getItemPosition(cardId: String): Int =
+        membershipCards.indexOfFirst { card -> card.id == cardId }
+
+
+    fun deleteCard(cardId: String) {
+        (membershipCards as ArrayList<MembershipCard>).removeAt(getItemPosition(cardId))
+        notifyItemRemoved(getItemPosition(cardId))
+    }
+
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
