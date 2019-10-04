@@ -1,8 +1,6 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.data.LoginDataDao
-import com.bink.wallet.TermsAndConditionsRepository
-import com.bink.wallet.TermsAndConditionsViewModel
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.modal.TermsAndConditionsRepository

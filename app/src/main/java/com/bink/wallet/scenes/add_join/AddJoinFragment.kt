@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,12 +34,12 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         binding.item = currentMembershipPlan
 
         when (currentMembershipPlan.feature_set?.card_type) {
-            0 -> {
+            CardType.STORE.type -> {
                 binding.addJoinViewImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_view_inactive))
                 binding.addJoinViewDescription.text =
                     getString(R.string.add_join_inactive_view_description)
             }
-            2 -> {
+            CardType.PLL.type -> {
                 binding.addJoinLinkImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
                 binding.addJoinLinkDescription.text =
                     getString(R.string.add_join_inactive_link_description)
