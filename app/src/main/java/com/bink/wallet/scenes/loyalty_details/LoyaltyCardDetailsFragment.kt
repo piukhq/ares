@@ -119,7 +119,6 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
-
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     val action =
@@ -215,7 +214,18 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-                    findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
+                    val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
+                        viewModel.membershipCard.value?.let { membershipCard ->
+                            LoyaltyCardDetailsFragmentDirections.detailToPllEmpty(
+                                membershipPlan, membershipCard
+                            )
+                        }
+                    }
+                    binding.linkedWrapper.setOnClickListener {
+                        if (directions != null) {
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
                     binding.activeLinked.setImageDrawable(
