@@ -7,12 +7,12 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
@@ -26,7 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -34,10 +34,6 @@ class LoyaltyCardDetailsFragment :
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
-    }
-
-    companion object {
-        const val PLACEHOLDER = "placeholder"
     }
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
@@ -50,6 +46,8 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.detail_to_home)
         }
+
+        setLoadingState(true)
 
         runBlocking {
             viewModel.fetchPaymentCards()
@@ -68,6 +66,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+            runBlocking { viewModel.updateMembershipCard() }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
         }
@@ -76,28 +75,22 @@ class LoyaltyCardDetailsFragment :
             viewModel.membershipCard.value = it
             binding.swipeLayout.isRefreshing = false
             viewModel.setAccountStatus()
+            viewModel.setLinkStatus()
         }
 
         viewModel.membershipCard.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = false
         }
 
-        binding.offerTiles.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
 
-        val tiles = ArrayList<String>()
+        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
-        if (viewModel.tiles.value.isNullOrEmpty()) {
-            tiles.add(PLACEHOLDER)
-        }
-
-        binding.offerTiles.adapter =
-            viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
         binding.footerAbout.setOnClickListener {
-            viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
+            viewModel.membershipPlan.value?.account?.plan_description?.let { membershipPlan ->
                 context?.displayModalPopup(
                     "",
-                    it1
+                    membershipPlan
                 )
             }
         }
@@ -114,7 +107,7 @@ class LoyaltyCardDetailsFragment :
                     }
                 }
 
-                directions?.let { findNavController().navigateIfAdded(this, it) }
+                directions?.let { findNavController().navigateIfAdded(this, directions) }
             }
         }
         binding.pointsWrapper.setOnClickListener {
@@ -185,7 +178,14 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
-            when (status) {
+            if (viewModel.accountStatus.value != null && viewModel.paymentCards.value != null) {
+                setLoadingState(false)
+            } else {
+                runBlocking {
+                    viewModel.fetchPaymentCards()
+                }
+            }
+            when(status){
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
                     binding.activeLinked.setImageDrawable(
                         ContextCompat.getDrawable(
@@ -193,13 +193,29 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_active_linked
                         )
                     )
-                    //TODO go to PLL screen
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
+                    var linkedCards = 0
+                    viewModel.membershipCard.value?.payment_cards?.forEach {
+                        if (it.active_link == true)
+                            linkedCards++
+                    }
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
-                        viewModel.membershipCard.value?.payment_cards?.size,
+                        linkedCards,
                         viewModel.paymentCards.value?.size
                     )
+                    binding.linkedWrapper.setOnClickListener {
+                        val directions =
+                            viewModel.membershipCard.value?.let { membershipCard ->
+                                viewModel.membershipPlan.value?.let { membershipPlan ->
+                                    LoyaltyCardDetailsFragmentDirections.detailToPll(
+                                        membershipCard, membershipPlan, false
+                                    )
+                                }
+
+                            }
+                        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                    }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
                     binding.activeLinked.setImageDrawable(
@@ -236,7 +252,19 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
-                    //TODO go to PLL screen
+
+                    binding.linkedWrapper.setOnClickListener {
+                        val directions =
+                            viewModel.membershipCard.value?.let { membershipCard ->
+                                viewModel.membershipPlan.value?.let { membershipPlan ->
+                                    LoyaltyCardDetailsFragmentDirections.detailToPll(
+                                        membershipCard, membershipPlan, false
+                                    )
+                                }
+
+                            }
+                        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                    }
 
                 }
                 LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
@@ -249,7 +277,7 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         getString(R.string.link_status_link_error)
                     binding.linkDescription.text = getString(R.string.description_error)
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         val directions =
                             LoyaltyCardDetailsFragmentDirections.detailToIssue(
                                 LinkStatus.STATUS_LINKABLE_GENERIC_ERROR,
@@ -310,7 +338,7 @@ class LoyaltyCardDetailsFragment :
                     binding.linkStatusText.text =
                         getString(R.string.link_status_unlinkable)
                     binding.linkDescription.text = getString(R.string.description_unlinkable)
-                    binding.activeLinked.setOnClickListener {
+                    binding.linkedWrapper.setOnClickListener {
                         val directions =
                             LoyaltyCardDetailsFragmentDirections.detailToIssue(
                                 LinkStatus.STATUS_UNLINKABLE,
@@ -517,5 +545,22 @@ class LoyaltyCardDetailsFragment :
                     getString(R.string.points_prefix_or_suffix, balance.value, suffix)
             }
         }
+    }
+
+    private fun setLoadingState(isLoading: Boolean) {
+        if (isLoading) {
+            binding.loadingIndicator.visibility = View.VISIBLE
+            binding.linkedWrapper.visibility = View.INVISIBLE
+            binding.pointsWrapper.visibility = View.INVISIBLE
+        } else {
+            binding.loadingIndicator.visibility = View.GONE
+            binding.linkedWrapper.visibility = View.VISIBLE
+            binding.pointsWrapper.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.paymentCards.value = null
     }
 }

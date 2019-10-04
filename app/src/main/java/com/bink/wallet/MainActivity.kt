@@ -10,6 +10,7 @@ import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.scenes.login.LoginRepository
@@ -72,6 +73,11 @@ class MainActivity : AppCompatActivity() {
             }
             findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
+            }
+            findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_fragment -> {
+                if(!SharedPreferenceManager.isAddJourney){
+                    findNavController(R.id.main_fragment).popBackStack()
+                }
             }
             else -> super.onBackPressed()
         }

@@ -131,7 +131,8 @@
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
-    <string name="link_payment_card_text">"You have not added any payment cards yet.\nAdd them to link to this card and others.\nUse this screen for more messaging about importance of adding payment cards, and utility of PLL.\nOptionally, also use info tiles on this screen."</string>
+    <string name="link_payment_card_text">You have not added any payment cards yet.
+        Add them to link to this card and others. </string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
@@ -180,6 +181,12 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
+
+    <!-- Pll Screen -->
+    <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
+    <string name="pll_linked_title">Link to payment cards</string>
+    <string name="pll_unlinked_title">Add card</string>
+    <string name="pll_last_digits">Card ending in %1$s</string>
     <string name="missing_destination_dialog_title">Missing destination</string>
     <string name="not_implemented_yet_text">Not implemented yet</string>
 

@@ -195,6 +195,14 @@
                 app:popExitAnim="@anim/slide_out_right" />
 
         <action
+                android:id="@+id/add_auth_to_pll"
+                app:destination="@id/pll_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
                 android:id="@+id/add_auth_to_details"
                 app:destination="@id/loyalty_card_detail_fragment"
                 app:enterAnim="@anim/slide_in_right"
@@ -267,6 +275,15 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/detail_to_pll"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpToInclusive="true"
+                app:destination="@id/pll_fragment" />
 
     </fragment>
 
@@ -348,6 +365,28 @@
         <argument
                 android:name="errorCodes"
                 app:argType="string" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/pll_fragment"
+            android:name="com.bink.wallet.scenes.pll.PllFragment">
+        <argument
+                android:name="membershipCard"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="isAddJourney"
+                app:argType="boolean" />
+        <action
+                android:id="@+id/pll_to_lcd"
+                app:destination="@+id/loyalty_card_detail_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

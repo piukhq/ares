@@ -19,6 +19,8 @@ import com.bink.wallet.model.response.membership_plan.AddFields
 import com.bink.wallet.model.response.membership_plan.AuthoriseFields
 import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
 import com.google.zxing.BarcodeFormat
@@ -29,9 +31,16 @@ import kotlinx.android.parcel.Parcelize
 import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(item: MembershipPlan) {
-    if (item.images != null && item.images.isNotEmpty())
-        Glide.with(context).load(item.images.first { it.type == 3 }.url).into(this)
+fun ImageView.loadImage(item: MembershipPlan?) {
+    if (item?.images != null && item.images.isNotEmpty())
+        Glide.with(context).load(item.images.first { it.type == ImageType.ICON.type }.url).into(this)
+}
+
+@BindingAdapter("image")
+fun ImageView.setPaymentCardImage(item:PaymentCard) {
+    if (!item.images.isNullOrEmpty()){
+        Glide.with(context).load(item.images.first().url).into(this)
+    }
 }
 
 
@@ -86,7 +95,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
 
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
-    plan?.let { binding.brandImage.loadImage(it) }
+    binding.brandImage.loadImage(plan)
     if (plan?.account?.plan_description != null) {
         binding.headerWrapper.setOnClickListener {
             context.displayModalPopup(
