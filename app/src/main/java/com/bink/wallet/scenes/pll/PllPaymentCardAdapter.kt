@@ -28,7 +28,7 @@ class PllPaymentCardAdapter(
 
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
-        paymentCards?.get(position).let {cardWrapper ->
+        paymentCards?.get(position).let { cardWrapper ->
             cardWrapper?.let {
                 holder.bindCard(cardWrapper)
             }

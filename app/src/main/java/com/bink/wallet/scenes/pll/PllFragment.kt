@@ -26,7 +26,8 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -40,8 +41,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             PllFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
-                viewModel.title.set(getString(R.string.pll_unlinked_title)).takeIf { membershipCard.payment_cards?.isNullOrEmpty()!! }
-                    ?: viewModel.title.set(getString(R.string.pll_linked_title))
+                displayTitle(membershipCard.payment_cards?.isNullOrEmpty()!!)
                 if (isAddJourney) {
                     this@PllFragment.isAddJourney = isAddJourney
                     binding.toolbar.navigationIcon = null
@@ -71,6 +71,7 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 viewModel.getLocalPaymentCards()
             }
         }
+
         val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null)
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
@@ -170,6 +171,14 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         viewModel.unlinkError.observeNonNull(this) {
             requireContext().displayModalPopup(getString(R.string.description_error), it.toString())
+        }
+    }
+
+    private fun displayTitle(hasLinkedCards: Boolean) {
+        if (hasLinkedCards) {
+            viewModel.title.set(getString(R.string.pll_linked_title))
+        } else {
+            viewModel.title.set(getString(R.string.pll_unlinked_title))
         }
     }
 }

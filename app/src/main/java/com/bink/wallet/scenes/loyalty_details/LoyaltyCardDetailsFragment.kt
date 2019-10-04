@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
