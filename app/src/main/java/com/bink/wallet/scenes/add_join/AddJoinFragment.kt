@@ -9,6 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,7 +48,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            val action = AddJoinFragmentDirections.addJoinToAddAuth(currentMembershipPlan, null)
+            val action = AddJoinFragmentDirections.addJoinToGhost(
+                SignUpFormType.ADD_AUTH,
+                currentMembershipPlan,
+                null
+            )
             findNavController().navigateIfAdded(this, action)
         }
 
@@ -67,7 +72,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 }
                 action = AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
             } else {
-                action = AddJoinFragmentDirections.addJoinToEnrol(currentMembershipPlan)
+                action = AddJoinFragmentDirections.addJoinToGhost(
+                    SignUpFormType.ENROL,
+                    currentMembershipPlan,
+                    null
+                )
             }
             findNavController().navigateIfAdded(this, action)
         }
