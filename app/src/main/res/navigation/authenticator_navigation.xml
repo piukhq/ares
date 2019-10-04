@@ -274,6 +274,20 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/detail_to_about"
+                app:destination="@+id/about_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/detail_to_security"
+                app:destination="@+id/security_and_privacy"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -359,7 +373,7 @@
 
     <fragment
             android:id="@+id/terms_and_conditions"
-            android:name="com.bink.wallet.modal.TermsAndConditionsFragment">
+            android:name="com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -379,5 +393,20 @@
     <fragment
             android:id="@+id/settings_screen"
             android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
+    <fragment
+            android:id="@+id/about_fragment"
+            android:name="com.bink.wallet.modal.AboutMembershipFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/security_and_privacy"
+            android:name="com.bink.wallet.modal.SecurityAndPrivacyFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
 
 </navigation>

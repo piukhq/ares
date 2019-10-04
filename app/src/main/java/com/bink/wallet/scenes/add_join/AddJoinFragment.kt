@@ -62,7 +62,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 if (currentMembershipPlan.account.plan_url!!.isNotEmpty()) {
                     genericModalParameters.firstButtonText =
                         getString(R.string.native_join_unavailable_button_text)
-                    genericModalParameters.joinUnavailableLink =
+                    genericModalParameters.link =
                         currentMembershipPlan.account.plan_url
                 }
                 action = AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)

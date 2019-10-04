@@ -14,8 +14,8 @@ class JoinUnavailableFragment : GenericModalFragment() {
 
         arguments?.let { bundle ->
             JoinUnavailableFragmentArgs.fromBundle(bundle).apply {
-                setupUi(this.genericModalParameters)
-                link = this.genericModalParameters.joinUnavailableLink!!
+                setupUi(genericModalParameters)
+                link = genericModalParameters.link
             }
         }
     }

@@ -17,11 +17,15 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
-import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.getElapsedTime
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -94,12 +98,18 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.adapter =
             viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it.plus(tiles)) }
         binding.footerAbout.setOnClickListener {
-            viewModel.membershipPlan.value?.account?.plan_description?.let { it1 ->
-                context?.displayModalPopup(
-                    "",
-                    it1
-                )
-            }
+            val directions =
+                viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
+                    GenericModalParameters(
+                        R.drawable.ic_back, getString(R.string.about_membership),
+                        description, getString(R.string.ok)
+                    )
+                }?.let { arguments ->
+                    LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                        arguments
+                    )
+                }
+            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
         if (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
