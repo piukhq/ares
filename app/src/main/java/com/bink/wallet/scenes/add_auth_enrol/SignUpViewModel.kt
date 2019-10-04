@@ -42,7 +42,7 @@ class SignUpViewModel constructor(private val loyaltyWalletRepository: LoyaltyWa
         loyaltyWalletRepository.ghostMembershipCard(
             membershipCard.id,
             membershipCardRequest,
-            membershipCardData,
+            newMembershipCard,
             createCardError
         )
     }

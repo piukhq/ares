@@ -103,15 +103,15 @@ class SignUpAdapter(
             binding.planField = item.first
             val text = binding.contentAddAuthText
             with(text) {
-                this.hint = item.first.description
-                this.setText(item.second.value)
-                this.addTextChangedListener(textWatcher)
+                hint = item.first.description
+                setText(item.second.value)
+                addTextChangedListener(textWatcher)
                 if (brands[adapterPosition].second.value.isNullOrBlank())
-                    this.error = null
+                    error = null
                 else
                     checkIfError(brands[adapterPosition].first, adapterPosition, this)
 
-                this?.setOnFocusChangeListener { _, isFocus ->
+                setOnFocusChangeListener { _, isFocus ->
                     if (!isFocus)
                         try {
                             checkIfError(brands[adapterPosition].first, adapterPosition, this)
@@ -150,8 +150,8 @@ class SignUpAdapter(
             binding.planField = item.first
             brands[adapterPosition].second.value = item.first.choice?.get(0)
             with(spinner) {
-                this.isFocusable = false
-                this.onItemSelectedListener = itemSelectedListener
+                isFocusable = false
+                onItemSelectedListener = itemSelectedListener
             }
 
             binding.executePendingBindings()
@@ -167,11 +167,11 @@ class SignUpAdapter(
             binding.planField = item.first
             brands[adapterPosition].second.value = FALSE_TEXT
             with(switch) {
-                this.text = item.first.description
-                this.setOnCheckedChangeListener { _, isChecked ->
+                text = item.first.description
+                setOnCheckedChangeListener { _, isChecked ->
                     brands[adapterPosition].second.value = isChecked.toString()
                 }
-                this.isFocusable = false
+                isFocusable = false
             }
             binding.executePendingBindings()
         }
