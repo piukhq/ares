@@ -28,7 +28,11 @@ class PllPaymentCardAdapter(
 
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
-        paymentCards?.get(position).let { it?.let { it1 -> holder.bindCard(it1) } }
+        paymentCards?.get(position).let {cardWrapper ->
+            cardWrapper?.let {
+                holder.bindCard(cardWrapper)
+            }
+        }
     }
 
     inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :

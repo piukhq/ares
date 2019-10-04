@@ -18,9 +18,11 @@ class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
     var unlinkedRequestBody = MutableLiveData<ResponseBody>()
     var linkError = MutableLiveData<Throwable>()
     var unlinkError = MutableLiveData<Throwable>()
+    var fetchError = MutableLiveData<Throwable>()
+    var localFetchError = MutableLiveData<Throwable>()
 
     suspend fun getPaymentCards(){
-        pllRepository.getPaymentCards(paymentCards)
+        pllRepository.getPaymentCards(paymentCards, fetchError)
     }
 
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
@@ -32,6 +34,6 @@ class PllViewModel(private val pllRepository: PllRepository): BaseViewModel() {
     }
 
     suspend fun getLocalPaymentCards() {
-        pllRepository.getLocalPaymentCards(localPaymentCards)
+        pllRepository.getLocalPaymentCards(localPaymentCards, localFetchError)
     }
 }

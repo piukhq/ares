@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
@@ -27,9 +26,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import android.R.attr.button
-import android.os.CountDownTimer
-
 
 
 class LoyaltyCardDetailsFragment :
@@ -199,7 +195,10 @@ class LoyaltyCardDetailsFragment :
                     )
                     binding.linkStatusText.text = getString(R.string.link_status_linked)
                     var linkedCards = 0
-                    viewModel.membershipCard.value?.payment_cards?.forEach { if (it.active_link == true) linkedCards++ }
+                    viewModel.membershipCard.value?.payment_cards?.forEach {
+                        if (it.active_link == true)
+                            linkedCards++
+                    }
                     binding.linkDescription.text = getString(
                         R.string.description_linked,
                         linkedCards,

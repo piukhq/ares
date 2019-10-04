@@ -15,6 +15,7 @@ import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -141,8 +142,20 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
+        viewModel.fetchError.observeNonNull(this) { throwable ->
+            Snackbar.make(binding.root, throwable.toString(), Snackbar.LENGTH_SHORT).show()
+        }
+
+        viewModel.localFetchError.observeNonNull(this) { throwable ->
+            Snackbar.make(binding.root, throwable.toString(), Snackbar.LENGTH_SHORT).show()
+        }
+
         viewModel.linkError.observeNonNull(this) {
-            AlertDialog.Builder(requireContext()).setTitle(getString(R.string.description_error)).setMessage(it.toString()).setPositiveButton(getString(R.string.ok)
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.description_error))
+                .setMessage(it.toString())
+                .setPositiveButton(
+                    getString(R.string.ok)
                 ) { _, _ ->
                     if (findNavController().currentDestination?.id == R.id.pll_fragment)
                         directions?.let { directions ->

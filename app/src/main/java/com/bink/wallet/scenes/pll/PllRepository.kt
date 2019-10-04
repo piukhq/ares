@@ -14,7 +14,9 @@ import okhttp3.ResponseBody
 
 class PllRepository(private val apiService: ApiService, private val paymentCardDao: PaymentCardDao) {
 
-    suspend fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>) {
+    suspend fun getPaymentCards(
+        paymentCards: MutableLiveData<List<PaymentCard>>,
+        fetchError: MutableLiveData<Throwable>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
@@ -24,18 +26,22 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
                     paymentCardDao.storeAll(response)
                     paymentCards.value = response
                 } catch (e: Throwable) {
+                    fetchError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
     }
 
-    suspend fun getLocalPaymentCards(localPaymentCards: MutableLiveData<List<PaymentCard>>) {
+    suspend fun getLocalPaymentCards(
+        localPaymentCards: MutableLiveData<List<PaymentCard>>,
+        localFetchError: MutableLiveData<Throwable>) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
+                    localFetchError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
