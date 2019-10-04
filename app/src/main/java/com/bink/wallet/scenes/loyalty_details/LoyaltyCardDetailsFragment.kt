@@ -228,8 +228,17 @@ class LoyaltyCardDetailsFragment :
                         getString(R.string.description_no_cards)
                     binding.linkStatusText.text =
                         getString(R.string.link_status_linkable_no_cards)
+                    val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
+                        viewModel.membershipCard.value?.let { membershipCard ->
+                            LoyaltyCardDetailsFragmentDirections.detailToPllEmpty(
+                                membershipPlan, membershipCard
+                            )
+                        }
+                    }
                     binding.linkedWrapper.setOnClickListener {
-                        findNavController().navigateIfAdded(this, R.id.detail_to_pll_empty)
+                        if (directions != null) {
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
