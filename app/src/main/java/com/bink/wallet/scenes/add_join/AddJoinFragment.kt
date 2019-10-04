@@ -7,9 +7,9 @@ import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,7 +75,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 action = AddJoinFragmentDirections.addJoinToGhost(
                     SignUpFormType.ENROL,
                     currentMembershipPlan,
-                    null)
+                    null
+                )
             }
             findNavController().navigateIfAdded(this, action)
         }
