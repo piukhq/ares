@@ -21,6 +21,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
@@ -125,6 +126,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_FAILED -> {
                     val action =
                         LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                            SignUpFormType.ADD_AUTH,
                             viewModel.membershipPlan.value!!,
                             viewModel.membershipCard.value!!
                         )
@@ -400,7 +402,7 @@ class LoyaltyCardDetailsFragment :
                     )
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    binding.pointsText.text = getString(R.string.points_history)
+                    binding.pointsText.text = getString(R.string.history_text)
                     binding.pointsDescription.text =
                         getString(R.string.description_not_available)
                     binding.pointsImage.setImageDrawable(
