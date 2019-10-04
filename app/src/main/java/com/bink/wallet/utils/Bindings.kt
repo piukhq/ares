@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.graphics.Color
 import android.os.Parcelable
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -32,8 +33,17 @@ import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
-    if (item?.images != null && item.images.isNotEmpty())
-        Glide.with(context).load(item.images.first { it.type == ImageType.ICON.type }.url).into(this)
+    if (item?.images != null && item.images.isNotEmpty()) {
+        // wrapped in a try/catch as it was throwing error on very strange situations
+        try {
+            Glide.with(context)
+                .load(item.images.first { it.type == ImageType.ICON.type }.url)
+                .onlyRetrieveFromCache(true)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            Log.e("loadImage", e.localizedMessage, e)
+        }
+    }
 }
 
 @BindingAdapter("image")
