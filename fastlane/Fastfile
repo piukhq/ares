@@ -36,6 +36,14 @@ platform :android do
     flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
     build_name = "MR"
 
+    notify_options = {
+      build_name: build_name,
+      mergeId: parameters[:mergeId],
+      source: parameters[:source],
+      target: parameters[:target],
+      requestTitle: parameters[:requestTitle]
+    }
+
     build_options = {
       build_name: build_name,
       crashlytics_groups: ["dev_team"],
@@ -46,15 +54,14 @@ platform :android do
       test: true,
       deviceTest: true
     }
-    build(build_options)
 
-    crashlytics_options = {
-      apk_path: "app/build/outputs/apk/nightly/Bink_2.0.0_nightly.apk",
-      api_token: ENV["FABRIC_API_KEY"],
-      build_secret: ENV["FABRIC_BUILD_SECRET"]
-
+    slack_options = {
+      build_name: build_name
     }
-    crashlytics(crashlytics_options)
+
+    notifyBuild(notify_options)
+    build(build_options)
+    slackSuccess(slack_options)
   end
 
   desc "Build Bink Beta"
@@ -183,14 +190,6 @@ platform :android do
     flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
     build_name = "Nightly"
 
-    notify_options = {
-      build_name: build_name,
-      mergeId: parameters[:mergeId],
-      source: parameters[:source],
-      target: parameters[:target],
-      requestTitle: parameters[:requestTitle]
-    }
-
     build_options = {
       build_name: build_name,
       crashlytics_groups: ["dev_team"],
@@ -201,14 +200,15 @@ platform :android do
       test: true,
       deviceTest: true
     }
-
-    slack_options = {
-      build_name: build_name
-    }
-
-    notifyBuild(notify_options)
     build(build_options)
-    slackSuccess(slack_options)
+
+    crashlytics_options = {
+      apk_path: "app/build/outputs/apk/nightly/Bink_2.0.0_nightly.apk",
+      api_token: ENV["FABRIC_API_KEY"],
+      build_secret: ENV["FABRIC_BUILD_SECRET"]
+
+    }
+    crashlytics(crashlytics_options)
   end
 
   private_lane :notifyBuild do |options|
