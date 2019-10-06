@@ -202,13 +202,13 @@ platform :android do
     }
     build(build_options)
 
-    crashlytics_options = {
+    clytics_options = {
       apk_path: "app/build/outputs/apk/nightly/Bink_2.0.0_nightly.apk",
       api_token: ENV["FABRIC_API_KEY"],
       build_secret: ENV["FABRIC_BUILD_SECRET"]
 
     }
-    crashlytics(crashlytics_options)
+    crashlytics(clytics_options)
   end
 
   private_lane :notifyBuild do |options|
