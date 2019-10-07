@@ -8,16 +8,8 @@
         <import type="android.text.InputType" />
 
         <variable
-                name="enrolFields"
-                type="com.bink.wallet.model.response.membership_plan.EnrolFields" />
-
-        <variable
-                name="addFields"
-                type="com.bink.wallet.model.response.membership_plan.AddFields" />
-
-        <variable
-                name="authFields"
-                type="com.bink.wallet.model.response.membership_plan.AuthoriseFields" />
+                name="PlanField"
+                type="com.bink.wallet.model.response.membership_plan.PlanFields" />
 
     </data>
 

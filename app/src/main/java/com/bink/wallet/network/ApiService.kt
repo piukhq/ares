@@ -43,4 +43,10 @@ interface ApiService {
         @Path("card_id") cardId: String,
         @Body membershipCardRequest: MembershipCardRequest
     ): Deferred<MembershipCard>
+
+    @PATCH("/ubiquity/membership_card/{card_id}")
+    fun ghostMembershipCardAsync(
+        @Path("card_id") cardId: String,
+        @Body membershipCardRequest: MembershipCardRequest
+    ): Deferred<MembershipCard>
 }

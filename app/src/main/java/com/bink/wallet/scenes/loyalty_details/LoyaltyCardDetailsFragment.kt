@@ -24,6 +24,7 @@ import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
@@ -135,6 +136,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_FAILED -> {
                     val action =
                         LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                            SignUpFormType.ADD_AUTH,
                             viewModel.membershipPlan.value!!,
                             viewModel.membershipCard.value!!
                         )
@@ -399,7 +401,7 @@ class LoyaltyCardDetailsFragment :
                     )
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    binding.pointsText.text = getString(R.string.points_history)
+                    binding.pointsText.text = getString(R.string.history_text)
                     binding.pointsDescription.text =
                         getString(R.string.description_not_available)
                     binding.pointsImage.setImageDrawable(

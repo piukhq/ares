@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import android.graphics.Color
 import android.os.Parcelable
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -15,14 +16,13 @@ import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
-import com.bink.wallet.model.response.membership_plan.AddFields
-import com.bink.wallet.model.response.membership_plan.AuthoriseFields
-import com.bink.wallet.model.response.membership_plan.EnrolFields
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
@@ -32,8 +32,17 @@ import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
-    if (item?.images != null && item.images.isNotEmpty())
-        Glide.with(context).load(item.images.first { it.type == ImageType.ICON.type }.url).into(this)
+    if (item?.images != null && item.images.isNotEmpty()) {
+        // wrapped in a try/catch as it was throwing error on very strange situations
+        try {
+            Glide.with(context)
+                .load(item.images.first { it.type == ImageType.ICON.type }.url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            Log.e("loadImage", e.localizedMessage, e)
+        }
+    }
 }
 
 @BindingAdapter("image")
@@ -122,46 +131,24 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
 }
 
 
-@BindingAdapter("addField", "authField", "enrolField")
+@BindingAdapter("planField")
 fun TextView.title(
-    addFields: AddFields?,
-    authoriseFields: AuthoriseFields?,
-    enrolFields: EnrolFields?
+    planFields: PlanFields?
 ) {
-    if (!addFields?.column.isNullOrEmpty()) {
-        text = addFields?.column
-    }
-    if (!authoriseFields?.column.isNullOrEmpty()) {
-        text = authoriseFields?.column
-    }
-    if (!enrolFields?.column.isNullOrEmpty()) {
-        this.text = enrolFields?.column
+    if (!planFields?.column.isNullOrEmpty()) {
+        this.text = planFields?.column
     }
 }
 
-@BindingAdapter("addField", "authField", "enrolField")
+@BindingAdapter("planField")
 fun Spinner.setValues(
-    addFields: AddFields?,
-    authoriseFields: AuthoriseFields?,
-    enrolFields: EnrolFields?
+    planFields: PlanFields?
 ) {
-    if (addFields != null && !addFields.choice.isNullOrEmpty())
+    if (planFields != null && !planFields.choice.isNullOrEmpty())
         adapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_dropdown_item,
-            addFields.choice
-        )
-    if (authoriseFields != null && !authoriseFields.choice.isNullOrEmpty())
-        adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_spinner_dropdown_item,
-            authoriseFields.choice
-        )
-    if (enrolFields != null && !enrolFields.choice.isNullOrEmpty())
-        this.adapter = ArrayAdapter(
-            this.context,
-            android.R.layout.simple_spinner_dropdown_item,
-            enrolFields.choice
+            planFields.choice
         )
 }
 
