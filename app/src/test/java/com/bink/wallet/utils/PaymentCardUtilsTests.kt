@@ -1,7 +1,7 @@
 package com.bink.wallet.utils
 
-import junit.framework.TestCase.assertTrue
-import junit.framework.TestCase.assertFalse
+import com.bink.wallet.model.payment_card.PaymentCardType
+import junit.framework.TestCase.*
 import org.junit.Test
 
 class PaymentCardUtilsTests {
@@ -31,17 +31,22 @@ class PaymentCardUtilsTests {
     }
 
     @Test
+    fun invalidCard() {
+        assertEquals("1242 4242 4242 4242".cardValidation(), PaymentCardType.NONE)
+    }
+
+    @Test
     fun validVisa() {
-        assertTrue("4242 4242 4242 4242".cardValidation())
+        assertEquals("4242 4242 4242 4242".cardValidation(), PaymentCardType.VISA)
     }
 
     @Test
     fun validMasterCard() {
-        assertTrue("5336 1653 2182 8811".cardValidation())
+        assertEquals("5336 1653 2182 8811".cardValidation(), PaymentCardType.MASTERCARD)
     }
 
     @Test
     fun validAmEx() {
-        assertTrue("3400 00000 000009".cardValidation())
+        assertEquals("3400 00000 000009".cardValidation(), PaymentCardType.AMEX)
     }
 }

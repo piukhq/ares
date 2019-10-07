@@ -1,5 +1,6 @@
 package com.bink.wallet.utils
 
+import com.bink.wallet.model.payment_card.PaymentCardType
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 
@@ -13,16 +14,20 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
     return false
 }
 
-fun String.cardValidation() : Boolean {
+fun String.cardValidation() : PaymentCardType {
     if (!this.luhnValidation())
-        return false
+        return PaymentCardType.NONE
     val sanitizedInput = this.ccSanitize()
-    return when (sanitizedInput.length) {
-        15 -> (listOf("34", "37").contains(sanitizedInput.substring(0, 2))) // AmEx
-        16 -> (sanitizedInput.substring(0, 1) == "4") // Visa
-           || (sanitizedInput.substring(0, 1) == "5") // MasterCard
-        else -> false
+    if (sanitizedInput.length == 15) {
+        if (listOf("34", "37").contains(sanitizedInput.substring(0, 2))) // AmEx
+            return PaymentCardType.AMEX
+    } else if (sanitizedInput.length == 16) {
+        if (sanitizedInput.substring(0, 1) == "4") // Visa
+            return PaymentCardType.VISA
+        if (sanitizedInput.substring(0, 1) == "5") // MasterCard
+            return PaymentCardType.MASTERCARD
     }
+    return PaymentCardType.NONE
 }
 
 fun String.ccSanitize(): String {
