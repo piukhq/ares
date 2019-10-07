@@ -1,3 +1,4 @@
+AB20-80  Added ghost card button
 AB20-75  Ghost card register
 AB20-208 fix brand list crash
 AB20-155 new icons for debug, beta, MR & nightly

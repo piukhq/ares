@@ -75,13 +75,19 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
         binding.item = viewModel.currentMembershipPlan.value
 
-        if (viewModel.currentMembershipPlan.value != null)
+        if (viewModel.currentMembershipPlan.value != null) {
             binding.descriptionAddAuth.text =
                 getString(
                     R.string.enrol_description,
                     viewModel.currentMembershipPlan.value!!.account?.company_name
                 )
 
+            if (!viewModel.currentMembershipPlan.value!!.account?.registration_fields?.isNullOrEmpty()!!) {
+                with(binding.noAccountText) {
+                    visibility = View.VISIBLE
+                }
+            }
+        }
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
             activity?.onBackPressed()
@@ -124,7 +130,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                         )
                     }
                 } else {
-                    binding.noAccountText.visibility = View.VISIBLE
                     viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                         it.typeOfField = TypeOfField.ADD
                         addFieldToList(it)
@@ -153,6 +158,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     it.typeOfField = TypeOfField.REGISTRATION
                     addFieldToList(it)
                 }
+
+                with(binding.noAccountText) {
+                    visibility = View.INVISIBLE
+                }
+
             }
         }
 
