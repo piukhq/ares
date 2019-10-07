@@ -117,5 +117,34 @@
                     />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+                android:id="@+id/card_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                android:text="@string/name_on_card"
+                android:textSize="@dimen/text_size_description_medium"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/card_number_input_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/card_name_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_name_label"
+                app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/card_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:hint="@string/name_on_card"
+                    />
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

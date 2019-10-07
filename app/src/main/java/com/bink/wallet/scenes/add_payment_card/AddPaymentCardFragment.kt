@@ -28,6 +28,9 @@ class AddPaymentCardFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        cardSwitcher("")
+        cardDisplay()
+
         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
@@ -47,6 +50,7 @@ class AddPaymentCardFragment :
                 p3: Int
             ) {
                 cardSwitcher(currentText.toString())
+                cardDisplay()
             }
         }
         binding.cardNumber.addTextChangedListener(textWatcher)
@@ -54,22 +58,43 @@ class AddPaymentCardFragment :
 
     fun cardSwitcher(card: String) {
         when (card.presentedCardType()) {
-            PaymentCardType.NONE -> {}
+            PaymentCardType.NONE -> {
+                binding.topLayout.background = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_card_payment_bkgr_none
+                )
+                binding.topLayoutBrand.setImageResource(R.drawable.blank)
+                binding.bottomLayoutBrand.setImageResource(R.drawable.blank)
+            }
             PaymentCardType.VISA -> {
-                binding.topLayout.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_bkgr_visa)
-                binding.topLayoutBrand.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_logo_visa)
-                binding.bottomLayoutBrand.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_sublogo_visa)
+                binding.topLayout.background = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_card_payment_bkgr_visa
+                )
+                binding.topLayoutBrand.setImageResource(R.drawable.ic_card_payment_logo_visa)
+                binding.bottomLayoutBrand.setImageResource(R.drawable.ic_card_payment_sublogo_visa)
             }
             PaymentCardType.MASTERCARD -> {
-                binding.topLayout.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_bkgr_master_card)
-                binding.topLayoutBrand.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_logo_master_card)
-                binding.bottomLayoutBrand.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_sublogo_master_card)
+                binding.topLayout.background = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_card_payment_bkgr_master_card
+                )
+                binding.topLayoutBrand.setImageResource(R.drawable.ic_card_payment_logo_master_card)
+                binding.bottomLayoutBrand.setImageResource(R.drawable.ic_card_payment_sublogo_master_card)
             }
             PaymentCardType.AMEX -> {
-                binding.topLayout.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_bkgr_am_ex)
-                binding.topLayoutBrand.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_logo_am_ex)
-                binding.bottomLayoutBrand.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_card_payment_sublogo_am_ex)
+                binding.topLayout.background = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_card_payment_bkgr_am_ex
+                )
+                binding.topLayoutBrand.setImageResource(R.drawable.ic_card_payment_logo_am_ex)
+                binding.bottomLayoutBrand.setImageResource(R.drawable.ic_card_payment_sublogo_am_ex)
             }
         }
+    }
+
+    fun cardDisplay() {
+        binding.displayCardNumber.text = binding.cardNumber.text
+        binding.displayCardName.text = binding.cardName.text
     }
 }
