@@ -23,14 +23,14 @@
       {
         "id": 524,
         "type": 0,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/HarveyNichols_UPPT2Yx.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/HarveyNichols_UPPT2Yx.png",
         "description": "Harvey Nichols Default Hero",
         "encoding": "png"
       },
       {
         "id": 537,
         "type": 3,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Harvey_Nichols_icon_RS5YgmD.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Harvey_Nichols_icon_RS5YgmD.png",
         "description": "Harvey nichols Icon",
         "encoding": "png"
       }
@@ -74,21 +74,21 @@
       {
         "id": 524,
         "type": 0,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/HarveyNichols_UPPT2Yx.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/HarveyNichols_UPPT2Yx.png",
         "description": "Harvey Nichols Default Hero",
         "encoding": "png"
       },
       {
         "id": 494,
         "type": 8,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Harvey-Nichols_Silver_txDikHN.jpg",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Harvey-Nichols_Silver_txDikHN.jpg",
         "description": "Silver Tier",
         "encoding": "jpg"
       },
       {
         "id": 537,
         "type": 3,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Harvey_Nichols_icon_RS5YgmD.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Harvey_Nichols_icon_RS5YgmD.png",
         "description": "Harvey nichols Icon",
         "encoding": "png"
       }
@@ -193,21 +193,21 @@
       {
         "id": 524,
         "type": 0,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/HarveyNichols_UPPT2Yx.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/HarveyNichols_UPPT2Yx.png",
         "description": "Harvey Nichols Default Hero",
         "encoding": "png"
       },
       {
         "id": 494,
         "type": 8,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Harvey-Nichols_Silver_txDikHN.jpg",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Harvey-Nichols_Silver_txDikHN.jpg",
         "description": "Silver Tier",
         "encoding": "jpg"
       },
       {
         "id": 537,
         "type": 3,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Harvey_Nichols_icon_RS5YgmD.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Harvey_Nichols_icon_RS5YgmD.png",
         "description": "Harvey nichols Icon",
         "encoding": "png"
       }
@@ -246,14 +246,14 @@
       {
         "id": 538,
         "type": 3,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Co-op_icon.png",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Co-op_icon.png",
         "description": "Co-op Icon",
         "encoding": "png"
       },
       {
         "id": 539,
         "type": 0,
-        "url": "https://api.bink-dev.com/content/dev-media/hermes/schemes/Co-op-hero.jpg",
+        "url": "https://api.dev.gb.bink.com/content/dev-media/hermes/schemes/Co-op-hero.jpg",
         "description": "Co-op Hero",
         "encoding": "jpg"
       }
