@@ -148,7 +148,7 @@ platform :android do
 
     build_options = {
       build_name: build_name,
-      crashlytics_groups: ["dev_team",],
+      crashlytics_groups: ["dev_team"],
       buildType: "External",
       flags: "#{flags}",
       clean: true,
@@ -202,18 +202,16 @@ platform :android do
     }
     build(build_options)
 
-    envPath = ENV["BITRISE_SOURCE_DIR"]
-    if envPath == nil
-        envPath = "."
-    end
-    fullPath = envPath + "/app/build/outputs/apk/nightly/Bink_2.0.0_nightly.apk"
-    clytics_options = {
-      apk_path: fullPath,
-      notes_path: "app/beta_release_notes.txt",
-      api_token: ENV["FABRIC_API_KEY"],
-      build_secret: ENV["FABRIC_BUILD_SECRET"]
-    }
-    crashlytics(clytics_options)
+    gradle(
+      task: "crashlyticsUploadDistributionNightly"
+    )
+#    apiKey = ENV["FABRIC_API_KEY"]
+#    buildSecret = ENV["FABRIC_BUILD_SECRET"]
+#    crashlytics {
+#      api_token: ["apiKey"],
+#      build_secret: ["buildSecret"]
+#    }
+#    gradle(task: 'crashlyticsUploadDistribution', build_type: 'Release')
   end
 
   private_lane :notifyBuild do |options|
