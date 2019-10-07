@@ -205,13 +205,6 @@ platform :android do
     gradle(
       task: "crashlyticsUploadDistributionNightly"
     )
-#    apiKey = ENV["FABRIC_API_KEY"]
-#    buildSecret = ENV["FABRIC_BUILD_SECRET"]
-#    crashlytics {
-#      api_token: ["apiKey"],
-#      build_secret: ["buildSecret"]
-#    }
-#    gradle(task: 'crashlyticsUploadDistribution', build_type: 'Release')
   end
 
   private_lane :notifyBuild do |options|
