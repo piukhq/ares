@@ -105,14 +105,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     binding.brandImage.loadImage(plan)
-    if (plan?.account?.plan_description != null) {
-        binding.headerWrapper.setOnClickListener {
-            context.displayModalPopup(
-                resources.getString(R.string.plan_description),
-                plan.account.plan_description.toString()
-            )
-        }
-    }
     plan?.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)

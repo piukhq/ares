@@ -9,7 +9,9 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
+import com.bink.wallet.scenes.add_join.AddJoinFragmentDirections
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
@@ -48,6 +50,17 @@ class PllFragment: BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
                 SharedPreferenceManager.isAddJourney = isAddJourney
             }
+        }
+
+        binding.brandHeader.setOnClickListener {
+            val directions = viewModel.membershipPlan.value?.account?.plan_description?.let { message ->
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.plan_description),
+                    message, getString(R.string.ok)
+                )
+            }?.let { params -> PllFragmentDirections.pllToBrandHeader(params) }
+            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
         runBlocking {

@@ -63,7 +63,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     plan, card
                                 )
                             }
-                        if (findNavController().currentDestination?.id == R.id.loyalty_wallet_fragment) {
+                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
                             directions?.let {
                                 findNavController().navigateIfAdded(
                                     this@LoyaltyWalletFragment, it
@@ -216,7 +216,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        if (verifyAvailableNetwork(activity!!)) {
+                        if (verifyAvailableNetwork(requireActivity())) {
                             runBlocking {
                                 viewModel.deleteCard(membershipCard.id)
                             }

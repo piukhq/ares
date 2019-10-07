@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/bottom_layout_height"
                         android:paddingTop="@dimen/margin_padding_size_extra_small"
-                        style="@style/DescriptionTextView" />
+                        style="@style/CustomTextView" />
             </LinearLayout>
         </ScrollView>
 

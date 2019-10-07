@@ -79,6 +79,9 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.main_fragment).popBackStack()
                 }
             }
+            findNavController(R.id.main_fragment).currentDestination?.id == R.id.home_wallet -> {
+                finish()
+            }
             else -> super.onBackPressed()
         }
     }

@@ -132,6 +132,14 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
 
+        <action
+                android:id="@+id/add_join_to_brand_header"
+                app:destination="@+id/brand_header"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -164,6 +172,14 @@
         <action
                 android:id="@+id/sign_up_to_pll_empty"
                 app:destination="@id/pll_empty_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/sign_up_to_brand_header"
+                app:destination="@id/brand_header"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -323,6 +339,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/pll_empty_to_brand_header"
+                app:destination="@id/brand_header"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -336,6 +359,13 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <action
+                android:id="@+id/transactions_to_brand_header"
+                app:destination="@+id/brand_header"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -395,6 +425,14 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/pll_to_brand_header"
+                app:destination="@+id/brand_header"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -430,6 +468,14 @@
     <fragment
             android:id="@+id/security_and_privacy"
             android:name="com.bink.wallet.modal.loyalty_card_details.SecurityAndPrivacyFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/brand_header"
+            android:name="com.bink.wallet.modal.BrandHeaderFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />

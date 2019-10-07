@@ -47,6 +47,17 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             }
         }
 
+        binding.addJoinReward.setOnClickListener {
+            val directions = currentMembershipPlan.account?.plan_description?.let { message ->
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.plan_description),
+                    message, getString(R.string.ok)
+                )
+            }?.let { params -> AddJoinFragmentDirections.addJoinToBrandHeader(params) }
+            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+        }
+
         binding.addCardButton.setOnClickListener {
             val action = AddJoinFragmentDirections.addJoinToGhost(
                 SignUpFormType.ADD_AUTH,
@@ -64,7 +75,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                     getString(R.string.native_join_unavailable_title),
                     getString(R.string.native_join_unavailable_text)
                 )
-                if (currentMembershipPlan.account.plan_url!!.isNotEmpty()) {
+                if (currentMembershipPlan.account.plan_url?.isNotEmpty()!!) {
                     genericModalParameters.firstButtonText =
                         getString(R.string.native_join_unavailable_button_text)
                     genericModalParameters.link =

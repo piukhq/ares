@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
@@ -88,6 +89,18 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        binding.addJoinReward.setOnClickListener {
+            val directions =
+                viewModel.currentMembershipPlan.value?.account?.plan_description?.let { message ->
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        getString(R.string.plan_description),
+                        message, getString(R.string.ok)
+                    )
+                }?.let { params -> SignUpFragmentDirections.signUpToBrandHeader(params) }
+            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
         when (signUpFormType) {
