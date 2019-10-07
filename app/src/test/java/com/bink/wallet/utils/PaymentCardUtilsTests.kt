@@ -32,10 +32,16 @@ class PaymentCardUtilsTests {
 
     @Test
     fun validVisa() {
-        assertTrue("4242 4242 4242 4242".luhnValidation())
+        assertTrue("4242 4242 4242 4242".cardValidation())
     }
+
+    @Test
+    fun validMasterCard() {
+        assertTrue("5336 1653 2182 8811".cardValidation())
+    }
+
     @Test
     fun validAmEx() {
-        assertTrue("3400 00000 000009".luhnValidation())
+        assertTrue("3400 00000 000009".cardValidation())
     }
 }

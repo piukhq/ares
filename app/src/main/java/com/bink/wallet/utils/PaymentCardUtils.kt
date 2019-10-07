@@ -13,8 +13,25 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
     return false
 }
 
+fun String.cardValidation() : Boolean {
+    if (!this.luhnValidation())
+        return false
+    val sanitizedInput = this.ccSanitize()
+    // AmEx
+    if (sanitizedInput.length == 15) {
+        return (listOf("34", "37").contains(sanitizedInput.substring(0, 2)))
+    } else {
+        return (sanitizedInput.substring(0, 1) == "4") // Visa
+            || (sanitizedInput.substring(0, 1) == "5") // MasterCard
+    }
+}
+
+fun String.ccSanitize(): String {
+    return this.replace(" ", "")
+}
+
 fun String.luhnValidation() : Boolean {
-    val sanitizedInput = this.replace(" ", "")
+    val sanitizedInput = this.ccSanitize()
     return when {
         sanitizedInput.luhnLengthInvalid() -> false
         sanitizedInput.luhnValidPopulated() -> sanitizedInput.luhnChecksum() % 10 == 0
