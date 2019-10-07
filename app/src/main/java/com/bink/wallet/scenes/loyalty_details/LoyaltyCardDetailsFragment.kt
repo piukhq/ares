@@ -91,16 +91,10 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         binding.footerAbout.setOnClickListener {
-            viewModel.membershipPlan.value?.account?.plan_description?.let { membershipPlan ->
-                context?.displayModalPopup(
-                    "",
-                    membershipPlan
-                )
-            }
             val directions =
                 viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
                     GenericModalParameters(
-                        R.drawable.ic_back, getString(R.string.about_membership),
+                        R.drawable.ic_close, getString(R.string.about_membership),
                         description, getString(R.string.ok)
                     )
                 }?.let { arguments ->
@@ -169,28 +163,17 @@ class LoyaltyCardDetailsFragment :
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            val dialog = Dialog(requireContext())
-            val dialogBinding = DataBindingUtil.inflate<DialogSecurityBinding>(
-                layoutInflater,
-                R.layout.dialog_security,
-                null,
-                true
+            val directions = LoyaltyCardDetailsFragmentDirections.detailToSecurity(
+                GenericModalParameters(
+                    R.drawable.ic_close, getString(R.string.security_modal_title), getString(
+                        R.string.security_modal_body,
+                        getString(R.string.security_modal_body_1),
+                        getString(R.string.security_modal_body_2)
+                                + getString(R.string.security_modal_body_3)
+                    ), getString(R.string.ok)
+                )
             )
-
-            dialog.setContentView(dialogBinding.root)
-            dialog.setTitle(R.string.security_modal_title)
-            dialogBinding.preBody.text = getString(
-                R.string.security_modal_body,
-                getString(R.string.security_modal_body_1),
-                getString(R.string.security_modal_body_2)
-            )
-            dialogBinding.body.text = spannableString
-            dialogBinding.body.movementMethod = LinkMovementMethod.getInstance()
-            dialogBinding.ok.setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.show()
-
+            findNavController().navigateIfAdded(this, directions)
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->

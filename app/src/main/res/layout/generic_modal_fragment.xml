@@ -35,9 +35,7 @@
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/terms_and_conditions_title"
-                        android:textSize="@dimen/size_headline"
-                        android:textStyle="bold" />
+                        style="@style/HeaderTextView"/>
 
                 <TextView
                         android:id="@+id/description"
@@ -45,8 +43,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/bottom_layout_height"
                         android:paddingTop="@dimen/margin_padding_size_extra_small"
-                        android:text="@string/terms_and_conditions_text"
-                        android:textSize="@dimen/size_sub_headline" />
+                        style="@style/DescriptionTextView" />
             </LinearLayout>
         </ScrollView>
 

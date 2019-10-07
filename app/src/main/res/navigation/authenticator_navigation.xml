@@ -434,7 +434,7 @@
             android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
     <fragment
             android:id="@+id/about_fragment"
-            android:name="com.bink.wallet.modal.AboutMembershipFragment">
+            android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -442,7 +442,7 @@
 
     <fragment
             android:id="@+id/security_and_privacy"
-            android:name="com.bink.wallet.modal.SecurityAndPrivacyFragment">
+            android:name="com.bink.wallet.modal.loyalty_card_details.SecurityAndPrivacyFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />

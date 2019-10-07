@@ -47,7 +47,6 @@ open class GenericModalFragment :
         binding.secondButton.setOnClickListener {
             onSecondButtonClicked()
         }
-
         viewModel.destinationLiveData.observeNonNull(this) {
             goTo(it)
         }
