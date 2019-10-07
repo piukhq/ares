@@ -14,6 +14,16 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
     return false
 }
 
+fun String.presentedCardType(): PaymentCardType {
+    val sanitizedInput = this.ccSanitize()
+    if (sanitizedInput.length >= 2 && listOf("34", "37").contains(sanitizedInput.substring(0, 2)))
+        return PaymentCardType.AMEX
+    else if (sanitizedInput.isNotEmpty() && sanitizedInput.substring(0, 1) == "4")
+        return PaymentCardType.VISA
+    else if (sanitizedInput.isNotEmpty() && sanitizedInput.substring(0, 1) == "5")
+        return PaymentCardType.MASTERCARD
+    return PaymentCardType.NONE
+}
 fun String.cardValidation() : PaymentCardType {
     if (!this.luhnValidation())
         return PaymentCardType.NONE

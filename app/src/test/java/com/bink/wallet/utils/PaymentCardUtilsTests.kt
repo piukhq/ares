@@ -49,4 +49,19 @@ class PaymentCardUtilsTests {
     fun validAmEx() {
         assertEquals("3400 00000 000009".cardValidation(), PaymentCardType.AMEX)
     }
+
+    @Test
+    fun checkPresentedVisa() {
+        assertEquals("4242".presentedCardType(), PaymentCardType.VISA)
+    }
+
+    @Test
+    fun checkPresentedMasterCard() {
+        assertEquals("51".presentedCardType(), PaymentCardType.MASTERCARD)
+    }
+
+    @Test
+    fun checkPresentedAmEx() {
+        assertEquals("34".presentedCardType(), PaymentCardType.AMEX)
+    }
 }
