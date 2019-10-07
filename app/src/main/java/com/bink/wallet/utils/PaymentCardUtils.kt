@@ -13,3 +13,25 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
     }
     return false
 }
+
+fun String.luhnValidation() : Boolean {
+    val sanitizedInput = this.replace(" ", "")
+    return when {
+        sanitizedInput.luhnValidPopulated() -> sanitizedInput.checksum() % 10 == 0
+        else -> false
+    }
+}
+
+fun String.luhnValidPopulated() = this.all(Char::isDigit) && this.length > 1
+
+fun String.checksum() = this.addends().sum()
+
+fun String.addends() = this.digits().mapIndexed { i, j ->
+    when {
+        (this.length - i + 1) % 2 == 0 -> j
+        j >= 5 -> j * 2 - 9
+        else -> j * 2
+    }
+}
+
+fun String.digits() = this.map(Character::getNumericValue)
