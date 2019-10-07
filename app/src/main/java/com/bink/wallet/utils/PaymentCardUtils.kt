@@ -5,8 +5,8 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
-        if(paymentMembershipCard.id.toString() == membershipCard.id
-            && paymentMembershipCard.active_link == true) {
+        if (paymentMembershipCard.id.toString() == membershipCard.id &&
+            paymentMembershipCard.active_link == true) {
             return true
         }
     }
@@ -17,12 +17,11 @@ fun String.cardValidation() : Boolean {
     if (!this.luhnValidation())
         return false
     val sanitizedInput = this.ccSanitize()
-    // AmEx
-    if (sanitizedInput.length == 15) {
-        return (listOf("34", "37").contains(sanitizedInput.substring(0, 2)))
-    } else {
-        return (sanitizedInput.substring(0, 1) == "4") // Visa
-            || (sanitizedInput.substring(0, 1) == "5") // MasterCard
+    return when (sanitizedInput.length) {
+        15 -> (listOf("34", "37").contains(sanitizedInput.substring(0, 2))) // AmEx
+        16 -> (sanitizedInput.substring(0, 1) == "4") // Visa
+           || (sanitizedInput.substring(0, 1) == "5") // MasterCard
+        else -> false
     }
 }
 
