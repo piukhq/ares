@@ -153,6 +153,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             }
         }
 
+        binding.noAccountText.setOnClickListener {
+            if (viewModel.currentMembershipPlan.value != null) {
+                val action = SignUpFragmentDirections.toGhost(
+                    SignUpFormType.GHOST,
+                    viewModel.currentMembershipPlan.value!!,
+                    null
+                )
+                findNavController().navigateIfAdded(this, action)
+            }
+        }
+
 
         planBooleanFieldsList?.map { planFieldsList?.add(it) }
 
