@@ -8,6 +8,8 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.model.payment_card.PaymentCardType
+import com.bink.wallet.utils.cardFormatter
+import com.bink.wallet.utils.cardStarFormatter
 import com.bink.wallet.utils.presentedCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,7 +31,7 @@ class AddPaymentCardFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         cardSwitcher("")
-        cardDisplay()
+        cardInfoDisplay()
 
         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -50,7 +52,7 @@ class AddPaymentCardFragment :
                 p3: Int
             ) {
                 cardSwitcher(currentText.toString())
-                cardDisplay()
+                cardInfoDisplay()
             }
         }
         binding.cardNumber.addTextChangedListener(textWatcher)
@@ -93,8 +95,12 @@ class AddPaymentCardFragment :
         }
     }
 
-    fun cardDisplay() {
-        binding.displayCardNumber.text = binding.cardNumber.text
+    fun cardInfoDisplay() {
+        binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
         binding.displayCardName.text = binding.cardName.text
+    }
+
+    fun cardNumberDisplays() {
+        binding.cardNumber.setText(binding.cardNumber.text.toString().cardFormatter())
     }
 }

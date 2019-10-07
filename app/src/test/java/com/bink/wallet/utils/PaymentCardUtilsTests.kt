@@ -64,4 +64,38 @@ class PaymentCardUtilsTests {
     fun checkPresentedAmEx() {
         assertEquals("34".presentedCardType(), PaymentCardType.AMEX)
     }
+
+    @Test
+    fun checkLayoutShort() {
+        assertEquals("42424242".cardFormatter(), "4242 4242")
+    }
+    @Test
+    fun checkLayoutMedium() {
+        assertEquals("424242424242".cardFormatter(), "4242 4242 4242")
+    }
+    @Test
+    fun checkLayoutLong() {
+        assertEquals("4242424242424242".cardFormatter(), "4242 4242 4242 4242")
+    }
+
+    @Test
+    fun checkStarLayoutEmpty() {
+        assertEquals("".cardStarFormatter(), "")
+    }
+    @Test
+    fun checkStarLayoutVeryShort() {
+        assertEquals("4242".cardStarFormatter(), "****")
+    }
+    @Test
+    fun checkStarLayoutShort() {
+        assertEquals("42424242".cardStarFormatter(), "**** ****")
+    }
+    @Test
+    fun checkStarLayoutMedium() {
+        assertEquals("424242424242".cardStarFormatter(), "**** **** ****")
+    }
+    @Test
+    fun checkStarLayoutLong() {
+        assertEquals("4242424242424242".cardStarFormatter(), "**** **** **** 4242")
+    }
 }
