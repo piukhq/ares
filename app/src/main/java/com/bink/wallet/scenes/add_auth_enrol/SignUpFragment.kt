@@ -74,11 +74,13 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         val signUpFormType = args.signUpFormType
 
         binding.item = viewModel.currentMembershipPlan.value
-        binding.descriptionAddAuth.text =
-            getString(
-                R.string.add_auth_description,
-                viewModel.currentMembershipPlan.value!!.account?.company_name
-            )
+
+        if (viewModel.currentMembershipPlan.value != null)
+            binding.descriptionAddAuth.text =
+                getString(
+                    R.string.enrol_description,
+                    viewModel.currentMembershipPlan.value!!.account?.company_name
+                )
 
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
@@ -122,6 +124,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                         )
                     }
                 } else {
+                    binding.noAccountText.visibility = View.VISIBLE
                     viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                         it.typeOfField = TypeOfField.ADD
                         addFieldToList(it)
