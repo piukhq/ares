@@ -41,10 +41,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         windowFullscreenHandler.toFullscreen()
     }
 
-    private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+    private var planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
         mutableListOf()
 
-    private val planBooleanFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+    private var planBooleanFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
         mutableListOf()
 
     private fun addFieldToList(planField: PlanFields) {
@@ -71,6 +71,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
         viewModel.currentMembershipCard.value = args.membershipCard
+        planFieldsList = mutableListOf()
+        planBooleanFieldsList = mutableListOf()
         val signUpFormType = args.signUpFormType
 
         binding.item = viewModel.currentMembershipPlan.value
