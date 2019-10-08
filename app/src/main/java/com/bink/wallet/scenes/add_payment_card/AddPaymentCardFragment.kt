@@ -105,16 +105,18 @@ class AddPaymentCardFragment :
         with (binding.cardNumber) {
             val origNumber = text.toString()
             val newNumber = origNumber.cardFormatter()
-            if (origNumber != newNumber) {
-                val pos = selectionStart
-                setText(newNumber)
-                if (newNumber.length > origNumber.length) {
-                    if (pos == origNumber.length) {
-                        setSelection(newNumber.length)
-                    }
-                } else if (newNumber.length < origNumber.length) {
-                    if (pos > newNumber.length) {
-                        setSelection(newNumber.length)
+            if (origNumber.isNotEmpty() && newNumber.isNotEmpty()) {
+                if (origNumber != newNumber) {
+                    val pos = selectionStart
+                    setText(newNumber)
+                    if (newNumber.length > origNumber.length) {
+                        if (pos == origNumber.length) {
+                            setSelection(newNumber.length)
+                        }
+                    } else if (newNumber.length < origNumber.length) {
+                        if (pos > newNumber.length) {
+                            setSelection(newNumber.length)
+                        }
                     }
                 }
             }
