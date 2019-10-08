@@ -272,20 +272,20 @@ fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
 
     when (paymentCard.card?.provider) {
         PaymentCardType.VISA.type -> {
-            colors[0] = Color.parseColor("#13288d")
-            colors[1] = Color.parseColor("#181c51")
+            colors[0] = ContextCompat.getColor(context, R.color.visa_right)
+            colors[1] = ContextCompat.getColor(context, R.color.visa_left)
         }
         PaymentCardType.MASTERCARD.type -> {
-            colors[0] = Color.parseColor("#f79e1b")
-            colors[1] = Color.parseColor("#eb001b")
+            colors[0] = ContextCompat.getColor(context, R.color.mastercard_right)
+            colors[1] = ContextCompat.getColor(context, R.color.mastercard_left)
         }
         PaymentCardType.AMEX.type -> {
-            colors[0] = Color.parseColor("#57c4ff")
-            colors[1] = Color.parseColor("#006bcd")
+            colors[0] = ContextCompat.getColor(context, R.color.amex_right)
+            colors[1] = ContextCompat.getColor(context, R.color.amex_left)
         }
         else -> {
-            colors[0] = Color.parseColor("#b46fea")
-            colors[1] = Color.parseColor("#4371fe")
+            colors[0] = ContextCompat.getColor(context, R.color.unknown_right)
+            colors[1] = ContextCompat.getColor(context, R.color.unknown_left)
         }
     }
 
