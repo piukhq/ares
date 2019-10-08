@@ -16,12 +16,25 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
 
 fun String.presentedCardType(): PaymentCardType {
     val sanitizedInput = this.ccSanitize()
-    if (sanitizedInput.length >= 2 && listOf("34", "37").contains(sanitizedInput.substring(0, 2)))
-        return PaymentCardType.AMEX
-    else if (sanitizedInput.isNotEmpty() && sanitizedInput.substring(0, 1) == "4")
-        return PaymentCardType.VISA
-    else if (sanitizedInput.isNotEmpty() && sanitizedInput.substring(0, 1) == "5")
-        return PaymentCardType.MASTERCARD
+    if (sanitizedInput.isEmpty())
+        return PaymentCardType.NONE
+    PaymentCardType.values().forEach {
+        if (it != PaymentCardType.NONE) {
+            val splits = it.prefix.split("|")
+            for (prefix in splits) {
+                if (splits.size <= 1 ||
+                    prefix.length != 1 ||
+                    sanitizedInput.length <= prefix.length) {
+                    if (sanitizedInput.length >= prefix.length &&
+                        sanitizedInput.substring(0, prefix.length) == prefix
+                    ) {
+                        return it
+                    }
+                }
+                // skip this, as it's an indicator prefix
+            }
+        }
+    }
     return PaymentCardType.NONE
 }
 
@@ -29,17 +42,11 @@ fun String.cardValidation() : PaymentCardType {
     if (!this.luhnValidation())
         return PaymentCardType.NONE
     val sanitizedInput = this.ccSanitize()
-    if (sanitizedInput.length == PaymentCardType.AMEX.len &&
-       listOf("34", "37").contains(sanitizedInput.substring(0, 2)))
-        return PaymentCardType.AMEX
-    else if (sanitizedInput.length == PaymentCardType.VISA.len &&
-             sanitizedInput.substring(0, 1) == "4") // Visa
-        return PaymentCardType.VISA
-    else if (sanitizedInput.length == PaymentCardType.VISA.len &&
-             sanitizedInput.substring(0, 1) == "5") // MasterCard
-        return PaymentCardType.MASTERCARD
+    val paymentType = sanitizedInput.presentedCardType()
+    return if (sanitizedInput.length == paymentType.len)
+        paymentType
     else
-        return PaymentCardType.NONE
+        PaymentCardType.NONE
 }
 
 fun String.ccSanitize(): String {
@@ -73,10 +80,10 @@ fun String.digits() = this.map(Character::getNumericValue)
 
 fun String.cardFormatter() : String {
     val userInput = this.replace("[^\\d]".toRegex(), "")
-    if (userInput.length <= 16) {
-        return userInput.convertLayout()
+    return if (userInput.length <= 16) {
+        userInput.convertLayout()
     } else {
-        return userInput
+        userInput
     }
 }
 
@@ -94,20 +101,31 @@ fun String.convertLayout() : String {
 
 fun String.cardStarFormatter() : String {
     val sanitizedInput = this.ccSanitize()
-    val shortPartLen = sanitizedInput.presentedCardType().len - 4
-    var outPrep = ""
-    if (sanitizedInput.isEmpty()) {
-        outPrep = ""
-    } else if (sanitizedInput.length <= shortPartLen) {
-        outPrep = sanitizedInput.starMeUp()
-    } else {
-        val part1 = sanitizedInput.substring(0, shortPartLen)
-        val part2 = sanitizedInput.substring(shortPartLen)
-        val part1a = part1.starMeUp()
-        outPrep = part1a + part2
+    val type = sanitizedInput.presentedCardType()
+    if (type == PaymentCardType.NONE) {
+        return ""
     }
-    val output = outPrep.convertLayout()
-    return output
+    val shortPartLen = type.len - 4
+    var outPrep = ""
+    outPrep = if (sanitizedInput.isEmpty()) {
+        ""
+    } else if (sanitizedInput.length <= shortPartLen) {
+        sanitizedInput.starMeUp()
+    } else {
+        if (type.len == 15 && sanitizedInput.length == type.len) {
+            "0$sanitizedInput".cardStarConcatenator(shortPartLen + 1)
+        } else {
+            sanitizedInput.cardStarConcatenator(shortPartLen)
+        }
+    }
+    return outPrep.convertLayout()
+}
+
+fun String.cardStarConcatenator(shortPartLen: Int): String {
+    val part1 = this.substring(0, shortPartLen)
+    val part2 = this.substring(shortPartLen)
+    val part1a = part1.starMeUp()
+    return part1a + part2
 }
 
 fun String.starMeUp() : String {

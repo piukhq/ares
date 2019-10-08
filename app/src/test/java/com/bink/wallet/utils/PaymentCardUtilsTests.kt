@@ -61,8 +61,18 @@ class PaymentCardUtilsTests {
     }
 
     @Test
+    fun checkPresentedAmExSingle() {
+        assertEquals("3".presentedCardType(), PaymentCardType.AMEX)
+    }
+
+    @Test
     fun checkPresentedAmEx() {
         assertEquals("34".presentedCardType(), PaymentCardType.AMEX)
+    }
+
+    @Test
+    fun checkPresentedAmExFail() {
+        assertEquals("31".presentedCardType(), PaymentCardType.NONE)
     }
 
     @Test
@@ -80,22 +90,30 @@ class PaymentCardUtilsTests {
 
     @Test
     fun checkStarLayoutEmpty() {
-        assertEquals("".cardStarFormatter(), "")
+        assertEquals("", "".cardStarFormatter())
+    }
+    @Test
+    fun checkStarLayoutInvalid() {
+        assertEquals("", "9427".cardStarFormatter())
     }
     @Test
     fun checkStarLayoutVeryShort() {
-        assertEquals("4242".cardStarFormatter(), "****")
+        assertEquals("****", "4242".cardStarFormatter())
     }
     @Test
     fun checkStarLayoutShort() {
-        assertEquals("42424242".cardStarFormatter(), "**** ****")
+        assertEquals("**** ****", "42424242".cardStarFormatter())
     }
     @Test
     fun checkStarLayoutMedium() {
-        assertEquals("424242424242".cardStarFormatter(), "**** **** ****")
+        assertEquals("**** **** ****", "424242424242".cardStarFormatter())
     }
     @Test
     fun checkStarLayoutLong() {
-        assertEquals("4242424242424242".cardStarFormatter(), "**** **** **** 4242")
+        assertEquals("**** **** **** 4242", "4242424242424242".cardStarFormatter())
+    }
+    @Test
+    fun checkStarAmExLayoutLong() {
+        assertEquals("**** **** **** 2424", "344242424242424".cardStarFormatter())
     }
 }
