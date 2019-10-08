@@ -6,6 +6,16 @@ import org.junit.Test
 
 class PaymentCardUtilsTests {
     @Test
+    fun testSanitizeShort() {
+        assertEquals("12345678", "1234 5678".numberSanitize())
+    }
+
+    @Test
+    fun testSanitizeMedium() {
+        assertEquals("123456789012", "1234 5678 9012".numberSanitize())
+    }
+
+    @Test
     fun testLuhnEmptyCard() {
         assertFalse("".luhnValidation())
     }
@@ -32,60 +42,64 @@ class PaymentCardUtilsTests {
 
     @Test
     fun invalidCard() {
-        assertEquals("1242 4242 4242 4242".cardValidation(), PaymentCardType.NONE)
+        assertEquals(PaymentCardType.NONE, "1242 4242 4242 4242".cardValidation())
     }
 
     @Test
     fun validVisa() {
-        assertEquals("4242 4242 4242 4242".cardValidation(), PaymentCardType.VISA)
+        assertEquals(PaymentCardType.VISA, "4242 4242 4242 4242".cardValidation())
     }
 
     @Test
     fun validMasterCard() {
-        assertEquals("5336 1653 2182 8811".cardValidation(), PaymentCardType.MASTERCARD)
+        assertEquals(PaymentCardType.MASTERCARD, "5336 1653 2182 8811".cardValidation())
     }
 
     @Test
     fun validAmEx() {
-        assertEquals("3400 00000 000009".cardValidation(), PaymentCardType.AMEX)
+        assertEquals(PaymentCardType.AMEX, "3400 00000 000009".cardValidation())
     }
 
     @Test
     fun checkPresentedVisa() {
-        assertEquals("4242".presentedCardType(), PaymentCardType.VISA)
+        assertEquals(PaymentCardType.VISA, "4242".presentedCardType())
     }
 
     @Test
     fun checkPresentedMasterCard() {
-        assertEquals("51".presentedCardType(), PaymentCardType.MASTERCARD)
+        assertEquals(PaymentCardType.MASTERCARD, "51".presentedCardType())
     }
 
     @Test
     fun checkPresentedAmExSingle() {
-        assertEquals("3".presentedCardType(), PaymentCardType.AMEX)
+        assertEquals(PaymentCardType.AMEX, "3".presentedCardType())
     }
 
     @Test
     fun checkPresentedAmEx() {
-        assertEquals("34".presentedCardType(), PaymentCardType.AMEX)
+        assertEquals(PaymentCardType.AMEX, "34".presentedCardType())
     }
 
     @Test
     fun checkPresentedAmExFail() {
-        assertEquals("31".presentedCardType(), PaymentCardType.NONE)
+        assertEquals(PaymentCardType.NONE, "31".presentedCardType())
     }
 
     @Test
     fun checkLayoutShort() {
-        assertEquals("42424242".cardFormatter(), "4242 4242")
+        assertEquals("4242 4242", "42424242".cardFormatter())
     }
     @Test
     fun checkLayoutMedium() {
-        assertEquals("424242424242".cardFormatter(), "4242 4242 4242")
+        assertEquals("4242 4242 4242", "424242424242".cardFormatter())
     }
     @Test
     fun checkLayoutLong() {
-        assertEquals("4242424242424242".cardFormatter(), "4242 4242 4242 4242")
+        assertEquals("4242 4242 4242 4242", "4242424242424242".cardFormatter())
+    }
+    @Test
+    fun checkAmExLayoutLong() {
+        assertEquals("3424 242424 24242", "342424242424242".cardFormatter())
     }
 
     @Test
@@ -106,14 +120,22 @@ class PaymentCardUtilsTests {
     }
     @Test
     fun checkStarLayoutMedium() {
-        assertEquals("**** **** ****", "424242424242".cardStarFormatter())
+        assertEquals("**** **** ****", "4242 4242 4242".cardStarFormatter())
+    }
+    @Test
+    fun checkStarLayoutAlmostFull() {
+        assertEquals("**** **** **** 42", "4242 4242 4242 42".cardStarFormatter())
     }
     @Test
     fun checkStarLayoutLong() {
-        assertEquals("**** **** **** 4242", "4242424242424242".cardStarFormatter())
+        assertEquals("**** **** **** 4242", "4242 4242 4242 4242".cardStarFormatter())
+    }
+    @Test
+    fun checkStarAmExLayoutAlmostFull() {
+        assertEquals("**** **** **** 242", "3442 424242 4242".cardStarFormatter())
     }
     @Test
     fun checkStarAmExLayoutLong() {
-        assertEquals("**** **** **** 2424", "344242424242424".cardStarFormatter())
+        assertEquals("**** **** **** 2424", "3442 424242 42424".cardStarFormatter())
     }
 }

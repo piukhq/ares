@@ -49,6 +49,9 @@ fun String.cardValidation() : PaymentCardType {
         PaymentCardType.NONE
 }
 
+fun String.numberSanitize(): String {
+    return this.replace("[^\\d]".toRegex(), "")
+}
 fun String.ccSanitize(): String {
     return this.replace(" ", "")
 }
@@ -79,7 +82,7 @@ fun String.luhnMultiply() = this.digits().mapIndexed { i, j ->
 fun String.digits() = this.map(Character::getNumericValue)
 
 fun String.cardFormatter() : String {
-    val userInput = this.replace("[^\\d]".toRegex(), "")
+    val userInput = this.numberSanitize()
     return if (userInput.length <= 16) {
         userInput.convertLayout()
     } else {
@@ -88,6 +91,25 @@ fun String.cardFormatter() : String {
 }
 
 fun String.convertLayout() : String {
+    val userInput = this.ccSanitize()
+    val sb = StringBuilder()
+    val type = userInput.presentedCardType()
+    if (type != PaymentCardType.NONE) {
+        val layout = type.format
+        var pos = 0
+        for (i in layout.indices) {
+            if (pos >= userInput.length) {
+                break
+            } else if (layout[i].toString() == " ") {
+                sb.append(layout[i])
+            } else {
+                sb.append(userInput[pos++])
+            }
+        }
+    }
+    return sb.toString()
+}
+fun String.fourBlockLayout() : String {
     val userInput = this.ccSanitize()
     val sb = StringBuilder()
     for (i in userInput.indices) {
@@ -106,19 +128,18 @@ fun String.cardStarFormatter() : String {
         return ""
     }
     val shortPartLen = type.len - 4
-    var outPrep = ""
-    outPrep = if (sanitizedInput.isEmpty()) {
+    val outPrep = if (sanitizedInput.isEmpty()) {
         ""
     } else if (sanitizedInput.length <= shortPartLen) {
         sanitizedInput.starMeUp()
     } else {
-        if (type.len == 15 && sanitizedInput.length == type.len) {
+        if (type.len == 15 && sanitizedInput.length > type.len - 4) {
             "0$sanitizedInput".cardStarConcatenator(shortPartLen + 1)
         } else {
             sanitizedInput.cardStarConcatenator(shortPartLen)
         }
     }
-    return outPrep.convertLayout()
+    return outPrep.fourBlockLayout()
 }
 
 fun String.cardStarConcatenator(shortPartLen: Int): String {
