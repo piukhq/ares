@@ -8,7 +8,9 @@ import com.bink.wallet.databinding.WalletsFragmentBinding
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -32,6 +34,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
+        runBlocking {
+            viewModel.fetchMembershipPlans()
+        }
+
         activity?.let {
             it.setActionBar(binding.toolbar)
             it.actionBar?.setDisplayShowTitleEnabled(false)
@@ -42,27 +48,37 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
             ?.commit()
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.loyalty_menu_item -> {
-                    fragmentManager?.beginTransaction()?.remove(paymentCardWalletFragment)?.commit()
-                    fragmentManager?.beginTransaction()?.replace(
-                        R.id.wallet_content,
-                        loyaltyWalletsFragment
-                    )?.commit()
+        viewModel.membershipPlanData.observeNonNull(this) {
+            binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.loyalty_menu_item -> {
+                        fragmentManager?.beginTransaction()?.remove(paymentCardWalletFragment)
+                            ?.commit()
+                        fragmentManager?.beginTransaction()?.replace(
+                            R.id.wallet_content,
+                            loyaltyWalletsFragment
+                        )?.commit()
+                    }
+                    R.id.add_menu_item -> {
+                        val directions = it?.toTypedArray()?.let { plans ->
+                            WalletsFragmentDirections.homeToAdd(
+                                plans
+                            )
+                        }
+                        directions?.let { findNavController().navigateIfAdded(this, it) }
+                    }
+                    R.id.payment_menu_item -> {
+                        fragmentManager?.beginTransaction()?.remove(loyaltyWalletsFragment)
+                            ?.commit()
+                        fragmentManager?.beginTransaction()?.replace(
+                            R.id.wallet_content,
+                            paymentCardWalletFragment
+                        )?.commit()
+                    }
+
                 }
-                R.id.add_menu_item -> {
-                    loyaltyWalletsFragment.changeScreen()
-                }
-                R.id.payment_menu_item -> {
-                    fragmentManager?.beginTransaction()?.remove(loyaltyWalletsFragment)?.commit()
-                    fragmentManager?.beginTransaction()?.replace(
-                        R.id.wallet_content,
-                        paymentCardWalletFragment
-                    )?.commit()
-                }
+                true
             }
-            true
         }
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
