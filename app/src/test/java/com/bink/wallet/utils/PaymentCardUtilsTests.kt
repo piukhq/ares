@@ -6,6 +6,16 @@ import org.junit.Test
 
 class PaymentCardUtilsTests {
     @Test
+    fun testCcSanitizeShort() {
+        assertEquals("12345678", "1234 5678".ccSanitize())
+    }
+
+    @Test
+    fun testCcSanitizeMedium() {
+        assertEquals("123456789012", "1234 5678 9012".ccSanitize())
+    }
+
+    @Test
     fun testSanitizeShort() {
         assertEquals("12345678", "1234 5678".numberSanitize())
     }
@@ -13,6 +23,11 @@ class PaymentCardUtilsTests {
     @Test
     fun testSanitizeMedium() {
         assertEquals("123456789012", "1234 5678 9012".numberSanitize())
+    }
+
+    @Test
+    fun testSanitizeLetters() {
+        assertEquals("1234", "1234ABCD".numberSanitize())
     }
 
     @Test

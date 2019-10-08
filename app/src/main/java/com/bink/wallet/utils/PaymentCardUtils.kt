@@ -59,6 +59,7 @@ fun String.ccSanitize(): String {
 fun String.luhnValidation() : Boolean {
     val sanitizedInput = this.ccSanitize()
     return when {
+        sanitizedInput != this.numberSanitize() -> false
         sanitizedInput.luhnLengthInvalid() -> false
         sanitizedInput.luhnValidPopulated() -> sanitizedInput.luhnChecksum() % 10 == 0
         else -> false
