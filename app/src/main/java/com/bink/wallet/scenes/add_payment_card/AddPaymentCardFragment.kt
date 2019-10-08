@@ -16,10 +16,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPaymentCardFragment :
     BaseFragment<AddPaymentCardViewModel, AddPaymentCardFragmentBinding>() {
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .withId(FragmentToolbar.NO_TOOLBAR)
+            .with(binding.toolbar)
+            .shouldDisplayBack(activity!!)
             .build()
     }
 
@@ -53,6 +53,7 @@ class AddPaymentCardFragment :
             ) {
                 cardSwitcher(currentText.toString())
                 cardInfoDisplay()
+                updateEnteredCardNumber()
             }
         }
         binding.cardNumber.addTextChangedListener(textWatcher)
@@ -100,7 +101,23 @@ class AddPaymentCardFragment :
         binding.displayCardName.text = binding.cardName.text
     }
 
-    fun cardNumberDisplays() {
-        binding.cardNumber.setText(binding.cardNumber.text.toString().cardFormatter())
+    fun updateEnteredCardNumber() {
+        with (binding.cardNumber) {
+            val origNumber = text.toString()
+            val newNumber = origNumber.cardFormatter()
+            if (origNumber != newNumber) {
+                val pos = selectionStart
+                setText(newNumber)
+                if (newNumber.length > origNumber.length) {
+                    if (pos == origNumber.length) {
+                        setSelection(newNumber.length)
+                    }
+                } else if (newNumber.length < origNumber.length) {
+                    if (pos > newNumber.length) {
+                        setSelection(newNumber.length)
+                    }
+                }
+            }
+        }
     }
 }

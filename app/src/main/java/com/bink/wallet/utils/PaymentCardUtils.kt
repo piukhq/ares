@@ -15,7 +15,7 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
 }
 
 fun String.presentedCardType(): PaymentCardType {
-    val sanitizedInput = this.ccSanitize()
+    val sanitizedInput = this.numberSanitize()
     if (sanitizedInput.isEmpty())
         return PaymentCardType.NONE
     PaymentCardType.values().forEach {
