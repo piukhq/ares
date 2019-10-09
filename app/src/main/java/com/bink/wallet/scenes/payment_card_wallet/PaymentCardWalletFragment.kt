@@ -41,7 +41,6 @@ class PaymentCardWalletFragment :
                     PaymentCardWalletAdapter(
                         viewModel.paymentCards.value!!,
                         onClickListener = {
-                            //                            onCardClicked(it)
                         })
             }
 

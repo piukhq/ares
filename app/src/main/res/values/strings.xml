@@ -212,8 +212,8 @@
     <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
 
-
+    <!--    Payment card wallet-->
     <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
     <string name="payment_card_not_linked">Not linked</string>
-    <string name="payment_card_number">••••   ••••   ••••   %1$s</string>
+    <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
 </resources>

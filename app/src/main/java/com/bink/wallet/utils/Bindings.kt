@@ -270,6 +270,8 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
     val colors = IntArray(2)
 
+    //TODO: Philip could you update this later? (https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/86#note_14997)
+
     when (paymentCard.card?.provider) {
         PaymentCardType.VISA.type -> {
             colors[0] = ContextCompat.getColor(context, R.color.visa_right)
@@ -289,25 +291,23 @@ fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
         }
     }
 
-    //create a new gradient color
     val gd = GradientDrawable(
         GradientDrawable.Orientation.RIGHT_LEFT, colors
     )
 
     gd.cornerRadius = 15f
-    //apply the button background to newly created drawable gradient
     background = gd
 }
 
 @BindingAdapter("linkedStatus")
 fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
     if (paymentCard.membership_cards.isNullOrEmpty()) {
-        setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_unlinked))
+        setImageResource(R.drawable.ic_unlinked)
     } else {
         if (paymentCard.membership_cards.any { it.active_link == true }) {
-            setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_linked))
+            setImageResource(R.drawable.ic_linked)
         } else {
-            setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_unlinked))
+            setImageResource(R.drawable.ic_unlinked)
         }
     }
 }
@@ -331,23 +331,14 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
 @BindingAdapter("paymentCardLogo")
 fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
     when (paymentCard.card?.provider) {
-        PaymentCardType.VISA.type -> setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                R.drawable.ic_visa
-            )
+        PaymentCardType.VISA.type -> setImageResource(
+            R.drawable.ic_visa
         )
-        PaymentCardType.MASTERCARD.type -> setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                R.drawable.ic_master_card
-            )
+        PaymentCardType.MASTERCARD.type -> setImageResource(
+            R.drawable.ic_master_card
         )
-        PaymentCardType.AMEX.type -> setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                R.drawable.ic_am_ex
-            )
+        PaymentCardType.AMEX.type -> setImageResource(
+            R.drawable.ic_am_ex
         )
     }
 }
@@ -355,23 +346,14 @@ fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
 @BindingAdapter("paymentCardSubLogo")
 fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
     when (paymentCard.card?.provider) {
-        PaymentCardType.VISA.type -> setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                R.drawable.ic_visa_sub_logo
-            )
+        PaymentCardType.VISA.type -> setImageResource(
+            R.drawable.ic_visa_sub_logo
         )
-        PaymentCardType.MASTERCARD.type -> setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                R.drawable.ic_master_card_sub_logo
-            )
+        PaymentCardType.MASTERCARD.type -> setImageResource(
+            R.drawable.ic_master_card_sub_logo
         )
-        PaymentCardType.AMEX.type -> setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                R.drawable.ic_am_ex_sub_logo
-            )
+        PaymentCardType.AMEX.type -> setImageResource(
+            R.drawable.ic_am_ex_sub_logo
         )
     }
 }

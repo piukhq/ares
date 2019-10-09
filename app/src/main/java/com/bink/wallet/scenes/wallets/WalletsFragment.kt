@@ -1,6 +1,8 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -36,6 +38,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         runBlocking {
             viewModel.fetchMembershipPlans()
+            binding.progressSpinner.visibility = View.VISIBLE
         }
 
         activity?.let {
@@ -49,15 +52,11 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             ?.commit()
 
         viewModel.membershipPlanData.observeNonNull(this) {
+            binding.progressSpinner.visibility = View.GONE
             binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.loyalty_menu_item -> {
-                        fragmentManager?.beginTransaction()?.remove(paymentCardWalletFragment)
-                            ?.commit()
-                        fragmentManager?.beginTransaction()?.replace(
-                            R.id.wallet_content,
-                            loyaltyWalletsFragment
-                        )?.commit()
+                        replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
                     }
                     R.id.add_menu_item -> {
                         val directions = it?.toTypedArray()?.let { plans ->
@@ -68,12 +67,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                         directions?.let { findNavController().navigateIfAdded(this, it) }
                     }
                     R.id.payment_menu_item -> {
-                        fragmentManager?.beginTransaction()?.remove(loyaltyWalletsFragment)
-                            ?.commit()
-                        fragmentManager?.beginTransaction()?.replace(
-                            R.id.wallet_content,
-                            paymentCardWalletFragment
-                        )?.commit()
+                        replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
                     }
 
                 }
@@ -83,6 +77,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
         }
+    }
+
+    private fun replaceFragment(removedFragment: Fragment, addedFragment: Fragment) {
+        fragmentManager?.beginTransaction()?.remove(removedFragment)
+            ?.commit()
+        fragmentManager?.beginTransaction()?.replace(
+            R.id.wallet_content,
+            addedFragment
+        )?.commit()
     }
 
 }
