@@ -17,7 +17,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .withId(FragmentToolbar.NO_TOOLBAR)
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -40,11 +41,15 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 binding.addJoinViewDescription.text =
                     getString(R.string.add_join_inactive_view_description)
             }
-            CardType.PLL.type -> {
+            CardType.VIEW.type, CardType.STORE.type -> {
                 binding.addJoinLinkImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
                 binding.addJoinLinkDescription.text =
                     getString(R.string.add_join_inactive_link_description)
             }
+        }
+
+        binding.closeButton.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.add_join_to_home)
         }
 
         binding.addJoinReward.setOnClickListener {

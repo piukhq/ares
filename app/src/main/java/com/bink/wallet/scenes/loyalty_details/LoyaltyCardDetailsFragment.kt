@@ -80,15 +80,25 @@ class LoyaltyCardDetailsFragment :
             binding.swipeLayout.isRefreshing = false
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context)
 
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
+
+        if (viewModel.membershipPlan.value?.account?.plan_name != null) {
+            binding.footerDelete.binding.title.text = getString(R.string.delete_card_plan, viewModel.membershipPlan.value?.account?.plan_name)
+        }
 
         binding.footerAbout.setOnClickListener {
             val directions =
                 viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
+                    val aboutText =
+                        if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+                            getString(R.string.about_membership)
+                        } else
+                            viewModel.membershipPlan.value?.account!!.plan_name!!
+
                     GenericModalParameters(
-                        R.drawable.ic_close, getString(R.string.about_membership),
+                        R.drawable.ic_close, aboutText,
                         description, getString(R.string.ok)
                     )
                 }?.let { arguments ->

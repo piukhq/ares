@@ -67,13 +67,16 @@
     <string name="status_placeholder">Linked</string>
     <string name="status_number_placeholder">To 2 of 6 cards</string>
     <string name="about_membership">About membership</string>
+    <string name="about_membership_plan_name">About %1$s</string>
     <string name="learn_more">Learn more about how it works</string>
     <string name="chevron">&gt;</string>
     <string name="security_privacy">Security and privacy</string>
     <string name="how_we_protect">How we protect your data</string>
     <string name="delete_card">Delete this card</string>
+    <string name="delete_card_plan">Delete %1$s</string>
     <string name="remove_card">Remove this card from Bink</string>
     <string name="tap_card">Tap card to show barcode</string>
+    <string name="tap_card_to_show_card_number">Tap to show card number</string>
     <string name="security_modal_title">Is my Data Secure?</string>
     <string name="security_modal_body_1">We take security very seriously and keeping your personal details safe is very important to us.\n</string>
     <string name="security_modal_body_2">We are a PCI certified service provider which means that we meet the highest level of security standards set by the payment card industry. This certification requires us to employ a wide range of measures designed to protect the security of your information. We recommend that you secure your app with Touch ID and/or a passcode for an extra layer of security.\n</string>

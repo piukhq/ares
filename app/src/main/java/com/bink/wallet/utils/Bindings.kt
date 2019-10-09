@@ -119,7 +119,9 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     } else {
         binding.image.setBackgroundColor(Color.GREEN)
     }
-    binding.tapCard.setVisible(card?.card?.barcode != null)
+    if (card?.card?.barcode == null) {
+        binding.tapCard.text = binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    }
 }
 
 

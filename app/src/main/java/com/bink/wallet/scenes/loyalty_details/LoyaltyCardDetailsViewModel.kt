@@ -55,7 +55,8 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                         when {
                             paymentCards.value.isNullOrEmpty() -> linkStatus.value =
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
-                            membershipCard.value?.payment_cards.isNullOrEmpty() -> linkStatus.value =
+                            membershipCard.value?.payment_cards.isNullOrEmpty()
+                                    || !existLinkedPaymentCards() -> linkStatus.value =
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
                             else -> linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
                         }
@@ -77,6 +78,15 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         }
         errorCodes.value = null
         membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value+= "$it " }
+    }
+
+    private fun existLinkedPaymentCards(): Boolean {
+        membershipCard.value?.payment_cards?.forEach { card ->
+            if (card.active_link == true) {
+                return true
+            }
+        }
+        return false
     }
 }
 
