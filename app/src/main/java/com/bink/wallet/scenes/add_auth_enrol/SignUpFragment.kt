@@ -159,10 +159,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     addFieldToList(it)
                 }
 
-                with(binding.noAccountText) {
-                    visibility = View.INVISIBLE
-                }
-
+                binding.noAccountText.visibility = View.INVISIBLE
             }
         }
 
