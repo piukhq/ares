@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.Log
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
@@ -21,6 +23,7 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.PaymentCardType
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.zxing.BarcodeFormat
@@ -29,6 +32,7 @@ import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
 import kotlin.math.absoluteValue
+
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
@@ -46,8 +50,8 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 }
 
 @BindingAdapter("image")
-fun ImageView.setPaymentCardImage(item:PaymentCard) {
-    if (!item.images.isNullOrEmpty()){
+fun ImageView.setPaymentCardImage(item: PaymentCard) {
+    if (!item.images.isNullOrEmpty()) {
         Glide.with(context).load(item.images.first().url).into(this)
     }
 }
@@ -269,6 +273,98 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         LoginStatus.STATUS_SIGN_UP_PENDING ->
             text = this.context.getString(R.string.description_text)
         else -> text = this.context.getString(R.string.description_text)
+    }
+}
+
+@BindingAdapter("backgroundGradient")
+fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
+    val colors = IntArray(2)
+
+    //TODO: Philip could you update this later? (https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/86#note_14997)
+
+    when (paymentCard.card?.provider) {
+        PaymentCardType.VISA.type -> {
+            colors[0] = ContextCompat.getColor(context, R.color.visa_right)
+            colors[1] = ContextCompat.getColor(context, R.color.visa_left)
+        }
+        PaymentCardType.MASTERCARD.type -> {
+            colors[0] = ContextCompat.getColor(context, R.color.mastercard_right)
+            colors[1] = ContextCompat.getColor(context, R.color.mastercard_left)
+        }
+        PaymentCardType.AMEX.type -> {
+            colors[0] = ContextCompat.getColor(context, R.color.amex_right)
+            colors[1] = ContextCompat.getColor(context, R.color.amex_left)
+        }
+        else -> {
+            colors[0] = ContextCompat.getColor(context, R.color.unknown_right)
+            colors[1] = ContextCompat.getColor(context, R.color.unknown_left)
+        }
+    }
+
+    val gd = GradientDrawable(
+        GradientDrawable.Orientation.RIGHT_LEFT, colors
+    )
+
+    gd.cornerRadius = 15f
+    background = gd
+}
+
+@BindingAdapter("linkedStatus")
+fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
+    if (paymentCard.membership_cards.isNullOrEmpty()) {
+        setImageResource(R.drawable.ic_unlinked)
+    } else {
+        if (paymentCard.membership_cards.any { it.active_link == true }) {
+            setImageResource(R.drawable.ic_linked)
+        } else {
+            setImageResource(R.drawable.ic_unlinked)
+        }
+    }
+}
+
+@BindingAdapter("linkedStatus")
+fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
+    text = if (paymentCard.membership_cards.isNullOrEmpty()) {
+        context.getString(R.string.payment_card_not_linked)
+    } else {
+        if (paymentCard.membership_cards.any { it.active_link == true }) {
+            context.getString(
+                R.string.payment_card_linked_status,
+                paymentCard.membership_cards.filter { it.active_link == true }.size
+            )
+        } else {
+            context.getString(R.string.payment_card_not_linked)
+        }
+    }
+}
+
+@BindingAdapter("paymentCardLogo")
+fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
+    when (paymentCard.card?.provider) {
+        PaymentCardType.VISA.type -> setImageResource(
+            R.drawable.ic_visa
+        )
+        PaymentCardType.MASTERCARD.type -> setImageResource(
+            R.drawable.ic_master_card
+        )
+        PaymentCardType.AMEX.type -> setImageResource(
+            R.drawable.ic_am_ex
+        )
+    }
+}
+
+@BindingAdapter("paymentCardSubLogo")
+fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
+    when (paymentCard.card?.provider) {
+        PaymentCardType.VISA.type -> setImageResource(
+            R.drawable.ic_visa_sub_logo
+        )
+        PaymentCardType.MASTERCARD.type -> setImageResource(
+            R.drawable.ic_master_card_sub_logo
+        )
+        PaymentCardType.AMEX.type -> setImageResource(
+            R.drawable.ic_am_ex_sub_logo
+        )
     }
 }
 
