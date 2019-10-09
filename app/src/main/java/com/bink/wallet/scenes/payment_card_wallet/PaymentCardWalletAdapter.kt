@@ -26,9 +26,7 @@ class PaymentCardWalletAdapter(
 
     override fun getItemCount() = paymentCards.size
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int) = position.toLong()
 
     inner class PaymentCardWalletHolder(val binding: PaymentCardWalletItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
