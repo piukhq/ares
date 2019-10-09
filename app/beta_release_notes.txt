@@ -21,3 +21,9 @@ ab20-212 Tapping on Back Button on Home Wallet refreshes the app
 ab20-188 Transactions unavailable screen wording changes
 ab20-214 PLL - The user is redirected to PLL Empty after adding a PLL card
 ab20-215 PLL - The user is redirected to details screen after adding a non PLL card
+AB20-177-LCD when no barcode available
+AB20-175-Change maximize barcode to display barcode number
+AB20-187-LCD Loyalty Card wording changes
+AB20-218-Unlinking all cards doesn't correctly update the Linking Module
+AB20-219-Add/Join Screen displays Link Status Incorrectly
+AB20-103-Nav bar on Add/Join screen does not appear
