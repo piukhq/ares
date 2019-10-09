@@ -184,6 +184,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/sign_up_to_pll"
+                app:destination="@+id/pll_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -256,8 +263,8 @@
                 app:popExitAnim="@anim/slide_out_right" />
 
         <action
-                android:id="@+id/detail_to_not_supported_transactions"
-                app:destination="@+id/transactions_not_supported"
+                android:id="@+id/detail_to_error_modal"
+                app:destination="@+id/lcd_error_modal_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -265,14 +272,6 @@
         <action
                 android:id="@+id/detail_to_pll_empty"
                 app:destination="@+id/pll_empty_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
-
-        <action
-                android:id="@+id/detail_to_issue"
-                app:destination="@+id/module_issue"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -381,28 +380,12 @@
     </fragment>
 
     <fragment
-            android:id="@+id/transactions_not_supported"
-            android:name="com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedFragment">
-
+            android:id="@+id/lcd_error_modal_fragment"
+            android:name="com.bink.wallet.modal.points_module.LCDErrorFragment">
         <argument
-                android:name="membershipCard"
-                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
 
-        <argument
-                android:name="loginStatus"
-                app:argType="com.bink.wallet.utils.enums.LoginStatus" />
-
-    </fragment>
-
-    <fragment
-            android:id="@+id/module_issue"
-            android:name="com.bink.wallet.scenes.loyalty_details.ModuleIssueScreen">
-        <argument
-                android:name="linkStatus"
-                app:argType="com.bink.wallet.utils.enums.LinkStatus" />
-        <argument
-                android:name="errorCodes"
-                app:argType="string" />
     </fragment>
 
     <fragment

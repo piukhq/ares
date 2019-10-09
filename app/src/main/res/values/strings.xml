@@ -165,16 +165,26 @@
     <string name="pll_text">PLL</string>
     <string name="all_text">All</string>
 
+    <!-- LCD Error Screen -->
+    <!-- 1.2 -->
+    <string name="title_1_2">Transaction history unavailable</string>
+    <string name="description_1_2">We are unable to currently show the transaction history for this loyalty scheme yet\n Your %1$s history is not available yet.</string>
+    <!-- 1.7 -->
+    <string name="title_1_7">Log in pending</string>
+    <string name="description_1_7">You are seeing this because sometimes it takes a while to log in with the merchant. In the meantime please do not attempt to log in again, but you can use your card and receive your benefits as usual. After you are logged in you will be able to see your points balance</string>
+    <!-- 1.9 -->
+    <string name="title_1_9">Sign up pending</string>
+    <string name="description_1_9">Sometimes it takes a while to sign up with  your merchant.\nIn the meantime please do not attempt to sign up again. You can use your card and receive your benefits as normal.\nAfter the sign up has been completed you will be able to see your points balance.</string>
+    <!-- 1.11 -->
+    <string name="title_1_11">Register Ghost card pending</string>
+    <string name="description_1_11">Sometimes it takes a while to register with  your merchant.\nIn the meantime please do not attempt to register your card again. You can use your card and receive your benefits as normal.\nAfter registration up has been completed you will be able to see your points balance.</string>
 
-    <!-- Catch all module issue -->
     <!-- 2.4 -->
     <string name="title_2_4">Error</string>
-    <string name="text_2_4_1">Status: %1$s</string>
-    <string name="text_2_4_2">Error codes: %1$s</string>
+    <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
-    <string name="text_2_8_1">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
-    <string name="text_2_8_2">This is currently not available for this merchant</string>
+    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
 
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
