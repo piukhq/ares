@@ -22,7 +22,6 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
-import kotlinx.android.synthetic.main.fragment_loyalty_wallet.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -66,22 +65,23 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (direction == ItemTouchHelper.RIGHT) {
                     val card = viewModel.localMembershipCardData.value?.get(position)
                     if (viewModel.localMembershipPlanData.value != null) {
-
                         val plan =
                             viewModel.localMembershipPlanData.value?.first { it.id == card?.membership_plan }!!
 
                         val directions =
                             card?.card?.barcode_type?.let {
                                 WalletsFragmentDirections.homeToBarcode(
-                                    plan, card.card?.barcode, it
+                                    plan, card
                                 )
                             }
-                        directions?.let {
-                            findNavController().navigateIfAdded(
-                                this@LoyaltyWalletFragment, it
-                            )
+                        if (findNavController().currentDestination?.id == R.id.loyalty_wallet_fragment) {
+                            directions?.let {
+                                findNavController().navigateIfAdded(
+                                    this@LoyaltyWalletFragment, it
+                                )
+                            }
+                            this@LoyaltyWalletFragment.onDestroy()
                         }
-                        this@LoyaltyWalletFragment.onDestroy()
                     }
                 } else {
                     viewModel.localMembershipCardData.value?.get(position)
@@ -94,18 +94,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         viewModel.deleteCard.observe(this, Observer { id ->
             viewModel.membershipCardData.value =
                 viewModel.membershipCardData.value?.filter { it.id != id }
+            (binding.loyaltyWalletList.adapter as LoyaltyWalletAdapter).deleteCard(id)
         })
-
 
         if (!viewModel.localPlansReceived.hasObservers())
             viewModel.localPlansReceived.observeNonNull(this) { plansReceived ->
                 if (!viewModel.localCardsReceived.hasObservers())
                     viewModel.localCardsReceived.observeNonNull(this) { cardsReceived ->
                         binding.swipeLayout.isRefreshing = false
-                        swipe_layout.isEnabled = true
+                        binding.swipeLayout.isEnabled = true
                         if (cardsReceived && plansReceived) {
                             binding.progressSpinner.visibility = View.GONE
                             binding.loyaltyWalletList.apply {
@@ -140,7 +142,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.progressSpinner.visibility = View.VISIBLE
 
         runBlocking {
-            if (verifyAvailableNetwork(activity!!)) {
+            if (verifyAvailableNetwork(requireActivity())) {
                 binding.swipeLayout.isEnabled = false
                 binding.swipeLayout.isRefreshing = false
                 viewModel.fetchMembershipPlans()
@@ -185,7 +187,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 showNoInternetConnectionDialog()
             }
         }
-
     }
 
     fun changeScreen() {
@@ -233,14 +234,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         } else {
                             showNoInternetConnectionDialog()
                         }
-                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(
                             LoyaltyWalletFragment::class.java.simpleName,
                             getString(R.string.loayalty_wallet_dialog_description)
                         )
-                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
                     }
 
                 }

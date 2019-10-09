@@ -27,8 +27,9 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
         arguments?.let {
             BarcodeFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = currentMembershipPlan
-                viewModel.barcode.value = BarcodeWrapper(barcode, barcodeType)
-                viewModel.isBarcodeAvailable.value = !barcode.isNullOrEmpty()
+                viewModel.membershipCard.value = membershipCard
+                viewModel.barcode.value = BarcodeWrapper(membershipCard)
+                viewModel.isBarcodeAvailable.value = !membershipCard.card?.barcode.isNullOrEmpty()
             }
         }
         val directions =

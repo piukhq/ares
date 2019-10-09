@@ -1,11 +1,13 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.WalletsFragmentBinding
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,6 +37,8 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             it.actionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
+
         fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
             ?.commit()
 
@@ -59,6 +63,9 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 }
             }
             true
+        }
+        binding.settingsButton.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.settings_screen)
         }
     }
 
