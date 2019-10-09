@@ -88,7 +88,7 @@ class LoyaltyCardDetailsFragment :
             val directions =
                 viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
                     GenericModalParameters(
-                        R.drawable.ic_close, getString(R.string.about_membership),
+                        R.drawable.ic_close, getString(R.string.about_membership_plan, viewModel.membershipPlan.value?.account!!.plan_name),
                         description, getString(R.string.ok)
                     )
                 }?.let { arguments ->
