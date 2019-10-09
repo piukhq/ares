@@ -4,8 +4,7 @@ import android.os.Bundle
 import com.bink.wallet.modal.generic.GenericModalFragment
 
 
-class LCDErrorFragment :
-    GenericModalFragment() {
+class LCDErrorFragment : GenericModalFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

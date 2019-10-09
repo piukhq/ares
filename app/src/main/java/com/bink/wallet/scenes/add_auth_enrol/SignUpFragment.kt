@@ -152,6 +152,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             SignUpFormType.ENROL -> {
                 binding.titleAddAuthText.text = getString(R.string.sign_up_enrol)
                 binding.addCardButton.text = getString(R.string.sign_up_text)
+                binding.descriptionAddAuth.text = getString(R.string.enrol_description, viewModel.currentMembershipPlan.value?.account?.company_name)
                 viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
                     it.typeOfField = TypeOfField.ENROL
                     addFieldToList(it)
