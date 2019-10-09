@@ -60,39 +60,13 @@ class AddPaymentCardFragment :
     }
 
     fun cardSwitcher(card: String) {
-        when (card.presentedCardType()) {
-            PaymentCardType.NONE -> {
-                binding.topLayout.background = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_card_payment_bkgr_none
-                )
-                binding.topLayoutBrand.setImageResource(R.drawable.blank)
-                binding.bottomLayoutBrand.setImageResource(R.drawable.blank)
-            }
-            PaymentCardType.VISA -> {
-                binding.topLayout.background = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_card_payment_bkgr_visa
-                )
-                binding.topLayoutBrand.setImageResource(R.drawable.ic_card_payment_logo_visa)
-                binding.bottomLayoutBrand.setImageResource(R.drawable.ic_card_payment_sublogo_visa)
-            }
-            PaymentCardType.MASTERCARD -> {
-                binding.topLayout.background = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_card_payment_bkgr_master_card
-                )
-                binding.topLayoutBrand.setImageResource(R.drawable.ic_card_payment_logo_master_card)
-                binding.bottomLayoutBrand.setImageResource(R.drawable.ic_card_payment_sublogo_master_card)
-            }
-            PaymentCardType.AMEX -> {
-                binding.topLayout.background = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_card_payment_bkgr_am_ex
-                )
-                binding.topLayoutBrand.setImageResource(R.drawable.ic_card_payment_logo_am_ex)
-                binding.bottomLayoutBrand.setImageResource(R.drawable.ic_card_payment_sublogo_am_ex)
-            }
+        with (card.presentedCardType()) {
+            binding.topLayout.background = ContextCompat.getDrawable(
+                requireContext(),
+                background
+            )
+            binding.topLayoutBrand.setImageResource(logo)
+            binding.bottomLayoutBrand.setImageResource(subLogo)
         }
     }
 

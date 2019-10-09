@@ -6,7 +6,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_padding_size_medium"
             tools:context="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
 
         <Toolbar
@@ -17,172 +16,190 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/top_layout"
+        <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/payment_card_height"
-                android:background="@drawable/ic_card_payment_bkgr_visa"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_padding_size_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 >
-            <ImageView
-                    android:id="@+id/top_layout_brand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/payment_card_logo_image_margin"
-                    android:src="@drawable/ic_card_payment_logo_visa"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:ignore="ContentDescription"
-                    />
-            <ImageView
-                    android:id="@+id/bottom_layout_brand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/payment_card_logo_image_margin"
-                    android:src="@drawable/ic_card_payment_sublogo_visa"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="ContentDescription"
-                    />
 
-            <TextView
-                    android:id="@+id/display_card_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/payment_card_logo_image_margin"
-                    android:layout_marginTop="@dimen/payment_card_logo_image_margin"
-                    android:text="Card name"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_description_big"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    />
-            <TextView
-                    android:id="@+id/display_card_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/payment_card_logo_image_margin"
-                    android:layout_marginTop="@dimen/payment_card_number_top_margin"
-                    android:text="**** **** **** 1234"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_description_big"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-                android:id="@+id/add_card_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:text="@string/add_payment_card"
-                android:textSize="@dimen/text_size_title_big"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/top_layout"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-        <TextView
-                android:id="@+id/add_card_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
-                android:textSize="@dimen/text_size_title_big"
-                app:layout_constraintTop_toBottomOf="@id/add_card_title"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-
-        <TextView
-                android:id="@+id/card_number_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_card_spacing_margin"
-                android:text="@string/card_number"
-                android:textSize="@dimen/text_size_description_medium"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/add_card_subtitle"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/card_number_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_number_label"
-                app:errorEnabled="true">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/card_number"
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:imeOptions="actionDone"
-                    android:hint="@string/card_number"
-                    />
-        </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    >
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/top_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/payment_card_height"
+                        android:background="@drawable/ic_card_payment_bkgr_visa"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-                android:id="@+id/card_expiry_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_card_spacing_margin"
-                android:text="@string/expiry"
-                android:textSize="@dimen/text_size_description_medium"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/card_number_input_layout"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/card_expiry_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_expiry_label"
-                app:errorEnabled="true">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/card_expiry"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:imeOptions="actionDone"
-                    android:hint="@string/expiry"
-                    />
-        </com.google.android.material.textfield.TextInputLayout>
+                    <ImageView
+                            android:id="@+id/top_layout_brand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/payment_card_logo_image_margin"
+                            android:src="@drawable/ic_card_payment_logo_visa"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
+
+                    <ImageView
+                            android:id="@+id/bottom_layout_brand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/payment_card_logo_image_margin"
+                            android:src="@drawable/ic_card_payment_sublogo_visa"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:ignore="ContentDescription" />
+
+                    <TextView
+                            android:id="@+id/display_card_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/payment_card_logo_image_margin"
+                            android:layout_marginTop="@dimen/payment_card_logo_image_margin"
+                            android:text="Card name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_description_big"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                            android:id="@+id/display_card_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/payment_card_logo_image_margin"
+                            android:layout_marginTop="@dimen/payment_card_number_top_margin"
+                            android:text="**** **** **** 1234"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_description_big"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                        android:id="@+id/add_card_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:text="@string/add_payment_card"
+                        android:textSize="@dimen/text_size_title_big"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/top_layout" />
+
+                <TextView
+                        android:id="@+id/add_card_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
+                        android:textSize="@dimen/text_size_title_big"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/add_card_title" />
+
+                <TextView
+                        android:id="@+id/card_number_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:text="@string/card_number"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/add_card_subtitle" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/card_number_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_number_label">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/card_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLength="19"
+                            android:hint="@string/card_number"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:nextFocusDown="@id/card_expiry"
+                            />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                        android:id="@+id/card_expiry_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:text="@string/expiry"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_number_input_layout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/card_expiry_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_expiry_label">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/card_expiry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/expiry"
+                            android:imeOptions="actionNext"
+                            android:inputType="date"
+                            android:nextFocusDown="@id/card_name"
+                            />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
-        <TextView
-                android:id="@+id/card_name_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_card_spacing_margin"
-                android:text="@string/name_on_card"
-                android:textSize="@dimen/text_size_description_medium"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/card_expiry_input_layout"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/card_name_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/card_name_label"
-                app:errorEnabled="true">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/card_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:imeOptions="actionDone"
-                    android:hint="@string/name_on_card"
-                    />
-        </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                        android:id="@+id/card_name_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:text="@string/name_on_card"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_expiry_input_layout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/card_name_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_name_label">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/card_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/name_on_card"
+                            android:imeOptions="actionDone"
+                            android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

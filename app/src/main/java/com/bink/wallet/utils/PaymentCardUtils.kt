@@ -15,23 +15,26 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
 }
 
 fun String.presentedCardType(): PaymentCardType {
-    val sanitizedInput = this.numberSanitize()
+    val sanitizedInput = numberSanitize()
     if (sanitizedInput.isEmpty())
         return PaymentCardType.NONE
     PaymentCardType.values().forEach {
         if (it != PaymentCardType.NONE) {
-            val splits = it.prefix.split("|")
-            for (prefix in splits) {
-                if (splits.size <= 1 ||
-                    prefix.length != 1 ||
-                    sanitizedInput.length <= prefix.length) {
-                    if (sanitizedInput.length >= prefix.length &&
-                        sanitizedInput.substring(0, prefix.length) == prefix
+            if (it.len >= sanitizedInput.length) {
+                val splits = it.prefix.split("|")
+                for (prefix in splits) {
+                    // if it's not an indicator prefix, work on it
+                    if (splits.size <= 1 ||
+                        prefix.length != 1 ||
+                        sanitizedInput.length <= prefix.length
                     ) {
-                        return it
+                        if (sanitizedInput.length >= prefix.length &&
+                            sanitizedInput.substring(0, prefix.length) == prefix
+                        ) {
+                            return it
+                        }
                     }
                 }
-                // skip this, as it's an indicator prefix
             }
         }
     }
@@ -39,9 +42,9 @@ fun String.presentedCardType(): PaymentCardType {
 }
 
 fun String.cardValidation() : PaymentCardType {
-    if (!this.luhnValidation())
+    if (!luhnValidation())
         return PaymentCardType.NONE
-    val sanitizedInput = this.ccSanitize()
+    val sanitizedInput = ccSanitize()
     val paymentType = sanitizedInput.presentedCardType()
     return if (sanitizedInput.length == paymentType.len)
         paymentType
@@ -53,37 +56,37 @@ fun String.numberSanitize(): String {
     return this.replace("[^\\d]".toRegex(), "")
 }
 fun String.ccSanitize(): String {
-    return this.replace(" ", "")
+    return replace(" ", "")
 }
 
 fun String.luhnValidation() : Boolean {
-    val sanitizedInput = this.ccSanitize()
+    val sanitizedInput = ccSanitize()
     return when {
-        sanitizedInput != this.numberSanitize() -> false
+        sanitizedInput != numberSanitize() -> false
         sanitizedInput.luhnLengthInvalid() -> false
         sanitizedInput.luhnValidPopulated() -> sanitizedInput.luhnChecksum() % 10 == 0
         else -> false
     }
 }
 
-fun String.luhnValidPopulated() = this.all(Char::isDigit) && this.length > 1
+fun String.luhnValidPopulated() = all(Char::isDigit) && length > 1
 
-fun String.luhnLengthInvalid() = !(this.length == 16 || this.length == 15)
+fun String.luhnLengthInvalid() = !(length == 16 || length == 15)
 
-fun String.luhnChecksum() = this.luhnMultiply().sum()
+fun String.luhnChecksum() = luhnMultiply().sum()
 
-fun String.luhnMultiply() = this.digits().mapIndexed { i, j ->
+fun String.luhnMultiply() = digits().mapIndexed { i, j ->
     when {
-        (this.length - i + 1) % 2 == 0 -> j
+        (length - i + 1) % 2 == 0 -> j
         j >= 5 -> j * 2 - 9
         else -> j * 2
     }
 }
 
-fun String.digits() = this.map(Character::getNumericValue)
+fun String.digits() = map(Character::getNumericValue)
 
 fun String.cardFormatter() : String {
-    val userInput = this.numberSanitize()
+    val userInput = numberSanitize()
     return if (userInput.length <= 16) {
         userInput.convertLayout()
     } else {
@@ -92,7 +95,7 @@ fun String.cardFormatter() : String {
 }
 
 fun String.convertLayout() : String {
-    val userInput = this.ccSanitize()
+    val userInput = ccSanitize()
     val sb = StringBuilder()
     val type = userInput.presentedCardType()
     if (type != PaymentCardType.NONE) {
@@ -111,7 +114,7 @@ fun String.convertLayout() : String {
     return sb.toString()
 }
 fun String.fourBlockLayout() : String {
-    val userInput = this.ccSanitize()
+    val userInput = ccSanitize()
     val sb = StringBuilder()
     for (i in userInput.indices) {
         if (i % 4 == 0 && i > 0) {
@@ -123,7 +126,7 @@ fun String.fourBlockLayout() : String {
 }
 
 fun String.cardStarFormatter() : String {
-    val sanitizedInput = this.ccSanitize()
+    val sanitizedInput = ccSanitize()
     val type = sanitizedInput.presentedCardType()
     if (type == PaymentCardType.NONE) {
         return ""
@@ -144,12 +147,12 @@ fun String.cardStarFormatter() : String {
 }
 
 fun String.cardStarConcatenator(shortPartLen: Int): String {
-    val part1 = this.substring(0, shortPartLen)
-    val part2 = this.substring(shortPartLen)
+    val part1 = substring(0, shortPartLen)
+    val part2 = substring(shortPartLen)
     val part1a = part1.starMeUp()
     return part1a + part2
 }
 
 fun String.starMeUp() : String {
-    return this.replace("[\\d]".toRegex(), "*")
+    return replace("[\\d]".toRegex(), "*")
 }

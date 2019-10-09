@@ -56,6 +56,15 @@ class PaymentCardUtilsTests {
     }
 
     @Test
+    fun visaTooLong() {
+        assertEquals(PaymentCardType.NONE, "4242 4242 4242 4242 4".cardValidation())
+    }
+    @Test
+    fun amexTooLong() {
+        assertEquals(PaymentCardType.NONE, "3424 424242 424242 4".cardValidation())
+    }
+
+    @Test
     fun invalidCard() {
         assertEquals(PaymentCardType.NONE, "1242 4242 4242 4242".cardValidation())
     }
