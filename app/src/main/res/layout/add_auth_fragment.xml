@@ -28,9 +28,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@string/cancel_text"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_medium"
-                android:text="@string/cancel_text"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
                 tools:ignore="ContentDescription" />
@@ -51,13 +51,13 @@
                 style="@style/TitleTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:text="@string/log_in_text"
-                app:layout_constraintTop_toBottomOf="@+id/add_join_reward"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@string/sign_up_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_join_reward" />
 
         <TextView
                 android:id="@+id/description_add_auth"
@@ -103,11 +103,24 @@
                 android:layout_marginStart="@dimen/margin_padding_size_extra_large"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                android:layout_marginBottom="@dimen/margin_padding_size_large"
-                android:text="@string/log_in_text"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:text="@string/sign_up_text"
+                app:layout_constraintBottom_toTopOf="@+id/no_account_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/auth_add_fields" />
+
+        <TextView
+                android:id="@+id/no_account_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:text="@string/no_account_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_big"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
