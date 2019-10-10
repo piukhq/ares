@@ -216,6 +216,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             }
                         }
                         SignUpFormType.GHOST -> {
+                            if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
+                                context?.displayModalPopup(
+                                    null,
+                                    getString(R.string.cannot_complete_registration)
+                                )
+                                return@setOnClickListener
+                            }
+
                             val currentRequest = MembershipCardRequest(
                                 Account(
                                     addRegisterFieldsRequest.add_fields,
