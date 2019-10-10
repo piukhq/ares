@@ -2,7 +2,7 @@ package com.bink.wallet.scenes.payment_card_wallet
 
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
@@ -36,7 +36,7 @@ class PaymentCardWalletFragment :
         viewModel.paymentCards.observeNonNull(this) {
             binding.progressSpinner.visibility = View.INVISIBLE
             binding.paymentCardRecycler.apply {
-                layoutManager = LinearLayoutManager(activity)
+                layoutManager = GridLayoutManager(activity, 1)
                 adapter =
                     PaymentCardWalletAdapter(
                         viewModel.paymentCards.value!!,
