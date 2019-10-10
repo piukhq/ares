@@ -66,7 +66,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:scaleType="fitXY"
                     app:layout_constraintEnd_toEndOf="@+id/card_number"
                     app:layout_constraintStart_toStartOf="@+id/card_number"
                     app:layout_constraintTop_toBottomOf="@+id/card_number"
