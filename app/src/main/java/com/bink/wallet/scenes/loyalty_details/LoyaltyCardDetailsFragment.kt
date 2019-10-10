@@ -202,12 +202,15 @@ class LoyaltyCardDetailsFragment :
         binding.footerSecurity.setOnClickListener {
             val directions = LoyaltyCardDetailsFragmentDirections.detailToSecurity(
                 GenericModalParameters(
-                    R.drawable.ic_close, getString(R.string.security_modal_title), getString(
+                    R.drawable.ic_close,
+                    getString(R.string.security_modal_title),
+                    getString(
                         R.string.security_modal_body,
                         getString(R.string.security_modal_body_1),
                         getString(R.string.security_modal_body_2)
                                 + getString(R.string.security_modal_body_3)
-                    ), getString(R.string.ok)
+                    ),
+                    getString(R.string.ok)
                 )
             )
             findNavController().navigateIfAdded(this, directions)
