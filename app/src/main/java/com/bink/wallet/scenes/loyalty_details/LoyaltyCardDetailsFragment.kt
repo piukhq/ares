@@ -88,28 +88,45 @@ class LoyaltyCardDetailsFragment :
             binding.footerDelete.binding.title.text = getString(R.string.delete_card_plan, viewModel.membershipPlan.value?.account?.plan_name)
         }
 
-        binding.footerAbout.setOnClickListener {
-            val directions =
-                viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
-                    val aboutText =
-                        if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
-                            getString(R.string.about_membership)
-                        } else
-                            viewModel.membershipPlan.value?.account!!.plan_name!!
+        val aboutTitle =
+            if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+                getString(R.string.about_membership)
+            } else
+                getString(
+                    R.string.about_membership_plan_name,
+                    viewModel.membershipPlan.value?.account!!.plan_name!!
+                )
 
+        binding.footerAbout.binding.title.text = aboutTitle
+
+        binding.footerAbout.setOnClickListener {
+            val aboutText =
+                if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+                    getString(R.string.about_membership)
+                } else
+                    viewModel.membershipPlan.value?.account!!.plan_name!!
+            val description =
+                if (viewModel.membershipPlan.value?.account?.plan_description.isNullOrEmpty()) {
+                    getString(R.string.no_plan_description_available)
+                } else
+                    viewModel.membershipPlan.value?.account?.plan_description
+            val directions =
+                description?.let { _ ->
                     GenericModalParameters(
-                        R.drawable.ic_close, aboutText,
-                        description, getString(R.string.ok)
-                    )
-                }?.let { arguments ->
-                    LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                        arguments
-                    )
+                        R.drawable.ic_close,
+                        aboutText,
+                        description,
+                        getString(R.string.ok)
+                    ).let { arguments ->
+                        LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                            arguments
+                        )
+                    }
                 }
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
-        if (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+        if (viewModel.membershipCard.value?.card != null) {
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
