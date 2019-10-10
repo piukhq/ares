@@ -46,7 +46,8 @@ fun String.cardValidation() : PaymentCardType {
         return PaymentCardType.NONE
     val sanitizedInput = ccSanitize()
     val paymentType = sanitizedInput.presentedCardType()
-    return if (sanitizedInput.length == paymentType.len)
+    return if (sanitizedInput.length == paymentType.len &&
+               sanitizedInput.luhnValidation())
         paymentType
     else
         PaymentCardType.NONE

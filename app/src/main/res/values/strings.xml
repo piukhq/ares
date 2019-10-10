@@ -212,7 +212,10 @@
     <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
     <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
+
+    <!-- Payment Card entry -->
     <string name="card_number">Card number</string>
     <string name="name_on_card">Name on card</string>
     <string name="expiry">Expiry</string>
+    <string name="incorrect_card_error">Please enter a valid card number</string>
 </resources>

@@ -8,9 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.model.payment_card.PaymentCardType
-import com.bink.wallet.utils.cardFormatter
-import com.bink.wallet.utils.cardStarFormatter
-import com.bink.wallet.utils.presentedCardType
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -57,6 +55,22 @@ class AddPaymentCardFragment :
             }
         }
         binding.cardNumber.addTextChangedListener(textWatcher)
+        binding.cardNumber.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                binding.cardNumberInputLayout.error =
+                    if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
+                        getString(R.string.incorrect_card_error)
+                    } else {
+                        ""
+                    }
+            }
+        }
+
+        binding.cardExpiry.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+
+            }
+        }
     }
 
     fun cardSwitcher(card: String) {
