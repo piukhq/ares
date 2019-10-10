@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.payment_card_wallet
+package com.bink.wallet.scenes.payment_card_details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

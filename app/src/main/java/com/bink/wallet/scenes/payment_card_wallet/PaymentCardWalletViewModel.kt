@@ -8,11 +8,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 
-class PaymentCardWalletViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
-    BaseViewModel() {
-    var localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
-
 class PaymentCardWalletViewModel(private var pllRepository: PllRepository) : BaseViewModel() {
     var paymentCards = MutableLiveData<List<PaymentCard>>()
     var fetchError = MutableLiveData<Throwable>()

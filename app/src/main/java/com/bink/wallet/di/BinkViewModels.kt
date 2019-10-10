@@ -79,8 +79,6 @@ val viewModelModules = module {
     viewModel { PllViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
-
-    viewModel { PaymentCardWalletViewModel(get()) }
 }
 
 fun provideLoginRepository(

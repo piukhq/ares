@@ -55,6 +55,24 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
 
+        <action
+                android:id="@+id/payment_wallet_to_details"
+                app:destination="@+id/payment_card_detail"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/payment_card_detail"
+            android:name="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetails">
+
+        <argument
+                android:name="paymentCard"
+                app:argType="com.bink.wallet.model.response.payment_card.PaymentCard" />
+
     </fragment>
 
     <fragment
@@ -272,12 +290,12 @@
 
         <action
                 android:id="@+id/detail_to_pll"
+                app:destination="@id/pll_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpToInclusive="true"
-                app:destination="@id/pll_fragment" />
+                app:popUpToInclusive="true" />
 
     </fragment>
 
