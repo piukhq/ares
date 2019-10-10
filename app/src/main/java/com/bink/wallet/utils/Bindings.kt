@@ -1,7 +1,6 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.Log
@@ -23,7 +22,6 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.PaymentCardType
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.zxing.BarcodeFormat
@@ -278,35 +276,7 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
 @BindingAdapter("backgroundGradient")
 fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
-    val colors = IntArray(2)
-
-    //TODO: Philip could you update this later? (https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/86#note_14997)
-
-    when (paymentCard.card?.provider) {
-        PaymentCardType.VISA.type -> {
-            colors[0] = ContextCompat.getColor(context, R.color.visa_right)
-            colors[1] = ContextCompat.getColor(context, R.color.visa_left)
-        }
-        PaymentCardType.MASTERCARD.type -> {
-            colors[0] = ContextCompat.getColor(context, R.color.mastercard_right)
-            colors[1] = ContextCompat.getColor(context, R.color.mastercard_left)
-        }
-        PaymentCardType.AMEX.type -> {
-            colors[0] = ContextCompat.getColor(context, R.color.amex_right)
-            colors[1] = ContextCompat.getColor(context, R.color.amex_left)
-        }
-        else -> {
-            colors[0] = ContextCompat.getColor(context, R.color.unknown_right)
-            colors[1] = ContextCompat.getColor(context, R.color.unknown_left)
-        }
-    }
-
-    val gd = GradientDrawable(
-        GradientDrawable.Orientation.RIGHT_LEFT, colors
-    )
-
-    gd.cornerRadius = 15f
-    background = gd
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.background)
 }
 
 @BindingAdapter("linkedStatus")
@@ -340,32 +310,12 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
 
 @BindingAdapter("paymentCardLogo")
 fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
-    when (paymentCard.card?.provider) {
-        PaymentCardType.VISA.type -> setImageResource(
-            R.drawable.ic_visa
-        )
-        PaymentCardType.MASTERCARD.type -> setImageResource(
-            R.drawable.ic_master_card
-        )
-        PaymentCardType.AMEX.type -> setImageResource(
-            R.drawable.ic_am_ex
-        )
-    }
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.logo)
 }
 
 @BindingAdapter("paymentCardSubLogo")
 fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
-    when (paymentCard.card?.provider) {
-        PaymentCardType.VISA.type -> setImageResource(
-            R.drawable.ic_visa_sub_logo
-        )
-        PaymentCardType.MASTERCARD.type -> setImageResource(
-            R.drawable.ic_master_card_sub_logo
-        )
-        PaymentCardType.AMEX.type -> setImageResource(
-            R.drawable.ic_am_ex_sub_logo
-        )
-    }
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.subLogo)
 }
 
 @BindingAdapter("loginStatus")
