@@ -1,3 +1,4 @@
+AB20-194 Enabled I don't have an account button
 AB20-80  Added ghost card button
 AB20-75  Ghost card register
 AB20-208 fix brand list crash
