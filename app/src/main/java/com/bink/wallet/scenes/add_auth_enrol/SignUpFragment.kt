@@ -72,15 +72,23 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
         viewModel.currentMembershipCard.value = args.membershipCard
+        planFieldsList?.clear()
+        planBooleanFieldsList?.clear()
         val signUpFormType = args.signUpFormType
 
         binding.item = viewModel.currentMembershipPlan.value
-        binding.descriptionAddAuth.text =
-            getString(
-                R.string.add_auth_description,
-                viewModel.currentMembershipPlan.value!!.account?.company_name
-            )
 
+        if (viewModel.currentMembershipPlan.value != null) {
+            binding.descriptionAddAuth.text =
+                getString(
+                    R.string.enrol_description,
+                    viewModel.currentMembershipPlan.value!!.account?.company_name
+                )
+
+            if (!viewModel.currentMembershipPlan.value!!.account?.registration_fields?.isNullOrEmpty()!!) {
+                binding.noAccountText.visibility = View.VISIBLE
+            }
+        }
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
             activity?.onBackPressed()
@@ -172,6 +180,19 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     it.typeOfField = TypeOfField.REGISTRATION
                     addFieldToList(it)
                 }
+
+                binding.noAccountText.visibility = View.INVISIBLE
+            }
+        }
+
+        binding.noAccountText.setOnClickListener {
+            if (viewModel.currentMembershipPlan.value != null) {
+                val action = SignUpFragmentDirections.toGhost(
+                    SignUpFormType.GHOST,
+                    viewModel.currentMembershipPlan.value!!,
+                    null
+                )
+                findNavController().navigateIfAdded(this, action)
             }
         }
 

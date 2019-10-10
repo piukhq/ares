@@ -170,6 +170,16 @@
                 app:popUpToInclusive="true" />
 
         <action
+                android:id="@+id/to_ghost"
+                app:destination="@id/ghost_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@+id/loyalty_fragment"
+                app:popUpToInclusive="true" />
+
+        <action
                 android:id="@+id/sign_up_to_pll_empty"
                 app:destination="@id/pll_empty_fragment"
                 app:enterAnim="@anim/slide_in_right"
@@ -301,12 +311,12 @@
 
         <action
                 android:id="@+id/detail_to_pll"
+                app:destination="@id/pll_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpToInclusive="true"
-                app:destination="@id/pll_fragment" />
+                app:popUpToInclusive="true" />
 
     </fragment>
 
