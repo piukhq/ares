@@ -218,4 +218,5 @@
     <string name="name_on_card">Name on card</string>
     <string name="expiry">Expiry</string>
     <string name="incorrect_card_error">Please enter a valid card number</string>
+    <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
 </resources>

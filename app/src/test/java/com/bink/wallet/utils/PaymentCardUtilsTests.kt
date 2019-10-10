@@ -195,4 +195,12 @@ class PaymentCardUtilsTests {
     fun validateYearTooLarge() {
         assertFalse("10/40".dateValidation())
     }
+    @Test
+    fun validateDateNoSlash() {
+        assertTrue("1021".dateValidation())
+    }
+    @Test
+    fun validateDateWithSlash() {
+        assertTrue("10/21".dateValidation())
+    }
 }

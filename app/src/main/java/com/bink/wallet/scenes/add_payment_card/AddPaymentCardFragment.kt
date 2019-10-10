@@ -3,6 +3,8 @@ package com.bink.wallet.scenes.add_payment_card
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -66,11 +68,22 @@ class AddPaymentCardFragment :
             }
         }
 
-        binding.cardExpiry.setOnFocusChangeListener { _, focus ->
+        binding.cardExpiry.setOnFocusChangeListener { view, focus ->
             if (!focus) {
-
+                binding.cardExpiryInputLayout.error = cardExpiryErrorCheck(view)
             }
         }
+    }
+
+    fun cardExpiryErrorCheck(view: View): String {
+        with ((view as EditText).text.toString()) {
+            if (!dateValidation()) {
+                return getString(R.string.incorrect_card_expiry)
+            } else {
+                binding.cardExpiry.setText(formatDate())
+            }
+        }
+        return ""
     }
 
     fun cardSwitcher(card: String) {

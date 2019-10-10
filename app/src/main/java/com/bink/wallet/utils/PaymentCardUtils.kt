@@ -165,7 +165,7 @@ fun String.dateValidation(): Boolean {
         val split = new.split("/")
         if (split.size > 1) {
             val month = split[0].toInt()
-            val year = split[1].toInt()
+            val year = split[1].toInt() + 2000
             if (month < 1 || month > 12)
                 return false
             val cal = Calendar.getInstance()
@@ -175,7 +175,7 @@ fun String.dateValidation(): Boolean {
                 year > cal.get(Calendar.YEAR) + 10) {
                 return false
             } else if (year == cal.get(Calendar.YEAR) &&
-                       month < cal.get(Calendar.MONTH)) {
+                       month <= cal.get(Calendar.MONTH)) {
                 return false
             }
             return true
