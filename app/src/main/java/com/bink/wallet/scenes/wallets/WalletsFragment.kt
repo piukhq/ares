@@ -38,6 +38,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         runBlocking {
             viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipCards()
             binding.progressSpinner.visibility = View.VISIBLE
         }
 
@@ -51,27 +52,29 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
             ?.commit()
 
-        viewModel.membershipPlanData.observeNonNull(this) {
-            binding.progressSpinner.visibility = View.GONE
-            binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.loyalty_menu_item -> {
-                        replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-                    }
-                    R.id.add_menu_item -> {
-                        val directions = it?.toTypedArray()?.let { plans ->
-                            WalletsFragmentDirections.homeToAdd(
-                                plans
-                            )
+        viewModel.membershipPlanData.observeNonNull(this) { plans ->
+            viewModel.membershipCardData.observeNonNull(this) { cards ->
+                binding.progressSpinner.visibility = View.GONE
+                binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.loyalty_menu_item -> {
+                            replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
                         }
-                        directions?.let { findNavController().navigateIfAdded(this, it) }
-                    }
-                    R.id.payment_menu_item -> {
-                        replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
-                    }
+                        R.id.add_menu_item -> {
+                            val directions = plans?.toTypedArray()?.let { plans ->
+                                WalletsFragmentDirections.homeToAdd(
+                                    plans
+                                )
+                            }
+                            directions?.let { findNavController().navigateIfAdded(this, it) }
+                        }
+                        R.id.payment_menu_item -> {
+                            replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
+                        }
 
+                    }
+                    true
                 }
-                true
             }
         }
         binding.settingsButton.setOnClickListener {

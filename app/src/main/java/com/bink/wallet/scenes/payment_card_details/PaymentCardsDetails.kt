@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,13 +29,24 @@ class PaymentCardsDetails :
         arguments?.let {
             viewModel.paymentCard.value =
                 PaymentCardsDetailsArgs.fromBundle(it).paymentCard
+            viewModel.membershipCardData.value =
+                PaymentCardsDetailsArgs.fromBundle(it).membershipCards.toList()
+            viewModel.membershipPlanData.value =
+                PaymentCardsDetailsArgs.fromBundle(it).membershipPlans.toList()
         }
 
-        binding.linkedCardsList.apply {
-            layoutManager = GridLayoutManager(context, 1)
-            adapter = LinkedCardsAdapter(viewModel.paymentCard.value?.membership_cards!!)
+        viewModel.membershipPlanData.observeNonNull(this) { plans ->
+            viewModel.membershipCardData.observeNonNull(this) { cards ->
+                binding.linkedCardsList.apply {
+                    layoutManager = GridLayoutManager(context, 1)
+                    adapter = LinkedCardsAdapter(
+                        cards,
+                        plans,
+                        viewModel.paymentCard.value?.membership_cards!!
+                    )
+                }
+            }
         }
-
     }
 
 }

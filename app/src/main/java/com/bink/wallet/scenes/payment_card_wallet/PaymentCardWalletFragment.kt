@@ -33,25 +33,35 @@ class PaymentCardWalletFragment :
 
         runBlocking {
             viewModel.getPaymentCards()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipPlans()
             binding.progressSpinner.visibility = View.VISIBLE
         }
 
-        viewModel.paymentCards.observeNonNull(this) {
-            binding.progressSpinner.visibility = View.INVISIBLE
-            binding.paymentCardRecycler.apply {
-                layoutManager = GridLayoutManager(context, 1)
-                adapter =
-                    PaymentCardWalletAdapter(
-                        viewModel.paymentCards.value!!,
-                        onClickListener = {
-                            val action = WalletsFragmentDirections.paymentWalletToDetails(it)
-                            findNavController().navigateIfAdded(
-                                this@PaymentCardWalletFragment,
-                                action
-                            )
-                        })
+        viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
+            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
+                viewModel.paymentCards.observeNonNull(this) { paymentCards ->
+                    binding.progressSpinner.visibility = View.INVISIBLE
+                    binding.paymentCardRecycler.apply {
+                        layoutManager = GridLayoutManager(context, 1)
+                        adapter =
+                            PaymentCardWalletAdapter(
+                                viewModel.paymentCards.value!!,
+                                onClickListener = {
+                                    val action =
+                                        WalletsFragmentDirections.paymentWalletToDetails(
+                                            it,
+                                            plans.toTypedArray(),
+                                            cards.toTypedArray()
+                                        )
+                                    findNavController().navigateIfAdded(
+                                        this@PaymentCardWalletFragment,
+                                        action
+                                    )
+                                })
+                    }
+                }
             }
-
         }
 
     }

@@ -73,6 +73,14 @@
                 android:name="paymentCard"
                 app:argType="com.bink.wallet.model.response.payment_card.PaymentCard" />
 
+        <argument
+                android:name="membershipPlans"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+
+        <argument
+                android:name="membershipCards"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
+
     </fragment>
 
     <fragment
