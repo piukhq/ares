@@ -22,7 +22,6 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.PaymentCardType
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.zxing.BarcodeFormat
@@ -267,11 +266,7 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
 @BindingAdapter("backgroundGradient")
 fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
-    val currentType = PaymentCardType.values().firstOrNull { it.type == paymentCard.card?.provider }
-    if (currentType != null)
-        setBackgroundResource(currentType.background)
-    else
-        setBackgroundResource(PaymentCardType.NONE.background)
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.background)
 }
 
 @BindingAdapter("linkedStatus")
@@ -305,20 +300,12 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
 
 @BindingAdapter("paymentCardLogo")
 fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
-    val currentType = PaymentCardType.values().firstOrNull { it.type == paymentCard.card?.provider }
-    if (currentType != null)
-        setBackgroundResource(currentType.logo)
-    else
-        setBackgroundResource(PaymentCardType.NONE.logo)
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.logo)
 }
 
 @BindingAdapter("paymentCardSubLogo")
 fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
-    val currentType = PaymentCardType.values().firstOrNull { it.type == paymentCard.card?.provider }
-    if (currentType != null)
-        setBackgroundResource(currentType.subLogo)
-    else
-        setBackgroundResource(PaymentCardType.NONE.subLogo)
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.subLogo)
 }
 
 @BindingAdapter("loginStatus")
