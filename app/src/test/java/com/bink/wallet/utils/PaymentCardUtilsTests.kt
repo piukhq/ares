@@ -162,4 +162,37 @@ class PaymentCardUtilsTests {
     fun checkStarAmExLayoutLong() {
         assertEquals("**** **** **** 2424", "3442 424242 42424".cardStarFormatter())
     }
+
+    @Test
+    fun emptyDateTest() {
+        assertFalse("".dateValidation())
+    }
+    @Test
+    fun garbageDateTest() {
+        assertFalse("abcde".dateValidation())
+    }
+    @Test
+    fun testSimpleDateFormat() {
+        assertEquals("01/01", "101".formatDate())
+    }
+    @Test
+    fun testDateFormat() {
+        assertEquals("11/21", "11/21".formatDate())
+    }
+    @Test
+    fun validateMonthTooSmall() {
+        assertFalse("00/20".dateValidation())
+    }
+    @Test
+    fun validateMonthTooLarge() {
+        assertFalse("13/20".dateValidation())
+    }
+    @Test
+    fun validateYearTooSmall() {
+        assertFalse("10/10".dateValidation())
+    }
+    @Test
+    fun validateYearTooLarge() {
+        assertFalse("10/40".dateValidation())
+    }
 }

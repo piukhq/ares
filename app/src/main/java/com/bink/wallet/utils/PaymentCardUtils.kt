@@ -3,6 +3,7 @@ package com.bink.wallet.utils
 import com.bink.wallet.model.payment_card.PaymentCardType
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import java.util.*
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
@@ -156,4 +157,52 @@ fun String.cardStarConcatenator(shortPartLen: Int): String {
 
 fun String.starMeUp() : String {
     return replace("[\\d]".toRegex(), "*")
+}
+
+fun String.dateValidation(): Boolean {
+    val new = formatDate()
+    if (new.isNotEmpty()) {
+        val split = new.split("/")
+        if (split.size > 1) {
+            val month = split[0].toInt()
+            val year = split[1].toInt()
+            if (month < 1 || month > 12)
+                return false
+            val cal = Calendar.getInstance()
+            // presuming that a card can't expire more than 10 years in the future
+            // the average expiry is about 3 years, but giving more in case
+            if (year < cal.get(Calendar.YEAR) ||
+                year > cal.get(Calendar.YEAR) + 10) {
+                return false
+            } else if (year == cal.get(Calendar.YEAR) &&
+                       month < cal.get(Calendar.MONTH)) {
+                return false
+            }
+            return true
+        }
+    }
+    return false
+}
+
+fun String.formatDate(): String {
+    val builder = StringBuilder()
+    val new = replace("[^\\d/]".toRegex(), "")
+    if (new.isNotEmpty()) {
+        val parts = new.split("/")
+        var year = ""
+        var month = ""
+        if (parts.size == 1) {
+            val len = Math.max(0, length - 2)
+            month = new.substring(0, len)
+            year = new.substring(len)
+        } else {
+            month = parts[0]
+            year = parts[1]
+        }
+        month = "00$month"
+        builder.append(month.substring(month.length - 2))
+        builder.append("/")
+        builder.append(year)
+    }
+    return builder.toString()
 }
