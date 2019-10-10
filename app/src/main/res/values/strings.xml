@@ -225,4 +225,5 @@
     <string name="native_join_unavailable_title">Native join unavailable</string>
     <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
+    <string name="no_account_text">I don\'t have an account</string>
 </resources>
