@@ -341,7 +341,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                         }
                     }
                 }
-            
+
                 hideLoadingViews()
             }
 
