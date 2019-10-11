@@ -24,8 +24,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <com.bink.wallet.PaymentCardHeader
+        <include
                 android:id="@+id/payment_header"
+                layout="@layout/payment_card_wallet_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
