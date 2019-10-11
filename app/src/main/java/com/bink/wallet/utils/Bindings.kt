@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
+import com.bink.wallet.PaymentCardHeader
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
@@ -61,6 +62,12 @@ fun ImageView.loadImage(item: MembershipCard) {
         }
     }
 }
+
+@BindingAdapter("app:paymentCard")
+fun PaymentCardHeader.loadInfo(item: PaymentCard?) {
+    binding.paymentCard = item
+}
+
 
 @BindingAdapter("image")
 fun ImageView.setPaymentCardImage(item: PaymentCard) {

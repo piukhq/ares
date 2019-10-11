@@ -34,6 +34,8 @@ class PaymentCardsDetails :
             viewModel.membershipPlanData.value = currentBundle.membershipPlans.toList()
         }
 
+        binding.paymentCardDetail = viewModel.paymentCard.value
+
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 binding.linkedCardsList.apply {
