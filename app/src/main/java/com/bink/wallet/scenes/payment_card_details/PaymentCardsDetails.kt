@@ -27,12 +27,11 @@ class PaymentCardsDetails :
         super.onActivityCreated(savedInstanceState)
 
         arguments?.let {
-            viewModel.paymentCard.value =
-                PaymentCardsDetailsArgs.fromBundle(it).paymentCard
-            viewModel.membershipCardData.value =
-                PaymentCardsDetailsArgs.fromBundle(it).membershipCards.toList()
-            viewModel.membershipPlanData.value =
-                PaymentCardsDetailsArgs.fromBundle(it).membershipPlans.toList()
+            val currentBundle = PaymentCardsDetailsArgs.fromBundle(it)
+
+            viewModel.paymentCard.value = currentBundle.paymentCard
+            viewModel.membershipCardData.value = currentBundle.membershipCards.toList()
+            viewModel.membershipPlanData.value = currentBundle.membershipPlans.toList()
         }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
