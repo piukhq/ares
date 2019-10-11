@@ -88,7 +88,8 @@ class LoyaltyCardDetailsFragment :
             val directions =
                 viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
                     GenericModalParameters(
-                        R.drawable.ic_close, getString(R.string.about_membership_plan, viewModel.membershipPlan.value?.account!!.plan_name),
+                        R.drawable.ic_close,
+                        getString(R.string.about_membership_plan, viewModel.membershipPlan.value?.account!!.plan_name),
                         description, getString(R.string.ok)
                     )
                 }?.let { arguments ->
@@ -115,7 +116,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
         binding.pointsWrapper.setOnClickListener {
-            var genericModalParameters: GenericModalParameters? = null
+            val genericModalParameters: GenericModalParameters?
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     val action =
