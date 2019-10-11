@@ -3,10 +3,12 @@ package com.bink.wallet.di
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.modal.TermsAndConditionsRepository
+import com.bink.wallet.modal.TermsAndConditionsViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
-import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.SignUpViewModel
@@ -21,11 +23,13 @@ import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllRepository
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
+import com.bink.wallet.scenes.wallets.WalletsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -61,7 +65,11 @@ val viewModelModules = module {
 
     viewModel { AddPaymentCardViewModel() }
 
+    viewModel { PaymentCardWalletViewModel(get()) }
+
     viewModel { BaseModalViewModel() }
+
+    viewModel { WalletsViewModel(get()) }
 
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
@@ -91,4 +99,7 @@ fun provideLoyaltyCardDetailsRepository(
 fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
     TermsAndConditionsRepository(restApiService)
 
-fun providePllRepository(restApiService: ApiService, paymentCardDao: PaymentCardDao): PllRepository = PllRepository(restApiService, paymentCardDao)
+fun providePllRepository(
+    restApiService: ApiService,
+    paymentCardDao: PaymentCardDao
+): PllRepository = PllRepository(restApiService, paymentCardDao)

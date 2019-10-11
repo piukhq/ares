@@ -224,5 +224,10 @@
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
+
+    <!--    Payment card wallet-->
+    <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
+    <string name="payment_card_not_linked">Not linked</string>
+    <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="no_account_text">I don\'t have an account</string>
 </resources>
