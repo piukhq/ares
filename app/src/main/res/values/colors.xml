@@ -22,4 +22,14 @@
     <color name="gray_inactive">#d3d3d3</color>
     <color name="white_transparent">#00ffffff</color>
     <color name="white">#ffffffff</color>
+
+    <!--    Payment card colors-->
+    <color name="visa_right">#13288d</color>
+    <color name="visa_left">#181c51</color>
+    <color name="mastercard_right">#f79e1b</color>
+    <color name="mastercard_left">#eb001b</color>
+    <color name="amex_right">#57c4ff</color>
+    <color name="amex_left">#006bcd</color>
+    <color name="unknown_right">#b46fea</color>
+    <color name="unknown_left">#4371fe</color>
 </resources>

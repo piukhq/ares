@@ -66,16 +66,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        when {
-            findNavController(R.id.main_fragment).currentDestination?.id == R.id.maximised_barcode_fragment -> {
+        when (findNavController(R.id.main_fragment).currentDestination?.id) {
+            R.id.maximised_barcode_fragment -> {
                 findNavController(R.id.main_fragment).popBackStack()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
-            findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_empty_fragment -> {
+            R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
             }
-            findNavController(R.id.main_fragment).currentDestination?.id == R.id.pll_fragment -> {
-                if(!SharedPreferenceManager.isAddJourney){
+            R.id.pll_fragment -> {
+                if (!SharedPreferenceManager.isAddJourney) {
                     findNavController(R.id.main_fragment).popBackStack()
                 }
             }
@@ -98,6 +98,10 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private operator fun Any.setValue(mainActivity: MainActivity, property: KProperty<*>, loginRepository: LoginRepository) {
+private operator fun Any.setValue(
+    mainActivity: MainActivity,
+    property: KProperty<*>,
+    loginRepository: LoginRepository
+) {
 
 }
