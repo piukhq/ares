@@ -41,6 +41,11 @@ class FooterItem @JvmOverloads constructor(
                 binding.title.text = resources.getText(R.string.delete_card)
                 binding.description.text = resources.getText(R.string.remove_card)
             }
+
+            FooterType.RENAME.type -> {
+                binding.title.text = resources.getText(R.string.rename_card)
+                binding.description.text = resources.getText(R.string.rename_card_description)
+            }
         }
     }
 }
