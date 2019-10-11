@@ -33,16 +33,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             .build()
     }
 
-    private var onChange: (ArrayList<MembershipCard>) -> Unit = {}
-
     private lateinit var nestedNavController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         nestedNavController = Navigation.findNavController(view)
     }
-
-    private var TAG = LoyaltyWalletFragment::class.simpleName
 
     override val viewModel: LoyaltyViewModel by viewModel()
     override val layoutRes: Int
@@ -51,10 +47,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    fun setChangeAction(onChange: (ArrayList<MembershipCard>) -> Unit) {
-        this.onChange = onChange
     }
 
     val listener: RecyclerItemTouchHelperListener = object :
@@ -187,19 +179,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 showNoInternetConnectionDialog()
             }
         }
-    }
-
-    fun changeScreen() {
-        viewModel.localMembershipPlanData.observe(this, Observer {
-            val directions = it?.toTypedArray()?.let { plans ->
-                WalletsFragmentDirections.homeToAdd(
-                    plans
-                )
-            }
-            viewModel.localMembershipPlanData.removeObservers(this)
-            directions?.let { nestedNavController.navigateIfAdded(this, it) }
-            this@LoyaltyWalletFragment.onDestroy()
-        })
     }
 
     private fun onCardClicked(card: MembershipCard) {
