@@ -220,6 +220,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
+
+                    planFieldsList?.map {
+                        if (!UtilFunctions.isValidField(
+                                it.first.validation,
+                                it.second.value
+                            )
+                        ) {
+                            context?.displayModalPopup(
+                                null,
+                                getString(R.string.all_fields_must_be_valid)
+                            )
+                            return@setOnClickListener
+                        }
+                    }
+
                     when (signUpFormType) {
                         SignUpFormType.ADD_AUTH -> {
                             val currentRequest = MembershipCardRequest(
@@ -244,6 +259,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             }
                         }
                         SignUpFormType.GHOST -> {
+                            if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
+                                context?.displayModalPopup(
+                                    null,
+                                    getString(R.string.cannot_complete_registration)
+                                )
+                                return@setOnClickListener
+                            }
+
                             val currentRequest = MembershipCardRequest(
                                 Account(
                                     addRegisterFieldsRequest.add_fields,
