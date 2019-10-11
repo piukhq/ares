@@ -282,30 +282,24 @@ fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
 
 @BindingAdapter("linkedStatus")
 fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
-    if (paymentCard.membership_cards.isNullOrEmpty()) {
-        setImageResource(R.drawable.ic_unlinked)
-    } else {
-        if (paymentCard.membership_cards.any { it.active_link == true }) {
-            setImageResource(R.drawable.ic_linked)
-        } else {
-            setImageResource(R.drawable.ic_unlinked)
+    setImageResource(
+        when (!paymentCard.membership_cards.isNullOrEmpty() &&
+                paymentCard.membership_cards.any { it.active_link == true }) {
+            true -> R.drawable.ic_linked
+            false -> R.drawable.ic_unlinked
         }
-    }
+    )
 }
 
 @BindingAdapter("linkedStatus")
 fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
-    text = if (paymentCard.membership_cards.isNullOrEmpty()) {
-        context.getString(R.string.payment_card_not_linked)
-    } else {
-        if (paymentCard.membership_cards.any { it.active_link == true }) {
-            context.getString(
-                R.string.payment_card_linked_status,
-                paymentCard.membership_cards.filter { it.active_link == true }.size
-            )
-        } else {
-            context.getString(R.string.payment_card_not_linked)
-        }
+    text = when (!paymentCard.membership_cards.isNullOrEmpty() &&
+            paymentCard.membership_cards.any { it.active_link == true }) {
+        true -> context.getString(
+            R.string.payment_card_linked_status,
+            paymentCard.membership_cards.filter { it.active_link == true }.size
+        )
+        false -> context.getString(R.string.payment_card_not_linked)
     }
 }
 
