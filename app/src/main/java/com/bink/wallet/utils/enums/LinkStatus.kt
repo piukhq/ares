@@ -7,7 +7,7 @@ enum class LinkStatus(
     val drawable: Int,
     val statusText: Int,
     val descriptionText: Int,
-    val descriptionParams: List<String>? = null
+    var descriptionParams: List<*>? = null
 ) {
     STATUS_LINKED_TO_SOME_OR_ALL(
         2.1f,

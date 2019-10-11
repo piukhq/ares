@@ -4,8 +4,6 @@ import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.modal.TermsAndConditionsRepository
-import com.bink.wallet.modal.TermsAndConditionsViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
