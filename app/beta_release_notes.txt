@@ -1,3 +1,4 @@
+AB20-135 Linked payments cards
 AB20-133 Created payment cards wallet
 AB20-194 Enabled I don't have an account button
 AB20-80  Added ghost card button
