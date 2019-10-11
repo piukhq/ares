@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.payment_card_details
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.LinkedCardsListItemBinding
@@ -31,9 +30,9 @@ class LinkedCardsAdapter(
         return LinkedCardsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: LinkedCardsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LinkedCardsViewHolder, position: Int) =
         paymentMembershipCards[position].let { holder.bind(it) }
-    }
+
 
     override fun getItemCount(): Int = paymentMembershipCards.size
 
