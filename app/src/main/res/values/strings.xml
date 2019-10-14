@@ -16,7 +16,7 @@
 
 
     <!-- Barcode Screen -->
-    <string name="barcode_maximize">Maximize barcode</string>
+    <string name="barcode_maximize">Maximise barcode</string>
     <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind some scanners cannot read from screens.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
