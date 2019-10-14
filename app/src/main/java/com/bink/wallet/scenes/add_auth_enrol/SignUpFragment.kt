@@ -24,7 +24,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
-            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -95,10 +94,16 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             windowFullscreenHandler.toNormalScreen()
             requireActivity().onBackPressed()
         }
-        binding.close.setOnClickListener {
+        binding.cancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        binding.close.setOnClickListener {
+            view?.hideKeyboard()
+            windowFullscreenHandler.toNormalScreen()
+            findNavController().popBackStack()
         }
 
         runBlocking {
@@ -201,7 +206,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 findNavController().navigateIfAdded(this, action)
             }
         }
-
 
         planBooleanFieldsList?.map { planFieldsList?.add(it) }
 
@@ -344,7 +348,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
                 hideLoadingViews()
             }
-
 
         viewModel.createCardError.observeNonNull(this) {
             requireContext().displayModalPopup(
