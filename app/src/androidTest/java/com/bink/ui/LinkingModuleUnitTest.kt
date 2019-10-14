@@ -29,7 +29,7 @@ class LinkingModuleUnitTest {
             LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
                 onView(withId(linkDescriptionId)).check(matches(withText(R.string.description_no_cards)))
                 onView(withId(linkStatusTextId)).check(matches(withText(R.string.link_status_linkable_no_cards)))
-                //onView(withId(linkImageId)).check(matches(with))
+                onView(withId(linkImageId)).check(matches(withDrawable(R.drawable.ic_lcd_module_icons_link_error)))
             }
         }
     }
