@@ -25,7 +25,6 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
     override fun builder(): FragmentToolbar {
@@ -71,13 +70,13 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
             viewModel.membershipCard.value = it
-            binding.swipeLayout.isRefreshing = false
+            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
             viewModel.setAccountStatus()
             viewModel.setLinkStatus()
         }
 
         viewModel.membershipCard.observeNonNull(this) {
-            binding.swipeLayout.isRefreshing = false
+            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
         }
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
@@ -144,7 +143,7 @@ class LoyaltyCardDetailsFragment :
             configureLinkStatus(status)
         }
 
-        binding.swipeLayout.setOnRefreshListener {
+        binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             runBlocking {
                 viewModel.updateMembershipCard()
             }
@@ -237,6 +236,10 @@ class LoyaltyCardDetailsFragment :
         if (loginStatus.pointsDescription != null) {
             binding.pointsDescription.text = getString(R.string.description_see_history)
         }
+
+        binding.pointsText.text = loginStatus.pointsText?.let { getString(it) }
+        binding.pointsDescription.text = loginStatus.pointsDescription?.let { getString(it) }
+
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                 val balance = viewModel.membershipCard.value?.balances?.first()

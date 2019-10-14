@@ -1,47 +1,59 @@
 package com.bink.espresso_test_matchers
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
 
-class CustomDrawableMatcher : TypeSafeMatcher<View> {
-    private var expectedId: Int = 0
-    private var resourceName: String? = null
-    val EMPTY = -1
-    val ANY = -2
+class CustomDrawableMatcher {
 
-    constructor(expectedId: Int) {
-        this.expectedId = expectedId
-    }
+    companion object {
+        fun toBitmap(drawable: Drawable): Bitmap? {
+            val bitmap: Bitmap? =
+                if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+                    Bitmap.createBitmap(
+                        1,
+                        1,
+                        Bitmap.Config.ARGB_8888
+                    ) // Single color bitmap will be created of 1x1 pixel
+                } else {
+                    Bitmap.createBitmap(
+                        drawable.intrinsicWidth,
+                        drawable.intrinsicHeight,
+                        Bitmap.Config.ARGB_8888
+                    )
+                }
 
-    override fun describeTo(description: Description?) {
-        description?.appendText("with drawable from resource id: ")
-        description?.appendValue(expectedId)
-        if (resourceName != null) {
-            description?.appendText("[")
-            description?.appendText(resourceName)
-            description?.appendText("]")
+            if (drawable is BitmapDrawable) {
+                if (drawable.bitmap != null) {
+                    return drawable.bitmap
+                }
+            }
+            val canvas = bitmap?.let { Canvas(it) }
+            canvas?.width?.let { drawable.setBounds(0, 0, it, canvas.height) }
+            canvas?.let { drawable.draw(it) }
+            return bitmap
         }
-    }
 
-    override fun matchesSafely(target: View?): Boolean {
-        if (target !is ImageView) {
-            return false
-        }
-        if (expectedId == EMPTY) {
-            return target.drawable == null
-        }
-        if (expectedId == ANY) {
-            return target.drawable != null
-        }
-        val resources = target.getContext().resources
-        val expectedDrawable = resources.getDrawable(expectedId)
-        resourceName = resources.getResourceEntryName(expectedId)
+        fun withDrawable(@DrawableRes id: Int) = object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("ImageView with drawable same as drawable with id $id")
+            }
 
-        if (expectedDrawable == null) {
-            return false
+            override fun matchesSafely(view: View): Boolean {
+                val context = view.context
+                val expectedBitmap = context.getDrawable(id)?.let {
+                    toBitmap(it)
+                }
+                return view is ImageView && toBitmap(view.drawable)!!.sameAs(expectedBitmap)
+            }
         }
-        return  expectedDrawable == target.drawable
     }
 }
+
+
