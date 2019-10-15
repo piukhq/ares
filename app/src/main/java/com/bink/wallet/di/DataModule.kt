@@ -10,7 +10,6 @@ val dataModule = module {
         Room.databaseBuilder(androidApplication(), BinkDatabase::class.java, "bink-db")
             .fallbackToDestructiveMigration()
             .build()
-
     }
 
     single { get<BinkDatabase>().membershipPlanDao() }

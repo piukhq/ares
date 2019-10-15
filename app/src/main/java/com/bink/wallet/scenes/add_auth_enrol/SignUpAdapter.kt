@@ -46,7 +46,6 @@ class SignUpAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
-
         return when (viewType) {
             FieldType.TEXT.type,
             FieldType.PASSWORD.type -> TextFieldHolder(AddAuthTextItemBinding.inflate(inflater))

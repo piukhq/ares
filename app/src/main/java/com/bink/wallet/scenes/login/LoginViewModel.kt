@@ -12,7 +12,6 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     var loginData = MutableLiveData<LoginData>()
     var loginEmail = loginRepository.loginEmail
 
-
     fun authenticate() {
         loginRepository.doAuthenticationWork(
             LoginResponse(

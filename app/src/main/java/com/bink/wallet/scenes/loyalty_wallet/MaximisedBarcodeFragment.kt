@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding

@@ -16,7 +16,6 @@ interface ApiService {
     @POST("/ubiquity/service")
     fun loginOrRegisterAsync(@Body loginResponse: LoginResponse): Deferred<LoginResponse>
 
-
     @GET("/ubiquity/membership_cards")
     fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
 

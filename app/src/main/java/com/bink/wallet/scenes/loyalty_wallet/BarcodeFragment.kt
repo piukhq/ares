@@ -44,7 +44,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                         )
                     }
                 }
-
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
     }

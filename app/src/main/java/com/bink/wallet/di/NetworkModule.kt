@@ -34,7 +34,6 @@ fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
         chain.proceed(newRequest)
     }
 
-
     val logging = HttpLoggingInterceptor()
     // sets desired log level
     logging.level = HttpLoggingInterceptor.Level.BODY

@@ -49,9 +49,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
         arguments?.let { brandsList ->
             var plans = BrowseBrandsFragmentArgs.fromBundle(brandsList).membershipPlans
-
             val plansList = ArrayList<Pair<String?, MembershipPlan>>()
-
             plans =
                 plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
                     comparePlans(membershipPlan1, membershipPlan2)
@@ -69,7 +67,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 }
             }
 
-            browse_brands_container.apply {
+            binding.browseBrandsContainer.apply {
                 layoutManager = GridLayoutManager(activity, 1)
                 adapter =
                     BrowseBrandsAdapter(plansList, itemClickListener = { toAddJoinScreen(it) })
