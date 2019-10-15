@@ -32,12 +32,18 @@ class PaymentCardsDetails :
         get() = R.layout.payment_cards_details_fragment
 
     override fun onPause() {
-        for (i in changedCards) {
+        for (currentCard in changedCards) {
             runBlocking {
-                if (i.value) {
-                    viewModel.linkPaymentCard(i.key, viewModel.paymentCard.value?.id.toString())
+                if (currentCard.value) {
+                    viewModel.linkPaymentCard(
+                        currentCard.key,
+                        viewModel.paymentCard.value?.id.toString()
+                    )
                 } else {
-                    viewModel.unlinkPaymentCard(viewModel.paymentCard.value?.id.toString(), i.key)
+                    viewModel.unlinkPaymentCard(
+                        viewModel.paymentCard.value?.id.toString(),
+                        currentCard.key
+                    )
                 }
             }
         }
@@ -64,8 +70,7 @@ class PaymentCardsDetails :
 
         binding.footerSecurity.setOnClickListener {
             binding.footerSecurity.setOnClickListener {
-                if (context != null)
-                    SecurityDialog().openDialog(context!!, layoutInflater)
+                SecurityDialog().openDialog(requireContext(), layoutInflater)
             }
         }
 
