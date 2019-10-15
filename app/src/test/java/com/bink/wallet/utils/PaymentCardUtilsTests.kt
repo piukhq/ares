@@ -203,7 +203,6 @@ class PaymentCardUtilsTests {
     fun validateDateWithSlash() {
         assertTrue("10/21".dateValidation())
     }
-}
 
     @Test
     fun testCardIsVisa() {
