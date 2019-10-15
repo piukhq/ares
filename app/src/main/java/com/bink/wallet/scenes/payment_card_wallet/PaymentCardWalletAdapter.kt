@@ -15,6 +15,15 @@ class PaymentCardWalletAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentCardWalletHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PaymentCardWalletItemBinding.inflate(inflater)
+
+        binding.apply {
+            root.setOnClickListener {
+                paymentCard?.apply {
+                    onClickListener(this)
+                }
+            }
+        }
+
         return PaymentCardWalletHolder(
             binding
         )

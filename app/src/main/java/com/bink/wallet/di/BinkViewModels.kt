@@ -21,6 +21,7 @@ import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllRepository
@@ -63,7 +64,9 @@ val viewModelModules = module {
 
     viewModel { AddPaymentCardViewModel() }
 
-    viewModel { PaymentCardWalletViewModel(get()) }
+    viewModel { PaymentCardWalletViewModel(get(), get()) }
+
+    viewModel { PaymentCardsDetailsViewModel() }
 
     viewModel { BaseModalViewModel() }
 
