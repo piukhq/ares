@@ -1,6 +1,5 @@
 package com.bink.wallet.utils
 
-import com.bink.wallet.model.payment_card.PaymentCardType
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.PaymentCardType

@@ -3,14 +3,13 @@ package com.bink.wallet.scenes.add_payment_card
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
-import com.bink.wallet.model.payment_card.PaymentCardType
+import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
@@ -96,8 +95,6 @@ class AddPaymentCardFragment :
 
                 val cardNo = binding.cardNumber.text.toString().numberSanitize()
                 val cardExp = binding.cardExpiry.text.toString().split("/")
-
-                Log.d("AddPaymentCardFragment", "card number md5=" + BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]))
 
                 // TODO add in location request and get lat & long from the SDK
                 viewModel.sendAddCard(PaymentCardAdd(
