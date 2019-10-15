@@ -25,7 +25,7 @@
                 android:background="@android:color/white"
                 android:elevation="5dp"
                 android:orientation="vertical"
-                app:cardCornerRadius="5dp"
+                app:cardCornerRadius="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
