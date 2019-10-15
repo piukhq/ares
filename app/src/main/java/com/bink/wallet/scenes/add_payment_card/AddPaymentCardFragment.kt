@@ -73,6 +73,16 @@ class AddPaymentCardFragment :
                 binding.cardExpiryInputLayout.error = cardExpiryErrorCheck(view)
             }
         }
+        binding.cardName.setOnFocusChangeListener { view, focus ->
+            if (!focus) {
+                binding.cardNameInputLayout.error =
+                    if (binding.cardName.text.toString().isEmpty()) {
+                        getString(R.string.incorrect_card_name)
+                    } else {
+                        ""
+                    }
+            }
+        }
     }
 
     fun cardExpiryErrorCheck(view: View): String {

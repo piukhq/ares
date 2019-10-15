@@ -15,5 +15,7 @@ data class BankCard(
     val currency_code: String?,
     val name_on_card: String?,
     val provider: String?,
-    val type: String?
+    val type: String?,
+    val token: String?,
+    val fingerprint: String?
 ) : Parcelable
