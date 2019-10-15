@@ -11,5 +11,5 @@ data class GenericModalParameters(
     var description: String,
     var firstButtonText: String = "",
     var secondButtonText: String = "",
-    var joinUnavailableLink: String = ""
+    var link: String = ""
 ) : Parcelable

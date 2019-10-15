@@ -1,4 +1,4 @@
-package com.bink.wallet.modal
+package com.bink.wallet.modal.terms_and_conditions
 
 import com.bink.wallet.network.ApiService
 

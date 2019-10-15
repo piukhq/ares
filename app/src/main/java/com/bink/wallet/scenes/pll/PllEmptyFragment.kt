@@ -5,8 +5,10 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentPllEmptyBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.scenes.add_join.AddJoinFragmentDirections
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -35,6 +37,17 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
                 currentMembershipCard = PllEmptyFragmentArgs.fromBundle(bundle).membershipCard
                 currentMembershipPlan = PllEmptyFragmentArgs.fromBundle(bundle).membershipPlan
             }
+        }
+
+        binding.header.setOnClickListener {
+            val directions = currentMembershipPlan?.account?.plan_description?.let { message ->
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.plan_description),
+                    message, getString(R.string.ok)
+                )
+            }?.let { params -> PllEmptyFragmentDirections.pllEmptyToBrandHeader(params) }
+            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
         currentMembershipPlan?.let {

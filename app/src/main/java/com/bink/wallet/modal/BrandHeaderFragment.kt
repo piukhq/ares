@@ -1,26 +1,21 @@
 package com.bink.wallet.modal
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.modal.generic.GenericModalFragment
 
-/**
- */
-class JoinUnavailableFragment : GenericModalFragment() {
-    var link: String = ""
+class BrandHeaderFragment : GenericModalFragment() {
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         arguments?.let { bundle ->
             JoinUnavailableFragmentArgs.fromBundle(bundle).apply {
                 setupUi(genericModalParameters)
-                link = genericModalParameters.link
             }
         }
     }
 
     override fun onFirstButtonClicked() {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+        findNavController().popBackStack()
     }
 }
