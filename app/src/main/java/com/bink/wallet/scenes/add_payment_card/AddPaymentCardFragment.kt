@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.add_payment_card
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
@@ -10,6 +11,10 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.model.payment_card.PaymentCardType
+import com.bink.wallet.model.response.payment_card.Account
+import com.bink.wallet.model.response.payment_card.BankCard
+import com.bink.wallet.model.response.payment_card.Consent
+import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,6 +86,46 @@ class AddPaymentCardFragment :
                     } else {
                         ""
                     }
+            }
+        }
+
+        binding.addButton.setOnClickListener {
+            if (binding.cardNumberInputLayout.error.isNullOrEmpty() &&
+                binding.cardExpiryInputLayout.error.isNullOrBlank() &&
+                !binding.cardName.text.isNullOrEmpty()) {
+
+                val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                val cardExp = binding.cardExpiry.text.toString().split("/")
+
+                Log.d("AddPaymentCardFragment", "card number md5=" + BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]))
+
+                // TODO add in location request and get lat & long from the SDK
+                viewModel.sendAddCard(PaymentCardAdd(
+                    BankCard(
+                        cardNo.substring(0, 6),
+                        cardNo.substring(-6),
+                        cardExp[0].toInt(),
+                        cardExp[1].toInt(),
+                        "GB",
+                        "GBP",
+                        binding.cardName.text.toString(),
+                        cardNo.cardValidation().type,
+                        cardNo.cardValidation().type,
+                        BankCard.tokenGenerator(),
+                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                    ),
+                    Account(
+                        false,
+                        0,
+                        listOf(
+                            Consent(
+                                0,
+                                0.0f,
+                                0.0f,
+                                System.currentTimeMillis()
+                                ))
+                        )
+                ))
             }
         }
     }
