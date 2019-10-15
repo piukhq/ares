@@ -4,8 +4,8 @@ import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.modal.TermsAndConditionsRepository
-import com.bink.wallet.modal.TermsAndConditionsViewModel
+import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
+import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
@@ -17,17 +17,16 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
-import com.bink.wallet.scenes.loyalty_details.ModuleIssueViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllRepository
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
-import com.bink.wallet.scenes.transactions_not_supported.TransactionsNotSupportedViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -60,16 +59,14 @@ val viewModelModules = module {
 
     viewModel { TransactionViewModel() }
 
-    viewModel { TransactionsNotSupportedViewModel() }
-
-    viewModel { ModuleIssueViewModel() }
-
     single { provideTermsAndConditionsRepository(get()) }
     viewModel { TermsAndConditionsViewModel(get()) }
 
     viewModel { AddPaymentCardViewModel() }
 
-    viewModel { PaymentCardWalletViewModel(get()) }
+    viewModel { PaymentCardWalletViewModel(get(), get()) }
+
+    viewModel { PaymentCardsDetailsViewModel() }
 
     viewModel { BaseModalViewModel() }
 

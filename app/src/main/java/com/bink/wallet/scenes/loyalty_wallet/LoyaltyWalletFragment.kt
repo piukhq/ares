@@ -40,11 +40,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         nestedNavController = Navigation.findNavController(view)
     }
 
-    private var TAG = LoyaltyWalletFragment::class.simpleName
-
     override val viewModel: LoyaltyViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     val listener: RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelperListener {
@@ -63,7 +66,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     plan, card
                                 )
                             }
-                        if (findNavController().currentDestination?.id == R.id.loyalty_wallet_fragment) {
+                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
                             directions?.let {
                                 findNavController().navigateIfAdded(
                                     this@LoyaltyWalletFragment, it
@@ -178,19 +181,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    fun changeScreen() {
-        viewModel.localMembershipPlanData.observe(this, Observer {
-            val directions = it?.toTypedArray()?.let { plans ->
-                WalletsFragmentDirections.homeToAdd(
-                    plans
-                )
-            }
-            viewModel.localMembershipPlanData.removeObservers(this)
-            directions?.let { nestedNavController.navigateIfAdded(this, it) }
-            this@LoyaltyWalletFragment.onDestroy()
-        })
-    }
-
     private fun onCardClicked(card: MembershipCard) {
         for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
             if (card.membership_plan == membershipPlan.id) {
@@ -216,7 +206,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        if (verifyAvailableNetwork(activity!!)) {
+                        if (verifyAvailableNetwork(requireActivity())) {
                             runBlocking {
                                 viewModel.deleteCard(membershipCard.id)
                             }

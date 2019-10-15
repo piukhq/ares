@@ -79,6 +79,7 @@
                 android:layout_marginEnd="@dimen/brand_logo_size"
                 android:layout_marginBottom="@dimen/margin_padding_size_large"
                 android:text="@string/done_button"
+                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

@@ -34,11 +34,26 @@ import kotlin.math.absoluteValue
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
-    if (item?.images != null && item.images.isNotEmpty()) {
+    if (!item?.images.isNullOrEmpty()) {
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
-                .load(item.images.first { it.type == ImageType.ICON.type }.url)
+                .load(item?.images?.first { it.type == ImageType.ICON.type }?.url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            Log.e("loadImage", e.localizedMessage, e)
+        }
+    }
+}
+
+@BindingAdapter("imageUrl")
+fun ImageView.loadImage(item: MembershipCard) {
+    if (!item.images.isNullOrEmpty()) {
+        // wrapped in a try/catch as it was throwing error on very strange situations
+        try {
+            Glide.with(context)
+                .load(item.images?.first { it.type == ImageType.ICON.type }?.url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
@@ -107,14 +122,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     binding.brandImage.loadImage(plan)
-    if (plan?.account?.plan_description != null) {
-        binding.headerWrapper.setOnClickListener {
-            context.displayModalPopup(
-                resources.getString(R.string.plan_description),
-                plan.account.plan_description.toString()
-            )
-        }
-    }
     plan?.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
@@ -132,6 +139,17 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     binding.tapCard.setVisible(card?.card?.barcode != null)
 }
 
+@BindingAdapter("textBalance")
+fun TextView.textBalance(card: MembershipCard?) {
+    val balance = card?.balances?.first()
+    if (!card?.balances.isNullOrEmpty())
+        text = when (balance?.prefix != null) {
+            true -> balance?.prefix?.plus(balance.value)
+            else -> {
+                balance?.value.plus(balance?.suffix)
+            }
+        }
+}
 
 @BindingAdapter("planField")
 fun TextView.title(
