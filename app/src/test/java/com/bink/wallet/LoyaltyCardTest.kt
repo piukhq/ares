@@ -93,8 +93,7 @@ class LoyaltyCardTest {
         runBlocking {
             Mockito.`when`(loyaltyWalletRepository.retrieveMembershipPlans(viewModel.membershipPlanData))
                 .then {
-                    (
-                            viewModel.membershipPlanData.apply {
+                    (viewModel.membershipPlanData.apply {
                                 postValue(
                                     asList(
                                         MembershipPlan(
@@ -107,8 +106,7 @@ class LoyaltyCardTest {
                                         )
                                     )
                                 )
-                            }
-                            )
+                            })
                     val observer = mock(Observer::class.java) as Observer<List<MembershipPlan>>
                     viewModel.membershipPlanData.observeForever(observer)
                     runBlocking {

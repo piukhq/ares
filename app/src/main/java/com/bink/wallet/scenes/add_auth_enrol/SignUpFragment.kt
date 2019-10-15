@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
@@ -71,15 +72,23 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
         viewModel.currentMembershipCard.value = args.membershipCard
+        planFieldsList?.clear()
+        planBooleanFieldsList?.clear()
         val signUpFormType = args.signUpFormType
 
         binding.item = viewModel.currentMembershipPlan.value
-        binding.descriptionAddAuth.text =
-            getString(
-                R.string.add_auth_description,
-                viewModel.currentMembershipPlan.value!!.account?.company_name
-            )
 
+        if (viewModel.currentMembershipPlan.value != null) {
+            binding.descriptionAddAuth.text =
+                getString(
+                    R.string.enrol_description,
+                    viewModel.currentMembershipPlan.value!!.account?.company_name
+                )
+
+            if (!viewModel.currentMembershipPlan.value!!.account?.registration_fields?.isNullOrEmpty()!!) {
+                binding.noAccountText.visibility = View.VISIBLE
+            }
+        }
         binding.toolbar.setNavigationOnClickListener {
             windowFullscreenHandler.toNormalScreen()
             activity?.onBackPressed()
@@ -90,8 +99,26 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
+        binding.addJoinReward.setOnClickListener {
+            val directions =
+                viewModel.currentMembershipPlan.value?.account?.plan_description?.let { message ->
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        getString(R.string.plan_description),
+                        message, getString(R.string.ok)
+                    )
+                }?.let { params ->
+                    SignUpFragmentDirections.signUpToBrandHeader(params)
+                }
+            directions?.let { _ ->
+                findNavController().navigateIfAdded(this, directions)
+            }
+        }
+
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
+                binding.titleAddAuthText.text = getString(R.string.log_in_text)
+                binding.addCardButton.text = getString(R.string.log_in_text)
                 if (viewModel.currentMembershipCard.value != null) {
                     if (viewModel.currentMembershipPlan.value!!.feature_set?.has_points != null &&
                         viewModel.currentMembershipPlan.value!!.feature_set?.has_points == true &&
@@ -135,6 +162,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
             }
             SignUpFormType.ENROL -> {
+                binding.titleAddAuthText.text = getString(R.string.sign_up_enrol)
+                binding.addCardButton.text = getString(R.string.sign_up_text)
+                binding.descriptionAddAuth.text = getString(R.string.enrol_description, viewModel.currentMembershipPlan.value?.account?.company_name)
                 viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
                     it.typeOfField = TypeOfField.ENROL
                     addFieldToList(it)
@@ -150,6 +180,19 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     it.typeOfField = TypeOfField.REGISTRATION
                     addFieldToList(it)
                 }
+
+                binding.noAccountText.visibility = View.INVISIBLE
+            }
+        }
+
+        binding.noAccountText.setOnClickListener {
+            if (viewModel.currentMembershipPlan.value != null) {
+                val action = SignUpFragmentDirections.toGhost(
+                    SignUpFormType.GHOST,
+                    viewModel.currentMembershipPlan.value!!,
+                    null
+                )
+                findNavController().navigateIfAdded(this, action)
             }
         }
 
@@ -178,6 +221,20 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
 
+                    planFieldsList?.map {
+                        if (!UtilFunctions.isValidField(
+                                it.first.validation,
+                                it.second.value
+                            )
+                        ) {
+                            context?.displayModalPopup(
+                                null,
+                                getString(R.string.all_fields_must_be_valid)
+                            )
+                            return@setOnClickListener
+                        }
+                    }
+
                     when (signUpFormType) {
                         SignUpFormType.ADD_AUTH -> {
                             val currentRequest = MembershipCardRequest(
@@ -202,6 +259,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             }
                         }
                         SignUpFormType.GHOST -> {
+                            if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
+                                context?.displayModalPopup(
+                                    null,
+                                    getString(R.string.cannot_complete_registration)
+                                )
+                                return@setOnClickListener
+                            }
+
                             val currentRequest = MembershipCardRequest(
                                 Account(
                                     addRegisterFieldsRequest.add_fields,
@@ -211,7 +276,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                                 ),
                                 viewModel.currentMembershipPlan.value!!.id
                             )
-
                             viewModel.createMembershipCard(
                                 currentRequest
                             )
@@ -235,18 +299,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             }
         }
 
-        if (viewModel.newMembershipCard.hasActiveObservers())
-            viewModel.newMembershipCard.removeObservers(this)
-        else
-            viewModel
-                .newMembershipCard.observeNonNull(this) { membershipCard ->
-
+        viewModel.newMembershipCard.observeNonNull(this) { membershipCard ->
+            if (viewModel.newMembershipCard.hasActiveObservers())
+                viewModel.newMembershipCard.removeObservers(this)
                 if (signUpFormType == SignUpFormType.GHOST) {
                     val currentRequest = MembershipCardRequest(
                         Account(null, null, null, addRegisterFieldsRequest.registration_fields),
                         viewModel.currentMembershipPlan.value!!.id
                     )
-
                     viewModel.ghostMembershipCard(
                         membershipCard,
                         currentRequest
@@ -254,26 +314,47 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 }
 
                 when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
-
                     CardType.VIEW.type, CardType.STORE.type -> {
-                        val directions =
-                            SignUpFragmentDirections.signUpToDetails(
-                                viewModel.currentMembershipPlan.value!!, membershipCard
-                            )
-                        findNavController().navigateIfAdded(this, directions)
-                    }
-                    CardType.PLL.type -> {
-                        if (membershipCard.membership_transactions != null && membershipCard.membership_transactions?.isEmpty()!!) {
+                        if (signUpFormType == SignUpFormType.GHOST) {
+                            val directions =
+                                SignUpFragmentDirections.signUpToDetails(
+                                    viewModel.currentMembershipPlan.value!!,
+                                    membershipCard
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        } else {
                             val directions = SignUpFragmentDirections.signUpToPllEmpty(
                                 viewModel.currentMembershipPlan.value!!,
                                 membershipCard
                             )
-
                             findNavController().navigateIfAdded(this, directions)
                         }
                     }
+                    CardType.PLL.type -> {
+                        if (signUpFormType == SignUpFormType.GHOST) {
+                            if (membershipCard.membership_transactions != null
+                                && membershipCard.membership_transactions?.isEmpty()!!
+                            ) {
+                                val directions = SignUpFragmentDirections.signUpToPllEmpty(
+                                    viewModel.currentMembershipPlan.value!!,
+                                    membershipCard
+                                )
+                                findNavController().navigateIfAdded(this, directions)
+                            }
+                        } else {
+                            if (viewModel.currentMembershipPlan.value != null) {
+                                val directions = SignUpFragmentDirections.signUpToPll(
+                                    membershipCard,
+                                    viewModel.currentMembershipPlan.value!!,
+                                    true
+                                )
+                                findNavController().navigateIfAdded(this, directions)
+                            }
+                        }
+                    }
                 }
-                hideLoadingViews()
+
+            hideLoadingViews()
             }
 
 

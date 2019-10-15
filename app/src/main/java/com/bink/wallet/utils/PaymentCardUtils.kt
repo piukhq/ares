@@ -3,16 +3,21 @@ package com.bink.wallet.utils
 import com.bink.wallet.model.payment_card.PaymentCardType
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.enums.PaymentCardType
 import java.util.*
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
-        if (paymentMembershipCard.id.toString() == membershipCard.id &&
-            paymentMembershipCard.active_link == true) {
+        if(paymentMembershipCard.id.toString() == membershipCard.id
+            && paymentMembershipCard.active_link == true) {
             return true
         }
     }
     return false
+}
+
+fun String.getCardType(): PaymentCardType {
+    return PaymentCardType.values().firstOrNull { it.type == this } ?: PaymentCardType.NONE
 }
 
 fun String.presentedCardType(): PaymentCardType {

@@ -28,9 +28,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@string/cancel_text"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_medium"
-                android:text="@string/cancel_text"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
                 tools:ignore="ContentDescription" />
@@ -104,10 +104,26 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
                 android:layout_marginBottom="@dimen/margin_padding_size_large"
-                android:text="@string/log_in_text"
+                android:text="@string/sign_up_text"
+                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/auth_add_fields" />
+
+        <TextView
+                android:id="@+id/no_account_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:text="@string/no_account_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_big"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_card_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
@@ -30,13 +31,29 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
 import kotlin.math.absoluteValue
 
+
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
-    if (item?.images != null && item.images.isNotEmpty()) {
+    if (!item?.images.isNullOrEmpty()) {
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
-                .load(item.images.first { it.type == ImageType.ICON.type }.url)
+                .load(item?.images?.first { it.type == ImageType.ICON.type }?.url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            Log.e("loadImage", e.localizedMessage, e)
+        }
+    }
+}
+
+@BindingAdapter("imageUrl")
+fun ImageView.loadImage(item: MembershipCard) {
+    if (!item.images.isNullOrEmpty()) {
+        // wrapped in a try/catch as it was throwing error on very strange situations
+        try {
+            Glide.with(context)
+                .load(item.images?.first { it.type == ImageType.ICON.type }?.url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
@@ -46,8 +63,8 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 }
 
 @BindingAdapter("image")
-fun ImageView.setPaymentCardImage(item:PaymentCard) {
-    if (!item.images.isNullOrEmpty()){
+fun ImageView.setPaymentCardImage(item: PaymentCard) {
+    if (!item.images.isNullOrEmpty()) {
         Glide.with(context).load(item.images.first().url).into(this)
     }
 }
@@ -105,14 +122,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     binding.brandImage.loadImage(plan)
-    if (plan?.account?.plan_description != null) {
-        binding.headerWrapper.setOnClickListener {
-            context.displayModalPopup(
-                resources.getString(R.string.plan_description),
-                plan.account.plan_description.toString()
-            )
-        }
-    }
     plan?.account?.plan_name_card?.let {
         binding.loyaltyScheme.text =
             resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
@@ -130,6 +139,17 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     binding.tapCard.setVisible(card?.card?.barcode != null)
 }
 
+@BindingAdapter("textBalance")
+fun TextView.textBalance(card: MembershipCard?) {
+    val balance = card?.balances?.first()
+    if (!card?.balances.isNullOrEmpty())
+        text = when (balance?.prefix != null) {
+            true -> balance?.prefix?.plus(balance.value)
+            else -> {
+                balance?.value.plus(balance?.suffix)
+            }
+        }
+}
 
 @BindingAdapter("planField")
 fun TextView.title(
@@ -260,6 +280,44 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
             text = this.context.getString(R.string.description_text)
         else -> text = this.context.getString(R.string.description_text)
     }
+}
+
+@BindingAdapter("backgroundGradient")
+fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.background)
+}
+
+@BindingAdapter("linkedStatus")
+fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
+    setImageResource(
+        when (!paymentCard.membership_cards.isNullOrEmpty() &&
+                paymentCard.membership_cards.any { it.active_link == true }) {
+            true -> R.drawable.ic_linked
+            false -> R.drawable.ic_unlinked
+        }
+    )
+}
+
+@BindingAdapter("linkedStatus")
+fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
+    text = when (!paymentCard.membership_cards.isNullOrEmpty() &&
+            paymentCard.membership_cards.any { it.active_link == true }) {
+        true -> context.getString(
+            R.string.payment_card_linked_status,
+            paymentCard.membership_cards.filter { it.active_link == true }.size
+        )
+        false -> context.getString(R.string.payment_card_not_linked)
+    }
+}
+
+@BindingAdapter("paymentCardLogo")
+fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.logo)
+}
+
+@BindingAdapter("paymentCardSubLogo")
+fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
+    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.subLogo)
 }
 
 @BindingAdapter("loginStatus")

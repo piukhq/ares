@@ -1,3 +1,7 @@
+AB20-135 Linked payments cards
+AB20-133 Created payment cards wallet
+AB20-194 Enabled I don't have an account button
+AB20-80  Added ghost card button
 AB20-75  Ghost card register
 AB20-208 fix brand list crash
 AB20-155 new icons for debug, beta, MR & nightly
@@ -12,4 +16,12 @@ AB20-176 LCD loyalty card image display update
 AB20-77 Native-Join-Sign-Up-Unavailable
 AB20-34 PLL
 AB20-183 LCD Error Message Not Displayed
-ab20-167 Bink Beta Release Crashes
+AB20-167 Bink Beta Release Crashes
+AB20-207 Barcode Screen Showing Incorrect Info
+AB20-209 App Crash on Maximise Barcode
+AB20-210 Barcode Screen cannot be accessed from wallet screen
+AB20-211 DONE should be displayed as Done in PLL and PLL empty screens
+AB20-212 Tapping on Back Button on Home Wallet refreshes the app
+AB20-188 Transactions unavailable screen wording changes
+AB20-214 PLL - The user is redirected to PLL Empty after adding a PLL card
+AB20-215 PLL - The user is redirected to details screen after adding a non PLL card

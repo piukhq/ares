@@ -1,4 +1,4 @@
-package com.bink.wallet.modal
+package com.bink.wallet.modal.terms_and_conditions
 
 import android.os.Bundle
 import com.bink.wallet.R
