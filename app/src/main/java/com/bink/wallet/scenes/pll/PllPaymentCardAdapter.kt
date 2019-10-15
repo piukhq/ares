@@ -40,13 +40,16 @@ class PllPaymentCardAdapter(
         fun bindCard(paymentCard: PllPaymentCardWrapper) {
             binding.paymentCard = paymentCard
 
-            binding.toggle.isChecked = paymentCard.isSelected
-            binding.toggle.displayCustomSwitch(paymentCard.isSelected)
+            with(binding.toggle) {
+                isChecked = paymentCard.isSelected
+                displayCustomSwitch(paymentCard.isSelected)
 
-            binding.toggle.setOnCheckedChangeListener { _, isChecked ->
-                paymentCard.isSelected = isChecked
-                binding.toggle.displayCustomSwitch(isChecked)
+                setOnCheckedChangeListener { _, isChecked ->
+                    paymentCard.isSelected = isChecked
+                    displayCustomSwitch(isChecked)
+                }
             }
+
             if (paymentCards?.last() == paymentCard) {
                 binding.view.visibility = View.GONE
             }

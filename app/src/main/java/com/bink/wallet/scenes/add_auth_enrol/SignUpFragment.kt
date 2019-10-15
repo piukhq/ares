@@ -122,8 +122,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                         getString(R.string.plan_description),
                         message, getString(R.string.ok)
                     )
-                }?.let { params -> SignUpFragmentDirections.signUpToBrandHeader(params) }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                }?.let { params ->
+                    SignUpFragmentDirections.signUpToBrandHeader(params)
+                }
+            directions?.let { _ ->
+                findNavController().navigateIfAdded(this, directions)
+            }
         }
 
         when (signUpFormType) {
@@ -230,6 +234,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
+
+                    planFieldsList?.map {
+                        if (!UtilFunctions.isValidField(
+                                it.first.validation,
+                                it.second.value
+                            )
+                        ) {
+                            context?.displayModalPopup(
+                                null,
+                                getString(R.string.all_fields_must_be_valid)
+                            )
+                            return@setOnClickListener
+                        }
+                    }
+
                     when (signUpFormType) {
                         SignUpFormType.ADD_AUTH -> {
                             val currentRequest = MembershipCardRequest(
@@ -254,6 +273,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             }
                         }
                         SignUpFormType.GHOST -> {
+                            if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
+                                context?.displayModalPopup(
+                                    null,
+                                    getString(R.string.cannot_complete_registration)
+                                )
+                                return@setOnClickListener
+                            }
+
                             val currentRequest = MembershipCardRequest(
                                 Account(
                                     addRegisterFieldsRequest.add_fields,
@@ -305,7 +332,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                         if (signUpFormType == SignUpFormType.GHOST) {
                             val directions =
                                 SignUpFragmentDirections.signUpToDetails(
-                                    viewModel.currentMembershipPlan.value!!, membershipCard
+                                    viewModel.currentMembershipPlan.value!!,
+                                    membershipCard
                                 )
                             findNavController().navigateIfAdded(this, directions)
                         } else {
@@ -318,7 +346,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     }
                     CardType.PLL.type -> {
                         if (signUpFormType == SignUpFormType.GHOST) {
-                            if (membershipCard.membership_transactions != null && membershipCard.membership_transactions?.isEmpty()!!) {
+                            if (membershipCard.membership_transactions != null
+                                && membershipCard.membership_transactions?.isEmpty()!!
+                            ) {
                                 val directions = SignUpFragmentDirections.signUpToPllEmpty(
                                     viewModel.currentMembershipPlan.value!!,
                                     membershipCard
@@ -346,7 +376,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     }
                 }
 
-                hideLoadingViews()
+            hideLoadingViews()
             }
 
         viewModel.createCardError.observeNonNull(this) {

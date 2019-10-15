@@ -40,11 +40,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         nestedNavController = Navigation.findNavController(view)
     }
 
-    private var TAG = LoyaltyWalletFragment::class.simpleName
-
     override val viewModel: LoyaltyViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     val listener: RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelperListener {
@@ -176,19 +179,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 showNoInternetConnectionDialog()
             }
         }
-    }
-
-    fun changeScreen() {
-        viewModel.localMembershipPlanData.observe(this, Observer {
-            val directions = it?.toTypedArray()?.let { plans ->
-                WalletsFragmentDirections.homeToAdd(
-                    plans
-                )
-            }
-            viewModel.localMembershipPlanData.removeObservers(this)
-            directions?.let { nestedNavController.navigateIfAdded(this, it) }
-            this@LoyaltyWalletFragment.onDestroy()
-        })
     }
 
     private fun onCardClicked(card: MembershipCard) {
