@@ -2,10 +2,13 @@ package com.bink.wallet.scenes.payment_card_wallet
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
+import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -30,20 +33,35 @@ class PaymentCardWalletFragment :
 
         runBlocking {
             viewModel.getPaymentCards()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipPlans()
             binding.progressSpinner.visibility = View.VISIBLE
         }
 
-        viewModel.paymentCards.observeNonNull(this) {
-            binding.progressSpinner.visibility = View.INVISIBLE
-            binding.paymentCardRecycler.apply {
-                layoutManager = GridLayoutManager(activity, 1)
-                adapter =
-                    PaymentCardWalletAdapter(
-                        viewModel.paymentCards.value!!,
-                        onClickListener = {
-                        })
+        viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
+            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
+                viewModel.paymentCards.observeNonNull(this) { paymentCards ->
+                    binding.progressSpinner.visibility = View.INVISIBLE
+                    binding.paymentCardRecycler.apply {
+                        layoutManager = GridLayoutManager(context, 1)
+                        adapter =
+                            PaymentCardWalletAdapter(
+                                viewModel.paymentCards.value!!,
+                                onClickListener = {
+                                    val action =
+                                        WalletsFragmentDirections.paymentWalletToDetails(
+                                            it,
+                                            plans.toTypedArray(),
+                                            cards.toTypedArray()
+                                        )
+                                    findNavController().navigateIfAdded(
+                                        this@PaymentCardWalletFragment,
+                                        action
+                                    )
+                                })
+                    }
+                }
             }
-
         }
 
     }
