@@ -12,11 +12,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
-class PllRepository(private val apiService: ApiService, private val paymentCardDao: PaymentCardDao) {
+class PllRepository(
+    private val apiService: ApiService,
+    private val paymentCardDao: PaymentCardDao
+) {
 
     suspend fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
-        fetchError: MutableLiveData<Throwable>) {
+        fetchError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
@@ -35,7 +39,8 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
 
     suspend fun getLocalPaymentCards(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Throwable>) {
+        localFetchError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
@@ -82,6 +87,20 @@ class PllRepository(private val apiService: ApiService, private val paymentCardD
                     unlinkedBody.value = response
                 } catch (e: Throwable) {
                     unlinkError.value = e
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    suspend fun deletePaymentCard(id: String?, mutableDeleteCard: MutableLiveData<ResponseBody>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = id?.let { apiService.deletePaymentCardAsync(it) }
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request?.await()
+                    mutableDeleteCard.value = response
+                } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

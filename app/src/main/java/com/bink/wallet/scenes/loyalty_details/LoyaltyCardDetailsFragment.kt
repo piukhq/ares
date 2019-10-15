@@ -1,21 +1,14 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.method.LinkMovementMethod
-import android.text.style.URLSpan
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.databinding.DialogSecurityBinding
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.*
@@ -144,39 +137,8 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.footerSecurity.setOnClickListener {
-            val stringToSpan = getString(R.string.security_modal_body_3)
-            val spannableString = SpannableStringBuilder(stringToSpan)
-            val url = getString(R.string.terms_and_conditions_url)
-            val hyperlinkText = getString(R.string.hyperlink_text)
-            spannableString.setSpan(
-                URLSpan(url),
-                stringToSpan.indexOf(hyperlinkText),
-                stringToSpan.indexOf(hyperlinkText) + hyperlinkText.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            val dialog = Dialog(requireContext())
-            val dialogBinding = DataBindingUtil.inflate<DialogSecurityBinding>(
-                layoutInflater,
-                R.layout.dialog_security,
-                null,
-                true
-            )
-
-            dialog.setContentView(dialogBinding.root)
-            dialog.setTitle(R.string.security_modal_title)
-            dialogBinding.preBody.text = getString(
-                R.string.security_modal_body,
-                getString(R.string.security_modal_body_1),
-                getString(R.string.security_modal_body_2)
-            )
-            dialogBinding.body.text = spannableString
-            dialogBinding.body.movementMethod = LinkMovementMethod.getInstance()
-            dialogBinding.ok.setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.show()
-
+            if (context != null)
+                SecurityDialog().openDialog(context!!, layoutInflater)
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
@@ -187,7 +149,7 @@ class LoyaltyCardDetailsFragment :
                     viewModel.fetchPaymentCards()
                 }
             }
-            when(status){
+            when (status) {
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
                     binding.activeLinked.setImageDrawable(
                         ContextCompat.getDrawable(
@@ -216,7 +178,12 @@ class LoyaltyCardDetailsFragment :
                                 }
 
                             }
-                        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                        directions?.let { _ ->
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions
+                            )
+                        }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
@@ -265,7 +232,12 @@ class LoyaltyCardDetailsFragment :
                                 }
 
                             }
-                        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                        directions?.let { _ ->
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions
+                            )
+                        }
                     }
 
                 }
