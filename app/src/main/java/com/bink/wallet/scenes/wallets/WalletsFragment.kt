@@ -49,12 +49,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
 
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
-        if (SharedPreferenceManager.isLoyaltySelected)
+        if (SharedPreferenceManager.isLoyaltySelected) {
+            binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
             fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
                 ?.commit()
-        else
+        } else {
+            binding.bottomNavigation.selectedItemId = R.id.payment_menu_item
             fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
                 ?.commit()
+        }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
