@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
@@ -21,7 +22,6 @@ class MaximisedBarcodeFragment: BaseFragment<MaximisedBarcodeViewModel, Fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         arguments?.let {
             MaximisedBarcodeFragmentArgs.fromBundle(it).apply {
@@ -30,10 +30,11 @@ class MaximisedBarcodeFragment: BaseFragment<MaximisedBarcodeViewModel, Fragment
                 binding.viewModel = viewModel
             }
         }
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         binding.close.setOnClickListener {
-            activity?.onBackPressed()
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            requireActivity().onBackPressed()
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
 }
