@@ -93,7 +93,11 @@ class PllRepository(
         }
     }
 
-    suspend fun deletePaymentCard(id: String?, mutableDeleteCard: MutableLiveData<ResponseBody>) {
+    suspend fun deletePaymentCard(
+        id: String?,
+        mutableDeleteCard: MutableLiveData<ResponseBody>,
+        deleteError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deletePaymentCardAsync(it) }
             withContext(Dispatchers.Main) {
@@ -101,6 +105,7 @@ class PllRepository(
                     val response = request?.await()
                     mutableDeleteCard.value = response
                 } catch (e: Throwable) {
+                    deleteError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
