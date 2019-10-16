@@ -18,6 +18,7 @@ class TermsAndConditionsFragment : GenericModalFragment() {
             }
         }
     }
+
     override fun onSecondButtonClicked() {
         super.onSecondButtonClicked()
         viewModel.destinationLiveData.value = R.id.global_to_home

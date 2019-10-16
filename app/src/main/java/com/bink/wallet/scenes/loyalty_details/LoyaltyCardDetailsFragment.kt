@@ -88,7 +88,10 @@ class LoyaltyCardDetailsFragment :
                 viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
                     GenericModalParameters(
                         R.drawable.ic_close,
-                        getString(R.string.about_membership_plan, viewModel.membershipPlan.value?.account!!.plan_name),
+                        getString(
+                            R.string.about_membership_plan,
+                            viewModel.membershipPlan.value?.account!!.plan_name
+                        ),
                         description, getString(R.string.ok)
                     )
                 }?.let { arguments ->
@@ -254,7 +257,7 @@ class LoyaltyCardDetailsFragment :
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                 val balance = viewModel.membershipCard.value?.balances?.first()
-                if(balance != null) {
+                if (balance != null) {
                     setBalanceText(balance)
                 } else {
                     binding.pointsText.text = getString(R.string.points_signing_up)

@@ -14,7 +14,12 @@ class LoyaltyDetailsTilesAdapter(var tiles: List<String>) :
         parent: ViewGroup,
         viewType: Int
     ): LoyaltyDetailsTileViewHolder {
-        val binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.detail_tile_item, parent, false) as DetailTileItemBinding
+        val binding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.detail_tile_item,
+            parent,
+            false
+        ) as DetailTileItemBinding
         return LoyaltyDetailsTileViewHolder(binding)
     }
 

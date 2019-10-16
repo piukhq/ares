@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet;
+package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.DialogInterface
 import android.os.Bundle

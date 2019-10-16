@@ -71,7 +71,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 }
                 R.id.add_menu_item -> {
                     val directions =
-                        viewModel.membershipPlanData.value!!.toTypedArray()?.let { plans ->
+                        viewModel.membershipPlanData.value!!.toTypedArray().let { plans ->
                             WalletsFragmentDirections.homeToAdd(
                                 plans
                             )

@@ -7,12 +7,14 @@ import com.bink.wallet.model.LoginData
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
 
-class LoginRepository(private val apiService: ApiService,
-                      private val loginDataDao: LoginDataDao
+class LoginRepository(
+    private val apiService: ApiService,
+    private val loginDataDao: LoginDataDao
 ) {
     companion object {
         const val DEFAULT_LOGIN_ID = "0"
     }
+
     var loginEmail: String = "Bink20iteration1@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
@@ -44,7 +46,7 @@ class LoginRepository(private val apiService: ApiService,
                     val response = loginDataDao.getLoginData()
                     // Note: the AS hint says that response should never be null,
                     // but it appears it can be during runtime... go figure!
-                    if (response?.email != null) {
+                    if (response.email != null) {
                         loginEmail = response.email
                         updateLiveData(loginData, response)
                     } else {

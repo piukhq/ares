@@ -10,7 +10,7 @@ class WindowFullscreenHandler(val activity: Activity) {
         activity.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
-    fun toNormalScreen(){
+    fun toNormalScreen() {
         activity.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         activity.window?.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
     }

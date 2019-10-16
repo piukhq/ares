@@ -16,7 +16,8 @@ class FooterItem @JvmOverloads constructor(
 
     var binding: FooterItemBinding =
         DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.footer_item, this, true)
-    private val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.FooterItem, 0, 0)
+    private val attributes =
+        context.theme.obtainStyledAttributes(attrs, R.styleable.FooterItem, 0, 0)
     private val footerType = attributes.getString(R.styleable.FooterItem_type)
 
 

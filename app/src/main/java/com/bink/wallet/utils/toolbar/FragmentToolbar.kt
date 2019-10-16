@@ -48,6 +48,7 @@ class FragmentToolbar(
             this.menuClicks.addAll(menuClicks)
         }
 
-        fun build() = FragmentToolbar(resId, title, menuId, menuItems, menuClicks, activity, toolbar)
+        fun build() =
+            FragmentToolbar(resId, title, menuId, menuItems, menuClicks, activity, toolbar)
     }
 }

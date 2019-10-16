@@ -18,13 +18,18 @@ class PllPaymentCardAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PllPaymentCardViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<PllPaymentCardItemBinding>(inflater, R.layout.pll_payment_card_item, parent, false)
+        val binding = DataBindingUtil.inflate<PllPaymentCardItemBinding>(
+            inflater,
+            R.layout.pll_payment_card_item,
+            parent,
+            false
+        )
         return PllPaymentCardViewHolder(binding)
     }
 
     override fun getItemCount(): Int = if (!paymentCards.isNullOrEmpty()) {
-            paymentCards?.size!!
-        } else 0
+        paymentCards?.size!!
+    } else 0
 
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
