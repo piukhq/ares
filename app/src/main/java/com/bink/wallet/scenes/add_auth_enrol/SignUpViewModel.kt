@@ -17,8 +17,7 @@ class SignUpViewModel constructor(private val loyaltyWalletRepository: LoyaltyWa
     var fetchCardsError = MutableLiveData<Throwable>()
     var currentMembershipPlan = MutableLiveData<MembershipPlan>()
     var currentMembershipCard = MutableLiveData<MembershipCard>()
-    var isPaymentWalletEmpty = MutableLiveData<Boolean>()
-
+    
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
         loyaltyWalletRepository.createMembershipCard(
             membershipCardRequest,
