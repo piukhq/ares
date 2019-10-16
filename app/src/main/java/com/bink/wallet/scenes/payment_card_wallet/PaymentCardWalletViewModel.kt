@@ -22,15 +22,15 @@ class PaymentCardWalletViewModel(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
     }
 
+    suspend fun getPaymentCards() {
+        pllRepository.getPaymentCards(paymentCards, fetchError)
+    }
+
     fun fetchLocalMembershipCards() {
         loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
     }
 
     fun fetchLocalMembershipPlans() {
         loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
-    }
-
-    suspend fun getPaymentCards() {
-        pllRepository.getPaymentCards(paymentCards, fetchError)
     }
 }

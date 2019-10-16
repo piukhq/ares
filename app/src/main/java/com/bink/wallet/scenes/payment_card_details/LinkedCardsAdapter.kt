@@ -12,7 +12,7 @@ class LinkedCardsAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
     private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
-    private val changedCards: HashMap<String, Boolean>
+    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {}
 ) : RecyclerView.Adapter<LinkedCardsAdapter.LinkedCardsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkedCardsViewHolder {
@@ -31,17 +31,17 @@ class LinkedCardsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PaymentMembershipCard) {
-            val currentMembershipCard = cards.first { it.id == item.id }
+            val currentMembershipCard = cards.firstOrNull { it.id == item.id }
             val currentMembershipPlan =
-                plans.first { it.id == currentMembershipCard.membership_plan }
-            binding.companyName.text = currentMembershipPlan.account?.company_name
+                plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
+            binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.paymentMembershipCard = item
             binding.membershipCard = currentMembershipCard
             binding.toggle.isChecked = item.active_link ?: false
             binding.toggle.displayCustomSwitch(item.active_link ?: false)
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
-                changedCards[item.id!!] = isChecked
+                onLinkStatusChange(Pair(item.id, isChecked))
                 binding.toggle.displayCustomSwitch(isChecked)
             }
 

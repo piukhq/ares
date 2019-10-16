@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -25,8 +24,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             .build()
     }
 
-    private var TAG = WalletsFragment::class.simpleName
-
     override val viewModel: WalletsViewModel by viewModel()
 
     override val layoutRes: Int
@@ -40,7 +37,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         runBlocking {
             viewModel.fetchMembershipPlans()
             viewModel.fetchMembershipCards()
-            binding.progressSpinner.visibility = View.VISIBLE
         }
 
         activity?.let {
@@ -59,30 +55,52 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 ?.commit()
         }
 
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.loyalty_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = true
+                    replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
+                    if (viewModel.membershipCardData.value != null &&
+                        viewModel.membershipPlanData.value != null
+                    ) {
+                        loyaltyWalletsFragment.setData(
+                            viewModel.membershipCardData.value!!,
+                            viewModel.membershipPlanData.value!!
+                        )
+                    }
+                }
+                R.id.add_menu_item -> {
+                    val directions =
+                        viewModel.membershipPlanData.value!!.toTypedArray()?.let { plans ->
+                            WalletsFragmentDirections.homeToAdd(
+                                plans
+                            )
+                        }
+                    directions.let { findNavController().navigateIfAdded(this, it) }
+                }
+                R.id.payment_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = false
+                    replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
+                    if (viewModel.membershipCardData.value != null &&
+                        viewModel.membershipPlanData.value != null
+                    ) {
+                        paymentCardWalletFragment.setData(
+                            viewModel.membershipCardData.value!!,
+                            viewModel.membershipPlanData.value!!
+                        )
+                    }
+                }
+
+            }
+            true
+        }
+
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
-                binding.progressSpinner.visibility = View.GONE
-                binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.loyalty_menu_item -> {
-                            SharedPreferenceManager.isLoyaltySelected = true
-                            replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-                        }
-                        R.id.add_menu_item -> {
-                            val directions = plans?.toTypedArray()?.let { plans ->
-                                WalletsFragmentDirections.homeToAdd(
-                                    plans
-                                )
-                            }
-                            directions?.let { findNavController().navigateIfAdded(this, it) }
-                        }
-                        R.id.payment_menu_item -> {
-                            SharedPreferenceManager.isLoyaltySelected = false
-                            replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
-                        }
-
-                    }
-                    true
+                if (SharedPreferenceManager.isLoyaltySelected) {
+                    loyaltyWalletsFragment.setData(cards, plans)
+                } else {
+                    paymentCardWalletFragment.setData(cards, plans)
                 }
             }
         }

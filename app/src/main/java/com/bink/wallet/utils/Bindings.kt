@@ -48,12 +48,12 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 }
 
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(item: MembershipCard) {
-    if (!item.images.isNullOrEmpty()) {
+fun ImageView.loadImage(item: MembershipCard?) {
+    if (!item?.images.isNullOrEmpty()) {
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
-                .load(item.images?.first { it.type == ImageType.ICON.type }?.url)
+                .load(item?.images?.first { it.type == ImageType.ICON.type }?.url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {

@@ -7,11 +7,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
-import com.bink.wallet.utils.SecurityDialog
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,33 +22,12 @@ class PaymentCardsDetails :
             .build()
     }
 
-    private val changedCards = HashMap<String, Boolean>()
-
     override val viewModel: PaymentCardsDetailsViewModel by viewModel()
 
-    val securityDialog = SecurityDialog()
+    private val securityDialog = SecurityDialog()
 
     override val layoutRes: Int
         get() = R.layout.payment_cards_details_fragment
-
-    override fun onPause() {
-        for (currentCard in changedCards) {
-            runBlocking {
-                if (currentCard.value) {
-                    viewModel.linkPaymentCard(
-                        currentCard.key,
-                        viewModel.paymentCard.value?.id.toString()
-                    )
-                } else {
-                    viewModel.unlinkPaymentCard(
-                        viewModel.paymentCard.value?.id.toString(),
-                        currentCard.key
-                    )
-                }
-            }
-        }
-        super.onPause()
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -103,7 +79,7 @@ class PaymentCardsDetails :
                             cards,
                             plans,
                             viewModel.paymentCard.value?.membership_cards!!,
-                            changedCards
+                            onLinkStatusChange = { onLinkStatusChange(it) }
                         )
                     else
                         adapter = SuggestedCardsAdapter(
@@ -130,6 +106,22 @@ class PaymentCardsDetails :
                 "",
                 getString(R.string.card_error_dialog)
             )
+        }
+    }
+
+    private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
+        runBlocking {
+            if (currentItem.first != null && currentItem.second) {
+                viewModel.linkPaymentCard(
+                    currentItem.first!!,
+                    viewModel.paymentCard.value?.id.toString()
+                )
+            } else {
+                viewModel.unlinkPaymentCard(
+                    viewModel.paymentCard.value?.id.toString(),
+                    currentItem.first!!
+                )
+            }
         }
     }
 
