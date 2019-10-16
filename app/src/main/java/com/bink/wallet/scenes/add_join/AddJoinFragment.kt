@@ -41,7 +41,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 binding.addJoinViewDescription.text =
                     getString(R.string.add_join_inactive_view_description)
             }
-            CardType.VIEW.type, CardType.STORE.type -> {
+            CardType.VIEW.type,
+            CardType.STORE.type -> {
                 binding.addJoinLinkImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
                 binding.addJoinLinkDescription.text =
                     getString(R.string.add_join_inactive_link_description)

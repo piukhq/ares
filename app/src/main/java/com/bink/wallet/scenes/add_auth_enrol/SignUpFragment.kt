@@ -43,6 +43,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         windowFullscreenHandler.toFullscreen()
     }
 
+    private var isPaymentWalletEmpty: Boolean? = null
+
     private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
         mutableListOf()
 
@@ -111,7 +113,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         }
 
         viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-            viewModel.isPaymentWalletEmpty.value = paymentCards.isNullOrEmpty()
+            isPaymentWalletEmpty = paymentCards.isNullOrEmpty()
         }
 
         binding.addJoinReward.setOnClickListener {
@@ -318,7 +320,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 viewModel.newMembershipCard.removeObservers(this)
                 if (signUpFormType == SignUpFormType.GHOST) {
                     val currentRequest = MembershipCardRequest(
-                        Account(null, null, null, addRegisterFieldsRequest.registration_fields),
+                        Account(
+                            null,
+                            null,
+                            null,
+                            addRegisterFieldsRequest.registration_fields
+                        ),
                         viewModel.currentMembershipPlan.value!!.id
                     )
                     viewModel.ghostMembershipCard(
@@ -357,7 +364,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             }
                         } else {
                             if (viewModel.currentMembershipPlan.value != null) {
-                                if (viewModel.isPaymentWalletEmpty.value == false) {
+                                if (isPaymentWalletEmpty != null
+                                    && !isPaymentWalletEmpty!!
+                                ) {
                                     val directions = SignUpFragmentDirections.signUpToPll(
                                         membershipCard,
                                         viewModel.currentMembershipPlan.value!!,

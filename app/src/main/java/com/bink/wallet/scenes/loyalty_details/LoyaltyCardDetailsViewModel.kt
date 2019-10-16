@@ -53,11 +53,11 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                 when (membershipCard.value?.status?.state) {
                     CardStatus.AUTHORISED.status -> {
                         when {
-                            paymentCards.value.isNullOrEmpty() -> linkStatus.value =
-                                LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
+                            paymentCards.value.isNullOrEmpty() ->
+                                linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
                             membershipCard.value?.payment_cards.isNullOrEmpty()
-                                    || !existLinkedPaymentCards() -> linkStatus.value =
-                                LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
+                                    || !existLinkedPaymentCards() ->
+                                linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
                             else -> linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
                         }
                     }
