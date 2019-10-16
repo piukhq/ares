@@ -11,8 +11,8 @@ import com.bink.wallet.utils.SecurityDialog
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -77,7 +77,7 @@ class PaymentCardsDetails :
 
         binding.footerDelete.setOnClickListener {
             val builder = AlertDialog.Builder(context)
-            var dialog: AlertDialog? = null
+            val dialog: AlertDialog?
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
@@ -123,6 +123,13 @@ class PaymentCardsDetails :
 
         viewModel.deleteRequest.observeNonNull(this) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        viewModel.deleteError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                "",
+                getString(R.string.card_error_dialog)
+            )
         }
     }
 

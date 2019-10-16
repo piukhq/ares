@@ -236,4 +236,5 @@
     <string name="rename_card_description">Change this card\'s \"nickname\"</string>
     <string name="card_suggestion_description">You can link this card</string>
     <string name="add_card_text">Add card</string>
+    <string name="card_error_dialog">The card couldn\'t be deleted</string>
 </resources>
