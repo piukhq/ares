@@ -67,6 +67,7 @@
     <string name="status_placeholder">Linked</string>
     <string name="status_number_placeholder">To 2 of 6 cards</string>
     <string name="about_membership">About membership</string>
+    <string name="about_membership_plan">About %1$s</string>
     <string name="about_membership_plan_name">About %1$s</string>
     <string name="learn_more">Learn more about how it works</string>
     <string name="chevron">&gt;</string>
@@ -225,5 +226,12 @@
     <string name="native_join_unavailable_title">Native join unavailable</string>
     <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
+    <string name="all_fields_must_be_valid">All fields must have passed validation</string>
+    <string name="cannot_complete_registration">Cannot complete the registration</string>
+
+    <!--    Payment card wallet-->
+    <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
+    <string name="payment_card_not_linked">Not linked</string>
+    <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="no_account_text">I don\'t have an account</string>
 </resources>
