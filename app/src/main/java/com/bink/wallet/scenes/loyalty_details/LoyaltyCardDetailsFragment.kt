@@ -121,14 +121,6 @@ class LoyaltyCardDetailsFragment :
                             arguments
                         )
                     }
-                        R.drawable.ic_close,
-                        getString(R.string.about_membership_plan, viewModel.membershipPlan.value?.account!!.plan_name),
-                        description, getString(R.string.ok)
-                    )
-                }?.let { arguments ->
-                    LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                        arguments
-                    )
                 }
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
@@ -509,22 +501,5 @@ class LoyaltyCardDetailsFragment :
                 }
             }
         }
-    }
-
-    private fun setLoadingState(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingIndicator.visibility = View.VISIBLE
-            binding.linkedWrapper.visibility = View.INVISIBLE
-            binding.pointsWrapper.visibility = View.INVISIBLE
-        } else {
-            binding.loadingIndicator.visibility = View.GONE
-            binding.linkedWrapper.visibility = View.VISIBLE
-            binding.pointsWrapper.visibility = View.VISIBLE
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.paymentCards.value = null
     }
 }
