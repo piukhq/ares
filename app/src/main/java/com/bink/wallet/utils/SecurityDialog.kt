@@ -13,7 +13,11 @@ import com.bink.wallet.databinding.DialogSecurityBinding
 
 class SecurityDialog {
 
+    private var dialog: Dialog? = null
+
     fun openDialog(context: Context, layoutInflater: LayoutInflater) {
+        if (dialog == null)
+            dialog = Dialog(context)
         val stringToSpan = context.getString(R.string.security_modal_body_3)
         val spannableString = SpannableStringBuilder(stringToSpan)
         val url = context.getString(R.string.terms_and_conditions_url)
@@ -25,7 +29,6 @@ class SecurityDialog {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        val dialog = Dialog(context)
         val dialogBinding = DataBindingUtil.inflate<DialogSecurityBinding>(
             layoutInflater,
             R.layout.dialog_security,
@@ -33,18 +36,22 @@ class SecurityDialog {
             true
         )
 
-        dialog.setContentView(dialogBinding.root)
-        dialog.setTitle(R.string.security_modal_title)
-        dialogBinding.preBody.text = context.getString(
-            R.string.security_modal_body,
-            context.getString(R.string.security_modal_body_1),
-            context.getString(R.string.security_modal_body_2)
-        )
-        dialogBinding.body.text = spannableString
-        dialogBinding.body.movementMethod = LinkMovementMethod.getInstance()
-        dialogBinding.ok.setOnClickListener {
-            dialog.dismiss()
+        with(dialog!!) {
+            if (!isShowing) {
+                setContentView(dialogBinding.root)
+                setTitle(R.string.security_modal_title)
+                dialogBinding.preBody.text = context.getString(
+                    R.string.security_modal_body,
+                    context.getString(R.string.security_modal_body_1),
+                    context.getString(R.string.security_modal_body_2)
+                )
+                dialogBinding.body.text = spannableString
+                dialogBinding.body.movementMethod = LinkMovementMethod.getInstance()
+                dialogBinding.ok.setOnClickListener {
+                    dismiss()
+                }
+                show()
+            }
         }
-        dialog.show()
     }
 }

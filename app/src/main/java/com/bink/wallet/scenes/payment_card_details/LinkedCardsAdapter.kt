@@ -25,7 +25,6 @@ class LinkedCardsAdapter(
     override fun onBindViewHolder(holder: LinkedCardsViewHolder, position: Int) =
         paymentMembershipCards[position].let { holder.bind(it) }
 
-
     override fun getItemCount(): Int = paymentMembershipCards.size
 
     inner class LinkedCardsViewHolder(val binding: LinkedCardsListItemBinding) :

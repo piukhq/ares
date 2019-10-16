@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.utils.SecurityDialog
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -27,6 +28,8 @@ class PaymentCardsDetails :
     private val changedCards = HashMap<String, Boolean>()
 
     override val viewModel: PaymentCardsDetailsViewModel by viewModel()
+
+    val securityDialog = SecurityDialog()
 
     override val layoutRes: Int
         get() = R.layout.payment_cards_details_fragment
@@ -69,9 +72,7 @@ class PaymentCardsDetails :
         binding.paymentCardDetail = viewModel.paymentCard.value
 
         binding.footerSecurity.setOnClickListener {
-            binding.footerSecurity.setOnClickListener {
-                SecurityDialog().openDialog(requireContext(), layoutInflater)
-            }
+            securityDialog.openDialog(requireContext(), layoutInflater)
         }
 
         binding.footerDelete.setOnClickListener {
@@ -96,12 +97,26 @@ class PaymentCardsDetails :
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 binding.linkedCardsList.apply {
                     layoutManager = GridLayoutManager(context, 1)
-                    adapter = LinkedCardsAdapter(
-                        cards,
-                        plans,
-                        viewModel.paymentCard.value?.membership_cards!!,
-                        changedCards
-                    )
+
+                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty())
+                        adapter = LinkedCardsAdapter(
+                            cards,
+                            plans,
+                            viewModel.paymentCard.value?.membership_cards!!,
+                            changedCards
+                        )
+                    else
+                        adapter = SuggestedCardsAdapter(
+                            plans.filter { it.getCardType() == CardType.PLL },
+                            itemClickListener = {
+                                val directions =
+                                    PaymentCardsDetailsDirections.paymentDetailsToAddJoin(it)
+                                findNavController().navigateIfAdded(
+                                    this@PaymentCardsDetails,
+                                    directions
+                                )
+                            }
+                        )
                 }
             }
         }

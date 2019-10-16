@@ -81,6 +81,13 @@
                 android:name="membershipCards"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
 
+        <action
+                android:id="@+id/payment_details_to_add_join"
+                app:destination="@+id/add_join"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
