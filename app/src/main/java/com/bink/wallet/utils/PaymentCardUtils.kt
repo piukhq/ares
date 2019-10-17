@@ -15,9 +15,9 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boole
     return false
 }
 
-fun String.getCardType(): PaymentCardType {
-    return PaymentCardType.values().firstOrNull { it.type == this } ?: PaymentCardType.NONE
-}
+fun String.getCardType() =
+    PaymentCardType.values().firstOrNull { it.type == this }
+        ?: PaymentCardType.NONE
 
 fun String.presentedCardType(): PaymentCardType {
     val sanitizedInput = numberSanitize()
@@ -60,12 +60,9 @@ fun String.cardValidation() : PaymentCardType {
     }
 }
 
-fun String.numberSanitize(): String {
-    return this.replace("[^\\d]".toRegex(), "")
-}
-fun String.ccSanitize(): String {
-    return replace(" ", "")
-}
+fun String.numberSanitize() = replace("[^\\d]".toRegex(), "")
+
+fun String.ccSanitize() = replace(" ", "")
 
 fun String.luhnValidation() : Boolean {
     val sanitizedInput = ccSanitize()
@@ -161,9 +158,7 @@ fun String.cardStarConcatenator(shortPartLen: Int): String {
     return part1a + part2
 }
 
-fun String.starMeUp() : String {
-    return replace("[\\d]".toRegex(), "*")
-}
+fun String.starMeUp() = replace("[\\d]".toRegex(), "*")
 
 fun String.dateValidation(): Boolean {
     val new = formatDate()
