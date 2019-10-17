@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
@@ -14,6 +15,7 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
+import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -100,7 +102,7 @@ class AddPaymentCardFragment :
                 viewModel.sendAddCard(PaymentCardAdd(
                     BankCard(
                         cardNo.substring(0, 6),
-                        cardNo.substring(-6),
+                        cardNo.substring(cardNo.length - 4),
                         cardExp[0].toInt(),
                         cardExp[1].toInt(),
                         "GB",
@@ -120,9 +122,31 @@ class AddPaymentCardFragment :
                                 0.0f,
                                 0.0f,
                                 System.currentTimeMillis()
-                                ))
+                            )
                         )
+                    )
                 ))
+            }
+        }
+
+        viewModel.paymentCard.observeNonNull(this) {
+            val action =
+                AddPaymentCardFragmentDirections.addPaymentToDetails(
+                    it,
+                    arrayOf(),
+                    arrayOf()
+                )
+            findNavController().navigateIfAdded(
+                this@AddPaymentCardFragment,
+                action
+            )
+        }
+        viewModel.error.observeNonNull(this) {
+            if (viewModel.error.value != null) {
+                requireContext().displayModalPopup(
+                    getString(R.string.add_card_error_title),
+                    getString(R.string.add_card_error_message) + "\n" + viewModel.error.value!!.message
+                )
             }
         }
     }
