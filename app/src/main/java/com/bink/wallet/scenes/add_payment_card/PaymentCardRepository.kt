@@ -24,7 +24,6 @@ class PaymentCardRepository(private val apiService: ApiService,
     fun sendAddCard(card: PaymentCardAdd,
                     mutableAddCard: MutableLiveData<PaymentCard>,
                     error: MutableLiveData<Throwable>) {
-        Log.d(PaymentCardRepository::class.simpleName, "card=$card")
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.addPaymentCardAsync(card)
             withContext(Dispatchers.Main) {
