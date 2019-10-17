@@ -11,13 +11,16 @@ object SharedPreferenceManager {
 
     //----- KEYS -----
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
+    private const val IS_LOYALTY_WALLET = "isLoyaltyWalletActive"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
+    private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
     }
+
     private inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {
         val editor = edit()
         operation(editor)
@@ -29,5 +32,11 @@ object SharedPreferenceManager {
 
         set(value) = preferences.edit {
             it.putBoolean(IS_ADD_JOURNEY.first, value)
+        }
+
+    var isLoyaltySelected: Boolean
+        get() = preferences.getBoolean(IS_LOYALTY_SELECTED.first, IS_LOYALTY_SELECTED.second)
+        set(value) = preferences.edit {
+            it.putBoolean(IS_LOYALTY_SELECTED.first, value)
         }
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.WalletsFragmentBinding
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
@@ -48,9 +49,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
 
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
-
-        fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
-            ?.commit()
+        if (SharedPreferenceManager.isLoyaltySelected) {
+            binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
+            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
+                ?.commit()
+        } else {
+            binding.bottomNavigation.selectedItemId = R.id.payment_menu_item
+            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
+                ?.commit()
+        }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
@@ -58,6 +65,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.loyalty_menu_item -> {
+                            SharedPreferenceManager.isLoyaltySelected = true
                             replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
                         }
                         R.id.add_menu_item -> {
@@ -69,6 +77,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                             directions?.let { findNavController().navigateIfAdded(this, it) }
                         }
                         R.id.payment_menu_item -> {
+                            SharedPreferenceManager.isLoyaltySelected = false
                             replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
                         }
 
@@ -77,6 +86,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 }
             }
         }
+
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
         }

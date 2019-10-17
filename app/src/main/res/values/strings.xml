@@ -230,6 +230,11 @@
     <string name="payment_card_not_linked">Not linked</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="no_account_text">I don\'t have an account</string>
+    <string name="payment_card_details_title_text">Linked cards</string>
+    <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
+    <string name="rename_card">Rename this card</string>
+    <string name="rename_card_description">Change this card\'s \"nickname\"</string>
+    <string name="card_error_dialog">The card couldn\'t be deleted</string>
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>
