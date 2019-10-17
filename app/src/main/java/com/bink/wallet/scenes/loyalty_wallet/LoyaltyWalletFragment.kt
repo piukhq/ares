@@ -6,8 +6,6 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,13 +30,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
-    }
-
-    private lateinit var nestedNavController: NavController
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        nestedNavController = Navigation.findNavController(view)
     }
 
     override val viewModel: LoyaltyViewModel by viewModel()
