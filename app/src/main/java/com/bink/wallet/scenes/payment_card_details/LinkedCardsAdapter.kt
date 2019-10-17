@@ -12,20 +12,12 @@ class LinkedCardsAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
     private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
-    val itemClickListener: (PaymentMembershipCard) -> Unit = {}
+    private val changedCards: HashMap<String, Boolean>
 ) : RecyclerView.Adapter<LinkedCardsAdapter.LinkedCardsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkedCardsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = LinkedCardsListItemBinding.inflate(inflater)
-
-        binding.apply {
-            root.setOnClickListener {
-                paymentMembershipCard?.apply {
-                    itemClickListener(this)
-                }
-            }
-        }
 
         return LinkedCardsViewHolder(binding)
     }
@@ -50,6 +42,7 @@ class LinkedCardsAdapter(
             binding.toggle.displayCustomSwitch(item.active_link ?: false)
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
+                changedCards[item.id!!] = isChecked
                 binding.toggle.displayCustomSwitch(isChecked)
             }
 
