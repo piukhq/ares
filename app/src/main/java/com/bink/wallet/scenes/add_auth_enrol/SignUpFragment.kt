@@ -186,13 +186,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         }
 
         binding.noAccountText.setOnClickListener {
-            if (viewModel.currentMembershipPlan.value != null) {
-                val action = SignUpFragmentDirections.toGhost(
-                    SignUpFormType.GHOST,
-                    viewModel.currentMembershipPlan.value!!,
-                    null
-                )
-                findNavController().navigateIfAdded(this, action)
+            if (viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.contains(TypeOfField.REGISTRATION.name)!!) {
+                if (viewModel.currentMembershipPlan.value != null) {
+                    val action = SignUpFragmentDirections.toGhost(
+                        SignUpFormType.GHOST,
+                        viewModel.currentMembershipPlan.value!!,
+                        null
+                    )
+                    findNavController().navigateIfAdded(this, action)
+                }
+            } else {
+                //TODO goto native ghost registration unavailable
             }
         }
 
@@ -314,7 +318,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 }
 
                 when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
-                    CardType.VIEW.type, CardType.STORE.type -> {
+                    CardType.VIEW.type,
+                    CardType.STORE.type -> {
                         if (signUpFormType == SignUpFormType.GHOST) {
                             val directions =
                                 SignUpFragmentDirections.signUpToDetails(
