@@ -473,10 +473,6 @@
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
-        <!-- <argument
-                android:name="paymentCard"
-                app:argType="com.bink.wallet.model.response.payment_card.PaymentCard" />
-                -->
         <action
                 android:id="@+id/add_payment_to_details"
                 app:destination="@+id/payment_card_detail"
@@ -484,7 +480,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpToInclusive="true" />
+                />
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
