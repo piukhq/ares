@@ -169,7 +169,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         binding.swipeLayout.setOnRefreshListener {
-            if (verifyAvailableNetwork(activity!!)) {
+            if (verifyAvailableNetwork(requireActivity())) {
                 runBlocking {
                     viewModel.fetchMembershipPlans()
                 }
