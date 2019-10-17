@@ -123,6 +123,11 @@ class SignUpAdapter(
                         }
                 }
             }
+            if (adapterPosition == brands.size - 1) {
+                binding.separator.visibility = View.GONE
+            } else {
+                binding.separator.visibility = View.VISIBLE
+            }
 
             binding.executePendingBindings()
         }
@@ -155,6 +160,11 @@ class SignUpAdapter(
             with(spinner) {
                 isFocusable = false
                 onItemSelectedListener = itemSelectedListener
+            }
+            if (adapterPosition == brands.size - 1) {
+                binding.separator.visibility = View.GONE
+            } else {
+                binding.separator.visibility = View.VISIBLE
             }
 
             binding.executePendingBindings()
