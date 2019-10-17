@@ -227,6 +227,14 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/sign_up_to_ghost_registration_unavailable"
+                app:destination="@+id/ghost_registration_unavailable"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -495,6 +503,14 @@
     <fragment
             android:id="@+id/brand_header"
             android:name="com.bink.wallet.modal.BrandHeaderFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/ghost_registration_unavailable"
+            android:name="com.bink.wallet.modal.GhostRegistrationUnavailableFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
