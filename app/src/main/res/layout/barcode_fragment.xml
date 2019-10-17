@@ -60,7 +60,6 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/label_margin_top"
                 android:text="@string/barcode_card_number"
-                app:isVisible="@{viewModel.isBarcodeAvailable}"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/size_headline"
                 android:textStyle="bold"
