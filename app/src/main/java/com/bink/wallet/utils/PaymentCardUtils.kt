@@ -21,14 +21,14 @@ fun String.getCardType(): PaymentCardType {
 
 fun String.presentedCardType(): PaymentCardType {
     val sanitizedInput = numberSanitize()
-    if (sanitizedInput.isEmpty())
+    if (sanitizedInput.isEmpty()) {
         return PaymentCardType.NONE
+    }
     PaymentCardType.values().forEach {
         if (it != PaymentCardType.NONE) {
             if (it.len >= sanitizedInput.length) {
                 val splits = it.prefix.split("|")
                 for (prefix in splits) {
-                    // if it's not an indicator prefix, work on it
                     if (splits.size <= 1 ||
                         prefix.length != 1 ||
                         sanitizedInput.length <= prefix.length
@@ -47,15 +47,17 @@ fun String.presentedCardType(): PaymentCardType {
 }
 
 fun String.cardValidation() : PaymentCardType {
-    if (!luhnValidation())
+    if (!luhnValidation()) {
         return PaymentCardType.NONE
+    }
     val sanitizedInput = ccSanitize()
     val paymentType = sanitizedInput.presentedCardType()
     return if (sanitizedInput.length == paymentType.len &&
-               sanitizedInput.luhnValidation())
+               sanitizedInput.luhnValidation()) {
         paymentType
-    else
+    } else {
         PaymentCardType.NONE
+    }
 }
 
 fun String.numberSanitize(): String {
