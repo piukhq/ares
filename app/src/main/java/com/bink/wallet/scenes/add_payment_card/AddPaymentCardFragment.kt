@@ -99,33 +99,35 @@ class AddPaymentCardFragment :
                 val cardExp = binding.cardExpiry.text.toString().split("/")
 
                 // TODO add in location request and get lat & long from the SDK
-                viewModel.sendAddCard(PaymentCardAdd(
-                    BankCard(
-                        cardNo.substring(0, 6),
-                        cardNo.substring(cardNo.length - 4),
-                        cardExp[0].toInt(),
-                        cardExp[1].toInt(),
-                        "GB",
-                        "GBP",
-                        binding.cardName.text.toString(),
-                        cardNo.cardValidation().type,
-                        cardNo.cardValidation().type,
-                        BankCard.tokenGenerator(),
-                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
-                    ),
-                    Account(
-                        false,
-                        0,
-                        listOf(
-                            Consent(
-                                0,
-                                0.0f,
-                                0.0f,
-                                System.currentTimeMillis()
+                viewModel.sendAddCard(
+                    PaymentCardAdd(
+                        BankCard(
+                            cardNo.substring(0, 6),
+                            cardNo.substring(cardNo.length - 4),
+                            cardExp[0].toInt(),
+                            cardExp[1].toInt(),
+                            "GB",
+                            "GBP",
+                            binding.cardName.text.toString(),
+                            cardNo.cardValidation().type,
+                            cardNo.cardValidation().type,
+                            BankCard.tokenGenerator(),
+                            BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                        ),
+                        Account(
+                            false,
+                            0,
+                            listOf(
+                                Consent(
+                                    0,
+                                    0.0f,
+                                    0.0f,
+                                    System.currentTimeMillis()
+                                )
                             )
                         )
                     )
-                ))
+                )
             }
         }
 
