@@ -39,6 +39,7 @@ class AddPaymentCardFragment :
         cardSwitcher("")
         cardInfoDisplay()
 
+        // pre-load the cards on screen open, so we have them ready after card is added
         viewModel.fetchLocalMembershipCards()
         viewModel.fetchLocalMembershipPlans()
 
@@ -102,6 +103,7 @@ class AddPaymentCardFragment :
                 val cardExp = binding.cardExpiry.text.toString().split("/")
 
                 // TODO add in location request and get lat & long from the SDK
+                // TODO don't forget to add in features to change country & currency later
                 viewModel.sendAddCard(
                     PaymentCardAdd(
                         BankCard(
@@ -183,6 +185,15 @@ class AddPaymentCardFragment :
         binding.displayCardName.text = binding.cardName.text
     }
 
+    /***
+     * This function is frustrating as hell for the logic... if the user is entering and it adds
+     * a space every few, and the cursor has to be moved to the end, but if the user is editing
+     * and it has to re-format the number, then the cursor stays in the same place it was!
+     * Remember that the spacing can move between a Visa/MC & AmEx, especially if the user
+     * decides to add a "3" before the start of a previously Visa number... so the number could
+     * go from "4242 4242 4242" to "3424 242424 242", and that causes a bit of insanity on
+     * cursor locations!
+     */
     fun updateEnteredCardNumber() {
         with (binding.cardNumber) {
             val origNumber = text.toString()
