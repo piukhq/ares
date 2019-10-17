@@ -7,8 +7,8 @@ import java.util.*
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
-        if(paymentMembershipCard.id.toString() == membershipCard.id
-            && paymentMembershipCard.active_link == true) {
+        if (paymentMembershipCard.id.toString() == membershipCard.id &&
+            paymentMembershipCard.active_link == true) {
             return true
         }
     }
