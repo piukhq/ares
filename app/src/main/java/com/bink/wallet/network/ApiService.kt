@@ -26,7 +26,7 @@ interface ApiService {
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
     @POST("/ubiquity/payment_cards")
-    fun addPaymentCard(@Body cardAdd: PaymentCardAdd): Deferred<PaymentCard>
+    fun addPaymentCardAsync(@Body cardAdd: PaymentCardAdd): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
     fun linkToPaymentCardAsync(

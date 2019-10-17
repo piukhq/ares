@@ -39,6 +39,9 @@ class AddPaymentCardFragment :
         cardSwitcher("")
         cardInfoDisplay()
 
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalMembershipPlans()
+
         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
@@ -105,7 +108,7 @@ class AddPaymentCardFragment :
                             cardNo.substring(0, 6),
                             cardNo.substring(cardNo.length - 4),
                             cardExp[0].toInt(),
-                            cardExp[1].toInt(),
+                            cardExp[1].toInt() + 2000,
                             "GB",
                             "GBP",
                             binding.cardName.text.toString(),
@@ -122,7 +125,7 @@ class AddPaymentCardFragment :
                                     0,
                                     0.0f,
                                     0.0f,
-                                    System.currentTimeMillis()
+                                    System.currentTimeMillis() / 1000
                                 )
                             )
                         )
@@ -135,8 +138,8 @@ class AddPaymentCardFragment :
             val action =
                 AddPaymentCardFragmentDirections.addPaymentToDetails(
                     it,
-                    arrayOf(),
-                    arrayOf()
+                    viewModel.localMembershipPlanData.value!!.toTypedArray(),
+                    viewModel.localMembershipCardData.value!!.toTypedArray()
                 )
             findNavController().navigateIfAdded(
                 this@AddPaymentCardFragment,

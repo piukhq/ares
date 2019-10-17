@@ -29,7 +29,7 @@ data class BankCard(
 
         fun fingerprintGenerator(pan: String, expiryYear: String, expiryMonth: String): String {
             // Based a hash of the pan, it's the key identifier of the card
-            return "$(pan)|$(expiryMonth)|$(expiryYear)".md5()
+            return "$pan|$expiryMonth|$expiryYear".md5()
         }
     }
 

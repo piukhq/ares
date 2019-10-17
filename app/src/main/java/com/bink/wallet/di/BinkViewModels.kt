@@ -63,7 +63,7 @@ val viewModelModules = module {
     single { provideTermsAndConditionsRepository(get()) }
     viewModel { TermsAndConditionsViewModel(get()) }
 
-    single { providePaymentCardRepository(get(), get()) }
+    single { providePaymentCardRepository(get(), get(), get(), get()) }
     viewModel { AddPaymentCardViewModel(get()) }
 
     viewModel { PaymentCardWalletViewModel(get(), get()) }
@@ -109,5 +109,8 @@ fun providePllRepository(
 
 fun providePaymentCardRepository(
     restApiService: ApiService,
-    paymentCardDao: PaymentCardDao
-): PaymentCardRepository = PaymentCardRepository(restApiService, paymentCardDao)
+    paymentCardDao: PaymentCardDao,
+    membershipPlanDao: MembershipPlanDao,
+    membershipCardDao: MembershipCardDao
+): PaymentCardRepository =
+    PaymentCardRepository(restApiService, paymentCardDao, membershipCardDao, membershipPlanDao)

@@ -473,9 +473,10 @@
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
-        <argument
+        <!-- <argument
                 android:name="paymentCard"
                 app:argType="com.bink.wallet.model.response.payment_card.PaymentCard" />
+                -->
         <action
                 android:id="@+id/add_payment_to_details"
                 app:destination="@+id/payment_card_detail"
