@@ -26,10 +26,15 @@ class FooterItem @JvmOverloads constructor(
         attributes.recycle()
     }
 
-    private fun populateItem(type: String) {
-        FooterType.values().first { it.type == type }.let {
+    private fun populateItem(id: String) {
+        getFooterTypeById(id).let {
             binding.title.text = resources.getString(it.footerTitle)
             binding.description.text = resources.getString(it.footerDescription)
         }
     }
+
+    private fun getFooterTypeById(type: String): FooterType {
+        return FooterType.values().first { it.type == type }
+    }
+
 }
