@@ -16,7 +16,8 @@ class FooterItem @JvmOverloads constructor(
 
     var binding: FooterItemBinding =
         DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.footer_item, this, true)
-    private val attributes = context.theme.obtainStyledAttributes(attrs, R.styleable.FooterItem, 0, 0)
+    private val attributes =
+        context.theme.obtainStyledAttributes(attrs, R.styleable.FooterItem, 0, 0)
     private val footerType = attributes.getString(R.styleable.FooterItem_type)
 
 
@@ -26,26 +27,9 @@ class FooterItem @JvmOverloads constructor(
     }
 
     private fun populateItem(type: String) {
-        when (type) {
-            FooterType.ABOUT.type -> {
-                binding.title.text = resources.getText(R.string.about_membership)
-                binding.description.text = resources.getText(R.string.learn_more)
-            }
-
-            FooterType.SECURITY.type -> {
-                binding.title.text = resources.getText(R.string.security_privacy)
-                binding.description.text = resources.getText(R.string.how_we_protect)
-            }
-
-            FooterType.DELETE.type -> {
-                binding.title.text = resources.getText(R.string.delete_card)
-                binding.description.text = resources.getText(R.string.remove_card)
-            }
-
-            FooterType.RENAME.type -> {
-                binding.title.text = resources.getText(R.string.rename_card)
-                binding.description.text = resources.getText(R.string.rename_card_description)
-            }
+        FooterType.values().first { it.type == type }.let {
+            binding.title.text = resources.getString(it.footerTitle)
+            binding.description.text = resources.getString(it.footerDescription)
         }
     }
 }
