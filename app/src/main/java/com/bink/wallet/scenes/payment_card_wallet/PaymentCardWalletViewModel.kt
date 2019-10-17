@@ -26,6 +26,10 @@ class PaymentCardWalletViewModel(
         pllRepository.getPaymentCards(paymentCards, fetchError)
     }
 
+    suspend fun getLocalPaymentCards() {
+        pllRepository.getLocalPaymentCards(paymentCards, fetchError)
+    }
+
     fun fetchLocalMembershipCards() {
         loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
     }

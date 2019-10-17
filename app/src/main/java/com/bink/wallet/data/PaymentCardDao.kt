@@ -5,11 +5,11 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 
 @Dao
 interface PaymentCardDao {
-    @Query("SELECT * FROM payment_card")
+    @Query("SELECT * FROM payment_card ORDER BY id DESC")
     suspend fun getAllAsync(): List<PaymentCard>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun storeAll(plans: List<PaymentCard>)
+    suspend fun storeAll(plans: List<PaymentCard>?)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePaymentCard(paymentCard: PaymentCard)

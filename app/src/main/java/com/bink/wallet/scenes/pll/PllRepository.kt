@@ -6,10 +6,7 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 
 class PllRepository(
@@ -26,11 +23,25 @@ class PllRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCardDao.deleteAll()
-                    paymentCardDao.storeAll(response)
-                    paymentCards.value = response
+                    storePaymentsCards(response)
+                    paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    private fun storePaymentsCards(cards: List<PaymentCard>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    runBlocking {
+                        paymentCardDao.deleteAll()
+                        paymentCardDao.storeAll(cards)
+                    }
+                } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

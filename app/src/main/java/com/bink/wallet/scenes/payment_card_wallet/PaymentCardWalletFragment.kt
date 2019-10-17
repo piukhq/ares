@@ -36,6 +36,7 @@ class PaymentCardWalletFragment :
         runBlocking {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
+            viewModel.getLocalPaymentCards()
             viewModel.getPaymentCards()
             binding.progressSpinner.visibility = View.VISIBLE
         }
