@@ -230,4 +230,8 @@
     <string name="payment_card_not_linked">Not linked</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="no_account_text">I don\'t have an account</string>
+
+    <!-- Native Ghost Card Registration N/A -->
+    <string name="title_ghost_card_not_available">Native join unavailable</string>
+    <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
 </resources>
