@@ -11,6 +11,9 @@ class WalletsViewModel(private var repository: LoyaltyWalletRepository) : BaseVi
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
 
+    fun fetchLocalMembershipPlans() {
+        repository.retrieveStoredMembershipPlans(membershipPlanData)
+    }
 
     fun fetchMembershipCards() {
         repository.retrieveMembershipCards(membershipCardData)
