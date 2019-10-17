@@ -171,6 +171,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 }
             }
             SignUpFormType.GHOST -> {
+                binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
+                binding.addCardButton.text = getString(R.string.register_ghost_card_button)
                 viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                     it.typeOfField = TypeOfField.ADD
                     addFieldToList(it)
@@ -220,7 +222,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
-
                     planFieldsList?.map {
                         if (!UtilFunctions.isValidField(
                                 it.first.validation,
