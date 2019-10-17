@@ -5,10 +5,11 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.PaymentCardType
 import java.util.*
 
-fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard) : Boolean {
+fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
         if (paymentMembershipCard.id.toString() == membershipCard.id &&
-            paymentMembershipCard.active_link == true) {
+            paymentMembershipCard.active_link == true
+        ) {
             return true
         }
     }
@@ -46,14 +47,15 @@ fun String.presentedCardType(): PaymentCardType {
     return PaymentCardType.NONE
 }
 
-fun String.cardValidation() : PaymentCardType {
+fun String.cardValidation(): PaymentCardType {
     if (!luhnValidation()) {
         return PaymentCardType.NONE
     }
     val sanitizedInput = ccSanitize()
     val paymentType = sanitizedInput.presentedCardType()
     return if (sanitizedInput.length == paymentType.len &&
-               sanitizedInput.luhnValidation()) {
+        sanitizedInput.luhnValidation()
+    ) {
         paymentType
     } else {
         PaymentCardType.NONE
@@ -64,7 +66,7 @@ fun String.numberSanitize() = replace("[^\\d]".toRegex(), "")
 
 fun String.ccSanitize() = replace(" ", "")
 
-fun String.luhnValidation() : Boolean {
+fun String.luhnValidation(): Boolean {
     val sanitizedInput = ccSanitize()
     return when {
         sanitizedInput != numberSanitize() -> false
@@ -90,7 +92,7 @@ fun String.luhnMultiply() = digits().mapIndexed { i, j ->
 
 fun String.digits() = map(Character::getNumericValue)
 
-fun String.cardFormatter() : String {
+fun String.cardFormatter(): String {
     val userInput = numberSanitize()
     return if (userInput.length <= 16) {
         userInput.convertLayout()
@@ -99,7 +101,7 @@ fun String.cardFormatter() : String {
     }
 }
 
-fun String.convertLayout() : String {
+fun String.convertLayout(): String {
     val userInput = ccSanitize()
     val sb = StringBuilder()
     val type = userInput.presentedCardType()
@@ -118,7 +120,8 @@ fun String.convertLayout() : String {
     }
     return sb.toString()
 }
-fun String.fourBlockLayout() : String {
+
+fun String.fourBlockLayout(): String {
     val userInput = ccSanitize()
     val sb = StringBuilder()
     for (i in userInput.indices) {
@@ -130,7 +133,7 @@ fun String.fourBlockLayout() : String {
     return sb.toString()
 }
 
-fun String.cardStarFormatter() : String {
+fun String.cardStarFormatter(): String {
     val sanitizedInput = ccSanitize()
     val type = sanitizedInput.presentedCardType()
     if (type == PaymentCardType.NONE) {
@@ -173,10 +176,12 @@ fun String.dateValidation(): Boolean {
             // presuming that a card can't expire more than 10 years in the future
             // the average expiry is about 3 years, but giving more in case
             if (year < cal.get(Calendar.YEAR) ||
-                year > cal.get(Calendar.YEAR) + 10) {
+                year > cal.get(Calendar.YEAR) + 10
+            ) {
                 return false
             } else if (year == cal.get(Calendar.YEAR) &&
-                       month <= cal.get(Calendar.MONTH)) {
+                month <= cal.get(Calendar.MONTH)
+            ) {
                 return false
             }
             return true
@@ -190,8 +195,8 @@ fun String.formatDate(): String {
     val new = replace("[^\\d/]".toRegex(), "")
     if (new.isNotEmpty()) {
         val parts = new.split("/")
-        var year = ""
-        var month = ""
+        var year: String
+        var month: String
         if (parts.size == 1) {
             val len = Math.max(0, length - 2)
             month = new.substring(0, len)
