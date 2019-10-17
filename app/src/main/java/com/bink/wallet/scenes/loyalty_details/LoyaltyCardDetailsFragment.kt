@@ -84,7 +84,9 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         if (viewModel.membershipPlan.value?.account?.plan_name != null) {
-            binding.footerDelete.binding.title.text = getString(R.string.delete_card_plan, viewModel.membershipPlan.value?.account?.plan_name)
+            binding.footerDelete.binding.title.text =
+                getString(R.string.delete_card_plan,
+                viewModel.membershipPlan.value?.account?.plan_name)
         }
 
         val aboutTitle =
