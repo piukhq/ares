@@ -4,7 +4,8 @@ import com.bink.wallet.R
 
 enum class PaymentCardType(
     val type: String, val len: Int, val prefix: String, val format: String,
-    val background: Int, val logo: Int, val subLogo: Int) {
+    val background: Int, val logo: Int, val subLogo: Int
+) {
     NONE(
         "NONE", 16, "", "0000000000000000",
         R.drawable.ic_card_payment_bkgr_none, R.drawable.blank, R.drawable.blank
