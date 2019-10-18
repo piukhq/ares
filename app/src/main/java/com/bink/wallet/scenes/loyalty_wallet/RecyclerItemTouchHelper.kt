@@ -26,12 +26,15 @@ class RecyclerItemTouchHelper(
         val foregroundView: CardView
         if (viewHolder != null) {
             when (viewHolder) {
-                is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> foregroundView =
-                    viewHolder.binding.cardItem.mainLayout
-                is PaymentCardWalletAdapter.PaymentCardWalletHolder -> foregroundView =
-                    viewHolder.binding.paymentCardz
+                is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
+                    foregroundView = viewHolder.binding.cardItem.mainLayout
+                    getDefaultUIUtil().onSelected(foregroundView)
+                }
+                is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
+                    foregroundView = viewHolder.binding.mainPayment
+                    getDefaultUIUtil().onSelected(foregroundView)
+                }
             }
-            getDefaultUIUtil().onSelected(foregroundView)
         }
     }
 
@@ -40,18 +43,38 @@ class RecyclerItemTouchHelper(
         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
         actionState: Int, isCurrentlyActive: Boolean
     ) {
-        val foregroundView =
-            (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
-        getDefaultUIUtil().onDrawOver(
-            c, recyclerView, foregroundView, dX, dY,
-            actionState, isCurrentlyActive
-        )
+
+        val foregroundView: CardView
+        when (viewHolder) {
+            is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
+                foregroundView = viewHolder.binding.cardItem.mainLayout
+                getDefaultUIUtil().onDrawOver(
+                    c, recyclerView, foregroundView, dX, dY,
+                    actionState, isCurrentlyActive
+                )
+            }
+            is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
+                foregroundView = viewHolder.binding.mainPayment
+                getDefaultUIUtil().onDrawOver(
+                    c, recyclerView, foregroundView, dX, dY,
+                    actionState, isCurrentlyActive
+                )
+            }
+        }
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        val foregroundView =
-            (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
-        getDefaultUIUtil().clearView(foregroundView)
+        val foregroundView: CardView
+        when (viewHolder) {
+            is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
+                foregroundView = viewHolder.binding.cardItem.mainLayout
+                getDefaultUIUtil().clearView(foregroundView)
+            }
+            is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
+                foregroundView = viewHolder.binding.mainPayment
+                getDefaultUIUtil().clearView(foregroundView)
+            }
+        }
     }
 
     override fun onChildDraw(
@@ -59,13 +82,23 @@ class RecyclerItemTouchHelper(
         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
         actionState: Int, isCurrentlyActive: Boolean
     ) {
-        val foregroundView =
-            (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
-
-        getDefaultUIUtil().onDraw(
-            c, recyclerView, foregroundView, dX / 2, dY / 2,
-            actionState, isCurrentlyActive
-        )
+        val foregroundView: CardView
+        when (viewHolder) {
+            is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
+                foregroundView = viewHolder.binding.cardItem.mainLayout
+                getDefaultUIUtil().onDraw(
+                    c, recyclerView, foregroundView, dX / 2, dY / 2,
+                    actionState, isCurrentlyActive
+                )
+            }
+            is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
+                foregroundView = viewHolder.binding.mainPayment
+                getDefaultUIUtil().onDraw(
+                    c, recyclerView, foregroundView, dX / 2, dY / 2,
+                    actionState, isCurrentlyActive
+                )
+            }
+        }
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
