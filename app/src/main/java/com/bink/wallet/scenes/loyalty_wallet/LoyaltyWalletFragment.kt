@@ -43,7 +43,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     val listener: RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelperListener {
-
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
             if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
                 if (direction == ItemTouchHelper.RIGHT) {
@@ -112,7 +111,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         binding.swipeLayout.setOnRefreshListener {
-            if (verifyAvailableNetwork(activity!!)) {
+            if (verifyAvailableNetwork(requireActivity())) {
                 runBlocking {
                     viewModel.fetchMembershipPlans()
                     viewModel.fetchMembershipCards()

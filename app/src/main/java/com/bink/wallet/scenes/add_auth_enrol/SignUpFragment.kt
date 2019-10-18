@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -41,6 +42,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         super.onResume()
         windowFullscreenHandler.toFullscreen()
     }
+
+    private var isPaymentWalletEmpty: Boolean? = null
 
     private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
         mutableListOf()
@@ -92,12 +95,26 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         }
         binding.close.setOnClickListener {
             windowFullscreenHandler.toNormalScreen()
-            activity?.onBackPressed()
+            requireActivity().onBackPressed()
         }
         binding.cancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        binding.close.setOnClickListener {
+            view?.hideKeyboard()
+            windowFullscreenHandler.toNormalScreen()
+            findNavController().popBackStack()
+        }
+
+        runBlocking {
+            viewModel.getPaymentCards()
+        }
+
+        viewModel.paymentCards.observeNonNull(this) { paymentCards ->
+            isPaymentWalletEmpty = paymentCards.isNullOrEmpty()
         }
 
         binding.addJoinReward.setOnClickListener {
@@ -201,7 +218,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 findNavController().navigateIfAdded(this, action)
             }
         }
-
 
         planBooleanFieldsList?.map { planFieldsList?.add(it) }
 
@@ -317,6 +333,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     currentRequest
                 )
             }
+                if (signUpFormType == SignUpFormType.GHOST) {
+                    val currentRequest = MembershipCardRequest(
+                        Account(
+                            null,
+                            null,
+                            null,
+                            addRegisterFieldsRequest.registration_fields
+                        ),
+                        viewModel.currentMembershipPlan.value!!.id
+                    )
+                    viewModel.ghostMembershipCard(
+                        membershipCard,
+                        currentRequest
+                    )
+                }
 
             when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
@@ -361,7 +392,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
             hideLoadingViews()
         }
-
 
         viewModel.createCardError.observeNonNull(this) {
             requireContext().displayModalPopup(
