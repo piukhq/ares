@@ -53,7 +53,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
-                            android:src="@drawable/ic_card_payment_sublogo_visa"
+                            android:src="@drawable/ic_visa_sub_logo"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             tools:ignore="ContentDescription" />
