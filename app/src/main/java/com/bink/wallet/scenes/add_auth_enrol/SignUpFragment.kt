@@ -23,7 +23,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -91,11 +90,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 binding.noAccountText.visibility = View.VISIBLE
             }
         }
-        binding.toolbar.setNavigationOnClickListener {
+        binding.close.setOnClickListener {
             windowFullscreenHandler.toNormalScreen()
             activity?.onBackPressed()
         }
-        binding.close.setOnClickListener {
+        binding.cancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
@@ -176,6 +175,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 }
             }
             SignUpFormType.GHOST -> {
+                binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
+                binding.addCardButton.text = getString(R.string.register_ghost_card_button)
                 viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                     it.typeOfField = TypeOfField.ADD
                     addFieldToList(it)
@@ -225,7 +226,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
-
                     planFieldsList?.map {
                         if (!UtilFunctions.isValidField(
                                 it.first.validation,

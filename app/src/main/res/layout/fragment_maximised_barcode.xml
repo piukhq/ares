@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-                android:id="@+id/close"
+                android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/barcode_top_margin"
                 android:gravity="start"
-                android:text="@{viewModel.barcodeWrapper.membershipCard.card.membership_id}"
+                android:text="@{viewModel.barcodeWrapper.membershipCard.card.barcode}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_headline"
                 android:textStyle="bold"

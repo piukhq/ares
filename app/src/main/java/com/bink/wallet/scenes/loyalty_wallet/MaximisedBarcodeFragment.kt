@@ -32,7 +32,7 @@ class MaximisedBarcodeFragment :
         }
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-        binding.close.setOnClickListener {
+        binding.cancel.setOnClickListener {
             requireActivity().onBackPressed()
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
