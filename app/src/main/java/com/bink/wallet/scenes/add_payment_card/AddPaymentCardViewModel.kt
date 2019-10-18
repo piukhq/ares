@@ -12,8 +12,8 @@ class AddPaymentCardViewModel constructor(
 ) : BaseViewModel() {
     val paymentCard = MutableLiveData<PaymentCard>()
     val error = MutableLiveData<Throwable>()
-    var localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
+    var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
     fun sendAddCard(card: PaymentCardAdd) {
         error.value = null
