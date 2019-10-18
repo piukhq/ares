@@ -14,8 +14,9 @@ interface ApiService {
     fun checkRegisteredUser(): Deferred<LoginResponse>
 
     @POST("/ubiquity/service")
-    fun loginOrRegisterAsync(@Body loginResponse: LoginResponse): Deferred<LoginResponse>
-
+    fun loginOrRegisterAsync(
+        @Body loginResponse: LoginResponse
+    ): Deferred<LoginResponse>
 
     @GET("/ubiquity/membership_cards")
     fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
@@ -24,19 +25,29 @@ interface ApiService {
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
-    fun linkToPaymentCardAsync(@Path("membershipCardId") membershipCardId: String, @Path("paymentCardId") paymentCardId: String): Deferred<PaymentCard>
+    fun linkToPaymentCardAsync(
+        @Path("membershipCardId") membershipCardId: String,
+        @Path("paymentCardId") paymentCardId: String
+    ): Deferred<PaymentCard>
 
     @DELETE("/ubiquity/payment_card/{paymentCardId}/membership_card/{membershipCardId}")
-    fun unlinkFromPaymentCardAsync(@Path("paymentCardId") paymentCardId: String, @Path("membershipCardId") membershipCardId: String): Deferred<ResponseBody>
+    fun unlinkFromPaymentCardAsync(
+        @Path("paymentCardId") paymentCardId: String,
+        @Path("membershipCardId") membershipCardId: String
+    ): Deferred<ResponseBody>
 
     @DELETE("/ubiquity/membership_card/{card_id}")
-    fun deleteCardAsync(@Path("card_id") cardId: String): Deferred<ResponseBody>
+    fun deleteCardAsync(
+        @Path("card_id") cardId: String
+    ): Deferred<ResponseBody>
 
     @GET("/ubiquity/membership_plans")
     fun getMembershipPlansAsync(): Deferred<List<MembershipPlan>>
 
     @POST("/ubiquity/membership_cards")
-    fun createMembershipCardAsync(@Body membershipCardRequest: MembershipCardRequest): Deferred<MembershipCard>
+    fun createMembershipCardAsync(
+        @Body membershipCardRequest: MembershipCardRequest
+    ): Deferred<MembershipCard>
 
     @PUT("/ubiquity/membership_card/{card_id}")
     fun updateMembershipCardAsync(
@@ -49,4 +60,9 @@ interface ApiService {
         @Path("card_id") cardId: String,
         @Body membershipCardRequest: MembershipCardRequest
     ): Deferred<MembershipCard>
+
+    @DELETE("/ubiquity/payment_card/{payment_id}")
+    fun deletePaymentCardAsync(
+        @Path("payment_id") cardId: String
+    ): Deferred<ResponseBody>
 }

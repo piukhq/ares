@@ -5,6 +5,7 @@
             <enum name="about" value="0" />
             <enum name="security" value="1" />
             <enum name="delete" value="2" />
+            <enum name="rename" value="3" />
         </attr>
     </declare-styleable>
 </resources>

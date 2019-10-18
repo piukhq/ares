@@ -1,3 +1,7 @@
+AB20-92 Payment card details screen
+AB20-135 Linked payments cards
+AB20-133 Created payment cards wallet
+AB20-194 Enabled I don't have an account button
 AB20-80  Added ghost card button
 AB20-75  Ghost card register
 AB20-208 fix brand list crash
@@ -28,3 +32,4 @@ AB20-187-LCD Loyalty Card wording changes
 AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
+AB20-166-Decisioning Change Sign Up Screen
