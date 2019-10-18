@@ -5,8 +5,6 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.PaymentCardType
 import java.util.*
 
-const val EMPTY_STRING = ""
-const val SPACE = " "
 const val SEPARATOR_PIPE = "|"
 const val SEPARATOR_SLASH = "/"
 const val REGEX_DECIMAL_ONLY = "[^\\d]"
