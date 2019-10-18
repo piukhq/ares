@@ -13,11 +13,9 @@ import com.bink.wallet.databinding.DialogSecurityBinding
 
 class SecurityDialogs(val context: Context) {
 
-    private var dialog: Dialog? = Dialog(context)
+    private var dialog: Dialog = Dialog(context)
 
     fun openDialog(layoutInflater: LayoutInflater) {
-        if (dialog == null)
-            dialog = Dialog(context)
         val stringToSpan = context.getString(R.string.security_modal_body_3)
         val spannableString = SpannableStringBuilder(stringToSpan)
         val url = context.getString(R.string.terms_and_conditions_url)
@@ -36,7 +34,7 @@ class SecurityDialogs(val context: Context) {
             true
         )
 
-        with(dialog!!) {
+        with(dialog) {
             if (!isShowing) {
                 setContentView(dialogBinding.root)
                 setTitle(R.string.security_modal_title)

@@ -74,14 +74,14 @@ class PaymentCardsDetails :
                 binding.linkedCardsList.apply {
                     layoutManager = GridLayoutManager(context, 1)
 
-                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty())
+                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
                         adapter = LinkedCardsAdapter(
                             cards,
                             plans,
                             viewModel.paymentCard.value?.membership_cards!!,
                             onLinkStatusChange = { onLinkStatusChange(it) }
                         )
-                    else
+                    } else {
                         adapter = SuggestedCardsAdapter(
                             plans.filter { it.getCardType() == CardType.PLL },
                             itemClickListener = {
@@ -93,6 +93,7 @@ class PaymentCardsDetails :
                                 )
                             }
                         )
+                    }
                 }
             }
         }
