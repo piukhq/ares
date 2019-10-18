@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
+import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -27,6 +30,15 @@ class PaymentCardWalletFragment :
         get() = R.layout.payment_card_wallet_fragment
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
+
+
+    val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
+        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,6 +71,19 @@ class PaymentCardWalletFragment :
                                         action
                                     )
                                 })
+                        val helperListener =
+                            RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+                        ItemTouchHelper(helperListener).attachToRecyclerView(this)
+                        ItemTouchHelper(
+                            RecyclerItemTouchHelper(
+                                0,
+                                ItemTouchHelper.RIGHT,
+                                listener
+                            )
+                        ).attachToRecyclerView(
+                            this
+                        )
                     }
                 }
             }
