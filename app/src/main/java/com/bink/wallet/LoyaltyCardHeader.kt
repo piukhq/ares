@@ -12,12 +12,10 @@ class LoyaltyCardHeader @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
-
     var binding: LoyaltyCardHeaderBinding = DataBindingUtil.inflate(
         LayoutInflater.from(context),
         R.layout.loyalty_card_header,
         this,
         true
     )
-
 }
