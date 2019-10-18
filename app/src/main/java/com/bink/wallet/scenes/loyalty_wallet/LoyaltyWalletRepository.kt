@@ -7,6 +7,7 @@ import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
 
@@ -170,6 +171,24 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Throwable) {
                     createCardError.value = e.localizedMessage
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    suspend fun getPaymentCards(
+        paymentCards: MutableLiveData<List<PaymentCard>>,
+        fetchError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.getPaymentCardsAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    paymentCards.value = response
+                } catch (e: Throwable) {
+                    fetchError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

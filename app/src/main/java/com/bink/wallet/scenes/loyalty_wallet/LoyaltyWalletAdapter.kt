@@ -104,6 +104,5 @@ class LoyaltyWalletAdapter(
                 cardBinding.cardView.setSecondColor(Color.parseColor(item.card?.colour))
             }
         }
-
     }
 }

@@ -30,6 +30,28 @@
                     android:layout_height="wrap_content"
                     tools:context=".scenes.add_join.AddJoinFragment">
 
+                <Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                        android:id="@+id/close_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/ic_close"
+                        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/toolbar"
+                        tools:ignore="ContentDescription" />
+
                 <com.bink.wallet.ModalBrandHeader
                         android:layout_marginTop="@dimen/loyalty_details_margin_top"
                         android:id="@+id/add_join_reward"
@@ -39,7 +61,7 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_small"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/toolbar"
                         app:membershipPlan="@{item}" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
