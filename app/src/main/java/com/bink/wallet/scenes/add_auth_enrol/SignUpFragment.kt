@@ -364,8 +364,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                             }
                         } else {
                             if (viewModel.currentMembershipPlan.value != null) {
-                                if (isPaymentWalletEmpty != null
-                                    && !isPaymentWalletEmpty!!
+                                if (isPaymentWalletEmpty != null &&
+                                    !isPaymentWalletEmpty!!
                                 ) {
                                     val directions = SignUpFragmentDirections.signUpToPll(
                                         membershipCard,
