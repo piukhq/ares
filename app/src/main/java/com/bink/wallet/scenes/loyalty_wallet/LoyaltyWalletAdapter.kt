@@ -36,13 +36,11 @@ class LoyaltyWalletAdapter(
         holder.bind(membershipCards[position])
     }
 
-    override fun getItemCount(): Int {
-        return membershipCards.size
-    }
+    override fun getItemCount(): Int = membershipCards.size
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+
+    override fun getItemId(position: Int): Long = position.toLong()
+
 
     private fun getItemPosition(cardId: String): Int =
         membershipCards.indexOfFirst { card -> card.id == cardId }
@@ -98,9 +96,10 @@ class LoyaltyWalletAdapter(
                         }
                     }
                 }
-
-                cardBinding.cardView.setFirstColor(Color.parseColor("#888888"))
-                cardBinding.cardView.setSecondColor(Color.parseColor(item.card?.colour))
+                with(cardBinding.cardView) {
+                    setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                    setSecondColor(Color.parseColor(item.card?.colour))
+                }
             }
         }
     }

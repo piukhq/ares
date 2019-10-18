@@ -24,8 +24,6 @@ class PaymentCardsDetails :
 
     override val viewModel: PaymentCardsDetailsViewModel by viewModel()
 
-    private val securityDialog = SecurityDialog()
-
     override val layoutRes: Int
         get() = R.layout.payment_cards_details_fragment
 
@@ -36,6 +34,8 @@ class PaymentCardsDetails :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
+
+        val securityDialog = SecurityDialogs(requireContext())
 
         arguments?.let {
             val currentBundle = PaymentCardsDetailsArgs.fromBundle(it)
@@ -48,7 +48,7 @@ class PaymentCardsDetails :
         binding.paymentCardDetail = viewModel.paymentCard.value
 
         binding.footerSecurity.setOnClickListener {
-            securityDialog.openDialog(requireContext(), layoutInflater)
+            securityDialog.openDialog(layoutInflater)
         }
 
         binding.footerDelete.setOnClickListener {
@@ -118,8 +118,8 @@ class PaymentCardsDetails :
                 )
             } else {
                 viewModel.unlinkPaymentCard(
-                    viewModel.paymentCard.value?.id.toString(),
-                    currentItem.first!!
+                    currentItem.first!!,
+                    viewModel.paymentCard.value?.id.toString()
                 )
             }
         }

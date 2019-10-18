@@ -11,7 +11,7 @@ class JwtCreator(private val repo: LoginRepository) {
 
     fun createJwt(context: Context): String {
         val header = JSONObject()
-        header.put(JWT_HEADER_NAME_ALGORYTHM, JWT_HEADER_VALUE_ALGORYTHM)
+        header.put(JWT_HEADER_NAME_ALGORITHM, JWT_HEADER_VALUE_ALGORITHM)
         header.put(JWT_HEADER_NAME_TYPE, JWT_HEADER_VALUE_TYPE)
 
         val payload = JSONObject()

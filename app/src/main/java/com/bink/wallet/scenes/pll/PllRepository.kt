@@ -23,7 +23,7 @@ class PllRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    storePaymentsCards(response)
+                    storePaymentsCards(response, fetchError)
                     paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e
@@ -33,7 +33,10 @@ class PllRepository(
         }
     }
 
-    private fun storePaymentsCards(cards: List<PaymentCard>) {
+    private fun storePaymentsCards(
+        cards: List<PaymentCard>,
+        fetchError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
@@ -42,13 +45,14 @@ class PllRepository(
                         paymentCardDao.storeAll(cards)
                     }
                 } catch (e: Throwable) {
+                    fetchError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
     }
 
-    suspend fun getLocalPaymentCards(
+    fun getLocalPaymentCards(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
         localFetchError: MutableLiveData<Throwable>
     ) {

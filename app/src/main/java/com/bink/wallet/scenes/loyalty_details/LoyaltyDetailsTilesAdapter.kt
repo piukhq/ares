@@ -25,9 +25,9 @@ class LoyaltyDetailsTilesAdapter(var tiles: List<String>) :
 
     override fun getItemCount() = tiles.size
 
-    override fun onBindViewHolder(holder: LoyaltyDetailsTileViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LoyaltyDetailsTileViewHolder, position: Int) =
         holder.bind(position, tiles)
-    }
+
 
     class LoyaltyDetailsTileViewHolder(var binding: DetailTileItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

@@ -11,11 +11,11 @@ import androidx.databinding.DataBindingUtil
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DialogSecurityBinding
 
-class SecurityDialog {
+class SecurityDialogs(val context: Context) {
 
-    private var dialog: Dialog? = null
+    private var dialog: Dialog? = Dialog(context)
 
-    fun openDialog(context: Context, layoutInflater: LayoutInflater) {
+    fun openDialog(layoutInflater: LayoutInflater) {
         if (dialog == null)
             dialog = Dialog(context)
         val stringToSpan = context.getString(R.string.security_modal_body_3)

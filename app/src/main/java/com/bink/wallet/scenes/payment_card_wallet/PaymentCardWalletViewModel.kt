@@ -26,7 +26,7 @@ class PaymentCardWalletViewModel(
         pllRepository.getPaymentCards(paymentCards, fetchError)
     }
 
-    suspend fun getLocalPaymentCards() {
+    fun fetchLocalPaymentCards() {
         pllRepository.getLocalPaymentCards(paymentCards, fetchError)
     }
 

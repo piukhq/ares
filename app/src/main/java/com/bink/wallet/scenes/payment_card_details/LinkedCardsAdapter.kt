@@ -31,9 +31,8 @@ class LinkedCardsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PaymentMembershipCard) {
-            val currentMembershipCard = cards.firstOrNull { it.id == item.id }
-            val currentMembershipPlan =
-                plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
+            val currentMembershipCard = getCardByPaymentId(item)
+            val currentMembershipPlan = getPlanByCardID(currentMembershipCard)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.paymentMembershipCard = item
             binding.membershipCard = currentMembershipCard
@@ -47,5 +46,11 @@ class LinkedCardsAdapter(
 
             binding.executePendingBindings()
         }
+
+        private fun getCardByPaymentId(item: PaymentMembershipCard) =
+            cards.firstOrNull { it.id == item.id }
+
+        private fun getPlanByCardID(currentMembershipCard: MembershipCard?) =
+            plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
     }
 }

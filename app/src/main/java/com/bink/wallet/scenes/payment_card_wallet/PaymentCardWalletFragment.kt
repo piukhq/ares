@@ -33,10 +33,11 @@ class PaymentCardWalletFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel.fetchLocalMembershipPlans()
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalPaymentCards()
+
         runBlocking {
-            viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
-            viewModel.getLocalPaymentCards()
             viewModel.getPaymentCards()
             binding.progressSpinner.visibility = View.VISIBLE
         }
