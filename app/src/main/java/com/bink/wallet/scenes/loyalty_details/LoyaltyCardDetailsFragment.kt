@@ -129,8 +129,8 @@ class LoyaltyCardDetailsFragment :
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
-        if (viewModel.membershipCard.value?.card != null
-            && !viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+        if (viewModel.membershipCard.value?.card != null &&
+            !viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
@@ -164,7 +164,8 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
-            if (viewModel.accountStatus.value != null && viewModel.paymentCards.value != null) {
+            if (viewModel.accountStatus.value != null &&
+                viewModel.paymentCards.value != null) {
                 setLoadingState(false)
             } else {
                 runBlocking {
