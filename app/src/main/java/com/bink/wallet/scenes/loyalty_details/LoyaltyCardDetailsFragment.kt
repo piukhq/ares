@@ -1,10 +1,12 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -33,6 +35,9 @@ class LoyaltyCardDetailsFragment :
             .build()
     }
 
+    private val MAX_ALPHA = 127f
+    private val MIN_ALPHA = 0f
+
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
@@ -49,6 +54,10 @@ class LoyaltyCardDetailsFragment :
         runBlocking {
             viewModel.fetchPaymentCards()
         }
+
+        val cd = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
+        cd.alpha = MIN_ALPHA.toInt()
+        binding.toolbar.background = cd
 
         viewModel.paymentCards.observeNonNull(this) {
             viewModel.setLinkStatus()
@@ -173,6 +182,14 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             configureLinkStatus(status)
+        }
+
+        binding.scrollView.setOnScrollChangeListener {
+                v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+            cd.alpha = v?.scrollY?.let {
+                getAlphaForActionBar(it)
+            }!!
+
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -506,6 +523,16 @@ class LoyaltyCardDetailsFragment :
                 else -> {
                 }
             }
+        }
+    }
+
+    private fun getAlphaForActionBar(scrollY: Int): Int {
+        val minDist = 0
+        val maxDist = 650
+        return when {
+            scrollY > maxDist -> MAX_ALPHA.toInt()
+            scrollY < minDist -> MIN_ALPHA.toInt()
+            else -> (MAX_ALPHA / maxDist * scrollY).toInt()
         }
     }
 }
