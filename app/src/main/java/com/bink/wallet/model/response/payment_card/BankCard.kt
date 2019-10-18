@@ -23,8 +23,10 @@ data class BankCard(
 ) : Parcelable {
 
     companion object {
+        const val TOKEN_LENGTH = 100
+
         fun tokenGenerator(): String {
-            return StringUtils.randomString(100)
+            return StringUtils.randomString(TOKEN_LENGTH)
         }
 
         fun fingerprintGenerator(pan: String, expiryYear: String, expiryMonth: String): String {

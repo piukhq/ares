@@ -5,12 +5,14 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.PaymentCardType
 import java.util.*
 
-val EMPTY_STRING = ""
-val SPACE = " "
-val SEPARATOR_PIPE = "|"
-val SEPARATOR_SLASH = "/"
-val REGEX_DECIMAL_ONLY = "[^\\d]"
-val REGEX_DECIMAL_OR_SLASH = "[^\\d/]"
+const val EMPTY_STRING = ""
+const val SPACE = " "
+const val SEPARATOR_PIPE = "|"
+const val SEPARATOR_SLASH = "/"
+const val REGEX_DECIMAL_ONLY = "[^\\d]"
+const val REGEX_DECIMAL_OR_SLASH = "[^\\d/]"
+const val DIGITS_VISA_MASTERCARD = 16
+const val DIGITS_AMERICAN_EXPRESS = 15
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
@@ -32,19 +34,18 @@ fun String.presentedCardType(): PaymentCardType {
         return PaymentCardType.NONE
     }
     PaymentCardType.values().forEach {
-        if (it != PaymentCardType.NONE) {
-            if (it.len >= sanitizedInput.length) {
-                val splits = it.prefix.split(SEPARATOR_PIPE)
-                for (prefix in splits) {
-                    if (splits.size <= 1 ||
-                        prefix.length != 1 ||
-                        sanitizedInput.length <= prefix.length
+        if (it != PaymentCardType.NONE &&
+            it.len >= sanitizedInput.length) {
+            val splits = it.prefix.split(SEPARATOR_PIPE)
+            for (prefix in splits) {
+                if (splits.size <= 1 ||
+                    prefix.length != 1 ||
+                    sanitizedInput.length <= prefix.length
+                ) {
+                    if (sanitizedInput.length >= prefix.length &&
+                        sanitizedInput.substring(0, prefix.length) == prefix
                     ) {
-                        if (sanitizedInput.length >= prefix.length &&
-                            sanitizedInput.substring(0, prefix.length) == prefix
-                        ) {
-                            return it
-                        }
+                        return it
                     }
                 }
             }
@@ -84,7 +85,9 @@ fun String.isValidLuhnFormat(): Boolean {
 
 fun String.luhnValidPopulated() = all(Char::isDigit) && length > 1
 
-fun String.luhnLengthInvalid() = !(length == 16 || length == 15)
+fun String.luhnLengthInvalid() =
+    !(length == DIGITS_VISA_MASTERCARD ||
+      length == DIGITS_AMERICAN_EXPRESS)
 
 fun String.luhnChecksum() = luhnMultiply().sum()
 
@@ -150,12 +153,12 @@ fun String.cardStarFormatter(): String {
         EMPTY_STRING
     } else if (sanitizedInput.length <= shortPartLen) {
         sanitizedInput.starMeUp()
+    } else if (type.len == 15 &&
+        sanitizedInput.length > type.len - 4
+    ) {
+        "0$sanitizedInput".cardStarConcatenator(shortPartLen + 1)
     } else {
-        if (type.len == 15 && sanitizedInput.length > type.len - 4) {
-            "0$sanitizedInput".cardStarConcatenator(shortPartLen + 1)
-        } else {
-            sanitizedInput.cardStarConcatenator(shortPartLen)
-        }
+        sanitizedInput.cardStarConcatenator(shortPartLen)
     }
     return outPrep.fourBlockLayout()
 }

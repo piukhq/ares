@@ -15,13 +15,20 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPaymentCardFragment :
     BaseFragment<AddPaymentCardViewModel, AddPaymentCardFragmentBinding>() {
+
+    val DEFAULT_CONSENT_TYPE = 0
+    val DEFAULT_LATITUDE = 0.0f
+    val DEFAULT_LONGITUDE = 0.0f
+    val YEAR_BASE_ADDITION = 2000
+    val DEFAULT_ACCOUNT_STATUS = 0
+    val DIVISOR_MILLISECONDS = 1000
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -66,15 +73,17 @@ class AddPaymentCardFragment :
                 updateEnteredCardNumber()
             }
         }
-        binding.cardNumber.addTextChangedListener(textWatcher)
-        binding.cardNumber.setOnFocusChangeListener { _, focus ->
-            if (!focus) {
-                binding.cardNumberInputLayout.error =
-                    if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
-                        getString(R.string.incorrect_card_error)
-                    } else {
-                        ""
-                    }
+        with (binding.cardNumber) {
+            addTextChangedListener(textWatcher)
+            setOnFocusChangeListener { _, focus ->
+                if (!focus) {
+                    binding.cardNumberInputLayout.error =
+                        if (text.toString().cardValidation() == PaymentCardType.NONE) {
+                            getString(R.string.incorrect_card_error)
+                        } else {
+                            ""
+                        }
+                }
             }
         }
 
@@ -110,7 +119,7 @@ class AddPaymentCardFragment :
                             cardNo.substring(0, 6),
                             cardNo.substring(cardNo.length - 4),
                             cardExp[0].toInt(),
-                            cardExp[1].toInt() + 2000,
+                            cardExp[1].toInt() + YEAR_BASE_ADDITION,
                             getString(R.string.country_code_gb),
                             getString(R.string.currency_code_gbp),
                             binding.cardName.text.toString(),
@@ -121,13 +130,13 @@ class AddPaymentCardFragment :
                         ),
                         Account(
                             false,
-                            0,
+                            DEFAULT_ACCOUNT_STATUS,
                             listOf(
                                 Consent(
-                                    0,
-                                    0.0f,
-                                    0.0f,
-                                    System.currentTimeMillis() / 1000
+                                    DEFAULT_CONSENT_TYPE,
+                                    DEFAULT_LATITUDE,
+                                    DEFAULT_LONGITUDE,
+                                    System.currentTimeMillis() / DIVISOR_MILLISECONDS
                                 )
                             )
                         )
