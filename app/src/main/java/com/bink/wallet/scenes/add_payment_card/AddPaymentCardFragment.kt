@@ -25,7 +25,7 @@ class AddPaymentCardFragment :
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
-            .shouldDisplayBack(activity!!)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -36,7 +36,7 @@ class AddPaymentCardFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        cardSwitcher("")
+        cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
         // pre-load the cards on screen open, so we have them ready after card is added
@@ -111,8 +111,8 @@ class AddPaymentCardFragment :
                             cardNo.substring(cardNo.length - 4),
                             cardExp[0].toInt(),
                             cardExp[1].toInt() + 2000,
-                            "GB",
-                            "GBP",
+                            getString(R.string.country_code_gb),
+                            getString(R.string.currency_code_gbp),
                             binding.cardName.text.toString(),
                             cardNo.cardValidation().type,
                             cardNo.cardValidation().type,
@@ -198,19 +198,20 @@ class AddPaymentCardFragment :
         with (binding.cardNumber) {
             val origNumber = text.toString()
             val newNumber = origNumber.cardFormatter()
-            if (origNumber.isNotEmpty() && newNumber.isNotEmpty()) {
-                if (origNumber != newNumber) {
-                    val pos = selectionStart
-                    setText(newNumber)
-                    if (newNumber.length > origNumber.length) {
-                        if (pos == origNumber.length) {
-                            setSelection(newNumber.length)
-                        }
-                    } else if (newNumber.length < origNumber.length) {
-                        if (pos > newNumber.length) {
-                            setSelection(newNumber.length)
-                        }
-                    }
+            if (origNumber.isNotEmpty() &&
+                newNumber.isNotEmpty() &&
+                origNumber != newNumber
+            ) {
+                val pos = selectionStart
+                setText(newNumber)
+                if (newNumber.length > origNumber.length &&
+                    pos == origNumber.length
+                ) {
+                    setSelection(newNumber.length)
+                } else if (newNumber.length < origNumber.length &&
+                    pos > newNumber.length
+                ) {
+                    setSelection(newNumber.length)
                 }
             }
         }

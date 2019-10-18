@@ -32,27 +32,27 @@ class PaymentCardUtilsTests {
 
     @Test
     fun testLuhnEmptyCard() {
-        assertFalse("".luhnValidation())
+        assertFalse("".isValidLuhnFormat())
     }
 
     @Test
     fun singleDigitStringsCannotBeValid() {
-        assertFalse("1".luhnValidation())
+        assertFalse("1".isValidLuhnFormat())
     }
 
     @Test
     fun singleZeroIsInvalid() {
-        assertFalse("0".luhnValidation())
+        assertFalse("0".isValidLuhnFormat())
     }
 
     @Test
     fun invalidWithNonDigit() {
-        assertFalse("055a 444 285".luhnValidation())
+        assertFalse("055a 444 285".isValidLuhnFormat())
     }
 
     @Test
     fun invalidLength() {
-        assertFalse("0555 1444 2285".luhnValidation())
+        assertFalse("0555 1444 2285".isValidLuhnFormat())
     }
 
     @Test

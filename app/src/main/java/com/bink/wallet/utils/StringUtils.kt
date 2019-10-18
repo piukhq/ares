@@ -14,7 +14,15 @@ object StringUtils {
     }
 }
 
+val ENCRYPTION_TYPE_MD5 = "MD5"
+val ENCRYPTION_PAD_CHAR = '0'
+val ENCRYPTION_SIGN_NUM = 1
+val ENCRYPTION_RADIX = 16
+val ENCRYPTION_LENGTH = 32
+
 fun String.md5(): String {
-    val md = MessageDigest.getInstance("MD5")
-    return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+    val md = MessageDigest.getInstance(ENCRYPTION_TYPE_MD5)
+    return BigInteger(ENCRYPTION_SIGN_NUM, md.digest(toByteArray()))
+        .toString(ENCRYPTION_RADIX)
+        .padStart(ENCRYPTION_LENGTH, ENCRYPTION_PAD_CHAR)
 }

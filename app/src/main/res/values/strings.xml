@@ -245,6 +245,7 @@
     <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
 
     <!-- Payment Card entry -->
+    <string name="empty_string" />
     <string name="card_number">Card number</string>
     <string name="name_on_card">Name on card</string>
     <string name="expiry">Expiry</string>
@@ -253,4 +254,6 @@
     <string name="incorrect_card_name">Please enter the name on the card</string>
     <string name="privacy_and_security"><u>Privacy and security</u></string>
     <string name="more_information"><u>More information</u></string>
+    <string name="country_code_gb">GB</string>
+    <string name="currency_code_gbp">GBP</string>
 </resources>

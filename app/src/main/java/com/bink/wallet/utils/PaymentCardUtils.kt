@@ -5,6 +5,13 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.PaymentCardType
 import java.util.*
 
+val EMPTY_STRING = ""
+val SPACE = " "
+val SEPARATOR_PIPE = "|"
+val SEPARATOR_SLASH = "/"
+val REGEX_DECIMAL_ONLY = "[^\\d]"
+val REGEX_DECIMAL_OR_SLASH = "[^\\d/]"
+
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolean {
     membership_cards?.forEach { paymentMembershipCard ->
         if (paymentMembershipCard.id.toString() == membershipCard.id &&
@@ -27,7 +34,7 @@ fun String.presentedCardType(): PaymentCardType {
     PaymentCardType.values().forEach {
         if (it != PaymentCardType.NONE) {
             if (it.len >= sanitizedInput.length) {
-                val splits = it.prefix.split("|")
+                val splits = it.prefix.split(SEPARATOR_PIPE)
                 for (prefix in splits) {
                     if (splits.size <= 1 ||
                         prefix.length != 1 ||
@@ -47,13 +54,13 @@ fun String.presentedCardType(): PaymentCardType {
 }
 
 fun String.cardValidation(): PaymentCardType {
-    if (!luhnValidation()) {
+    if (!isValidLuhnFormat()) {
         return PaymentCardType.NONE
     }
     val sanitizedInput = ccSanitize()
     val paymentType = sanitizedInput.presentedCardType()
     return if (sanitizedInput.length == paymentType.len &&
-        sanitizedInput.luhnValidation()
+        sanitizedInput.isValidLuhnFormat()
     ) {
         paymentType
     } else {
@@ -61,11 +68,11 @@ fun String.cardValidation(): PaymentCardType {
     }
 }
 
-fun String.numberSanitize() = replace("[^\\d]".toRegex(), "")
+fun String.numberSanitize() = replace(REGEX_DECIMAL_ONLY.toRegex(), EMPTY_STRING)
 
-fun String.ccSanitize() = replace(" ", "")
+fun String.ccSanitize() = replace(SPACE, EMPTY_STRING)
 
-fun String.luhnValidation(): Boolean {
+fun String.isValidLuhnFormat(): Boolean {
     val sanitizedInput = ccSanitize()
     return when {
         sanitizedInput != numberSanitize() -> false
@@ -110,7 +117,7 @@ fun String.convertLayout(): String {
         for (i in layout.indices) {
             if (pos >= userInput.length) {
                 break
-            } else if (layout[i].toString() == " ") {
+            } else if (layout[i].toString() == SPACE) {
                 sb.append(layout[i])
             } else {
                 sb.append(userInput[pos++])
@@ -125,7 +132,7 @@ fun String.fourBlockLayout(): String {
     val sb = StringBuilder()
     for (i in userInput.indices) {
         if (i % 4 == 0 && i > 0) {
-            sb.append(" ")
+            sb.append(SPACE)
         }
         sb.append(userInput[i])
     }
@@ -136,11 +143,11 @@ fun String.cardStarFormatter(): String {
     val sanitizedInput = ccSanitize()
     val type = sanitizedInput.presentedCardType()
     if (type == PaymentCardType.NONE) {
-        return ""
+        return EMPTY_STRING
     }
     val shortPartLen = type.len - 4
     val outPrep = if (sanitizedInput.isEmpty()) {
-        ""
+        EMPTY_STRING
     } else if (sanitizedInput.length <= shortPartLen) {
         sanitizedInput.starMeUp()
     } else {
@@ -165,12 +172,15 @@ fun String.starMeUp() = replace("[\\d]".toRegex(), "*")
 fun String.dateValidation(): Boolean {
     val new = formatDate()
     if (new.isNotEmpty()) {
-        val split = new.split("/")
+        val split = new.split(SEPARATOR_SLASH)
         if (split.size > 1) {
             val month = split[0].toInt()
             val year = split[1].toInt() + 2000
-            if (month < 1 || month > 12)
+            if (month < 1 ||
+                month > 12
+            ) {
                 return false
+            }
             val cal = Calendar.getInstance()
             // presuming that a card can't expire more than 10 years in the future
             // the average expiry is about 3 years, but giving more in case
@@ -191,10 +201,10 @@ fun String.dateValidation(): Boolean {
 
 fun String.formatDate(): String {
     val builder = StringBuilder()
-    val new = replace("[^\\d/]".toRegex(), "")
+    val new = replace(REGEX_DECIMAL_OR_SLASH.toRegex(), EMPTY_STRING)
     if (new.isNotEmpty()) {
-        val parts = new.split("/")
-        var year: String
+        val parts = new.split(SEPARATOR_SLASH)
+        val year: String
         var month: String
         if (parts.size == 1) {
             val len = Math.max(0, length - 2)
@@ -206,7 +216,7 @@ fun String.formatDate(): String {
         }
         month = "00$month"
         builder.append(month.substring(month.length - 2))
-        builder.append("/")
+        builder.append(SEPARATOR_SLASH)
         builder.append(year)
     }
     return builder.toString()
