@@ -17,8 +17,7 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolea
 }
 
 fun String.getCardType() =
-    PaymentCardType.values().firstOrNull { it.type == this }
-        ?: PaymentCardType.NONE
+    PaymentCardType.values().firstOrNull { it.type == this } ?: PaymentCardType.NONE
 
 fun String.presentedCardType(): PaymentCardType {
     val sanitizedInput = numberSanitize()
