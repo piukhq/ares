@@ -35,8 +35,10 @@ class LoyaltyCardDetailsFragment :
             .build()
     }
 
-    private val MAX_ALPHA = 127f
-    private val MIN_ALPHA = 0f
+    companion object {
+        const val MAX_ALPHA = 127f
+        const val MIN_ALPHA = 0f
+    }
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
