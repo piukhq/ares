@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -31,22 +33,24 @@ class PaymentCardWalletFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel.fetchLocalMembershipPlans()
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalPaymentCards()
+
         runBlocking {
             viewModel.getPaymentCards()
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchLocalMembershipPlans()
             binding.progressSpinner.visibility = View.VISIBLE
         }
 
         viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    binding.progressSpinner.visibility = View.INVISIBLE
+                    binding.progressSpinner.visibility = View.GONE
                     binding.paymentCardRecycler.apply {
                         layoutManager = GridLayoutManager(context, 1)
                         adapter =
                             PaymentCardWalletAdapter(
-                                viewModel.paymentCards.value!!,
+                                paymentCards,
                                 onClickListener = {
                                     val action =
                                         WalletsFragmentDirections.paymentWalletToDetails(
@@ -66,4 +70,13 @@ class PaymentCardWalletFragment :
 
     }
 
+    fun setData(
+        membershipCards: List<MembershipCard>,
+        membershipPlans: List<MembershipPlan>
+    ) {
+        viewModel.run {
+            localMembershipCardData.value = membershipCards
+            localMembershipPlanData.value = membershipPlans
+        }
+    }
 }

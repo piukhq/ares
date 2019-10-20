@@ -1,6 +1,5 @@
 package com.bink.wallet.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import kotlinx.android.parcel.Parcelize

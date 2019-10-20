@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsChangeEmailDialogBinding
 
-class SettingsEmailDialog(context: Context, private val initialEmail: String):
+class SettingsEmailDialog(context: Context, private val initialEmail: String) :
     AlertDialog(context) {
 
     val newEmail = MutableLiveData<String>()
@@ -20,21 +20,22 @@ class SettingsEmailDialog(context: Context, private val initialEmail: String):
                 inflater,
                 R.layout.settings_change_email_dialog,
                 null,
-                false)
+                false
+            )
 
         setCancelable(true)
         setTitle(context.getString(R.string.edit_email_address))
         binding.email = initialEmail
         setView(binding.root)
         setButton(BUTTON_POSITIVE, context.getString(R.string.ok))
-            { _, _ ->
-                if (!setEmail(binding.email!!)) {
-                    binding.textInputLayout.error =
-                        context.getString(R.string.please_enter_valid_email)
-                }
+        { _, _ ->
+            if (!setEmail(binding.email!!)) {
+                binding.textInputLayout.error =
+                    context.getString(R.string.please_enter_valid_email)
             }
+        }
         setButton(BUTTON_NEGATIVE, context.getString(R.string.cancel_text))
-            { _, _ -> dismiss() }
+        { _, _ -> dismiss() }
     }
 
     private fun setEmail(email: String): Boolean {

@@ -1,11 +1,15 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.graphics.Canvas
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 
 
-class RecyclerItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listener: RecyclerItemTouchHelperListener) :
+class RecyclerItemTouchHelper(
+    dragDirs: Int,
+    swipeDirs: Int,
+    private val listener: RecyclerItemTouchHelperListener
+) :
     ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 
     override fun onMove(
@@ -18,7 +22,8 @@ class RecyclerItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listene
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (viewHolder != null) {
-            val foregroundView = (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
+            val foregroundView =
+                (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
             getDefaultUIUtil().onSelected(foregroundView)
         }
     }
@@ -28,7 +33,8 @@ class RecyclerItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listene
         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
         actionState: Int, isCurrentlyActive: Boolean
     ) {
-        val foregroundView = (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
+        val foregroundView =
+            (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
         getDefaultUIUtil().onDrawOver(
             c, recyclerView, foregroundView, dX, dY,
             actionState, isCurrentlyActive
@@ -36,7 +42,8 @@ class RecyclerItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listene
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        val foregroundView = (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
+        val foregroundView =
+            (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
         getDefaultUIUtil().clearView(foregroundView)
     }
 
@@ -45,7 +52,8 @@ class RecyclerItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val listene
         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
         actionState: Int, isCurrentlyActive: Boolean
     ) {
-        val foregroundView = (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
+        val foregroundView =
+            (viewHolder as LoyaltyWalletAdapter.LoyaltyWalletViewHolder).binding.cardItem.mainLayout
 
         getDefaultUIUtil().onDraw(
             c, recyclerView, foregroundView, dX/2, dY/2,

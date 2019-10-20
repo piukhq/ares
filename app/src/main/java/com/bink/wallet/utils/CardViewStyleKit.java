@@ -1,27 +1,14 @@
 package com.bink.wallet.utils;
 
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 
 import java.util.Stack;
 
 public class CardViewStyleKit {
-    public enum ResizingBehavior {
-        AspectFit,
-        AspectFill,
-        Stretch,
-        Center,
-    }
-
-    private static class CacheForCanvas {
-        private static Paint paint = new Paint();
-        private static RectF originalFrame = new RectF(0f, 0f, 240f, 120f);
-        private static RectF resizedFrame = new RectF();
-        private static RectF rectangleRect = new RectF();
-        private static Path rectanglePath = new Path();
-        private static RectF rectangle2Rect = new RectF();
-        private static Path rectangle2Path = new Path();
-    }
-
     public static void drawCanvas(Canvas canvas, int firstColor, int secondColor) {
         CardViewStyleKit.drawCanvas(canvas, new RectF(0f, 0f, 240f, 120f), ResizingBehavior.AspectFit, firstColor, secondColor);
     }
@@ -116,5 +103,22 @@ public class CardViewStyleKit {
                 target.centerY() - newHeight / 2,
                 target.centerX() + newWidth / 2,
                 target.centerY() + newHeight / 2);
+    }
+
+    public enum ResizingBehavior {
+        AspectFit,
+        AspectFill,
+        Stretch,
+        Center,
+    }
+
+    private static class CacheForCanvas {
+        private static Paint paint = new Paint();
+        private static RectF originalFrame = new RectF(0f, 0f, 240f, 120f);
+        private static RectF resizedFrame = new RectF();
+        private static RectF rectangleRect = new RectF();
+        private static Path rectanglePath = new Path();
+        private static RectF rectangle2Rect = new RectF();
+        private static Path rectangle2Path = new Path();
     }
 }

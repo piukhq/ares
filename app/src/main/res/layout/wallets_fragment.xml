@@ -41,20 +41,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        <ProgressBar
-                android:id="@+id/progress_spinner"
-                style="@style/ProgressSpinner"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/wallet_content"
-                app:layout_constraintStart_toStartOf="@+id/wallet_content"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"

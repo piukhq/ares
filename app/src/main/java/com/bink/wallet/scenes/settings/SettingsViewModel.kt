@@ -9,7 +9,7 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.scenes.login.LoginRepository
 import kotlinx.coroutines.launch
 
-class SettingsViewModel  constructor(var loginRepository: LoginRepository) :
+class SettingsViewModel constructor(var loginRepository: LoginRepository) :
     BaseViewModel() {
 
     var loginData = MutableLiveData<LoginData>()
