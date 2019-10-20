@@ -16,8 +16,7 @@ import com.bink.wallet.utils.enums.CardStatus
 class LoyaltyWalletAdapter(
     private val membershipPlans: List<MembershipPlan>,
     private val membershipCards: List<MembershipCard>,
-    val onClickListener: (MembershipCard) -> Unit = {},
-    val itemDeleteListener: (MembershipCard) -> Unit = {}
+    val onClickListener: (MembershipCard) -> Unit = {}
 ) : RecyclerView.Adapter<LoyaltyWalletAdapter.LoyaltyWalletViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoyaltyWalletViewHolder {
@@ -37,13 +36,11 @@ class LoyaltyWalletAdapter(
         holder.bind(membershipCards[position])
     }
 
-    override fun getItemCount(): Int {
-        return membershipCards.size
-    }
+    override fun getItemCount(): Int = membershipCards.size
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+
+    override fun getItemId(position: Int): Long = position.toLong()
+
 
     private fun getItemPosition(cardId: String): Int =
         membershipCards.indexOfFirst { card -> card.id == cardId }
@@ -63,7 +60,6 @@ class LoyaltyWalletAdapter(
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
                 cardBinding.plan = currentMembershipPlan
 
-                binding.deleteLayout.setOnClickListener { itemDeleteListener(item) }
                 cardBinding.mainLayout.setOnClickListener { onClickListener(item) }
 
                 when (item.status?.state) {
@@ -100,8 +96,10 @@ class LoyaltyWalletAdapter(
                         }
                     }
                 }
-                cardBinding.cardView.setFirstColor(Color.parseColor("#888888"))
-                cardBinding.cardView.setSecondColor(Color.parseColor(item.card?.colour))
+                with(cardBinding.cardView) {
+                    setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                    setSecondColor(Color.parseColor(item.card?.colour))
+                }
             }
         }
     }

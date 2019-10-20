@@ -24,7 +24,7 @@ class PaymentCardsDetailsViewModel(private var pllRepository: PllRepository) : B
         pllRepository.linkPaymentCard(cardId, paymentCardId, linkedPaymentCard, linkError)
     }
 
-    suspend fun unlinkPaymentCard(paymentCardId: String, cardId: String) {
+    suspend fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
         pllRepository.unlinkPaymentCard(paymentCardId, cardId, unlinkError, unlinkedRequestBody)
     }
 

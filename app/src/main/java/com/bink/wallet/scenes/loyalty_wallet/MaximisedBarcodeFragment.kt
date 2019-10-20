@@ -2,14 +2,14 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MaximisedBarcodeFragment: BaseFragment<MaximisedBarcodeViewModel, FragmentMaximisedBarcodeBinding>() {
+class MaximisedBarcodeFragment :
+    BaseFragment<MaximisedBarcodeViewModel, FragmentMaximisedBarcodeBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)

@@ -7,20 +7,20 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
+import com.bink.wallet.MainActivity
+import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
+import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.network.ApiConstants
-import com.bink.wallet.utils.toolbar.FragmentToolbar
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.bink.wallet.MainActivity
-import com.bink.wallet.R
-import com.bink.wallet.model.ListHolder
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.utils.ENVIRONMENTS_TO_DEBUG
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -93,7 +93,8 @@ class SettingsFragment :
                             SettingsItem(
                                 item.title,
                                 it.email!!,
-                                item.type)
+                                item.type
+                            )
                         viewModel.itemsList.setItem(i, newItem)
                     }
                 }

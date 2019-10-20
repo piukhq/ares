@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.SettingsItemBinding
-import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
@@ -32,8 +31,10 @@ class SettingsAdapter(
         itemsList[position].let { holder.bind(it!!) }
     }
 
-    class SettingsViewHolder(val binding: SettingsItemBinding,
-                             val itemClickListener: (SettingsItem) -> Unit) :
+    class SettingsViewHolder(
+        val binding: SettingsItemBinding,
+        val itemClickListener: (SettingsItem) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SettingsItem) {
