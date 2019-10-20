@@ -12,6 +12,7 @@ class LoginDataConverters {
         val type = object : TypeToken<LoginData?>() {}.type
         return gson.toJson(value, type)
     }
+
     @TypeConverter
     fun toLoginData(value: String?): LoginData? {
         val gson = Gson()

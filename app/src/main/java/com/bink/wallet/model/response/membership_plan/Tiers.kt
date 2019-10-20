@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Tiers (
+data class Tiers(
 
-	val name : String?,
-	val description : String?
+    val name: String?,
+    val description: String?
 ) : Parcelable

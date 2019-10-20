@@ -1,3 +1,5 @@
+AB20-142 Missing loyalty cards, code refactor
+AB20-92 Payment card details screen
 AB20-176 LCD loyalty card image display update, fix scrolling issue & scaling of logo
 AB20-92  Payment card details screen
 AB20-135 Linked payments cards
@@ -26,6 +28,7 @@ AB20-212 Tapping on Back Button on Home Wallet refreshes the app
 AB20-188 Transactions unavailable screen wording changes
 AB20-214 PLL - The user is redirected to PLL Empty after adding a PLL card
 AB20-215 PLL - The user is redirected to details screen after adding a non PLL card
+AB20-162 loyalty card specification
 AB20-177-LCD when no barcode available
 AB20-175-Change maximize barcode to display barcode number
 AB20-187-LCD Loyalty Card wording changes
@@ -40,3 +43,4 @@ AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
 AB20-226-Register Ghost Card-Incorrect text on title and button
+AB20-224-Enable I Don't Have An Account

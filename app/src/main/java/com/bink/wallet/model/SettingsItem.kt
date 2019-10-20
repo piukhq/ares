@@ -10,5 +10,4 @@ data class SettingsItem(
     val title: String,
     val value: String,
     val type: SettingsItemType
-) : Parcelable {
-}
+) : Parcelable

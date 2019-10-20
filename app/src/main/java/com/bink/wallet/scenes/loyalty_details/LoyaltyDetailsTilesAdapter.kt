@@ -14,15 +14,20 @@ class LoyaltyDetailsTilesAdapter(var tiles: List<String>) :
         parent: ViewGroup,
         viewType: Int
     ): LoyaltyDetailsTileViewHolder {
-        val binding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.detail_tile_item, parent, false) as DetailTileItemBinding
+        val binding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.detail_tile_item,
+            parent,
+            false
+        ) as DetailTileItemBinding
         return LoyaltyDetailsTileViewHolder(binding)
     }
 
     override fun getItemCount() = tiles.size
 
-    override fun onBindViewHolder(holder: LoyaltyDetailsTileViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LoyaltyDetailsTileViewHolder, position: Int) =
         holder.bind(position, tiles)
-    }
+
 
     class LoyaltyDetailsTileViewHolder(var binding: DetailTileItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

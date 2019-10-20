@@ -14,7 +14,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.bink.wallet.R
 
-fun Context.toPixelFromDip(value: Float) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
+fun Context.toPixelFromDip(value: Float) =
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
 
 fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int) {
     if (fragment.isAdded) {

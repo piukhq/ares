@@ -231,7 +231,7 @@
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
 
-    <!--    Payment card wallet-->
+    <!-- Payment card wallet-->
     <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
     <string name="payment_card_not_linked">Not linked</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
@@ -240,5 +240,8 @@
     <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
     <string name="rename_card">Rename this card</string>
     <string name="rename_card_description">Change this card\'s \"nickname\"</string>
+    <string name="card_suggestion_description">You can link this card</string>
+    <string name="add_card_text">Add card</string>
     <string name="card_error_dialog">The card couldn\'t be deleted</string>
+    <string name="default_card_second_color">#888888</string>
 </resources>

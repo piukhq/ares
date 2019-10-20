@@ -78,7 +78,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
             }
         }
         errorCodes.value = null
-        membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value+= "$it " }
+        membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value += "$it " }
     }
 
     private fun existLinkedPaymentCards(): Boolean {
