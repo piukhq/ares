@@ -515,4 +515,8 @@
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
     </fragment>
 
+    <fragment
+            android:id="@+id/onboarding_fragment"
+            android:name="com.bink.wallet.scenes.onboarding.OnboardingFragment" />
+
 </navigation>

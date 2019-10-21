@@ -259,4 +259,10 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="log_in_with_email">Log in with email</string>
 </resources>
