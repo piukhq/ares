@@ -37,13 +37,15 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         when (currentMembershipPlan.feature_set?.card_type) {
             CardType.STORE.type -> {
-                binding.addJoinViewImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_view_inactive))
+                binding.addJoinViewImage.setImageDrawable(requireContext().getDrawable(R.drawable.ic_icons_svl_view_inactive))
                 binding.addJoinViewDescription.text =
                     getString(R.string.add_join_inactive_view_description)
+                binding.addJoinLinkImage.setImageDrawable(requireContext().getDrawable(R.drawable.ic_icons_svl_link_inactive))
+                binding.addJoinLinkDescription.text =
+                    getString(R.string.add_join_inactive_link_description)
             }
-            CardType.VIEW.type,
-            CardType.STORE.type -> {
-                binding.addJoinLinkImage.setImageDrawable(context?.getDrawable(R.drawable.ic_icons_svl_link_inactive))
+            CardType.VIEW.type -> {
+                binding.addJoinLinkImage.setImageDrawable(requireContext().getDrawable(R.drawable.ic_icons_svl_link_inactive))
                 binding.addJoinLinkDescription.text =
                     getString(R.string.add_join_inactive_link_description)
             }
