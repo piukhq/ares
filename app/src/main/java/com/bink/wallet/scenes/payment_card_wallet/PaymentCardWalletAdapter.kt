@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PaymentCardWalletItemBinding
 import com.bink.wallet.model.response.payment_card.PaymentCard
-
+import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PaymentCardWalletAdapter(
     private val paymentCards: List<PaymentCard>,
@@ -43,6 +43,11 @@ class PaymentCardWalletAdapter(
         fun bind(item: PaymentCard) {
             binding.paymentCard = item
             binding.executePendingBindings()
+            item.card?.provider?.let {
+                binding.paymentCardWrapper.setBackgroundResource(
+                    it.getCardTypeFromProvider().background
+                )
+            }
         }
     }
 }
