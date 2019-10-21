@@ -4,16 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.*
@@ -110,6 +113,17 @@ class SettingsFragment :
                         Uri.parse(getString(R.string.faq_url))
                     )
                 )
+            SettingsItemType.SECURITY_AND_PRIVACY -> {
+                val directions =
+                    SettingsFragmentDirections.settingsToSecurityAndPrivacy(
+                            GenericModalParameters(
+                                R.drawable.ic_back,
+                                getString(R.string.security_and_privacy_title),
+                                getString(R.string.security_and_privacy_copy)
+                            )
+                        )
+                findNavController().navigateIfAdded(this, directions)
+            }
 
             else -> {
                 // if not handled, we do nothing, i.e. headers, info rows
