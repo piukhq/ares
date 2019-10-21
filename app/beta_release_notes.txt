@@ -1,6 +1,6 @@
 AB20-90  Add payment card
+AB20-176 LCD loyalty card image display update, fix scrolling issue & scaling of logo
 AB20-142 Missing loyalty cards, code refactor
-AB20-92  Payment card details screen
 AB20-92  Payment card details screen
 AB20-135 Linked payments cards
 AB20-133 Created payment cards wallet
