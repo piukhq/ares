@@ -18,6 +18,9 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import android.content.Intent
+import android.net.Uri
+
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -82,6 +85,24 @@ class SettingsFragment :
         when (item.type) {
             SettingsItemType.EMAIL_ADDRESS ->
                 emailDialogOpen()
+            SettingsItemType.RATE_APP -> {
+                val appPackageName = requireContext().packageName
+                try {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.play_store_market_url, appPackageName))
+                        )
+                    )
+                } catch (_: android.content.ActivityNotFoundException) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.play_store_browser_url, appPackageName))
+                        )
+                    )
+                }
+            }
 
             else -> {
                 // if not handled, we do nothing, i.e. headers, info rows
