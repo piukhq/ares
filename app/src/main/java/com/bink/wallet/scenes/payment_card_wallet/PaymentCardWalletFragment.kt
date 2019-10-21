@@ -50,6 +50,9 @@ class PaymentCardWalletFragment :
                 viewModel.paymentCards.value?.get(position)
                     ?.let { deleteDialog(it) }
             }
+            if (direction == ItemTouchHelper.RIGHT) {
+                binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+            }
         }
     }
 
@@ -74,6 +77,7 @@ class PaymentCardWalletFragment :
                             PaymentCardWalletFragment::class.java.simpleName,
                             getString(R.string.loayalty_wallet_dialog_description)
                         )
+                        binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                     }
 
                 }
