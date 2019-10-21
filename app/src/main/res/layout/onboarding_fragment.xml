@@ -2,11 +2,6 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -38,7 +33,6 @@
                 android:layout_marginEnd="@dimen/buttons_margin"
                 android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
                 android:textAllCaps="false"
-                android:textStyle="bold"
                 style="@style/RoundedFacebookButton"
                 android:text="@string/continue_with_facebook"
                 app:layout_constraintBottom_toTopOf="@+id/sign_up_with_email"
@@ -68,8 +62,9 @@
                 android:layout_marginEnd="@dimen/buttons_margin"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 android:textAllCaps="false"
-                android:textStyle="bold"
-                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:selectableItemBackground"
                 android:text="@string/log_in_with_email"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
