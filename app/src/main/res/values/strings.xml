@@ -244,6 +244,7 @@
     <string name="please_enter_valid_email">Please enter a valid email address</string>
     <string name="play_store_market_url">market://details?id=%1$s</string>
     <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Native join unavailable</string>

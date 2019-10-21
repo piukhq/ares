@@ -103,6 +103,13 @@ class SettingsFragment :
                     )
                 }
             }
+            SettingsItemType.FAQS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.faq_url))
+                    )
+                )
 
             else -> {
                 // if not handled, we do nothing, i.e. headers, info rows
