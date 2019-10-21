@@ -245,6 +245,7 @@
     <string name="play_store_market_url">market://details?id=%1$s</string>
     <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
+    <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
 
     <string name="security_and_privacy_title">Security and privacy</string>
     <string name="security_and_privacy_copy">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>

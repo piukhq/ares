@@ -124,6 +124,14 @@ class SettingsFragment :
                         )
                 findNavController().navigateIfAdded(this, directions)
             }
+            SettingsItemType.TERMS_AND_CONDITIONS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.ts_and_cs_url))
+                    )
+                )
+
 
             else -> {
                 // if not handled, we do nothing, i.e. headers, info rows
