@@ -111,11 +111,14 @@ class SettingsFragment :
             val data = MutableLiveData<LoginData>()
             data.value = LoginData(DEFAULT_LOGIN_ID, email)
             viewModel.storeLoginData(email)
-            viewModel.loginData.observe(this, Observer {
-                if (viewModel.loginData.value!!.email.equals(email)) {
-                    restartApp()
+            viewModel.loginData.observeNonNull(this) {
+                viewModel.loginData.value.let {
+                    if (it != null &&
+                        it.email.equals(email)) {
+                        restartApp()
+                    }
                 }
-            })
+            }
         }
         dialog.show()
     }
