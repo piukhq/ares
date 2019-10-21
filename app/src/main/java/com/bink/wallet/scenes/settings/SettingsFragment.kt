@@ -20,6 +20,9 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.content.Intent
 import android.net.Uri
+import androidx.navigation.fragment.findNavController
+import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.utils.navigateIfAdded
 
 
 class SettingsFragment :
@@ -102,6 +105,17 @@ class SettingsFragment :
                         )
                     )
                 }
+            }
+            SettingsItemType.HOW_IT_WORKS -> {
+                val directions =
+                    SettingsFragmentDirections.settingsToHowItWorks(
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.how_it_works_title),
+                            getString(R.string.how_it_works_copy)
+                        )
+                    )
+                findNavController().navigateIfAdded(this, directions)
             }
 
             else -> {

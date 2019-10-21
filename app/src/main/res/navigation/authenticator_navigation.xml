@@ -490,7 +490,17 @@
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
-            android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
+            android:name="com.bink.wallet.scenes.settings.SettingsFragment">
+        <action
+                android:id="@+id/settings_to_how_it_works"
+                app:destination="@+id/how_it_works"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+
+    </fragment>
     <fragment
             android:id="@+id/about_fragment"
             android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">
@@ -502,6 +512,14 @@
     <fragment
             android:id="@+id/security_and_privacy"
             android:name="com.bink.wallet.modal.loyalty_card_details.SecurityAndPrivacyFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/how_it_works"
+            android:name="com.bink.wallet.modal.settings.HowItWorksFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
