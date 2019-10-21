@@ -280,4 +280,8 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
+
+    <!-- Native Ghost Card Registration N/A -->
+    <string name="title_ghost_card_not_available">Native join unavailable</string>
+    <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
 </resources>

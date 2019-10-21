@@ -1,7 +1,4 @@
-AB20-90  Add payment card
-AB20-176 LCD loyalty card image display update, fix scrolling issue & scaling of logo
-AB20-142 Missing loyalty cards, code refactor
-AB20-92  Payment card details screen
+AB20-92 Payment card details screen
 AB20-135 Linked payments cards
 AB20-133 Created payment cards wallet
 AB20-194 Enabled I don't have an account button
@@ -49,3 +46,4 @@ AB20-238-Add/Join Screen views are not displayed correctly
 AB20-203 Settings screen population
 AB20-193 Enable click for Rate this app
 AB20-190 FAQs link active
+AB20-78 Native Ghost Card Registration Not Available

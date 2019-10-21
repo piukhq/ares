@@ -219,7 +219,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                //TODO goto native ghost registration unavailable
+                val action = SignUpFragmentDirections.signUpToGhostRegistrationUnavailable(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        getString(R.string.title_ghost_card_not_available),
+                        getString(R.string.description_ghost_card_not_available)
+                    )
+                )
+                findNavController().navigateIfAdded(this, action)
             }
         }
 
