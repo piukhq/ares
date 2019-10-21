@@ -4,6 +4,7 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.scenes.login.LoginResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.ResponseBody
@@ -23,6 +24,9 @@ interface ApiService {
 
     @GET("/ubiquity/payment_cards")
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
+
+    @POST("/ubiquity/payment_cards")
+    fun addPaymentCardAsync(@Body cardAdd: PaymentCardAdd): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
     fun linkToPaymentCardAsync(

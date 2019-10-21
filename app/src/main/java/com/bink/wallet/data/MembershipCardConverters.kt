@@ -2,7 +2,6 @@ package com.bink.wallet.data
 
 import androidx.room.TypeConverter
 import com.bink.wallet.model.response.membership_card.*
-import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

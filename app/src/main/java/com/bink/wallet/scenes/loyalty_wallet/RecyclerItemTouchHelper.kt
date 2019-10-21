@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletAdapter
+import androidx.recyclerview.widget.RecyclerView
 
 
 class RecyclerItemTouchHelper(

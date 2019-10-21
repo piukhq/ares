@@ -29,7 +29,6 @@ object SharedPreferenceManager {
 
     var isAddJourney: Boolean
         get() = preferences.getBoolean(IS_ADD_JOURNEY.first, IS_ADD_JOURNEY.second)
-
         set(value) = preferences.edit {
             it.putBoolean(IS_ADD_JOURNEY.first, value)
         }

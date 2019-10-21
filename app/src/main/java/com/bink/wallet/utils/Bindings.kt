@@ -38,7 +38,7 @@ fun ImageView.loadImage(item: MembershipPlan?) {
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
-                .load(item?.images?.first { it.type == ImageType.ICON.type }?.url)
+                .load(getIconTypeFromPlan(item))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
@@ -47,13 +47,16 @@ fun ImageView.loadImage(item: MembershipPlan?) {
     }
 }
 
+fun getIconTypeFromPlan(item: MembershipPlan?) =
+    item?.images?.first { it.type == ImageType.ICON.type }?.url
+
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(item: MembershipCard) {
-    if (!item.images.isNullOrEmpty()) {
+fun ImageView.loadImage(item: MembershipCard?) {
+    if (!item?.images.isNullOrEmpty()) {
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
-                .load(item.images?.first { it.type == ImageType.ICON.type }?.url)
+                .load(getIconTypeFromCard(item))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
@@ -61,6 +64,9 @@ fun ImageView.loadImage(item: MembershipCard) {
         }
     }
 }
+
+fun getIconTypeFromCard(item: MembershipCard?) =
+    item?.images?.first { it.type == ImageType.ICON.type }?.url
 
 @BindingAdapter("image")
 fun ImageView.setPaymentCardImage(item: PaymentCard) {
@@ -136,7 +142,9 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     } else {
         binding.image.setBackgroundColor(Color.GREEN)
     }
-    binding.tapCard.setVisible(card?.card?.barcode != null)
+    if (card?.card?.barcode == null) {
+        binding.tapCard.text = binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    }
 }
 
 @BindingAdapter("textBalance")

@@ -1,6 +1,9 @@
 package com.bink.wallet.data
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.bink.wallet.model.response.membership_card.MembershipCard
 
 
