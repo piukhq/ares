@@ -13,6 +13,7 @@
     <string name="cancel_text_upper">CANCEL</string>
     <string name="cancel_text">Cancel</string>
     <string name="root">root</string>
+    <string name="add">Add</string>
 
 
     <!-- Barcode Screen -->
@@ -243,5 +244,19 @@
     <string name="card_suggestion_description">You can link this card</string>
     <string name="add_card_text">Add card</string>
     <string name="card_error_dialog">The card couldn\'t be deleted</string>
+    <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
     <string name="default_card_second_color">#888888</string>
+
+    <!-- Payment Card entry -->
+    <string name="empty_string" />
+    <string name="card_number">Card number</string>
+    <string name="name_on_card">Name on card</string>
+    <string name="expiry">Expiry</string>
+    <string name="incorrect_card_error">Please enter a valid card number</string>
+    <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
+    <string name="incorrect_card_name">Please enter the name on the card</string>
+    <string name="privacy_and_security"><u>Privacy and security</u></string>
+    <string name="more_information"><u>More information</u></string>
+    <string name="country_code_gb">GB</string>
+    <string name="currency_code_gbp">GBP</string>
 </resources>

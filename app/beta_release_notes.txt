@@ -1,5 +1,7 @@
+AB20-90  Add payment card
 AB20-142 Missing loyalty cards, code refactor
-AB20-92 Payment card details screen
+AB20-92  Payment card details screen
+AB20-92  Payment card details screen
 AB20-135 Linked payments cards
 AB20-133 Created payment cards wallet
 AB20-194 Enabled I don't have an account button
@@ -15,8 +17,8 @@ AB20-178 PLL empty layout issue
 AB20-174 brand header not visible when no data
 AB20-89  add payment card enabled
 AB20-176 LCD loyalty card image display update
-AB20-77 Native-Join-Sign-Up-Unavailable
-AB20-34 PLL
+AB20-77  Native-Join-Sign-Up-Unavailable
+AB20-34  PLL
 AB20-183 LCD Error Message Not Displayed
 AB20-167 Bink Beta Release Crashes
 AB20-207 Barcode Screen Showing Incorrect Info

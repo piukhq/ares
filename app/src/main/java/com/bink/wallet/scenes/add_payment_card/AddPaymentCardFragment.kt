@@ -1,17 +1,38 @@
 package com.bink.wallet.scenes.add_payment_card
 
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.widget.EditText
+import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
+import com.bink.wallet.utils.enums.PaymentCardType
+import com.bink.wallet.model.response.payment_card.Account
+import com.bink.wallet.model.response.payment_card.BankCard
+import com.bink.wallet.model.response.payment_card.Consent
+import com.bink.wallet.model.response.payment_card.PaymentCardAdd
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPaymentCardFragment :
     BaseFragment<AddPaymentCardViewModel, AddPaymentCardFragmentBinding>() {
 
+    val DEFAULT_CONSENT_TYPE = 0
+    val DEFAULT_LATITUDE = 0.0f
+    val DEFAULT_LONGITUDE = 0.0f
+    val YEAR_BASE_ADDITION = 2000
+    val DEFAULT_ACCOUNT_STATUS = 0
+    val DIVISOR_MILLISECONDS = 1000
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .withId(FragmentToolbar.NO_TOOLBAR)
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -19,4 +40,189 @@ class AddPaymentCardFragment :
 
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        cardSwitcher(getString(R.string.empty_string))
+        cardInfoDisplay()
+
+        // pre-load the cards on screen open, so we have them ready after card is added
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalMembershipPlans()
+
+        val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                currentText: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+                cardSwitcher(currentText.toString())
+                cardInfoDisplay()
+                updateEnteredCardNumber()
+            }
+        }
+        with (binding.cardNumber) {
+            addTextChangedListener(textWatcher)
+            setOnFocusChangeListener { _, focus ->
+                if (!focus) {
+                    binding.cardNumberInputLayout.error =
+                        if (text.toString().cardValidation() == PaymentCardType.NONE) {
+                            getString(R.string.incorrect_card_error)
+                        } else {
+                            ""
+                        }
+                }
+            }
+        }
+
+        binding.cardExpiry.setOnFocusChangeListener { view, focus ->
+            if (!focus) {
+                binding.cardExpiryInputLayout.error = cardExpiryErrorCheck(view)
+            }
+        }
+        binding.cardName.setOnFocusChangeListener { view, focus ->
+            if (!focus) {
+                binding.cardNameInputLayout.error =
+                    if (binding.cardName.text.toString().isEmpty()) {
+                        getString(R.string.incorrect_card_name)
+                    } else {
+                        ""
+                    }
+            }
+        }
+
+        binding.addButton.setOnClickListener {
+            if (binding.cardNumberInputLayout.error.isNullOrEmpty() &&
+                binding.cardExpiryInputLayout.error.isNullOrBlank() &&
+                !binding.cardName.text.isNullOrEmpty()) {
+
+                val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                val cardExp = binding.cardExpiry.text.toString().split("/")
+
+                // TODO add in location request and get lat & long from the SDK
+                // TODO don't forget to add in features to change country & currency later
+                viewModel.sendAddCard(
+                    PaymentCardAdd(
+                        BankCard(
+                            cardNo.substring(0, 6),
+                            cardNo.substring(cardNo.length - 4),
+                            cardExp[0].toInt(),
+                            cardExp[1].toInt() + YEAR_BASE_ADDITION,
+                            getString(R.string.country_code_gb),
+                            getString(R.string.currency_code_gbp),
+                            binding.cardName.text.toString(),
+                            cardNo.cardValidation().type,
+                            cardNo.cardValidation().type,
+                            BankCard.tokenGenerator(),
+                            BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                        ),
+                        Account(
+                            false,
+                            DEFAULT_ACCOUNT_STATUS,
+                            listOf(
+                                Consent(
+                                    DEFAULT_CONSENT_TYPE,
+                                    DEFAULT_LATITUDE,
+                                    DEFAULT_LONGITUDE,
+                                    System.currentTimeMillis() / DIVISOR_MILLISECONDS
+                                )
+                            )
+                        )
+                    )
+                )
+            }
+        }
+
+        viewModel.paymentCard.observeNonNull(this) {
+            val action =
+                AddPaymentCardFragmentDirections.addPaymentToDetails(
+                    it,
+                    viewModel.localMembershipPlanData.value!!.toTypedArray(),
+                    viewModel.localMembershipCardData.value!!.toTypedArray()
+                )
+            findNavController().navigateIfAdded(
+                this@AddPaymentCardFragment,
+                action
+            )
+        }
+        viewModel.error.observeNonNull(this) {
+            if (viewModel.error.value != null) {
+                requireContext().displayModalPopup(
+                    getString(R.string.add_card_error_title),
+                    getString(R.string.add_card_error_message) + "\n" + viewModel.error.value!!.message
+                )
+            }
+        }
+    }
+
+    fun cardExpiryErrorCheck(view: View): String {
+        with ((view as EditText).text.toString()) {
+            if (!dateValidation()) {
+                return getString(R.string.incorrect_card_expiry)
+            } else {
+                binding.cardExpiry.setText(formatDate())
+            }
+        }
+        return ""
+    }
+
+    fun cardSwitcher(card: String) {
+        with (card.presentedCardType()) {
+            binding.topLayout.background = ContextCompat.getDrawable(
+                requireContext(),
+                background
+            )
+            binding.topLayoutBrand.setImageResource(logo)
+            binding.bottomLayoutBrand.setImageResource(subLogo)
+        }
+    }
+
+    fun cardInfoDisplay() {
+        binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
+        binding.displayCardName.text = binding.cardName.text
+    }
+
+    /***
+     * This function is frustrating as hell for the logic... if the user is entering and it adds
+     * a space every few, and the cursor has to be moved to the end, but if the user is editing
+     * and it has to re-format the number, then the cursor stays in the same place it was!
+     * Remember that the spacing can move between a Visa/MC & AmEx, especially if the user
+     * decides to add a "3" before the start of a previously Visa number... so the number could
+     * go from "4242 4242 4242" to "3424 242424 242", and that causes a bit of insanity on
+     * cursor locations!
+     */
+    fun updateEnteredCardNumber() {
+        with (binding.cardNumber) {
+            val origNumber = text.toString()
+            val newNumber = origNumber.cardFormatter()
+            if (origNumber.isNotEmpty() &&
+                newNumber.isNotEmpty() &&
+                origNumber != newNumber
+            ) {
+                val pos = selectionStart
+                setText(newNumber)
+                if (newNumber.length > origNumber.length &&
+                    pos == origNumber.length
+                ) {
+                    setSelection(newNumber.length)
+                } else if (newNumber.length < origNumber.length &&
+                    pos > newNumber.length
+                ) {
+                    setSelection(newNumber.length)
+                }
+            }
+        }
+    }
 }

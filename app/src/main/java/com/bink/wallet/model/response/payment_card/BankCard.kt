@@ -1,6 +1,8 @@
 package com.bink.wallet.model.response.payment_card
 
 import android.os.Parcelable
+import com.bink.wallet.utils.StringUtils
+import com.bink.wallet.utils.md5
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
@@ -15,5 +17,22 @@ data class BankCard(
     val currency_code: String?,
     val name_on_card: String?,
     val provider: String?,
-    val type: String?
-) : Parcelable
+    val type: String?,
+    val token: String?,
+    val fingerprint: String?
+) : Parcelable {
+
+    companion object {
+        const val TOKEN_LENGTH = 100
+
+        fun tokenGenerator(): String {
+            return StringUtils.randomString(TOKEN_LENGTH)
+        }
+
+        fun fingerprintGenerator(pan: String, expiryYear: String, expiryMonth: String): String {
+            // Based a hash of the pan, it's the key identifier of the card
+            return "$pan|$expiryMonth|$expiryYear".md5()
+        }
+    }
+
+}
