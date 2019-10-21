@@ -43,3 +43,4 @@ AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
 AB20-226-Register Ghost Card-Incorrect text on title and button
 AB20-224-Enable I Don't Have An Account
+AB20-238-Add/Join Screen views are not displayed correctly
