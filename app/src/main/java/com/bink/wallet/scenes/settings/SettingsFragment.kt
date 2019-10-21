@@ -103,7 +103,8 @@ class SettingsFragment :
             viewModel.storeLoginData(email)
             viewModel.loginData.observeNonNull(this) {
                 viewModel.loginData.value.let {
-                    if (it != null && it.email.equals(email)) {
+                    if (it != null &&
+                        it.email.equals(email)) {
                         restartApp()
                     }
                 }
