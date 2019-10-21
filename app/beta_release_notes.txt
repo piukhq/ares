@@ -48,4 +48,5 @@ AB20-224-Enable I Don't Have An Account
 AB20-238-Add/Join Screen views are not displayed correctly
 AB20-203 Settings screen population
 AB20-193 Enable click for Rate this app
+AB20-190 FAQs link active
 AB20-197 Security & privacy from Settings page

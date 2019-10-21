@@ -106,6 +106,13 @@ class SettingsFragment :
                     )
                 }
             }
+            SettingsItemType.FAQS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.faq_url))
+                    )
+                )
             SettingsItemType.SECURITY_AND_PRIVACY -> {
                 val directions =
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
