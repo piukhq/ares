@@ -14,10 +14,13 @@
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
     <dimen name="loyalty_value_margin_end">18dp</dimen>
-    <dimen name="card_login_width">88dp</dimen>
-    <dimen name="card_login_height">@dimen/margin_padding_size_large</dimen>
+    <dimen name="card_login_width">80dp</dimen>
+    <dimen name="card_login_height">28dp</dimen>
     <dimen name="card_login_margin_end">12dp</dimen>
     <dimen name="link_status_wrapper_margin_end">18dp</dimen>
+    <dimen name="delete_icon_size">30dp</dimen>
+    <dimen name="delete_icon_padding">7dp</dimen>
+    <dimen name="card_item_linear_layout_margin">10dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -83,4 +86,10 @@
     <!--T&C Screen -->
     <dimen name="bottom_layout_height">160dp</dimen>
     <dimen name="horizontal_button_padding">100dp</dimen>
+
+    <!-- PCD Screen -->
+    <dimen name="payment_card_height">120dp</dimen>
+    <dimen name="payment_card_logo_image_margin">20dp</dimen>
+    <dimen name="payment_card_number_top_margin">54dp</dimen>
+    <dimen name="payment_card_spacing_margin">17dp</dimen>
 </resources>

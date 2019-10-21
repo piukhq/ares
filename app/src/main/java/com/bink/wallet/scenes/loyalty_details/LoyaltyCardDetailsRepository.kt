@@ -12,9 +12,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LoyaltyCardDetailsRepository(private val apiService: ApiService, private val membershipCardDao: MembershipCardDao ) {
+class LoyaltyCardDetailsRepository(
+    private val apiService: ApiService,
+    private val membershipCardDao: MembershipCardDao
+) {
 
-    suspend fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>, error: MutableLiveData<String>) {
+    suspend fun deleteMembershipCard(
+        id: String?,
+        mutableDeleteCard: MutableLiveData<String>,
+        error: MutableLiveData<String>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
@@ -30,7 +37,10 @@ class LoyaltyCardDetailsRepository(private val apiService: ApiService, private v
         }
     }
 
-    suspend fun refreshMembershipCard(cardId: String, membershipCard: MutableLiveData<MembershipCard>) {
+    suspend fun refreshMembershipCard(
+        cardId: String,
+        membershipCard: MutableLiveData<MembershipCard>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipCardsAsync()
             withContext(Dispatchers.Main) {

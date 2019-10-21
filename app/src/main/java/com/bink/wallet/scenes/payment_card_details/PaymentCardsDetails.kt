@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,31 +22,10 @@ class PaymentCardsDetails :
             .build()
     }
 
-    private val changedCards = HashMap<String, Boolean>()
-
     override val viewModel: PaymentCardsDetailsViewModel by viewModel()
 
     override val layoutRes: Int
         get() = R.layout.payment_cards_details_fragment
-
-    override fun onPause() {
-        for (currentCard in changedCards) {
-            runBlocking {
-                if (currentCard.value) {
-                    viewModel.linkPaymentCard(
-                        currentCard.key,
-                        viewModel.paymentCard.value?.id.toString()
-                    )
-                } else {
-                    viewModel.unlinkPaymentCard(
-                        viewModel.paymentCard.value?.id.toString(),
-                        currentCard.key
-                    )
-                }
-            }
-        }
-        super.onPause()
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -54,6 +34,8 @@ class PaymentCardsDetails :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
+
+        val securityDialog = SecurityDialogs(requireContext())
 
         arguments?.let {
             val currentBundle = PaymentCardsDetailsArgs.fromBundle(it)
@@ -66,9 +48,7 @@ class PaymentCardsDetails :
         binding.paymentCardDetail = viewModel.paymentCard.value
 
         binding.footerSecurity.setOnClickListener {
-            binding.footerSecurity.setOnClickListener {
-                SecurityDialog().openDialog(requireContext(), layoutInflater)
-            }
+            securityDialog.openDialog(layoutInflater)
         }
 
         binding.footerDelete.setOnClickListener {
@@ -93,12 +73,27 @@ class PaymentCardsDetails :
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 binding.linkedCardsList.apply {
                     layoutManager = GridLayoutManager(context, 1)
-                    adapter = LinkedCardsAdapter(
-                        cards,
-                        plans,
-                        viewModel.paymentCard.value?.membership_cards!!,
-                        changedCards
-                    )
+
+                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
+                        adapter = LinkedCardsAdapter(
+                            cards,
+                            plans,
+                            viewModel.paymentCard.value?.membership_cards!!,
+                            onLinkStatusChange = { onLinkStatusChange(it) }
+                        )
+                    } else {
+                        adapter = SuggestedCardsAdapter(
+                            plans.filter { it.getCardType() == CardType.PLL },
+                            itemClickListener = {
+                                val directions =
+                                    PaymentCardsDetailsDirections.paymentDetailsToAddJoin(it)
+                                findNavController().navigateIfAdded(
+                                    this@PaymentCardsDetails,
+                                    directions
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -112,6 +107,22 @@ class PaymentCardsDetails :
                 "",
                 getString(R.string.card_error_dialog)
             )
+        }
+    }
+
+    private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
+        runBlocking {
+            if (currentItem.first != null && currentItem.second) {
+                viewModel.linkPaymentCard(
+                    currentItem.first!!,
+                    viewModel.paymentCard.value?.id.toString()
+                )
+            } else {
+                viewModel.unlinkPaymentCard(
+                    currentItem.first!!,
+                    viewModel.paymentCard.value?.id.toString()
+                )
+            }
         }
     }
 

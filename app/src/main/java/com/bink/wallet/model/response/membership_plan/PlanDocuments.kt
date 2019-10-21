@@ -6,10 +6,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class PlanDocuments (
-	val name : String?,
-	val description : String?,
-	val url : String?,
-	val display : List<String>?,
-	val checkbox : Boolean?
+data class PlanDocuments(
+    val name: String?,
+    val description: String?,
+    val url: String?,
+    val display: List<String>?,
+    val checkbox: Boolean?
 ) : Parcelable

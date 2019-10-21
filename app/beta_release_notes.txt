@@ -14,8 +14,8 @@ AB20-178 PLL empty layout issue
 AB20-174 brand header not visible when no data
 AB20-89  add payment card enabled
 AB20-176 LCD loyalty card image display update
-AB20-77 Native-Join-Sign-Up-Unavailable
-AB20-34 PLL
+AB20-77  Native-Join-Sign-Up-Unavailable
+AB20-34  PLL
 AB20-183 LCD Error Message Not Displayed
 AB20-167 Bink Beta Release Crashes
 AB20-207 Barcode Screen Showing Incorrect Info
@@ -26,4 +26,24 @@ AB20-212 Tapping on Back Button on Home Wallet refreshes the app
 AB20-188 Transactions unavailable screen wording changes
 AB20-214 PLL - The user is redirected to PLL Empty after adding a PLL card
 AB20-215 PLL - The user is redirected to details screen after adding a non PLL card
+AB20-162 loyalty card specification
+AB20-177-LCD when no barcode available
+AB20-175-Change maximize barcode to display barcode number
+AB20-187-LCD Loyalty Card wording changes
+AB20-218-Unlinking all cards doesn't correctly update the Linking Module
+AB20-219-Add/Join Screen displays Link Status Incorrectly
+AB20-103-Nav bar on Add/Join screen does not appear
+AB20-166-Decisioning Change Sign Up Screen
+AB20-177-LCD when no barcode available
+AB20-175-Change maximize barcode to display barcode number
+AB20-187-LCD Loyalty Card wording changes
+AB20-218-Unlinking all cards doesn't correctly update the Linking Module
+AB20-219-Add/Join Screen displays Link Status Incorrectly
+AB20-103-Nav bar on Add/Join screen does not appear
+AB20-226-Register Ghost Card-Incorrect text on title and button
+AB20-224-Enable I Don't Have An Account
+AB20-238-Add/Join Screen views are not displayed correctly
+AB20-203 Settings screen population
+AB20-193 Enable click for Rate this app
+AB20-190 FAQs link active
 AB20-78 Native Ghost Card Registration Not Available

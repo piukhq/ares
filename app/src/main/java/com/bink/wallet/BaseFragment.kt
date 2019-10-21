@@ -26,7 +26,11 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
 
     open lateinit var binding: DB
 
-    open val windowFullscreenHandler: WindowFullscreenHandler by inject { parametersOf(requireActivity())}
+    open val windowFullscreenHandler: WindowFullscreenHandler by inject {
+        parametersOf(
+            requireActivity()
+        )
+    }
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
@@ -45,7 +49,6 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
         init()
         return binding.root
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

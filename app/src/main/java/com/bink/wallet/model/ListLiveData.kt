@@ -3,7 +3,7 @@ package com.bink.wallet.model
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 
-class ListLiveData<T>: MutableLiveData<ListHolder<T>>() {
+class ListLiveData<T> : MutableLiveData<ListHolder<T>>() {
     val size: Int
         get() = value?.size() ?: -1
 
@@ -63,17 +63,20 @@ data class ListHolder<T>(val list: MutableList<T> = mutableListOf()) {
         INSERT {
             override fun notifyChange(
                 adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-                indexChanged: Int) = adapter.notifyItemInserted(indexChanged)
+                indexChanged: Int
+            ) = adapter.notifyItemInserted(indexChanged)
         },
         REMOVE {
             override fun notifyChange(
                 adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-                indexChanged: Int) = adapter.notifyItemRemoved(indexChanged)
+                indexChanged: Int
+            ) = adapter.notifyItemRemoved(indexChanged)
         },
         CHANGE {
             override fun notifyChange(
                 adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-                indexChanged: Int) = adapter.notifyItemChanged(indexChanged)
+                indexChanged: Int
+            ) = adapter.notifyItemChanged(indexChanged)
         };
 
         abstract fun notifyChange(

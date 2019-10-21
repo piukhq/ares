@@ -13,10 +13,11 @@
     <string name="cancel_text_upper">CANCEL</string>
     <string name="cancel_text">Cancel</string>
     <string name="root">root</string>
+    <string name="add">Add</string>
 
 
     <!-- Barcode Screen -->
-    <string name="barcode_maximize">Maximize barcode</string>
+    <string name="barcode_maximize">Maximise barcode</string>
     <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind some scanners cannot read from screens.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
@@ -67,14 +68,17 @@
     <string name="status_placeholder">Linked</string>
     <string name="status_number_placeholder">To 2 of 6 cards</string>
     <string name="about_membership">About membership</string>
+    <string name="about_membership_plan_name">About %1$s</string>
     <string name="about_membership_plan">About %1$s</string>
     <string name="learn_more">Learn more about how it works</string>
     <string name="chevron">&gt;</string>
     <string name="security_privacy">Security and privacy</string>
     <string name="how_we_protect">How we protect your data</string>
     <string name="delete_card">Delete this card</string>
+    <string name="delete_card_plan">Delete %1$s</string>
     <string name="remove_card">Remove this card from Bink</string>
     <string name="tap_card">Tap card to show barcode</string>
+    <string name="tap_card_to_show_card_number">Tap to show card number</string>
     <string name="security_modal_title">Is my Data Secure?</string>
     <string name="security_modal_body_1">We take security very seriously and keeping your personal details safe is very important to us.\n</string>
     <string name="security_modal_body_2">We are a PCI certified service provider which means that we meet the highest level of security standards set by the payment card industry. This certification requires us to employ a wide range of measures designed to protect the security of your information. We recommend that you secure your app with Touch ID and/or a passcode for an extra layer of security.\n</string>
@@ -82,6 +86,7 @@
     <string name="hyperlink_text">here</string>
     <string name="security_modal_body">%1$s%2$s</string>
     <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
+    <string name="no_plan_description_available">No plan description available</string>
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s%2$s</string>
     <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
@@ -191,6 +196,8 @@
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
     <string name="transactions_suffix">%1$s%2$s %3$s</string>
     <string name="sign_up_enrol">Sign up for a new card</string>
+    <string name="register_ghost_card_title">Register your card</string>
+    <string name="register_ghost_card_button">Register card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
 
@@ -210,6 +217,24 @@
     <string name="popular_text">Popular</string>
     <string name="debug_menu">Debug menu</string>
     <string name="tools">Tools</string>
+    <string name="settings">Settings</string>
+    <string name="settings_menu_account">Account</string>
+    <string name="settings_menu_log_out">Log out</string>
+    <string name="settings_menu_support_and_feedback">Support and feedback</string>
+    <string name="settings_menu_faqs">FAQs</string>
+    <string name="settings_menu_faqs_subtitle">Frequently asked questions</string>
+    <string name="settings_menu_contact_us">Contact us</string>
+    <string name="settings_menu_contact_us_subtitle">Get in touch with Bink</string>
+    <string name="settings_menu_rate_this_app">Rate this app</string>
+    <string name="settings_menu_about">About</string>
+    <string name="settings_menu_security_and_privacy">Security and privacy</string>
+    <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
+    <string name="settings_menu_how_it_works">How it works</string>
+    <string name="settings_menu_how_it_works_subtitle">Find out more about Bink</string>
+    <string name="settings_menu_legal">Legal</string>
+    <string name="settings_menu_privacy_policy">Privacy policy</string>
+    <string name="settings_menu_terms_and_conditions">Terms and conditions</string>
+    <string name="settings_menu_debug">Debug menu</string>
     <string name="current_version">Current version</string>
     <string name="version_name_format">%s build %d</string>
     <string name="environment_base_url">Environment Base URL</string>
@@ -217,6 +242,9 @@
     <string name="edit_email_address">Edit Email Address</string>
     <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
     <string name="please_enter_valid_email">Please enter a valid email address</string>
+    <string name="play_store_market_url">market://details?id=%1$s</string>
+    <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Native join unavailable</string>
@@ -225,7 +253,7 @@
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
 
-    <!--    Payment card wallet-->
+    <!-- Payment card wallet-->
     <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
     <string name="payment_card_not_linked">Not linked</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
@@ -234,7 +262,24 @@
     <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
     <string name="rename_card">Rename this card</string>
     <string name="rename_card_description">Change this card\'s \"nickname\"</string>
+    <string name="card_suggestion_description">You can link this card</string>
+    <string name="add_card_text">Add card</string>
     <string name="card_error_dialog">The card couldn\'t be deleted</string>
+    <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
+    <string name="default_card_second_color">#888888</string>
+
+    <!-- Payment Card entry -->
+    <string name="empty_string" />
+    <string name="card_number">Card number</string>
+    <string name="name_on_card">Name on card</string>
+    <string name="expiry">Expiry</string>
+    <string name="incorrect_card_error">Please enter a valid card number</string>
+    <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
+    <string name="incorrect_card_name">Please enter the name on the card</string>
+    <string name="privacy_and_security"><u>Privacy and security</u></string>
+    <string name="more_information"><u>More information</u></string>
+    <string name="country_code_gb">GB</string>
+    <string name="currency_code_gbp">GBP</string>
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>

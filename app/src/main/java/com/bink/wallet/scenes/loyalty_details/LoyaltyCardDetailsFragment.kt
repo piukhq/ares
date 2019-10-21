@@ -1,10 +1,12 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -33,6 +35,11 @@ class LoyaltyCardDetailsFragment :
             .build()
     }
 
+    companion object {
+        const val MAX_ALPHA = 127f
+        const val MIN_ALPHA = 0f
+    }
+
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
@@ -49,6 +56,10 @@ class LoyaltyCardDetailsFragment :
         runBlocking {
             viewModel.fetchPaymentCards()
         }
+
+        val cd = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
+        cd.alpha = MIN_ALPHA.toInt()
+        binding.toolbar.background = cd
 
         viewModel.paymentCards.observeNonNull(this) {
             viewModel.setLinkStatus()
@@ -79,27 +90,58 @@ class LoyaltyCardDetailsFragment :
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context)
 
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
+        if (viewModel.membershipPlan.value?.account?.plan_name != null) {
+            binding.footerDelete.binding.title.text =
+                getString(
+                    R.string.delete_card_plan,
+                    viewModel.membershipPlan.value?.account?.plan_name
+                )
+        }
+
+        val aboutTitle =
+            if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+                getString(R.string.about_membership)
+            } else
+                getString(
+                    R.string.about_membership_plan_name,
+                    viewModel.membershipPlan.value?.account!!.plan_name!!
+                )
+
+        binding.footerAbout.binding.title.text = aboutTitle
+
         binding.footerAbout.setOnClickListener {
+            val aboutText =
+                if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+                    getString(R.string.about_membership)
+                } else
+                    viewModel.membershipPlan.value?.account!!.plan_name!!
+            val description =
+                if (viewModel.membershipPlan.value?.account?.plan_description.isNullOrEmpty()) {
+                    getString(R.string.no_plan_description_available)
+                } else
+                    viewModel.membershipPlan.value?.account?.plan_description
             val directions =
-                viewModel.membershipPlan.value?.account?.plan_description?.let { description ->
+                description?.let { _ ->
                     GenericModalParameters(
                         R.drawable.ic_close,
-                        getString(R.string.about_membership_plan, viewModel.membershipPlan.value?.account!!.plan_name),
-                        description, getString(R.string.ok)
-                    )
-                }?.let { arguments ->
-                    LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                        arguments
-                    )
+                        aboutText,
+                        description,
+                        getString(R.string.ok)
+                    ).let { arguments ->
+                        LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                            arguments
+                        )
+                    }
                 }
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
-        if (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+        if (viewModel.membershipCard.value?.card != null &&
+            !viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
@@ -133,7 +175,8 @@ class LoyaltyCardDetailsFragment :
         }
 
         viewModel.linkStatus.observeNonNull(this) { status ->
-            if (viewModel.accountStatus.value != null && viewModel.paymentCards.value != null) {
+            if (viewModel.accountStatus.value != null &&
+                viewModel.paymentCards.value != null) {
                 setLoadingState(false)
             } else {
                 runBlocking {
@@ -141,6 +184,14 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             configureLinkStatus(status)
+        }
+
+        binding.scrollView.setOnScrollChangeListener {
+                v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+            cd.alpha = v?.scrollY?.let {
+                getAlphaForActionBar(it)
+            }!!
+
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -254,7 +305,7 @@ class LoyaltyCardDetailsFragment :
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                 val balance = viewModel.membershipCard.value?.balances?.first()
-                if(balance != null) {
+                if (balance != null) {
                     setBalanceText(balance)
                 } else {
                     binding.pointsText.text = getString(R.string.points_signing_up)
@@ -474,6 +525,16 @@ class LoyaltyCardDetailsFragment :
                 else -> {
                 }
             }
+        }
+    }
+
+    private fun getAlphaForActionBar(scrollY: Int): Int {
+        val minDist = 0
+        val maxDist = 650
+        return when {
+            scrollY > maxDist -> MAX_ALPHA.toInt()
+            scrollY < minDist -> MIN_ALPHA.toInt()
+            else -> (MAX_ALPHA / maxDist * scrollY).toInt()
         }
     }
 }
