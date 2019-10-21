@@ -85,6 +85,24 @@ class SettingsFragment :
         when (item.type) {
             SettingsItemType.EMAIL_ADDRESS ->
                 emailDialogOpen()
+            SettingsItemType.RATE_APP -> {
+                val appPackageName = requireContext().packageName
+                try {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.play_store_market_url, appPackageName))
+                        )
+                    )
+                } catch (_: android.content.ActivityNotFoundException) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getString(R.string.play_store_browser_url, appPackageName))
+                        )
+                    )
+                }
+            }
             SettingsItemType.FAQS ->
                 startActivity(
                     Intent(
