@@ -245,6 +245,14 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/sign_up_to_ghost_registration_unavailable"
+                app:destination="@+id/ghost_registration_unavailable"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -497,7 +505,17 @@
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
-            android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
+            android:name="com.bink.wallet.scenes.settings.SettingsFragment">
+        <action
+                android:id="@+id/settings_to_security_and_privacy"
+                app:destination="@+id/security_and_privacy_settings"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+
+    </fragment>
     <fragment
             android:id="@+id/about_fragment"
             android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">
@@ -509,6 +527,14 @@
     <fragment
             android:id="@+id/security_and_privacy"
             android:name="com.bink.wallet.modal.loyalty_card_details.SecurityAndPrivacyFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/security_and_privacy_settings"
+            android:name="com.bink.wallet.modal.settings.SecurityAndPrivacySettingsFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -532,6 +558,14 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/ghost_registration_unavailable"
+            android:name="com.bink.wallet.modal.GhostRegistrationUnavailableFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
     </fragment>
 
 </navigation>

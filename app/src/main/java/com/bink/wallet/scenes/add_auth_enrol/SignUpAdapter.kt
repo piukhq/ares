@@ -76,6 +76,10 @@ class SignUpAdapter(
         return brands.size
     }
 
+    fun isLastItem(adapterPosition: Int): Int {
+        return if (adapterPosition == brands.size - 1) View.GONE else View.VISIBLE
+    }
+
     inner class TextFieldHolder(val binding: AddAuthTextItemBinding) :
         BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
 
@@ -123,6 +127,7 @@ class SignUpAdapter(
                         }
                 }
             }
+            binding.separator.visibility = isLastItem(adapterPosition)
 
             binding.executePendingBindings()
         }
@@ -156,6 +161,7 @@ class SignUpAdapter(
                 isFocusable = false
                 onItemSelectedListener = itemSelectedListener
             }
+            binding.separator.visibility = isLastItem(adapterPosition)
 
             binding.executePendingBindings()
         }
