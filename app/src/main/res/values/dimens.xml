@@ -86,4 +86,10 @@
     <!--T&C Screen -->
     <dimen name="bottom_layout_height">160dp</dimen>
     <dimen name="horizontal_button_padding">100dp</dimen>
+
+    <!-- PCD Screen -->
+    <dimen name="payment_card_height">120dp</dimen>
+    <dimen name="payment_card_logo_image_margin">20dp</dimen>
+    <dimen name="payment_card_number_top_margin">54dp</dimen>
+    <dimen name="payment_card_spacing_margin">17dp</dimen>
 </resources>

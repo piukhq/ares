@@ -31,3 +31,6 @@ const val JWT_PAYLOAD_TYPE_TIME          = "iat"
 const val HMAC_TYPE = "HmacSHA512"
 
 val ENVIRONMENTS_TO_DEBUG = listOf("debug", "beta", "mr", "nightly")
+
+const val EMPTY_STRING = ""
+const val SPACE = " "

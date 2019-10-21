@@ -11,6 +11,9 @@ interface PaymentCardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun storeAll(plans: List<PaymentCard>?)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun store(cards: PaymentCard)
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePaymentCard(paymentCard: PaymentCard)
 

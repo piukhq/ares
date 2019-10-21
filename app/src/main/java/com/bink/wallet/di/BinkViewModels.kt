@@ -11,6 +11,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.SignUpViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
+import com.bink.wallet.scenes.add_payment_card.PaymentCardRepository
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.login.LoginRepository
@@ -62,7 +63,8 @@ val viewModelModules = module {
     single { provideTermsAndConditionsRepository(get()) }
     viewModel { TermsAndConditionsViewModel(get()) }
 
-    viewModel { AddPaymentCardViewModel() }
+    single { providePaymentCardRepository(get(), get(), get(), get()) }
+    viewModel { AddPaymentCardViewModel(get()) }
 
     viewModel { PaymentCardWalletViewModel(get(), get()) }
 
@@ -104,3 +106,11 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao
 ): PllRepository = PllRepository(restApiService, paymentCardDao)
+
+fun providePaymentCardRepository(
+    restApiService: ApiService,
+    paymentCardDao: PaymentCardDao,
+    membershipPlanDao: MembershipPlanDao,
+    membershipCardDao: MembershipCardDao
+): PaymentCardRepository =
+    PaymentCardRepository(restApiService, paymentCardDao, membershipCardDao, membershipPlanDao)
