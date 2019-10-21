@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -9,13 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
-import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -38,7 +43,45 @@ class PaymentCardWalletFragment :
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+            if (viewModel.paymentCards.value != null &&
+                viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
+                direction == ItemTouchHelper.LEFT
+            ) {
+                viewModel.paymentCards.value?.get(position)
+                    ?.let { deleteDialog(it) }
+            }
+        }
+    }
 
+    fun deleteDialog(paymentCard: PaymentCard) {
+        lateinit var dialog: AlertDialog
+        val builder = context?.let { AlertDialog.Builder(it) }
+        if (builder != null) {
+            builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
+            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                when (which) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        if (verifyAvailableNetwork(requireActivity())) {
+                            runBlocking {
+                                viewModel.deletePaymentCard(paymentCard.id.toString())
+                            }
+                        } else {
+                            showNoInternetConnectionDialog()
+                        }
+                    }
+                    DialogInterface.BUTTON_NEUTRAL -> {
+                        Log.d(
+                            PaymentCardWalletFragment::class.java.simpleName,
+                            getString(R.string.loayalty_wallet_dialog_description)
+                        )
+                    }
+
+                }
+            }
+            builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
+            builder.setNeutralButton(getString(R.string.cancel_text_upper), dialogClickListener)
+            dialog = builder.create()
+            dialog.show()
         }
     }
 
@@ -52,6 +95,10 @@ class PaymentCardWalletFragment :
         runBlocking {
             viewModel.getPaymentCards()
             binding.progressSpinner.visibility = View.VISIBLE
+        }
+
+        viewModel.deleteRequest.observeNonNull(this) {
+            viewModel.fetchLocalPaymentCards()
         }
 
         viewModel.localMembershipPlanData.observeNonNull(this) { plans ->

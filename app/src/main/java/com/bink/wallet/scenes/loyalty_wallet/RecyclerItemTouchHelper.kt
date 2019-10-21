@@ -5,8 +5,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletAdapter
-import androidx.recyclerview.widget.RecyclerView
-
 
 class RecyclerItemTouchHelper(
     dragDirs: Int,
@@ -95,7 +93,7 @@ class RecyclerItemTouchHelper(
             is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
                 foregroundView = viewHolder.binding.mainPayment
                 getDefaultUIUtil().onDraw(
-                    c, recyclerView, foregroundView, dX / 2, dY / 2,
+                    c, recyclerView, foregroundView, dX / 3, dY / 3,
                     actionState, isCurrentlyActive
                 )
             }

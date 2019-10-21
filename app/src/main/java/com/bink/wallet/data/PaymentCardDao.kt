@@ -22,4 +22,7 @@ interface PaymentCardDao {
 
     @Query("DELETE FROM payment_card")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM payment_card WHERE id =:paymentCardId")
+    suspend fun deletePaymentCardById(paymentCardId: String)
 }
