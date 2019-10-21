@@ -242,6 +242,7 @@
     <string name="edit_email_address">Edit Email Address</string>
     <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
     <string name="please_enter_valid_email">Please enter a valid email address</string>
+    <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Native join unavailable</string>

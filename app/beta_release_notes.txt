@@ -47,3 +47,4 @@ AB20-226-Register Ghost Card-Incorrect text on title and button
 AB20-224-Enable I Don't Have An Account
 AB20-238-Add/Join Screen views are not displayed correctly
 AB20-203 Settings screen population
+AB20-190 FAQs link active
