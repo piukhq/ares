@@ -124,6 +124,13 @@ class SettingsFragment :
                         )
                 findNavController().navigateIfAdded(this, directions)
             }
+            SettingsItemType.PRIVACY_POLICY ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.privacy_policy_url))
+                    )
+                )
 
             else -> {
                 // if not handled, we do nothing, i.e. headers, info rows
