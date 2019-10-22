@@ -45,14 +45,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/buttons_margin"
                 android:layout_marginEnd="@dimen/buttons_margin"
-                style="@style/RoundedGradientButton"
+                style="@style/TextAppearance.AppCompat.Button"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
                 android:text="@string/sign_up_with_email"
                 app:layout_constraintBottom_toTopOf="@+id/log_in_email"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/rounded_corners_gradient_button"
+                android:textColor="@android:color/white" />
 
         <Button
                 android:id="@+id/log_in_email"
