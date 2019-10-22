@@ -289,4 +289,10 @@
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>
     <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="log_in_with_email">Log in with email</string>
 </resources>
