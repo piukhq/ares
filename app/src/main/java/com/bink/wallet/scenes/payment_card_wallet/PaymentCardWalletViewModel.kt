@@ -12,29 +12,45 @@ class PaymentCardWalletViewModel(
     private var pllRepository: PllRepository,
     private var loyaltyWalletRepository: LoyaltyWalletRepository
 ) : BaseViewModel() {
-    var paymentCards = MutableLiveData<List<PaymentCard>>()
-    var fetchError = MutableLiveData<Throwable>()
-    var deleteCard = MutableLiveData<String>()
-    var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
-    var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
+    val paymentCards = MutableLiveData<List<PaymentCard>>()
+    val fetchError = MutableLiveData<Throwable>()
+    val deleteCard = MutableLiveData<String>()
+    val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
+    val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
+    val paymentCardsLoadedCount = MutableLiveData<Int>()
 
     suspend fun deleteCard(id: String?) {
-        loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
+        loyaltyWalletRepository.deleteMembershipCard(
+            id,
+            deleteCard
+        )
     }
 
     suspend fun getPaymentCards() {
-        pllRepository.getPaymentCards(paymentCards, fetchError)
+        pllRepository.getPaymentCards(
+            paymentCards,
+            fetchError,
+            paymentCardsLoadedCount
+        )
     }
 
     fun fetchLocalPaymentCards() {
-        pllRepository.getLocalPaymentCards(paymentCards, fetchError)
+        pllRepository.getLocalPaymentCards(
+            paymentCards,
+            fetchError,
+            paymentCardsLoadedCount
+        )
     }
 
     fun fetchLocalMembershipCards() {
-        loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
+        loyaltyWalletRepository.retrieveStoredMembershipCards(
+            localMembershipCardData
+        )
     }
 
     fun fetchLocalMembershipPlans() {
-        loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
+        loyaltyWalletRepository.retrieveStoredMembershipPlans(
+            localMembershipPlanData
+        )
     }
 }

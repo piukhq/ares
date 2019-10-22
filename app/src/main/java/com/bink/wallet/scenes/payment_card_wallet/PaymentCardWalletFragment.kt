@@ -43,6 +43,26 @@ class PaymentCardWalletFragment :
             binding.progressSpinner.visibility = View.VISIBLE
         }
 
+        viewModel.paymentCardsLoadedCount.observeNonNull(this) { count ->
+            when (count) {
+                // loading the local payment cards, so we start the spinner
+                -1 -> {
+                    binding.progressSpinner.visibility = View.VISIBLE
+                }
+                // no cards loaded, so shift to the "add cards" display
+                0 -> {
+                    binding.progressSpinner.visibility = View.GONE
+                    binding.paymentCardRecycler.visibility = View.GONE
+                    binding.noPaymentCardsDisplay.visibility = View.VISIBLE
+                }
+                // user has cards, so show the adapter
+                else -> {
+                    binding.progressSpinner.visibility = View.GONE
+                    binding.paymentCardRecycler.visibility = View.GONE
+                    binding.noPaymentCardsDisplay.visibility = View.VISIBLE
+                }
+            }
+        }
         viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
@@ -50,7 +70,6 @@ class PaymentCardWalletFragment :
                 }
             }
         }
-
     }
 
     private fun setupRecycler(

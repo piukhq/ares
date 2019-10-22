@@ -16,7 +16,8 @@ class PllRepository(
 
     suspend fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
-        fetchError: MutableLiveData<Throwable>
+        fetchError: MutableLiveData<Throwable>,
+        paymentCardsLoadedCount: MutableLiveData<Int>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
@@ -24,9 +25,12 @@ class PllRepository(
                 try {
                     val response = request.await()
                     storePaymentsCards(response, fetchError)
-                    paymentCards.value = response.toMutableList()
+                    val cards = response.toMutableList()
+                    paymentCards.value = cards
+                    paymentCardsLoadedCount.value = cards.size
                 } catch (e: Throwable) {
                     fetchError.value = e
+                    paymentCardsLoadedCount.value = 0
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
@@ -54,14 +58,19 @@ class PllRepository(
 
     fun getLocalPaymentCards(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Throwable>
+        localFetchError: MutableLiveData<Throwable>,
+        paymentCardsLoadedCount: MutableLiveData<Int>
     ) {
+        paymentCardsLoadedCount.value = -1
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    localPaymentCards.value = paymentCardDao.getAllAsync()
+                    val cards = paymentCardDao.getAllAsync()
+                    localPaymentCards.value = cards
+                    paymentCardsLoadedCount.value = cards.size
                 } catch (e: Throwable) {
                     localFetchError.value = e
+                    paymentCardsLoadedCount.value = 0
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
