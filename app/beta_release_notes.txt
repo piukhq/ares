@@ -43,3 +43,4 @@ AB20-235 Remove split screen functionality
 AB20-198 How it works
 AB20-93  Onboarding Template
 AB20-201 Terms and Conditions open in browser
+AB20-200 Privacy policy open in browser
