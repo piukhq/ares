@@ -23,6 +23,13 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
+        adapter?.addFragment(OnboardingPageFragment.newInstance(0, getString(R.string.page_1_title),getString(R.string.page_1_description)))
+        adapter?.addFragment(OnboardingPageFragment.newInstance(0, getString(R.string.page_2_title),getString(R.string.page_2_description)))
+        adapter?.addFragment(OnboardingPageFragment.newInstance(0, getString(R.string.page_3_title),getString(R.string.page_3_description)))
+        binding.pager.adapter = adapter
+
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
         }
