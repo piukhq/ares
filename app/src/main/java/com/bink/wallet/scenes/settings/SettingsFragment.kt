@@ -149,6 +149,13 @@ class SettingsFragment :
                     )
                 )
 
+            SettingsItemType.PRIVACY_POLICY ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.privacy_policy_url))
+                    )
+                )
 
             else ->
                 requireContext().displayModalPopup(
