@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.text.method.MovementMethod
 import android.text.style.URLSpan
 import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalFragment

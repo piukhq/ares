@@ -1,4 +1,7 @@
-AB20-92 Payment card details screen
+AB20-90  Add payment card
+AB20-176 LCD loyalty card image display update, fix scrolling issue & scaling of logo
+AB20-142 Missing loyalty cards, code refactor
+AB20-92  Payment card details screen
 AB20-135 Linked payments cards
 AB20-133 Created payment cards wallet
 AB20-194 Enabled I don't have an account button
@@ -14,8 +17,8 @@ AB20-178 PLL empty layout issue
 AB20-174 brand header not visible when no data
 AB20-89  add payment card enabled
 AB20-176 LCD loyalty card image display update
-AB20-77 Native-Join-Sign-Up-Unavailable
-AB20-34 PLL
+AB20-77  Native-Join-Sign-Up-Unavailable
+AB20-34  PLL
 AB20-183 LCD Error Message Not Displayed
 AB20-167 Bink Beta Release Crashes
 AB20-207 Barcode Screen Showing Incorrect Info
@@ -41,3 +44,10 @@ AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
 AB20-226-Register Ghost Card-Incorrect text on title and button
+AB20-224-Enable I Don't Have An Account
+AB20-238-Add/Join Screen views are not displayed correctly
+AB20-203 Settings screen population
+AB20-193 Enable click for Rate this app
+AB20-190 FAQs link active
+AB20-78 Native Ghost Card Registration Not Available
+AB20-197 Security & privacy from Settings page

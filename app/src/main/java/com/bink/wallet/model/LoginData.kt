@@ -13,4 +13,4 @@ import kotlinx.android.parcel.Parcelize
 class LoginData(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "email") val email: String?
-): Parcelable
+) : Parcelable

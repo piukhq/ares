@@ -8,7 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "settings_item")
 data class SettingsItem(
     val title: String,
-    val value: String,
+    val value: String?,
     val type: SettingsItemType
-) : Parcelable {
-}
+) : Parcelable

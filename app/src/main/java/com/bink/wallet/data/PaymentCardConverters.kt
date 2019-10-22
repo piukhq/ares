@@ -1,7 +1,6 @@
 package com.bink.wallet.data
 
 import androidx.room.TypeConverter
-import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Image

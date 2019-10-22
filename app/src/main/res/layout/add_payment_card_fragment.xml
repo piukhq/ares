@@ -1,11 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
+
+        <Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_padding_size_medium"
+                    android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/top_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/payment_card_height"
+                        android:background="@drawable/ic_card_payment_bkgr_visa"
+                        >
+
+                    <ImageView
+                            android:id="@+id/top_layout_brand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/payment_card_logo_image_margin"
+                            android:src="@drawable/ic_visa"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
+
+                    <ImageView
+                            android:id="@+id/bottom_layout_brand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/payment_card_logo_image_margin"
+                            android:src="@drawable/ic_visa_sub_logo"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:ignore="ContentDescription" />
+
+                    <TextView
+                            android:id="@+id/display_card_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/payment_card_logo_image_margin"
+                            android:layout_marginTop="@dimen/payment_card_logo_image_margin"
+                            android:text="Card name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_description_big"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                            android:id="@+id/display_card_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/payment_card_logo_image_margin"
+                            android:layout_marginTop="@dimen/payment_card_number_top_margin"
+                            android:text="**** **** **** 1234"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_description_big"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                        android:id="@+id/add_card_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:text="@string/add_payment_card"
+                        android:textSize="@dimen/text_size_title_big"
+                        android:textStyle="bold"
+                        />
+
+                <TextView
+                        android:id="@+id/add_card_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
+                        android:textSize="@dimen/text_size_title_big"
+                        />
+
+                <TextView
+                        android:id="@+id/card_number_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:text="@string/card_number"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:textStyle="bold"
+                        />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/card_number_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/card_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/card_number"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="19"
+                            android:nextFocusDown="@id/card_expiry" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                        android:id="@+id/card_expiry_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:text="@string/expiry"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:textStyle="bold"
+                        />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/card_expiry_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/card_expiry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/expiry"
+                            android:imeOptions="actionNext"
+                            android:inputType="date"
+                            android:maxLength="5"
+                            android:nextFocusDown="@id/card_name" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                        android:id="@+id/card_name_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:text="@string/name_on_card"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:textStyle="bold"
+                        />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/card_name_input_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        >
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/card_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minLines="2"
+                            android:hint="@string/name_on_card"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapCharacters" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                        android:id="@+id/privacy_link"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_large"
+                        android:text="@string/privacy_and_security"
+                        android:textColor="@color/blue_accent"
+                        android:textSize="@dimen/text_size_description_big"
+                        />
+                <TextView
+                        android:id="@+id/more_info_link"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_large"
+                        android:text="@string/more_information"
+                        android:textColor="@color/blue_accent"
+                        android:textSize="@dimen/text_size_description_big"
+                        />
+
+                <Button
+                        android:id="@+id/add_button"
+                        style="@style/RoundedGradientButton"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="@dimen/margin_padding_size_large"
+                        android:layout_marginBottom="@dimen/margin_padding_size_large"
+                        android:layout_marginStart="@dimen/custom_text_card_margin"
+                        android:layout_marginEnd="@dimen/custom_text_card_margin"
+                        android:text="@string/add"
+                        />
+            </LinearLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.login
 
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R

@@ -14,8 +14,8 @@ const val NUMBER_DAYS_IN_WEEK = 7
 const val NUMBER_WEEKS_IN_MONTH = 5
 const val NUMBER_MONTHS_IN_YEAR = 12
 
-const val JWT_HEADER_NAME_ALGORYTHM  = "alg"
-const val JWT_HEADER_VALUE_ALGORYTHM = "HS512"
+const val JWT_HEADER_NAME_ALGORITHM  = "alg"
+const val JWT_HEADER_VALUE_ALGORITHM = "HS512"
 const val JWT_HEADER_NAME_TYPE       = "typ"
 const val JWT_HEADER_VALUE_TYPE      = "JWT"
 
@@ -31,3 +31,6 @@ const val JWT_PAYLOAD_TYPE_TIME          = "iat"
 const val HMAC_TYPE = "HmacSHA512"
 
 val ENVIRONMENTS_TO_DEBUG = listOf("debug", "beta", "mr", "nightly")
+
+const val EMPTY_STRING = ""
+const val SPACE = " "

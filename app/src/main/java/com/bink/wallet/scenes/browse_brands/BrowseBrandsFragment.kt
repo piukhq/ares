@@ -34,10 +34,12 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         membershipPlan2: MembershipPlan
     ): Int {
         return when {
-            (isPlanPLL(membershipPlan1) || isPlanPLL(membershipPlan2)) &&
+            (isPlanPLL(membershipPlan1) ||
+                    isPlanPLL(membershipPlan2)) &&
                     (membershipPlan1.getCardType()?.type!! >
                             membershipPlan2.getCardType()?.type!!) -> -1
-            (isPlanPLL(membershipPlan1) || isPlanPLL(membershipPlan2)) &&
+            (isPlanPLL(membershipPlan1) ||
+                    isPlanPLL(membershipPlan2)) &&
                     (membershipPlan1.getCardType()?.type!! <
                             membershipPlan2.getCardType()?.type!!) -> 1
             else -> 0

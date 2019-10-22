@@ -11,8 +11,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/home_wallet"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/home_wallet" />
 
     <fragment
             android:id="@+id/splash"
@@ -24,8 +23,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@id/home_wallet"
-                app:popUpToInclusive="true" />
+                app:popUpTo="@id/home_wallet" />
     </fragment>
 
     <fragment
@@ -61,7 +59,8 @@
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/home_wallet" />
 
     </fragment>
 
@@ -81,6 +80,13 @@
                 android:name="membershipCards"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
 
+        <action
+                android:id="@+id/payment_details_to_add_join"
+                app:destination="@+id/add_join"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -199,8 +205,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/loyalty_fragment"
-                app:popUpToInclusive="true" />
+                app:popUpTo="@+id/loyalty_fragment" />
 
         <action
                 android:id="@+id/to_ghost"
@@ -209,8 +214,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/loyalty_fragment"
-                app:popUpToInclusive="true" />
+                app:popUpTo="@+id/loyalty_fragment" />
 
         <action
                 android:id="@+id/sign_up_to_pll_empty"
@@ -234,6 +238,14 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/sign_up_to_ghost_registration_unavailable"
+                app:destination="@+id/ghost_registration_unavailable"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -269,8 +281,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/home_wallet"
-                app:popUpToInclusive="true" />
+                app:popUpTo="@+id/home_wallet" />
     </fragment>
 
     <fragment
@@ -348,8 +359,7 @@
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                app:popUpToInclusive="true" />
+                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -371,8 +381,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/home_wallet"
-                app:popUpToInclusive="true" />
+                app:popUpTo="@+id/home_wallet" />
 
         <action
                 android:id="@+id/detail_to_barcode"
@@ -449,16 +458,14 @@
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                app:popUpToInclusive="true" />
+                app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/pll_to_brand_header"
                 app:destination="@+id/brand_header"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                app:popUpToInclusive="true" />
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -479,10 +486,29 @@
 
     <fragment
             android:id="@+id/add_payment_card"
-            android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment" />
+            android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
+        <action
+                android:id="@+id/add_payment_to_details"
+                app:destination="@+id/payment_card_detail"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+    </fragment>
     <fragment
             android:id="@+id/settings_screen"
-            android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
+            android:name="com.bink.wallet.scenes.settings.SettingsFragment">
+        <action
+                android:id="@+id/settings_to_security_and_privacy"
+                app:destination="@+id/security_and_privacy_settings"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+
+    </fragment>
     <fragment
             android:id="@+id/about_fragment"
             android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">
@@ -500,8 +526,24 @@
     </fragment>
 
     <fragment
+            android:id="@+id/security_and_privacy_settings"
+            android:name="com.bink.wallet.modal.settings.SecurityAndPrivacySettingsFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
             android:id="@+id/brand_header"
             android:name="com.bink.wallet.modal.BrandHeaderFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/ghost_registration_unavailable"
+            android:name="com.bink.wallet.modal.GhostRegistrationUnavailableFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
