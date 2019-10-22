@@ -51,3 +51,4 @@ AB20-193 Enable click for Rate this app
 AB20-190 FAQs link active
 AB20-78 Native Ghost Card Registration Not Available
 AB20-197 Security & privacy from Settings page
+AB20-235 Remove split screen functionality
