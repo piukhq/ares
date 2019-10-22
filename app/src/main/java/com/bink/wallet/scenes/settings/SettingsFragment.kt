@@ -114,15 +114,26 @@ class SettingsFragment :
                     )
                 )
             SettingsItemType.SECURITY_AND_PRIVACY -> {
-                val directions =
+                val action =
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
-                            GenericModalParameters(
-                                R.drawable.ic_back,
-                                getString(R.string.security_and_privacy_title),
-                                getString(R.string.security_and_privacy_copy)
-                            )
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.security_and_privacy_title),
+                            getString(R.string.security_and_privacy_copy)
                         )
-                findNavController().navigateIfAdded(this, directions)
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
+            SettingsItemType.HOW_IT_WORKS -> {
+                val action =
+                    SettingsFragmentDirections.settingsToHowItWorks(
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.how_it_works_title),
+                            getString(R.string.how_it_works_copy)
+                        )
+                    )
+                findNavController().navigateIfAdded(this, action)
             }
 
             else -> {
