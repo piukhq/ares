@@ -9,6 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -45,29 +46,37 @@ class PaymentCardWalletFragment :
         viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    binding.progressSpinner.visibility = View.GONE
-                    binding.paymentCardRecycler.apply {
-                        layoutManager = GridLayoutManager(context, 1)
-                        adapter =
-                            PaymentCardWalletAdapter(
-                                paymentCards,
-                                onClickListener = {
-                                    val action =
-                                        WalletsFragmentDirections.paymentWalletToDetails(
-                                            it,
-                                            plans.toTypedArray(),
-                                            cards.toTypedArray()
-                                        )
-                                    findNavController().navigateIfAdded(
-                                        this@PaymentCardWalletFragment,
-                                        action
-                                    )
-                                })
-                    }
+                    setupRecycler(paymentCards, plans, cards)
                 }
             }
         }
 
+    }
+
+    private fun setupRecycler(
+        paymentCards: List<PaymentCard>,
+        plans: List<MembershipPlan>,
+        cards: List<MembershipCard>
+    ) {
+        binding.progressSpinner.visibility = View.GONE
+        binding.paymentCardRecycler.apply {
+            layoutManager = GridLayoutManager(context, 1)
+            adapter =
+                PaymentCardWalletAdapter(
+                    paymentCards,
+                    onClickListener = {
+                        val action =
+                            WalletsFragmentDirections.paymentWalletToDetails(
+                                it,
+                                plans.toTypedArray(),
+                                cards.toTypedArray()
+                            )
+                        findNavController().navigateIfAdded(
+                            this@PaymentCardWalletFragment,
+                            action
+                        )
+                    })
+        }
     }
 
     fun setData(
