@@ -14,9 +14,9 @@ class PaymentCardWalletViewModel(
 ) : BaseViewModel() {
     var paymentCards = MutableLiveData<List<PaymentCard>>()
     var fetchError = MutableLiveData<Throwable>()
-    var deleteCard: MutableLiveData<String> = MutableLiveData()
-    var localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    var deleteCard = MutableLiveData<String>()
+    var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
+    var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
