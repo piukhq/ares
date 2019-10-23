@@ -1,3 +1,4 @@
+AB20-195 Wipe to delete payment card
 AB20-90  Add payment card
 AB20-176 LCD loyalty card image display update, fix scrolling issue & scaling of logo
 AB20-142 Missing loyalty cards, code refactor
