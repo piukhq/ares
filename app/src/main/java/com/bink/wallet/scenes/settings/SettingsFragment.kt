@@ -23,6 +23,7 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.content.Intent
 import android.net.Uri
+import com.bink.wallet.utils.displayModalPopup
 
 
 class SettingsFragment :
@@ -86,6 +87,11 @@ class SettingsFragment :
 
     private fun settingsItemClick(item: SettingsItem) {
         when (item.type) {
+            SettingsItemType.VERSION_NUMBER,
+            SettingsItemType.BASE_URL,
+            SettingsItemType.HEADER -> {
+                // these items are to do nothing at all, as they'll never be clickable
+            }
             SettingsItemType.EMAIL_ADDRESS ->
                 emailDialogOpen()
             SettingsItemType.RATE_APP -> {
@@ -135,10 +141,27 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
+            SettingsItemType.TERMS_AND_CONDITIONS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.ts_and_cs_url))
+                    )
+                )
 
-            else -> {
-                // if not handled, we do nothing, i.e. headers, info rows
-            }
+            SettingsItemType.PRIVACY_POLICY ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.privacy_policy_url))
+                    )
+                )
+
+            else ->
+                requireContext().displayModalPopup(
+                    getString(R.string.missing_destination_dialog_title),
+                    getString(R.string.not_implemented_yet_text)
+                )
         }
     }
 

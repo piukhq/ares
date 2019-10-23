@@ -127,6 +127,7 @@ class PllRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request?.await()
+                    paymentCardDao.deletePaymentCardById(id.toString())
                     mutableDeleteCard.value = response
                 } catch (e: Throwable) {
                     deleteError.value = e

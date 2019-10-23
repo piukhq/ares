@@ -7,6 +7,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PllRepository
+import okhttp3.ResponseBody
 
 class PaymentCardWalletViewModel(
     private var pllRepository: PllRepository,
@@ -15,6 +16,8 @@ class PaymentCardWalletViewModel(
     val paymentCards = MutableLiveData<List<PaymentCard>>()
     val fetchError = MutableLiveData<Throwable>()
     val deleteCard = MutableLiveData<String>()
+    val deleteRequest = MutableLiveData<ResponseBody>()
+    val deleteError = MutableLiveData<Throwable>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val paymentCardsLoadedCount = MutableLiveData<Int>()
@@ -52,5 +55,9 @@ class PaymentCardWalletViewModel(
         loyaltyWalletRepository.retrieveStoredMembershipPlans(
             localMembershipPlanData
         )
+    }
+
+    suspend fun deletePaymentCard(paymentCardId: String) {
+        pllRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
     }
 }
