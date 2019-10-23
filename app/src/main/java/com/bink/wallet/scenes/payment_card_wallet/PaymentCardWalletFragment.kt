@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.payment_card_wallet
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
@@ -47,8 +46,7 @@ class PaymentCardWalletFragment :
                 viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
                 direction == ItemTouchHelper.LEFT
             ) {
-                viewModel.paymentCards.value?.get(position)
-                    ?.let { deleteDialog(it) }
+                viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
             }
             if (direction == ItemTouchHelper.RIGHT) {
                 binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
@@ -57,7 +55,7 @@ class PaymentCardWalletFragment :
     }
 
     fun deleteDialog(paymentCard: PaymentCard) {
-        lateinit var dialog: AlertDialog
+        val dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
         if (builder != null) {
             builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
@@ -73,13 +71,8 @@ class PaymentCardWalletFragment :
                         }
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
-                        Log.d(
-                            PaymentCardWalletFragment::class.java.simpleName,
-                            getString(R.string.loayalty_wallet_dialog_description)
-                        )
                         binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                     }
-
                 }
             }
             builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)

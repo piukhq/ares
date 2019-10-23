@@ -42,38 +42,31 @@ class RecyclerItemTouchHelper(
         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
         actionState: Int, isCurrentlyActive: Boolean
     ) {
-
-        val foregroundView: CardView
-        when (viewHolder) {
+        val foregroundView = when (viewHolder) {
             is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
-                foregroundView = viewHolder.binding.cardItem.mainLayout
-                getDefaultUIUtil().onDrawOver(
-                    c, recyclerView, foregroundView, dX, dY,
-                    actionState, isCurrentlyActive
-                )
+                viewHolder.binding.cardItem.mainLayout
             }
-            is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
-                foregroundView = viewHolder.binding.mainPayment
-                getDefaultUIUtil().onDrawOver(
-                    c, recyclerView, foregroundView, dX, dY,
-                    actionState, isCurrentlyActive
-                )
+            else -> {
+                (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
             }
         }
+
+        getDefaultUIUtil().onDrawOver(
+            c, recyclerView, foregroundView, dX, dY,
+            actionState, isCurrentlyActive
+        )
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        val foregroundView: CardView
-        when (viewHolder) {
+        val foregroundView = when (viewHolder) {
             is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
-                foregroundView = viewHolder.binding.cardItem.mainLayout
-                getDefaultUIUtil().clearView(foregroundView)
+                viewHolder.binding.cardItem.mainLayout
             }
-            is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
-                foregroundView = viewHolder.binding.mainPayment
-                getDefaultUIUtil().clearView(foregroundView)
+            else -> {
+                (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
             }
         }
+        getDefaultUIUtil().clearView(foregroundView)
     }
 
     override fun onChildDraw(
