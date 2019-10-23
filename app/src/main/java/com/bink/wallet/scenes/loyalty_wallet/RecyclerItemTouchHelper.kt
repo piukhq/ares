@@ -26,10 +26,10 @@ class RecyclerItemTouchHelper(
             val foregroundView = when (viewHolder) {
                 is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                     viewHolder.binding.cardItem.mainLayout
-                is PaymentCardWalletAdapter.PaymentCardWalletJoinHolder ->
-                    null
+                is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                    viewHolder.binding.mainPayment
                 else ->
-                    (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
+                    null
             }
             if (foregroundView != null) {
                 getDefaultUIUtil().onSelected(foregroundView)
@@ -45,10 +45,10 @@ class RecyclerItemTouchHelper(
         val foregroundView = when (viewHolder) {
             is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                 viewHolder.binding.cardItem.mainLayout
-            is PaymentCardWalletAdapter.PaymentCardWalletJoinHolder ->
-                null
+            is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                viewHolder.binding.mainPayment
             else ->
-                (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
+                null
         }
         if (foregroundView != null) {
             getDefaultUIUtil().onDrawOver(
@@ -62,10 +62,10 @@ class RecyclerItemTouchHelper(
         val foregroundView = when (viewHolder) {
             is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                 viewHolder.binding.cardItem.mainLayout
-            is PaymentCardWalletAdapter.PaymentCardWalletJoinHolder ->
-                null
+            is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                viewHolder.binding.mainPayment
             else ->
-                (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
+                null
         }
         if (foregroundView != null) {
             getDefaultUIUtil().clearView(foregroundView)
@@ -80,15 +80,20 @@ class RecyclerItemTouchHelper(
         val foregroundView = when (viewHolder) {
             is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                 viewHolder.binding.cardItem.mainLayout
-            is PaymentCardWalletAdapter.PaymentCardWalletJoinHolder ->
-                null
+            is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                viewHolder.binding.mainPayment
             else ->
-                (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
+                null
         }
         if (foregroundView != null) {
             getDefaultUIUtil().onDraw(
-                c, recyclerView, foregroundView, dX / 2, dY / 2,
-                actionState, isCurrentlyActive
+                c,
+                recyclerView,
+                foregroundView,
+                dX / 2,
+                dY / 2,
+                actionState,
+                isCurrentlyActive
             )
         }
     }
