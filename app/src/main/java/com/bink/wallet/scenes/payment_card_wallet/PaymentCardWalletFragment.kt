@@ -58,8 +58,8 @@ class PaymentCardWalletFragment :
                 // user has cards, so show the adapter
                 else -> {
                     binding.progressSpinner.visibility = View.GONE
-                    binding.paymentCardRecycler.visibility = View.GONE
-                    binding.noPaymentCardsDisplay.visibility = View.VISIBLE
+                    binding.paymentCardRecycler.visibility = View.VISIBLE
+                    binding.noPaymentCardsDisplay.visibility = View.GONE
                 }
             }
         }
@@ -77,6 +77,7 @@ class PaymentCardWalletFragment :
         plans: List<MembershipPlan>,
         cards: List<MembershipCard>
     ) {
+        viewModel.paymentCardsLoadedCount.value = paymentCards.size
         binding.progressSpinner.visibility = View.GONE
         binding.paymentCardRecycler.apply {
             layoutManager = GridLayoutManager(context, 1)
