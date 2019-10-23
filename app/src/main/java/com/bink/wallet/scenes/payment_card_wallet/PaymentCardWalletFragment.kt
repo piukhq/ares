@@ -119,19 +119,23 @@ class PaymentCardWalletFragment :
                                         action
                                     )
                                 })
-                        val helperListener =
-                            RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+                        
+                        val helperListenerLeft =
+                            RecyclerItemTouchHelper(
+                                0,
+                                ItemTouchHelper.LEFT,
+                                listener
+                            )
 
-                        ItemTouchHelper(helperListener).attachToRecyclerView(this)
-                        ItemTouchHelper(
+                        val helperListenerRight =
                             RecyclerItemTouchHelper(
                                 0,
                                 ItemTouchHelper.RIGHT,
                                 listener
                             )
-                        ).attachToRecyclerView(
-                            this
-                        )
+
+                        ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+                        ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
                     }
                 }
             }
