@@ -63,7 +63,6 @@ class PaymentCardWalletFragment :
             1
         }
 
-
     fun deleteDialog(paymentCard: PaymentCard) {
         val dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
@@ -145,6 +144,8 @@ class PaymentCardWalletFragment :
                             )
 
                         ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+                        // remarked this out as the Swipe Right isn't used on Payment Cards
+                        // but leaving it here as it could be used for a future story
                         //ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
                     }
                 }
