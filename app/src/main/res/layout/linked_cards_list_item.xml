@@ -14,11 +14,12 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/brand_image"
                 imageUrl="@{membershipCard}"
                 android:layout_width="@dimen/margin_large"
                 android:layout_height="@dimen/margin_large"
@@ -39,7 +40,7 @@
                 android:textSize="@dimen/text_size_description_big"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/toggle"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/brand_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -54,7 +55,7 @@
                 android:textSize="@dimen/text_size_description_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/toggle"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/brand_image"
                 app:layout_constraintTop_toBottomOf="@+id/company_name"
                 app:textBalance="@{membershipCard}" />
 
@@ -62,10 +63,32 @@
                 android:id="@+id/toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                android:padding="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+                android:id="@+id/pending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/payment_card_pending"
+                android:textColor="@color/amber_pending"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/toggle"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/payment_card_retry"
+                android:textColor="@color/red_attention"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/toggle"
+                app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
