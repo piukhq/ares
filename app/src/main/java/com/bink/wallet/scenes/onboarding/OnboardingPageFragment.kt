@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingPageFragmentBinding
+import com.bink.wallet.utils.PAGE_1
 
 class OnboardingPageFragment: Fragment() {
 
@@ -15,8 +17,9 @@ class OnboardingPageFragment: Fragment() {
         private const val EXTRA_IMAGE = "extraImage"
         private const val EXTRA_TITLE = "extraTitle"
         private const val EXTRA_DESCRIPTION = "extraDescription"
+        private const val EXTRA_PAGE_TITLE = "extraPageTitle"
 
-        fun newInstance(imageId: Int, title: String, description: String): OnboardingPageFragment {
+        fun newInstance(pageTitle: String, imageId: Int, title: String, description: String): OnboardingPageFragment {
             val fragment = OnboardingPageFragment()
             val bundle = Bundle()
             with(bundle){
@@ -35,10 +38,19 @@ class OnboardingPageFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = DataBindingUtil.inflate<OnboardingPageFragmentBinding>(inflater,R.layout.onboarding_page_fragment, container, false)
+
         arguments?.let { bundle ->
             binding.pageTitle.text = bundle.getString(EXTRA_TITLE)
+            val pageTitle = bundle.getString(EXTRA_PAGE_TITLE)
             binding.pageDescription.text = bundle.getString(EXTRA_DESCRIPTION)
             binding.pageImage.setImageResource(bundle.getInt(EXTRA_IMAGE))
+
+            if(pageTitle?.equals(PAGE_1) == true) {
+                binding.binkImage.visibility = View.VISIBLE
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(binding.pageLayout)
+                constraintSet.connect(R.id.bink_image, ConstraintSet.BOTTOM, R.id.page_image, ConstraintSet.TOP)
+            }
         }
         return binding.root
     }

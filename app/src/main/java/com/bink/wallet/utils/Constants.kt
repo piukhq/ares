@@ -34,3 +34,7 @@ val ENVIRONMENTS_TO_DEBUG = listOf("debug", "beta", "mr", "nightly")
 
 const val EMPTY_STRING = ""
 const val SPACE = " "
+
+const val PAGE_1 = "Page1"
+const val PAGE_2 = "Page2"
+const val PAGE_3 = "Page3"
