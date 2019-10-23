@@ -24,16 +24,15 @@ class RecyclerItemTouchHelper(
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         val foregroundView: CardView
         if (viewHolder != null) {
-            when (viewHolder) {
+            foregroundView = when (viewHolder) {
                 is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
-                    foregroundView = viewHolder.binding.cardItem.mainLayout
-                    getDefaultUIUtil().onSelected(foregroundView)
+                    viewHolder.binding.cardItem.mainLayout
                 }
-                is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
-                    foregroundView = viewHolder.binding.mainPayment
-                    getDefaultUIUtil().onSelected(foregroundView)
+                else -> {
+                    (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
                 }
             }
+            getDefaultUIUtil().onSelected(foregroundView)
         }
     }
 
@@ -74,23 +73,19 @@ class RecyclerItemTouchHelper(
         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
         actionState: Int, isCurrentlyActive: Boolean
     ) {
-        val foregroundView: CardView
-        when (viewHolder) {
+        val foregroundView = when (viewHolder) {
             is LoyaltyWalletAdapter.LoyaltyWalletViewHolder -> {
-                foregroundView = viewHolder.binding.cardItem.mainLayout
-                getDefaultUIUtil().onDraw(
-                    c, recyclerView, foregroundView, dX / 2, dY / 2,
-                    actionState, isCurrentlyActive
-                )
+                viewHolder.binding.cardItem.mainLayout
+
             }
-            is PaymentCardWalletAdapter.PaymentCardWalletHolder -> {
-                foregroundView = viewHolder.binding.mainPayment
-                getDefaultUIUtil().onDraw(
-                    c, recyclerView, foregroundView, dX / 3, dY / 3,
-                    actionState, isCurrentlyActive
-                )
+            else -> {
+                (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.mainPayment
             }
         }
+        getDefaultUIUtil().onDraw(
+            c, recyclerView, foregroundView, dX / 2, dY / 2,
+            actionState, isCurrentlyActive
+        )
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
