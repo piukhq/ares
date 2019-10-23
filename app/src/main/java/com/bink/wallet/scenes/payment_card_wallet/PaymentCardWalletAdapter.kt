@@ -22,6 +22,12 @@ class PaymentCardWalletAdapter(
         val inflater = LayoutInflater.from(parent.context)
         if (viewType == JOIN_CARD) {
             val binding = PaymentCardWalletJoinBinding.inflate(inflater)
+            binding.apply {
+                close.setOnClickListener {
+                    SharedPreferenceManager.isPaymentJoinHidden = true
+                    notifyDataSetChanged()
+                }
+            }
             return PaymentCardWalletJoinHolder(binding)
         } else {
             val binding = PaymentCardWalletItemBinding.inflate(inflater)

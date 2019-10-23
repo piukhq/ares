@@ -20,13 +20,11 @@ class PllViewModel(private val pllRepository: PllRepository) : BaseViewModel() {
     val unlinkError = MutableLiveData<Throwable>()
     val fetchError = MutableLiveData<Throwable>()
     val localFetchError = MutableLiveData<Throwable>()
-    val paymentCardsLoadedCount = MutableLiveData<Int>()
 
     suspend fun getPaymentCards() {
         pllRepository.getPaymentCards(
             paymentCards,
-            fetchError,
-            paymentCardsLoadedCount
+            fetchError
         )
     }
 
@@ -51,8 +49,7 @@ class PllViewModel(private val pllRepository: PllRepository) : BaseViewModel() {
     suspend fun getLocalPaymentCards() {
         pllRepository.getLocalPaymentCards(
             localPaymentCards,
-            localFetchError,
-            paymentCardsLoadedCount
+            localFetchError
         )
     }
 }
