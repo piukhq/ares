@@ -4,22 +4,26 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.content.Intent
 import android.net.Uri
+import com.bink.wallet.utils.displayModalPopup
 
 
 class SettingsFragment :
@@ -83,6 +87,11 @@ class SettingsFragment :
 
     private fun settingsItemClick(item: SettingsItem) {
         when (item.type) {
+            SettingsItemType.VERSION_NUMBER,
+            SettingsItemType.BASE_URL,
+            SettingsItemType.HEADER -> {
+                // these items are to do nothing at all, as they'll never be clickable
+            }
             SettingsItemType.EMAIL_ADDRESS ->
                 emailDialogOpen()
             SettingsItemType.RATE_APP -> {
@@ -103,10 +112,56 @@ class SettingsFragment :
                     )
                 }
             }
-
-            else -> {
-                // if not handled, we do nothing, i.e. headers, info rows
+            SettingsItemType.FAQS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.faq_url))
+                    )
+                )
+            SettingsItemType.SECURITY_AND_PRIVACY -> {
+                val action =
+                    SettingsFragmentDirections.settingsToSecurityAndPrivacy(
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.security_and_privacy_title),
+                            getString(R.string.security_and_privacy_copy)
+                        )
+                    )
+                findNavController().navigateIfAdded(this, action)
             }
+            SettingsItemType.HOW_IT_WORKS -> {
+                val action =
+                    SettingsFragmentDirections.settingsToHowItWorks(
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.how_it_works_title),
+                            getString(R.string.how_it_works_copy)
+                        )
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
+            SettingsItemType.TERMS_AND_CONDITIONS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.ts_and_cs_url))
+                    )
+                )
+
+            SettingsItemType.PRIVACY_POLICY ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.privacy_policy_url))
+                    )
+                )
+
+            else ->
+                requireContext().displayModalPopup(
+                    getString(R.string.missing_destination_dialog_title),
+                    getString(R.string.not_implemented_yet_text)
+                )
         }
     }
 

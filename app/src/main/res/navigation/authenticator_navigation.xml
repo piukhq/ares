@@ -24,6 +24,13 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpTo="@id/home_wallet" />
+        <action
+                android:id="@+id/splash_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -238,6 +245,14 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/sign_up_to_ghost_registration_unavailable"
+                app:destination="@+id/ghost_registration_unavailable"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -490,7 +505,24 @@
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
-            android:name="com.bink.wallet.scenes.settings.SettingsFragment" />
+            android:name="com.bink.wallet.scenes.settings.SettingsFragment">
+        <action
+                android:id="@+id/settings_to_security_and_privacy"
+                app:destination="@+id/security_and_privacy_settings"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+        <action
+                android:id="@+id/settings_to_how_it_works"
+                app:destination="@+id/how_it_works"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+    </fragment>
     <fragment
             android:id="@+id/about_fragment"
             android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">
@@ -508,8 +540,43 @@
     </fragment>
 
     <fragment
+            android:id="@+id/security_and_privacy_settings"
+            android:name="com.bink.wallet.modal.settings.SecurityAndPrivacySettingsFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+    <fragment
+            android:id="@+id/how_it_works"
+            android:name="com.bink.wallet.modal.settings.HowItWorksFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
             android:id="@+id/brand_header"
             android:name="com.bink.wallet.modal.BrandHeaderFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/onboarding_fragment"
+            android:name="com.bink.wallet.scenes.onboarding.OnboardingFragment">
+        <action
+                android:id="@+id/onboarding_to_home"
+                app:destination="@+id/home_wallet"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/ghost_registration_unavailable"
+            android:name="com.bink.wallet.modal.GhostRegistrationUnavailableFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />

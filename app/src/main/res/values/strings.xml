@@ -215,8 +215,8 @@
     <string name="accept_button_text">Accept</string>
     <string name="decline_button_text">Decline</string>
     <string name="popular_text">Popular</string>
-    <string name="debug_menu">Debug menu</string>
-    <string name="tools">Tools</string>
+
+    <!-- Settings screen -->
     <string name="settings">Settings</string>
     <string name="settings_menu_account">Account</string>
     <string name="settings_menu_log_out">Log out</string>
@@ -244,6 +244,14 @@
     <string name="please_enter_valid_email">Please enter a valid email address</string>
     <string name="play_store_market_url">market://details?id=%1$s</string>
     <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
+    <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
+    <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
+
+    <string name="security_and_privacy_title">Security and privacy</string>
+    <string name="security_and_privacy_copy">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
+    <string name="how_it_works_title">How it works</string>
+    <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Native join unavailable</string>
@@ -279,4 +287,14 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
+
+    <!-- Native Ghost Card Registration N/A -->
+    <string name="title_ghost_card_not_available">Native join unavailable</string>
+    <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="log_in_with_email">Log in with email</string>
 </resources>
