@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
@@ -21,12 +20,7 @@ class LoyaltyWalletAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoyaltyWalletViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<LoyaltyWalletItemBinding>(
-            inflater,
-            R.layout.loyalty_wallet_item,
-            parent,
-            false
-        )
+        val binding = LoyaltyWalletItemBinding.inflate(inflater)
         return LoyaltyWalletViewHolder(
             binding
         )

@@ -7,8 +7,8 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -186,9 +187,16 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.isRefreshing = false
         binding.swipeLayout.isEnabled = true
         binding.progressSpinner.visibility = View.GONE
+
+        val walletItems = ArrayList<Any>(plansReceived.filter {
+            it.getCardType() == CardType.PLL &&
+                    cardsReceived.firstOrNull { card -> card.membership_plan == it.id } == null
+        })
+
+        walletItems.addAll(cardsReceived)
+
         binding.loyaltyWalletList.apply {
-            layoutManager =
-                LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            layoutManager = GridLayoutManager(requireContext(), 1)
             adapter =
                 LoyaltyWalletAdapter(
                     plansReceived,
@@ -210,6 +218,16 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             ).attachToRecyclerView(
                 this
             )
+        }
+
+        binding.suggestionPlanList.apply {
+            layoutManager = GridLayoutManager(requireContext(), 1)
+            adapter = PlanSuggestionAdapter(
+                plansReceived,
+                cardsReceived,
+                onClickListener = {
+                    onCardClicked(it)
+                })
         }
     }
 
