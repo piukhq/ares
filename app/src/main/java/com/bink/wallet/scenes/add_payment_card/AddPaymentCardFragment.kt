@@ -118,7 +118,7 @@ class AddPaymentCardFragment :
                         arguments
                     )
                 }
-            action.let { findNavController().navigateIfAdded(this, action) }
+            findNavController().navigateIfAdded(this, action)
         }
 
         binding.addButton.setOnClickListener {
