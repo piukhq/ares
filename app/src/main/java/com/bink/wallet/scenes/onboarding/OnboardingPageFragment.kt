@@ -23,6 +23,7 @@ class OnboardingPageFragment: Fragment() {
             val fragment = OnboardingPageFragment()
             val bundle = Bundle()
             with(bundle){
+                putString(EXTRA_PAGE_TITLE, pageTitle)
                 putInt(EXTRA_IMAGE, imageId)
                 putString(EXTRA_TITLE, title)
                 putString(EXTRA_DESCRIPTION, description)
@@ -41,15 +42,15 @@ class OnboardingPageFragment: Fragment() {
 
         arguments?.let { bundle ->
             binding.pageTitle.text = bundle.getString(EXTRA_TITLE)
-            val pageTitle = bundle.getString(EXTRA_PAGE_TITLE)
             binding.pageDescription.text = bundle.getString(EXTRA_DESCRIPTION)
             binding.pageImage.setImageResource(bundle.getInt(EXTRA_IMAGE))
 
-            if(pageTitle?.equals(PAGE_1) == true) {
+            if(bundle.getString(EXTRA_PAGE_TITLE).equals(PAGE_1)) {
                 binding.binkImage.visibility = View.VISIBLE
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(binding.pageLayout)
-                constraintSet.connect(R.id.bink_image, ConstraintSet.BOTTOM, R.id.page_image, ConstraintSet.TOP)
+                constraintSet.connect(R.id.page_image, ConstraintSet.TOP, R.id.bink_image, ConstraintSet.BOTTOM)
+                constraintSet.applyTo(binding.pageLayout)
             }
         }
         return binding.root

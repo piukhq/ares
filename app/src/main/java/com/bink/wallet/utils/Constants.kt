@@ -38,3 +38,4 @@ const val SPACE = " "
 const val PAGE_1 = "Page1"
 const val PAGE_2 = "Page2"
 const val PAGE_3 = "Page3"
+const val ONBOARDING_SCROLL_DURATION_SECONDS = 12000L
