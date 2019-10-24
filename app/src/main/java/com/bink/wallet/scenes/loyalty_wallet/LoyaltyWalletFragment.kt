@@ -140,6 +140,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
+    private fun onCardJoinClick(plan: MembershipPlan) {
+        val directions =
+            WalletsFragmentDirections.homeToAddJoin(
+                plan
+            )
+        findNavController().navigateIfAdded(
+            this@LoyaltyWalletFragment,
+            directions
+        )
+        this@LoyaltyWalletFragment.onDestroy()
+    }
+
     fun deleteDialog(membershipCard: MembershipCard) {
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
@@ -180,6 +192,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     }
 
+    private fun merchantNoLoyalty(
+        cardsReceived: List<MembershipCard>,
+        plan: MembershipPlan
+    ): Boolean {
+        return cardsReceived.firstOrNull { card -> card.membership_plan == plan.id } == null
+    }
+
     private fun populateScreen(
         plansReceived: List<MembershipPlan>,
         cardsReceived: List<MembershipCard>
@@ -188,12 +207,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.isEnabled = true
         binding.progressSpinner.visibility = View.GONE
 
-        val walletItems = ArrayList<Any>(plansReceived.filter {
+        val walletItems = ArrayList<MembershipPlan>(plansReceived.filter {
             it.getCardType() == CardType.PLL &&
-                    cardsReceived.firstOrNull { card -> card.membership_plan == it.id } == null
+                    merchantNoLoyalty(cardsReceived, it)
         })
 
-        walletItems.addAll(cardsReceived)
 
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
@@ -223,10 +241,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.suggestionPlanList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = PlanSuggestionAdapter(
-                plansReceived,
-                cardsReceived,
+                walletItems.toList(),
                 onClickListener = {
-                    onCardClicked(it)
+                    onCardJoinClick(it)
                 })
         }
     }
