@@ -297,4 +297,6 @@
     <string name="continue_with_facebook">Continue with Facebook</string>
     <string name="sign_up_with_email">Sign up with email</string>
     <string name="log_in_with_email">Log in with email</string>
+    <string name="add_your_payment_cards">Add your payment cards</string>
+    <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
 </resources>

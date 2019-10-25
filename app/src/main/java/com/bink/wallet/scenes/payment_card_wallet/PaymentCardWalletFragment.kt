@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -40,19 +41,27 @@ class PaymentCardWalletFragment :
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
             if (viewModel.paymentCards.value != null &&
                 viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
                 direction == ItemTouchHelper.LEFT
             ) {
-                viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
+                viewModel.paymentCards.value?.get(
+                    position - isJoinCardHiddenCount()
+                )?.let { deleteDialog(it) }
             }
             if (direction == ItemTouchHelper.RIGHT) {
                 binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
             }
         }
     }
+
+    private fun isJoinCardHiddenCount() =
+        if (SharedPreferenceManager.isPaymentJoinHidden) {
+            0
+        } else {
+            1
+        }
 
     fun deleteDialog(paymentCard: PaymentCard) {
         val dialog: AlertDialog
@@ -119,7 +128,7 @@ class PaymentCardWalletFragment :
                                         action
                                     )
                                 })
-                        
+
                         val helperListenerLeft =
                             RecyclerItemTouchHelper(
                                 0,
@@ -135,12 +144,13 @@ class PaymentCardWalletFragment :
                             )
 
                         ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-                        ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+                        // remarked this out as the Swipe Right isn't used on Payment Cards
+                        // but leaving it here as it could be used for a future story
+                        //ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
                     }
                 }
             }
         }
-
     }
 
     fun setData(
