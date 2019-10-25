@@ -17,7 +17,7 @@ import com.bink.wallet.utils.enums.CardStatus
 class LoyaltyWalletAdapter(
     private val membershipPlans: List<MembershipPlan>,
     private val membershipCards: List<Any>,
-    val onClickListener: (MembershipCard) -> Unit = {},
+    val onClickListener: (Any) -> Unit = {},
     val onRemoveListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -52,13 +52,13 @@ class LoyaltyWalletAdapter(
     override fun getItemId(position: Int): Long = position.toLong()
 
 
-//    private fun getItemPosition(cardId: String): Int =
-//        membershipCards.indexOfFirst { card -> card.id == cardId }
+    private fun getItemPosition(cardId: String): Int =
+        membershipCards.indexOfFirst { card -> (card as MembershipCard).id == cardId }
 
 
     fun deleteCard(cardId: String) {
-//        (membershipCards as ArrayList<MembershipCard>).removeAt(getItemPosition(cardId))
-//        notifyItemRemoved(getItemPosition(cardId))
+        (membershipCards as ArrayList<*>).removeAt(getItemPosition(cardId))
+        notifyItemRemoved(getItemPosition(cardId))
     }
 
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
@@ -120,9 +120,10 @@ class LoyaltyWalletAdapter(
         override fun bind(item: MembershipPlan) {
             binding.membershipPlan = item
             binding.closeButton.setOnClickListener {
-                onRemoveListener(membershipPlans[adapterPosition])
+                onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
                 notifyItemRemoved(adapterPosition)
             }
+            binding.joinCardMainLayout.setOnClickListener { onClickListener(item) }
         }
     }
 }

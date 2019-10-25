@@ -125,33 +125,33 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    private fun onCardClicked(card: MembershipCard) {
-        for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
-            if (card.membership_plan == membershipPlan.id) {
-                val directions =
-                    WalletsFragmentDirections.homeToDetail(
-                        membershipPlan,
-                        card
+    private fun onCardClicked(item: Any) {
+        if (item is MembershipCard) {
+            for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
+                if (item.membership_plan == membershipPlan.id) {
+                    val directions =
+                        WalletsFragmentDirections.homeToDetail(
+                            membershipPlan,
+                            item
+                        )
+                    findNavController().navigateIfAdded(
+                        this@LoyaltyWalletFragment,
+                        directions
                     )
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    directions
-                )
-                this@LoyaltyWalletFragment.onDestroy()
+                    this@LoyaltyWalletFragment.onDestroy()
+                }
             }
-        }
-    }
-
-    private fun onCardJoinClick(plan: MembershipPlan) {
-        val directions =
-            WalletsFragmentDirections.homeToAddJoin(
-                plan
+        } else {
+            val directions =
+                WalletsFragmentDirections.homeToAddJoin(
+                    item as MembershipPlan
+                )
+            findNavController().navigateIfAdded(
+                this@LoyaltyWalletFragment,
+                directions
             )
-        findNavController().navigateIfAdded(
-            this@LoyaltyWalletFragment,
-            directions
-        )
-        this@LoyaltyWalletFragment.onDestroy()
+            this@LoyaltyWalletFragment.onDestroy()
+        }
     }
 
     fun deleteDialog(membershipCard: MembershipCard) {
@@ -209,39 +209,41 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.isEnabled = true
         binding.progressSpinner.visibility = View.GONE
 
-        val walletItems = ArrayList<Any>(plansReceived.filter {
-            it.getCardType() == CardType.PLL &&
-                    merchantNoLoyalty(cardsReceived, it) &&
-                    viewModel.dismissedCardData.value!!.firstOrNull { currentId -> it.id == currentId.id } == null
-        })
+        viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
+            val walletItems = ArrayList<Any>(plansReceived.filter {
+                it.getCardType() == CardType.PLL &&
+                        merchantNoLoyalty(cardsReceived, it) &&
+                        dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null
+            })
 
-        walletItems.addAll(cardsReceived)
+            walletItems.addAll(cardsReceived)
 
-        binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
-            adapter =
-                LoyaltyWalletAdapter(
-                    plansReceived,
-                    walletItems.toList(),
-                    onClickListener = {
-                        onCardClicked(it)
-                    },
-                    onRemoveListener = { onBannerRemove(it) }
+            binding.loyaltyWalletList.apply {
+                layoutManager = GridLayoutManager(requireContext(), 1)
+                adapter =
+                    LoyaltyWalletAdapter(
+                        plansReceived,
+                        walletItems.toList(),
+                        onClickListener = {
+                            onCardClicked(it)
+                        },
+                        onRemoveListener = { onBannerRemove(it) }
+                    )
+
+                val helperListener =
+                    RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+                ItemTouchHelper(helperListener).attachToRecyclerView(this)
+                ItemTouchHelper(
+                    RecyclerItemTouchHelper(
+                        0,
+                        ItemTouchHelper.RIGHT,
+                        listener
+                    )
+                ).attachToRecyclerView(
+                    this
                 )
-
-            val helperListener =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-            ItemTouchHelper(helperListener).attachToRecyclerView(this)
-            ItemTouchHelper(
-                RecyclerItemTouchHelper(
-                    0,
-                    ItemTouchHelper.RIGHT,
-                    listener
-                )
-            ).attachToRecyclerView(
-                this
-            )
+            }
         }
     }
 
