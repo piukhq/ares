@@ -52,7 +52,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
         }
 
-        binding.continueWithFacebook.setOnClickListener { 
+        binding.continueWithFacebook.setOnClickListener {
             requireContext().displayModalPopup(getString(R.string.missing_destination_dialog_title), getString(R.string.not_implemented_yet_text))
         }
 
