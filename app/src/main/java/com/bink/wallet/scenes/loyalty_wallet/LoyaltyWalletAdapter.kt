@@ -6,28 +6,44 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.enums.CardStatus
 
 
 class LoyaltyWalletAdapter(
     private val membershipPlans: List<MembershipPlan>,
-    private val membershipCards: List<MembershipCard>,
-    val onClickListener: (MembershipCard) -> Unit = {}
-) : RecyclerView.Adapter<LoyaltyWalletAdapter.LoyaltyWalletViewHolder>() {
+    private val membershipCards: List<Any>,
+    val onClickListener: (MembershipCard) -> Unit = {},
+    val onRemoveListener: (MembershipPlan) -> Unit = {}
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoyaltyWalletViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = LoyaltyWalletItemBinding.inflate(inflater)
-        return LoyaltyWalletViewHolder(
-            binding
-        )
+
+        return if (viewType == 0) {
+            val binding = LoyaltyWalletItemBinding.inflate(inflater)
+            LoyaltyWalletViewHolder(binding)
+        } else {
+            val binding = EmptyLoyaltyItemBinding.inflate(inflater)
+            PlanSuggestionHolder(binding)
+        }
     }
 
-    override fun onBindViewHolder(holder: LoyaltyWalletViewHolder, position: Int) {
-        holder.bind(membershipCards[position])
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        membershipCards[position].let {
+            when (holder) {
+                is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
+                is PlanSuggestionHolder -> holder.bind(it as MembershipPlan)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (membershipCards[position] is MembershipCard) 0 else 1
     }
 
     override fun getItemCount(): Int = membershipCards.size
@@ -36,19 +52,19 @@ class LoyaltyWalletAdapter(
     override fun getItemId(position: Int): Long = position.toLong()
 
 
-    private fun getItemPosition(cardId: String): Int =
-        membershipCards.indexOfFirst { card -> card.id == cardId }
+//    private fun getItemPosition(cardId: String): Int =
+//        membershipCards.indexOfFirst { card -> card.id == cardId }
 
 
     fun deleteCard(cardId: String) {
-        (membershipCards as ArrayList<MembershipCard>).removeAt(getItemPosition(cardId))
-        notifyItemRemoved(getItemPosition(cardId))
+//        (membershipCards as ArrayList<MembershipCard>).removeAt(getItemPosition(cardId))
+//        notifyItemRemoved(getItemPosition(cardId))
     }
 
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        BaseViewHolder<MembershipCard>(binding) {
 
-        fun bind(item: MembershipCard) {
+        override fun bind(item: MembershipCard) {
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
@@ -85,7 +101,7 @@ class LoyaltyWalletAdapter(
                         CardStatus.UNAUTHORISED.status -> {
                             cardBinding.linkStatusWrapper.visibility = View.VISIBLE
                             cardBinding.linkStatusText.text =
-                                binding.root.context.getString(R.string.link_status_cannot_link)
+                                cardBinding.linkStatusText.context.getString(R.string.link_status_cannot_link)
                             cardBinding.linkStatusImg.setImageResource(R.drawable.ic_unlinked)
                         }
                     }
@@ -94,6 +110,18 @@ class LoyaltyWalletAdapter(
                     setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
                     setSecondColor(Color.parseColor(item.card?.colour))
                 }
+            }
+        }
+    }
+
+    inner class PlanSuggestionHolder(val binding: EmptyLoyaltyItemBinding) :
+        BaseViewHolder<MembershipPlan>(binding) {
+
+        override fun bind(item: MembershipPlan) {
+            binding.membershipPlan = item
+            binding.closeButton.setOnClickListener {
+                onRemoveListener(membershipPlans[adapterPosition])
+                notifyItemRemoved(adapterPosition)
             }
         }
     }

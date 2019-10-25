@@ -209,15 +209,25 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.isEnabled = true
         binding.progressSpinner.visibility = View.GONE
 
+        val walletItems = ArrayList<Any>(plansReceived.filter {
+            it.getCardType() == CardType.PLL &&
+                    merchantNoLoyalty(cardsReceived, it) &&
+                    viewModel.dismissedCardData.value!!.firstOrNull { currentId -> it.id == currentId.id } == null
+        })
+
+        walletItems.addAll(cardsReceived)
+
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter =
                 LoyaltyWalletAdapter(
                     plansReceived,
-                    cardsReceived,
+                    walletItems.toList(),
                     onClickListener = {
                         onCardClicked(it)
-                    })
+                    },
+                    onRemoveListener = { onBannerRemove(it) }
+                )
 
             val helperListener =
                 RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
@@ -232,24 +242,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             ).attachToRecyclerView(
                 this
             )
-        }
-
-        viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-
-            val walletItems = ArrayList<MembershipPlan>(plansReceived.filter {
-                it.getCardType() == CardType.PLL &&
-                        merchantNoLoyalty(cardsReceived, it) &&
-                        dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null
-            })
-
-            binding.suggestionPlanList.apply {
-                layoutManager = GridLayoutManager(requireContext(), 1)
-                adapter = PlanSuggestionAdapter(
-                    walletItems.toList(),
-                    onClickListener = { onCardJoinClick(it) },
-                    onRemoveListener = { onBannerRemove(it) }
-                )
-            }
         }
     }
 
