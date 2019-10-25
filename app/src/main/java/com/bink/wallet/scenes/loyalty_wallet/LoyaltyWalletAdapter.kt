@@ -11,6 +11,7 @@ import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardStatus
+import com.bink.wallet.utils.enums.CardType
 
 
 class LoyaltyWalletAdapter(
@@ -68,8 +69,9 @@ class LoyaltyWalletAdapter(
                         cardBinding.valueWrapper.visibility = View.VISIBLE
                         val balance = item.balances?.first()
                         when (balance?.prefix != null) {
-                            true -> cardBinding.loyaltyValue.text =
-                                balance?.prefix?.plus(balance.value)
+                            true ->
+                                cardBinding.loyaltyValue.text =
+                                    balance?.prefix?.plus(balance.value)
                             else -> {
                                 cardBinding.loyaltyValue.text = balance?.value
                                 cardBinding.loyaltyValueExtra.text = balance?.suffix
@@ -83,16 +85,22 @@ class LoyaltyWalletAdapter(
                             cardBinding.loyaltyValueExtra.context?.getString(R.string.card_status_pending)
                     }
                 }
-
-                when (currentMembershipPlan.feature_set?.card_type) {
-                    2 -> when (item.status?.state) {
-                        CardStatus.AUTHORISED.status -> cardBinding.linkStatusWrapper.visibility =
-                            View.VISIBLE
-                        CardStatus.UNAUTHORISED.status -> {
+                if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
+                    cardBinding.linkStatusWrapper.visibility = View.VISIBLE
+                    cardBinding.linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                    cardBinding.linkStatusText.text =
+                        binding.root.context.getString(R.string.link_status_cannot_link)
+                } else {
+                    when (item.payment_cards?.size) {
+                        0 -> {
+                            cardBinding.linkStatusWrapper.visibility = View.GONE
+                        }
+                        else -> {
                             cardBinding.linkStatusWrapper.visibility = View.VISIBLE
                             cardBinding.linkStatusText.text =
-                                binding.root.context.getString(R.string.link_status_cannot_link)
-                            cardBinding.linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                                binding.root.context.getString(
+                                    R.string.loyalty_card_linked
+                                )
                         }
                     }
                 }
