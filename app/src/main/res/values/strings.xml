@@ -280,6 +280,7 @@
     <string name="card_number">Card number</string>
     <string name="name_on_card">Name on card</string>
     <string name="expiry">Expiry</string>
+    <string name="expiry_format">MM/YY</string>
     <string name="incorrect_card_error">Please enter a valid card number</string>
     <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
     <string name="incorrect_card_name">Please enter the name on the card</string>
