@@ -98,9 +98,11 @@ class PaymentCardWalletFragment :
         viewModel.fetchLocalMembershipCards()
         viewModel.fetchLocalPaymentCards()
 
-        runBlocking {
-            viewModel.getPaymentCards()
-            binding.progressSpinner.visibility = View.VISIBLE
+        fetchPaymentCards()
+
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            fetchPaymentCards()
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
@@ -150,6 +152,13 @@ class PaymentCardWalletFragment :
                     }
                 }
             }
+        }
+    }
+
+    private fun fetchPaymentCards() {
+        runBlocking {
+            binding.progressSpinner.visibility = View.VISIBLE
+            viewModel.getPaymentCards()
         }
     }
 
