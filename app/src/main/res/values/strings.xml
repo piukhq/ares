@@ -288,6 +288,7 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
+    <string name="could_not_add_card">Something went wrong adding the card, please try again</string>
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>

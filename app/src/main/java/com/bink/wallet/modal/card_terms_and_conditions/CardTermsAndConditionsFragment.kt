@@ -1,13 +1,16 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalFragment
 import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragmentDirections
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,7 +44,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
 
         viewModel.paymentCard.observeNonNull(this) {
             val action =
-                AddPaymentCardFragmentDirections.addPaymentToDetails(
+                CardTermsAndConditionsFragmentDirections.cardTermsToDetails(
                     it,
                     viewModel.localMembershipPlanData.value!!.toTypedArray(),
                     viewModel.localMembershipCardData.value!!.toTypedArray()
@@ -51,10 +54,22 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
                 action
             )
         }
+        viewModel.error.observeNonNull(this) {
+            if (viewModel.error.value != null) {
+                binding.progressSpinner.visibility = View.GONE
+                binding.firstButton.isEnabled = true
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.could_not_add_card)
+                )
+            }
+        }
     }
 
     override fun onFirstButtonClicked() {
         super.onFirstButtonClicked()
+        binding.firstButton.isEnabled = false
+        binding.progressSpinner.visibility = View.VISIBLE
         viewModel.sendAddCard(
             PaymentCardAdd(
                 userBankCard!!,
