@@ -90,7 +90,6 @@ class LoyaltyCardDetailsFragment :
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
         }
 
-
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
@@ -98,7 +97,7 @@ class LoyaltyCardDetailsFragment :
             binding.footerDelete.binding.title.text =
                 getString(
                     R.string.delete_card_plan,
-                    viewModel.membershipPlan.value?.account?.plan_name
+                    viewModel.membershipPlan.value?.account?.plan_name_card
                 )
         }
 
