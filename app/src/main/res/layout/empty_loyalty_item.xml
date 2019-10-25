@@ -58,7 +58,7 @@
                         android:textColor="@color/blue_accent"
                         android:textSize="@dimen/text_size_description_big"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/textView2"
+                        app:layout_constraintEnd_toStartOf="@+id/close_button"
                         app:layout_constraintStart_toEndOf="@+id/imageView3"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,7 +78,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
                 <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/close_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"

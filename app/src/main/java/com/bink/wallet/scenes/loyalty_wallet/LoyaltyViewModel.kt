@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
@@ -13,6 +14,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    var dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
 
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
@@ -32,5 +34,13 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
 
     fun fetchLocalMembershipPlans() {
         loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
+    }
+
+    fun fetchDismissedCards() {
+        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData)
+    }
+
+    fun addPlanIdAsDismissed(id: String) {
+        loyaltyWalletRepository.addBannerAsDismissed(id)
     }
 }

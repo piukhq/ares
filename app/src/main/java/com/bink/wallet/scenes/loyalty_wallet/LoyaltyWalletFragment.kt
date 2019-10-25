@@ -79,6 +79,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
+        viewModel.addPlanIdAsDismissed("test")
 
         viewModel.deleteCard.observe(this, Observer { id ->
             viewModel.membershipCardData.value =
@@ -106,6 +107,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.swipeLayout.isRefreshing = false
                 viewModel.fetchLocalMembershipPlans()
                 viewModel.fetchLocalMembershipCards()
+                viewModel.fetchDismissedCards()
             } else {
                 showNoInternetConnectionDialog()
             }
@@ -207,12 +209,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.isEnabled = true
         binding.progressSpinner.visibility = View.GONE
 
-        val walletItems = ArrayList<MembershipPlan>(plansReceived.filter {
-            it.getCardType() == CardType.PLL &&
-                    merchantNoLoyalty(cardsReceived, it)
-        })
-
-
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter =
@@ -238,14 +234,28 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             )
         }
 
-        binding.suggestionPlanList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
-            adapter = PlanSuggestionAdapter(
-                walletItems.toList(),
-                onClickListener = {
-                    onCardJoinClick(it)
-                })
+        viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
+
+            val walletItems = ArrayList<MembershipPlan>(plansReceived.filter {
+                it.getCardType() == CardType.PLL &&
+                        merchantNoLoyalty(cardsReceived, it) &&
+                        dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null
+            })
+
+            binding.suggestionPlanList.apply {
+                layoutManager = GridLayoutManager(requireContext(), 1)
+                adapter = PlanSuggestionAdapter(
+                    walletItems.toList(),
+                    onClickListener = { onCardJoinClick(it) },
+                    onRemoveListener = { onBannerRemove(it) }
+                )
+            }
         }
+    }
+
+    private fun onBannerRemove(plan: MembershipPlan) {
+        viewModel.addPlanIdAsDismissed(plan.id)
+        viewModel.fetchDismissedCards()
     }
 
     fun setData(

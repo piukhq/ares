@@ -8,7 +8,8 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
 class PlanSuggestionAdapter(
     private val membershipPlans: List<MembershipPlan>,
-    val onClickListener: (MembershipPlan) -> Unit = {}
+    val onClickListener: (MembershipPlan) -> Unit = {},
+    val onRemoveListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<PlanSuggestionAdapter.PlanSuggestionHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanSuggestionHolder {
@@ -41,6 +42,10 @@ class PlanSuggestionAdapter(
 
         fun bind(item: MembershipPlan) {
             binding.membershipPlan = item
+            binding.closeButton.setOnClickListener {
+                onRemoveListener(membershipPlans[adapterPosition])
+                notifyItemRemoved(adapterPosition)
+            }
         }
     }
 
