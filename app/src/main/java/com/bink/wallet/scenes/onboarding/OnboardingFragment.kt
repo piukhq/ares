@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
@@ -19,7 +20,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     override val layoutRes: Int
         get() = R.layout.onboarding_fragment
     override val viewModel: OnboardingViewModel by viewModel()
-
+    var timer = Timer()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -63,11 +64,17 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         binding.pager.addOnPageChangeListener(object: OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                scrollPagesAutomatically(binding.pager)
                 if(position == 0) {
+                    SharedPreferenceManager.isFirstOnboardingScreen = true
                     binding.back.visibility = View.GONE
                 } else {
+                    SharedPreferenceManager.isFirstOnboardingScreen = false
                     binding.back.visibility = View.VISIBLE
                 }
+                timer.cancel()
+                timer = Timer()
+                scrollPagesAutomatically(binding.pager)
             }
         })
 
@@ -80,7 +87,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     private fun scrollPagesAutomatically(pager: ViewPager) {
         var currentPage = pager.currentItem
-        val handler = Handler()
+        val pagerHandler = Handler()
         val update = Runnable {
             if(currentPage == ONBOARDING_PAGES_NUMBER){
                 pager.setCurrentItem(FIRST_PAGE_INDEX, true)
@@ -90,9 +97,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             }
         }
 
-        Timer().schedule(object : TimerTask() {
+        timer.schedule(object : TimerTask() {
             override fun run() {
-                handler.post(update)
+                pagerHandler.post(update)
             }
         }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
     }

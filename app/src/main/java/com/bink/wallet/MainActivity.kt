@@ -82,6 +82,12 @@ class MainActivity : AppCompatActivity() {
             R.id.home_wallet -> {
                 finish()
             }
+            R.id.onboarding_fragment -> {
+                if(SharedPreferenceManager.isFirstOnboardingScreen) {
+                    finish()
+                }
+
+            }
             else -> super.onBackPressed()
         }
     }
@@ -107,4 +113,8 @@ private operator fun Any.setValue(
     loginRepository: LoginRepository
 ) {
 
+}
+
+interface OnBackPressedOnboarding {
+    fun onBackPressed()
 }

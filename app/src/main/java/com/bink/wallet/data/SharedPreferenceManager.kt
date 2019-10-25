@@ -12,10 +12,12 @@ object SharedPreferenceManager {
     //----- KEYS -----
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
     private const val IS_LOYALTY_WALLET = "isLoyaltyWalletActive"
+    private const val IS_FIRST_ONBOARDING_SCREEN = "isFirstOnboardingScreen"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
     private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
+    private val IS_FIRST_ONBGOARDING_SCREEN = Pair(IS_FIRST_ONBOARDING_SCREEN, true)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
@@ -38,4 +40,10 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putBoolean(IS_LOYALTY_SELECTED.first, value)
         }
+    var isFirstOnboardingScreen: Boolean
+        get() = preferences.getBoolean(IS_FIRST_ONBGOARDING_SCREEN.first, IS_FIRST_ONBGOARDING_SCREEN.second)
+        set(value) = preferences.edit {
+            it.putBoolean(IS_FIRST_ONBGOARDING_SCREEN.first, value)
+        }
+
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingPageFragmentBinding
 import com.bink.wallet.utils.PAGE_1
+import com.bink.wallet.utils.toPixelFromDip
 
 class OnboardingPageFragment: Fragment() {
 
@@ -47,9 +48,13 @@ class OnboardingPageFragment: Fragment() {
 
             if(bundle.getString(EXTRA_PAGE_TITLE).equals(PAGE_1)) {
                 binding.binkImage.visibility = View.VISIBLE
+                val layoutParams = binding.pageImage.layoutParams
+                layoutParams.height = requireContext().toPixelFromDip(100.toFloat()).toInt()
+                binding.pageImage.layoutParams = layoutParams
+
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(binding.pageLayout)
-                constraintSet.connect(R.id.page_image, ConstraintSet.TOP, R.id.bink_image, ConstraintSet.BOTTOM)
+                constraintSet.connect(R.id.page_image, ConstraintSet.TOP, R.id.bink_image, ConstraintSet.BOTTOM,requireContext().toPixelFromDip(16.toFloat()).toInt())
                 constraintSet.applyTo(binding.pageLayout)
             }
         }

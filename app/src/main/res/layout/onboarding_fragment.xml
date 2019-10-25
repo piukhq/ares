@@ -35,22 +35,23 @@
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="8dp"
                 android:overScrollMode="never"
                 app:layout_constraintBottom_toTopOf="@+id/pager_indicator"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintVertical_bias="0.0" />
 
         <com.rd.PageIndicatorView
                 android:id="@+id/pager_indicator"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginBottom="32dp"
+                android:layout_height="8dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/continue_with_facebook"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pager"
                 app:piv_animationType="scale"
                 app:piv_count="3"
                 app:piv_interactiveAnimation="true"
