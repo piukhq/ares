@@ -48,3 +48,4 @@ AB20-85  Not Implemented Yet on Settings pages for functionality that isn't impl
 AB20-195 Swipe to delete payment card
 AB20-143 Empty payment wallet
 AB20-207-Barcode Screen Not Showing Correct Information
+AB20-259 Settings page text colour
