@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.payment_card_details
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -67,6 +68,12 @@ class PaymentCardsDetails :
             }
             dialog = builder.create()
             dialog.show()
+        }
+
+        if (viewModel.paymentCard.value!!.card!!.isExpired()) {
+            binding.paymentHeader.cardExpired.visibility = View.VISIBLE
+            binding.paymentHeader.linkStatus.visibility  = View.GONE
+            binding.paymentHeader.imageStatus.visibility = View.GONE
         }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
