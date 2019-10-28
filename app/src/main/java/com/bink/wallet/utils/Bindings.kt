@@ -142,8 +142,13 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     } else {
         binding.image.setBackgroundColor(Color.GREEN)
     }
-    if (card?.card?.barcode == null) {
-        binding.tapCard.text = binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    if (card?.card?.barcode.isNullOrEmpty()) {
+        if (card?.card?.membership_id.isNullOrEmpty()) {
+            binding.tapCard.visibility = View.GONE
+        } else {
+            binding.tapCard.text =
+                binding.root.context.getString(R.string.tap_card_to_show_card_number)
+        }
     }
 }
 

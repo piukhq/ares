@@ -140,7 +140,9 @@ class LoyaltyCardDetailsFragment :
         }
 
         if (viewModel.membershipCard.value?.card != null &&
-            !viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+            (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
+             !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())) {
+
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
@@ -154,6 +156,8 @@ class LoyaltyCardDetailsFragment :
 
                 directions?.let { findNavController().navigateIfAdded(this, directions) }
             }
+        } else if (viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty()) {
+            binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
         binding.footerSecurity.setOnClickListener {
