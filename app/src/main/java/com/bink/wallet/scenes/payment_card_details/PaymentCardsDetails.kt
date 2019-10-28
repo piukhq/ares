@@ -70,7 +70,9 @@ class PaymentCardsDetails :
             dialog.show()
         }
 
-        if (viewModel.paymentCard.value!!.card!!.isExpired()) {
+        if (viewModel.paymentCard.value != null &&
+            viewModel.paymentCard.value!!.card != null &&
+            viewModel.paymentCard.value!!.card!!.isExpired()) {
             binding.paymentHeader.cardExpired.visibility = View.VISIBLE
             binding.paymentHeader.linkStatus.visibility  = View.GONE
             binding.paymentHeader.imageStatus.visibility = View.GONE
