@@ -66,10 +66,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 super.onPageSelected(position)
                 scrollPagesAutomatically(binding.pager)
                 if(position == 0) {
-                    SharedPreferenceManager.isFirstOnboardingScreen = true
                     binding.back.visibility = View.GONE
                 } else {
-                    SharedPreferenceManager.isFirstOnboardingScreen = false
                     binding.back.visibility = View.VISIBLE
                 }
                 timer.cancel()

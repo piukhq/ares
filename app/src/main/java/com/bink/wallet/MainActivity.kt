@@ -79,14 +79,9 @@ class MainActivity : AppCompatActivity() {
                     findNavController(R.id.main_fragment).popBackStack()
                 }
             }
-            R.id.home_wallet -> {
+            R.id.home_wallet,
+            R.id.onboarding_fragment-> {
                 finish()
-            }
-            R.id.onboarding_fragment -> {
-                if(SharedPreferenceManager.isFirstOnboardingScreen) {
-                    finish()
-                }
-
             }
             else -> super.onBackPressed()
         }
@@ -115,6 +110,4 @@ private operator fun Any.setValue(
 
 }
 
-interface OnBackPressedOnboarding {
-    fun onBackPressed()
-}
+
