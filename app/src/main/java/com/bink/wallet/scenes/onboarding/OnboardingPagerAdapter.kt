@@ -6,24 +6,25 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 
 
-
-class OnboardingPagerAdapter(fragmentManager: FragmentManager): FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
+    FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     companion object {
         const val ONBOARDING_PAGES_NUMBER = 3
         const val FIRST_PAGE_INDEX = 0
     }
+
     private val onboardingFragments = mutableListOf<OnboardingPageFragment>()
 
-    override fun getItem(position: Int): Fragment  = onboardingFragments[position]
+    override fun getItem(position: Int): Fragment = onboardingFragments[position]
 
-    override fun getCount(): Int =  ONBOARDING_PAGES_NUMBER
+    override fun getCount(): Int = ONBOARDING_PAGES_NUMBER
 
-    fun addFragment(fragment: OnboardingPageFragment){
+    fun addFragment(fragment: OnboardingPageFragment) {
         onboardingFragments.add(fragment)
     }
 
-     open class CircularViewPagerHandler(private val viewPager: ViewPager) :
+    open class CircularViewPagerHandler(private val viewPager: ViewPager) :
         ViewPager.OnPageChangeListener {
         private var currentPosition: Int = 0
         private var scrollState: Int = 0

@@ -12,18 +12,26 @@ import com.bink.wallet.databinding.OnboardingPageFragmentBinding
 import com.bink.wallet.utils.PAGE_1
 import com.bink.wallet.utils.toPixelFromDip
 
-class OnboardingPageFragment: Fragment() {
+class OnboardingPageFragment : Fragment() {
 
     companion object {
         private const val EXTRA_IMAGE = "extraImage"
         private const val EXTRA_TITLE = "extraTitle"
         private const val EXTRA_DESCRIPTION = "extraDescription"
         private const val EXTRA_PAGE_TITLE = "extraPageTitle"
+        private const val PAGE_IMAGE_HEIGHT_PX = 100f
+        private const val PAGE_MARGIN_HEIGHT_PX = 16f
 
-        fun newInstance(pageTitle: String, imageId: Int, title: String, description: String): OnboardingPageFragment {
+        fun newInstance(
+            pageTitle: String,
+            imageId: Int,
+            title: String,
+            description: String
+        ): OnboardingPageFragment {
             val fragment = OnboardingPageFragment()
             val bundle = Bundle()
-            with(bundle){
+
+            with(bundle) {
                 putString(EXTRA_PAGE_TITLE, pageTitle)
                 putInt(EXTRA_IMAGE, imageId)
                 putString(EXTRA_TITLE, title)
@@ -39,23 +47,38 @@ class OnboardingPageFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<OnboardingPageFragmentBinding>(inflater,R.layout.onboarding_page_fragment, container, false)
+        val binding = DataBindingUtil.inflate<OnboardingPageFragmentBinding>(
+            inflater,
+            R.layout.onboarding_page_fragment,
+            container,
+            false
+        )
 
         arguments?.let { bundle ->
-            binding.pageTitle.text = bundle.getString(EXTRA_TITLE)
-            binding.pageDescription.text = bundle.getString(EXTRA_DESCRIPTION)
-            binding.pageImage.setImageResource(bundle.getInt(EXTRA_IMAGE))
+            with(binding) {
+                pageTitle.text = bundle.getString(EXTRA_TITLE)
+                pageDescription.text = bundle.getString(EXTRA_DESCRIPTION)
+                pageImage.setImageResource(bundle.getInt(EXTRA_IMAGE))
+            }
 
-            if(bundle.getString(EXTRA_PAGE_TITLE).equals(PAGE_1)) {
+            if (bundle.getString(EXTRA_PAGE_TITLE).equals(PAGE_1)) {
                 binding.binkImage.visibility = View.VISIBLE
                 val layoutParams = binding.pageImage.layoutParams
-                layoutParams.height = requireContext().toPixelFromDip(100.toFloat()).toInt()
+                layoutParams.height = requireContext().toPixelFromDip(PAGE_IMAGE_HEIGHT_PX).toInt()
                 binding.pageImage.layoutParams = layoutParams
 
                 val constraintSet = ConstraintSet()
-                constraintSet.clone(binding.pageLayout)
-                constraintSet.connect(R.id.page_image, ConstraintSet.TOP, R.id.bink_image, ConstraintSet.BOTTOM,requireContext().toPixelFromDip(16.toFloat()).toInt())
-                constraintSet.applyTo(binding.pageLayout)
+                with(constraintSet) {
+                    clone(binding.pageLayout)
+                    connect(
+                        R.id.page_image,
+                        ConstraintSet.TOP,
+                        R.id.bink_image,
+                        ConstraintSet.BOTTOM,
+                        requireContext().toPixelFromDip(PAGE_MARGIN_HEIGHT_PX).toInt()
+                    )
+                    applyTo(binding.pageLayout)
+                }
             }
         }
         return binding.root

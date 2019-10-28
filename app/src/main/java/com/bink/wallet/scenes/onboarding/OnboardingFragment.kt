@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
@@ -31,22 +30,30 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         super.onActivityCreated(savedInstanceState)
 
         val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
-        adapter?.addFragment(OnboardingPageFragment.newInstance(
-            PAGE_1,
-            R.drawable.logo_page_1,
-            getString(R.string.page_1_title),
-            getString(R.string.page_1_description)
-        ))
-        adapter?.addFragment(OnboardingPageFragment.newInstance(
-            PAGE_2,
-            R.drawable.onb_2,
-            getString(R.string.page_2_title),
-            getString(R.string.page_2_description)))
-        adapter?.addFragment(OnboardingPageFragment.newInstance(
-            PAGE_3,
-            R.drawable.onb_3,
-            getString(R.string.page_3_title),
-            getString(R.string.page_3_description)))
+        adapter?.addFragment(
+            OnboardingPageFragment.newInstance(
+                PAGE_1,
+                R.drawable.logo_page_1,
+                getString(R.string.page_1_title),
+                getString(R.string.page_1_description)
+            )
+        )
+        adapter?.addFragment(
+            OnboardingPageFragment.newInstance(
+                PAGE_2,
+                R.drawable.onb_2,
+                getString(R.string.page_2_title),
+                getString(R.string.page_2_description)
+            )
+        )
+        adapter?.addFragment(
+            OnboardingPageFragment.newInstance(
+                PAGE_3,
+                R.drawable.onb_3,
+                getString(R.string.page_3_title),
+                getString(R.string.page_3_description)
+            )
+        )
         binding.pager.adapter = adapter
 
         binding.logInEmail.setOnClickListener {
@@ -54,18 +61,25 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.continueWithFacebook.setOnClickListener {
-            requireContext().displayModalPopup(getString(R.string.missing_destination_dialog_title), getString(R.string.not_implemented_yet_text))
+            requireContext().displayModalPopup(
+                getString(R.string.missing_destination_dialog_title),
+                getString(R.string.not_implemented_yet_text)
+            )
         }
 
         binding.signUpWithEmail.setOnClickListener {
-            requireContext().displayModalPopup(getString(R.string.missing_destination_dialog_title), getString(R.string.not_implemented_yet_text))
+            requireContext().displayModalPopup(
+                getString(R.string.missing_destination_dialog_title),
+                getString(R.string.not_implemented_yet_text)
+            )
         }
 
-        binding.pager.addOnPageChangeListener(object: OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager){
+        binding.pager.addOnPageChangeListener(object :
+            OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager) {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 scrollPagesAutomatically(binding.pager)
-                if(position == 0) {
+                if (position == 0) {
                     binding.back.visibility = View.GONE
                 } else {
                     binding.back.visibility = View.VISIBLE
@@ -87,7 +101,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         var currentPage = pager.currentItem
         val pagerHandler = Handler()
         val update = Runnable {
-            if(currentPage == ONBOARDING_PAGES_NUMBER){
+            if (currentPage == ONBOARDING_PAGES_NUMBER) {
                 pager.setCurrentItem(FIRST_PAGE_INDEX, true)
                 currentPage = FIRST_PAGE_INDEX
             } else {
