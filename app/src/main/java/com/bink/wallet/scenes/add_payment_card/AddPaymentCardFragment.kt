@@ -50,7 +50,7 @@ class AddPaymentCardFragment :
         viewModel.fetchLocalMembershipCards()
         viewModel.fetchLocalMembershipPlans()
 
-        val textWatcher = object : TextWatcher {
+        val cardNumberTextWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
 
@@ -74,7 +74,7 @@ class AddPaymentCardFragment :
             }
         }
         with (binding.cardNumber) {
-            addTextChangedListener(textWatcher)
+            addTextChangedListener(cardNumberTextWatcher)
             setOnFocusChangeListener { _, focus ->
                 if (!focus) {
                     binding.cardNumberInputLayout.error =
@@ -92,14 +92,34 @@ class AddPaymentCardFragment :
                 binding.cardExpiryInputLayout.error = cardExpiryErrorCheck(view)
             }
         }
-        binding.cardName.setOnFocusChangeListener { view, focus ->
-            if (!focus) {
-                binding.cardNameInputLayout.error =
-                    if (binding.cardName.text.toString().isEmpty()) {
-                        getString(R.string.incorrect_card_name)
-                    } else {
-                        ""
-                    }
+
+        val nameTextWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(
+                currentText: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+                binding.displayCardName.text = currentText
+            }
+        }
+        with (binding.cardName) {
+            addTextChangedListener(nameTextWatcher)
+            setOnFocusChangeListener { view, focus ->
+                if (!focus) {
+                    binding.cardNameInputLayout.error =
+                        if (binding.cardName.text.toString().isEmpty()) {
+                            getString(R.string.incorrect_card_name)
+                        } else {
+                            ""
+                        }
+                }
             }
         }
 
