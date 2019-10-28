@@ -54,3 +54,4 @@ AB20-246 Payment card expiry for wallet & details screen
 AB20-258 Barcode not showing for H&M account
 AB20-260 Barcode maximise screen title
 AB20-265 Barcode maximise screen close click area too small
+AB20-257 Barcode screen should show only the membership id
