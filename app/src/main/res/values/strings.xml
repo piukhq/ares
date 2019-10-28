@@ -36,9 +36,9 @@
     <string name="add_join_inactive_view_description">You cannot see your live points balance and transaction history
         for this card in Bink.
     </string>
-    <string name="add_join_inactive_link_description">You cannot link this card to your payment cards yet</string>
+    <string name="add_join_inactive_link_description">You cannot link this card to your payment cards yet.</string>
     <string name="add_join_active_link_description">You can link this card to your bank cards and automatically collect
-        points when you pay
+        points when you pay.
     </string>
     <string name="add_join_link_title">Link</string>
     <string name="add_join__inactive_view_description">You can see your live points balance and transactions history for
