@@ -65,30 +65,29 @@ class PaymentCardWalletFragment :
 
     fun deleteDialog(paymentCard: PaymentCard) {
         val dialog: AlertDialog
-        val builder = context?.let { AlertDialog.Builder(it) }
-        if (builder != null) {
-            builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
-            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
-                when (which) {
-                    DialogInterface.BUTTON_POSITIVE -> {
-                        if (verifyAvailableNetwork(requireActivity())) {
-                            runBlocking {
-                                viewModel.deletePaymentCard(paymentCard.id.toString())
-                            }
-                        } else {
-                            showNoInternetConnectionDialog()
+        val builder = requireContext().let { AlertDialog.Builder(it) }
+        builder.setCancelable(false)
+        builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
+        val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    if (verifyAvailableNetwork(requireActivity())) {
+                        runBlocking {
+                            viewModel.deletePaymentCard(paymentCard.id.toString())
                         }
-                    }
-                    DialogInterface.BUTTON_NEUTRAL -> {
-                        binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+                    } else {
+                        showNoInternetConnectionDialog()
                     }
                 }
+                DialogInterface.BUTTON_NEUTRAL -> {
+                    binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+                }
             }
-            builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
-            builder.setNeutralButton(getString(R.string.cancel_text_upper), dialogClickListener)
-            dialog = builder.create()
-            dialog.show()
         }
+        builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
+        builder.setNeutralButton(getString(R.string.cancel_text_upper), dialogClickListener)
+        dialog = builder.create()
+        dialog.show()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
