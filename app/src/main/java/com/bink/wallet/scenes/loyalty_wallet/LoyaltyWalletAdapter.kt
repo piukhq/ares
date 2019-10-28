@@ -59,60 +59,60 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
-                cardBinding.plan = currentMembershipPlan
 
-                cardBinding.mainLayout.setOnClickListener { onClickListener(item) }
+                with(cardBinding) {
+                    plan = currentMembershipPlan
 
-                when (item.status?.state) {
-                    CardStatus.AUTHORISED.status -> {
-                        cardBinding.cardLogin.visibility = View.GONE
-                        cardBinding.valueWrapper.visibility = View.VISIBLE
-                        val balance = item.balances?.first()
-                        when (balance?.prefix != null) {
-                            true ->
-                                cardBinding.loyaltyValue.text =
-                                    balance?.prefix?.plus(balance.value)
-                            else -> {
-                                cardBinding.loyaltyValue.text = balance?.value
-                                cardBinding.loyaltyValueExtra.text = balance?.suffix
+                    mainLayout.setOnClickListener { onClickListener(item) }
+
+                    when (item.status?.state) {
+                        CardStatus.AUTHORISED.status -> {
+                            cardLogin.visibility = View.GONE
+                            valueWrapper.visibility = View.VISIBLE
+                            val balance = item.balances?.first()
+                            when (balance?.prefix != null) {
+                                true ->
+                                    loyaltyValue.text =
+                                        balance?.prefix?.plus(balance.value)
+                                else -> {
+                                    loyaltyValue.text = balance?.value
+                                    loyaltyValueExtra.text = balance?.suffix
+                                }
                             }
                         }
-                    }
-                    CardStatus.PENDING.status -> {
-                        cardBinding.valueWrapper.visibility = View.VISIBLE
-                        cardBinding.cardLogin.visibility = View.GONE
-                        cardBinding.loyaltyValue.text =
-                            cardBinding.loyaltyValueExtra.context?.getString(R.string.card_status_pending)
-                    }
-                    CardStatus.FAILED.status -> {
-                        cardBinding.valueWrapper.visibility = View.VISIBLE
-                        cardBinding.cardLogin.visibility = View.GONE
-                        cardBinding.loyaltyValue.text =
-                            cardBinding.loyaltyValueExtra.context?.getString(R.string.link_status_auth_failed)
-                    }
-                    CardStatus.UNAUTHORISED.status -> {
-                        cardBinding.valueWrapper.visibility = View.VISIBLE
-                        cardBinding.cardLogin.visibility = View.GONE
-                        cardBinding.loyaltyValue.text =
-                            cardBinding.loyaltyValueExtra.context?.getString(R.string.link_status_auth_failed)
-                    }
-                }
-                if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
-                    cardBinding.linkStatusWrapper.visibility = View.VISIBLE
-                    cardBinding.linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                    cardBinding.linkStatusText.text =
-                        binding.root.context.getString(R.string.link_status_cannot_link)
-                } else {
-                    when (item.payment_cards?.size) {
-                        0 -> {
-                            cardBinding.linkStatusWrapper.visibility = View.GONE
+                        CardStatus.PENDING.status -> {
+                            valueWrapper.visibility = View.VISIBLE
+                            cardLogin.visibility = View.GONE
+                            loyaltyValue.text = cardBinding.loyaltyValueExtra.context?.getString(R.string.card_status_pending)
                         }
-                        else -> {
-                            cardBinding.linkStatusWrapper.visibility = View.VISIBLE
-                            cardBinding.linkStatusText.text =
-                                binding.root.context.getString(
-                                    R.string.loyalty_card_linked
-                                )
+                        CardStatus.FAILED.status -> {
+                            valueWrapper.visibility = View.VISIBLE
+                            cardLogin.visibility = View.GONE
+                            loyaltyValue.text = cardBinding.loyaltyValueExtra.context?.getString(R.string.link_status_auth_failed)
+                        }
+                        CardStatus.UNAUTHORISED.status -> {
+                            valueWrapper.visibility = View.VISIBLE
+                            cardLogin.visibility = View.GONE
+                            loyaltyValue.text =
+                                loyaltyValueExtra.context?.getString(R.string.link_status_auth_failed)
+                        }
+                    }
+                    if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
+                        linkStatusWrapper.visibility = View.VISIBLE
+                        linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                        linkStatusText.text = binding.root.context.getString(R.string.link_status_cannot_link)
+                    } else {
+                        when (item.payment_cards?.size) {
+                            0 -> {
+                                linkStatusWrapper.visibility = View.GONE
+                            }
+                            else -> {
+                                linkStatusWrapper.visibility = View.VISIBLE
+                                linkStatusText.text =
+                                    binding.root.context.getString(
+                                        R.string.loyalty_card_linked
+                                    )
+                            }
                         }
                     }
                 }
