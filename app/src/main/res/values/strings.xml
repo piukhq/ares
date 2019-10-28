@@ -21,7 +21,7 @@
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
-    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind some scanners cannot read from screens.</string>
+    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind that some scanners cannot read from screens.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
@@ -246,6 +246,8 @@
     <string name="play_store_market_url">market://details?id=%1$s</string>
     <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
+    <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
+    <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
 
     <string name="security_and_privacy_title">Security and privacy</string>
     <string name="security_and_privacy_copy">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
@@ -302,4 +304,6 @@
     <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
     <string name="page_3_title">Never miss out</string>
     <string name="page_3_description">Show your loyalty cards\' balances on screen, or collect points instantly when you pay. Whichever way, you’re always covered.</string>
+    <string name="add_your_payment_cards">Add your payment cards</string>
+    <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
 </resources>

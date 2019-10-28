@@ -160,6 +160,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             LoyaltyWalletFragment::class.java.simpleName,
                             getString(R.string.loayalty_wallet_dialog_description)
                         )
+                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
                     }
 
                 }
