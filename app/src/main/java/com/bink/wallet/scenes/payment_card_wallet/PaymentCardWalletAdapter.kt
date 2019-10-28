@@ -96,6 +96,5 @@ class PaymentCardWalletAdapter(
     }
 
     inner class PaymentCardWalletJoinHolder(val binding: PaymentCardWalletJoinBinding):
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 }

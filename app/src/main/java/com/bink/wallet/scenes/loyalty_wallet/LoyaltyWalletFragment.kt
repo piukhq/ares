@@ -126,31 +126,43 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun onCardClicked(item: Any) {
-        if (item is MembershipCard) {
-            for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
-                if (item.membership_plan == membershipPlan.id) {
-                    val directions =
-                        WalletsFragmentDirections.homeToDetail(
-                            membershipPlan,
-                            item
+        when (item) {
+            is MembershipCard -> {
+                for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
+                    if (item.membership_plan == membershipPlan.id) {
+                        val directions =
+                            WalletsFragmentDirections.homeToDetail(
+                                membershipPlan,
+                                item
+                            )
+                        findNavController().navigateIfAdded(
+                            this@LoyaltyWalletFragment,
+                            directions
                         )
-                    findNavController().navigateIfAdded(
-                        this@LoyaltyWalletFragment,
-                        directions
-                    )
-                    this@LoyaltyWalletFragment.onDestroy()
+                        this@LoyaltyWalletFragment.onDestroy()
+                    }
                 }
             }
-        } else {
-            val directions =
-                WalletsFragmentDirections.homeToAddJoin(
-                    item as MembershipPlan
+            is MembershipPlan -> {
+                val directions =
+                    WalletsFragmentDirections.homeToAddJoin(
+                        item
+                    )
+                findNavController().navigateIfAdded(
+                    this@LoyaltyWalletFragment,
+                    directions
                 )
-            findNavController().navigateIfAdded(
-                this@LoyaltyWalletFragment,
-                directions
-            )
-            this@LoyaltyWalletFragment.onDestroy()
+                this@LoyaltyWalletFragment.onDestroy()
+            }
+            else -> {
+                val directions =
+                    WalletsFragmentDirections.homeToPcd()
+                findNavController().navigateIfAdded(
+                    this@LoyaltyWalletFragment,
+                    directions
+                )
+                this@LoyaltyWalletFragment.onDestroy()
+            }
         }
     }
 
@@ -215,6 +227,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         merchantNoLoyalty(cardsReceived, it) &&
                         dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null
             })
+
+            //            if (SharedPreferenceManager.isPaymentJoinHidden) {
+            walletItems.add(Any())
+//            }
 
             walletItems.addAll(cardsReceived)
 

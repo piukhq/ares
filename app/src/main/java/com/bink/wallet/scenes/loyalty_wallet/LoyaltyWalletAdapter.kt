@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
+import com.bink.wallet.databinding.PaymentCardWalletJoinBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
@@ -24,12 +26,26 @@ class LoyaltyWalletAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
-        return if (viewType == 0) {
-            val binding = LoyaltyWalletItemBinding.inflate(inflater)
-            LoyaltyWalletViewHolder(binding)
-        } else {
-            val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-            PlanSuggestionHolder(binding)
+        return when (viewType) {
+            0 -> {
+                val binding = LoyaltyWalletItemBinding.inflate(inflater)
+                LoyaltyWalletViewHolder(binding)
+            }
+            1 -> {
+                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
+                PlanSuggestionHolder(binding)
+            }
+            else -> {
+                val binding = PaymentCardWalletJoinBinding.inflate(inflater)
+                binding.apply {
+                    root.apply {
+                        this.setOnClickListener {
+                            onClickListener(it)
+                        }
+                    }
+                }
+                return PaymentCardWalletJoinHolder(binding)
+            }
         }
     }
 
@@ -38,27 +54,35 @@ class LoyaltyWalletAdapter(
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
                 is PlanSuggestionHolder -> holder.bind(it as MembershipPlan)
+                is PaymentCardWalletJoinHolder -> holder.bind(it)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (membershipCards[position] is MembershipCard) 0 else 1
+        return when (membershipCards[position]) {
+            is MembershipCard -> 0
+            is MembershipPlan -> 1
+            else -> 2
+        }
     }
 
     override fun getItemCount(): Int = membershipCards.size
 
-
     override fun getItemId(position: Int): Long = position.toLong()
-
 
     private fun getItemPosition(cardId: String): Int =
         membershipCards.indexOfFirst { card -> (card as MembershipCard).id == cardId }
 
-
     fun deleteCard(cardId: String) {
         (membershipCards as ArrayList<*>).removeAt(getItemPosition(cardId))
         notifyItemRemoved(getItemPosition(cardId))
+    }
+
+    inner class PaymentCardWalletJoinHolder(val binding: PaymentCardWalletJoinBinding) :
+        BaseViewHolder<Any>(binding) {
+
+        override fun bind(item: Any) {}
     }
 
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
@@ -119,7 +143,7 @@ class LoyaltyWalletAdapter(
 
         override fun bind(item: MembershipPlan) {
             binding.membershipPlan = item
-            binding.closeButton.setOnClickListener {
+            binding.close.setOnClickListener {
                 onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
                 notifyItemRemoved(adapterPosition)
             }
