@@ -180,6 +180,25 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:linkedStatus="@{paymentCard}" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                            android:id="@+id/card_expired"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/card_login_margin_end"
+                            android:paddingTop="@dimen/margin_padding_size_really_small"
+                            android:paddingBottom="@dimen/margin_padding_size_really_small"
+                            android:paddingStart="@dimen/margin_padding_size_extra_small"
+                            android:paddingEnd="@dimen/margin_padding_size_small"
+                            android:text="@string/expired"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_description_medium"
+                            android:textStyle="bold"
+                            android:drawableStart="@drawable/ic_attention"
+                            android:drawablePadding="@dimen/margin_padding_size_extra_small"
+                            android:background="@drawable/expired_background"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
