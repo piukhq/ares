@@ -10,24 +10,18 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.utils.enums.PaymentCardType
-import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
-import com.bink.wallet.model.response.payment_card.Consent
-import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPaymentCardFragment :
     BaseFragment<AddPaymentCardViewModel, AddPaymentCardFragmentBinding>() {
-
-    val DEFAULT_CONSENT_TYPE = 0
-    val DEFAULT_LATITUDE = 0.0f
-    val DEFAULT_LONGITUDE = 0.0f
-    val YEAR_BASE_ADDITION = 2000
-    val DEFAULT_ACCOUNT_STATUS = 0
-    val DIVISOR_MILLISECONDS = 1000
+    companion object {
+        const val YEAR_BASE_ADDITION = 2000
+    }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -45,10 +39,6 @@ class AddPaymentCardFragment :
         super.onActivityCreated(savedInstanceState)
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
-
-        // pre-load the cards on screen open, so we have them ready after card is added
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchLocalMembershipPlans()
 
         val textWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -81,7 +71,7 @@ class AddPaymentCardFragment :
                         if (text.toString().cardValidation() == PaymentCardType.NONE) {
                             getString(R.string.incorrect_card_error)
                         } else {
-                            ""
+                            getString(R.string.empty_string)
                         }
                 }
             }
@@ -98,9 +88,14 @@ class AddPaymentCardFragment :
                     if (binding.cardName.text.toString().isEmpty()) {
                         getString(R.string.incorrect_card_name)
                     } else {
-                        ""
+                        getString(R.string.empty_string)
                     }
             }
+        }
+
+        binding.privacyLink.setOnClickListener {
+            val securityDialog = SecurityDialogs(requireContext())
+            securityDialog.openDialog(layoutInflater)
         }
 
         binding.addButton.setOnClickListener {
@@ -111,58 +106,28 @@ class AddPaymentCardFragment :
                 val cardNo = binding.cardNumber.text.toString().numberSanitize()
                 val cardExp = binding.cardExpiry.text.toString().split("/")
 
-                // TODO add in location request and get lat & long from the SDK
-                // TODO don't forget to add in features to change country & currency later
-                viewModel.sendAddCard(
-                    PaymentCardAdd(
-                        BankCard(
-                            cardNo.substring(0, 6),
-                            cardNo.substring(cardNo.length - 4),
-                            cardExp[0].toInt(),
-                            cardExp[1].toInt() + YEAR_BASE_ADDITION,
-                            getString(R.string.country_code_gb),
-                            getString(R.string.currency_code_gbp),
-                            binding.cardName.text.toString(),
-                            cardNo.cardValidation().type,
-                            cardNo.cardValidation().type,
-                            BankCard.tokenGenerator(),
-                            BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
-                        ),
-                        Account(
-                            false,
-                            DEFAULT_ACCOUNT_STATUS,
-                            listOf(
-                                Consent(
-                                    DEFAULT_CONSENT_TYPE,
-                                    DEFAULT_LATITUDE,
-                                    DEFAULT_LONGITUDE,
-                                    System.currentTimeMillis() / DIVISOR_MILLISECONDS
-                                )
-                            )
-                        )
-                    )
+                val bankCard = BankCard(
+                    cardNo.substring(0, 6),
+                    cardNo.substring(cardNo.length - 4),
+                    cardExp[0].toInt(),
+                    cardExp[1].toInt() + YEAR_BASE_ADDITION,
+                    getString(R.string.country_code_gb),
+                    getString(R.string.currency_code_gbp),
+                    binding.cardName.text.toString(),
+                    cardNo.cardValidation().type,
+                    cardNo.cardValidation().type,
+                    BankCard.tokenGenerator(),
+                    BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
                 )
-            }
-        }
-
-        viewModel.paymentCard.observeNonNull(this) {
-            val action =
-                AddPaymentCardFragmentDirections.addPaymentToDetails(
-                    it,
-                    viewModel.localMembershipPlanData.value!!.toTypedArray(),
-                    viewModel.localMembershipCardData.value!!.toTypedArray()
+                val params = GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.terms_and_conditions_title),
+                    getString(R.string.terms_and_conditions_text),
+                    getString(R.string.accept_button_text),
+                    getString(R.string.decline_button_text)
                 )
-            findNavController().navigateIfAdded(
-                this@AddPaymentCardFragment,
-                action
-            )
-        }
-        viewModel.error.observeNonNull(this) {
-            if (viewModel.error.value != null) {
-                requireContext().displayModalPopup(
-                    getString(R.string.add_card_error_title),
-                    getString(R.string.add_card_error_message) + "\n" + viewModel.error.value!!.message
-                )
+                val action = AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                findNavController().navigateIfAdded(this, action)
             }
         }
     }
@@ -175,7 +140,7 @@ class AddPaymentCardFragment :
                 binding.cardExpiry.setText(formatDate())
             }
         }
-        return ""
+        return getString(R.string.empty_string)
     }
 
     fun cardSwitcher(card: String) {
