@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(activity!!)
+            .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 

@@ -215,7 +215,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
             R.string.transactions_suffix,
             sign,
             currentValue.toString(),
-            membershipTransactions.amounts[0].suffix
+            membershipTransactions.amounts[0].currency
         )
 }
 
