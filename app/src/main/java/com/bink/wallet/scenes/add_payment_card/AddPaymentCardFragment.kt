@@ -40,10 +40,6 @@ class AddPaymentCardFragment :
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
-        // pre-load the cards on screen open, so we have them ready after card is added
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchLocalMembershipPlans()
-
         val cardNumberTextWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
