@@ -22,6 +22,7 @@
                 android:paddingStart="@dimen/margin_padding_size_small"
                 android:paddingEnd="@dimen/margin_padding_size_small"
                 android:paddingTop="@dimen/margin_padding_size_medium_large"
+                android:fontFamily="@font/nunito_sans_extrabold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
