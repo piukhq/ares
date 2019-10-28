@@ -93,21 +93,10 @@ class AddPaymentCardFragment :
             }
         }
 
-//        binding.privacyLink.setOnClickListener {
-//            val action =
-//                GenericModalParameters(
-//                    R.drawable.ic_close,
-//                    getString(R.string.terms_and_conditions_title),
-//                    getString(R.string.terms_and_conditions_text),
-//                    getString(R.string.accept_button_text),
-//                    getString(R.string.decline_button_text)
-//                ).let { arguments ->
-//                    AddPaymentCardFragmentDirections.addPaymentToTerms(
-//                        arguments, bankCard
-//                    )
-//                }
-//            findNavController().navigateIfAdded(this, action)
-//        }
+        binding.privacyLink.setOnClickListener {
+            val securityDialog = SecurityDialogs(requireContext())
+            securityDialog.openDialog(layoutInflater)
+        }
 
         binding.addButton.setOnClickListener {
             if (binding.cardNumberInputLayout.error.isNullOrEmpty() &&
