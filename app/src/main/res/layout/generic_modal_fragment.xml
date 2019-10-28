@@ -33,17 +33,17 @@
 
                 <TextView
                         android:id="@+id/title"
+                        style="@style/HeaderTextView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/HeaderTextView"/>
+                        android:layout_height="wrap_content" />
 
                 <TextView
                         android:id="@+id/description"
+                        style="@style/CustomTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/bottom_layout_height"
-                        android:paddingTop="@dimen/margin_padding_size_extra_small"
-                        style="@style/CustomTextView" />
+                        android:paddingTop="@dimen/margin_padding_size_extra_small" />
             </LinearLayout>
         </ScrollView>
 
@@ -76,5 +76,15 @@
                     android:text="@string/decline_button_text"
                     android:textColor="@color/black" />
         </LinearLayout>
+
+        <ProgressBar
+                android:id="@+id/progress_spinner"
+                style="@style/ProgressSpinner"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
