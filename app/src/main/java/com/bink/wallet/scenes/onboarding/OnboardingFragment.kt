@@ -30,31 +30,33 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         super.onActivityCreated(savedInstanceState)
 
         val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
-        adapter?.addFragment(
-            OnboardingPageFragment.newInstance(
-                PAGE_1,
-                R.drawable.logo_page_1,
-                getString(R.string.page_1_title),
-                getString(R.string.page_1_description)
+        with(adapter!!) {
+            addFragment(
+                OnboardingPageFragment.newInstance(
+                    PAGE_1,
+                    R.drawable.logo_page_1,
+                    getString(R.string.page_1_title),
+                    getString(R.string.page_1_description)
+                )
             )
-        )
-        adapter?.addFragment(
-            OnboardingPageFragment.newInstance(
-                PAGE_2,
-                R.drawable.onb_2,
-                getString(R.string.page_2_title),
-                getString(R.string.page_2_description)
+            addFragment(
+                OnboardingPageFragment.newInstance(
+                    PAGE_2,
+                    R.drawable.onb_2,
+                    getString(R.string.page_2_title),
+                    getString(R.string.page_2_description)
+                )
             )
-        )
-        adapter?.addFragment(
-            OnboardingPageFragment.newInstance(
-                PAGE_3,
-                R.drawable.onb_3,
-                getString(R.string.page_3_title),
-                getString(R.string.page_3_description)
+            addFragment(
+                OnboardingPageFragment.newInstance(
+                    PAGE_3,
+                    R.drawable.onb_3,
+                    getString(R.string.page_3_title),
+                    getString(R.string.page_3_description)
+                )
             )
-        )
-        binding.pager.adapter = adapter
+            binding.pager.adapter = this
+        }
 
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
@@ -79,11 +81,14 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 scrollPagesAutomatically(binding.pager)
-                if (position == 0) {
-                    binding.back.visibility = View.GONE
-                } else {
-                    binding.back.visibility = View.VISIBLE
-                }
+
+                binding.back.visibility =
+                    if (position == 0) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+
                 timer.cancel()
                 timer = Timer()
                 scrollPagesAutomatically(binding.pager)

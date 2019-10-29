@@ -26,8 +26,8 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
 
     open class CircularViewPagerHandler(private val viewPager: ViewPager) :
         ViewPager.OnPageChangeListener {
-        private var currentPosition: Int = 0
-        private var scrollState: Int = 0
+        private var currentPosition = 0
+        private var scrollState = 0
 
         private val isScrollStateSettling: Boolean
             get() = scrollState == ViewPager.SCROLL_STATE_SETTLING

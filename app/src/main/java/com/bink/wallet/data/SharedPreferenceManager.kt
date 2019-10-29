@@ -46,5 +46,4 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putBoolean(IS_PAYMENT_JOIN_HIDDEN.first, value)
         }
-
 }
