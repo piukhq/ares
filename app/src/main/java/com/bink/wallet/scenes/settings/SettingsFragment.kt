@@ -55,7 +55,10 @@ class SettingsFragment :
             viewModel.itemsList.addItem(item)
         }
 
-        binding.toolbar.title = getString(R.string.settings)
+        with (binding.toolbar) {
+            title = getString(R.string.settings)
+            setNavigationIcon(R.drawable.ic_close)
+        }
 
         val settingsAdapter = SettingsAdapter(
             viewModel.itemsList,
