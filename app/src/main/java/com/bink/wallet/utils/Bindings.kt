@@ -205,7 +205,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
         }
     }
 
-    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue
+    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue?.toInt()
 
     if (membershipTransactions.amounts[0].prefix != null)
         text =
@@ -220,7 +220,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
             R.string.transactions_suffix,
             sign,
             currentValue.toString(),
-            membershipTransactions.amounts[0].suffix
+            membershipTransactions.amounts[0].currency
         )
 }
 
