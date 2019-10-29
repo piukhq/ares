@@ -22,7 +22,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium_large"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:background="@android:color/white"
+                android:background="@drawable/bg_round_background"
                 android:elevation="@dimen/margin_padding_size_extra_small"
                 android:orientation="vertical"
                 app:cardCornerRadius="@dimen/margin_padding_size_small"
@@ -36,8 +36,8 @@
                     android:layout_height="wrap_content">
 
                 <ImageView
-                        android:id="@+id/imageView3"
-                        imageUrl="@{membershipPlan}"
+                        android:id="@+id/join_card_image"
+                        joinCardImage="@{membershipPlan}"
                         android:layout_width="@dimen/image_suggested_pll_size"
                         android:layout_height="@dimen/image_suggested_pll_size"
                         android:layout_marginStart="@dimen/margin_padding_size_medium_large"
@@ -49,21 +49,22 @@
                         tools:ignore="ContentDescription" />
 
                 <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/join_card_title"
+                        joinCardTitle="@{membershipPlan}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:text="@{membershipPlan.account.plan_name}"
                         android:textColor="@color/blue_accent"
                         android:textSize="@dimen/text_size_description_big"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/close"
-                        app:layout_constraintStart_toEndOf="@+id/imageView3"
+                        app:layout_constraintStart_toEndOf="@+id/join_card_image"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                        android:id="@+id/join_card_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -75,8 +76,8 @@
                         android:textSize="@dimen/text_size_description_medium"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imageView3"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        app:layout_constraintStart_toEndOf="@+id/join_card_image"
+                        app:layout_constraintTop_toBottomOf="@+id/join_card_title" />
 
                 <ImageView
                         android:id="@+id/close"

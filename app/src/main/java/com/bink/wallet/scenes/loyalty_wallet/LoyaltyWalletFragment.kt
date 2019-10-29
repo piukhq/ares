@@ -55,7 +55,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     val card = walletItems[position] as MembershipCard
                     if (viewModel.membershipPlanData.value != null) {
                         val plan =
-                            viewModel.membershipPlanData.value?.first { it.id == card?.membership_plan }!!
+                            viewModel.membershipPlanData.value?.first {
+                                it.id == card.membership_plan
+                            }!!
 
                         val directions =
                             card.card?.barcode_type?.let {
@@ -229,7 +231,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.progressSpinner.visibility = View.GONE
 
         viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-            walletItems = ArrayList<Any>(plansReceived.filter {
+            walletItems = ArrayList(plansReceived.filter {
                 it.getCardType() == CardType.PLL &&
                         merchantNoLoyalty(cardsReceived, it) &&
                         dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null

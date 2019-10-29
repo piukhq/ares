@@ -9,7 +9,6 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
-import com.bink.wallet.databinding.PaymentCardWalletJoinBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
@@ -35,7 +34,7 @@ class LoyaltyWalletAdapter(
                 PlanSuggestionHolder(binding)
             }
             else -> {
-                val binding = PaymentCardWalletJoinBinding.inflate(inflater)
+                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
                 binding.apply {
                     root.apply {
                         this.setOnClickListener {
@@ -78,13 +77,18 @@ class LoyaltyWalletAdapter(
         notifyItemRemoved(getItemPosition(cardId))
     }
 
-    inner class PaymentCardWalletJoinHolder(val binding: PaymentCardWalletJoinBinding) :
+    inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
         BaseViewHolder<Any>(binding) {
 
         override fun bind(item: Any) {
-            binding.close.setOnClickListener {
-                SharedPreferenceManager.isPaymentJoinHidden = true
-                onRemoveListener(item)
+            with(binding) {
+                close.setOnClickListener {
+                    SharedPreferenceManager.isPaymentJoinHidden = true
+                    onRemoveListener(item)
+                }
+
+                joinCardDescription.text =
+                    joinCardDescription.context.getString(R.string.payment_join_description)
             }
         }
     }
@@ -97,7 +101,6 @@ class LoyaltyWalletAdapter(
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
                 cardBinding.plan = currentMembershipPlan
-
                 cardBinding.mainLayout.setOnClickListener { onClickListener(item) }
 
                 when (item.status?.state) {
@@ -146,12 +149,14 @@ class LoyaltyWalletAdapter(
         BaseViewHolder<MembershipPlan>(binding) {
 
         override fun bind(item: MembershipPlan) {
-            binding.membershipPlan = item
-            binding.close.setOnClickListener {
-                onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
-                notifyItemRemoved(adapterPosition)
+            with(binding) {
+                membershipPlan = item
+                close.setOnClickListener {
+                    onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
+                    notifyItemRemoved(adapterPosition)
+                }
+                joinCardMainLayout.setOnClickListener { onClickListener(item) }
             }
-            binding.joinCardMainLayout.setOnClickListener { onClickListener(item) }
         }
     }
 }

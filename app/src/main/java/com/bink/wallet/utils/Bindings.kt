@@ -134,6 +134,27 @@ fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     }
 }
 
+@BindingAdapter("joinCardTitle")
+fun TextView.planTitle(plan: MembershipPlan?) {
+    text = plan?.account?.plan_name ?: resources.getString(R.string.payment_join_title)
+}
+
+@BindingAdapter("joinCardImage")
+fun ImageView.image(plan: MembershipPlan?) {
+    if (plan == null) {
+        setImageResource(R.drawable.ic_no_payment_card)
+    } else {
+        try {
+            Glide.with(context)
+                .load(getIconTypeFromPlan(plan))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            Log.e("loadImage", e.localizedMessage, e)
+        }
+    }
+}
+
 
 @BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
