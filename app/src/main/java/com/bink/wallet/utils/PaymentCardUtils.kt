@@ -192,9 +192,11 @@ fun String.dateValidation(): Boolean {
                 year > cal.get(Calendar.YEAR) + 10
             ) {
                 return false
-            } else if (year == cal.get(Calendar.YEAR) &&
+            }
+            else if (year == cal.get(Calendar.YEAR) &&
                 month <= cal.get(Calendar.MONTH)
-            ) {
+            )
+            {
                 return false
             }
             return true
