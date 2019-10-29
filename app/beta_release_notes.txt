@@ -25,12 +25,7 @@ AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
 AB20-166-Decisioning Change Sign Up Screen
-AB20-177-LCD when no barcode available
-AB20-175-Change maximize barcode to display barcode number
-AB20-187-LCD Loyalty Card wording changes
-AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
-AB20-103-Nav bar on Add/Join screen does not appear
 AB20-226-Register Ghost Card-Incorrect text on title and button
 AB20-224-Enable I Don't Have An Account
 AB20-203 Settings screen population
