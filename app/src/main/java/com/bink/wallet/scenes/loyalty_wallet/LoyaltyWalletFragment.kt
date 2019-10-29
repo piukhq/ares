@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -42,18 +43,22 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         setHasOptionsMenu(true)
     }
 
+    private var walletItems = ArrayList<Any>()
+
     val listener: RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelperListener {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
             if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
-                if (direction == ItemTouchHelper.RIGHT) {
-                    val card = viewModel.localMembershipCardData.value?.get(position)
+                if (direction == ItemTouchHelper.RIGHT &&
+                    walletItems[position] is MembershipCard
+                ) {
+                    val card = walletItems[position] as MembershipCard
                     if (viewModel.membershipPlanData.value != null) {
                         val plan =
                             viewModel.membershipPlanData.value?.first { it.id == card?.membership_plan }!!
 
                         val directions =
-                            card?.card?.barcode_type?.let {
+                            card.card?.barcode_type?.let {
                                 WalletsFragmentDirections.homeToBarcode(
                                     plan, card
                                 )
@@ -68,8 +73,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-                    viewModel.membershipCardData.value?.get(position)
-                        ?.let { deleteDialog(it) }
+                    walletItems[position].let {
+                        if (it is MembershipCard)
+                            deleteDialog(it)
+                    }
                 }
             }
         }
@@ -222,15 +229,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.progressSpinner.visibility = View.GONE
 
         viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-            val walletItems = ArrayList<Any>(plansReceived.filter {
+            walletItems = ArrayList<Any>(plansReceived.filter {
                 it.getCardType() == CardType.PLL &&
                         merchantNoLoyalty(cardsReceived, it) &&
                         dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null
             })
 
-            //            if (SharedPreferenceManager.isPaymentJoinHidden) {
-            walletItems.add(Any())
-//            }
+            if (!SharedPreferenceManager.isPaymentJoinHidden &&
+                (cardsReceived.isNotEmpty() || walletItems.isNotEmpty())
+            ) {
+                walletItems.add(Any())
+            }
 
             walletItems.addAll(cardsReceived)
 
@@ -263,8 +272,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    private fun onBannerRemove(plan: MembershipPlan) {
-        viewModel.addPlanIdAsDismissed(plan.id)
+    private fun onBannerRemove(item: Any) {
+        when (item) {
+            is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
+            else -> SharedPreferenceManager.isPaymentJoinHidden = true
+        }
         viewModel.fetchDismissedCards()
     }
 

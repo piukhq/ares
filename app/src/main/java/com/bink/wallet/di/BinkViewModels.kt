@@ -69,7 +69,7 @@ val viewModelModules = module {
 
     viewModel { BaseModalViewModel() }
 
-    viewModel { WalletsViewModel(get()) }
+    viewModel { WalletsViewModel(get(), get()) }
 
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }

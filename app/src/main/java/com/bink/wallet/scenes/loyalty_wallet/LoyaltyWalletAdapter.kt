@@ -15,12 +15,11 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.enums.CardStatus
 
-
 class LoyaltyWalletAdapter(
     private val membershipPlans: List<MembershipPlan>,
     private val membershipCards: List<Any>,
     val onClickListener: (Any) -> Unit = {},
-    val onRemoveListener: (MembershipPlan) -> Unit = {}
+    val onRemoveListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
@@ -82,7 +81,12 @@ class LoyaltyWalletAdapter(
     inner class PaymentCardWalletJoinHolder(val binding: PaymentCardWalletJoinBinding) :
         BaseViewHolder<Any>(binding) {
 
-        override fun bind(item: Any) {}
+        override fun bind(item: Any) {
+            binding.close.setOnClickListener {
+                SharedPreferenceManager.isPaymentJoinHidden = true
+                onRemoveListener(item)
+            }
+        }
     }
 
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
