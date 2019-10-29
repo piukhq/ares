@@ -13,15 +13,23 @@
             android:background="@android:color/background_light"
             tools:context="com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/payment_card_recycler"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintTop_toTopOf="parent">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/payment_card_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         <ProgressBar
                 android:id="@+id/progress_spinner"
                 style="@style/ProgressSpinner"
@@ -31,8 +39,8 @@
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/payment_card_recycler"
-                app:layout_constraintStart_toStartOf="@+id/payment_card_recycler"
+                app:layout_constraintEnd_toEndOf="@+id/swipe_refresh"
+                app:layout_constraintStart_toStartOf="@+id/swipe_refresh"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 

@@ -5,6 +5,7 @@ import com.bink.wallet.utils.StringUtils
 import com.bink.wallet.utils.md5
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -35,4 +36,15 @@ data class BankCard(
         }
     }
 
+    fun isExpired(): Boolean {
+        val cal = Calendar.getInstance()
+        if (year != null && month != null) {
+            if (year < cal.get(Calendar.YEAR) ||
+                (year == cal.get(Calendar.YEAR) &&
+                 month <= cal.get(Calendar.MONTH))) {
+                return true
+            }
+        }
+        return false
+    }
 }

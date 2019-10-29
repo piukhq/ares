@@ -497,6 +497,25 @@
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
     </fragment>
+    <fragment
+            android:id="@+id/card_terms_and_conditions"
+            android:name="com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsFragment">
+        <argument
+                android:name="genericModalParameters"
+                app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+        <argument
+                android:name="bankCard"
+                app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
+        <action
+                android:id="@+id/card_terms_to_details"
+                app:destination="@+id/payment_card_detail"
+                app:popUpTo="@+id/home_wallet"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                />
+    </fragment>
 
     <fragment
             android:id="@+id/join_unavailable"
@@ -512,6 +531,13 @@
         <action
                 android:id="@+id/add_payment_to_details"
                 app:destination="@+id/payment_card_detail"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/add_payment_to_terms"
+                app:destination="@+id/card_terms_and_conditions"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"

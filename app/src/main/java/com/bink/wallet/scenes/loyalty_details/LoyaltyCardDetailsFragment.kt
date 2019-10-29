@@ -90,7 +90,6 @@ class LoyaltyCardDetailsFragment :
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
         }
 
-
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
@@ -98,7 +97,7 @@ class LoyaltyCardDetailsFragment :
             binding.footerDelete.binding.title.text =
                 getString(
                     R.string.delete_card_plan,
-                    viewModel.membershipPlan.value?.account?.plan_name
+                    viewModel.membershipPlan.value?.account?.plan_name_card
                 )
         }
 
@@ -141,7 +140,9 @@ class LoyaltyCardDetailsFragment :
         }
 
         if (viewModel.membershipCard.value?.card != null &&
-            !viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty()) {
+            (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
+             !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())) {
+
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
@@ -155,6 +156,8 @@ class LoyaltyCardDetailsFragment :
 
                 directions?.let { findNavController().navigateIfAdded(this, directions) }
             }
+        } else if (viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty()) {
+            binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
         binding.footerSecurity.setOnClickListener {

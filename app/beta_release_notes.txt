@@ -47,3 +47,13 @@ AB20-200 Privacy policy open in browser
 AB20-85  Not Implemented Yet on Settings pages for functionality that isn't implemented
 AB20-195 Swipe to delete payment card
 AB20-143 Empty payment wallet
+AB20-207-Barcode Screen Not Showing Correct Information
+AB20-91  Terms and Conditions on adding payment card
+AB20-247 No swipe-refresh on payment wallet
+AB20-246 Payment card expiry for wallet & details screen
+AB20-258 Barcode not showing for H&M account
+AB20-260 Barcode maximise screen title
+AB20-265 Barcode maximise screen close click area too small
+AB20-257 Barcode screen should show only the membership id
+AB20-259 Settings page text colour
+AB20-248 Name entry on Add Payment Card

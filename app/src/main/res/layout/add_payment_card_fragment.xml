@@ -152,7 +152,7 @@
                             android:id="@+id/card_expiry"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/expiry"
+                            android:hint="@string/expiry_format"
                             android:imeOptions="actionNext"
                             android:inputType="date"
                             android:maxLength="5"
