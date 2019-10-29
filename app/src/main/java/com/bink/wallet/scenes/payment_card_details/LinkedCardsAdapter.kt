@@ -60,13 +60,25 @@ class LinkedCardsAdapter(
                     showToggle()
                 }
                 CardStatus.PENDING.status -> {
-                    if (item.active_link!!) showPending()
+                    if (item.active_link != null &&
+                        item.active_link
+                    ) {
+                        showPending()
+                    }
                 }
                 CardStatus.UNAUTHORISED.status -> {
-                    if (item.active_link!!) showRetry()
+                    if (item.active_link != null &&
+                        item.active_link
+                    ) {
+                        showRetry()
+                    }
                 }
                 CardStatus.FAILED.status -> {
-                    if (item.active_link!!) showRetry()
+                    if (item.active_link != null &&
+                        item.active_link
+                    ) {
+                        showRetry()
+                    }
                 }
             }
 
