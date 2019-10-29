@@ -83,23 +83,23 @@ class LoyaltyWalletAdapter(
                         CardStatus.PENDING.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = getString(R.string.card_status_pending)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.card_status_pending)
                         }
                         CardStatus.FAILED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = getString(R.string.link_status_auth_failed)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.link_status_auth_failed)
                         }
                         CardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = getString(R.string.link_status_auth_failed)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.link_status_auth_failed)
                         }
                     }
                     if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
                         linkStatusWrapper.visibility = View.VISIBLE
                         linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        linkStatusText.text = getString(R.string.link_status_cannot_link)
+                        linkStatusText.text = mainLayout.context.getString(R.string.link_status_cannot_link)
                     } else {
                         when (item.payment_cards?.size) {
                             0 -> {
@@ -107,13 +107,13 @@ class LoyaltyWalletAdapter(
                             }
                             else -> {
                                 linkStatusWrapper.visibility = View.VISIBLE
-                                linkStatusText.text = getString(R.string.loyalty_card_linked)
+                                linkStatusText.text = mainLayout.context.getString(R.string.loyalty_card_linked)
                             }
                         }
                     }
                 }
                 with(cardBinding.cardView) {
-                    setFirstColor(Color.parseColor(getString(R.string.default_card_second_color)))
+                    setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
                     setSecondColor(Color.parseColor(item.card?.colour))
                 }
             }
