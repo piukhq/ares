@@ -88,7 +88,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
-        viewModel.addPlanIdAsDismissed("test")
 
         viewModel.deleteCard.observe(this, Observer { id ->
             viewModel.membershipCardData.value =
