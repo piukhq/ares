@@ -200,7 +200,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
         }
     }
 
-    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue
+    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue?.toInt()
 
     if (membershipTransactions.amounts[0].prefix != null)
         text =
