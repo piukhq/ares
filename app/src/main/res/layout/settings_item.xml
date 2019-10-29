@@ -31,24 +31,27 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{item.title}"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_big"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         />
                 <TextView
                         android:id="@+id/value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{item.value}"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
+                        android:fontFamily="@font/nunito_sans_light"
                         />
         </LinearLayout>
-        <TextView
+        <ImageView
                 android:id="@+id/right_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:text="@string/right_arrow"
-                android:textSize="@dimen/transaction_arrow_size"
+                android:src="@drawable/ic_right"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
