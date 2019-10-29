@@ -4,6 +4,8 @@ import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsRepository
+import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
@@ -11,7 +13,6 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.SignUpViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
-import com.bink.wallet.scenes.add_payment_card.PaymentCardRepository
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
 import com.bink.wallet.scenes.login.LoginRepository
@@ -63,8 +64,7 @@ val viewModelModules = module {
     single { provideTermsAndConditionsRepository(get()) }
     viewModel { TermsAndConditionsViewModel(get()) }
 
-    single { providePaymentCardRepository(get(), get(), get(), get()) }
-    viewModel { AddPaymentCardViewModel(get()) }
+    viewModel { AddPaymentCardViewModel() }
 
     viewModel { PaymentCardWalletViewModel(get(), get()) }
 
@@ -78,6 +78,9 @@ val viewModelModules = module {
     viewModel { PllViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
+
+    single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
+    viewModel { CardTermsAndConditionsViewModel(get()) }
 }
 
 fun provideLoginRepository(
@@ -107,10 +110,15 @@ fun providePllRepository(
     paymentCardDao: PaymentCardDao
 ): PllRepository = PllRepository(restApiService, paymentCardDao)
 
-fun providePaymentCardRepository(
+fun provideCardTermsAndConditionsRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao,
-    membershipPlanDao: MembershipPlanDao,
-    membershipCardDao: MembershipCardDao
-): PaymentCardRepository =
-    PaymentCardRepository(restApiService, paymentCardDao, membershipCardDao, membershipPlanDao)
+    membershipCardDao: MembershipCardDao,
+    membershipPlanDao: MembershipPlanDao
+): CardTermsAndConditionsRepository =
+    CardTermsAndConditionsRepository(
+        restApiService,
+        paymentCardDao,
+        membershipCardDao,
+        membershipPlanDao
+    )
