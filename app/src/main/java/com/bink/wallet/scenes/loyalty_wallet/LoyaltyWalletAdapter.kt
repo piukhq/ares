@@ -85,11 +85,7 @@ class LoyaltyWalletAdapter(
                             cardLogin.visibility = View.GONE
                             loyaltyValue.text = mainLayout.context.getString(R.string.card_status_pending)
                         }
-                        CardStatus.FAILED.status -> {
-                            valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
-                        }
+                        CardStatus.FAILED.status,
                         CardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
