@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_payment_card
+package com.bink.wallet.modal.card_terms_and_conditions
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -10,20 +10,21 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PaymentCardRepository(private val apiService: ApiService,
-                            private val paymentCardDao: PaymentCardDao,
-                            private val membershipCardDao: MembershipCardDao,
-                            private val membershipPlanDao: MembershipPlanDao
+class CardTermsAndConditionsRepository(
+    private val apiService: ApiService,
+    private val paymentCardDao: PaymentCardDao,
+    private val membershipCardDao: MembershipCardDao,
+    private val membershipPlanDao: MembershipPlanDao
 ) {
     fun sendAddCard(card: PaymentCardAdd,
                     mutableAddCard: MutableLiveData<PaymentCard>,
-                    error: MutableLiveData<Throwable>) {
+                    error: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.addPaymentCardAsync(card)
             withContext(Dispatchers.Main) {
@@ -44,7 +45,7 @@ class PaymentCardRepository(private val apiService: ApiService,
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.e(PaymentCardRepository::class.simpleName, e.toString())
+                    Log.e(CardTermsAndConditionsRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -57,7 +58,7 @@ class PaymentCardRepository(private val apiService: ApiService,
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(CardTermsAndConditionsRepository::class.simpleName, e.toString())
                 }
             }
         }
