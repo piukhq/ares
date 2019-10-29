@@ -88,12 +88,12 @@ class LoyaltyWalletAdapter(
                         CardStatus.FAILED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.link_status_auth_failed)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                         CardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.link_status_auth_failed)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                     }
                     if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
