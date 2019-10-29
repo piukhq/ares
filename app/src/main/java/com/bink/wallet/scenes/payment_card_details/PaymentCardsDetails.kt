@@ -72,12 +72,29 @@ class PaymentCardsDetails :
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 binding.linkedCardsList.apply {
+                    val notLinkedPllCards =
+                        plans.filterNot { plan -> cards.any { it.membership_plan == plan.id } }
+                    val linkableCards =
+                        cards.filter { card -> plans.any {
+                            it.id == card.membership_plan &&
+                            it.getCardType() == CardType.PLL
+                        }}
+
                     layoutManager = GridLayoutManager(context, 1)
 
-                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
+
+//                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
+//                        adapter = LinkedCardsAdapter(
+//                            cards,
+//                            plans,
+//                            viewModel.paymentCard.value?.membership_cards!!,
+//                            onLinkStatusChange = { onLinkStatusChange(it) }
+//                        )
+//                    ) {
+                    if (notLinkedPllCards.isNotEmpty()) {
                         adapter = LinkedCardsAdapter(
-                            cards,
-                            plans,
+                            linkableCards,
+                            plans.filter { it.getCardType() == CardType.PLL },
                             viewModel.paymentCard.value?.membership_cards!!,
                             onLinkStatusChange = { onLinkStatusChange(it) }
                         )
