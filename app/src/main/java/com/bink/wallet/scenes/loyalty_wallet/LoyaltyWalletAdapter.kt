@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.enums.CardStatus
+import com.bink.wallet.utils.enums.CardType
 
 class LoyaltyWalletAdapter(
     private val membershipPlans: List<MembershipPlan>,
@@ -25,7 +26,7 @@ class LoyaltyWalletAdapter(
         private const val MEMBERSHIP_CARD = 0
         // used for join loyalty card
         private const val MEMBERSHIP_PLAN = 1
-        private const val JOIN_PAYMENT = 0
+        private const val JOIN_PAYMENT = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
@@ -134,7 +135,7 @@ class LoyaltyWalletAdapter(
                     }
 
                     when (currentMembershipPlan.feature_set?.card_type) {
-                        2 -> when (item.status?.state) {
+                        CardType.PLL.type -> when (item.status?.state) {
                             CardStatus.AUTHORISED.status -> cardBinding.linkStatusWrapper.visibility =
                                 View.VISIBLE
                             CardStatus.UNAUTHORISED.status -> {
