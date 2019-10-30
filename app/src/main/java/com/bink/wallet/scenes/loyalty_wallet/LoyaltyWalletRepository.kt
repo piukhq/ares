@@ -202,9 +202,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    runBlocking {
-                        bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
-                    }
+                    bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }

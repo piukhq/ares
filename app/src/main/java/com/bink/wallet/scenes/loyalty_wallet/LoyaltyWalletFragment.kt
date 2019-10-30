@@ -218,7 +218,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         cardsReceived: List<MembershipCard>,
         plan: MembershipPlan
     ): Boolean {
-        return cardsReceived.firstOrNull { card -> card.membership_plan == plan.id } == null
+        return cardsReceived.firstOrNull { card ->
+            card.membership_plan == plan.id
+        } == null
     }
 
     private fun populateScreen(
