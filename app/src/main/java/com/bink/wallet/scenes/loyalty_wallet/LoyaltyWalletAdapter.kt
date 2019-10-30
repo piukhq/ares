@@ -21,15 +21,22 @@ class LoyaltyWalletAdapter(
     val onRemoveListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
+    companion object {
+        private const val MEMBERSHIP_CARD = 0
+        // used for join loyalty card
+        private const val MEMBERSHIP_PLAN = 1
+        private const val JOIN_PAYMENT = 0
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            0 -> {
+            MEMBERSHIP_CARD -> {
                 val binding = LoyaltyWalletItemBinding.inflate(inflater)
                 LoyaltyWalletViewHolder(binding)
             }
-            1 -> {
+            MEMBERSHIP_PLAN -> {
                 val binding = EmptyLoyaltyItemBinding.inflate(inflater)
                 PlanSuggestionHolder(binding)
             }
@@ -59,9 +66,9 @@ class LoyaltyWalletAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
-            is MembershipCard -> 0
-            is MembershipPlan -> 1
-            else -> 2
+            is MembershipCard -> MEMBERSHIP_CARD
+            is MembershipPlan -> MEMBERSHIP_PLAN
+            else -> JOIN_PAYMENT
         }
     }
 
@@ -100,46 +107,48 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
-                cardBinding.plan = currentMembershipPlan
-                cardBinding.mainLayout.setOnClickListener { onClickListener(item) }
+                with(cardBinding) {
+                    plan = currentMembershipPlan
+                    mainLayout.setOnClickListener { onClickListener(item) }
 
-                when (item.status?.state) {
-                    CardStatus.AUTHORISED.status -> {
-                        cardBinding.cardLogin.visibility = View.GONE
-                        cardBinding.valueWrapper.visibility = View.VISIBLE
-                        val balance = item.balances?.first()
-                        when (balance?.prefix != null) {
-                            true -> cardBinding.loyaltyValue.text =
-                                balance?.prefix?.plus(balance.value)
-                            else -> {
-                                cardBinding.loyaltyValue.text = balance?.value
-                                cardBinding.loyaltyValueExtra.text = balance?.suffix
+                    when (item.status?.state) {
+                        CardStatus.AUTHORISED.status -> {
+                            cardLogin.visibility = View.GONE
+                            valueWrapper.visibility = View.VISIBLE
+                            val balance = item.balances?.first()
+                            when (balance?.prefix != null) {
+                                true -> cardBinding.loyaltyValue.text =
+                                    balance?.prefix?.plus(balance.value)
+                                else -> {
+                                    loyaltyValue.text = balance?.value
+                                    loyaltyValueExtra.text = balance?.suffix
+                                }
+                            }
+                        }
+                        CardStatus.PENDING.status -> {
+                            valueWrapper.visibility = View.VISIBLE
+                            cardLogin.visibility = View.GONE
+                            loyaltyValue.text =
+                                cardBinding.loyaltyValueExtra.context?.getString(R.string.card_status_pending)
+                        }
+                    }
+
+                    when (currentMembershipPlan.feature_set?.card_type) {
+                        2 -> when (item.status?.state) {
+                            CardStatus.AUTHORISED.status -> cardBinding.linkStatusWrapper.visibility =
+                                View.VISIBLE
+                            CardStatus.UNAUTHORISED.status -> {
+                                linkStatusWrapper.visibility = View.VISIBLE
+                                linkStatusText.text =
+                                    cardBinding.linkStatusText.context.getString(R.string.link_status_cannot_link)
+                                linkStatusImg.setImageResource(R.drawable.ic_unlinked)
                             }
                         }
                     }
-                    CardStatus.PENDING.status -> {
-                        cardBinding.valueWrapper.visibility = View.VISIBLE
-                        cardBinding.cardLogin.visibility = View.GONE
-                        cardBinding.loyaltyValue.text =
-                            cardBinding.loyaltyValueExtra.context?.getString(R.string.card_status_pending)
+                    with(cardView) {
+                        setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                        setSecondColor(Color.parseColor(item.card?.colour))
                     }
-                }
-
-                when (currentMembershipPlan.feature_set?.card_type) {
-                    2 -> when (item.status?.state) {
-                        CardStatus.AUTHORISED.status -> cardBinding.linkStatusWrapper.visibility =
-                            View.VISIBLE
-                        CardStatus.UNAUTHORISED.status -> {
-                            cardBinding.linkStatusWrapper.visibility = View.VISIBLE
-                            cardBinding.linkStatusText.text =
-                                cardBinding.linkStatusText.context.getString(R.string.link_status_cannot_link)
-                            cardBinding.linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        }
-                    }
-                }
-                with(cardBinding.cardView) {
-                    setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
-                    setSecondColor(Color.parseColor(item.card?.colour))
                 }
             }
         }
