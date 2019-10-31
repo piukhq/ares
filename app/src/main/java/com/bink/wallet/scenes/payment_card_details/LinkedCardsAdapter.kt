@@ -7,13 +7,14 @@ import com.bink.wallet.databinding.LinkedCardsListItemBinding
 import com.bink.wallet.databinding.LoyaltySuggestionBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 
 class LinkedCardsAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
-    private val notLinkedPllCards: List<MembershipPlan> = ArrayList(),
-    private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
+    private val notLinkedPllCards: ArrayList<MembershipPlan> = ArrayList(),
+    private val paymentMembershipCards: ArrayList<PaymentMembershipCard> = ArrayList(),
     private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {},
     private val itemClickListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -67,32 +68,38 @@ class LinkedCardsAdapter(
         }
     }
 
+    fun updatePaymentCard(link: PaymentCard) {
+        if (paymentMembershipCards.firstOrNull {it.id == link.id.toString()} == null) {
+//            paymentMembershipCards.add(
+//                PaymentMembershipCard(link.id.toString(), true)
+//            )
+        }
+    }
+
     inner class LinkedCardsViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(currentMembershipCard: MembershipCard) {
             val item = getPaymentMembershipCard(currentMembershipCard.id)
-            //val currentMembershipCard = getCardByPaymentId(item)
             val currentMembershipPlan = getPlanByCardID(currentMembershipCard)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.paymentMembershipCard = item
             binding.membershipCard = currentMembershipCard
-            binding.toggle.isChecked = item?.active_link ?: false
-            binding.toggle.displayCustomSwitch(item?.active_link ?: false)
+            binding.toggle.isChecked = item.active_link ?: false
+            binding.toggle.displayCustomSwitch(item.active_link ?: false)
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
-                onLinkStatusChange(Pair(item?.id, isChecked))
+                onLinkStatusChange(Pair(item.id, isChecked))
                 binding.toggle.displayCustomSwitch(isChecked)
             }
 
             binding.executePendingBindings()
         }
 
-        private fun getPaymentMembershipCard(id: String) =
-            paymentMembershipCards.firstOrNull { it.id == id }
-
-        private fun getCardByPaymentId(item: PaymentMembershipCard) =
-            cards.firstOrNull { it.id == item.id }
+        private fun getPaymentMembershipCard(id: String): PaymentMembershipCard {
+            return paymentMembershipCards.firstOrNull { it.id == id }
+                ?: PaymentMembershipCard(id, false)
+        }
 
         private fun getPlanByCardID(currentMembershipCard: MembershipCard?) =
             plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
@@ -110,5 +117,4 @@ class LinkedCardsAdapter(
             binding.executePendingBindings()
         }
     }
-
 }
