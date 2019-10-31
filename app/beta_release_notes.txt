@@ -53,3 +53,4 @@ AB20-257 Barcode screen should show only the membership id
 AB20-259 Settings page text colour
 AB20-248 Name entry on Add Payment Card
 AB20-261-Barcode Screen showing incorrect information
+AB20-182-Transaction Screen Points Fix
