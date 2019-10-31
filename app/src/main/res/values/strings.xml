@@ -87,6 +87,8 @@
     <string name="security_modal_body">%1$s%2$s</string>
     <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
     <string name="no_plan_description_available">No plan description available</string>
+    <string name="loyalty_card_linked">Linked</string>
+    <string name="loyalty_card_unlinked">Not linked</string>
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s%2$s</string>
     <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
