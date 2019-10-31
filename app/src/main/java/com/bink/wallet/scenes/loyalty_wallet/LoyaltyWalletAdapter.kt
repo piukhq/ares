@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
@@ -118,8 +119,9 @@ class LoyaltyWalletAdapter(
                             valueWrapper.visibility = View.VISIBLE
                             val balance = item.balances?.first()
                             when (balance?.prefix != null) {
-                                true -> cardBinding.loyaltyValue.text =
-                                    balance?.prefix?.plus(balance.value)
+                                true ->
+                                    loyaltyValue.text =
+                                        balance?.prefix?.plus(balance.value)
                                 else -> {
                                     loyaltyValue.text = balance?.value
                                     loyaltyValueExtra.text = balance?.suffix
@@ -129,27 +131,38 @@ class LoyaltyWalletAdapter(
                         CardStatus.PENDING.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text =
-                                cardBinding.loyaltyValueExtra.context?.getString(R.string.card_status_pending)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.card_status_pending)
+                        }
+                        CardStatus.FAILED.status -> {
+                            valueWrapper.visibility = View.VISIBLE
+                            cardLogin.visibility = View.GONE
+                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
+                        }
+                        CardStatus.UNAUTHORISED.status -> {
+                            valueWrapper.visibility = View.VISIBLE
+                            cardLogin.visibility = View.GONE
+                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                     }
-
-                    when (currentMembershipPlan.feature_set?.card_type) {
-                        CardType.PLL.type -> when (item.status?.state) {
-                            CardStatus.AUTHORISED.status -> cardBinding.linkStatusWrapper.visibility =
-                                View.VISIBLE
-                            CardStatus.UNAUTHORISED.status -> {
+                    if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
+                        linkStatusWrapper.visibility = View.VISIBLE
+                        linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                        linkStatusText.text = mainLayout.context.getString(R.string.link_status_cannot_link)
+                    } else {
+                        when (item.payment_cards?.size) {
+                            0 -> {
+                                linkStatusWrapper.visibility = View.GONE
+                            }
+                            else -> {
                                 linkStatusWrapper.visibility = View.VISIBLE
-                                linkStatusText.text =
-                                    cardBinding.linkStatusText.context.getString(R.string.link_status_cannot_link)
-                                linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                                linkStatusText.text = mainLayout.context.getString(R.string.loyalty_card_linked)
                             }
                         }
                     }
-                    with(cardView) {
-                        setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
-                        setSecondColor(Color.parseColor(item.card?.colour))
-                    }
+                }
+                with(cardBinding.cardView) {
+                    setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                    setSecondColor(Color.parseColor(item.card?.colour))
                 }
             }
         }
