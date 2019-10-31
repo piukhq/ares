@@ -147,7 +147,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             this@LoyaltyWalletFragment,
                             directions
                         )
-                        this@LoyaltyWalletFragment.onDestroy()
                     }
                 }
             }
@@ -160,7 +159,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     this@LoyaltyWalletFragment,
                     directions
                 )
-                this@LoyaltyWalletFragment.onDestroy()
             }
             else -> {
                 val directions =
@@ -169,7 +167,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     this@LoyaltyWalletFragment,
                     directions
                 )
-                this@LoyaltyWalletFragment.onDestroy()
             }
         }
     }
@@ -235,7 +232,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             walletItems = ArrayList(plansReceived.filter {
                 it.getCardType() == CardType.PLL &&
                         merchantNoLoyalty(cardsReceived, it) &&
-                        dismissedCards.firstOrNull { currentId -> it.id == currentId.id } == null
+                        dismissedCards.firstOrNull { currentId ->
+                            it.id == currentId.id
+                        } == null
             })
 
             if (!SharedPreferenceManager.isPaymentJoinHidden &&
@@ -258,17 +257,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         onRemoveListener = { onBannerRemove(it) }
                     )
 
-                val helperListener =
+                val helperListenerLeft =
                     RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
 
-                ItemTouchHelper(helperListener).attachToRecyclerView(this)
-                ItemTouchHelper(
-                    RecyclerItemTouchHelper(
-                        0,
-                        ItemTouchHelper.RIGHT,
-                        listener
-                    )
-                ).attachToRecyclerView(
+                val helperListenerRight =
+                    RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
+
+                ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+                ItemTouchHelper(helperListenerRight).attachToRecyclerView(
                     this
                 )
             }

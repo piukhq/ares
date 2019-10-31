@@ -9,33 +9,28 @@
             android:layout_height="match_parent"
             android:background="@android:color/background_light">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/loyalty_wallet_list"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/loyalty_wallet_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                <ProgressBar
-                        android:id="@+id/progress_spinner"
-                        style="@style/ProgressSpinner"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="@dimen/margin_padding_size_small"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:layout_marginBottom="@dimen/margin_padding_size_small"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/loyalty_wallet_list"
-                        app:layout_constraintStart_toStartOf="@+id/loyalty_wallet_list"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:visibility="visible" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+            <ProgressBar
+                    android:id="@+id/progress_spinner"
+                    style="@style/ProgressSpinner"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/loyalty_wallet_list"
+                    app:layout_constraintStart_toStartOf="@+id/loyalty_wallet_list"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
