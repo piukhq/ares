@@ -105,6 +105,7 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_small"
                     android:src="@drawable/ic_login"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="ContentDescription" />

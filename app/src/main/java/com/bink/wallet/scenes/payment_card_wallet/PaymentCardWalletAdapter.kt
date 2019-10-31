@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.data.SharedPreferenceManager
@@ -92,10 +93,14 @@ class PaymentCardWalletAdapter(
                     it.getCardTypeFromProvider().background
                 )
             }
+            if (item.card!!.isExpired()) {
+                binding.cardExpired.visibility = View.VISIBLE
+                binding.linkStatus.visibility  = View.GONE
+                binding.imageStatus.visibility = View.GONE
+            }
         }
     }
 
     inner class PaymentCardWalletJoinHolder(val binding: PaymentCardWalletJoinBinding):
-        RecyclerView.ViewHolder(binding.root) {
-    }
+        RecyclerView.ViewHolder(binding.root)
 }

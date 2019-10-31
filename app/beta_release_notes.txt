@@ -25,12 +25,7 @@ AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
 AB20-166-Decisioning Change Sign Up Screen
-AB20-177-LCD when no barcode available
-AB20-175-Change maximize barcode to display barcode number
-AB20-187-LCD Loyalty Card wording changes
-AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
-AB20-103-Nav bar on Add/Join screen does not appear
 AB20-226-Register Ghost Card-Incorrect text on title and button
 AB20-224-Enable I Don't Have An Account
 AB20-203 Settings screen population
@@ -48,4 +43,17 @@ AB20-85  Not Implemented Yet on Settings pages for functionality that isn't impl
 AB20-195 Swipe to delete payment card
 AB20-143 Empty payment wallet
 AB20-207-Barcode Screen Not Showing Correct Information
+AB20-91  Terms and Conditions on adding payment card
+AB20-247 No swipe-refresh on payment wallet
+AB20-246 Payment card expiry for wallet & details screen
+AB20-258 Barcode not showing for H&M account
+AB20-260 Barcode maximise screen title
+AB20-265 Barcode maximise screen close click area too small
+AB20-257 Barcode screen should show only the membership id
+AB20-259 Settings page text colour
+AB20-248 Name entry on Add Payment Card
+AB20-261-Barcode Screen showing incorrect information
+AB20-182-Transaction Screen Points Fix
+AB20-182-Transaction Screen Points Fix
+AB20-236 Wallet auth status incorrect
 AB20-249 Existing PLL cards not on payment details

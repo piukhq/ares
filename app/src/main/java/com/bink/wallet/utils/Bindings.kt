@@ -96,7 +96,7 @@ data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
 @BindingAdapter("membershipCard")
 fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
-    if (!membershipCard?.membershipCard?.card?.membership_id.isNullOrEmpty()) {
+    if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
@@ -114,7 +114,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
 
         val bitMatrix: BitMatrix =
             multiFormatWriter.encode(
-                membershipCard?.membershipCard?.card?.membership_id,
+                membershipCard?.membershipCard?.card?.barcode,
                 format,
                 widthPx.toInt(),
                 heightPx.toInt()
@@ -142,8 +142,13 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
     } else {
         binding.image.setBackgroundColor(Color.GREEN)
     }
-    if (card?.card?.barcode == null) {
-        binding.tapCard.text = binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    if (card?.card?.barcode.isNullOrEmpty()) {
+        if (card?.card?.membership_id.isNullOrEmpty()) {
+            binding.tapCard.visibility = View.GONE
+        } else {
+            binding.tapCard.text =
+                binding.root.context.getString(R.string.tap_card_to_show_card_number)
+        }
     }
 }
 
@@ -200,7 +205,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
         }
     }
 
-    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue
+    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue?.toInt()
 
     if (membershipTransactions.amounts[0].prefix != null)
         text =
@@ -215,7 +220,7 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
             R.string.transactions_suffix,
             sign,
             currentValue.toString(),
-            membershipTransactions.amounts[0].suffix
+            membershipTransactions.amounts[0].currency
         )
 }
 
