@@ -9,12 +9,14 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
-    var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
-    var deleteCard: MutableLiveData<String> = MutableLiveData()
-    var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    var localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    var localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
-    var dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
+    val membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    val deleteCard: MutableLiveData<String> = MutableLiveData()
+    val membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
+    val localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
+    val localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    val dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
+    val addError: MutableLiveData<Throwable> = MutableLiveData()
+    val fetchError: MutableLiveData<Throwable> = MutableLiveData()
 
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
@@ -37,10 +39,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun fetchDismissedCards() {
-        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData)
+        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, fetchError)
     }
 
     fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id)
+        loyaltyWalletRepository.addBannerAsDismissed(id, addError)
     }
 }

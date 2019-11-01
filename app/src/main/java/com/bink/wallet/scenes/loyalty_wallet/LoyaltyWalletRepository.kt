@@ -198,19 +198,23 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun addBannerAsDismissed(id: String) {
+    fun addBannerAsDismissed(id: String, addError: MutableLiveData<Throwable>) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    addError.value = e
                 }
             }
         }
     }
 
-    fun retrieveDismissedCards(localMembershipCards: MutableLiveData<List<BannerDisplay>>) {
+    fun retrieveDismissedCards(
+        localMembershipCards: MutableLiveData<List<BannerDisplay>>,
+        fetchError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
@@ -218,6 +222,7 @@ class LoyaltyWalletRepository(
                     localMembershipCards.value = response
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    fetchError.value = e
                 }
             }
         }
