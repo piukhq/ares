@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.model.payment_card.RebuildPaymentCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
@@ -88,69 +89,56 @@ class PaymentCardsDetails :
             }
         }
 
-        viewModel.membershipPlanData.observeNonNull(this@PaymentCardsDetails) { plans ->
-            viewModel.membershipCardData.observeNonNull(this@PaymentCardsDetails) { cards ->
-                binding.linkedCardsList.apply {
-                    layoutManager = GridLayoutManager(context, 1)
-                    with(viewModel) {
-                        linkedPaymentCard.observeNonNull(this@PaymentCardsDetails) {
-                            val link = linkedPaymentCard.value!!
-                            val paymentMembershipCards = paymentCard.value?.membership_cards
-                            val item =
-                                paymentMembershipCards!!.firstOrNull { it.id == link.id.toString() }
-                            val cards: List<PaymentMembershipCard>
-                            if (item == null) {
-                                cards = ArrayList(paymentCard.value!!.membership_cards)
-                                cards.add(
-                                    PaymentMembershipCard(link.id.toString(), true)
-                                )
-                            } else {
-                                cards = ArrayList(paymentCard.value!!.membership_cards)
-                                cards[paymentMembershipCards.indexOf(item)] =
-                                    PaymentMembershipCard(item.id, item.active_link!!.not())
-                            }
-                            paymentCard.value =
-                                RebuildPaymentCard.rebuild(paymentCard.value!!, cards)
-                            (binding.linkedCardsList.adapter as LinkedCardsAdapter).updatePaymentCard(
-                                link
-                            )
+        binding.linkedCardsList.apply {
+            layoutManager = GridLayoutManager(context, 1)
+            with(viewModel) {
+                linkedPaymentCard.observeNonNull(this@PaymentCardsDetails) {
+                    val link = linkedPaymentCard.value!!
+                    val paymentMembershipCards = paymentCard.value?.membership_cards
+                    val item = paymentMembershipCards!!.firstOrNull { membershipCard ->
+                        membershipCard.id == link.id.toString()
                         }
-                        membershipPlanData.observeNonNull(this@PaymentCardsDetails) { plans ->
-                            membershipCardData.observeNonNull(this@PaymentCardsDetails) { cards ->
-                                binding.linkedCardsList.apply {
-                                    val pllCards = plans.filter { it.getCardType() == CardType.PLL }
-                                    val notLinkedPllCards = pllCards.filterNot { plan ->
-                                        cards.any {
-                                            plan.id == it.membership_plan
-                                        }
-                                    }
-                                    val linkableCards = cards.filter { card ->
-                                        pllCards.any {
-                                            it.id == card.membership_plan
-                                        }
-                                    }
-
-                                    layoutManager = GridLayoutManager(context, 1)
-
-                                    adapter = LinkedCardsAdapter(
-                                        linkableCards,
-                                        pllCards,
-                                        ArrayList(notLinkedPllCards),
-                                        ArrayList(paymentCard.value?.membership_cards!!),
-                                        onLinkStatusChange = { onLinkStatusChange(it) },
-                                        itemClickListener = {
-                                            val directions =
-                                                PaymentCardsDetailsDirections.paymentDetailsToAddJoin(
-                                                    it
-                                                )
-                                            findNavController().navigateIfAdded(
-                                                this@PaymentCardsDetails,
-                                                directions
-                                            )
-                                        }
-                                    )
+                    val cards: List<PaymentMembershipCard>
+                    if (item == null) {
+                        cards = ArrayList(paymentCard.value!!.membership_cards)
+                        cards.add(
+                            PaymentMembershipCard(link.id.toString(), true)
+                        )
+                    } else {
+                        cards = ArrayList(paymentCard.value!!.membership_cards)
+                        cards[paymentMembershipCards.indexOf(item)] =
+                            PaymentMembershipCard(item.id, item.active_link!!.not())
+                    }
+                    paymentCard.value =
+                        RebuildPaymentCard.rebuild(paymentCard.value!!, cards)
+                    (binding.linkedCardsList.adapter as LinkedCardsAdapter)
+                        .updatePaymentCard(link)
+                }
+                membershipPlanData.observeNonNull(this@PaymentCardsDetails) { plans ->
+                    membershipCardData.observeNonNull(this@PaymentCardsDetails) { cards ->
+                        binding.linkedCardsList.apply {
+                            val pllCards = plans.filter { card ->
+                                card.getCardType() == CardType.PLL
+                            }
+                            val notLinkedPllCards = pllCards.filterNot { plan ->
+                                cards.any {
+                                    plan.id == it.membership_plan
                                 }
                             }
+                            val linkableCards = cards.filter { card ->
+                                pllCards.any {
+                                    it.id == card.membership_plan
+                                }
+                            }
+                            layoutManager = GridLayoutManager(context, 1)
+                            adapter = LinkedCardsAdapter(
+                                linkableCards,
+                                pllCards,
+                                ArrayList(notLinkedPllCards),
+                                ArrayList(paymentCard.value?.membership_cards!!),
+                                onLinkStatusChange = { onLinkStatusChange(it) },
+                                itemClickListener = { addLoyaltyCard(it) }
+                            )
                         }
                     }
                 }
@@ -167,6 +155,17 @@ class PaymentCardsDetails :
                 getString(R.string.card_error_dialog)
             )
         }
+    }
+
+    private fun addLoyaltyCard(plan: MembershipPlan) {
+        val directions =
+            PaymentCardsDetailsDirections.paymentDetailsToAddJoin(
+                plan
+            )
+        findNavController().navigateIfAdded(
+            this@PaymentCardsDetails,
+            directions
+        )
     }
 
     private fun goHome() {
