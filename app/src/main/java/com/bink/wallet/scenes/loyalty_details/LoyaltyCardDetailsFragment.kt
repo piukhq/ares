@@ -210,7 +210,7 @@ class LoyaltyCardDetailsFragment :
         setPointsModuleClickListener()
         setLinkModuleClickListener()
 
-        binding.footerDelete.setOnClickListener { footerView ->
+        binding.footerDelete.setOnClickListener { footerView: View ->
             val builder = AlertDialog.Builder(context)
             var dialog: AlertDialog? = null
             builder.setMessage(getString(R.string.delete_card_modal_body))
@@ -384,7 +384,7 @@ class LoyaltyCardDetailsFragment :
                     }
                     if (directions != null) {
                         findNavController().navigateIfAdded(this, directions)
-                    }
+                    } else {}
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
                     val directions =
