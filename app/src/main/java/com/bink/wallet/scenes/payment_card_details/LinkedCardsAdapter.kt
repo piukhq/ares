@@ -69,11 +69,9 @@ class LinkedCardsAdapter(
     }
 
     fun updatePaymentCard(link: PaymentCard) {
-        if (paymentMembershipCards.firstOrNull {it.id == link.id.toString()} == null) {
-//            paymentMembershipCards.add(
-//                PaymentMembershipCard(link.id.toString(), true)
-//            )
-        }
+        paymentMembershipCards.clear()
+        paymentMembershipCards.addAll(link.membership_cards)
+        notifyDataSetChanged()
     }
 
     inner class LinkedCardsViewHolder(val binding: LinkedCardsListItemBinding) :
