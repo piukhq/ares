@@ -1,10 +1,8 @@
 package com.bink.wallet.scenes.onboarding
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-
 
 class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
     FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -12,21 +10,45 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
     companion object {
         const val ONBOARDING_PAGES_NUMBER = 3
         const val FIRST_PAGE_INDEX = 0
+        const val MIDDLE_PAGE_INDEX = 1
+
+        var currentPage = FIRST_PAGE_INDEX
+        val onboardingFragments = mutableListOf<OnboardingPageFragment>()
+        val storedFragments = mutableListOf<OnboardingPageFragment>()
+
+        fun getPageId(page: Int, current: Int = currentPage): Int {
+            val newPage = page + current - 1
+            return when {
+                newPage < 0 -> ONBOARDING_PAGES_NUMBER + newPage
+                newPage >= ONBOARDING_PAGES_NUMBER -> newPage - ONBOARDING_PAGES_NUMBER
+                else -> newPage
+            }
+        }
     }
 
-    private val onboardingFragments = mutableListOf<OnboardingPageFragment>()
+    override fun getItem(position: Int): OnboardingPageFragment {
+        val newId = getPageId(position, 0)
+        return onboardingFragments[newId]
+    }
 
-    override fun getItem(position: Int): Fragment = onboardingFragments[position]
+    override fun getItemPosition(obj: Any): Int {
+        for (i in 0 until ONBOARDING_PAGES_NUMBER) {
+            if ((obj as OnboardingPageFragment).pageId == onboardingFragments[i].pageId)
+                return i
+        }
+        return super.getItemPosition(obj)
+    }
 
     override fun getCount(): Int = ONBOARDING_PAGES_NUMBER
 
     fun addFragment(fragment: OnboardingPageFragment) {
         onboardingFragments.add(fragment)
+        storedFragments.add(fragment)
     }
 
     open class CircularViewPagerHandler(private val viewPager: ViewPager) :
         ViewPager.OnPageChangeListener {
-        private var currentPosition = 0
+        private var currentPosition = 1
         private var scrollState = 0
 
         private val isScrollStateSettling: Boolean
@@ -48,17 +70,18 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
         }
 
         private fun setNextItemIfNeeded() {
-            if (!isScrollStateSettling) {
+//            if (!isScrollStateSettling) {
                 handleSetNextItem()
-            }
+//            }
         }
 
         private fun handleSetNextItem() {
-            val lastPosition = ONBOARDING_PAGES_NUMBER - 1
-            if (currentPosition == FIRST_PAGE_INDEX) {
-                viewPager.setCurrentItem(lastPosition, false)
-            } else if (currentPosition == lastPosition) {
-                viewPager.setCurrentItem(FIRST_PAGE_INDEX, false)
+            val updatedPage = getPageId(currentPosition)
+            if (updatedPage != currentPage) {
+                currentPage = updatedPage
+                setupPages()
+                viewPager.adapter!!.notifyDataSetChanged()
+                viewPager.setCurrentItem(MIDDLE_PAGE_INDEX, false)
             }
         }
 
@@ -67,6 +90,22 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
             positionOffset: Float,
             positionOffsetPixels: Int
         ) {
+        }
+
+        fun setupPages() {
+            val updated = ArrayList<OnboardingPageFragment>()
+            for (i in 0 until ONBOARDING_PAGES_NUMBER) {
+                var whichPage = currentPage + i - 1
+                whichPage = when {
+                    whichPage < 0 -> ONBOARDING_PAGES_NUMBER + whichPage
+                    whichPage >= ONBOARDING_PAGES_NUMBER -> whichPage - ONBOARDING_PAGES_NUMBER
+                    else -> whichPage
+                }
+                updated.add(storedFragments[whichPage])
+            }
+            onboardingFragments.clear()
+            onboardingFragments.addAll(updated)
+            viewPager.adapter!!.notifyDataSetChanged()
         }
     }
 }

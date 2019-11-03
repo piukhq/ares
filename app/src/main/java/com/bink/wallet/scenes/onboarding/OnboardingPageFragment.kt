@@ -13,8 +13,8 @@ import com.bink.wallet.utils.PAGE_1
 import com.bink.wallet.utils.toPixelFromDip
 
 class OnboardingPageFragment : Fragment() {
-
     companion object {
+        private const val EXTRA_PAGE_ID = "extraId"
         private const val EXTRA_IMAGE = "extraImage"
         private const val EXTRA_TITLE = "extraTitle"
         private const val EXTRA_DESCRIPTION = "extraDescription"
@@ -23,6 +23,7 @@ class OnboardingPageFragment : Fragment() {
         private const val PAGE_MARGIN_HEIGHT_PX = 16f
 
         fun newInstance(
+            pageId: Int,
             pageTitle: String,
             imageId: Int,
             title: String,
@@ -32,6 +33,7 @@ class OnboardingPageFragment : Fragment() {
             val bundle = Bundle()
 
             with(bundle) {
+                putInt(EXTRA_PAGE_ID, pageId)
                 putString(EXTRA_PAGE_TITLE, pageTitle)
                 putInt(EXTRA_IMAGE, imageId)
                 putString(EXTRA_TITLE, title)
@@ -41,6 +43,8 @@ class OnboardingPageFragment : Fragment() {
             return fragment
         }
     }
+
+    var pageId: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +59,7 @@ class OnboardingPageFragment : Fragment() {
         )
 
         arguments?.let { bundle ->
+            pageId = bundle.getInt(EXTRA_PAGE_ID)
             with(binding) {
                 pageTitle.text = bundle.getString(EXTRA_TITLE)
                 pageDescription.text = bundle.getString(EXTRA_DESCRIPTION)

@@ -33,29 +33,33 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         with(adapter!!) {
             addFragment(
                 OnboardingPageFragment.newInstance(
+                    1,
                     PAGE_1,
                     R.drawable.logo_page_1,
-                    getString(R.string.page_1_title),
+                    getString(R.string.page_1_title) + " #1",
                     getString(R.string.page_1_description)
                 )
             )
             addFragment(
                 OnboardingPageFragment.newInstance(
+                    2,
                     PAGE_2,
                     R.drawable.onb_2,
-                    getString(R.string.page_2_title),
+                    getString(R.string.page_2_title) + " #2",
                     getString(R.string.page_2_description)
                 )
             )
             addFragment(
                 OnboardingPageFragment.newInstance(
+                    3,
                     PAGE_3,
                     R.drawable.onb_3,
-                    getString(R.string.page_3_title),
+                    getString(R.string.page_3_title) + " #3",
                     getString(R.string.page_3_description)
                 )
             )
             binding.pager.adapter = this
+            binding.pager.setCurrentItem(1, false)
         }
 
         binding.logInEmail.setOnClickListener {
@@ -103,21 +107,21 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     }
 
     private fun scrollPagesAutomatically(pager: ViewPager) {
-        var currentPage = pager.currentItem
-        val pagerHandler = Handler()
-        val update = Runnable {
-            if (currentPage == ONBOARDING_PAGES_NUMBER) {
-                pager.setCurrentItem(FIRST_PAGE_INDEX, true)
-                currentPage = FIRST_PAGE_INDEX
-            } else {
-                pager.setCurrentItem(currentPage++, true)
-            }
-        }
+/* NOTE: Disabling the timer for the moment as it threw an error:
+   Cannot setMaxLifecycle for Fragment not attached to FragmentManager
 
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                pagerHandler.post(update)
-            }
-        }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
+   That needs to be looked at, plus the dots below,
+   but getting the infinite scroller was the first step
+ */
+//        var currentPage = pager.currentItem
+//        val pagerHandler = Handler()
+//        val update = Runnable {
+//            pager.setCurrentItem(currentPage++, true)
+//        }
+//        timer.schedule(object : TimerTask() {
+//            override fun run() {
+//                pagerHandler.post(update)
+//            }
+//        }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
     }
 }
