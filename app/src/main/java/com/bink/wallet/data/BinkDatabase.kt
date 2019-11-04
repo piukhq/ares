@@ -11,7 +11,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 
 @Database(
     entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class],
-    version = 10,
+    version = 12,
     exportSchema = false
 )
 @TypeConverters(
