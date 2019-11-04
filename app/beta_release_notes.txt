@@ -57,3 +57,4 @@ AB20-182-Transaction Screen Points Fix
 AB20-182-Transaction Screen Points Fix
 AB20-236 Wallet auth status incorrect
 AB20-250 Hide rename card option
+AB20-220 Remove ghost card on sign up journey
