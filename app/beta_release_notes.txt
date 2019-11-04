@@ -59,3 +59,4 @@ AB20-236 Wallet auth status incorrect
 AB20-250 Hide rename card option
 AB20-220 Remove ghost card on sign up journey
 AB20-249 Existing PLL cards not on payment details
+AB20-302 App crash on Settings screen
