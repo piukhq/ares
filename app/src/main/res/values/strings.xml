@@ -4,6 +4,9 @@
 
     <string name="add_button_description">Add button</string>
 
+    <string name="missing_destination_dialog_title">Missing destination</string>
+    <string name="not_implemented_yet_text">Not implemented yet</string>
+
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
     <string name="loayalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
@@ -208,8 +211,6 @@
     <string name="pll_linked_title">Link to payment cards</string>
     <string name="pll_unlinked_title">Add card</string>
     <string name="pll_last_digits">Card ending in %1$s</string>
-    <string name="missing_destination_dialog_title">Missing destination</string>
-    <string name="not_implemented_yet_text">Not implemented yet</string>
 
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident</string>
@@ -301,6 +302,12 @@
     <string name="continue_with_facebook">Continue with Facebook</string>
     <string name="sign_up_with_email">Sign up with email</string>
     <string name="log_in_with_email">Log in with email</string>
+    <string name="page_1_title">Payment linked loyalty. Magic!</string>
+    <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
+    <string name="page_2_title">All you cards in one place</string>
+    <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
+    <string name="page_3_title">Never miss out</string>
+    <string name="page_3_description">Show your loyalty cards\' balances on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
     <string name="expired">Expired</string>

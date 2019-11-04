@@ -137,58 +137,62 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
             SignUpFormType.ADD_AUTH -> {
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
-                if (viewModel.currentMembershipCard.value != null) {
-                    if (viewModel.currentMembershipPlan.value!!.feature_set?.has_points != null &&
-                        viewModel.currentMembershipPlan.value!!.feature_set?.has_points == true &&
-                        viewModel.currentMembershipPlan.value!!.feature_set?.transactions_available != null
-                    ) {
-                        if (viewModel.currentMembershipPlan.value!!.feature_set?.transactions_available == true) {
+                with(viewModel) {
+                    if (currentMembershipCard.value != null) {
+                        if (currentMembershipPlan.value!!.feature_set?.has_points != null &&
+                            currentMembershipPlan.value!!.feature_set?.has_points == true &&
+                            currentMembershipPlan.value!!.feature_set?.transactions_available != null
+                        ) {
+                            if (currentMembershipPlan.value!!.feature_set?.transactions_available == true) {
+                                binding.descriptionAddAuth.text = getString(
+                                    R.string.log_in_transaction_available,
+                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
+                                )
+                            } else {
+                                binding.descriptionAddAuth.text =
+                                    getString(
+                                        R.string.log_in_transaction_unavailable,
+                                        viewModel.currentMembershipPlan.value!!.account?.plan_name_card
+                                    )
+                            }
+                        }
+
+                        if (MembershipPlanUtils.getAccountStatus(
+                                currentMembershipPlan.value!!,
+                                currentMembershipCard.value!!
+                            ) == LoginStatus.STATUS_LOGIN_FAILED
+                        ) {
                             binding.descriptionAddAuth.text = getString(
                                 R.string.log_in_transaction_available,
                                 viewModel.currentMembershipPlan.value!!.account?.plan_name_card
                             )
-                        } else {
-                            binding.descriptionAddAuth.text =
-                                getString(
-                                    R.string.log_in_transaction_unavailable,
-                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                )
+                        }
+                    } else {
+                        currentMembershipPlan.value!!.account?.add_fields?.map {
+                            it.typeOfField = TypeOfField.ADD
+                            addFieldToList(it)
                         }
                     }
 
-                    if (MembershipPlanUtils.getAccountStatus(
-                            viewModel.currentMembershipPlan.value!!,
-                            viewModel.currentMembershipCard.value!!
-                        ) == LoginStatus.STATUS_LOGIN_FAILED
-                    ) {
-                        binding.descriptionAddAuth.text = getString(
-                            R.string.log_in_transaction_available,
-                            viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                        )
-                    }
-                } else {
-                    viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
-                        it.typeOfField = TypeOfField.ADD
+                    currentMembershipPlan.value!!.account?.authorise_fields?.map {
+                        it.typeOfField = TypeOfField.AUTH
                         addFieldToList(it)
                     }
                 }
-
-                viewModel.currentMembershipPlan.value!!.account?.authorise_fields?.map {
-                    it.typeOfField = TypeOfField.AUTH
-                    addFieldToList(it)
-                }
-
             }
             SignUpFormType.ENROL -> {
-                binding.titleAddAuthText.text = getString(R.string.sign_up_enrol)
-                binding.addCardButton.text = getString(R.string.sign_up_text)
-                binding.descriptionAddAuth.text = getString(
-                    R.string.enrol_description,
-                    viewModel.currentMembershipPlan.value?.account?.company_name
-                )
-                viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
-                    it.typeOfField = TypeOfField.ENROL
-                    addFieldToList(it)
+                with(binding) {
+                    titleAddAuthText.text = getString(R.string.sign_up_enrol)
+                    addCardButton.text = getString(R.string.sign_up_text)
+                    descriptionAddAuth.text = getString(
+                        R.string.enrol_description,
+                        viewModel.currentMembershipPlan.value?.account?.company_name
+                    )
+                    viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
+                        it.typeOfField = TypeOfField.ENROL
+                        addFieldToList(it)
+                    }
+                    noAccountText.visibility = View.GONE
                 }
             }
             SignUpFormType.GHOST -> {
@@ -204,12 +208,15 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     addFieldToList(it)
                 }
 
-                binding.noAccountText.visibility = View.INVISIBLE
+                binding.noAccountText.visibility = View.GONE
             }
         }
 
         binding.noAccountText.setOnClickListener {
-            if (viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.contains(TypeOfField.REGISTRATION.name)!!) {
+            if (viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.contains(
+                    TypeOfField.REGISTRATION.name
+                )!!
+            ) {
                 if (viewModel.currentMembershipPlan.value != null) {
                     val action = SignUpFragmentDirections.toGhost(
                         SignUpFormType.GHOST,
@@ -344,21 +351,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     currentRequest
                 )
             }
-                if (signUpFormType == SignUpFormType.GHOST) {
-                    val currentRequest = MembershipCardRequest(
-                        Account(
-                            null,
-                            null,
-                            null,
-                            addRegisterFieldsRequest.registration_fields
-                        ),
-                        viewModel.currentMembershipPlan.value!!.id
-                    )
-                    viewModel.ghostMembershipCard(
-                        membershipCard,
-                        currentRequest
-                    )
-                }
+            if (signUpFormType == SignUpFormType.GHOST) {
+                val currentRequest = MembershipCardRequest(
+                    Account(
+                        null,
+                        null,
+                        null,
+                        addRegisterFieldsRequest.registration_fields
+                    ),
+                    viewModel.currentMembershipPlan.value!!.id
+                )
+                viewModel.ghostMembershipCard(
+                    membershipCard,
+                    currentRequest
+                )
+            }
 
             when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
