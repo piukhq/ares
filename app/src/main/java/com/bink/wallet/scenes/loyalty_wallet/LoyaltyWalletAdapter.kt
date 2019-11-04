@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
@@ -14,10 +15,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.enums.CardStatus
 import com.bink.wallet.utils.enums.CardType
+import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
-    private val membershipPlans: ArrayList<MembershipPlan>,
-    private val membershipCards: ArrayList<Any>,
     val onClickListener: (Any) -> Unit = {},
     val onRemoveListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
@@ -28,6 +28,12 @@ class LoyaltyWalletAdapter(
         private const val MEMBERSHIP_PLAN = 1
         private const val JOIN_PAYMENT = 2
     }
+
+    var membershipCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
+        notifyChanges(oldList, newList)
+    }
+
+    var membershipPlans = ArrayList<MembershipPlan>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
@@ -77,6 +83,35 @@ class LoyaltyWalletAdapter(
     fun deleteCard(cardId: String) {
         membershipCards.removeAt(getItemPosition(cardId))
         notifyItemRemoved(getItemPosition(cardId))
+    }
+
+    private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
+
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val currentOldItem = oldList[oldItemPosition]
+                val currentNewItem = newList[newItemPosition]
+
+                if (currentNewItem is MembershipCard && currentOldItem is MembershipCard)
+                    return currentNewItem.id == currentOldItem.id
+
+                if (currentNewItem is MembershipPlan && currentOldItem is MembershipPlan)
+                    return currentNewItem.id == currentOldItem.id
+
+                return false
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return oldList[oldItemPosition] == newList[newItemPosition]
+            }
+
+            override fun getOldListSize() = oldList.size
+
+            override fun getNewListSize() = newList.size
+        })
+
+        diff.dispatchUpdatesTo(this)
     }
 
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
@@ -172,7 +207,6 @@ class LoyaltyWalletAdapter(
                 membershipPlan = item
                 close.setOnClickListener {
                     onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
-                    notifyItemRemoved(adapterPosition)
                 }
                 joinCardMainLayout.setOnClickListener { onClickListener(item) }
             }

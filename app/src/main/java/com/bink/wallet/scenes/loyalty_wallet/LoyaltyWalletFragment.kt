@@ -38,6 +38,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
 
+    private val walletAdapter = LoyaltyWalletAdapter(
+        onClickListener = {
+            onCardClicked(it)
+        },
+        onRemoveListener = { onBannerRemove(it) }
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -105,6 +112,22 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
                 populateScreen(plansReceived, cardsReceived)
             }
+        }
+
+        binding.loyaltyWalletList.apply {
+            layoutManager = GridLayoutManager(requireContext(), 1)
+            adapter = walletAdapter
+
+            val helperListenerLeft =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+            val helperListenerRight =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
+
+            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+            ItemTouchHelper(helperListenerRight).attachToRecyclerView(
+                this
+            )
         }
 
         binding.progressSpinner.visibility = View.VISIBLE
@@ -243,29 +266,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             walletItems.addAll(cardsReceived)
 
-            binding.loyaltyWalletList.apply {
-                layoutManager = GridLayoutManager(requireContext(), 1)
-                adapter =
-                    LoyaltyWalletAdapter(
-                        plansReceived as ArrayList<MembershipPlan>,
-                        walletItems,
-                        onClickListener = {
-                            onCardClicked(it)
-                        },
-                        onRemoveListener = { onBannerRemove(it) }
-                    )
-
-                val helperListenerLeft =
-                    RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-                val helperListenerRight =
-                    RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
-
-                ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-                ItemTouchHelper(helperListenerRight).attachToRecyclerView(
-                    this
-                )
-            }
+            walletAdapter.membershipPlans = plansReceived as ArrayList<MembershipPlan>
+            walletAdapter.membershipCards = walletItems
         }
     }
 
