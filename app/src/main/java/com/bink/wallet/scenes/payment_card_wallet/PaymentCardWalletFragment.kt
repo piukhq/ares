@@ -58,9 +58,9 @@ class PaymentCardWalletFragment :
 
     private fun isJoinCardHiddenCount() =
         if (SharedPreferenceManager.isPaymentJoinHidden) {
-            0
+            PaymentCardWalletAdapter.JOIN_CARD
         } else {
-            1
+            PaymentCardWalletAdapter.PAYMENT_CARD
         }
 
     fun deleteDialog(paymentCard: PaymentCard) {
