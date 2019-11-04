@@ -17,6 +17,7 @@
                 android:name=".MainActivity"
                 android:configChanges="orientation|screenSize|keyboardHidden"
                 android:screenOrientation="portrait"
+                android:documentLaunchMode="intoExisting"
                 android:resizeableActivity="false"
                 android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>

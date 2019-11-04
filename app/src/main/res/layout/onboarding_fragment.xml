@@ -43,22 +43,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:layout_constraintVertical_bias="0.0" />
 
-        <com.rd.PageIndicatorView
+        <LinearLayout
                 android:id="@+id/pager_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/margin_padding_size_small"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@+id/continue_with_facebook"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pager"
-                app:piv_animationType="scale"
-                app:piv_count="3"
-                app:piv_interactiveAnimation="true"
-                app:piv_radius="@dimen/margin_padding_size_extra_small"
-                app:piv_selectedColor="@color/black"
-                app:piv_unselectedColor="@color/gray_inactive"
-                app:piv_viewPager="@id/pager" />
+                />
 
         <Button
                 android:id="@+id/continue_with_facebook"
