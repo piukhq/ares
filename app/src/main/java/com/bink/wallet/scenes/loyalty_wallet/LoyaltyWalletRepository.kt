@@ -204,7 +204,6 @@ class LoyaltyWalletRepository(
                 try {
                     bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                     addError.value = e
                 }
             }
@@ -221,7 +220,6 @@ class LoyaltyWalletRepository(
                     val response = bannersDisplayDao.getDismissedBanners()
                     localMembershipCards.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                     fetchError.value = e
                 }
             }

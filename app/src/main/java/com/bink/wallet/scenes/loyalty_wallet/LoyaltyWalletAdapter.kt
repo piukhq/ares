@@ -16,8 +16,8 @@ import com.bink.wallet.utils.enums.CardStatus
 import com.bink.wallet.utils.enums.CardType
 
 class LoyaltyWalletAdapter(
-    private val membershipPlans: List<MembershipPlan>,
-    private val membershipCards: List<Any>,
+    private val membershipPlans: ArrayList<MembershipPlan>,
+    private val membershipCards: ArrayList<Any>,
     val onClickListener: (Any) -> Unit = {},
     val onRemoveListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
@@ -33,14 +33,8 @@ class LoyaltyWalletAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            MEMBERSHIP_CARD -> {
-                val binding = LoyaltyWalletItemBinding.inflate(inflater)
-                LoyaltyWalletViewHolder(binding)
-            }
-            MEMBERSHIP_PLAN -> {
-                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-                PlanSuggestionHolder(binding)
-            }
+            MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
+            MEMBERSHIP_PLAN -> PlanSuggestionHolder(EmptyLoyaltyItemBinding.inflate(inflater))
             else -> {
                 val binding = EmptyLoyaltyItemBinding.inflate(inflater)
                 binding.apply {
@@ -81,7 +75,7 @@ class LoyaltyWalletAdapter(
         membershipCards.indexOfFirst { card -> (card as MembershipCard).id == cardId }
 
     fun deleteCard(cardId: String) {
-        (membershipCards as ArrayList<*>).removeAt(getItemPosition(cardId))
+        membershipCards.removeAt(getItemPosition(cardId))
         notifyItemRemoved(getItemPosition(cardId))
     }
 

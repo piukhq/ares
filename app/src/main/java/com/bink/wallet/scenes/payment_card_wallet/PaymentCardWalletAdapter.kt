@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.payment_card_wallet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
@@ -112,13 +111,7 @@ class PaymentCardWalletAdapter(
                     SharedPreferenceManager.isPaymentJoinHidden = true
                 }
 
-                joinCardImage.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        joinCardImage.context,
-                        R.drawable.ic_no_payment_card
-                    )
-                )
-
+                joinCardImage.setImageResource(R.drawable.ic_no_payment_card)
                 joinCardDescription.text =
                     joinCardDescription.context.getString(R.string.payment_join_description)
             }

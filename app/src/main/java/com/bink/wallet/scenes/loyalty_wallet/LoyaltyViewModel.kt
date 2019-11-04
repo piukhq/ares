@@ -9,14 +9,14 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
-    val membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
-    val deleteCard: MutableLiveData<String> = MutableLiveData()
-    val membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    val localMembershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    val localMembershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    val membershipCardData = MutableLiveData<List<MembershipCard>>()
+    val deleteCard = MutableLiveData<String>()
+    val membershipPlanData = MutableLiveData<List<MembershipPlan>>()
+    val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
+    val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
-    val addError: MutableLiveData<Throwable> = MutableLiveData()
-    val fetchError: MutableLiveData<Throwable> = MutableLiveData()
+    val addError = MutableLiveData<Throwable>()
+    val fetchError = MutableLiveData<Throwable>()
 
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)

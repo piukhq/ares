@@ -45,7 +45,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private var walletItems = ArrayList<Any>()
 
-    val listener: RecyclerItemTouchHelperListener = object :
+    val listener = object :
         RecyclerItemTouchHelperListener {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
             if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
@@ -160,14 +160,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     directions
                 )
             }
-            else -> {
-                val directions =
-                    WalletsFragmentDirections.homeToPcd()
+            else ->
                 findNavController().navigateIfAdded(
                     this@LoyaltyWalletFragment,
-                    directions
+                    WalletsFragmentDirections.homeToPcd()
                 )
-            }
         }
     }
 
@@ -238,7 +235,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             })
 
             if (!SharedPreferenceManager.isPaymentJoinHidden &&
-                (cardsReceived.isNotEmpty() || walletItems.isNotEmpty())
+                (cardsReceived.isNotEmpty() ||
+                        walletItems.isNotEmpty())
             ) {
                 walletItems.add(Any())
             }
@@ -249,8 +247,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 layoutManager = GridLayoutManager(requireContext(), 1)
                 adapter =
                     LoyaltyWalletAdapter(
-                        plansReceived,
-                        walletItems.toList(),
+                        plansReceived as ArrayList<MembershipPlan>,
+                        walletItems,
                         onClickListener = {
                             onCardClicked(it)
                         },
