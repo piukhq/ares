@@ -60,4 +60,5 @@ AB20-250 Hide rename card option
 AB20-220 Remove ghost card on sign up journey
 AB20-299-Hardcoded text chevrons
 
+AB20-306 Delete null is displayed on LCD screen
 AB20-249 Existing PLL cards not on payment details

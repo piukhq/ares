@@ -93,13 +93,21 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
-        if (viewModel.membershipPlan.value?.account?.plan_name != null) {
-            binding.footerDelete.binding.title.text =
-                getString(
-                    R.string.delete_card_plan,
-                    viewModel.membershipPlan.value?.account?.plan_name_card
-                )
-        }
+
+        val titleMessage =
+            if (viewModel.membershipPlan.value?.account?.plan_name_card == null) {
+                getString(R.string.delete_card)
+            } else {
+                viewModel.membershipPlan.value?.account?.plan_name_card
+            }
+
+
+        binding.footerDelete.binding.title.text =
+            getString(
+                R.string.delete_card_plan,
+                titleMessage
+            )
+
 
         val aboutTitle =
             if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
@@ -141,7 +149,8 @@ class LoyaltyCardDetailsFragment :
 
         if (viewModel.membershipCard.value?.card != null &&
             (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
-             !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())) {
+                    !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())
+        ) {
 
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
@@ -177,9 +186,11 @@ class LoyaltyCardDetailsFragment :
             findNavController().navigateIfAdded(this, directions)
         }
 
-        viewModel.linkStatus.observeNonNull(this) { status ->
+        viewModel.linkStatus.observeNonNull(this)
+        { status ->
             if (viewModel.accountStatus.value != null &&
-                viewModel.paymentCards.value != null) {
+                viewModel.paymentCards.value != null
+            ) {
                 setLoadingState(false)
             } else {
                 runBlocking {
@@ -189,8 +200,7 @@ class LoyaltyCardDetailsFragment :
             configureLinkStatus(status)
         }
 
-        binding.scrollView.setOnScrollChangeListener {
-                v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
             cd.alpha = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
@@ -203,7 +213,8 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        viewModel.accountStatus.observeNonNull(this) { status ->
+        viewModel.accountStatus.observeNonNull(this)
+        { status ->
             configureLoginStatus(status)
         }
 
@@ -236,6 +247,7 @@ class LoyaltyCardDetailsFragment :
             dialog.show()
         }
     }
+
 
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
@@ -270,6 +282,7 @@ class LoyaltyCardDetailsFragment :
             binding.pointsWrapper.visibility = View.VISIBLE
         }
     }
+
 
     override fun onPause() {
         super.onPause()
