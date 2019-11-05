@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.onboarding
 
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager.widget.ViewPager
 
 class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
@@ -46,7 +47,7 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
         storedFragments.add(fragment)
     }
 
-    open class CircularViewPagerHandler(private val viewPager: ViewPager) :
+    open class CircularViewPagerHandler(private val viewPager: ViewPager, val pageId: MutableLiveData<Int>) :
         ViewPager.OnPageChangeListener {
         private var currentPosition = 1
         private var scrollState = 0
@@ -78,6 +79,7 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
         private fun handleSetNextItem() {
             val updatedPage = getPageId(currentPosition)
             if (updatedPage != currentPage) {
+                pageId.value = updatedPage
                 currentPage = updatedPage
                 setupPages()
                 viewPager.adapter!!.notifyDataSetChanged()

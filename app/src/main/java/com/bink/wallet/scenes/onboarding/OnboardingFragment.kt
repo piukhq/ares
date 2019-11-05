@@ -3,6 +3,9 @@ package com.bink.wallet.scenes.onboarding
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -20,6 +23,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         get() = R.layout.onboarding_fragment
     override val viewModel: OnboardingViewModel by viewModel()
     var timer = Timer()
+    val icons = ArrayList<ImageView>()
+    val pageEntries = ArrayList<OnboardingPageFragment>()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -29,37 +34,73 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        pageEntries.add(
+            OnboardingPageFragment.newInstance(
+                1,
+                PAGE_1,
+                R.drawable.logo_page_1,
+                getString(R.string.page_1_title) + " #1",
+                getString(R.string.page_1_description)
+            )
+        )
+        pageEntries.add(
+            OnboardingPageFragment.newInstance(
+                2,
+                PAGE_2,
+                R.drawable.onb_2,
+                getString(R.string.page_2_title) + " #2",
+                getString(R.string.page_2_description)
+            )
+        )
+        pageEntries.add(
+            OnboardingPageFragment.newInstance(
+                3,
+                PAGE_3,
+                R.drawable.onb_3,
+                getString(R.string.page_3_title) + " #3",
+                getString(R.string.page_3_description)
+            )
+        )
         val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
         with(adapter!!) {
-            addFragment(
-                OnboardingPageFragment.newInstance(
-                    1,
-                    PAGE_1,
-                    R.drawable.logo_page_1,
-                    getString(R.string.page_1_title) + " #1",
-                    getString(R.string.page_1_description)
-                )
-            )
-            addFragment(
-                OnboardingPageFragment.newInstance(
-                    2,
-                    PAGE_2,
-                    R.drawable.onb_2,
-                    getString(R.string.page_2_title) + " #2",
-                    getString(R.string.page_2_description)
-                )
-            )
-            addFragment(
-                OnboardingPageFragment.newInstance(
-                    3,
-                    PAGE_3,
-                    R.drawable.onb_3,
-                    getString(R.string.page_3_title) + " #3",
-                    getString(R.string.page_3_description)
-                )
-            )
+            for (page in pageEntries) {
+                addFragment(page)
+            }
             binding.pager.adapter = this
             binding.pager.setCurrentItem(1, false)
+        }
+
+        with (binding.pagerIndicatorContainer) {
+            for (i in 0 until pageEntries.size) {
+                val icon = ImageView(context)
+                with (icon) {
+                    layoutParams = LinearLayout.LayoutParams(
+                        resources.getDimension(R.dimen.margin_padding_size_quite_small).toInt(),
+                        resources.getDimension(R.dimen.margin_padding_size_quite_small).toInt()).also {
+                        it.marginEnd = resources.getDimension(R.dimen.margin_padding_size_really_small).toInt()
+                        it.marginStart = resources.getDimension(R.dimen.margin_padding_size_really_small).toInt()
+                    }
+                    setImageResource(
+                        if (i == 0)
+                            R.drawable.ic_circle_dark
+                        else
+                            R.drawable.ic_circle_pale
+                    )
+                    tag = "icon_$i"
+                }
+                icons.add(icon)
+                addView(icon)
+            }
+        }
+        viewModel.pageId.observeNonNull(this) {pageId ->
+            for (icon in icons) {
+                icon.setImageResource(
+                    if (icon.tag == "icon_$pageId")
+                        R.drawable.ic_circle_dark
+                    else
+                        R.drawable.ic_circle_pale
+                )
+            }
         }
 
         binding.logInEmail.setOnClickListener {
@@ -81,7 +122,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.pager.addOnPageChangeListener(object :
-            OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager) {
+            OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager, viewModel.pageId) {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 scrollPagesAutomatically(binding.pager)
