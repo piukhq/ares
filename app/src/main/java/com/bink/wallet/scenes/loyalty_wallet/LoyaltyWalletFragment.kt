@@ -123,7 +123,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun onCardClicked(card: MembershipCard) {
-        for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
+        for (membershipPlan in viewModel.membershipPlanData.value!!) {
             if (card.membership_plan == membershipPlan.id) {
                 val directions =
                     WalletsFragmentDirections.homeToDetail(
