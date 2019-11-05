@@ -71,7 +71,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 }
             }
 
-            browse_brands_container.apply {
+            binding.browseBrandsContainer.apply {
                 layoutManager = GridLayoutManager(activity, 1)
                 adapter =
                     BrowseBrandsAdapter(plansList, itemClickListener = { toAddJoinScreen(it) })
