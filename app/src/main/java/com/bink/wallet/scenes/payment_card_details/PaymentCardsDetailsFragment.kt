@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.payment_card.RebuildPaymentCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
@@ -17,7 +19,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PaymentCardsDetails :
+class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
 
     override fun builder(): FragmentToolbar {
@@ -43,7 +45,7 @@ class PaymentCardsDetails :
         val securityDialog = SecurityDialogs(requireContext())
 
         arguments?.let {
-            val currentBundle = PaymentCardsDetailsArgs.fromBundle(it)
+            val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
 
             with(viewModel) {
                 paymentCard.value = currentBundle.paymentCard
@@ -89,6 +91,31 @@ class PaymentCardsDetails :
             }
         }
 
+        viewModel.membershipPlanData.observeNonNull(this) { plans ->
+            viewModel.membershipCardData.observeNonNull(this) { cards ->
+                binding.linkedCardsList.apply {
+                    layoutManager = GridLayoutManager(context, 1)
+
+                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
+                        adapter = LinkedCardsAdapter(
+                            cards,
+                            plans,
+                            viewModel.paymentCard.value?.membership_cards!!,
+                            onLinkStatusChange = ::onLinkStatusChange,
+                            onItemSelected = ::onItemSelected
+                        )
+                    } else {
+                        adapter = SuggestedCardsAdapter(
+                            plans.filter { it.getCardType() == CardType.PLL },
+                            itemClickListener = {
+                                val directions =
+                                    PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(it)
+                                findNavController().navigateIfAdded(
+                                    this@PaymentCardsDetailsFragment,
+                                    directions
+                                )
+                            }
+                        )
         binding.linkedCardsList.apply {
             layoutManager = GridLayoutManager(context, 1)
             with(viewModel) {
@@ -191,5 +218,13 @@ class PaymentCardsDetails :
                 }
             }
         }
+    }
+
+    private fun onItemSelected(membershipPlan: MembershipPlan, membershipCard: MembershipCard) {
+        val directions = PaymentCardsDetailsFragmentDirections.paymentDetailsToLoyaltyCardDetail(
+            membershipPlan,
+            membershipCard
+        )
+        directions.let { _ -> findNavController().navigateIfAdded(this, directions) }
     }
 }

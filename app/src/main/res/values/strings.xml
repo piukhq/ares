@@ -277,6 +277,8 @@
     <string name="card_error_dialog">The card couldn\'t be deleted</string>
     <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
     <string name="default_card_second_color">#888888</string>
+    <string name="payment_card_pending">Pending</string>
+    <string name="payment_card_retry">Retry</string>
 
     <!-- Payment Card entry -->
     <string name="empty_string" />
