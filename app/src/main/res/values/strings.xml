@@ -311,4 +311,6 @@
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
     <string name="expired">Expired</string>
+    <string name="forgot_password_title">Forgot password</string>
+    <string name="forgot_password_description">Please enter your email address and it is associated with a Bink account, then a password reset email will be sent.</string>
 </resources>
