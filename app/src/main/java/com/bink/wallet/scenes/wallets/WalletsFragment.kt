@@ -38,6 +38,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchMembershipPlans()
             viewModel.fetchMembershipCards()
+            viewModel.fetchPaymentCards()
         }
 
         activity?.let {
@@ -98,10 +99,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
-                if (SharedPreferenceManager.isLoyaltySelected) {
-                    loyaltyWalletsFragment.setData(cards, plans)
-                } else {
-                    paymentCardWalletFragment.setData(cards, plans)
+                viewModel.paymentCards.observeNonNull(this) { paymentCards ->
+                    if (paymentCards.isNotEmpty())
+                        SharedPreferenceManager.isPaymentJoinHidden = true
+
+                    if (SharedPreferenceManager.isLoyaltySelected) {
+                        loyaltyWalletsFragment.setData(cards, plans)
+                    } else {
+                        paymentCardWalletFragment.setData(cards, plans)
+                    }
                 }
             }
         }

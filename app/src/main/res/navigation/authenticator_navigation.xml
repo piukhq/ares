@@ -45,6 +45,14 @@
                 app:popExitAnim="@anim/slide_out_right" />
 
         <action
+                android:id="@+id/home_to_add_join"
+                app:destination="@id/add_join"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
                 android:id="@+id/home_to_barcode"
                 app:destination="@+id/barcode_fragment"
                 app:enterAnim="@anim/slide_in_right"
@@ -69,6 +77,13 @@
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpTo="@id/home_wallet" />
 
+        <action
+                android:id="@+id/home_to_pcd"
+                app:destination="@id/add_payment_card"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -528,16 +543,13 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
-                app:popExitAnim="@anim/slide_out_right"
-                />
         <action
                 android:id="@+id/add_payment_to_terms"
                 app:destination="@+id/card_terms_and_conditions"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                />
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
@@ -555,8 +567,7 @@
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                />
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
             android:id="@+id/about_fragment"
