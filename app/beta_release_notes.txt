@@ -60,4 +60,5 @@ AB20-250 Hide rename card option
 AB20-220 Remove ghost card on sign up journey
 AB20-299-Hardcoded text chevrons
 AB20-306 Delete null is displayed on LCD screen
-AB20-291-payment-terms-and-conditions-title-and-button-text-format
+AB20-291-Payment terms and conditions title and button text format
+AB20-222-Show the pending retry state of loyalty card in the pcd
