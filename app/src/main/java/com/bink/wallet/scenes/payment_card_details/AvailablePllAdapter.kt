@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.payment_card_details
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.adapters.AdapterViewBindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.LinkedCardsListItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -14,7 +15,7 @@ class AvailablePllAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
     private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
-    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {}
+    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {}, val onItemSelected: () -> Unit  = {}
 ) : RecyclerView.Adapter<AvailablePllAdapter.AvailablePllViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailablePllViewHolder {
