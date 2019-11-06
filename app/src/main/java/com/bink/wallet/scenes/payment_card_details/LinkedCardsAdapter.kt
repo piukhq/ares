@@ -15,10 +15,10 @@ import com.bink.wallet.utils.enums.CardStatus
 class LinkedCardsAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
-    private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
-    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit,
-    private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
     private val notLinkedPllCards: ArrayList<MembershipPlan> = ArrayList(),
+    private val paymentMembershipCards: ArrayList<PaymentMembershipCard> = ArrayList(),
+    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit,
+    private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit,
     private val itemClickListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
@@ -96,13 +96,11 @@ class LinkedCardsAdapter(
 
             binding.itemLayout.setOnClickListener {
                 currentMembershipPlan?.let { membershipPlan ->
-                    currentMembershipCard?.let { membershipCard ->
-                        onItemSelected(membershipPlan, membershipCard)
-                    }
+                    onItemSelected(membershipPlan, currentMembershipCard)
                 }
             }
 
-            when (currentMembershipCard?.status?.state) {
+            when (currentMembershipCard.status?.state) {
                 CardStatus.AUTHORISED.status -> {
                     showToggle()
                 }

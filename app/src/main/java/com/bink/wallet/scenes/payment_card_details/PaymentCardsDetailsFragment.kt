@@ -11,7 +11,6 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.payment_card.RebuildPaymentCard
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
@@ -90,36 +89,10 @@ class PaymentCardsDetailsFragment :
                 }
             }
         }
-
-        viewModel.membershipPlanData.observeNonNull(this) { plans ->
-            viewModel.membershipCardData.observeNonNull(this) { cards ->
-                binding.linkedCardsList.apply {
-                    layoutManager = GridLayoutManager(context, 1)
-
-                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
-                        adapter = LinkedCardsAdapter(
-                            cards,
-                            plans,
-                            viewModel.paymentCard.value?.membership_cards!!,
-                            onLinkStatusChange = ::onLinkStatusChange,
-                            onItemSelected = ::onItemSelected
-                        )
-                    } else {
-                        adapter = SuggestedCardsAdapter(
-                            plans.filter { it.getCardType() == CardType.PLL },
-                            itemClickListener = {
-                                val directions =
-                                    PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(it)
-                                findNavController().navigateIfAdded(
-                                    this@PaymentCardsDetailsFragment,
-                                    directions
-                                )
-                            }
-                        )
         binding.linkedCardsList.apply {
             layoutManager = GridLayoutManager(context, 1)
             with(viewModel) {
-                linkedPaymentCard.observeNonNull(this@PaymentCardsDetails) {
+                linkedPaymentCard.observeNonNull(this@PaymentCardsDetailsFragment) {
                     val link = linkedPaymentCard.value!!
                     val paymentMembershipCards = paymentCard.value?.membership_cards
                     val item = paymentMembershipCards!!.firstOrNull { membershipCard ->
@@ -141,8 +114,8 @@ class PaymentCardsDetailsFragment :
                     (binding.linkedCardsList.adapter as LinkedCardsAdapter)
                         .updatePaymentCard(link)
                 }
-                membershipPlanData.observeNonNull(this@PaymentCardsDetails) { plans ->
-                    membershipCardData.observeNonNull(this@PaymentCardsDetails) { cards ->
+                membershipPlanData.observeNonNull(this@PaymentCardsDetailsFragment) { plans ->
+                    membershipCardData.observeNonNull(this@PaymentCardsDetailsFragment) { cards ->
                         binding.linkedCardsList.apply {
                             val pllCards = plans.filter { card ->
                                 card.getCardType() == CardType.PLL
@@ -163,8 +136,9 @@ class PaymentCardsDetailsFragment :
                                 pllCards,
                                 ArrayList(notLinkedPllCards),
                                 ArrayList(paymentCard.value?.membership_cards!!),
-                                onLinkStatusChange = { onLinkStatusChange(it) },
-                                itemClickListener = { addLoyaltyCard(it) }
+                                onLinkStatusChange = ::onLinkStatusChange,
+                                onItemSelected = ::onItemSelected,
+                                itemClickListener = ::addLoyaltyCard
                             )
                         }
                     }
@@ -186,11 +160,11 @@ class PaymentCardsDetailsFragment :
 
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =
-            PaymentCardsDetailsDirections.paymentDetailsToAddJoin(
+            PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
                 plan
             )
         findNavController().navigateIfAdded(
-            this@PaymentCardsDetails,
+            this@PaymentCardsDetailsFragment,
             directions
         )
     }
@@ -225,6 +199,6 @@ class PaymentCardsDetailsFragment :
             membershipPlan,
             membershipCard
         )
-        directions.let { _ -> findNavController().navigateIfAdded(this, directions) }
+        directions.let { findNavController().navigateIfAdded(this, directions) }
     }
 }
