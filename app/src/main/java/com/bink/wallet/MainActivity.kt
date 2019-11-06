@@ -80,7 +80,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.home_wallet,
-            R.id.onboarding_fragment-> {
+            R.id.onboarding_fragment,
+            R.id.rooted_screen -> {
                 finish()
             }
             else -> super.onBackPressed()

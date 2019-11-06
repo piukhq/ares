@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.navigateIfAdded
+import com.scottyab.rootbeer.RootBeer
+
 
 class SplashFragment : Fragment() {
 
@@ -19,7 +21,14 @@ class SplashFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        findNavController().navigateIfAdded(this, R.id.splash_to_onboarding)
+
+        val rootBeer = RootBeer(context)
+        if (rootBeer.isRooted) {
+            findNavController().navigateIfAdded(this, R.id.splash_to_rooted_device)
+        } else {
+            findNavController().navigateIfAdded(this, R.id.splash_to_onboarding)
+        }
+
     }
 
 }
