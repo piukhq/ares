@@ -26,6 +26,9 @@ fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolea
 fun String.getCardType() =
     PaymentCardType.values().firstOrNull { it.type == this } ?: PaymentCardType.NONE
 
+fun String.getCardTypeFromProvider() =
+    PaymentCardType.values().firstOrNull { it.type == this } ?: PaymentCardType.NONE
+
 fun String.presentedCardType(): PaymentCardType {
     val sanitizedInput = numberSanitize()
     if (sanitizedInput.isEmpty()) {
@@ -189,9 +192,11 @@ fun String.dateValidation(): Boolean {
                 year > cal.get(Calendar.YEAR) + 10
             ) {
                 return false
-            } else if (year == cal.get(Calendar.YEAR) &&
+            }
+            else if (year == cal.get(Calendar.YEAR) &&
                 month <= cal.get(Calendar.MONTH)
-            ) {
+            )
+            {
                 return false
             }
             return true

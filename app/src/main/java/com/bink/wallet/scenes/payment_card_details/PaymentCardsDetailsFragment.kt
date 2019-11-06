@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.payment_card_details
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -31,10 +32,11 @@ class PaymentCardsDetailsFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+        with (binding.toolbar) {
+            setNavigationIcon(R.drawable.ic_close)
+            setNavigationOnClickListener {
+                goHome()
+            }
         }
 
         val securityDialog = SecurityDialogs(requireContext())
@@ -42,9 +44,11 @@ class PaymentCardsDetailsFragment :
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
 
-            viewModel.paymentCard.value = currentBundle.paymentCard
-            viewModel.membershipCardData.value = currentBundle.membershipCards.toList()
-            viewModel.membershipPlanData.value = currentBundle.membershipPlans.toList()
+            with (viewModel) {
+                paymentCard.value = currentBundle.paymentCard
+                membershipCardData.value = currentBundle.membershipCards.toList()
+                membershipPlanData.value = currentBundle.membershipPlans.toList()
+            }
         }
 
         binding.paymentCardDetail = viewModel.paymentCard.value
@@ -69,6 +73,18 @@ class PaymentCardsDetailsFragment :
             }
             dialog = builder.create()
             dialog.show()
+        }
+
+        with (viewModel.paymentCard) {
+            if (value != null &&
+                value!!.card != null &&
+                value!!.card!!.isExpired()) {
+                with(binding.paymentHeader) {
+                    cardExpired.visibility = View.VISIBLE
+                    linkStatus.visibility = View.GONE
+                    imageStatus.visibility = View.GONE
+                }
+            }
         }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
@@ -111,6 +127,13 @@ class PaymentCardsDetailsFragment :
                 getString(R.string.card_error_dialog)
             )
         }
+    }
+
+    private fun goHome() {
+        findNavController().navigateIfAdded(
+            this,
+            R.id.global_to_home
+        )
     }
 
     private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {

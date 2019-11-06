@@ -19,7 +19,7 @@ class SplashFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        findNavController().navigateIfAdded(this, R.id.splash_to_home)
+        findNavController().navigateIfAdded(this, R.id.splash_to_onboarding)
     }
 
 }

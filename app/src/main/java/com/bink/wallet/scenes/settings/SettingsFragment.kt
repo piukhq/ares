@@ -23,6 +23,7 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.content.Intent
 import android.net.Uri
+import com.bink.wallet.utils.displayModalPopup
 
 
 class SettingsFragment :
@@ -54,7 +55,10 @@ class SettingsFragment :
             viewModel.itemsList.addItem(item)
         }
 
-        binding.toolbar.title = getString(R.string.settings)
+        with (binding.toolbar) {
+            title = getString(R.string.settings)
+            setNavigationIcon(R.drawable.ic_close)
+        }
 
         val settingsAdapter = SettingsAdapter(
             viewModel.itemsList,
@@ -86,6 +90,11 @@ class SettingsFragment :
 
     private fun settingsItemClick(item: SettingsItem) {
         when (item.type) {
+            SettingsItemType.VERSION_NUMBER,
+            SettingsItemType.BASE_URL,
+            SettingsItemType.HEADER -> {
+                // these items are to do nothing at all, as they'll never be clickable
+            }
             SettingsItemType.EMAIL_ADDRESS ->
                 emailDialogOpen()
             SettingsItemType.RATE_APP -> {
@@ -114,20 +123,48 @@ class SettingsFragment :
                     )
                 )
             SettingsItemType.SECURITY_AND_PRIVACY -> {
-                val directions =
+                val action =
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
-                            GenericModalParameters(
-                                R.drawable.ic_back,
-                                getString(R.string.security_and_privacy_title),
-                                getString(R.string.security_and_privacy_copy)
-                            )
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.security_and_privacy_title),
+                            getString(R.string.security_and_privacy_copy)
                         )
-                findNavController().navigateIfAdded(this, directions)
+                    )
+                findNavController().navigateIfAdded(this, action)
             }
+            SettingsItemType.HOW_IT_WORKS -> {
+                val action =
+                    SettingsFragmentDirections.settingsToHowItWorks(
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            getString(R.string.how_it_works_title),
+                            getString(R.string.how_it_works_copy)
+                        )
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
+            SettingsItemType.TERMS_AND_CONDITIONS ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.ts_and_cs_url))
+                    )
+                )
 
-            else -> {
-                // if not handled, we do nothing, i.e. headers, info rows
-            }
+            SettingsItemType.PRIVACY_POLICY ->
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.privacy_policy_url))
+                    )
+                )
+
+            else ->
+                requireContext().displayModalPopup(
+                    getString(R.string.missing_destination_dialog_title),
+                    getString(R.string.not_implemented_yet_text)
+                )
         }
     }
 

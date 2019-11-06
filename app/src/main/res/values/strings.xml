@@ -4,6 +4,9 @@
 
     <string name="add_button_description">Add button</string>
 
+    <string name="missing_destination_dialog_title">Missing destination</string>
+    <string name="not_implemented_yet_text">Not implemented yet</string>
+
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
     <string name="loayalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
@@ -18,7 +21,7 @@
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
-    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind some scanners cannot read from screens.</string>
+    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind that some scanners cannot read from screens.</string>
     <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
     <string name="barcode_card_number">Card number:</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
@@ -36,9 +39,9 @@
     <string name="add_join_inactive_view_description">You cannot see your live points balance and transaction history
         for this card in Bink.
     </string>
-    <string name="add_join_inactive_link_description">You cannot link this card to your payment cards yet</string>
+    <string name="add_join_inactive_link_description">You cannot link this card to your payment cards yet.</string>
     <string name="add_join_active_link_description">You can link this card to your bank cards and automatically collect
-        points when you pay
+        points when you pay.
     </string>
     <string name="add_join_link_title">Link</string>
     <string name="add_join__inactive_view_description">You can see your live points balance and transactions history for
@@ -87,6 +90,8 @@
     <string name="security_modal_body">%1$s%2$s</string>
     <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
     <string name="no_plan_description_available">No plan description available</string>
+    <string name="loyalty_card_linked">Linked</string>
+    <string name="loyalty_card_unlinked">Not linked</string>
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s%2$s</string>
     <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
@@ -206,8 +211,6 @@
     <string name="pll_linked_title">Link to payment cards</string>
     <string name="pll_unlinked_title">Add card</string>
     <string name="pll_last_digits">Card ending in %1$s</string>
-    <string name="missing_destination_dialog_title">Missing destination</string>
-    <string name="not_implemented_yet_text">Not implemented yet</string>
 
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident\nLorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident</string>
@@ -245,9 +248,13 @@
     <string name="play_store_market_url">market://details?id=%1$s</string>
     <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
+    <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
+    <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
 
     <string name="security_and_privacy_title">Security and privacy</string>
     <string name="security_and_privacy_copy">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
+    <string name="how_it_works_title">How it works</string>
+    <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
 
     <!-- Native Join Unavailable-->
     <string name="native_join_unavailable_title">Native join unavailable</string>
@@ -278,6 +285,7 @@
     <string name="card_number">Card number</string>
     <string name="name_on_card">Name on card</string>
     <string name="expiry">Expiry</string>
+    <string name="expiry_format">MM/YY</string>
     <string name="incorrect_card_error">Please enter a valid card number</string>
     <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
     <string name="incorrect_card_name">Please enter the name on the card</string>
@@ -285,8 +293,24 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
+    <string name="could_not_add_card">Something went wrong adding the card, please try again</string>
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>
     <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="log_in_with_email">Log in with email</string>
+    <string name="page_1_title">Payment linked loyalty. Magic!</string>
+    <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
+    <string name="page_2_title">All you cards in one place</string>
+    <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
+    <string name="page_3_title">Never miss out</string>
+    <string name="page_3_description">Show your loyalty cards\' balances on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
+    <string name="add_your_payment_cards">Add your payment cards</string>
+    <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
+    <string name="expired">Expired</string>
 </resources>

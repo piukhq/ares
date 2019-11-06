@@ -25,7 +25,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
@@ -33,17 +33,18 @@
 
                 <TextView
                         android:id="@+id/title"
+                        style="@style/HeaderTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/HeaderTextView"/>
+                        android:gravity="center_horizontal" />
 
                 <TextView
                         android:id="@+id/description"
+                        style="@style/CustomTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/bottom_layout_height"
-                        android:paddingTop="@dimen/margin_padding_size_extra_small"
-                        style="@style/CustomTextView" />
+                        android:paddingTop="@dimen/margin_padding_size_extra_small" />
             </LinearLayout>
         </ScrollView>
 
@@ -65,6 +66,7 @@
                     android:layout_width="match_parent"
                     android:background="@drawable/rounded_corners_gradient_button"
                     android:text="@string/accept_button_text"
+                    android:textAllCaps="false"
                     android:textColor="@color/pale_grey" />
 
             <Button
@@ -74,7 +76,18 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:background="@color/white_transparent"
                     android:text="@string/decline_button_text"
+                    android:textAllCaps="false"
                     android:textColor="@color/black" />
         </LinearLayout>
+
+        <ProgressBar
+                android:id="@+id/progress_spinner"
+                style="@style/ProgressSpinner"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
