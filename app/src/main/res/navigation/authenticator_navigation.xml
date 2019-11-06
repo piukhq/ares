@@ -73,7 +73,7 @@
 
     <fragment
             android:id="@+id/payment_card_detail"
-            android:name="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetails">
+            android:name="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsFragment">
 
         <argument
                 android:name="paymentCard"

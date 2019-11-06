@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <variable
-                name="paymentMembershipCard"
-                type="com.bink.wallet.model.response.payment_card.PaymentMembershipCard" />
-
         <variable
                 name="membershipCard"
                 type="com.bink.wallet.model.response.membership_card.MembershipCard" />
@@ -26,7 +22,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/company_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
         <TextView
                 android:id="@+id/company_name"

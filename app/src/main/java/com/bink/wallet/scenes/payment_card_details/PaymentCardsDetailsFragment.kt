@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PaymentCardsDetails :
+class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
 
     override fun builder(): FragmentToolbar {
@@ -30,7 +31,7 @@ class PaymentCardsDetails :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        with (binding.toolbar) {
+        with(binding.toolbar) {
             setNavigationIcon(R.drawable.ic_close)
             setNavigationOnClickListener {
                 goHome()
@@ -40,9 +41,9 @@ class PaymentCardsDetails :
         val securityDialog = SecurityDialogs(requireContext())
 
         arguments?.let {
-            val currentBundle = PaymentCardsDetailsArgs.fromBundle(it)
+            val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
 
-            with (viewModel) {
+            with(viewModel) {
                 paymentCard.value = currentBundle.paymentCard
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
@@ -73,10 +74,11 @@ class PaymentCardsDetails :
             dialog.show()
         }
 
-        with (viewModel.paymentCard) {
+        with(viewModel.paymentCard) {
             if (value != null &&
                 value!!.card != null &&
-                value!!.card!!.isExpired()) {
+                value!!.card!!.isExpired()
+            ) {
                 with(binding.paymentHeader) {
                     cardExpired.visibility = View.VISIBLE
                     linkStatus.visibility = View.GONE
@@ -87,30 +89,49 @@ class PaymentCardsDetails :
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
-                binding.linkedCardsList.apply {
-                    layoutManager = GridLayoutManager(context, 1)
-
-                    if (viewModel.paymentCard.value?.membership_cards!!.isNotEmpty()) {
-                        adapter = LinkedCardsAdapter(
+                binding.apply {
+                    paymentCardDetailsTitle.visibility = View.VISIBLE
+                    paymentCardDetailsDescription.visibility = View.VISIBLE
+                    availablePllList.apply {
+                        visibility = View.VISIBLE
+                        layoutManager = GridLayoutManager(context, 1)
+                        adapter = AvailablePllAdapter(
                             cards,
                             plans,
                             viewModel.paymentCard.value?.membership_cards!!,
                             onLinkStatusChange = { onLinkStatusChange(it) }
                         )
-                    } else {
-                        adapter = SuggestedCardsAdapter(
-                            plans.filter { it.getCardType() == CardType.PLL },
-                            itemClickListener = {
-                                val directions =
-                                    PaymentCardsDetailsDirections.paymentDetailsToAddJoin(it)
-                                findNavController().navigateIfAdded(
-                                    this@PaymentCardsDetails,
-                                    directions
-                                )
-                            }
-                        )
                     }
+
+                    otherCardsList.apply {
+                        val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
+                        for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
+                            if (cards.count { card -> card.membership_plan == plan.id } == 0) {
+                                unaddedCardsForPlan.add(plan)
+                            }
+                        }
+                        if(unaddedCardsForPlan.isNotEmpty()) {
+                            visibility = View.VISIBLE
+                            layoutManager = GridLayoutManager(context, 1)
+                            adapter = SuggestedCardsAdapter(
+                                unaddedCardsForPlan,
+                                itemClickListener = {
+                                    val directions =
+                                        PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
+                                            it
+                                        )
+                                    findNavController().navigateIfAdded(
+                                        this@PaymentCardsDetailsFragment,
+                                        directions
+                                    )
+                                }
+                            )
+                        }
+                    }
+                    otherCardsDescription.visibility = View.VISIBLE
+                    otherCardsTitle.visibility = View.VISIBLE
                 }
+
             }
         }
 
