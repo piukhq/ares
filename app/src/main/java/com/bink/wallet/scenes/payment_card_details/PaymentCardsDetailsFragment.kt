@@ -99,7 +99,8 @@ class PaymentCardsDetailsFragment :
                             cards,
                             plans,
                             viewModel.paymentCard.value?.membership_cards!!,
-                            onLinkStatusChange = { onLinkStatusChange(it) }
+                            onLinkStatusChange = ::onLinkStatusChange,
+                            onItemSelected = ::onItemSelected
                         )
                     }
 
@@ -168,5 +169,13 @@ class PaymentCardsDetailsFragment :
                 )
             }
         }
+    }
+
+    private fun onItemSelected(membershipPlan: MembershipPlan, membershipCard: MembershipCard) {
+        val directions = PaymentCardsDetailsFragmentDirections.paymentDetailsToLoyaltyCardDetail(
+            membershipPlan,
+            membershipCard
+        )
+        directions.let { _ -> findNavController().navigateIfAdded(this, directions) }
     }
 }
