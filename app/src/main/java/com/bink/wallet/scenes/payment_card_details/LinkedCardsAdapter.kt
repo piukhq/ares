@@ -1,18 +1,21 @@
 package com.bink.wallet.scenes.payment_card_details
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.LinkedCardsListItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
+import com.bink.wallet.utils.enums.CardStatus
 
 class LinkedCardsAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
     private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
-    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {}
+    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit,
+    private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
 ) : RecyclerView.Adapter<LinkedCardsAdapter.LinkedCardsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkedCardsViewHolder {
@@ -44,6 +47,35 @@ class LinkedCardsAdapter(
                 binding.toggle.displayCustomSwitch(isChecked)
             }
 
+            binding.itemLayout.setOnClickListener {
+                currentMembershipPlan?.let { membershipPlan ->
+                    currentMembershipCard?.let { membershipCard ->
+                        onItemSelected(membershipPlan, membershipCard)
+                    }
+                }
+            }
+
+            when (currentMembershipCard?.status?.state) {
+                CardStatus.AUTHORISED.status -> {
+                    showToggle()
+                }
+                CardStatus.PENDING.status -> {
+                    if (item.active_link != null &&
+                        item.active_link
+                    ) {
+                        showPending()
+                    }
+                }
+                CardStatus.UNAUTHORISED.status,
+                CardStatus.FAILED.status -> {
+                    if (item.active_link != null &&
+                        item.active_link
+                    ) {
+                        showRetry()
+                    }
+                }
+            }
+
             binding.executePendingBindings()
         }
 
@@ -52,5 +84,26 @@ class LinkedCardsAdapter(
 
         private fun getPlanByCardID(currentMembershipCard: MembershipCard?) =
             plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
+
+        private fun showToggle() {
+            resetVisibility()
+            binding.toggle.visibility = View.VISIBLE
+        }
+
+        private fun showPending() {
+            resetVisibility()
+            binding.pending.visibility = View.VISIBLE
+        }
+
+        private fun showRetry() {
+            resetVisibility()
+            binding.retry.visibility = View.VISIBLE
+        }
+
+        private fun resetVisibility() {
+            binding.toggle.visibility = View.INVISIBLE
+            binding.pending.visibility = View.GONE
+            binding.retry.visibility = View.GONE
+        }
     }
 }

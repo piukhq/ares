@@ -3,14 +3,15 @@ package com.bink.wallet.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 
 @Database(
-    entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class],
-    version = 10,
+    entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class],
+    version = 12,
     exportSchema = false
 )
 @TypeConverters(
@@ -24,4 +25,5 @@ abstract class BinkDatabase : RoomDatabase() {
     abstract fun membershipPlanDao(): MembershipPlanDao
     abstract fun paymentCardDao(): PaymentCardDao
     abstract fun loginDataDao(): LoginDataDao
+    abstract fun bannersDisplayDao(): BannersDisplayDao
 }

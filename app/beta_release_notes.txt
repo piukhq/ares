@@ -25,12 +25,7 @@ AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
 AB20-103-Nav bar on Add/Join screen does not appear
 AB20-166-Decisioning Change Sign Up Screen
-AB20-177-LCD when no barcode available
-AB20-175-Change maximize barcode to display barcode number
-AB20-187-LCD Loyalty Card wording changes
-AB20-218-Unlinking all cards doesn't correctly update the Linking Module
 AB20-219-Add/Join Screen displays Link Status Incorrectly
-AB20-103-Nav bar on Add/Join screen does not appear
 AB20-226-Register Ghost Card-Incorrect text on title and button
 AB20-224-Enable I Don't Have An Account
 AB20-203 Settings screen population
@@ -57,5 +52,16 @@ AB20-265 Barcode maximise screen close click area too small
 AB20-257 Barcode screen should show only the membership id
 AB20-259 Settings page text colour
 AB20-248 Name entry on Add Payment Card
+AB20-261-Barcode Screen showing incorrect information
+AB20-182-Transaction Screen Points Fix
 AB20-182-Transaction Screen Points Fix
 AB20-236 Wallet auth status incorrect
+AB20-250 Hide rename card option
+AB20-220 Remove ghost card on sign up journey
+AB20-299-Hardcoded text chevrons
+AB20-306 Delete null is displayed on LCD screen
+AB20-291-Payment terms and conditions title and button text format
+AB20-222-Show the pending retry state of loyalty card in the pcd
+
+AB20-291-payment-terms-and-conditions-title-and-button-text-format
+AB20-125 Empty loyalty wallet

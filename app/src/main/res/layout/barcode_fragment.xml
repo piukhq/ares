@@ -31,7 +31,7 @@
                 android:layout_marginStart="@dimen/title_margin"
                 android:layout_marginTop="@dimen/title_margin"
                 android:layout_marginBottom="@dimen/title_margin"
-                android:text="@{viewModel.membershipPlan.account.plan_name}"
+                android:text="@{viewModel.membershipPlan.account.company_name}"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="@+id/toolbar"
