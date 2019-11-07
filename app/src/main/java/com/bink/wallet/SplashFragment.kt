@@ -23,12 +23,11 @@ class SplashFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val rootBeer = RootBeer(context)
-        if (rootBeer.isRooted) {
-            findNavController().navigateIfAdded(this, R.id.splash_to_rooted_device)
-        } else {
-            findNavController().navigateIfAdded(this, R.id.splash_to_onboarding)
-        }
-
+        findNavController().navigateIfAdded(
+            this, when (rootBeer.isRooted) {
+                true -> R.id.splash_to_rooted_device
+                else -> R.id.splash_to_onboarding
+            }
+        )
     }
-
 }
