@@ -8,7 +8,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 
-class SignUpViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
+class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
     var newMembershipCard = MutableLiveData<MembershipCard>()
