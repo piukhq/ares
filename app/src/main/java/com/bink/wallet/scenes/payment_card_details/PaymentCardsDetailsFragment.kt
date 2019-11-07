@@ -89,7 +89,10 @@ class PaymentCardsDetailsFragment :
         }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
+            val pllPlansIds = mutableListOf<String>()
+            plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
             viewModel.membershipCardData.observeNonNull(this) { cards ->
+                val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
                 binding.apply {
                     paymentCardDetailsTitle.visibility = View.VISIBLE
                     paymentCardDetailsDescription.visibility = View.VISIBLE
@@ -99,7 +102,7 @@ class PaymentCardsDetailsFragment :
                         adapter = AvailablePllAdapter(
                             viewModel.paymentCard.value!!,
                             plans,
-                            cards,
+                            pllCards,
                             onLinkStatusChange = ::onLinkStatusChange,
                             onItemSelected = ::onItemSelected
                         )

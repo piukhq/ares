@@ -34,7 +34,7 @@ class AvailablePllAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MembershipCard) {
-            val currentMembershipPlan = getPlanByCardID(item)
+            val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.membershipCard = item
             binding.toggle.isChecked =
@@ -72,7 +72,7 @@ class AvailablePllAdapter(
             binding.executePendingBindings()
         }
 
-        private fun getPlanByCardID(currentMembershipCard: MembershipCard?) =
+        private fun getPlanByCardId(currentMembershipCard: MembershipCard?) =
             plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
 
         private fun showToggle() {
