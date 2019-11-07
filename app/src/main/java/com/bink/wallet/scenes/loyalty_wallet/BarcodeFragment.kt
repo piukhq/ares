@@ -29,7 +29,7 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             BarcodeFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = currentMembershipPlan
                 viewModel.membershipCard.value = membershipCard
-                if(membershipCard.card?.membership_id.isNullOrEmpty()) {
+                if (membershipCard.card?.membership_id.isNullOrEmpty()) {
                     with(binding) {
                         cardNumberLabel.visibility = View.GONE
                         cardNumber.visibility = View.GONE
