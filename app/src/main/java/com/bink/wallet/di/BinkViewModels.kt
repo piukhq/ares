@@ -1,5 +1,6 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.data.*
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
@@ -11,7 +12,7 @@ import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
-import com.bink.wallet.scenes.add_auth_enrol.SignUpViewModel
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
@@ -39,10 +40,10 @@ val viewModelModules = module {
     single { provideLoginRepository(get(), get()) }
     viewModel { LoginViewModel(get()) }
 
-    single { provideLoyaltyCardRepository(get(), get(), get()) }
+    single { provideLoyaltyCardRepository(get(), get(), get(), get()) }
     viewModel { LoyaltyViewModel(get()) }
 
-    viewModel { SignUpViewModel(get()) }
+    viewModel { AddAuthViewModel(get()) }
 
     viewModel { BrowseBrandsViewModel() }
 
@@ -72,7 +73,7 @@ val viewModelModules = module {
 
     viewModel { BaseModalViewModel() }
 
-    viewModel { WalletsViewModel(get()) }
+    viewModel { WalletsViewModel(get(), get()) }
 
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
@@ -92,9 +93,10 @@ fun provideLoginRepository(
 fun provideLoyaltyCardRepository(
     restApiService: ApiService,
     membershipPlanDao: MembershipPlanDao,
-    membershipCardDao: MembershipCardDao
+    membershipCardDao: MembershipCardDao,
+    bannersDisplayDao: BannersDisplayDao
 ): LoyaltyWalletRepository =
-    LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao)
+    LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao, bannersDisplayDao)
 
 fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
