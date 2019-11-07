@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "payment_card")
 data class PaymentCard(
     @PrimaryKey @ColumnInfo(name = "id") val id: Int?,
-    @ColumnInfo(name = "membership_cards") val membership_cards: List<PaymentMembershipCard>?,
+    @ColumnInfo(name = "membership_cards") val membership_cards: List<PaymentMembershipCard> = ArrayList(),
     @ColumnInfo(name = "status") val status: String?,
     @ColumnInfo(name = "card") val card: BankCard?,
     @ColumnInfo(name = "image") val images: List<Image>?,
