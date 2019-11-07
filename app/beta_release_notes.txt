@@ -59,7 +59,6 @@ AB20-236 Wallet auth status incorrect
 AB20-250 Hide rename card option
 AB20-220 Remove ghost card on sign up journey
 AB20-299-Hardcoded text chevrons
-AB20-306 Delete null is displayed on LCD screen
 AB20-291-Payment terms and conditions title and button text format
 AB20-222-Show the pending retry state of loyalty card in the pcd
 AB20-291-payment-terms-and-conditions-title-and-button-text-format
@@ -68,3 +67,4 @@ AB20-304 App version in API call headers
 AB20-301-Onboarding Page1 Page2 Back Arrows
 AB20-293-Barcode Screen-Do not display card number text if not returned by API
 AB20-274 Auth and Add screen - Rule separation not applied under every credential name/description fields as per requirements
+AB20-306 Delete null is displayed on LCD screen
