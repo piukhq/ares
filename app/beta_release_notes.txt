@@ -1,62 +1,32 @@
 AB20-90  Add payment card
-AB20-176 LCD loyalty card image display update, fix scrolling issue & scaling of logo
 AB20-142 Missing loyalty cards, code refactor
 AB20-92  Payment card details screen
 AB20-135 Linked payments cards
 AB20-133 Created payment cards wallet
-AB20-80  Added ghost card button
 AB20-75  Ghost card register
 AB20-88  PCD screen
-AB20-89  add payment card enabled
-AB20-176 LCD loyalty card image display update
-AB20-77  Native-Join-Sign-Up-Unavailable
 AB20-34  PLL
-AB20-183 LCD Error Message Not Displayed
-AB20-207 Barcode Screen Showing Incorrect Info
-AB20-209 App Crash on Maximise Barcode
-AB20-210 Barcode Screen cannot be accessed from wallet screen
 AB20-188 Transactions unavailable screen wording changes
 AB20-214 PLL - The user is redirected to PLL Empty after adding a PLL card
 AB20-162 loyalty card specification
 AB20-177-LCD when no barcode available
-AB20-175-Change maximize barcode to display barcode number
-AB20-187-LCD Loyalty Card wording changes
 AB20-218-Unlinking all cards doesn't correctly update the Linking Module
-AB20-219-Add/Join Screen displays Link Status Incorrectly
-AB20-103-Nav bar on Add/Join screen does not appear
 AB20-166-Decisioning Change Sign Up Screen
-AB20-219-Add/Join Screen displays Link Status Incorrectly
-AB20-226-Register Ghost Card-Incorrect text on title and button
-AB20-224-Enable I Don't Have An Account
-AB20-203 Settings screen population
-AB20-193 Enable click for Rate this app
 AB20-190 FAQs link active
 AB20-78  Native Ghost Card Registration Not Available
 AB20-197 Security & privacy from Settings page
-AB28-228 Payment card wallet card background fix
-AB20-235 Remove split screen functionality
-AB20-198 How it works
 AB20-93  Onboarding Template
-AB20-201 Terms and Conditions open in browser
 AB20-200 Privacy policy open in browser
 AB20-85  Not Implemented Yet on Settings pages for functionality that isn't implemented
 AB20-195 Swipe to delete payment card
 AB20-143 Empty payment wallet
-AB20-207-Barcode Screen Not Showing Correct Information
 AB20-91  Terms and Conditions on adding payment card
-AB20-247 No swipe-refresh on payment wallet
-AB20-246 Payment card expiry for wallet & details screen
 AB20-258 Barcode not showing for H&M account
 AB20-260 Barcode maximise screen title
 AB20-265 Barcode maximise screen close click area too small
-AB20-257 Barcode screen should show only the membership id
-AB20-259 Settings page text colour
-AB20-248 Name entry on Add Payment Card
 AB20-261-Barcode Screen showing incorrect information
 AB20-182-Transaction Screen Points Fix
-AB20-182-Transaction Screen Points Fix
 AB20-236 Wallet auth status incorrect
-AB20-250 Hide rename card option
 AB20-220 Remove ghost card on sign up journey
 AB20-299-Hardcoded text chevrons
 AB20-306 Delete null is displayed on LCD screen
@@ -64,7 +34,6 @@ AB20-291-Payment terms and conditions title and button text format
 AB20-222-Show the pending retry state of loyalty card in the pcd
 AB20-291-payment-terms-and-conditions-title-and-button-text-format
 AB20-125 Empty loyalty wallet
-AB20-304 App version in API call headers
 AB20-301-Onboarding Page1 Page2 Back Arrows
 AB20-293-Barcode Screen-Do not display card number text if not returned by API
 AB20-274 Auth and Add screen - Rule separation not applied under every credential name/description fields as per requirements
