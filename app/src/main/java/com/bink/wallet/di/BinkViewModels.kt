@@ -12,7 +12,7 @@ import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
-import com.bink.wallet.scenes.add_auth_enrol.SignUpViewModel
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
@@ -43,7 +43,7 @@ val viewModelModules = module {
     single { provideLoyaltyCardRepository(get(), get(), get(), get()) }
     viewModel { LoyaltyViewModel(get()) }
 
-    viewModel { SignUpViewModel(get()) }
+    viewModel { AddAuthViewModel(get()) }
 
     viewModel { BrowseBrandsViewModel() }
 
