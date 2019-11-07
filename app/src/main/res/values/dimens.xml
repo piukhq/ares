@@ -96,6 +96,7 @@
 
     <!-- Onboarding -->
     <dimen name="buttons_margin">48dp</dimen>
+    <dimen name="image_suggested_pll_size">60dp</dimen>
     <dimen name="page_image_height">200dp</dimen>
     <dimen name="separator_height">1dp</dimen>
 </resources>

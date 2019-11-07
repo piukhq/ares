@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.PaymentCardWalletItemBinding
-import com.bink.wallet.databinding.PaymentCardWalletJoinBinding
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.getCardTypeFromProvider
 
@@ -22,7 +23,7 @@ class PaymentCardWalletAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         if (viewType == JOIN_CARD) {
-            val binding = PaymentCardWalletJoinBinding.inflate(inflater)
+            val binding = EmptyLoyaltyItemBinding.inflate(inflater)
             binding.apply {
                 close.setOnClickListener {
                     SharedPreferenceManager.isPaymentJoinHidden = true
@@ -49,7 +50,7 @@ class PaymentCardWalletAdapter(
         if (!isJoinCard(position)) {
             (holder as PaymentCardWalletHolder).bind(
                 paymentCards[
-                    position - isJoinCardHiddenCount()
+                        position - isJoinCardHiddenCount()
                 ]
             )
         }
@@ -57,11 +58,11 @@ class PaymentCardWalletAdapter(
 
     override fun getItemCount() =
         paymentCards.size +
-        isJoinCardHiddenCount()
+                isJoinCardHiddenCount()
 
     override fun getItemId(position: Int) =
         position.toLong() +
-        isJoinCardHiddenCount()
+                isJoinCardHiddenCount()
 
     override fun getItemViewType(position: Int): Int {
         return if (isJoinCard(position)) {
@@ -73,7 +74,7 @@ class PaymentCardWalletAdapter(
 
     private fun isJoinCard(position: Int) =
         position == 0 &&
-        isJoinCardHiddenCount() == 1
+                isJoinCardHiddenCount() == 1
 
     private fun isJoinCardHiddenCount() =
         if (SharedPreferenceManager.isPaymentJoinHidden) {
@@ -95,12 +96,25 @@ class PaymentCardWalletAdapter(
             }
             if (item.card!!.isExpired()) {
                 binding.cardExpired.visibility = View.VISIBLE
-                binding.linkStatus.visibility  = View.GONE
+                binding.linkStatus.visibility = View.GONE
                 binding.imageStatus.visibility = View.GONE
             }
         }
     }
 
-    inner class PaymentCardWalletJoinHolder(val binding: PaymentCardWalletJoinBinding):
-        RecyclerView.ViewHolder(binding.root)
+    inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind() {
+            with(binding) {
+                close.setOnClickListener {
+                    SharedPreferenceManager.isPaymentJoinHidden = true
+                }
+
+                joinCardImage.setImageResource(R.drawable.ic_no_payment_card)
+                joinCardDescription.text =
+                    joinCardDescription.context.getString(R.string.payment_join_description)
+            }
+        }
+    }
 }
