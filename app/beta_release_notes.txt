@@ -62,6 +62,6 @@ AB20-299-Hardcoded text chevrons
 AB20-306 Delete null is displayed on LCD screen
 AB20-291-Payment terms and conditions title and button text format
 AB20-222-Show the pending retry state of loyalty card in the pcd
-
 AB20-291-payment-terms-and-conditions-title-and-button-text-format
 AB20-125 Empty loyalty wallet
+AB20-192 Contact Us on settings page
