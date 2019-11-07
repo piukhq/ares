@@ -15,6 +15,7 @@ import com.bink.wallet.scenes.add_auth_enrol.SignUpViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
+import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
@@ -81,6 +82,8 @@ val viewModelModules = module {
 
     single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
     viewModel { CardTermsAndConditionsViewModel(get()) }
+
+    viewModel { ForgotPasswordViewModel(get()) }
 }
 
 fun provideLoginRepository(

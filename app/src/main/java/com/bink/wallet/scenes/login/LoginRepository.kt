@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.LoginData
+import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
+import okhttp3.ResponseBody
 
 class LoginRepository(
     private val apiService: ApiService,
@@ -15,7 +17,7 @@ class LoginRepository(
         const val DEFAULT_LOGIN_ID = "0"
     }
 
-    var loginEmail: String = "Bink20iteration1@testbink.com"
+    var loginEmail = "Bink20iteration1@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -46,7 +48,8 @@ class LoginRepository(
                     val response = loginDataDao.getLoginData()
                     // Note: the AS hint says that response should never be null,
                     // but it appears it can be during runtime... go figure!
-                    if (response != null && response.email != null) {
+                    // Updated null check, should work same as old version
+                    if (response?.email != null) {
                         loginEmail = response.email
                         updateLiveData(loginData, response)
                     } else {
@@ -73,6 +76,20 @@ class LoginRepository(
                     }
                 } catch (e: Throwable) {
                     Log.e(LoginDataDao::class.simpleName, e.toString(), e)
+                }
+            }
+        }
+    }
+
+    fun forgotPassword(email: String, forgotPasswordResponse: MutableLiveData<ResponseBody>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    forgotPasswordResponse.value = response
+                } catch (e: Throwable) {
+                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
                 }
             }
         }
