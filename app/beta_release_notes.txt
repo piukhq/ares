@@ -62,3 +62,6 @@ AB20-299-Hardcoded text chevrons
 AB20-306 Delete null is displayed on LCD screen
 AB20-291-Payment terms and conditions title and button text format
 AB20-222-Show the pending retry state of loyalty card in the pcd
+AB20-296-PLL module-Text displaying in the PLL module is not displaying as per the requirement document
+AB20-307-PCD screen does not show all PLL loyalty cards in the wallet
+AB20-310-Payment card details (PCD) screen combo list of loyalty cards

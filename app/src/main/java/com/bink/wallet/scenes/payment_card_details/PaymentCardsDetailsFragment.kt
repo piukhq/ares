@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
@@ -96,9 +97,9 @@ class PaymentCardsDetailsFragment :
                         visibility = View.VISIBLE
                         layoutManager = GridLayoutManager(context, 1)
                         adapter = AvailablePllAdapter(
-                            cards,
+                            viewModel.paymentCard.value!!,
                             plans,
-                            viewModel.paymentCard.value?.membership_cards!!,
+                            cards,
                             onLinkStatusChange = ::onLinkStatusChange,
                             onItemSelected = ::onItemSelected
                         )
@@ -111,7 +112,7 @@ class PaymentCardsDetailsFragment :
                                 unaddedCardsForPlan.add(plan)
                             }
                         }
-                        if(unaddedCardsForPlan.isNotEmpty()) {
+                        if (unaddedCardsForPlan.isNotEmpty()) {
                             visibility = View.VISIBLE
                             layoutManager = GridLayoutManager(context, 1)
                             adapter = SuggestedCardsAdapter(
