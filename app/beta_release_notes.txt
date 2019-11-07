@@ -65,4 +65,5 @@ AB20-222-Show the pending retry state of loyalty card in the pcd
 AB20-291-payment-terms-and-conditions-title-and-button-text-format
 AB20-125 Empty loyalty wallet
 AB20-304 App version in API call headers
+AB20-301-Onboarding Page1 Page2 Back Arrows
 AB20-293-Barcode Screen-Do not display card number text if not returned by API
