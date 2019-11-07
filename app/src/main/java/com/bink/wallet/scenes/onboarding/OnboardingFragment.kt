@@ -30,8 +30,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         super.onActivityCreated(savedInstanceState)
 
         val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
-        with(adapter!!) {
-            addFragment(
+        adapter?.let {
+            it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,
                     R.drawable.logo_page_1,
@@ -39,7 +39,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     getString(R.string.page_1_description)
                 )
             )
-            addFragment(
+            it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_2,
                     R.drawable.onb_2,
@@ -47,7 +47,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     getString(R.string.page_2_description)
                 )
             )
-            addFragment(
+            it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_3,
                     R.drawable.onb_3,
@@ -55,7 +55,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     getString(R.string.page_3_description)
                 )
             )
-            binding.pager.adapter = this
+            binding.pager.adapter = it
         }
 
         binding.logInEmail.setOnClickListener {
@@ -82,23 +82,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 scrollPagesAutomatically(binding.pager)
-
-                binding.back.visibility =
-                    if (position == 0) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
-
                 timer.cancel()
                 timer = Timer()
                 scrollPagesAutomatically(binding.pager)
             }
         })
-
-        binding.back.setOnClickListener {
-            binding.pager.arrowScroll(View.FOCUS_LEFT)
-        }
 
         scrollPagesAutomatically(binding.pager)
     }
