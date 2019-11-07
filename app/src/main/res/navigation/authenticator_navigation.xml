@@ -213,7 +213,7 @@
 
     <fragment
             android:id="@+id/ghost_fragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.SignUpFragment">
+            android:name="com.bink.wallet.scenes.add_auth_enrol.AddAuthFragment">
 
         <argument
                 android:name="signUpFormType"
