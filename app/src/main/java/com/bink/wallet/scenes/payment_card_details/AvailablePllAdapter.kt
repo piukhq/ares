@@ -7,40 +7,43 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.LinkedCardsListItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.CardStatus
 
-class LinkedCardsAdapter(
-    private val cards: List<MembershipCard> = ArrayList(),
+class AvailablePllAdapter(
+    private val currentPaymentCard: PaymentCard,
     private val plans: List<MembershipPlan> = ArrayList(),
-    private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
-    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit,
+    private val membershipCards: List<MembershipCard> = ArrayList(),
+    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {},
     private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
-) : RecyclerView.Adapter<LinkedCardsAdapter.LinkedCardsViewHolder>() {
+) : RecyclerView.Adapter<AvailablePllAdapter.AvailablePllViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkedCardsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailablePllViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = LinkedCardsListItemBinding.inflate(inflater)
 
-        return LinkedCardsViewHolder(binding)
+        return AvailablePllViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: LinkedCardsViewHolder, position: Int) =
-        paymentMembershipCards[position].let { holder.bind(it) }
+    override fun onBindViewHolder(holder: AvailablePllViewHolder, position: Int) =
+        membershipCards[position].let { holder.bind(it) }
 
-    override fun getItemCount(): Int = paymentMembershipCards.size
+    override fun getItemCount(): Int = membershipCards.size
 
-    inner class LinkedCardsViewHolder(val binding: LinkedCardsListItemBinding) :
+    inner class AvailablePllViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PaymentMembershipCard) {
-            val currentMembershipCard = getCardByPaymentId(item)
-            val currentMembershipPlan = getPlanByCardID(currentMembershipCard)
+        fun bind(item: MembershipCard) {
+            val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
-            binding.paymentMembershipCard = item
-            binding.membershipCard = currentMembershipCard
-            binding.toggle.isChecked = item.active_link ?: false
-            binding.toggle.displayCustomSwitch(item.active_link ?: false)
+            binding.membershipCard = item
+            binding.toggle.isChecked =
+                if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
+            if (isLinkedToPaymentCard(item) != null) {
+                binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item)!!)
+            } else {
+                binding.toggle.displayCustomSwitch(false)
+            }
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 onLinkStatusChange(Pair(item.id, isChecked))
@@ -49,40 +52,27 @@ class LinkedCardsAdapter(
 
             binding.itemLayout.setOnClickListener {
                 currentMembershipPlan?.let { membershipPlan ->
-                    currentMembershipCard?.let { membershipCard ->
-                        onItemSelected(membershipPlan, membershipCard)
-                    }
+                    onItemSelected(membershipPlan, item)
                 }
             }
 
-            when (currentMembershipCard?.status?.state) {
+            when (item.status?.state) {
                 CardStatus.AUTHORISED.status -> {
                     showToggle()
                 }
                 CardStatus.PENDING.status -> {
-                    if (item.active_link != null &&
-                        item.active_link
-                    ) {
-                        showPending()
-                    }
+                    showPending()
                 }
                 CardStatus.UNAUTHORISED.status,
                 CardStatus.FAILED.status -> {
-                    if (item.active_link != null &&
-                        item.active_link
-                    ) {
-                        showRetry()
-                    }
+                    showRetry()
                 }
             }
 
             binding.executePendingBindings()
         }
 
-        private fun getCardByPaymentId(item: PaymentMembershipCard) =
-            cards.firstOrNull { it.id == item.id }
-
-        private fun getPlanByCardID(currentMembershipCard: MembershipCard?) =
+        private fun getPlanByCardId(currentMembershipCard: MembershipCard?) =
             plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
 
         private fun showToggle() {
@@ -104,6 +94,11 @@ class LinkedCardsAdapter(
             binding.toggle.visibility = View.INVISIBLE
             binding.pending.visibility = View.GONE
             binding.retry.visibility = View.GONE
+        }
+
+        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean? {
+            return membershipCard.payment_cards?.findLast { paymentCard -> paymentCard.id == currentPaymentCard.id.toString() }
+                ?.active_link
         }
     }
 }

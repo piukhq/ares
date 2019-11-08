@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
                 name="paymentCardDetail"
                 type="com.bink.wallet.model.response.payment_card.PaymentCard" />
@@ -50,6 +51,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_big"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/payment_header" />
@@ -64,28 +66,31 @@
                         android:text="@string/payment_card_details_description_text"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/linked_cards_list"
+                        android:id="@+id/available_pll_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginBottom="@dimen/margin_padding_size_small"
-                        app:layout_constraintBottom_toTopOf="@+id/footer_security"
+                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@+id/payment_card_details_description" />
 
                 <com.bink.wallet.FooterItem
                         android:id="@+id/footer_security"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linked_cards_list"
-                        app:type="security" />
+                        app:layout_constraintTop_toBottomOf="@+id/other_cards_list"
+                        app:type="security"
+                        tools:layout_editor_absoluteY="409dp">
+
+                </com.bink.wallet.FooterItem>
 
                 <View
                         android:id="@+id/security_separator"
@@ -136,6 +141,42 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/footer_rename"
                         app:type="delete" />
+
+                <TextView
+                        android:id="@+id/other_cards_title"
+                        style="@style/TitleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/other_cards_you_can_add_title"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/available_pll_list" />
+
+                <TextView
+                        android:id="@+id/other_cards_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:text="@string/other_cards_you_can_add_description"
+                        android:visibility="gone"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_description_medium"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/other_cards_title" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/other_cards_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toStartOf="@+id/footer_delete"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/other_cards_description" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
