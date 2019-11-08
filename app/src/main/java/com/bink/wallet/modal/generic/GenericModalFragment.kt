@@ -27,9 +27,9 @@ open class GenericModalFragment :
         val scrollBounds = Rect()
         binding.screenScrollView.getHitRect(scrollBounds)
         if (binding.title.getLocalVisibleRect(scrollBounds)) {
-            binding.toolbar.title = ""
+            binding.titleToolbar.text = ""
         } else {
-            binding.toolbar.title = binding.title.text
+            binding.titleToolbar.text = binding.title.text
         }
     }
 
