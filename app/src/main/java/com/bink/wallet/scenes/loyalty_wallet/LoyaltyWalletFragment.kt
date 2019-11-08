@@ -14,6 +14,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
+import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
@@ -104,13 +105,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
-                populateScreen(plansReceived, cardsReceived)
+                viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
+                    if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
+                        populateScreen(plansReceived, cardsReceived, dismissedCards)
+                    }
+                }
             }
         }
 
         viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
-                populateScreen(plansReceived, cardsReceived)
+                viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
+                    if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
+                        populateScreen(plansReceived, cardsReceived, dismissedCards)
+                    }
+                }
             }
         }
 
@@ -132,16 +141,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         binding.progressSpinner.visibility = View.VISIBLE
 
-        runBlocking {
-            if (verifyAvailableNetwork(requireActivity())) {
-                binding.swipeLayout.isEnabled = false
-                binding.swipeLayout.isRefreshing = false
-                viewModel.fetchLocalMembershipPlans()
-                viewModel.fetchLocalMembershipCards()
-                viewModel.fetchDismissedCards()
-            } else {
-                showNoInternetConnectionDialog()
+        if (verifyAvailableNetwork(requireActivity())) {
+            runBlocking {
+                viewModel.fetchMembershipPlans()
+                viewModel.fetchMembershipCards()
             }
+            binding.swipeLayout.isEnabled = false
+            binding.swipeLayout.isRefreshing = false
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchDismissedCards()
+        } else {
+            showNoInternetConnectionDialog()
         }
 
         binding.swipeLayout.setOnRefreshListener {
@@ -149,6 +160,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 runBlocking {
                     viewModel.fetchMembershipPlans()
                     viewModel.fetchMembershipCards()
+                    viewModel.fetchDismissedCards()
                 }
             } else {
                 showNoInternetConnectionDialog()
@@ -242,33 +254,32 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun populateScreen(
         plansReceived: List<MembershipPlan>,
-        cardsReceived: List<MembershipCard>
+        cardsReceived: List<MembershipCard>,
+        dismissedCards: List<BannerDisplay>
     ) {
         binding.swipeLayout.isRefreshing = false
         binding.swipeLayout.isEnabled = true
         binding.progressSpinner.visibility = View.GONE
 
-        viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-            walletItems = ArrayList(plansReceived.filter {
-                it.getCardType() == CardType.PLL &&
-                        merchantNoLoyalty(cardsReceived, it) &&
-                        dismissedCards.firstOrNull { currentId ->
-                            it.id == currentId.id
-                        } == null
-            })
+        walletItems = ArrayList(plansReceived.filter {
+            it.getCardType() == CardType.PLL &&
+                    merchantNoLoyalty(cardsReceived, it) &&
+                    dismissedCards.firstOrNull { currentId ->
+                        it.id == currentId.id
+                    } == null
+        })
 
-            if (!SharedPreferenceManager.isPaymentJoinHidden &&
-                (cardsReceived.isNotEmpty() ||
-                        walletItems.isNotEmpty())
-            ) {
-                walletItems.add(Any())
-            }
-
-            walletItems.addAll(cardsReceived)
-
-            walletAdapter.membershipPlans = plansReceived as ArrayList<MembershipPlan>
-            walletAdapter.membershipCards = walletItems
+        if (!SharedPreferenceManager.isPaymentJoinHidden &&
+            (cardsReceived.isNotEmpty() ||
+                    walletItems.isNotEmpty())
+        ) {
+            walletItems.add(Any())
         }
+
+        walletItems.addAll(cardsReceived)
+
+        walletAdapter.membershipPlans = plansReceived as ArrayList<MembershipPlan>
+        walletAdapter.membershipCards = walletItems
     }
 
     private fun onBannerRemove(item: Any) {

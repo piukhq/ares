@@ -38,3 +38,4 @@ AB20-301-Onboarding Page1 Page2 Back Arrows
 AB20-293-Barcode Screen-Do not display card number text if not returned by API
 AB20-274 Auth and Add screen - Rule separation not applied under every credential name/description fields as per requirements
 AB20-249 Existing PLL cards not on payment details
+AB20-329 Fixed loyalty wallet after fresh install
