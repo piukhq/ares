@@ -23,7 +23,10 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.content.Intent
 import android.net.Uri
+import androidx.appcompat.app.AlertDialog
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.utils.displayModalPopup
+import java.lang.Exception
 
 
 class SettingsFragment :
@@ -159,6 +162,30 @@ class SettingsFragment :
                         Uri.parse(getString(R.string.privacy_policy_url))
                     )
                 )
+
+            SettingsItemType.CONTACT_US -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.data = Uri.parse("mailto:")
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_us_email_address)))
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
+                intent.putExtra(Intent.EXTRA_TEXT, getString(
+                    R.string.contact_us_email_message,
+                    viewModel.loginData.value?.email,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE.toString(),
+                    android.os.Build.VERSION.RELEASE,
+                    android.os.Build.VERSION.SDK_INT.toString()
+                    ))
+                try {
+                    startActivity(Intent.createChooser(intent, getString(R.string.contact_us_select_email_client)))
+                } catch (e: Exception) {
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.contact_us_no_email_message)
+                    )
+                }
+            }
 
             else ->
                 requireContext().displayModalPopup(
