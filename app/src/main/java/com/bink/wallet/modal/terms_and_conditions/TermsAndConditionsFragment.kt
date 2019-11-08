@@ -14,7 +14,7 @@ class TermsAndConditionsFragment : GenericModalFragment() {
 
         arguments?.let { bundle ->
             TermsAndConditionsFragmentArgs.fromBundle(bundle).apply {
-                setupUi(this.genericModalParameters)
+                setupUi(genericModalParameters)
             }
         }
     }

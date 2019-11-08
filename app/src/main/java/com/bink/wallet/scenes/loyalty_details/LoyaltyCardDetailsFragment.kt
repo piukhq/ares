@@ -96,7 +96,7 @@ class LoyaltyCardDetailsFragment :
 
         val titleMessage =
             if (viewModel.membershipPlan.value?.account?.plan_name_card == null) {
-                getString(R.string.delete_card)
+                getString(R.string.delete)
             } else {
                 viewModel.membershipPlan.value?.account?.plan_name_card
             }
@@ -220,6 +220,18 @@ class LoyaltyCardDetailsFragment :
 
         setPointsModuleClickListener()
         setLinkModuleClickListener()
+
+        binding.footerSecurity.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToSecurity(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        getString(R.string.security_and_privacy_title),
+                        getString(R.string.security_and_privacy_copy)
+                    )
+                )
+            findNavController().navigateIfAdded(this, action)
+        }
 
         binding.footerDelete.setOnClickListener { footerView ->
             val builder = AlertDialog.Builder(context)

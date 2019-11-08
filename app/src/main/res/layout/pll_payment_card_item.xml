@@ -20,7 +20,6 @@
                 android:layout_marginStart="@dimen/margin_padding_size_small"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
-                app:image="@{paymentCard.paymentCard}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

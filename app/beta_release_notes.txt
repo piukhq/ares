@@ -29,14 +29,18 @@ AB20-182-Transaction Screen Points Fix
 AB20-236 Wallet auth status incorrect
 AB20-220 Remove ghost card on sign up journey
 AB20-299-Hardcoded text chevrons
-AB20-306 Delete null is displayed on LCD screen
 AB20-291-Payment terms and conditions title and button text format
 AB20-222-Show the pending retry state of loyalty card in the pcd
-AB20-291-payment-terms-and-conditions-title-and-button-text-format
 AB20-125 Empty loyalty wallet
 AB20-304 App version in API call headers
 AB20-301-Onboarding Page1 Page2 Back Arrows
 AB20-293-Barcode Screen-Do not display card number text if not returned by API
 AB20-274 Auth and Add screen - Rule separation not applied under every credential name/description fields as per requirements
 AB20-249 Existing PLL cards not on payment details
+AB20-306 Delete null is displayed on LCD screen
+AB20-296-PLL module-Text displaying in the PLL module is not displaying as per the requirement document
+AB20-307-PCD screen does not show all PLL loyalty cards in the wallet
+AB20-310-Payment card details (PCD) screen combo list of loyalty cards
+AB20-269 Security and privacy screen
+AB20-308 PLL payment cards showing incorrect icons
 AB20-288 Forgot password screen
