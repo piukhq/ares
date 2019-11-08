@@ -183,7 +183,7 @@
                             android:minLines="2"
                             android:hint="@string/name_on_card"
                             android:imeOptions="actionDone"
-                            android:inputType="textCapCharacters" />
+                            android:inputType="textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
