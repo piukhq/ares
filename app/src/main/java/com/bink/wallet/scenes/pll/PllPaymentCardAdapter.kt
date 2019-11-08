@@ -9,6 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
+import com.bink.wallet.utils.*
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
@@ -45,6 +46,10 @@ class PllPaymentCardAdapter(
         fun bindCard(paymentCard: PllPaymentCardWrapper) {
             binding.paymentCard = paymentCard
 
+            with(binding.imageView) {
+                val type = paymentCard.paymentCard.card!!.provider!!.getCardTypeFromProvider()
+                setImageResource(type.addLogo)
+            }
             with(binding.toggle) {
                 isChecked = paymentCard.isSelected
                 displayCustomSwitch(paymentCard.isSelected)
