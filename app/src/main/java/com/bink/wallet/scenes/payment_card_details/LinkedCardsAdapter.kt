@@ -5,36 +5,83 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.LinkedCardsListItemBinding
+import com.bink.wallet.databinding.LoyaltySuggestionBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.bink.wallet.utils.enums.CardStatus
 
 class LinkedCardsAdapter(
     private val cards: List<MembershipCard> = ArrayList(),
     private val plans: List<MembershipPlan> = ArrayList(),
-    private val paymentMembershipCards: List<PaymentMembershipCard> = ArrayList(),
+    private val notLinkedPllCards: ArrayList<MembershipPlan> = ArrayList(),
+    private val paymentMembershipCards: ArrayList<PaymentMembershipCard> = ArrayList(),
     private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit,
-    private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
-) : RecyclerView.Adapter<LinkedCardsAdapter.LinkedCardsViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkedCardsViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = LinkedCardsListItemBinding.inflate(inflater)
-
-        return LinkedCardsViewHolder(binding)
+    private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit,
+    private val itemClickListener: (MembershipPlan) -> Unit = {}
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        const val EXISTING_CARDS = 0
+        const val UNUSED_PLANS = 1
     }
 
-    override fun onBindViewHolder(holder: LinkedCardsViewHolder, position: Int) =
-        paymentMembershipCards[position].let { holder.bind(it) }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            EXISTING_CARDS -> {
+                val binding = LinkedCardsListItemBinding.inflate(inflater)
+                LinkedCardsViewHolder(binding)
+            }
+            else -> {
+                val binding = LoyaltySuggestionBinding.inflate(inflater)
+                SuggestedCardsViewHolder(binding)
+            }
+        }
+    }
 
-    override fun getItemCount(): Int = paymentMembershipCards.size
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            EXISTING_CARDS ->
+                cards[position].let {
+                    (holder as LinkedCardsViewHolder).bind(it)
+                }
+            UNUSED_PLANS -> {
+                notLinkedPllCards[position - cards.size].let {
+                    (holder as SuggestedCardsViewHolder).bind(it)
+                }
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        val counts = plans.filterNot { plan ->
+            cards.any { card ->
+                card.membership_plan == plan.id
+            }
+        }
+        return cards.size + counts.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position < cards.size) {
+            EXISTING_CARDS
+        } else {
+            UNUSED_PLANS
+        }
+    }
+
+    fun updatePaymentCard(link: PaymentCard) {
+        paymentMembershipCards.clear()
+        paymentMembershipCards.addAll(link.membership_cards)
+        notifyDataSetChanged()
+    }
 
     inner class LinkedCardsViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PaymentMembershipCard) {
-            val currentMembershipCard = getCardByPaymentId(item)
+        fun bind(currentMembershipCard: MembershipCard) {
+            val item = getPaymentMembershipCard(currentMembershipCard.id)
             val currentMembershipPlan = getPlanByCardID(currentMembershipCard)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.paymentMembershipCard = item
@@ -49,13 +96,11 @@ class LinkedCardsAdapter(
 
             binding.itemLayout.setOnClickListener {
                 currentMembershipPlan?.let { membershipPlan ->
-                    currentMembershipCard?.let { membershipCard ->
-                        onItemSelected(membershipPlan, membershipCard)
-                    }
+                    onItemSelected(membershipPlan, currentMembershipCard)
                 }
             }
 
-            when (currentMembershipCard?.status?.state) {
+            when (currentMembershipCard.status?.state) {
                 CardStatus.AUTHORISED.status -> {
                     showToggle()
                 }
@@ -79,8 +124,10 @@ class LinkedCardsAdapter(
             binding.executePendingBindings()
         }
 
-        private fun getCardByPaymentId(item: PaymentMembershipCard) =
-            cards.firstOrNull { it.id == item.id }
+        private fun getPaymentMembershipCard(id: String): PaymentMembershipCard {
+            return paymentMembershipCards.firstOrNull { it.id == id }
+                ?: PaymentMembershipCard(id, false)
+        }
 
         private fun getPlanByCardID(currentMembershipCard: MembershipCard?) =
             plans.firstOrNull { it.id == currentMembershipCard?.membership_plan }
@@ -104,6 +151,19 @@ class LinkedCardsAdapter(
             binding.toggle.visibility = View.INVISIBLE
             binding.pending.visibility = View.GONE
             binding.retry.visibility = View.GONE
+        }
+    }
+
+    inner class SuggestedCardsViewHolder(val binding: LoyaltySuggestionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: MembershipPlan) {
+            binding.membershipPlan = item
+            binding.buttonAddCard.setOnClickListener {
+                itemClickListener(item)
+            }
+
+            binding.executePendingBindings()
         }
     }
 }
