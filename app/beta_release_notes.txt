@@ -37,3 +37,6 @@ AB20-293-Barcode Screen-Do not display card number text if not returned by API
 AB20-274 Auth and Add screen - Rule separation not applied under every credential name/description fields as per requirements
 AB20-249 Existing PLL cards not on payment details
 AB20-306 Delete null is displayed on LCD screen
+AB20-296-PLL module-Text displaying in the PLL module is not displaying as per the requirement document
+AB20-307-PCD screen does not show all PLL loyalty cards in the wallet
+AB20-310-Payment card details (PCD) screen combo list of loyalty cards
