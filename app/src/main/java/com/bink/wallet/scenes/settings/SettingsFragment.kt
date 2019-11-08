@@ -178,17 +178,12 @@ class SettingsFragment :
                     android.os.Build.VERSION.SDK_INT.toString()
                     ))
                 try {
-                    startActivity(Intent.createChooser(intent, "Choose Email Client..."))
+                    startActivity(Intent.createChooser(intent, getString(R.string.contact_us_select_email_client)))
                 } catch (e: Exception) {
-                    val dialog: AlertDialog
-                    val builder = requireContext().let { AlertDialog.Builder(it) }
-                    builder.setCancelable(false)
-                    builder.setMessage(getString(R.string.contact_us_no_email_message))
-                    builder.setNeutralButton(R.string.ok) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    dialog = builder.create()
-                    dialog.show()
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.contact_us_no_email_message)
+                    )
                 }
             }
 
