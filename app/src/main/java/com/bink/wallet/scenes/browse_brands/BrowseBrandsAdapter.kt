@@ -29,7 +29,7 @@ class BrowseBrandsAdapter(
     }
 
     override fun onBindViewHolder(holder: BrandsViewHolder, position: Int) {
-        brands[position].let { holder.bind(it) }
+        brands[position].let { holder.bind(it, position == brands.lastIndex) }
     }
 
     override fun getItemCount(): Int = brands.size
@@ -37,7 +37,7 @@ class BrowseBrandsAdapter(
     class BrandsViewHolder(val binding: BrandListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Pair<String?, MembershipPlan>) {
+        fun bind(item: Pair<String?, MembershipPlan>, isLast: Boolean) {
 
             if (item.first != null) {
                 binding.sectionTitle.text = item.first
@@ -54,6 +54,9 @@ class BrowseBrandsAdapter(
                     true -> View.VISIBLE
                     else -> View.INVISIBLE
                 }
+            if (isLast) {
+                binding.separator.visibility = View.GONE
+            }
         }
     }
 }

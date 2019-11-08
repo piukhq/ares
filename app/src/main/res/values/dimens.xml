@@ -93,8 +93,11 @@
     <dimen name="payment_card_logo_image_margin">20dp</dimen>
     <dimen name="payment_card_number_top_margin">54dp</dimen>
     <dimen name="payment_card_spacing_margin">17dp</dimen>
+    <dimen name="add_card_button_width">82dp</dimen>
+    <dimen name="add_card_button_height">32dp</dimen>
 
     <!-- Onboarding -->
     <dimen name="buttons_margin">48dp</dimen>
+    <dimen name="image_suggested_pll_size">60dp</dimen>
     <dimen name="page_image_height">200dp</dimen>
 </resources>

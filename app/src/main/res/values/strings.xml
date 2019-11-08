@@ -17,6 +17,7 @@
     <string name="cancel_text">Cancel</string>
     <string name="root">root</string>
     <string name="add">Add</string>
+    <string name="delete">Delete</string>
 
 
     <!-- Barcode Screen -->
@@ -270,6 +271,8 @@
     <string name="no_account_text">I don\'t have an account</string>
     <string name="payment_card_details_title_text">Linked cards</string>
     <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
+    <string name="other_cards_you_can_add_title">Other cards you can add</string>
+    <string name="other_cards_you_can_add_description">You can also add the cards below and link them to your payment cards.</string>
     <string name="rename_card">Rename this card</string>
     <string name="rename_card_description">Change this card\'s \"nickname\"</string>
     <string name="card_suggestion_description">You can link this card</string>
@@ -277,6 +280,8 @@
     <string name="card_error_dialog">The card couldn\'t be deleted</string>
     <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
     <string name="default_card_second_color">#888888</string>
+    <string name="payment_card_pending">Pending</string>
+    <string name="payment_card_retry">Retry</string>
 
     <!-- Payment Card entry -->
     <string name="empty_string" />
@@ -310,5 +315,8 @@
     <string name="page_3_description">Show your loyalty cards\' balances on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
+    <string name="join_card_description">Link this card to your payment cards to automatically collect rewards</string>
+    <string name="payment_join_title">Add your payment cards</string>
+    <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
 </resources>
