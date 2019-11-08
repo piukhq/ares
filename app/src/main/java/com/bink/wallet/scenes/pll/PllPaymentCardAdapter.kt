@@ -47,8 +47,9 @@ class PllPaymentCardAdapter(
             binding.paymentCard = paymentCard
 
             with(binding.imageView) {
-                val type = paymentCard.paymentCard.card!!.provider!!.getCardTypeFromProvider()
-                setImageResource(type.addLogo)
+                val type = paymentCard.paymentCard.card?.provider?.getCardTypeFromProvider()
+                if (type != null)
+                    setImageResource(type.addLogo)
             }
             with(binding.toggle) {
                 isChecked = paymentCard.isSelected
