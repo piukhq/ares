@@ -221,6 +221,18 @@ class LoyaltyCardDetailsFragment :
         setPointsModuleClickListener()
         setLinkModuleClickListener()
 
+        binding.footerSecurity.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToSecurity(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        getString(R.string.security_and_privacy_title),
+                        getString(R.string.security_and_privacy_copy)
+                    )
+                )
+            findNavController().navigateIfAdded(this, action)
+        }
+
         binding.footerDelete.setOnClickListener { footerView ->
             val builder = AlertDialog.Builder(context)
             var dialog: AlertDialog? = null
