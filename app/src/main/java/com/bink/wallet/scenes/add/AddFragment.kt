@@ -15,11 +15,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
     }
-
-    companion object {
-        fun newInstance() = AddFragment()
-    }
-
     override val layoutRes: Int
         get() = R.layout.add_fragment
 
