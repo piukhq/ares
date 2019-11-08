@@ -42,3 +42,4 @@ AB20-307-PCD screen does not show all PLL loyalty cards in the wallet
 AB20-310-Payment card details (PCD) screen combo list of loyalty cards
 AB20-269 Security and privacy screen
 AB20-308 PLL payment cards showing incorrect icons
+AB20-192 Contact Us on settings page
