@@ -10,6 +10,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.payment_card.RebuildPaymentCard
+import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -136,7 +138,6 @@ class PaymentCardsDetailsFragment :
                     otherCardsDescription.visibility = View.VISIBLE
                     otherCardsTitle.visibility = View.VISIBLE
                 }
-
             }
         }
 
@@ -152,6 +153,17 @@ class PaymentCardsDetailsFragment :
         }
     }
 
+    private fun addLoyaltyCard(plan: MembershipPlan) {
+        val directions =
+            PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
+                plan
+            )
+        findNavController().navigateIfAdded(
+            this@PaymentCardsDetailsFragment,
+            directions
+        )
+    }
+
     private fun goHome() {
         findNavController().navigateIfAdded(
             this,
@@ -160,17 +172,19 @@ class PaymentCardsDetailsFragment :
     }
 
     private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
-        runBlocking {
-            if (currentItem.first != null && currentItem.second) {
-                viewModel.linkPaymentCard(
-                    currentItem.first!!,
-                    viewModel.paymentCard.value?.id.toString()
-                )
-            } else {
-                viewModel.unlinkPaymentCard(
-                    currentItem.first!!,
-                    viewModel.paymentCard.value?.id.toString()
-                )
+        if (currentItem.first != null) {
+            runBlocking {
+                if (currentItem.second) {
+                    viewModel.linkPaymentCard(
+                        currentItem.first!!,
+                        viewModel.paymentCard.value?.id.toString()
+                    )
+                } else {
+                    viewModel.unlinkPaymentCard(
+                        currentItem.first!!,
+                        viewModel.paymentCard.value?.id.toString()
+                    )
+                }
             }
         }
     }
@@ -180,6 +194,6 @@ class PaymentCardsDetailsFragment :
             membershipPlan,
             membershipCard
         )
-        directions.let { _ -> findNavController().navigateIfAdded(this, directions) }
+        directions.let { findNavController().navigateIfAdded(this, directions) }
     }
 }
