@@ -85,7 +85,8 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.main_fragment).navigate(R.id.detail_to_home)
             }
             R.id.home_wallet,
-            R.id.onboarding_fragment-> {
+            R.id.onboarding_fragment,
+            R.id.rooted_screen -> {
                 finish()
             }
             else -> super.onBackPressed()
