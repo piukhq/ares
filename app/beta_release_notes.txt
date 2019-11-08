@@ -43,4 +43,6 @@ AB20-310-Payment card details (PCD) screen combo list of loyalty cards
 AB20-269 Security and privacy screen
 AB20-308 PLL payment cards showing incorrect icons
 AB20-192 Contact Us on settings page
+AB20-302 App crash on Settings screen
+AB20-305 Block the app for rooted devices
 AB20-253 Payment card details (PCD) screen when no loyalty cards added - List contents text does not match the requirements
