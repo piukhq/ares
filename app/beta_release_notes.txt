@@ -41,3 +41,4 @@ AB20-296-PLL module-Text displaying in the PLL module is not displaying as per t
 AB20-307-PCD screen does not show all PLL loyalty cards in the wallet
 AB20-310-Payment card details (PCD) screen combo list of loyalty cards
 AB20-269 Security and privacy screen
+AB20-300 PLL Screen- No payment cards loaded
