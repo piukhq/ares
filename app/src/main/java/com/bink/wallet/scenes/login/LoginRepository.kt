@@ -81,7 +81,11 @@ class LoginRepository(
         }
     }
 
-    fun forgotPassword(email: String, forgotPasswordResponse: MutableLiveData<ResponseBody>) {
+    fun forgotPassword(
+        email: String,
+        forgotPasswordResponse: MutableLiveData<ResponseBody>,
+        forgotPasswordError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
             withContext(Dispatchers.Main) {
@@ -89,7 +93,7 @@ class LoginRepository(
                     val response = request.await()
                     forgotPasswordResponse.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                    forgotPasswordError.value = e
                 }
             }
         }

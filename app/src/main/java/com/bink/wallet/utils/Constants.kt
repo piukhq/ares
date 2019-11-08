@@ -39,5 +39,3 @@ const val PAGE_1 = "Page1"
 const val PAGE_2 = "Page2"
 const val PAGE_3 = "Page3"
 const val ONBOARDING_SCROLL_DURATION_SECONDS = 12000L
-
-const val DEFAULT_EMAIL_REGEX = "^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*\$"

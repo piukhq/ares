@@ -5,12 +5,15 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ForgotPasswordFragmentBinding
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ForgotPasswordFragment(override val layoutRes: Int = R.layout.forgot_password_fragment) :
+class ForgotPasswordFragment :
     BaseFragment<ForgotPasswordViewModel, ForgotPasswordFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -18,6 +21,8 @@ class ForgotPasswordFragment(override val layoutRes: Int = R.layout.forgot_passw
             .shouldDisplayBack(requireActivity())
             .build()
     }
+
+    override val layoutRes: Int = R.layout.forgot_password_fragment
 
     override val viewModel: ForgotPasswordViewModel by viewModel()
 
@@ -27,28 +32,25 @@ class ForgotPasswordFragment(override val layoutRes: Int = R.layout.forgot_passw
         binding.viewModel = viewModel
 
         viewModel.email.observeNonNull(this) {
-            if (!UtilFunctions.isValidField(
-                    DEFAULT_EMAIL_REGEX,
-                    it
-                )
-            )
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
                 binding.emailText.error = getString(R.string.invalid_email_text)
-            else
+            } else {
                 binding.emailText.error = null
+            }
         }
 
         binding.buttonContinueEmail.setOnClickListener {
-            if (!UtilFunctions.isValidField(
-                    DEFAULT_EMAIL_REGEX,
-                    viewModel.email.value
-                )
-            )
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(
+                    viewModel.email.value ?: EMPTY_STRING
+                ).matches()
+            ) {
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.invalid_email_text)
                 )
-            else
+            } else {
                 viewModel.forgotPassword()
+            }
         }
 
         viewModel.forgotPasswordResponse.observeNonNull(this) {
@@ -61,6 +63,13 @@ class ForgotPasswordFragment(override val layoutRes: Int = R.layout.forgot_passw
                         R.id.forgot_password_to_onboarding
                     )
                 }
+            )
+        }
+
+        viewModel.forgotPasswordError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                EMPTY_STRING,
+                getString(R.string.error_description)
             )
         }
 

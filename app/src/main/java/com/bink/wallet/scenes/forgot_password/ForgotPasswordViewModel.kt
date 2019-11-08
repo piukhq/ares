@@ -9,8 +9,9 @@ class ForgotPasswordViewModel(val loginRepository: LoginRepository) : BaseViewMo
     val email = MutableLiveData<String>()
 
     val forgotPasswordResponse = MutableLiveData<ResponseBody>()
+    val forgotPasswordError = MutableLiveData<Throwable>()
 
     fun forgotPassword() {
-        loginRepository.forgotPassword(email.value!!, forgotPasswordResponse)
+        loginRepository.forgotPassword(email.value!!, forgotPasswordResponse, forgotPasswordError)
     }
 }
