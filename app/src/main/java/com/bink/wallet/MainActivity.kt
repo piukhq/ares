@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Base64
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         setContentView(R.layout.activity_main)
         storeSecret()
     }
@@ -78,6 +80,9 @@ class MainActivity : AppCompatActivity() {
                 if (!SharedPreferenceManager.isAddJourney) {
                     findNavController(R.id.main_fragment).popBackStack()
                 }
+            }
+            R.id.loyalty_card_detail_fragment -> {
+                findNavController(R.id.main_fragment).navigate(R.id.detail_to_home)
             }
             R.id.home_wallet,
             R.id.onboarding_fragment-> {
