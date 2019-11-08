@@ -325,4 +325,5 @@
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
+    <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
 </resources>
