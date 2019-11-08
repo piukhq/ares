@@ -14,7 +14,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
-import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
@@ -105,21 +104,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
-                viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-                    if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
-                        populateScreen(plansReceived, cardsReceived, dismissedCards)
-                    }
-                }
+                populateScreen(plansReceived, cardsReceived)
             }
         }
 
         viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
-                viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-                    if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
-                        populateScreen(plansReceived, cardsReceived, dismissedCards)
-                    }
-                }
+                populateScreen(plansReceived, cardsReceived)
             }
         }
 
@@ -254,32 +245,35 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun populateScreen(
         plansReceived: List<MembershipPlan>,
-        cardsReceived: List<MembershipCard>,
-        dismissedCards: List<BannerDisplay>
+        cardsReceived: List<MembershipCard>
     ) {
-        binding.swipeLayout.isRefreshing = false
-        binding.swipeLayout.isEnabled = true
-        binding.progressSpinner.visibility = View.GONE
+        viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
+            if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
+                binding.swipeLayout.isRefreshing = false
+                binding.swipeLayout.isEnabled = true
+                binding.progressSpinner.visibility = View.GONE
 
-        walletItems = ArrayList(plansReceived.filter {
-            it.getCardType() == CardType.PLL &&
-                    merchantNoLoyalty(cardsReceived, it) &&
-                    dismissedCards.firstOrNull { currentId ->
-                        it.id == currentId.id
-                    } == null
-        })
+                walletItems = ArrayList(plansReceived.filter {
+                    it.getCardType() == CardType.PLL &&
+                            merchantNoLoyalty(cardsReceived, it) &&
+                            dismissedCards.firstOrNull { currentId ->
+                                it.id == currentId.id
+                            } == null
+                })
 
-        if (!SharedPreferenceManager.isPaymentJoinHidden &&
-            (cardsReceived.isNotEmpty() ||
-                    walletItems.isNotEmpty())
-        ) {
-            walletItems.add(Any())
+                if (!SharedPreferenceManager.isPaymentJoinHidden &&
+                    (cardsReceived.isNotEmpty() ||
+                            walletItems.isNotEmpty())
+                ) {
+                    walletItems.add(Any())
+                }
+
+                walletItems.addAll(cardsReceived)
+
+                walletAdapter.membershipPlans = plansReceived as ArrayList<MembershipPlan>
+                walletAdapter.membershipCards = walletItems
+            }
         }
-
-        walletItems.addAll(cardsReceived)
-
-        walletAdapter.membershipPlans = plansReceived as ArrayList<MembershipPlan>
-        walletAdapter.membershipCards = walletItems
     }
 
     private fun onBannerRemove(item: Any) {
