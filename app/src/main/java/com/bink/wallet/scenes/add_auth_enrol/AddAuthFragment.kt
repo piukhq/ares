@@ -22,7 +22,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
+class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .build()
@@ -35,9 +35,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
 
-    private val args: SignUpFragmentArgs by navArgs()
+    private val args: AddAuthFragmentArgs by navArgs()
 
-    override val viewModel: SignUpViewModel by viewModel()
+    override val viewModel: AddAuthViewModel by viewModel()
 
     override fun onResume() {
         super.onResume()
@@ -127,7 +127,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                         message, getString(R.string.ok)
                     )
                 }?.let { params ->
-                    SignUpFragmentDirections.signUpToBrandHeader(params)
+                   AddAuthFragmentDirections.signUpToBrandHeader(params)
                 }
             directions?.let { _ ->
                 findNavController().navigateIfAdded(this, directions)
@@ -219,7 +219,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 )!!
             ) {
                 if (viewModel.currentMembershipPlan.value != null) {
-                    val action = SignUpFragmentDirections.toGhost(
+                    val action =AddAuthFragmentDirections.toGhost(
                         SignUpFormType.GHOST,
                         viewModel.currentMembershipPlan.value!!,
                         null
@@ -227,7 +227,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                     findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                val action = SignUpFragmentDirections.signUpToGhostRegistrationUnavailable(
+                val action =AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
                     GenericModalParameters(
                         R.drawable.ic_close,
                         getString(R.string.title_ghost_card_not_available),
@@ -357,13 +357,13 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
                 CardType.VIEW.type, CardType.STORE.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
                         val directions =
-                            SignUpFragmentDirections.signUpToDetails(
+                           AddAuthFragmentDirections.signUpToDetails(
                                 viewModel.currentMembershipPlan.value!!,
                                 membershipCard
                             )
                         findNavController().navigateIfAdded(this, directions)
                     } else {
-                        val directions = SignUpFragmentDirections.signUpToPllEmpty(
+                        val directions =AddAuthFragmentDirections.signUpToPllEmpty(
                             viewModel.currentMembershipPlan.value!!,
                             membershipCard
                         )
@@ -395,7 +395,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
         if (membershipCard.membership_transactions != null &&
             membershipCard.membership_transactions?.isEmpty()!!
         ) {
-            val directions = SignUpFragmentDirections.signUpToPllEmpty(
+            val directions = AddAuthFragmentDirections.signUpToPllEmpty(
                 viewModel.currentMembershipPlan.value!!,
                 membershipCard
             )
@@ -405,7 +405,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, AddAuthFragmentBinding>() {
 
     private fun handlePll() {
         SharedPreferenceManager.isLoyaltySelected = false
-        findNavController().navigateIfAdded(this, SignUpFragmentDirections.signUpToHome())
+        findNavController().navigateIfAdded(this, AddAuthFragmentDirections.signUpToHome())
     }
 
     private fun hideLoadingViews() {

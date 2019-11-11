@@ -23,7 +23,10 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.content.Intent
 import android.net.Uri
+import androidx.appcompat.app.AlertDialog
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.utils.displayModalPopup
+import java.lang.Exception
 
 
 class SettingsFragment :
@@ -160,6 +163,30 @@ class SettingsFragment :
                     )
                 )
 
+            SettingsItemType.CONTACT_US -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.data = Uri.parse("mailto:")
+                intent.type = "message/rfc822+1"
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_us_email_address)))
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
+                intent.putExtra(Intent.EXTRA_TEXT, getString(
+                    R.string.contact_us_email_message,
+                    viewModel.loginData.value?.email,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE.toString(),
+                    android.os.Build.VERSION.RELEASE,
+                    android.os.Build.VERSION.SDK_INT.toString()
+                    ))
+                try {
+                    startActivity(Intent.createChooser(intent, getString(R.string.contact_us_select_email_client)))
+                } catch (e: Exception) {
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.contact_us_no_email_message)
+                    )
+                }
+            }
+
             else ->
                 requireContext().displayModalPopup(
                     getString(R.string.missing_destination_dialog_title),
@@ -169,27 +196,30 @@ class SettingsFragment :
     }
 
     private fun emailDialogOpen() {
-        val dialog =
-            SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
-        dialog.newEmail.observeNonNull(this) {
-            dialog.dismiss()
-            val email = dialog.newEmail.value!!
+        if(viewModel.loginData.value != null) {
+            val dialog =
+                SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
+            dialog.newEmail.observeNonNull(this) {
+                dialog.dismiss()
+                val email = dialog.newEmail.value!!
 
-            binding.progressSpinner.visibility = View.VISIBLE
+                binding.progressSpinner.visibility = View.VISIBLE
 
-            val data = MutableLiveData<LoginData>()
-            data.value = LoginData(DEFAULT_LOGIN_ID, email)
-            viewModel.storeLoginData(email)
-            viewModel.loginData.observeNonNull(this) {
-                viewModel.loginData.value.let {
-                    if (it != null &&
-                        it.email.equals(email)) {
-                        restartApp()
+                val data = MutableLiveData<LoginData>()
+                data.value = LoginData(DEFAULT_LOGIN_ID, email)
+                viewModel.storeLoginData(email)
+                viewModel.loginData.observeNonNull(this) {
+                    viewModel.loginData.value.let {
+                        if (it != null &&
+                            it.email.equals(email)
+                        ) {
+                            restartApp()
+                        }
                     }
                 }
             }
+            dialog.show()
         }
-        dialog.show()
     }
 
     private fun restartApp() {
