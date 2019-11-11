@@ -166,7 +166,7 @@ class SettingsFragment :
             SettingsItemType.CONTACT_US -> {
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.data = Uri.parse("mailto:")
-                intent.type = "text/plain"
+                intent.type = "message/rfc822+1"
                 intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_us_email_address)))
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
                 intent.putExtra(Intent.EXTRA_TEXT, getString(
@@ -196,27 +196,30 @@ class SettingsFragment :
     }
 
     private fun emailDialogOpen() {
-        val dialog =
-            SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
-        dialog.newEmail.observeNonNull(this) {
-            dialog.dismiss()
-            val email = dialog.newEmail.value!!
+        if(viewModel.loginData.value != null) {
+            val dialog =
+                SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
+            dialog.newEmail.observeNonNull(this) {
+                dialog.dismiss()
+                val email = dialog.newEmail.value!!
 
-            binding.progressSpinner.visibility = View.VISIBLE
+                binding.progressSpinner.visibility = View.VISIBLE
 
-            val data = MutableLiveData<LoginData>()
-            data.value = LoginData(DEFAULT_LOGIN_ID, email)
-            viewModel.storeLoginData(email)
-            viewModel.loginData.observeNonNull(this) {
-                viewModel.loginData.value.let {
-                    if (it != null &&
-                        it.email.equals(email)) {
-                        restartApp()
+                val data = MutableLiveData<LoginData>()
+                data.value = LoginData(DEFAULT_LOGIN_ID, email)
+                viewModel.storeLoginData(email)
+                viewModel.loginData.observeNonNull(this) {
+                    viewModel.loginData.value.let {
+                        if (it != null &&
+                            it.email.equals(email)
+                        ) {
+                            restartApp()
+                        }
                     }
                 }
             }
+            dialog.show()
         }
-        dialog.show()
     }
 
     private fun restartApp() {

@@ -16,14 +16,7 @@
     <fragment
             android:id="@+id/splash"
             android:name="com.bink.wallet.SplashFragment">
-        <action
-                android:id="@+id/splash_to_home"
-                app:destination="@id/login_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@id/home_wallet" />
+
         <action
                 android:id="@+id/splash_to_onboarding"
                 app:destination="@+id/onboarding_fragment"
@@ -31,7 +24,19 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/splash_to_rooted_device"
+                app:destination="@+id/rooted_screen"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+            android:id="@+id/rooted_screen"
+            android:name="com.bink.wallet.scenes.rooted_device_screen.RootedDeviceFragment" />
 
     <fragment
             android:id="@+id/home_wallet"
