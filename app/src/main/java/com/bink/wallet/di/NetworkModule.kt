@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit
 
 val networkModule = module {
 
-    single { provideDefaultOkhttpClient(androidContext()) }
+    single { provideDefaultOkHttpClient(androidContext()) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 }
 
-fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
+fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -31,7 +31,7 @@ fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
             LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_JWT, context)?.let { it }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
-            .header("Content-Type", "application/json;v=${BuildConfig.VERSION_CODE}")
+            .header("Content-Type", "application/json;v=1.1")
             .header("Authorization", jwtToken).url(request)
             .build()
         chain.proceed(newRequest)

@@ -120,37 +120,42 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.buttonDone.setOnClickListener {
-            adapter.paymentCards?.forEach { card ->
-                if (card.isSelected
-                    && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                ) {
-                    runBlocking {
-                        viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
-                            card.paymentCard.id?.let { paymentCard ->
-                                viewModel.linkPaymentCard(
-                                    membershipCard.toString(), paymentCard.toString()
-                                )
+            if (viewModel.paymentCards.value.isNullOrEmpty()) {
+                findNavController().popBackStack()
+            } else {
+                adapter.paymentCards?.forEach { card ->
+                    if (card.isSelected &&
+                        !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                    ) {
+                        runBlocking {
+                            viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
+                                card.paymentCard.id?.let { paymentCard ->
+                                    viewModel.linkPaymentCard(
+                                        membershipCard.toString(),
+                                        paymentCard.toString()
+                                    )
+                                }
                             }
                         }
+                    } else if (viewModel.membershipCard.value != null &&
+                        !card.isSelected &&
+                        card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                    ) {
+                        runBlocking {
+                            viewModel.unlinkPaymentCard(
+                                card.paymentCard.id.toString(),
+                                viewModel.membershipCard.value!!.id
+                            )
+                        }
                     }
-                } else if (viewModel.membershipCard.value != null
-                    && !card.isSelected
-                    && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                ) {
-                    runBlocking {
-                        viewModel.unlinkPaymentCard(
-                            card.paymentCard.id.toString(),
-                            viewModel.membershipCard.value!!.id
-                        )
-                    }
-                }
 
-                if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                    directions?.let { directions ->
-                        findNavController().navigateIfAdded(
-                            this@PllFragment,
-                            directions
-                        )
+                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                        directions?.let { directions ->
+                            findNavController().navigateIfAdded(
+                                this@PllFragment,
+                                directions
+                            )
+                        }
                     }
                 }
             }
