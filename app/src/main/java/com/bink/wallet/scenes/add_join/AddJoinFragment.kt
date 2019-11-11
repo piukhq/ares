@@ -97,13 +97,13 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
-            if (currentMembershipPlan.account?.enrol_fields!!.isEmpty()) {
+            if (currentMembershipPlan.account?.enrol_fields.isNullOrEmpty()) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     getString(R.string.native_join_unavailable_title),
                     getString(R.string.native_join_unavailable_text)
                 )
-                if (currentMembershipPlan.account.plan_url?.isNotEmpty()!!) {
+                if (currentMembershipPlan.account?.plan_url?.isNotEmpty()!!) {
                     genericModalParameters.firstButtonText =
                         getString(R.string.native_join_unavailable_button_text)
                     genericModalParameters.link =

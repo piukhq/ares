@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit
 
 val networkModule = module {
 
-    single { provideDefaultOkhttpClient(androidContext()) }
+    single { provideDefaultOkHttpClient(androidContext()) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 }
 
-fun provideDefaultOkhttpClient(context: Context): OkHttpClient {
+fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
