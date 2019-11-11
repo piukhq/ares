@@ -49,3 +49,5 @@ AB20-305 Block the app for rooted devices
 AB20-253 Payment card details (PCD) screen when no loyalty cards added - List contents text does not match the requirements
 AB20-329 Fixed loyalty wallet after fresh install
 AB20-332 [PLL] Done button has no functionality if no payment cards are present
+295 Call to action on Login button in Sign Up Card Screen does not match requirements
+AB20-214 [PLL] The user is redirected to PLL Empty screen after adding a PLL card
