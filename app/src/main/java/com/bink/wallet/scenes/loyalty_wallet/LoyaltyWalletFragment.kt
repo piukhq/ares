@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -82,6 +81,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
+
                     walletItems[position].let {
                         if (it is MembershipCard)
                             deleteDialog(it)
@@ -96,11 +96,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         setHasOptionsMenu(true)
 
-        viewModel.deleteCard.observe(this, Observer { id ->
+        viewModel.deleteCard.observeNonNull(this) { id ->
+            viewModel.localMembershipCardData.value =
+                viewModel.localMembershipCardData.value?.filter { it.id != id }
             viewModel.membershipCardData.value =
                 viewModel.membershipCardData.value?.filter { it.id != id }
-            (binding.loyaltyWalletList.adapter as LoyaltyWalletAdapter).deleteCard(id)
-        })
+            walletItems.firstOrNull {
+                if (it is MembershipCard)
+                    it.id == id
+                else
+                    false
+            }.let { walletItems.remove(it) }
+            binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+        }
 
         viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
