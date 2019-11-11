@@ -124,21 +124,22 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 findNavController().popBackStack()
             } else {
                 adapter.paymentCards?.forEach { card ->
-                    if (card.isSelected
-                        && !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                    if (card.isSelected &&
+                        !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
                     ) {
                         runBlocking {
                             viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
                                 card.paymentCard.id?.let { paymentCard ->
                                     viewModel.linkPaymentCard(
-                                        membershipCard.toString(), paymentCard.toString()
+                                        membershipCard.toString(),
+                                        paymentCard.toString()
                                     )
                                 }
                             }
                         }
-                    } else if (viewModel.membershipCard.value != null
-                        && !card.isSelected
-                        && card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                    } else if (viewModel.membershipCard.value != null &&
+                        !card.isSelected &&
+                        card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
                     ) {
                         runBlocking {
                             viewModel.unlinkPaymentCard(
