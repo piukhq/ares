@@ -202,6 +202,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    implementation 'com.scottyab:rootbeer-lib:0.0.7'
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
     testImplementation 'junit:junit:4.12'
