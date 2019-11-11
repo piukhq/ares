@@ -343,7 +343,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.newMembershipCard.removeObservers(this)
             if (signUpFormType == SignUpFormType.GHOST) {
                 val currentRequest = MembershipCardRequest(
-                    Account(null, null, null, addRegisterFieldsRequest.registration_fields),
+                    Account(null,
+                        null,
+                        null,
+                        addRegisterFieldsRequest.registration_fields),
                     viewModel.currentMembershipPlan.value!!.id
                 )
                 viewModel.ghostMembershipCard(
