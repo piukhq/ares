@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.onboarding
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.navigation.fragment.findNavController
@@ -95,17 +96,19 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         super.onDestroy()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     private fun scrollPagesAutomatically(pager: ViewPager) {
         var currentPage = pager.currentItem
         val pagerHandler = Handler()
         val update = Runnable {
-            if (pager != null) {
-                if (currentPage == ONBOARDING_PAGES_NUMBER) {
-                    pager.setCurrentItem(FIRST_PAGE_INDEX, true)
-                    currentPage = FIRST_PAGE_INDEX
-                } else {
-                    pager.setCurrentItem(currentPage++, true)
-                }
+            if (currentPage == ONBOARDING_PAGES_NUMBER) {
+                pager.setCurrentItem(FIRST_PAGE_INDEX, true)
+                currentPage = FIRST_PAGE_INDEX
+            } else {
+                pager.setCurrentItem(currentPage++, true)
             }
         }
 
