@@ -44,6 +44,8 @@ fun ImageView.loadImage(item: MembershipPlan?) {
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
         }
+    } else {
+        visibility = View.INVISIBLE
     }
 }
 
@@ -62,6 +64,8 @@ fun ImageView.loadImage(item: MembershipCard?) {
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
         }
+    } else {
+        visibility = View.INVISIBLE
     }
 }
 
