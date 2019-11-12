@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -82,9 +81,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
+
                     walletItems[position].let {
                         if (it is MembershipCard)
-                            deleteDialog(it)
+                            deleteDialog(it, position)
                     }
                 }
             }
@@ -96,11 +96,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         setHasOptionsMenu(true)
 
-        viewModel.deleteCard.observe(this, Observer { id ->
+        viewModel.deleteCard.observeNonNull(this) { id ->
+            viewModel.localMembershipCardData.value =
+                viewModel.localMembershipCardData.value?.filter { it.id != id }
             viewModel.membershipCardData.value =
                 viewModel.membershipCardData.value?.filter { it.id != id }
-            (binding.loyaltyWalletList.adapter as LoyaltyWalletAdapter).deleteCard(id)
-        })
+            walletItems.firstOrNull {
+                if (it is MembershipCard)
+                    it.id == id
+                else
+                    false
+            }.let { walletItems.remove(it) }
+            binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+        }
 
         viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
@@ -194,7 +202,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    fun deleteDialog(membershipCard: MembershipCard) {
+    fun deleteDialog(membershipCard: MembershipCard, position: Int) {
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
         if (builder != null) {
@@ -215,7 +223,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             LoyaltyWalletFragment::class.java.simpleName,
                             getString(R.string.loayalty_wallet_dialog_description)
                         )
-                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
 
                 }
