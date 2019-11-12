@@ -327,6 +327,8 @@
     <string name="expired">Expired</string>
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
+    <string name="facebook_unavailable">Facebook is currently unavailable.</string>
+    <string name="facebook_cancelled">Facebook login was cancelled.</string>
 
     <!-- Facebook -->
     <string name="facebook_app_id">736124376499729</string>

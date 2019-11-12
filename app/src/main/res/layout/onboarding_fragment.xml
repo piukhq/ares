@@ -44,7 +44,7 @@
                 app:piv_unselectedColor="@color/gray_inactive"
                 app:piv_viewPager="@id/pager" />
 
-        <Button
+        <com.bink.wallet.FacebookButton
                 android:id="@+id/continue_with_facebook"
                 style="@style/RoundedFacebookButton"
                 android:layout_width="0dp"
@@ -54,6 +54,7 @@
                 android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
                 android:text="@string/continue_with_facebook"
                 android:textAllCaps="false"
+                app:barrierAllowsGoneWidgets="true"
                 app:layout_constraintBottom_toTopOf="@+id/sign_up_with_email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
