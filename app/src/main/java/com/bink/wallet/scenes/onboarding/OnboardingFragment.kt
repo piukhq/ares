@@ -12,6 +12,7 @@ import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.facebook.FacebookSdk
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -24,6 +25,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
             .build()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        FacebookSdk.sdkInitialize(context)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
