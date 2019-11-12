@@ -327,4 +327,5 @@
     <string name="expired">Expired</string>
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
+    <string name="sign_up_footer_text">\"Make sure you’re the first to know about available rewards, offers and updates! \\n You can opt out at any time.\"</string>
 </resources>

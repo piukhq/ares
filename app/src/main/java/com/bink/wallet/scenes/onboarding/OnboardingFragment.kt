@@ -69,10 +69,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.signUpWithEmail.setOnClickListener {
-            requireContext().displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
 
         binding.pager.addOnPageChangeListener(object :

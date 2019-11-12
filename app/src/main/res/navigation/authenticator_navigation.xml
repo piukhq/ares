@@ -628,7 +628,19 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/onboarding_to_sign_up"
+                app:destination="@+id/sign_up_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+            android:id="@+id/sign_up_fragment"
+            android:name="com.bink.wallet.scenes.SignUpFragment" />
 
     <fragment
             android:id="@+id/ghost_registration_unavailable"
