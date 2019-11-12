@@ -103,7 +103,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     getString(R.string.native_join_unavailable_title),
-                    getString(R.string.native_join_unavailable_text)
+                    getString(
+                        R.string.native_join_unavailable_text,
+                        currentMembershipPlan.account?.company_name
+                    )
                 )
                 if (currentMembershipPlan.account?.plan_url?.isNotEmpty()!!) {
                     genericModalParameters.firstButtonText =
