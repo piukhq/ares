@@ -139,6 +139,7 @@ class LoyaltyWalletAdapter(
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
                 with(cardBinding) {
                     plan = currentMembershipPlan
+                    item.plan = plan
                     mainLayout.setOnClickListener { onClickListener(item) }
 
                     when (item.status?.state) {
@@ -173,23 +174,49 @@ class LoyaltyWalletAdapter(
                             loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                     }
-                    if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
-                        linkStatusWrapper.visibility = View.VISIBLE
-                        linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        linkStatusText.text =
-                            mainLayout.context.getString(R.string.link_status_cannot_link)
-                    } else {
-                        when (item.payment_cards?.size) {
-                            0 -> {
-                                linkStatusWrapper.visibility = View.GONE
-                            }
-                            else -> {
-                                linkStatusWrapper.visibility = View.VISIBLE
-                                linkStatusText.text =
-                                    mainLayout.context.getString(R.string.loyalty_card_linked)
-                            }
+                    linkStatusWrapper.visibility = View.VISIBLE
+                    when (item.getLinkStatus()) {
+                        MembershipCard.RESPONSE_LINKED -> {
+                            linkStatusText.text =
+                                mainLayout.context.getString(R.string.loyalty_card_linked)
+                            linkStatusImg.setImageResource(R.drawable.ic_linked)
+                        }
+                        MembershipCard.RESPONSE_LINK_NOW -> {
+                            linkStatusText.text =
+                                mainLayout.context.getString(R.string.loyalty_card_pll_link_now)
+                            linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                        }
+                        MembershipCard.RESPONSE_PENDING -> {
+                            linkStatusText.text =
+                                mainLayout.context.getString(R.string.loyalty_card_pll_pending)
+                            linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                        }
+                        MembershipCard.RESPONSE_RETRY -> {
+                            linkStatusText.text =
+                                mainLayout.context.getString(R.string.loyalty_card_pll_retry)
+                            linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+                        }
+                        "" -> {
+                            linkStatusWrapper.visibility = View.GONE
                         }
                     }
+//                    if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
+//                        linkStatusWrapper.visibility = View.VISIBLE
+//                        linkStatusImg.setImageResource(R.drawable.ic_unlinked)
+//                        linkStatusText.text =
+//                            mainLayout.context.getString(R.string.link_status_cannot_link)
+//                    } else {
+//                        when (item.payment_cards?.size) {
+//                            0 -> {
+//                                linkStatusWrapper.visibility = View.GONE
+//                            }
+//                            else -> {
+//                                linkStatusWrapper.visibility = View.VISIBLE
+//                                linkStatusText.text =
+//                                    mainLayout.context.getString(R.string.loyalty_card_linked)
+//                            }
+//                        }
+//                    }
                 }
                 with(cardBinding.cardView) {
                     setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
