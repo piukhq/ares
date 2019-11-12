@@ -145,14 +145,16 @@ class LoyaltyWalletAdapter(
                         CardStatus.AUTHORISED.status -> {
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
-                            val balance = item.balances?.first()
-                            when (balance?.prefix != null) {
-                                true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
-                                else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                            if(!item.balances?.isNullOrEmpty()!!) {
+                                val balance = item.balances?.first()
+                                when (balance?.prefix != null) {
+                                    true ->
+                                        loyaltyValue.text =
+                                            balance?.prefix?.plus(balance.value)
+                                    else -> {
+                                        loyaltyValue.text = balance?.value
+                                        loyaltyValueExtra.text = balance?.suffix
+                                    }
                                 }
                             }
                         }

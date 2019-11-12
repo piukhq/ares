@@ -332,11 +332,13 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                val balance = viewModel.membershipCard.value?.balances?.first()
-                if (balance != null) {
-                    setBalanceText(balance)
-                } else {
-                    binding.pointsText.text = getString(R.string.points_signing_up)
+                if(!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    val balance = viewModel.membershipCard.value?.balances?.first()
+                    if (balance != null) {
+                        setBalanceText(balance)
+                    } else {
+                        binding.pointsText.text = getString(R.string.points_signing_up)
+                    }
                 }
             }
             else -> {
