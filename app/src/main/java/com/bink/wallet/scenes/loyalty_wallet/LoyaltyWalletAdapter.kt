@@ -200,23 +200,6 @@ class LoyaltyWalletAdapter(
                             linkStatusWrapper.visibility = View.GONE
                         }
                     }
-//                    if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
-//                        linkStatusWrapper.visibility = View.VISIBLE
-//                        linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-//                        linkStatusText.text =
-//                            mainLayout.context.getString(R.string.link_status_cannot_link)
-//                    } else {
-//                        when (item.payment_cards?.size) {
-//                            0 -> {
-//                                linkStatusWrapper.visibility = View.GONE
-//                            }
-//                            else -> {
-//                                linkStatusWrapper.visibility = View.VISIBLE
-//                                linkStatusText.text =
-//                                    mainLayout.context.getString(R.string.loyalty_card_linked)
-//                            }
-//                        }
-//                    }
                 }
                 with(cardBinding.cardView) {
                     setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
