@@ -78,13 +78,14 @@
                 <TextView
                         android:id="@+id/loyalty_value"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_medium"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
                         tools:text="1" />
 
                 <TextView
