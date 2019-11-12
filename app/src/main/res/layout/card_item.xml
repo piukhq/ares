@@ -55,11 +55,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/barcode_margin_top"
+                    android:layout_marginStart="@dimen/add_button_size"
+                    android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@{plan.account.company_name}"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/size_medium"
-                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/card_view"
                     app:layout_constraintTop_toTopOf="@+id/card_view" />
@@ -81,8 +81,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_medium"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/nunito_sans"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -133,7 +132,7 @@
                         android:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
                         android:textSize="@dimen/size_body_small"
-                        android:fontFamily="@font/nunito_sans"
+                        android:fontFamily="@font/nunito_sans_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
