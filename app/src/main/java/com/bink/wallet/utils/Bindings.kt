@@ -35,6 +35,7 @@ import kotlin.math.absoluteValue
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
     if (!item?.images.isNullOrEmpty()) {
+        visibility = View.VISIBLE
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
@@ -44,6 +45,8 @@ fun ImageView.loadImage(item: MembershipPlan?) {
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
         }
+    } else {
+        visibility = View.INVISIBLE
     }
 }
 
@@ -53,6 +56,7 @@ fun getIconTypeFromPlan(item: MembershipPlan?) =
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipCard?) {
     if (!item?.images.isNullOrEmpty()) {
+        visibility = View.VISIBLE
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
@@ -62,6 +66,8 @@ fun ImageView.loadImage(item: MembershipCard?) {
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
         }
+    } else {
+        visibility = View.INVISIBLE
     }
 }
 

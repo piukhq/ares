@@ -77,14 +77,6 @@ class LoyaltyWalletAdapter(
 
     override fun getItemId(position: Int): Long = position.toLong()
 
-    private fun getItemPosition(cardId: String): Int =
-        membershipCards.indexOfFirst { card -> (card as MembershipCard).id == cardId }
-
-    fun deleteCard(cardId: String) {
-        membershipCards.removeAt(getItemPosition(cardId))
-        notifyItemRemoved(getItemPosition(cardId))
-    }
-
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
 
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
