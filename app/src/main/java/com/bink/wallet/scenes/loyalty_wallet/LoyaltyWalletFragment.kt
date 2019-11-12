@@ -84,7 +84,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                     walletItems[position].let {
                         if (it is MembershipCard)
-                            deleteDialog(it)
+                            deleteDialog(it, position)
                     }
                 }
             }
@@ -202,7 +202,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    fun deleteDialog(membershipCard: MembershipCard) {
+    fun deleteDialog(membershipCard: MembershipCard, position: Int) {
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
         if (builder != null) {
@@ -223,7 +223,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             LoyaltyWalletFragment::class.java.simpleName,
                             getString(R.string.loayalty_wallet_dialog_description)
                         )
-                        binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
 
                 }
