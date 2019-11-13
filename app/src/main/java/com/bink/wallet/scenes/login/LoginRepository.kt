@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.LoginData
+import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
+import okhttp3.ResponseBody
 
 class LoginRepository(
     private val apiService: ApiService,
@@ -73,6 +75,20 @@ class LoginRepository(
                     }
                 } catch (e: Throwable) {
                     Log.e(LoginDataDao::class.simpleName, e.toString(), e)
+                }
+            }
+        }
+    }
+
+    fun signUp(signUpRequest: SignUpRequest, signUpResponse: MutableLiveData<ResponseBody>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.signUpAsync(signUpRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    signUpResponse.value = response
+                } catch (e: Throwable) {
+                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
                 }
             }
         }
