@@ -29,6 +29,8 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllRepository
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.registration.AcceptTCViewModel
+import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
@@ -82,6 +84,10 @@ val viewModelModules = module {
 
     single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
     viewModel { CardTermsAndConditionsViewModel(get()) }
+
+    viewModel { AcceptTCViewModel() }
+
+    viewModel { AddEmailViewModel() }
 }
 
 fun provideLoginRepository(

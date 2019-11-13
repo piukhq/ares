@@ -13,13 +13,12 @@ import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.FacebookSdk
+import com.facebook.*
 import com.facebook.login.LoginResult
+import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+
 
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
     override val layoutRes: Int
@@ -31,14 +30,15 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             .with(binding.toolbar)
             .build()
     }
+
     private val EMAIL_KEY = "email"
-    private val PUBLIC_PROFILE_KEY = "public_profile"
+    private val FIELDS_KEY = "fields"
     private lateinit var callbackManager: CallbackManager
+    private lateinit var facebookEmail: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(context)
-
         callbackManager = CallbackManager.Factory.create()
     }
 
@@ -77,20 +77,33 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
         }
-        binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY, PUBLIC_PROFILE_KEY))
-        binding.continueWithFacebook.registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
-            override fun onSuccess(result: LoginResult?) {
-                val accessToken = result?.accessToken
-            }
+        binding.continueWithFacebook.fragment = this
+        binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY))
+        binding.continueWithFacebook.registerCallback(
+            callbackManager,
+            object : FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult?) {
+                    result?.accessToken?.let {
+                        retrieveFacebookLoginInformation(it)
+                    }
+                }
 
-            override fun onCancel() {
-                Toast.makeText(requireContext(), getString(R.string.facebook_cancelled), Toast.LENGTH_LONG).show()
-            }
+                override fun onCancel() {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.facebook_cancelled),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
 
-            override fun onError(error: FacebookException?) {
-                Toast.makeText(requireContext(), getString(R.string.facebook_unavailable), Toast.LENGTH_LONG).show()
-            }
-        })
+                override fun onError(error: FacebookException?) {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.facebook_unavailable),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            })
 
         binding.signUpWithEmail.setOnClickListener {
             requireContext().displayModalPopup(
@@ -120,7 +133,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -141,5 +153,30 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 pagerHandler.post(update)
             }
         }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
+    }
+
+    private fun retrieveFacebookLoginInformation(accessToken: AccessToken) {
+        val request = GraphRequest.newMeRequest(
+            accessToken
+        ) { `object`, _ ->
+            try {
+                facebookEmail = `object`.getString(EMAIL_KEY)
+                handleFacebookNavigation(facebookEmail)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        val parameters = Bundle()
+        parameters.putString(FIELDS_KEY, EMAIL_KEY)
+        request.parameters = parameters
+        request.executeAsync()
+    }
+
+    private fun handleFacebookNavigation(email: String?) {
+        if (email.isNullOrEmpty()) {
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_add_email)
+        } else {
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_accept_tc)
+        }
     }
 }

@@ -628,6 +628,20 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/onboarding_to_accept_tc"
+                app:destination="@id/accept_tcs_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/onboarding_to_add_email"
+                app:destination="@+id/add_email_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -637,5 +651,13 @@
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
     </fragment>
+
+    <fragment
+            android:id="@+id/accept_tcs_fragment"
+            android:name="com.bink.wallet.scenes.registration.AcceptTCFragment" />
+
+    <fragment
+            android:id="@+id/add_email_fragment"
+            android:name="com.bink.wallet.scenes.registration.AddEmailFragment" />
 
 </navigation>

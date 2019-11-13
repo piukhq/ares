@@ -21,7 +21,12 @@ class FacebookButton @JvmOverloads constructor(
         defStyleAttr: Int,
         defStyleRes: Int
     ) {
-        super.configureButton(context, attrs, defStyleAttr, defStyleRes)
+        super.configureButton(
+            context,
+            attrs,
+            R.style.RoundedFacebookButton,
+            R.style.RoundedFacebookButton
+        )
         setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
     }
 }
