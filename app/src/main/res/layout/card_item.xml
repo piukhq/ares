@@ -43,7 +43,7 @@
                     android:id="@+id/card_view"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/button_margin_start"
+                    android:layout_marginStart="@dimen/margin_padding_size_triple_small"
                     app:cardCornerRadius="@dimen/margin_padding_size_small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -55,11 +55,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/button_margin_start"
+                    android:layout_marginStart="@dimen/add_button_size"
+                    android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@{plan.account.company_name}"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/size_medium"
-                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/card_view"
                     app:layout_constraintTop_toTopOf="@+id/card_view" />
@@ -68,34 +68,37 @@
                     android:id="@+id/value_wrapper"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:orientation="vertical"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible">
 
                 <TextView
                         android:id="@+id/loyalty_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_medium"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="1" />
 
                 <TextView
                         android:id="@+id/loyalty_value_extra"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_gravity="end"
-                        android:layout_marginTop="0dp"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_body"
+                        android:fontFamily="@font/nunito_sans"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/loyalty_value" />
+                        app:layout_constraintTop_toBottomOf="@+id/loyalty_value"
+                        tools:text="Points" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -129,6 +132,7 @@
                         android:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
                         android:textSize="@dimen/size_body_small"
+                        android:fontFamily="@font/nunito_sans_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
