@@ -392,9 +392,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 CardType.PLL.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
                         if (membershipCard.membership_transactions != null &&
-                            membershipCard.membership_transactions?.isEmpty()!! &&
-                            viewModel.paymentCards.value != null &&
-                            viewModel.paymentCards.value?.size!! > 0
+                            membershipCard.membership_transactions?.isEmpty()!!
                         ) {
                             val directions = AddAuthFragmentDirections.signUpToPllEmpty(
                                 viewModel.currentMembershipPlan.value!!,
@@ -404,11 +402,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     } else {
                         if (viewModel.currentMembershipPlan.value != null) {
-                            val directions = AddAuthFragmentDirections.signUpToPll(
-                                membershipCard,
-                                viewModel.currentMembershipPlan.value!!,
-                                true
-                            )
+                            val directions =
+                                if (viewModel.paymentCards.value.isNullOrEmpty()) {
+                                    AddAuthFragmentDirections.signUpToPllEmpty(
+                                        viewModel.currentMembershipPlan.value!!,
+                                        membershipCard
+                                    )
+                                } else {
+                                    AddAuthFragmentDirections.signUpToPll(
+                                        membershipCard,
+                                        viewModel.currentMembershipPlan.value!!,
+                                        true
+                                    )
+                                }
                             findNavController().navigateIfAdded(this, directions)
                         }
                     }
