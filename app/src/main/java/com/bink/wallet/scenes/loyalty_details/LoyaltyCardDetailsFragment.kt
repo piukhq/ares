@@ -95,12 +95,8 @@ class LoyaltyCardDetailsFragment :
 
 
         val titleMessage =
-            if (viewModel.membershipPlan.value?.account?.plan_name_card == null) {
-                getString(R.string.delete)
-            } else {
-                viewModel.membershipPlan.value?.account?.plan_name_card
-            }
-
+            viewModel.membershipPlan.value?.account?.plan_name_card
+                ?: getString(R.string.empty_string)
 
         binding.footerDelete.binding.title.text =
             getString(
