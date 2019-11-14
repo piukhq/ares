@@ -391,9 +391,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
                 CardType.PLL.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
-                        if (membershipCard.membership_transactions != null &&
-                            membershipCard.membership_transactions?.isEmpty()!!
-                        ) {
+                        if (membershipCard.membership_transactions.isNullOrEmpty()) {
                             val directions = AddAuthFragmentDirections.signUpToPllEmpty(
                                 viewModel.currentMembershipPlan.value!!,
                                 membershipCard
