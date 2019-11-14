@@ -37,11 +37,15 @@
         <TextView
                 android:id="@+id/title"
                 style="@style/HeaderTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/title_margin_top"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:text="@{viewModel.title}"
+                app:layout_constraintBottom_toTopOf="@+id/description"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/brand_header"
                 tools:text="Add card" />
@@ -52,9 +56,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:text="@string/pll_description"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <androidx.recyclerview.widget.RecyclerView

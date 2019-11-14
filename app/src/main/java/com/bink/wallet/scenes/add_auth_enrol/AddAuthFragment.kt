@@ -372,7 +372,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST) {
+                    if (signUpFormType == SignUpFormType.GHOST ||
+                        viewModel.paymentCards.value.isNullOrEmpty()
+                    ) {
                         val directions =
                            AddAuthFragmentDirections.signUpToDetails(
                                 viewModel.currentMembershipPlan.value!!,
@@ -389,10 +391,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
                 CardType.PLL.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
-                        if (membershipCard.membership_transactions != null &&
-                            membershipCard.membership_transactions?.isEmpty()!!
-                        ) {
-                            val directions =AddAuthFragmentDirections.signUpToPllEmpty(
+                        if (membershipCard.membership_transactions.isNullOrEmpty()) {
+                            val directions = AddAuthFragmentDirections.signUpToPllEmpty(
                                 viewModel.currentMembershipPlan.value!!,
                                 membershipCard
                             )
@@ -400,11 +400,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     } else {
                         if (viewModel.currentMembershipPlan.value != null) {
-                            val directions =AddAuthFragmentDirections.signUpToPll(
-                                membershipCard,
-                                viewModel.currentMembershipPlan.value!!,
-                                true
-                            )
+                            val directions =
+                                if (viewModel.paymentCards.value.isNullOrEmpty()) {
+                                    AddAuthFragmentDirections.signUpToPllEmpty(
+                                        viewModel.currentMembershipPlan.value!!,
+                                        membershipCard
+                                    )
+                                } else {
+                                    AddAuthFragmentDirections.signUpToPll(
+                                        membershipCard,
+                                        viewModel.currentMembershipPlan.value!!,
+                                        true
+                                    )
+                                }
                             findNavController().navigateIfAdded(this, directions)
                         }
                     }
