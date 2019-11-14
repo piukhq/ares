@@ -9,9 +9,9 @@ import android.util.Patterns
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SignUpFragmentBinding
+import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,8 +75,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             with(viewModel) {
                 if (termsCondition.value == true && privacyPolicy.value == true) {
                     signUp(SignUpRequest(email = email.value, password = password.value))
-                } else {
-                    requireContext().displayModalPopup("", "Check T&C and Privacy Policy")
+                    marketingPref(
+                        MarketingOption(
+                            when (marketingMessages.value) {
+                                true -> 1
+                                else -> 0
+                            }
+                        )
+                    )
                 }
             }
         }

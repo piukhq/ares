@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.LoginData
+import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
@@ -87,6 +88,23 @@ class LoginRepository(
                 try {
                     val response = request.await()
                     signUpResponse.value = response
+                } catch (e: Throwable) {
+                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                }
+            }
+        }
+    }
+
+    fun checkMarketingPref(
+        checkedOption: MarketingOption,
+        marketingResponse: MutableLiveData<ResponseBody>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.checkMarketingPrefAsync(checkedOption)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    marketingResponse.value = response
                 } catch (e: Throwable) {
                     Log.e(LoginRepository::class.simpleName, e.toString(), e)
                 }

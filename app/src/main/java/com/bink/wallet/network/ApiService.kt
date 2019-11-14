@@ -1,5 +1,6 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -74,5 +75,10 @@ interface ApiService {
     @POST("/users/register")
     fun signUpAsync(
         @Body signUpRequest: SignUpRequest
+    ): Deferred<ResponseBody>
+
+    @PUT("/users/me/settings")
+    fun checkMarketingPrefAsync(
+        @Body checkedOption: MarketingOption
     ): Deferred<ResponseBody>
 }
