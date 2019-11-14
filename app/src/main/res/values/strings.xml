@@ -80,6 +80,7 @@
     <string name="how_we_protect">How we protect your data</string>
     <string name="delete_card">Delete this card</string>
     <string name="delete_card_plan">Delete %1$s</string>
+    <string name="delete_card_ending"> this card</string>
     <string name="remove_card">Remove this card from Bink</string>
     <string name="tap_card">Tap card to show barcode</string>
     <string name="tap_card_to_show_card_number">Tap to show card number</string>

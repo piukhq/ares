@@ -93,13 +93,15 @@ class LoyaltyCardDetailsFragment :
 
         val titleMessage =
             viewModel.membershipPlan.value?.account?.plan_name_card
-                ?: getString(R.string.empty_string)
+                ?: getString(R.string.delete_card_ending)
 
         binding.footerDelete.binding.title.text =
             getString(
                 R.string.delete_card_plan,
                 titleMessage
             )
+        binding.footerDelete.binding.description.text =
+            getString(R.string.remove_card)
 
 
         val aboutTitle =
