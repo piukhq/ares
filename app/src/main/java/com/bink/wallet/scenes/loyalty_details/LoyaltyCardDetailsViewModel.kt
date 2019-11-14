@@ -20,7 +20,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var paymentCards = MutableLiveData<List<PaymentCard>>()
     var updatedMembershipCard = MutableLiveData<MembershipCard>()
     var deletedCard = MutableLiveData<String>()
-    var deleteError = MutableLiveData<String>()
+    var deleteError = MutableLiveData<Throwable>()
     var accountStatus = MutableLiveData<LoginStatus>()
     var linkStatus = MutableLiveData<LinkStatus>()
     var errorCodes = MutableLiveData<String>()

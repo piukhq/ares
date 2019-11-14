@@ -53,3 +53,4 @@ AB20-328 Multiple loyalty cards removal
 AB20-262 native join unavailable shown when enrol fields returned
 AB20-336 Add payment card screen changes
 AB20-306 delete message duplicated on LCD
+AB20-337 Delete membership card failure
