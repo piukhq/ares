@@ -51,3 +51,4 @@ AB20-329 Fixed loyalty wallet after fresh install
 AB20-332 [PLL] Done button has no functionality if no payment cards are present
 AB20-328 Multiple loyalty cards removal
 AB20 262 native join unavailable shown when enrol fields returned
+AB20-337 Delete membership card failure
