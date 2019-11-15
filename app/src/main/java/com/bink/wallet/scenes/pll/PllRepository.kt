@@ -72,7 +72,8 @@ class PllRepository(
         membershipCardId: String,
         paymentCardId: String,
         paymentCard: MutableLiveData<PaymentCard>,
-        linkError: MutableLiveData<Throwable>
+        linkError: MutableLiveData<Throwable>,
+        paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
@@ -80,6 +81,15 @@ class PllRepository(
                 try {
                     val response = request.await()
                     paymentCard.value = response
+
+                    val paymentCardValue = paymentCardMutableValue.value
+                    paymentCardValue?.membership_cards?.forEach {
+                        if (it.id == membershipCardId) {
+                            it.active_link = true
+                        }
+                    }
+
+                    paymentCardMutableValue.value = paymentCardValue
                 } catch (e: Throwable) {
                     linkError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
@@ -92,7 +102,8 @@ class PllRepository(
         paymentCardId: String,
         membershipCardId: String,
         unlinkError: MutableLiveData<Throwable>,
-        unlinkedBody: MutableLiveData<ResponseBody>
+        unlinkedBody: MutableLiveData<ResponseBody>,
+        paymentCard: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
@@ -100,6 +111,15 @@ class PllRepository(
                 try {
                     val response = request.await()
                     unlinkedBody.value = response
+
+                    val paymentCardValue = paymentCard.value
+                    paymentCardValue?.membership_cards?.forEach {
+                        if (it.id == membershipCardId) {
+                            it.active_link = false
+                        }
+                    }
+
+                    paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())

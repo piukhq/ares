@@ -21,11 +21,23 @@ class PaymentCardsDetailsViewModel(private var pllRepository: PllRepository) : B
     var deleteError = MutableLiveData<Throwable>()
 
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
-        pllRepository.linkPaymentCard(cardId, paymentCardId, linkedPaymentCard, linkError)
+        pllRepository.linkPaymentCard(
+            cardId,
+            paymentCardId,
+            linkedPaymentCard,
+            linkError,
+            paymentCard
+        )
     }
 
     suspend fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
-        pllRepository.unlinkPaymentCard(paymentCardId, cardId, unlinkError, unlinkedRequestBody)
+        pllRepository.unlinkPaymentCard(
+            paymentCardId,
+            cardId,
+            unlinkError,
+            unlinkedRequestBody,
+            paymentCard
+        )
     }
 
     suspend fun deletePaymentCard(paymentCardId: String) {
