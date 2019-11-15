@@ -58,7 +58,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
                 if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
-                    binding.passwordField.error =
+                    binding.confirmPasswordField.error =
                         getString(R.string.password_description)
                 } else {
                     if (password.value != it) {
