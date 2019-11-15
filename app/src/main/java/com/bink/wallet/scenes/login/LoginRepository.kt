@@ -6,8 +6,12 @@ import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
+import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
+import okhttp3.ResponseBody
 
 class LoginRepository(
     private val apiService: ApiService,
@@ -18,7 +22,6 @@ class LoginRepository(
     }
 
     var loginEmail: String = "Bink20iteration1@testbink.com"
-    var facebookAuthResponse = MutableLiveData<FacebookAuthResponse>()
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -94,6 +97,42 @@ class LoginRepository(
                     authResult.value = response
                 } catch (e: Throwable) {
                     authError.value = e
+                }
+            }
+        }
+    }
+
+    fun signUp(
+        signUpRequest: SignUpRequest,
+        signUpResponse: MutableLiveData<SignUpResponse>,
+        signUpErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.signUpAsync(signUpRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    signUpResponse.value = response
+                } catch (e: Throwable) {
+                    signUpErrorResponse.value = e
+                }
+            }
+        }
+    }
+
+    fun checkMarketingPref(
+        checkedOption: MarketingOption,
+        marketingResponse: MutableLiveData<ResponseBody>,
+        marketingPrefResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.checkMarketingPrefAsync(checkedOption)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    marketingResponse.value = response
+                } catch (e: Throwable) {
+                    marketingPrefResponse.value = e
                 }
             }
         }

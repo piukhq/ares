@@ -41,3 +41,5 @@ const val PAGE_3 = "Page3"
 const val ONBOARDING_SCROLL_DURATION_SECONDS = 12000L
 
 const val emailRegex = "^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*\$"
+
+const val PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$"

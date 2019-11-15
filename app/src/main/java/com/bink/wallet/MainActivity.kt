@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.loyalty_card_detail_fragment -> {
-                findNavController(R.id.main_fragment).navigate(R.id.detail_to_home)
+                findNavController(R.id.main_fragment).navigate(R.id.global_to_home)
             }
             R.id.home_wallet,
             R.id.onboarding_fragment,

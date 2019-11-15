@@ -1,7 +1,6 @@
 package com.bink.wallet.di
 
 import android.content.Context
-import com.bink.wallet.BuildConfig
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
@@ -9,7 +8,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -17,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 val networkModule = module {
 
-    single { provideDefaultOkHttpClient(androidContext()) }
+    single { provideDefaultOkHttpClient(androidApplication().applicationContext) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 }
@@ -28,15 +27,20 @@ fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
         val jwtToken =
-            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_JWT, context)?.let { it }
+            LocalStoreUtils.getAppSharedPref(
+                when (chain.request().url().url().file.contains("ubiquity")) {
+                    true -> LocalStoreUtils.KEY_JWT
+                    else -> LocalStoreUtils.KEY_JWT_V1
+                },
+                context
+            )?.let { it }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")
-            .header("Authorization", jwtToken).url(request)
+            .header("Authorization", jwtToken ?: "").url(request)
             .build()
         chain.proceed(newRequest)
     }
-
 
     val logging = HttpLoggingInterceptor()
     // sets desired log level

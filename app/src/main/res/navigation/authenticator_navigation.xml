@@ -213,13 +213,6 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
-        <action
-                android:id="@+id/add_join_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -335,13 +328,6 @@
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
-        <action
-                android:id="@+id/detail_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/detail_to_barcode"
                 app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard"
@@ -621,9 +607,10 @@
     <fragment
             android:id="@+id/onboarding_fragment"
             android:name="com.bink.wallet.scenes.onboarding.OnboardingFragment">
+
         <action
-                android:id="@+id/onboarding_to_home"
-                app:destination="@+id/home_wallet"
+                android:id="@+id/onboarding_to_sign_up"
+                app:destination="@+id/sign_up_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -643,6 +630,10 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+            android:id="@+id/sign_up_fragment"
+            android:name="com.bink.wallet.scenes.SignUpFragment" />
 
     <fragment
             android:id="@+id/ghost_registration_unavailable"

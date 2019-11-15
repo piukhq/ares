@@ -76,7 +76,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
         binding.continueWithFacebook.fragment = this
         binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY))
@@ -107,10 +107,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             })
 
         binding.signUpWithEmail.setOnClickListener {
-            requireContext().displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
 
         binding.pager.addOnPageChangeListener(object :
