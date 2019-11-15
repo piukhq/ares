@@ -8,10 +8,15 @@ import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.view.View
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AcceptTcFragmentBinding
+import com.bink.wallet.model.auth.FacebookAuthRequest
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.facebook.AccessToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding>() {
@@ -29,9 +34,18 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private val termsAndConditionsHyperlink = "Terms and Conditions"
     private val privacyPolicyHyperlink = "Privacy Policy"
     private val boldedTexts = arrayListOf("rewards", "offers", "updates")
+    private var userEmail: String? = null
+    private var accessToken: AccessToken? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            with(AcceptTCFragmentArgs.fromBundle(it)) {
+                userEmail = email
+                this@AcceptTCFragment.accessToken = accessToken
+            }
+        }
 
         buildHyperlinkSpanString(
             binding.acceptTcDisclaimer.text.toString(),
@@ -48,6 +62,21 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         )
 
         buildDescriptionSpanString()
+
+        viewModel.facebookAuthError.observeNonNull(this){
+            requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
+        }
+
+        binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
+            binding.accept.isEnabled = isChecked
+        }
+
+        binding.accept.setOnClickListener {
+            viewModel.authWithFacebook(FacebookAuthRequest(accessToken?.token!!, userEmail!!, accessToken?.userId!!))
+        }
+        binding.decline.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun buildHyperlinkSpanString(

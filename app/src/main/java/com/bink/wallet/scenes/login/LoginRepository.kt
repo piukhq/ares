@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.LoginData
+import com.bink.wallet.model.auth.FacebookAuthRequest
+import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
 
@@ -16,6 +18,7 @@ class LoginRepository(
     }
 
     var loginEmail: String = "Bink20iteration1@testbink.com"
+    var facebookAuthResponse = MutableLiveData<FacebookAuthResponse>()
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -46,7 +49,7 @@ class LoginRepository(
                     val response = loginDataDao.getLoginData()
                     // Note: the AS hint says that response should never be null,
                     // but it appears it can be during runtime... go figure!
-                    if (response != null && response.email != null) {
+                    if (response.email != null) {
                         loginEmail = response.email
                         updateLiveData(loginData, response)
                     } else {
@@ -73,6 +76,24 @@ class LoginRepository(
                     }
                 } catch (e: Throwable) {
                     Log.e(LoginDataDao::class.simpleName, e.toString(), e)
+                }
+            }
+        }
+    }
+
+    fun authWithFacebook(
+        facebookAuthRequest: FacebookAuthRequest,
+        authResult: MutableLiveData<FacebookAuthResponse>,
+        authError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.authWithFacebook(facebookAuthRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    authResult.value = response
+                } catch (e: Throwable) {
+                    authError.value = e
                 }
             }
         }

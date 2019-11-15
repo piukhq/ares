@@ -1,5 +1,7 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.auth.FacebookAuthRequest
+import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -69,4 +71,7 @@ interface ApiService {
     fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
     ): Deferred<ResponseBody>
+
+    @POST("/users/auth/facebook")
+    fun authWithFacebook(@Body facebookAuthRequest: FacebookAuthRequest): Deferred<FacebookAuthResponse>
 }

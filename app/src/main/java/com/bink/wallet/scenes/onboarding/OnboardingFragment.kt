@@ -35,6 +35,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     private val FIELDS_KEY = "fields"
     private lateinit var callbackManager: CallbackManager
     private lateinit var facebookEmail: String
+    private var accessToken: AccessToken? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,6 +162,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         ) { `object`, _ ->
             try {
                 facebookEmail = `object`.getString(EMAIL_KEY)
+                this.accessToken = accessToken
                 handleFacebookNavigation(facebookEmail)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -174,9 +176,21 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     private fun handleFacebookNavigation(email: String?) {
         if (email.isNullOrEmpty()) {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_add_email)
+            val directions =
+                accessToken?.let { OnboardingFragmentDirections.onboardingToAddEmail(it) }
+            directions?.let { findNavController().navigateIfAdded(this, it) }
         } else {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_accept_tc)
+            val directions =
+                accessToken?.let {
+                    OnboardingFragmentDirections.onboardingToAcceptTc(
+                        it,
+                        facebookEmail
+                    )
+                }
+
+            directions.let { _ ->
+                directions?.let { findNavController().navigateIfAdded(this, it) }
+            }
         }
     }
 }

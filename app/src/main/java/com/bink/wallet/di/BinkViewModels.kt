@@ -85,7 +85,7 @@ val viewModelModules = module {
     single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
     viewModel { CardTermsAndConditionsViewModel(get()) }
 
-    viewModel { AcceptTCViewModel() }
+    viewModel { AcceptTCViewModel(get()) }
 
     viewModel { AddEmailViewModel() }
 }

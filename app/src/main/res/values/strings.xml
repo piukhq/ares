@@ -336,6 +336,7 @@
     <string name="accept_pp_disclaimer">I accept Bink\'s Privacy Policy</string>
     <string name="accept_marketing_disclaimer">I opt in to receive marketing messages</string>
     <string name="general_disclaimer">Make sure you’re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
+    <string name="facebook_failed">Continue with Facebook failed</string>
 
     <!-- Add email -->
     <string name="add_email">Add email</string>

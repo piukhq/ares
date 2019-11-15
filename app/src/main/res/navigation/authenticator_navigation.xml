@@ -654,10 +654,30 @@
 
     <fragment
             android:id="@+id/accept_tcs_fragment"
-            android:name="com.bink.wallet.scenes.registration.AcceptTCFragment" />
+            android:name="com.bink.wallet.scenes.registration.AcceptTCFragment">
+        <argument
+                android:name="accessToken"
+                app:nullable="true"
+                app:argType="com.facebook.AccessToken" />
+        <argument
+                android:name="email"
+                app:argType="string" />
+    </fragment>
 
     <fragment
             android:id="@+id/add_email_fragment"
-            android:name="com.bink.wallet.scenes.registration.AddEmailFragment" />
+            android:name="com.bink.wallet.scenes.registration.AddEmailFragment">
+        <action
+                android:id="@+id/add_email_to_accept_terms"
+                app:destination="@+id/accept_tcs_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+                android:name="accessToken"
+                app:nullable="true"
+                app:argType="com.facebook.AccessToken" />
+    </fragment>
 
 </navigation>
