@@ -17,9 +17,9 @@
             android:layout_height="match_parent">
 
         <ScrollView
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -215,12 +215,14 @@
                 style="@style/RoundedGradientButton"
                 android:layout_width="0dp"
                 android:layout_marginStart="@dimen/button_margin_start"
+                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                 android:layout_marginEnd="@dimen/button_margin_end"
-                android:layout_marginBottom="@dimen/button_margin_bottom"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
                 android:text="@string/continue_text"
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
