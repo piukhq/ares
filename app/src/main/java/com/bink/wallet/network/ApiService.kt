@@ -73,5 +73,5 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @POST("/users/auth/facebook")
-    fun authWithFacebook(@Body facebookAuthRequest: FacebookAuthRequest): Deferred<FacebookAuthResponse>
+    fun authWithFacebookAsync(@Body facebookAuthRequest: FacebookAuthRequest): Deferred<FacebookAuthResponse>
 }

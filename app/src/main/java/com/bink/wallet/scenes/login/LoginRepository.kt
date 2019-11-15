@@ -87,7 +87,7 @@ class LoginRepository(
         authError: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.authWithFacebook(facebookAuthRequest)
+            val request = apiService.authWithFacebookAsync(facebookAuthRequest)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()

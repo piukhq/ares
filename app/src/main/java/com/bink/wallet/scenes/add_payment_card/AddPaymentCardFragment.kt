@@ -38,7 +38,7 @@ class AddPaymentCardFragment :
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
-        val cardNumberTextWatcher = object : ImprovedTextWatcher {
+        val cardNumberTextWatcher = object : SimplifiedTextWatcher {
             override fun onTextChanged(
                 currentText: CharSequence?,
                 p1: Int,
@@ -70,7 +70,7 @@ class AddPaymentCardFragment :
             }
         }
 
-        val nameTextWatcher = object : ImprovedTextWatcher {
+        val nameTextWatcher = object : SimplifiedTextWatcher {
             override fun onTextChanged(
                 currentText: CharSequence?,
                 p1: Int,

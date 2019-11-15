@@ -13,7 +13,7 @@ import com.bink.wallet.databinding.AddAuthSwitchItemBinding
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanFields
-import com.bink.wallet.utils.ImprovedTextWatcher
+import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 
@@ -78,7 +78,7 @@ class SignUpAdapter(
     inner class TextFieldHolder(val binding: AddAuthTextItemBinding) :
         BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
 
-        private val textWatcher = object : ImprovedTextWatcher {
+        private val textWatcher = object : SimplifiedTextWatcher {
             override fun onTextChanged(
                 currentText: CharSequence?,
                 p1: Int,

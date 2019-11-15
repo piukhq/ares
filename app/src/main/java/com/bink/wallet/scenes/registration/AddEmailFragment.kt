@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddEmailFragmentBinding
-import com.bink.wallet.utils.ImprovedTextWatcher
+import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.emailRegex
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -34,7 +34,7 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
             this@AddEmailFragment.accessToken = AddEmailFragmentArgs.fromBundle(it).accessToken
         }
 
-        binding.email.addTextChangedListener(object: ImprovedTextWatcher{
+        binding.email.addTextChangedListener(object: SimplifiedTextWatcher{
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                  s?.let {
                     binding.continueButton.isEnabled = matches(emailRegex, it)
