@@ -1,11 +1,8 @@
 package com.bink.wallet.scenes
 
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.util.Patterns
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -17,15 +14,9 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val layoutRes = R.layout.sign_up_fragment
-
-    companion object {
-        const val START_BOLD_POSITION = 50
-        const val END_BOLD_POSITION = 80
-    }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -39,18 +30,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val sb =
-            SpannableStringBuilder(getString(R.string.sign_up_footer_text))
-
-        val bss = StyleSpan(Typeface.BOLD)
-        sb.setSpan(
-            bss, START_BOLD_POSITION,
-            END_BOLD_POSITION,
-            Spannable.SPAN_INCLUSIVE_INCLUSIVE
-        )
-
         with(binding) {
-            signUpFooterMessage.text = sb
+            signUpFooterMessage.text = HtmlCompat.fromHtml(
+                getString(R.string.sign_up_footer_text),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
             viewModel = this@SignUpFragment.viewModel
         }
 
@@ -73,10 +57,15 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
-                if (password.value != it) {
-                    binding.confirmPasswordField.error = getString(R.string.password_not_match)
+                if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
+                    binding.passwordField.error =
+                        getString(R.string.password_description)
                 } else {
-                    binding.confirmPasswordField.error = null
+                    if (password.value != it) {
+                        binding.confirmPasswordField.error = getString(R.string.password_not_match)
+                    } else {
+                        binding.confirmPasswordField.error = null
+                    }
                 }
             }
         }
@@ -85,7 +74,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             runBlocking {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_JWT_V1,
-                    "Token ${it.api_key}",
+                    getString(R.string.token_api_v1, it.api_key),
                     requireContext()
                 )
 
@@ -104,9 +93,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         binding.signUpButton.setOnClickListener {
             with(viewModel) {
-                if (termsCondition.value == true && privacyPolicy.value == true) {
+                if (termsCondition.value == true &&
+                    privacyPolicy.value == true
+                ) {
                     if (binding.confirmPasswordField.error == null &&
-                        binding.confirmPasswordField.error == null &&
+                        binding.passwordField.error == null &&
                         binding.emailField.error == null
                     ) {
                         signUp(
@@ -117,7 +108,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     } else {
                         requireContext().displayModalPopup(
-                            EMPTY_STRING,
+                            null,
                             getString(R.string.all_fields_must_be_valid)
                         )
                     }

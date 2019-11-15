@@ -2,8 +2,7 @@
 
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -16,32 +15,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         <ScrollView
                 android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:context="com.bink.wallet.scenes.SignUpFragment">
-
-                <Toolbar
-                        android:id="@+id/toolbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content">
 
                 <TextView
                         android:id="@+id/sign_up_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:text="@string/sign_up_with_email"
                         android:textColor="@color/black"
@@ -49,7 +47,7 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
 
@@ -207,22 +205,23 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkbox_marketing_messages" />
 
+                <Button
+                        android:id="@+id/sign_up_button"
+                        style="@style/RoundedGradientButton"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="@dimen/button_margin_start"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                        android:layout_marginEnd="@dimen/button_margin_end"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                        android:text="@string/continue_text"
+                        android:textAllCaps="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/sign_up_footer_message" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
-        <Button
-                android:id="@+id/sign_up_button"
-                style="@style/RoundedGradientButton"
-                android:layout_width="0dp"
-                android:layout_marginStart="@dimen/button_margin_start"
-                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                android:layout_marginEnd="@dimen/button_margin_end"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-                android:text="@string/continue_text"
-                android:textAllCaps="false"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

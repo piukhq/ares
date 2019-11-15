@@ -328,8 +328,8 @@
     <string name="expired">Expired</string>
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
-    <string name="sign_up_footer_text">Make sure you’re the first to know about available rewards, offers and updates! \n You can opt out at any time.</string>
-    <string name="password_not_match">Password do not match</string>
+    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers and updates!</b> \n You can opt out at any time.]]></string>
+    <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
     <string name="incorrect_email_text">Incorrect email</string>
     <string name="continue_text">Continue</string>
@@ -340,4 +340,5 @@
     <string name="T_C_accept_description">I accept Bink’s Terms and Conditions</string>
     <string name="privacy_policy_description">I accept Bink’s Privacy Policy</string>
     <string name="marketing_messages">I opt in to receive marketing messages</string>
+    <string name="token_api_v1">Token %1$s</string>
 </resources>
