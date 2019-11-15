@@ -6,6 +6,7 @@ import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
@@ -81,7 +82,11 @@ class LoginRepository(
         }
     }
 
-    fun signUp(signUpRequest: SignUpRequest, signUpResponse: MutableLiveData<ResponseBody>) {
+    fun signUp(
+        signUpRequest: SignUpRequest,
+        signUpResponse: MutableLiveData<SignUpResponse>,
+        signUpErrorResponse: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.signUpAsync(signUpRequest)
             withContext(Dispatchers.Main) {
@@ -89,7 +94,7 @@ class LoginRepository(
                     val response = request.await()
                     signUpResponse.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                    signUpErrorResponse.value = e
                 }
             }
         }
@@ -97,7 +102,8 @@ class LoginRepository(
 
     fun checkMarketingPref(
         checkedOption: MarketingOption,
-        marketingResponse: MutableLiveData<ResponseBody>
+        marketingResponse: MutableLiveData<ResponseBody>,
+        marketingPrefResponse: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.checkMarketingPrefAsync(checkedOption)
@@ -106,7 +112,7 @@ class LoginRepository(
                     val response = request.await()
                     marketingResponse.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                    marketingPrefResponse.value = e
                 }
             }
         }
