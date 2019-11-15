@@ -58,7 +58,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         binding.continueWithFacebook.setOnClickListener {

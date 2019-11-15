@@ -105,7 +105,22 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         binding.signUpButton.setOnClickListener {
             with(viewModel) {
                 if (termsCondition.value == true && privacyPolicy.value == true) {
-                    signUp(SignUpRequest(email = email.value, password = password.value))
+                    if (binding.confirmPasswordField.error == null &&
+                        binding.confirmPasswordField.error == null &&
+                        binding.emailField.error == null
+                    ) {
+                        signUp(
+                            SignUpRequest(
+                                email = email.value,
+                                password = password.value
+                            )
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            EMPTY_STRING,
+                            getString(R.string.all_fields_must_be_valid)
+                        )
+                    }
                 }
             }
         }

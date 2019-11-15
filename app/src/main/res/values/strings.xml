@@ -332,7 +332,6 @@
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
     <string name="incorrect_email_text">Incorrect email</string>
     <string name="continue_text">Continue</string>
-    <string name="sign_up_with_email">Sign up with email</string>
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="email_text">Email</string>
     <string name="password_text">Password</string>

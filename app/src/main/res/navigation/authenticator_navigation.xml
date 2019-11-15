@@ -213,13 +213,6 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
-        <action
-                android:id="@+id/add_join_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -335,13 +328,6 @@
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
-        <action
-                android:id="@+id/detail_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
         <action
                 android:id="@+id/detail_to_barcode"
                 app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard"

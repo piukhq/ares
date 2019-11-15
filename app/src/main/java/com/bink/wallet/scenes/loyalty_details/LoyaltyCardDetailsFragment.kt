@@ -48,7 +48,7 @@ class LoyaltyCardDetailsFragment :
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.detail_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         setLoadingState(true)
@@ -249,7 +249,7 @@ class LoyaltyCardDetailsFragment :
                     }
                     viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
                         dialog?.dismiss()
-                        findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                        findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
                 } else {
                     showNoInternetConnectionDialog()
