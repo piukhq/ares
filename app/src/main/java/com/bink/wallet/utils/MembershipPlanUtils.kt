@@ -31,15 +31,7 @@ object MembershipPlanUtils {
                 }
 
                 PENDING.status -> {
-                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X200.code)) != null) {
-                        return LoginStatus.STATUS_SIGN_UP_PENDING
-                    }
-                    if (membershipCard.status?.reason_codes?.intersect(
-                            listOf(CardCodes.X100.code, CardCodes.X301.code)
-                        ) != null
-                    ) {
-                        return LoginStatus.STATUS_LOGIN_FAILED
-                    }
+                    return LoginStatus.STATUS_PENDING
                 }
 
                 FAILED.status -> {
