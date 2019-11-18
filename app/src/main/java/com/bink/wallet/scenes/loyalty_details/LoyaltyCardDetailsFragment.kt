@@ -331,22 +331,26 @@ class LoyaltyCardDetailsFragment :
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                val balance = viewModel.membershipCard.value?.balances?.first()
-                setBalanceText(balance)
-                val updateTime = balance?.updated_at
-                val currentTime = Calendar.getInstance().timeInMillis / 1000
-                updateTime?.let {
-                    val timeSinceUpdate = currentTime - it
-                    binding.pointsDescription.text =
-                        timeSinceUpdate.getElapsedTime(requireContext())
+                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    val balance = viewModel.membershipCard.value?.balances?.first()
+                    setBalanceText(balance)
+                    val updateTime = balance?.updated_at
+                    val currentTime = Calendar.getInstance().timeInMillis / 1000
+                    updateTime?.let {
+                        val timeSinceUpdate = currentTime - it
+                        binding.pointsDescription.text =
+                            timeSinceUpdate.getElapsedTime(requireContext())
+                    }
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                val balance = viewModel.membershipCard.value?.balances?.first()
-                if (balance != null) {
-                    setBalanceText(balance)
-                } else {
-                    binding.pointsText.text = getString(R.string.points_signing_up)
+                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    val balance = viewModel.membershipCard.value?.balances?.first()
+                    if (balance != null) {
+                        setBalanceText(balance)
+                    } else {
+                        binding.pointsText.text = getString(R.string.points_signing_up)
+                    }
                 }
             }
             else -> {

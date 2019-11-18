@@ -19,11 +19,15 @@ data class MembershipCard(
     @ColumnInfo(name = "bankCard") var card: Card?,
     @ColumnInfo(name = "card_images") var images: List<CardImages>?,
     @ColumnInfo(name = "balances") var balances: List<CardBalance>?,
-    @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>?
+    @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>?,
+    @ColumnInfo(name = "account") var account: Account?,
+    @ColumnInfo(name = "vouchers") var vouchers: List<Voucher>?
 ) : Parcelable {
 
     constructor(id: String) : this(
         id,
+        null,
+        null,
         null,
         null,
         null,
