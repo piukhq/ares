@@ -452,15 +452,7 @@ class LoyaltyCardDetailsFragment :
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
-                    val directions =
-                        LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                getString(R.string.title_1_7),
-                                getString(R.string.description_1_7)
-                            )
-                        )
-                    findNavController().navigateIfAdded(this, directions)
+                    pendingCardStatusModal()
                 }
                 LinkStatus.STATUS_UNLINKABLE -> {
                     val directions =
@@ -477,6 +469,18 @@ class LoyaltyCardDetailsFragment :
                 }
             }
         }
+    }
+
+    private fun pendingCardStatusModal() {
+        val directions =
+            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.title_lcd_pending),
+                    getString(R.string.description_lcd_pending)
+                )
+            )
+        findNavController().navigateIfAdded(this, directions)
     }
 
     private fun setPointsModuleClickListener() {
@@ -508,47 +512,8 @@ class LoyaltyCardDetailsFragment :
                         }
                     action.let { findNavController().navigateIfAdded(this, action) }
                 }
-                LoginStatus.STATUS_LOGIN_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_7),
-                        getString(R.string.description_1_7)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
-                }
-                LoginStatus.STATUS_SIGN_UP_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_9),
-                        getString(R.string.description_1_9)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
-                }
-                LoginStatus.STATUS_REGISTER_GHOST_CARD_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_11),
-                        getString(R.string.description_1_11)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                LoginStatus.STATUS_PENDING -> {
+                    pendingCardStatusModal()
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
