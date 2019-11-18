@@ -7,6 +7,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
+import com.bink.wallet.utils.enums.PLLCardStatus
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
@@ -23,12 +24,6 @@ data class MembershipCard(
     @ColumnInfo(name = "balances") var balances: List<CardBalance>?,
     @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>?
 ) : Parcelable {
-    companion object {
-        val RESPONSE_LINKED = "linked"
-        val RESPONSE_LINK_NOW = "link_now"
-        val RESPONSE_RETRY = "retry"
-        val RESPONSE_PENDING = "pending"
-    }
     @Ignore
     var plan: MembershipPlan? = null
 
@@ -49,30 +44,28 @@ data class MembershipCard(
         } else null
     }
 
-    fun getLinkStatus(): String {
+    fun getLinkStatus(): PLLCardStatus {
         if (plan?.feature_set?.card_type in 0..1) {
-            return ""
+            return PLLCardStatus.NONE
         }
         return when (status?.state) {
-            com.bink.wallet.utils.enums.CardStatus.AUTHORISED.status -> {
+            com.bink.wallet.utils.enums.MembershipCardStatus.AUTHORISED.status -> {
                 val pc = payment_cards
-                if (pc == null ||
-                    pc.isEmpty()
-                ) {
-                    RESPONSE_LINK_NOW
+                if (pc.isNullOrEmpty()) {
+                    PLLCardStatus.LINK_NOW
                 } else {
-                    RESPONSE_LINKED
+                    PLLCardStatus.LINKED
                 }
             }
 
-            com.bink.wallet.utils.enums.CardStatus.UNAUTHORISED.status,
-            com.bink.wallet.utils.enums.CardStatus.FAILED.status ->
-                RESPONSE_RETRY
+            com.bink.wallet.utils.enums.MembershipCardStatus.UNAUTHORISED.status,
+            com.bink.wallet.utils.enums.MembershipCardStatus.FAILED.status ->
+                PLLCardStatus.RETRY
 
-            com.bink.wallet.utils.enums.CardStatus.PENDING.status ->
-                RESPONSE_PENDING
+            com.bink.wallet.utils.enums.MembershipCardStatus.PENDING.status ->
+                PLLCardStatus.PENDING
 
-            else -> ""
+            else -> PLLCardStatus.NONE
         }
     }
 }

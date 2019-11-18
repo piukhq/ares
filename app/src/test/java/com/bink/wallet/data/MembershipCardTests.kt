@@ -5,84 +5,47 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.FeatureSet
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
+import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.PLLCardStatus
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 
 class MembershipCardTests {
     @Test
     fun checkLinkStatusAuthButEmpty() {
-        val card = MembershipCard("1",
-            null,
-            null,
-            CardStatus(
-                null,
-                com.bink.wallet.utils.enums.CardStatus.AUTHORISED.status
-            ),
-            null,
-            null,
-            null,
-            null)
-        assertEquals("link_now", card.getLinkStatus())
+        val card = makeMembershipCard(
+                MembershipCardStatus.AUTHORISED
+            )
+        assertEquals(PLLCardStatus.LINK_NOW, card.getLinkStatus())
     }
     @Test
     fun checkLinkStatus() {
-        val card = MembershipCard("1",
-            null,
-            listOf(PaymentMembershipCard("1", true)),
-            CardStatus(
-                null,
-                com.bink.wallet.utils.enums.CardStatus.AUTHORISED.status
-            ),
-            null,
-            null,
-            null,
-            null)
-        assertEquals("linked", card.getLinkStatus())
+        val card = makeMembershipCard(
+                MembershipCardStatus.AUTHORISED,
+                listOf(PaymentMembershipCard("1", true))
+            )
+        assertEquals(PLLCardStatus.LINKED, card.getLinkStatus())
     }
     @Test
     fun checkLinkPending() {
-        val card = MembershipCard("1",
-            null,
-            null,
-            CardStatus(
-                null,
-                com.bink.wallet.utils.enums.CardStatus.UNAUTHORISED.status
-            ),
-            null,
-            null,
-            null,
-            null)
-        assertEquals("retry", card.getLinkStatus())
+        val card = makeMembershipCard(
+                MembershipCardStatus.UNAUTHORISED
+            )
+        assertEquals(PLLCardStatus.RETRY, card.getLinkStatus())
     }
     @Test
     fun checkLinkFailed() {
-        val card = MembershipCard("1",
-            null,
-            null,
-            CardStatus(
-                null,
-                com.bink.wallet.utils.enums.CardStatus.FAILED.status
-            ),
-            null,
-            null,
-            null,
-            null)
-        assertEquals("retry", card.getLinkStatus())
+        val card = makeMembershipCard(
+                MembershipCardStatus.FAILED
+            )
+        assertEquals(PLLCardStatus.RETRY, card.getLinkStatus())
     }
     @Test
     fun checkLinkRetry() {
-        val card = MembershipCard("1",
-            null,
-            null,
-            CardStatus(
-                null,
-                com.bink.wallet.utils.enums.CardStatus.PENDING.status
-            ),
-            null,
-            null,
-            null,
-            null)
-        assertEquals("pending", card.getLinkStatus())
+        val card = makeMembershipCard(
+                MembershipCardStatus.PENDING
+            )
+        assertEquals(PLLCardStatus.PENDING, card.getLinkStatus())
     }
     @Test
     fun checkLinkEmpty() {
@@ -102,19 +65,27 @@ class MembershipCardTests {
             null,
             null
         )
-        val card = MembershipCard(
-            "1",
+        val card = makeMembershipCard(
+                MembershipCardStatus.PENDING
+            )
+        card.plan = plan
+        assertEquals(PLLCardStatus.NONE, card.getLinkStatus())
+    }
+
+    private fun makeMembershipCard(
+        statusMembership: MembershipCardStatus,
+        payment: List<PaymentMembershipCard>? = null
+        ): MembershipCard {
+        return MembershipCard("1",
             null,
-            null,
+            payment,
             CardStatus(
                 null,
-                com.bink.wallet.utils.enums.CardStatus.PENDING.status
+                statusMembership.status
             ),
             null,
             null,
             null,
             null)
-        card.plan = plan
-        assertEquals("", card.getLinkStatus())
     }
 }

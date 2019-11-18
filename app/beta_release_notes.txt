@@ -26,7 +26,7 @@ AB20-260 Barcode maximise screen title
 AB20-265 Barcode maximise screen close click area too small
 AB20-261-Barcode Screen showing incorrect information
 AB20-182-Transaction Screen Points Fix
-AB20-236 Wallet auth status incorrect
+AB20-236 Wallet auth statusMembership incorrect
 AB20-220 Remove ghost card on sign up journey
 AB20-299-Hardcoded text chevrons
 AB20-291-Payment terms and conditions title and button text format
@@ -55,4 +55,4 @@ AB20-336 Add payment card screen changes
 AB20-306 delete message duplicated on LCD
 AB20-337 Delete membership card failure
 AB20-340 Fix add PLL card with no payment cards
-AB20-221 PLL auth status to be displayed in loyalty wallet
+AB20-221 PLL auth statusMembership to be displayed in loyalty wallet

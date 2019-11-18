@@ -13,8 +13,7 @@ import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
-import com.bink.wallet.utils.enums.CardStatus
-import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -135,7 +134,7 @@ class LoyaltyWalletAdapter(
                     mainLayout.setOnClickListener { onClickListener(item) }
 
                     when (item.status?.state) {
-                        CardStatus.AUTHORISED.status -> {
+                        MembershipCardStatus.AUTHORISED.status -> {
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
                             val balance = item.balances?.first()
@@ -149,47 +148,31 @@ class LoyaltyWalletAdapter(
                                 }
                             }
                         }
-                        CardStatus.PENDING.status -> {
+                        MembershipCardStatus.PENDING.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
                             loyaltyValue.text =
                                 mainLayout.context.getString(R.string.card_status_pending)
                         }
-                        CardStatus.FAILED.status -> {
+                        MembershipCardStatus.FAILED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
                             loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
-                        CardStatus.UNAUTHORISED.status -> {
+                        MembershipCardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
                             loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                     }
                     linkStatusWrapper.visibility = View.VISIBLE
-                    when (item.getLinkStatus()) {
-                        MembershipCard.RESPONSE_LINKED -> {
-                            linkStatusText.text =
-                                mainLayout.context.getString(R.string.loyalty_card_linked)
-                            linkStatusImg.setImageResource(R.drawable.ic_linked)
-                        }
-                        MembershipCard.RESPONSE_LINK_NOW -> {
-                            linkStatusText.text =
-                                mainLayout.context.getString(R.string.loyalty_card_pll_link_now)
-                            linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        }
-                        MembershipCard.RESPONSE_PENDING -> {
-                            linkStatusText.text =
-                                mainLayout.context.getString(R.string.loyalty_card_pll_pending)
-                            linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        }
-                        MembershipCard.RESPONSE_RETRY -> {
-                            linkStatusText.text =
-                                mainLayout.context.getString(R.string.loyalty_card_pll_retry)
-                            linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        }
-                        "" -> {
+                    with (item.getLinkStatus()) {
+                        if (linkImage == 0) {
                             linkStatusWrapper.visibility = View.GONE
+                        } else {
+                            linkStatusImg.setImageResource(linkImage)
+                            linkStatusText.text =
+                                mainLayout.context.getString(display)
                         }
                     }
                 }
