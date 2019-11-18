@@ -100,6 +100,24 @@ class LoginRepository(
         }
     }
 
+    fun logIn(
+        logInRequest: SignUpRequest,
+        signUpResponse: MutableLiveData<SignUpResponse>,
+        signUpErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.logInAsync(logInRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    signUpResponse.value = response
+                } catch (e: Throwable) {
+                    signUpErrorResponse.value = e
+                }
+            }
+        }
+    }
+
     fun checkMarketingPref(
         checkedOption: MarketingOption,
         marketingResponse: MutableLiveData<ResponseBody>,
