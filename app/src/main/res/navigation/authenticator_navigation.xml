@@ -648,11 +648,26 @@
             android:name="com.bink.wallet.scenes.registration.AcceptTCFragment">
         <argument
                 android:name="accessToken"
-                app:nullable="true"
-                app:argType="com.facebook.AccessToken" />
+                app:argType="com.facebook.AccessToken"
+                app:nullable="true" />
         <argument
                 android:name="email"
                 app:argType="string" />
+        <action
+                android:id="@+id/accept_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/accept_to_lcd"
+                app:destination="@+id/loyalty_wallet_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -664,11 +679,20 @@
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right"/>
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/add_email_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
         <argument
                 android:name="accessToken"
-                app:nullable="true"
-                app:argType="com.facebook.AccessToken" />
+                app:argType="com.facebook.AccessToken"
+                app:nullable="true" />
     </fragment>
 
 </navigation>

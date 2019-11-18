@@ -21,7 +21,7 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(null)
+            .with(binding.toolbar)
             .build()
     }
 
@@ -42,6 +42,10 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
             }
 
         })
+
+        binding.back.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.add_email_to_onboarding)
+        }
 
 
         binding.continueButton.setOnClickListener {

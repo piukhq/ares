@@ -13,10 +13,14 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
+import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding>() {
@@ -27,7 +31,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
-            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -63,7 +66,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
         buildDescriptionSpanString()
 
-        viewModel.facebookAuthError.observeNonNull(this){
+        viewModel.facebookAuthError.observeNonNull(this) {
             requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
         }
 
@@ -71,11 +74,41 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             binding.accept.isEnabled = isChecked
         }
 
+        viewModel.facebookAuthResult.observeNonNull(this) {
+            runBlocking {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_JWT_V1,
+                    getString(R.string.token_api_v1, it.api_key),
+                    requireContext()
+                )
+            }
+            if (binding.acceptMarketing.isChecked) {
+                viewModel.handleMarketingPreferences(
+                    MarketingOption(1)
+                )
+            }
+            findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+        }
+
         binding.accept.setOnClickListener {
-            viewModel.authWithFacebook(FacebookAuthRequest(accessToken?.token!!, userEmail!!, accessToken?.userId!!))
+            if (accessToken?.token != null &&
+                userEmail != null &&
+                accessToken?.userId != null
+            )
+                viewModel.authWithFacebook(
+                    FacebookAuthRequest(
+                        accessToken?.token!!,
+                        userEmail!!,
+                        accessToken?.userId!!
+                    )
+                )
         }
         binding.decline.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.back.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
     }
 
