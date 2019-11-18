@@ -3,7 +3,7 @@ package com.bink.wallet.utils
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardCodes
-import com.bink.wallet.utils.enums.CardStatus.*
+import com.bink.wallet.utils.enums.MembershipCardStatus.*
 import com.bink.wallet.utils.enums.LoginStatus
 
 object MembershipPlanUtils {
