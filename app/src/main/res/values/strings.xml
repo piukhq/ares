@@ -187,15 +187,9 @@
     <!-- 1.2 -->
     <string name="title_1_2">Transaction history unavailable</string>
     <string name="description_1_2">We are unable to currently show the transaction history for this loyalty scheme yet\n Your %1$s history is not available yet.</string>
-    <!-- 1.7 -->
-    <string name="title_1_7">Log in pending</string>
-    <string name="description_1_7">You are seeing this because sometimes it takes a while to log in with the merchant. In the meantime please do not attempt to log in again, but you can use your card and receive your benefits as usual. After you are logged in you will be able to see your points balance</string>
-    <!-- 1.9 -->
-    <string name="title_1_9">Sign up pending</string>
-    <string name="description_1_9">Sometimes it takes a while to sign up with  your merchant.\nIn the meantime please do not attempt to sign up again. You can use your card and receive your benefits as normal.\nAfter the sign up has been completed you will be able to see your points balance.</string>
-    <!-- 1.11 -->
-    <string name="title_1_11">Register Ghost card pending</string>
-    <string name="description_1_11">Sometimes it takes a while to register with  your merchant.\nIn the meantime please do not attempt to register your card again. You can use your card and receive your benefits as normal.\nAfter registration up has been completed you will be able to see your points balance.</string>
+    <!-- 1.7, 1.9, 1.11 replacement -->
+    <string name="title_lcd_pending">Request pending</string>
+    <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn’t take long.</string>
 
     <!-- 2.4 -->
     <string name="title_2_4">Error</string>

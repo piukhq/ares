@@ -38,7 +38,7 @@ enum class LoginStatus(
         R.string.description_see_history,
         R.string.points_retry_login
     ),
-    STATUS_LOGIN_PENDING(
+    STATUS_PENDING(
         1.7,
         R.drawable.ic_lcd_module_icons_points_pending,
         R.string.description_please_wait,
@@ -49,24 +49,6 @@ enum class LoginStatus(
         R.drawable.ic_lcd_module_icons_points_login,
         R.string.description_please_try_again,
         R.string.points_sign_up_failed
-    ),
-    STATUS_SIGN_UP_PENDING(
-        1.9,
-        R.drawable.ic_lcd_module_icons_points_pending,
-        R.string.description_please_wait,
-        R.string.points_signing_up
-    ),
-    STATUS_REGISTER_GHOST_CARD_FAILED(
-        1.10,
-        R.drawable.ic_lcd_module_icons_points_login,
-        R.string.description_please_try_again,
-        R.string.points_registration_failed
-    ),
-    STATUS_REGISTER_GHOST_CARD_PENDING(
-        1.11,
-        R.drawable.ic_lcd_module_icons_points_pending,
-        R.string.description_please_wait,
-        R.string.points_registering_card
     ),
     STATUS_CARD_ALREADY_EXISTS(
         1.12,
