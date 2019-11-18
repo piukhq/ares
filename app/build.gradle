@@ -31,7 +31,7 @@ android {
     }
     defaultConfig {
         applicationId "com.bink.wallet.neo"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode buildNumber
         versionName "2.0.0"

@@ -56,3 +56,4 @@ AB20-306 delete message duplicated on LCD
 AB20-337 Delete membership card failure
 AB20-340 Fix add PLL card with no payment cards
 AB20-221 PLL auth status to be displayed in loyalty wallet
+AB20-327 Payment Card T&Cs wording changes
