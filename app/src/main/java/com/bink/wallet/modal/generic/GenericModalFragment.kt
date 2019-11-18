@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
@@ -87,6 +88,8 @@ open class GenericModalFragment :
             } else {
                 Html.fromHtml(parameters.description)
             }
+        binding.description.movementMethod = LinkMovementMethod.getInstance()
+
         if (parameters.firstButtonText.isNotEmpty()) {
             binding.firstButton.visibility = View.VISIBLE
             binding.firstButton.text = parameters.firstButtonText

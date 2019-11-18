@@ -215,7 +215,7 @@
     <string name="pll_last_digits">Card ending in %1$s</string>
 
     <!-- T&C Screen -->
-    <string name="terms_and_conditions_text"><![CDATA[I authorise MasterCard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction for MasterCard, Visa and American Express to share such transaction details with Loyalty Angels Limited to enable my card-linked offer(s) and target offers that may be of interest to me. For information about Loyalty Angels Limited privacy practices, please see our <a href="https://bink.com/privacy-policy/" target="_blank">Privacy Policy</a>. You may opt-out of transaction monitoring on the payment card(s) you entered at any time by deleting your payment card from your Bink wallet.]]></string>
+    <string name="terms_and_conditions_text"><![CDATA[I authorise MasterCard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction for MasterCard, Visa and American Express to share such transaction details with Loyalty Angels Limited to enable my card-linked offer(s) and target offers that may be of interest to me. For information about Loyalty Angels Limited privacy practices, please see our <a href=\"https://bink.com/privacy-policy/\">Privacy Policy</a>. You may opt-out of transaction monitoring on the payment card(s) you entered at any time by deleting your payment card from your Bink wallet.]]></string>
     <string name="terms_and_conditions_title">Terms and conditions</string>
     <string name="accept_button_text">Accept</string>
     <string name="decline_button_text">Decline</string>
