@@ -10,19 +10,6 @@
             android:layout_height="wrap_content">
 
         <ImageView
-                android:id="@+id/bink_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                android:src="@drawable/ic_bink_logo"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/page_image"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <ImageView
                 android:id="@+id/page_image"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/page_image_height"
