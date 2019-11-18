@@ -3,7 +3,6 @@ package com.bink.wallet.scenes
 import android.os.Bundle
 import android.util.Patterns
 import androidx.core.text.HtmlCompat
-import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SignUpFragmentBinding
@@ -86,8 +85,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         }
                     )
                 )
-
-                findNavController().navigateIfAdded(this@SignUpFragment, R.id.global_to_home)
             }
         }
 
