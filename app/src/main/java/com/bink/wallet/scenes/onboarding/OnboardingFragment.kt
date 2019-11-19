@@ -101,7 +101,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     pager.setCurrentItem(FIRST_PAGE_INDEX, true)
                     currentPage = FIRST_PAGE_INDEX
                 } else {
-                    pager.setCurrentItem(currentPage++, true)
+                    pager?.setCurrentItem(currentPage++, true)
                 }
             }
         }

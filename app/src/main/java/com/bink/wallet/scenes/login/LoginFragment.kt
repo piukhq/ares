@@ -29,6 +29,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.retrieveStoredLoginData()
+        binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {
             if (verifyAvailableNetwork(requireActivity())) {
                 viewModel.authenticate()

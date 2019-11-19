@@ -1,6 +1,7 @@
 package com.bink.wallet.di
 
 import android.content.Context
+import android.util.Log
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
@@ -15,7 +16,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-
     single { provideDefaultOkHttpClient(androidApplication().applicationContext) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
@@ -24,6 +24,8 @@ val networkModule = module {
 fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+    Log.e("Tag", LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_JWT_V1, context) ?: "")
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
         val jwtToken =
