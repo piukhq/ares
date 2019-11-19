@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class Burn(
     val type : String?,
-    val value : Int?,
+    val value : Float?,
     val prefix : String?,
     val suffix : String?,
     val currency : String?

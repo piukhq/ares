@@ -85,6 +85,10 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.membershipCard.observeNonNull(this) {
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+
+            if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+                setupVouchers()
+            }
         }
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
@@ -577,6 +581,14 @@ class LoyaltyCardDetailsFragment :
             scrollY > maxDist -> MAX_ALPHA.toInt()
             scrollY < minDist -> MIN_ALPHA.toInt()
             else -> (MAX_ALPHA / maxDist * scrollY).toInt()
+        }
+    }
+
+    private fun setupVouchers() {
+        with (binding.voucherTiles) {
+            visibility = View.VISIBLE
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = LoyaltyCardDetailsVouchersAdapter(viewModel.membershipCard.value!!.vouchers!!)
         }
     }
 }
