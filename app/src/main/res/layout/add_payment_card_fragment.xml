@@ -64,7 +64,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
                             android:layout_marginTop="@dimen/payment_card_logo_image_margin"
-                            android:text="Card name"
+                            android:text="@string/card_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_description_big"
                             android:textStyle="bold"
@@ -78,7 +78,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
                             android:layout_marginTop="@dimen/payment_card_number_top_margin"
-                            android:text="**** **** **** 1234"
+                            android:text="@string/_mock_card_ending"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_description_big"
                             android:textStyle="bold"
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_sub_headline"
                         android:fontFamily="@font/nunito_sans_light"
                         />
 
