@@ -22,6 +22,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding>() {
     override val layoutRes: Int
@@ -67,11 +68,35 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         buildDescriptionSpanString()
 
         viewModel.facebookAuthError.observeNonNull(this) {
+            binding.accept.isClickable = false
+            val timer = Timer()
+            timer.schedule(object: TimerTask(){
+                override fun run() {
+                    binding.accept.isClickable = true
+                }
+
+            }, 3000)
             requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
         }
 
         binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
-            binding.accept.isEnabled = isChecked
+            viewModel.shouldAcceptBeEnabledTC.value = isChecked
+        }
+
+        binding.acceptPrivacyPolicy.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.shouldAcceptBeEnabledPrivacy.value = isChecked
+        }
+
+        viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
+            viewModel.shouldAcceptBeEnabledTC.value?.let {
+                binding.accept.isEnabled =  enabledTc && it
+            }
+        }
+
+        viewModel.shouldAcceptBeEnabledPrivacy.observeNonNull(this) { enabledPrivacy ->
+            viewModel.shouldAcceptBeEnabledTC.value?.let {
+                binding.accept.isEnabled =  enabledPrivacy && it
+            }
         }
 
         viewModel.facebookAuthResult.observeNonNull(this) {

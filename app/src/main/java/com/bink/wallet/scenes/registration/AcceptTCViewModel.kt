@@ -14,6 +14,8 @@ class AcceptTCViewModel(private val loginRepository: LoginRepository) : BaseView
     var facebookAuthError = MutableLiveData<Throwable>()
     var marketingPreferences = MutableLiveData<ResponseBody>()
     var marketingError = MutableLiveData<Throwable>()
+    var shouldAcceptBeEnabledTC = MutableLiveData<Boolean>()
+    var shouldAcceptBeEnabledPrivacy = MutableLiveData<Boolean>()
 
     fun authWithFacebook(facebookAuthRequest: FacebookAuthRequest) {
         loginRepository.authWithFacebook(facebookAuthRequest, facebookAuthResult, facebookAuthError)
