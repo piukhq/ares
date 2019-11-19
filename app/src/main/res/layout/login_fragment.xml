@@ -45,7 +45,7 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:text="@string/sign_up_description"
+                android:text="@string/log_in_screen_description"
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
