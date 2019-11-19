@@ -10,7 +10,6 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.browse_brands_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFragmentBinding>() {
@@ -54,12 +53,14 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
             val plansList = ArrayList<Pair<String?, MembershipPlan>>()
 
-            plans =
-                plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
-                    comparePlans(membershipPlan1, membershipPlan2)
-                }.thenBy { it.account?.company_name }).toTypedArray()
+            if (plans.isNotEmpty()) {
+                plans =
+                    plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
+                        comparePlans(membershipPlan1, membershipPlan2)
+                    }.thenBy { it.account?.company_name }).toTypedArray()
 
-            plansList.add(Pair(getString(R.string.pll_text), plans[0]))
+                plansList.add(Pair(getString(R.string.pll_text), plans[0]))
+            }
 
             for (position in 1 until plans.size) {
                 if (plans[position - 1].getCardType() == CardType.PLL &&

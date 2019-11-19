@@ -8,7 +8,7 @@ import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.scenes.login.LoginRepository
 import okhttp3.ResponseBody
 
-class AcceptTCViewModel(private val loginRepository: LoginRepository) : BaseViewModel() {
+class AcceptTCViewModel(val loginRepository: LoginRepository) : BaseViewModel() {
 
     var facebookAuthResult = MutableLiveData<FacebookAuthResponse>()
     var facebookAuthError = MutableLiveData<Throwable>()
