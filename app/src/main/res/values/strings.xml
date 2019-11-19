@@ -341,4 +341,8 @@
     <string name="privacy_policy_description">I accept Bink’s Privacy Policy</string>
     <string name="marketing_messages">I opt in to receive marketing messages</string>
     <string name="token_api_v1">Token %1$s</string>
+    <string name="enter_email_text">Enter email address</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="registration_failed_text">Registration failed</string>
 </resources>

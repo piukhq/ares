@@ -1,7 +1,12 @@
 package com.bink.wallet.scenes
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
 import android.util.Patterns
+import android.widget.CheckBox
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -25,6 +30,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             .build()
     }
 
+    companion object {
+        private const val termsAndConditionsHyperlink = "Terms and Conditions"
+        private const val privacyPolicyHyperlink = "Privacy Policy"
+    }
+
     override val viewModel: SignUpViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -36,6 +46,20 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 HtmlCompat.FROM_HTML_MODE_LEGACY
             )
             viewModel = this@SignUpFragment.viewModel
+
+            buildHyperlinkSpanString(
+                binding.checkboxTermsConditions.text.toString(),
+                termsAndConditionsHyperlink,
+                getString(R.string.terms_and_conditions_url),
+                binding.checkboxTermsConditions
+            )
+
+            buildHyperlinkSpanString(
+                binding.checkboxPrivacyPolicy.text.toString(),
+                privacyPolicyHyperlink,
+                getString(R.string.privacy_policy_url),
+                binding.checkboxPrivacyPolicy
+            )
         }
 
         with(viewModel) {
@@ -57,17 +81,20 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
-                if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
-                    binding.confirmPasswordField.error =
-                        getString(R.string.password_description)
+
+                if (password.value != it) {
+                    binding.confirmPasswordField.error = getString(R.string.password_not_match)
                 } else {
-                    if (password.value != it) {
-                        binding.confirmPasswordField.error = getString(R.string.password_not_match)
-                    } else {
-                        binding.confirmPasswordField.error = null
-                    }
+                    binding.confirmPasswordField.error = null
                 }
             }
+        }
+
+        viewModel.signUpErrorResponse.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                EMPTY_STRING,
+                getString(R.string.registration_failed_text)
+            )
         }
 
         viewModel.signUpResponse.observeNonNull(this) {
@@ -115,6 +142,23 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 }
             }
         }
+    }
+
+    private fun buildHyperlinkSpanString(
+        stringToSpan: String,
+        stringToHyperlink: String,
+        url: String,
+        textView: CheckBox
+    ) {
+        val spannableString = SpannableString(stringToSpan)
+        spannableString.setSpan(
+            URLSpan(url),
+            spannableString.indexOf(stringToHyperlink) - 1,
+            spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
+            Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+        textView.text = spannableString
+        textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
 }
