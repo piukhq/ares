@@ -15,6 +15,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.CredentialsUtils
 import com.bink.wallet.utils.JwtCreator
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.observeNonNull
@@ -59,8 +60,14 @@ class MainActivity : AppCompatActivity() {
             }
             loginData.observeNonNull(this) {
                 LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECRET, String(data), this)
+                CredentialsUtils.createNewKey()
                 val currentToken = JwtCreator(loginRepository).createJwt(this)
-                LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_JWT, currentToken, this)
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_TOKEN,
+                    CredentialsUtils.encrypt(currentToken),
+                    this
+                )
             }
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
