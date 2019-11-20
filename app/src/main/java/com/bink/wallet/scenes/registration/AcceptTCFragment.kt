@@ -70,7 +70,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         viewModel.facebookAuthError.observeNonNull(this) {
             binding.accept.isClickable = false
             val timer = Timer()
-            timer.schedule(object: TimerTask(){
+            timer.schedule(object : TimerTask() {
                 override fun run() {
                     binding.accept.isClickable = true
                 }
@@ -88,14 +88,16 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
-            viewModel.shouldAcceptBeEnabledTC.value?.let {
-                binding.accept.isEnabled =  enabledTc && it
+            viewModel.shouldAcceptBeEnabledPrivacy.value?.let {
+                binding.accept.isEnabled = enabledTc == true &&
+                        it == true
             }
         }
 
         viewModel.shouldAcceptBeEnabledPrivacy.observeNonNull(this) { enabledPrivacy ->
             viewModel.shouldAcceptBeEnabledTC.value?.let {
-                binding.accept.isEnabled =  enabledPrivacy && it
+                binding.accept.isEnabled = enabledPrivacy == true &&
+                        it == true
             }
         }
 
@@ -129,7 +131,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
         }
         binding.decline.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
 
         binding.back.setOnClickListener {

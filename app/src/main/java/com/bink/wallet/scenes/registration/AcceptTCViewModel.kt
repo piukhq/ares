@@ -17,6 +17,11 @@ class AcceptTCViewModel(val loginRepository: LoginRepository) : BaseViewModel() 
     var shouldAcceptBeEnabledTC = MutableLiveData<Boolean>()
     var shouldAcceptBeEnabledPrivacy = MutableLiveData<Boolean>()
 
+    init {
+        shouldAcceptBeEnabledTC.value = true
+        shouldAcceptBeEnabledPrivacy.value = true
+    }
+
     fun authWithFacebook(facebookAuthRequest: FacebookAuthRequest) {
         loginRepository.authWithFacebook(facebookAuthRequest, facebookAuthResult, facebookAuthError)
     }

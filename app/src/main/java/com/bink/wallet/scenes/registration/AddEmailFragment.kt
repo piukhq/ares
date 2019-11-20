@@ -34,9 +34,12 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
             this@AddEmailFragment.accessToken = AddEmailFragmentArgs.fromBundle(it).accessToken
         }
 
-        binding.email.addTextChangedListener(object: SimplifiedTextWatcher{
+        binding.email.addTextChangedListener(object : SimplifiedTextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                 s?.let {
+                s?.let {
+                    if (!matches(emailRegex, it)) {
+                        binding.email.error = getString(R.string.invalid_email_format)
+                    }
                     binding.continueButton.isEnabled = matches(emailRegex, it)
                 }
             }
