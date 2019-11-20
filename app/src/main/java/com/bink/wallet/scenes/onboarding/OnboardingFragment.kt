@@ -158,12 +158,15 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             accessToken
         ) { `object`, _ ->
             try {
-                facebookEmail = `object`.getString(EMAIL_KEY)
                 this.accessToken = accessToken
-                handleFacebookNavigation(facebookEmail)
+                facebookEmail = `object`.getString(EMAIL_KEY)
             } catch (e: JSONException) {
+                if(!::facebookEmail.isInitialized){
+                    facebookEmail = getString(R.string.empty_string)
+                }
                 e.printStackTrace()
             }
+            handleFacebookNavigation(facebookEmail)
         }
         val parameters = Bundle()
         parameters.putString(FIELDS_KEY, EMAIL_KEY)
