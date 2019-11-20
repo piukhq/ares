@@ -72,7 +72,7 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
 
-        viewModel.retrieveStoredLoginData()
+        viewModel.retrieveStoredLoginData(requireContext())
         viewModel.loginData.observeNonNull(this) {
             val items = viewModel.itemsList.value!!
             for (i in 0 until items.list.size) {
@@ -207,7 +207,7 @@ class SettingsFragment :
 
                 val data = MutableLiveData<LoginData>()
                 data.value = LoginData(DEFAULT_LOGIN_ID, email)
-                viewModel.storeLoginData(email)
+                viewModel.storeLoginData(email, requireContext())
                 viewModel.loginData.observeNonNull(this) {
                     viewModel.loginData.value.let {
                         if (it != null &&

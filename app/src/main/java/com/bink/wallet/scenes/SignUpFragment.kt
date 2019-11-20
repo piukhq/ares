@@ -18,6 +18,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.UnsupportedEncodingException
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
@@ -104,6 +105,23 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     getString(R.string.token_api_v1, it.api_key),
                     requireContext()
                 )
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    viewModel.email.value ?: EMPTY_STRING,
+                    requireContext()
+                )
+
+                try {
+                    val currentToken = JwtCreator().createJwt(requireContext())
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_JWT,
+                        currentToken,
+                        requireContext()
+                    )
+                } catch (e: UnsupportedEncodingException) {
+                    e.printStackTrace()
+                }
 
                 viewModel.marketingPref(
                     MarketingOption(

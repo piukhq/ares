@@ -9,6 +9,7 @@ object LocalStoreUtils {
     const val KEY_SECRET = "api_secret"
     const val KEY_JWT = "kwt_token"
     const val KEY_JWT_V1 = "kwt_token_v1"
+    const val KEY_EMAIL = "email_key"
 
     fun setAppSharedPref(secretKey: String, secret: String, context: Context) {
         try {
