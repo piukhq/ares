@@ -28,7 +28,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.retrieveStoredLoginData()
+        viewModel.retrieveStoredLoginData(requireContext())
         viewModel.loginData.observeNonNull(this) {
             if (verifyAvailableNetwork(requireActivity())) {
                 viewModel.authenticate()

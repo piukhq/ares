@@ -10,7 +10,10 @@ import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class LoginRepository(
@@ -21,7 +24,7 @@ class LoginRepository(
         const val DEFAULT_LOGIN_ID = "0"
     }
 
-    var loginEmail: String = "Bink20iteration1@testbink.com"
+//    var loginEmail: String = "Bink20iteration1@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -37,52 +40,52 @@ class LoginRepository(
         }
     }
 
-    private fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                liveData.value = loginData
-            }
-        }
-    }
-
-    suspend fun retrieveStoredLoginData(loginData: MutableLiveData<LoginData>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Default) {
-                try {
-                    val response = loginDataDao.getLoginData()
-                    // Note: the AS hint says that response should never be null,
-                    // but it appears it can be during runtime... go figure!
-                    if (response.email != null) {
-                        loginEmail = response.email
-                        updateLiveData(loginData, response)
-                    } else {
-                        updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, loginEmail))
-                        storeLoginData(loginEmail, loginData)
-                    }
-                } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.localizedMessage, e)
-                }
-            }
-        }
-    }
-
-    fun storeLoginData(email: String, loginData: MutableLiveData<LoginData>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Default) {
-                try {
-                    runBlocking {
-                        val pos = loginDataDao.store(LoginData(DEFAULT_LOGIN_ID, email))
-                        if (pos >= 0) {
-                            updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, email))
-                            loginEmail = email
-                        }
-                    }
-                } catch (e: Throwable) {
-                    Log.e(LoginDataDao::class.simpleName, e.toString(), e)
-                }
-            }
-        }
-    }
+//    private fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.Main) {
+//                liveData.value = loginData
+//            }
+//        }
+//    }
+//
+//    suspend fun retrieveStoredLoginData(loginData: MutableLiveData<LoginData>) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.Default) {
+//                try {
+//                    val response = loginDataDao.getLoginData()
+//                    // Note: the AS hint says that response should never be null,
+//                    // but it appears it can be during runtime... go figure!
+//                    if (response != null && response.email != null) {
+//                        loginEmail = response.email
+//                        updateLiveData(loginData, response)
+//                    } else {
+//                        updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, loginEmail))
+//                        storeLoginData(loginEmail, loginData)
+//                    }
+//                } catch (e: Throwable) {
+//                    Log.e(LoginRepository::class.simpleName, e.localizedMessage, e)
+//                }
+//            }
+//        }
+//    }
+//
+//    fun storeLoginData(email: String, loginData: MutableLiveData<LoginData>) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            withContext(Dispatchers.Default) {
+//                try {
+//                    runBlocking {
+//                        val pos = loginDataDao.store(LoginData(DEFAULT_LOGIN_ID, email))
+//                        if (pos >= 0) {
+//                            updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, email))
+//                            loginEmail = email
+//                        }
+//                    }
+//                } catch (e: Throwable) {
+//                    Log.e(LoginDataDao::class.simpleName, e.toString(), e)
+//                }
+//            }
+//        }
+//    }
 
     fun authWithFacebook(
         facebookAuthRequest: FacebookAuthRequest,

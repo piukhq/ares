@@ -18,6 +18,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.UnsupportedEncodingException
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
@@ -100,7 +101,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         viewModel.signUpResponse.observeNonNull(this) {
             runBlocking {
                 LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_JWT_V1,
+                    LocalStoreUtils.KEY_JWT,
                     getString(R.string.token_api_v1, it.api_key),
                     requireContext()
                 )

@@ -7,7 +7,7 @@ import org.json.JSONObject
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-class JwtCreator(private val repo: LoginRepository) {
+class JwtCreator {
 
     fun createJwt(context: Context): String {
         val header = JSONObject()
@@ -17,7 +17,12 @@ class JwtCreator(private val repo: LoginRepository) {
         val payload = JSONObject()
         payload.put(JWT_PAYLOAD_TYPE_ORGANISATION, JWT_PAYLOAD_VALUE_ORGANISATION)
         payload.put(JWT_PAYLOAD_TYPE_BUNDLE, JWT_PAYLOAD_VALUE_BUNDLE)
-        payload.put(JWT_PAYLOAD_TYPE_USER, repo.loginEmail)
+        payload.put(
+            JWT_PAYLOAD_TYPE_USER,
+            LocalStoreUtils.getAppSharedPref(
+                LocalStoreUtils.KEY_EMAIL, context
+            )
+        )
         payload.put(JWT_PAYLOAD_TYPE_PROPERTY, JWT_PAYLOAD_VALUE_PROPERTY)
         payload.put(JWT_PAYLOAD_TYPE_TIME, System.currentTimeMillis() / 1000)
 

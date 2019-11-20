@@ -28,10 +28,7 @@ fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     val headerAuthorizationInterceptor = Interceptor { chain ->
         val jwtToken =
             LocalStoreUtils.getAppSharedPref(
-                when (chain.request().url().url().file.contains("ubiquity")) {
-                    true -> LocalStoreUtils.KEY_JWT
-                    else -> LocalStoreUtils.KEY_JWT_V1
-                },
+                LocalStoreUtils.KEY_JWT,
                 context
             )?.let { it }
         val request = chain.request().url().newBuilder().build()
