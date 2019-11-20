@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import kotlinx.coroutines.launch
 
@@ -19,7 +20,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
             LoginResponse(
                 LoginBody(
                     System.currentTimeMillis() / 1000,
-                    loginData.value?.email ?: "",
+                    loginData.value?.email ?: EMPTY_STRING,
                     0.0,
                     0.0
                 )
@@ -32,7 +33,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
             DEFAULT_LOGIN_ID,
             LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_EMAIL, context
-            ) ?: ""
+            ) ?: EMPTY_STRING
         )
     }
 }
