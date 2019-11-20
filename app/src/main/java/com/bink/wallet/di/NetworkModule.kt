@@ -3,6 +3,7 @@ package com.bink.wallet.di
 import android.content.Context
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
@@ -34,7 +35,7 @@ fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")
-            .header("Authorization", jwtToken ?: "").url(request)
+            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
             .build()
         chain.proceed(newRequest)
     }
