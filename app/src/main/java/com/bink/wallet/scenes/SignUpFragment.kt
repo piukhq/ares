@@ -101,27 +101,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         viewModel.signUpResponse.observeNonNull(this) {
             runBlocking {
                 LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_JWT_V1,
+                    LocalStoreUtils.KEY_JWT,
                     getString(R.string.token_api_v1, it.api_key),
                     requireContext()
                 )
-
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_EMAIL,
-                    viewModel.email.value ?: EMPTY_STRING,
-                    requireContext()
-                )
-
-                try {
-                    val currentToken = JwtCreator().createJwt(requireContext())
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_JWT,
-                        currentToken,
-                        requireContext()
-                    )
-                } catch (e: UnsupportedEncodingException) {
-                    e.printStackTrace()
-                }
 
                 viewModel.marketingPref(
                     MarketingOption(
