@@ -204,8 +204,8 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="register_ghost_card_title">Register your card</string>
     <string name="register_ghost_card_button">Register card</string>
-    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
-    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points.</string>
+    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
 
     <!-- Pll Screen -->
     <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
