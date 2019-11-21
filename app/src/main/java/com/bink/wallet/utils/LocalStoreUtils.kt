@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 object LocalStoreUtils {
 
     private const val PREF_FILE_NAME = "com.bink.wallet"
-    const val KEY_JWT = "kwt_token"
+    const val KEY_JWT = "jwt_token"
     const val KEY_EMAIL = "email_key"
 
     fun setAppSharedPref(secretKey: String, secret: String, context: Context) {

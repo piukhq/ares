@@ -346,4 +346,5 @@
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="registration_failed_text">Registration failed</string>
+    <string name="accept_tc_pp">Please accept %1$s</string>
 </resources>

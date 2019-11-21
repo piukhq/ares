@@ -15,6 +15,7 @@ class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
     val termsCondition = MutableLiveData<Boolean>()
     val privacyPolicy = MutableLiveData<Boolean>()
     val marketingMessages = MutableLiveData<Boolean>()
+    val isLoading = MutableLiveData<Boolean>()
 
     val signUpResponse = MutableLiveData<SignUpResponse>()
     val signUpErrorResponse = MutableLiveData<Throwable>()
