@@ -16,7 +16,6 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
 
     var loginBody = MutableLiveData<LoginBody>()
     var loginData = MutableLiveData<LoginData>()
-    var loginEmail = loginRepository.loginEmail
     val logInResponse = MutableLiveData<SignUpResponse>()
     val logInErrorResponse = MutableLiveData<Throwable>()
     val email = MutableLiveData<String>()

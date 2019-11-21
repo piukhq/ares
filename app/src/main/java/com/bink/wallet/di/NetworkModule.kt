@@ -26,8 +26,6 @@ fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-    Log.e("Tag", LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_JWT_V1, context) ?: "")
-
     val headerAuthorizationInterceptor = Interceptor { chain ->
         val jwtToken =
             LocalStoreUtils.getAppSharedPref(
