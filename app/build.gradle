@@ -120,12 +120,7 @@ android {
             }
         }
     }
-
-    externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/Android.mk'
-        }
-    }
+    
     compileOptions {
         setTargetCompatibility(1.8)
         setSourceCompatibility(1.8)

@@ -256,7 +256,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         cardsReceived: List<MembershipCard>
     ) {
         viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-            if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
+            if (plansReceived.isNotEmpty()) {
                 binding.swipeLayout.isRefreshing = false
                 binding.swipeLayout.isEnabled = true
                 binding.progressSpinner.visibility = View.GONE

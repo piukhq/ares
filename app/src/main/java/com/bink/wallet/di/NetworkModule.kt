@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
@@ -30,16 +31,13 @@ fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     val headerAuthorizationInterceptor = Interceptor { chain ->
         val jwtToken =
             LocalStoreUtils.getAppSharedPref(
-                when (chain.request().url().url().file.contains("ubiquity")) {
-                    true -> LocalStoreUtils.KEY_JWT
-                    else -> LocalStoreUtils.KEY_JWT_V1
-                },
+                LocalStoreUtils.KEY_JWT,
                 context
             )?.let { it }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")
-            .header("Authorization", jwtToken ?: "").url(request)
+            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
             .build()
         chain.proceed(newRequest)
     }
