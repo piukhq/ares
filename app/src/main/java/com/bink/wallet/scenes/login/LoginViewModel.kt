@@ -20,6 +20,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     val logInErrorResponse = MutableLiveData<Throwable>()
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
+    val isLoading = MutableLiveData<Boolean>()
 
     fun authenticate() {
         loginRepository.doAuthenticationWork(

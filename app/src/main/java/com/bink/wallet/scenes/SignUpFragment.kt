@@ -9,6 +9,7 @@ import android.util.Patterns
 import android.view.View
 import android.widget.CheckBox
 import androidx.core.text.HtmlCompat
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SignUpFragmentBinding

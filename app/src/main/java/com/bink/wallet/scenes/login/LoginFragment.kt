@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.login
 
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -53,24 +54,37 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     binding.passwordField.error = null
                 }
             }
-        }
 
-        viewModel.logInResponse.observeNonNull(this) {
+            logInResponse.observeNonNull(this@LoginFragment) {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_JWT,
+                    getString(R.string.token_api_v1, it.api_key),
+                    requireContext()
+                )
 
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_JWT,
-                getString(R.string.token_api_v1, it.api_key),
-                requireContext()
-            )
+                findNavController().navigateIfAdded(
+                    this@LoginFragment,
+                    R.id.global_to_home
+                )
+            }
 
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
-        }
+            logInErrorResponse.observeNonNull(this@LoginFragment) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.incorrect_credentials)
+                )
+            }
 
-        viewModel.logInErrorResponse.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.incorrect_credentials)
-            )
+            isLoading.observeNonNull(this@LoginFragment) {
+                with(binding) {
+                    progressSpinner.visibility = when (it) {
+                        true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+
+                    logInButton.isEnabled = !it
+                }
+            }
         }
 
         binding.logInButton.setOnClickListener {
@@ -80,10 +94,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     password = viewModel.password.value
                 )
             )
-        }
-
-        viewModel.loginData.observeNonNull(this) {
-
         }
     }
 }
