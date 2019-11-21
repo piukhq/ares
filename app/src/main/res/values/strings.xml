@@ -349,4 +349,5 @@
     <string name="log_in_email_text">Log in with email</string>
     <string name="log_in_screen_description">Welcome back!</string>
     <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
+    <string name="forgot_password_text">Forgot password</string>
 </resources>

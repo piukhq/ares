@@ -107,6 +107,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/password_description" />
 
+        <TextView
+                android:id="@+id/forgot_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/forgot_password_text"
+                android:textColor="@color/blue_accent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password_field" />
+
         <Button
                 android:id="@+id/log_in_button"
                 style="@style/RoundedGradientButton"
