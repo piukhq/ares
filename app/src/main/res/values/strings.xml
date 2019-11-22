@@ -338,8 +338,8 @@
     <string name="email_text">Email</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
-    <string name="T_C_accept_description">I accept Bink’s Terms and Conditions</string>
-    <string name="privacy_policy_description">I accept Bink’s Privacy Policy</string>
+    <string name="T_C_accept_description">I accept Bink\'s Terms and Conditions</string>
+    <string name="privacy_policy_description">I accept Bink\'s Privacy Policy</string>
     <string name="marketing_messages">I opt in to receive marketing messages</string>
     <string name="token_api_v1">Token %1$s</string>
     <string name="enter_email_text">Enter email address</string>
@@ -347,4 +347,6 @@
     <string name="confirm_password">Confirm password</string>
     <string name="registration_failed_text">Registration failed</string>
     <string name="accept_tc_pp">Please accept %1$s</string>
+    <string name="terms_conds_text">Terms and Conditions</string>
+    <string name="privacy_policy_text">Privacy Policy</string>
 </resources>
