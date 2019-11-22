@@ -11,10 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
-import com.bink.wallet.utils.CredentialsUtils
-import com.bink.wallet.utils.JwtCreator
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.observeNonNull
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kotlin.reflect.KProperty
