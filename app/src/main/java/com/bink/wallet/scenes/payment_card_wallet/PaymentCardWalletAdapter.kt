@@ -4,9 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.PaymentCardWalletItemBinding
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.getCardTypeFromProvider
@@ -15,73 +12,29 @@ class PaymentCardWalletAdapter(
     private val paymentCards: List<PaymentCard>,
     val onClickListener: (PaymentCard) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    companion object {
-        const val JOIN_CARD = 0
-        const val PAYMENT_CARD = 1
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        if (viewType == JOIN_CARD) {
-            val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-            binding.apply {
-                close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
-                    notifyDataSetChanged()
+        val binding = PaymentCardWalletItemBinding.inflate(inflater)
+        binding.apply {
+            root.setOnClickListener {
+                paymentCard?.apply {
+                    onClickListener(this)
                 }
             }
-            return PaymentCardWalletJoinHolder(binding)
-        } else {
-            val binding = PaymentCardWalletItemBinding.inflate(inflater)
-            binding.apply {
-                root.setOnClickListener {
-                    paymentCard?.apply {
-                        onClickListener(this)
-                    }
-                }
-            }
-            return PaymentCardWalletHolder(
-                binding
-            )
         }
+        return PaymentCardWalletHolder(
+            binding
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (!isJoinCard(position)) {
-            (holder as PaymentCardWalletHolder).bind(
-                paymentCards[
-                        position - isJoinCardHiddenCount()
-                ]
-            )
-        }
+        (holder as PaymentCardWalletHolder).bind(paymentCards[position])
     }
 
-    override fun getItemCount() =
-        paymentCards.size +
-                isJoinCardHiddenCount()
+    override fun getItemCount() = paymentCards.size
 
-    override fun getItemId(position: Int) =
-        position.toLong() +
-                isJoinCardHiddenCount()
-
-    override fun getItemViewType(position: Int): Int {
-        return if (isJoinCard(position)) {
-            JOIN_CARD
-        } else {
-            PAYMENT_CARD
-        }
-    }
-
-    private fun isJoinCard(position: Int) =
-        position == 0 &&
-                isJoinCardHiddenCount() == 1
-
-    private fun isJoinCardHiddenCount() =
-        if (SharedPreferenceManager.isPaymentJoinHidden) {
-            0
-        } else {
-            1
-        }
+    override fun getItemId(position: Int) = position.toLong()
 
     inner class PaymentCardWalletHolder(val binding: PaymentCardWalletItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -98,22 +51,6 @@ class PaymentCardWalletAdapter(
                 binding.cardExpired.visibility = View.VISIBLE
                 binding.linkStatus.visibility = View.GONE
                 binding.imageStatus.visibility = View.GONE
-            }
-        }
-    }
-
-    inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind() {
-            with(binding) {
-                close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
-                }
-
-                joinCardImage.setImageResource(R.drawable.ic_no_payment_card)
-                joinCardDescription.text =
-                    joinCardDescription.context.getString(R.string.payment_join_description)
             }
         }
     }

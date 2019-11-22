@@ -21,6 +21,7 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
+import kotlinx.android.synthetic.main.empty_loyalty_item.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -46,22 +47,13 @@ class PaymentCardWalletFragment :
                 viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
                 direction == ItemTouchHelper.LEFT
             ) {
-                viewModel.paymentCards.value?.get(
-                    position - isJoinCardHiddenCount()
-                )?.let { deleteDialog(it) }
+                viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
             }
             if (direction == ItemTouchHelper.RIGHT) {
                 binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
             }
         }
     }
-
-    private fun isJoinCardHiddenCount() =
-        if (SharedPreferenceManager.isPaymentJoinHidden) {
-            0
-        } else {
-            1
-        }
 
     fun deleteDialog(paymentCard: PaymentCard) {
         val dialog: AlertDialog
@@ -112,46 +104,72 @@ class PaymentCardWalletFragment :
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
                     binding.progressSpinner.visibility = View.GONE
-                    binding.paymentCardRecycler.apply {
-                        layoutManager = GridLayoutManager(context, 1)
-                        adapter =
-                            PaymentCardWalletAdapter(
-                                paymentCards,
-                                onClickListener = {
-                                    val action =
-                                        WalletsFragmentDirections.paymentWalletToDetails(
-                                            it,
-                                            plans.toTypedArray(),
-                                            cards.toTypedArray()
+
+                    if (paymentCards.isNullOrEmpty()) {
+                        showEmptyScreen()
+                    } else {
+                        hideEmptyScreen()
+
+                        binding.paymentCardRecycler.apply {
+                            layoutManager = GridLayoutManager(context, 1)
+                            adapter =
+                                PaymentCardWalletAdapter(
+                                    paymentCards,
+                                    onClickListener = {
+                                        val action =
+                                            WalletsFragmentDirections.paymentWalletToDetails(
+                                                it,
+                                                plans.toTypedArray(),
+                                                cards.toTypedArray()
+                                            )
+                                        findNavController().navigateIfAdded(
+                                            this@PaymentCardWalletFragment,
+                                            action
                                         )
-                                    findNavController().navigateIfAdded(
-                                        this@PaymentCardWalletFragment,
-                                        action
-                                    )
-                                })
+                                    })
 
-                        val helperListenerLeft =
-                            RecyclerItemTouchHelper(
-                                0,
-                                ItemTouchHelper.LEFT,
-                                listener
-                            )
+                            val helperListenerLeft =
+                                RecyclerItemTouchHelper(
+                                    0,
+                                    ItemTouchHelper.LEFT,
+                                    listener
+                                )
 
-                        val helperListenerRight =
-                            RecyclerItemTouchHelper(
-                                0,
-                                ItemTouchHelper.RIGHT,
-                                listener
-                            )
+                            val helperListenerRight =
+                                RecyclerItemTouchHelper(
+                                    0,
+                                    ItemTouchHelper.RIGHT,
+                                    listener
+                                )
 
-                        ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-                        // remarked this out as the Swipe Right isn't used on Payment Cards
-                        // but leaving it here as it could be used for a future story
-                        //ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+                            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+                            // remarked this out as the Swipe Right isn't used on Payment Cards
+                            // but leaving it here as it could be used for a future story
+                            //ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+                        }
                     }
                 }
             }
         }
+
+        close.setOnClickListener {
+            SharedPreferenceManager.isPaymentJoinHidden = true
+            hideEmptyScreen()
+        }
+    }
+
+    private fun showEmptyScreen() {
+        binding.paymentCardRecycler.visibility = View.GONE
+        if (SharedPreferenceManager.isPaymentJoinHidden) {
+            binding.emptyLayout.joinCardMainLayout.visibility = View.GONE
+        } else {
+            binding.emptyLayout.joinCardMainLayout.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideEmptyScreen() {
+        binding.paymentCardRecycler.visibility = View.VISIBLE
+        binding.emptyLayout.joinCardMainLayout.visibility = View.GONE
     }
 
     private fun fetchPaymentCards() {
