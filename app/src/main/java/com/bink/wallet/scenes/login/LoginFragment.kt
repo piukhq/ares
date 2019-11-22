@@ -1,21 +1,22 @@
 package com.bink.wallet.scenes.login
 
 import android.os.Bundle
-import androidx.lifecycle.MutableLiveData
+import android.util.Patterns
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .withId(FragmentToolbar.NO_TOOLBAR)
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -23,12 +24,29 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         get() = R.layout.login_fragment
     override val viewModel: LoginViewModel by viewModel()
 
-    private val loginData = MutableLiveData<LoginBody>()
+    private fun validateEmail() =
+        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
+            binding.emailField.error = getString(R.string.incorrect_email_text)
+        } else {
+            binding.emailField.error = null
+        }
+
+    private fun validatePassword() = if (!UtilFunctions.isValidField(
+            PASSWORD_REGEX,
+            viewModel.password.value ?: EMPTY_STRING
+        )
+    ) {
+        binding.passwordField.error =
+            getString(R.string.password_description)
+    } else {
+        binding.passwordField.error = null
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.retrieveStoredLoginData()
+        viewModel.retrieveStoredLoginData(requireContext())
+        binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {
             if (verifyAvailableNetwork(requireActivity())) {
                 viewModel.authenticate()
@@ -37,8 +55,67 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
         }
 
-        viewModel.loginData.observeNonNull(this) {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+        with(viewModel) {
+            email.observeNonNull(this@LoginFragment) {
+                validateEmail()
+            }
+
+            password.observeNonNull(this@LoginFragment) {
+                validatePassword()
+            }
+
+            logInResponse.observeNonNull(this@LoginFragment) {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_JWT,
+                    getString(R.string.token_api_v1, it.api_key),
+                    requireContext()
+                )
+
+                findNavController().navigateIfAdded(
+                    this@LoginFragment,
+                    R.id.global_to_home
+                )
+            }
+
+            logInErrorResponse.observeNonNull(this@LoginFragment) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.incorrect_credentials)
+                )
+            }
+
+            isLoading.observeNonNull(this@LoginFragment) {
+                with(binding) {
+                    progressSpinner.visibility = when (it) {
+                        true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+
+                    logInButton.isEnabled = !it
+                }
+            }
+        }
+
+        binding.logInButton.setOnClickListener {
+
+            validateEmail()
+            validatePassword()
+
+            if (binding.passwordField.error == null &&
+                binding.emailField.error == null
+            ) {
+                viewModel.logIn(
+                    SignUpRequest(
+                        email = viewModel.email.value,
+                        password = viewModel.password.value
+                    )
+                )
+            } else {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.all_fields_must_be_valid)
+                )
+            }
         }
     }
 }
