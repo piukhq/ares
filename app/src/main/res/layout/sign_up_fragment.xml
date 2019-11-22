@@ -228,7 +228,7 @@
                         android:id="@+id/progress_spinner"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:background="#B3FFFFFF"
+                        android:background="@color/white_50_alpha"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
