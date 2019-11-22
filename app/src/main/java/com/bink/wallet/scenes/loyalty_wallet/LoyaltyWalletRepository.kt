@@ -28,7 +28,7 @@ class LoyaltyWalletRepository(
                 try {
                     val response = request.await()
                     storeMembershipCards(response)
-                    mutableMembershipCards.value = response.toMutableList()
+                    mutableMembershipCards.postValue(response.toMutableList())
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -189,7 +189,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCards.value = response
+                    paymentCards.postValue(response)
                 } catch (e: Throwable) {
                     fetchError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())

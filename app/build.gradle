@@ -120,12 +120,7 @@ android {
             }
         }
     }
-
-    externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/Android.mk'
-        }
-    }
+    
     compileOptions {
         setTargetCompatibility(1.8)
         setSourceCompatibility(1.8)
@@ -145,6 +140,9 @@ android {
             url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/"
         }
     }
+}
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -219,6 +217,13 @@ dependencies {
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
     testImplementation group: 'androidx.arch.core', name: 'core-testing', version: '2.1.0'
     testImplementation 'org.koin:koin-test:2.0.1'
+    testImplementation 'com.xfinity:resourceprovider-library:1.2.1'
+    kapt "com.xfinity:resourceprovider-compiler:1.2.1"
+    testImplementation('com.nhaarman:mockito-kotlin:1.4.0',
+            {
+                exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+                exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
+            })
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
     }

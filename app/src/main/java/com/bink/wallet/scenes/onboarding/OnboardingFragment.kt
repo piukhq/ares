@@ -33,7 +33,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,
-                    R.drawable.logo_page_1,
+                    R.drawable.onboarding_page_1,
                     getString(R.string.page_1_title),
                     getString(R.string.page_1_description)
                 )
@@ -41,7 +41,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_2,
-                    R.drawable.onb_2,
+                    R.drawable.onboarding_page_2,
                     getString(R.string.page_2_title),
                     getString(R.string.page_2_description)
                 )
@@ -49,7 +49,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_3,
-                    R.drawable.onb_3,
+                    R.drawable.onboarding_page_3,
                     getString(R.string.page_3_title),
                     getString(R.string.page_3_description)
                 )
@@ -58,7 +58,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
 
         binding.continueWithFacebook.setOnClickListener {
@@ -69,10 +69,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.signUpWithEmail.setOnClickListener {
-            requireContext().displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
 
         binding.pager.addOnPageChangeListener(object :
@@ -104,7 +101,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     pager.setCurrentItem(FIRST_PAGE_INDEX, true)
                     currentPage = FIRST_PAGE_INDEX
                 } else {
-                    pager.setCurrentItem(currentPage++, true)
+                    pager?.setCurrentItem(currentPage++, true)
                 }
             }
         }

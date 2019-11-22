@@ -54,6 +54,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/bottom_layout_height"
+                        android:textColorLink="@color/blue_accent"
                         android:paddingTop="@dimen/margin_padding_size_extra_small" />
             </LinearLayout>
         </ScrollView>

@@ -6,14 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Base64
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.LoginData
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.CredentialsUtils
 import com.bink.wallet.utils.JwtCreator
@@ -21,57 +17,15 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.observeNonNull
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
-import java.io.UnsupportedEncodingException
 import kotlin.reflect.KProperty
 
 class MainActivity : AppCompatActivity() {
-    private var loginRepository: LoginRepository by inject { parametersOf(this) }
-
-    companion object {
-        init {
-            System.loadLibrary("keys")
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         setContentView(R.layout.activity_main)
-        storeSecret()
-    }
-
-    private external fun getNativeKey(url: String): String
-
-    private fun storeSecret() {
-        val data = Base64.decode(getNativeKey(ApiConstants.BASE_URL), Base64.URL_SAFE)
-        val loginData = MutableLiveData<LoginData>()
-        try {
-            CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) {
-                    loginRepository.retrieveStoredLoginData(loginData)
-                }
-            }
-            loginData.observeNonNull(this) {
-                LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECRET, String(data), this)
-                CredentialsUtils.createNewKey()
-                val currentToken = JwtCreator(loginRepository).createJwt(this)
-
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_TOKEN,
-                    CredentialsUtils.encrypt(currentToken),
-                    this
-                )
-            }
-        } catch (e: UnsupportedEncodingException) {
-            e.printStackTrace()
-        }
     }
 
     override fun onBackPressed() {
@@ -89,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             R.id.loyalty_card_detail_fragment -> {
-                findNavController(R.id.main_fragment).navigate(R.id.detail_to_home)
+                findNavController(R.id.main_fragment).navigate(R.id.global_to_home)
             }
             R.id.home_wallet,
             R.id.onboarding_fragment,
