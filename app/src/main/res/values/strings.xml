@@ -332,7 +332,7 @@
     <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers and updates!</b> \n You can opt out at any time.]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
-    <string name="incorrect_email_text">Incorrect email</string>
+    <string name="incorrect_email_text">Invalid email address</string>
     <string name="continue_text">Continue</string>
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="email_text">Email</string>
@@ -346,6 +346,9 @@
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="registration_failed_text">Registration failed</string>
+    <string name="log_in_email_text">Log in with email</string>
+    <string name="log_in_screen_description">Welcome back!</string>
+    <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
     <string name="accept_tc_pp">Please accept %1$s</string>
     <string name="terms_conds_text">Terms and Conditions</string>
     <string name="privacy_policy_text">Privacy Policy</string>

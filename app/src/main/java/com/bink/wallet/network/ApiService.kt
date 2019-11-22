@@ -82,4 +82,9 @@ interface ApiService {
     fun checkMarketingPrefAsync(
         @Body checkedOption: MarketingOption
     ): Deferred<ResponseBody>
+
+    @POST("/users/login")
+    fun logInAsync(
+        @Body signUpRequest: SignUpRequest
+    ): Deferred<SignUpResponse>
 }

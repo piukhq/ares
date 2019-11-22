@@ -16,7 +16,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-
     single { provideDefaultOkHttpClient(androidApplication().applicationContext) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
