@@ -3,10 +3,14 @@ package com.bink.wallet.scenes.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
-import com.bink.wallet.model.LoginData
-import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
+import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class LoginRepository(
@@ -16,8 +20,6 @@ class LoginRepository(
     companion object {
         const val DEFAULT_LOGIN_ID = "0"
     }
-
-    var loginEmail = "Bink20iteration1@testbink.com"
 
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -33,49 +35,55 @@ class LoginRepository(
         }
     }
 
-    private fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
+    fun signUp(
+        signUpRequest: SignUpRequest,
+        signUpResponse: MutableLiveData<SignUpResponse>,
+        signUpErrorResponse: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.signUpAsync(signUpRequest)
             withContext(Dispatchers.Main) {
-                liveData.value = loginData
-            }
-        }
-    }
-
-    suspend fun retrieveStoredLoginData(loginData: MutableLiveData<LoginData>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Default) {
                 try {
-                    val response = loginDataDao.getLoginData()
-                    // Note: the AS hint says that response should never be null,
-                    // but it appears it can be during runtime... go figure!
-                    // Updated null check, should work same as old version
-                    if (response?.email != null) {
-                        loginEmail = response.email
-                        updateLiveData(loginData, response)
-                    } else {
-                        updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, loginEmail))
-                        storeLoginData(loginEmail, loginData)
-                    }
+                    val response = request.await()
+                    signUpResponse.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.localizedMessage, e)
+                    signUpErrorResponse.value = e
                 }
             }
         }
     }
 
-    fun storeLoginData(email: String, loginData: MutableLiveData<LoginData>) {
+    fun logIn(
+        logInRequest: SignUpRequest,
+        signUpResponse: MutableLiveData<SignUpResponse>,
+        signUpErrorResponse: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Default) {
+            val request = apiService.logInAsync(logInRequest)
+            withContext(Dispatchers.Main) {
                 try {
-                    runBlocking {
-                        val pos = loginDataDao.store(LoginData(DEFAULT_LOGIN_ID, email))
-                        if (pos >= 0) {
-                            updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, email))
-                            loginEmail = email
-                        }
-                    }
+                    val response = request.await()
+                    signUpResponse.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoginDataDao::class.simpleName, e.toString(), e)
+                    signUpErrorResponse.value = e
+                }
+            }
+        }
+    }
+
+    fun checkMarketingPref(
+        checkedOption: MarketingOption,
+        marketingResponse: MutableLiveData<ResponseBody>,
+        marketingError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.checkMarketingPrefAsync(checkedOption)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    marketingResponse.value = response
+                } catch (e: Throwable) {
+                    marketingError.value = e
                 }
             }
         }
