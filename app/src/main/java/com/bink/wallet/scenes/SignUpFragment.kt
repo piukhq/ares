@@ -118,9 +118,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             signUpResponse.observeNonNull(this@SignUpFragment) {
                 isLoading.value = false
                 runBlocking {
+                    CredentialsUtils.createNewKey()
+
                     LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_JWT,
-                        getString(R.string.token_api_v1, it.api_key),
+                        LocalStoreUtils.KEY_TOKEN,
+                        CredentialsUtils.encrypt(getString(R.string.token_api_v1, it.api_key)),
                         requireContext()
                     )
 
