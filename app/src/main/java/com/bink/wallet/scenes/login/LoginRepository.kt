@@ -74,7 +74,7 @@ class LoginRepository(
     fun checkMarketingPref(
         checkedOption: MarketingOption,
         marketingResponse: MutableLiveData<ResponseBody>,
-        marketingPrefResponse: MutableLiveData<Throwable>
+        marketingError: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.checkMarketingPrefAsync(checkedOption)
@@ -83,7 +83,7 @@ class LoginRepository(
                     val response = request.await()
                     marketingResponse.value = response
                 } catch (e: Throwable) {
-                    marketingPrefResponse.value = e
+                    marketingError.value = e
                 }
             }
         }
