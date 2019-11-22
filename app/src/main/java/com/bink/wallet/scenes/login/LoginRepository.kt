@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.CoroutineScope
@@ -84,6 +85,24 @@ class LoginRepository(
                     marketingResponse.value = response
                 } catch (e: Throwable) {
                     marketingError.value = e
+                }
+            }
+        }
+    }
+
+    fun forgotPassword(
+        email: String,
+        forgotPasswordResponse: MutableLiveData<ResponseBody>,
+        forgotPasswordError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    forgotPasswordResponse.value = response
+                } catch (e: Throwable) {
+                    forgotPasswordError.value = e
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -22,6 +23,11 @@ interface ApiService {
         @Body loginResponse: LoginResponse
     ): Deferred<LoginResponse>
 
+    @POST("/users/forgotten_password/")
+    fun forgotPasswordAsync(
+        @Body forgotPasswordRequest: ForgotPasswordRequest
+    ): Deferred<ResponseBody>
+
     @GET("/ubiquity/membership_cards")
     fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
 
@@ -29,7 +35,9 @@ interface ApiService {
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
     @POST("/ubiquity/payment_cards")
-    fun addPaymentCardAsync(@Body cardAdd: PaymentCardAdd): Deferred<PaymentCard>
+    fun addPaymentCardAsync(
+        @Body cardAdd: PaymentCardAdd
+    ): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
     fun linkToPaymentCardAsync(

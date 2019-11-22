@@ -1,6 +1,8 @@
 package com.bink.wallet.scenes.login
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -45,6 +47,18 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        val content = SpannableString(getString(R.string.forgot_password_text))
+        content.setSpan(UnderlineSpan(), 0, content.length, 0)
+
+        with(binding.forgotPassword) {
+            text = content
+            setOnClickListener {
+                findNavController().navigateIfAdded(
+                    this@LoginFragment,
+                    R.id.login_to_forgot_password
+                )
+            }
+        }
         viewModel.retrieveStoredLoginData(requireContext())
         binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {

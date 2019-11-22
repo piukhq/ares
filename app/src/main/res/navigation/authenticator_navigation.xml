@@ -138,7 +138,17 @@
 
     <fragment
             android:id="@+id/login_fragment"
-            android:name="com.bink.wallet.scenes.login.LoginFragment" />
+            android:name="com.bink.wallet.scenes.login.LoginFragment">
+
+        <action
+                android:id="@+id/login_to_forgot_password"
+                app:destination="@+id/forgot_password"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
 
     <fragment
             android:id="@+id/add_fragment"
@@ -619,6 +629,18 @@
         <action
                 android:id="@+id/onboarding_to_log_in"
                 app:destination="@+id/login_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/forgot_password"
+            android:name="com.bink.wallet.scenes.forgot_password.ForgotPasswordFragment">
+        <action
+                android:id="@+id/forgot_password_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
