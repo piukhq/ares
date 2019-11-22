@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.login
 
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -23,6 +24,24 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         get() = R.layout.login_fragment
     override val viewModel: LoginViewModel by viewModel()
 
+    private fun validateEmail() =
+        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
+            binding.emailField.error = getString(R.string.incorrect_email_text)
+        } else {
+            binding.emailField.error = null
+        }
+
+    private fun validatePassword() = if (!UtilFunctions.isValidField(
+            PASSWORD_REGEX,
+            viewModel.password.value ?: EMPTY_STRING
+        )
+    ) {
+        binding.passwordField.error =
+            getString(R.string.password_description)
+    } else {
+        binding.passwordField.error = null
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -38,52 +57,65 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
-                if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
-                    binding.emailField.error = getString(R.string.incorrect_email_text)
-                } else {
-                    binding.emailField.error = null
-                }
+                validateEmail()
             }
 
             password.observeNonNull(this@LoginFragment) {
-                if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
-                    binding.passwordField.error =
-                        getString(R.string.password_description)
-                } else {
-                    binding.passwordField.error = null
+                validatePassword()
+            }
+
+            logInResponse.observeNonNull(this@LoginFragment) {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_JWT,
+                    getString(R.string.token_api_v1, it.api_key),
+                    requireContext()
+                )
+
+                findNavController().navigateIfAdded(
+                    this@LoginFragment,
+                    R.id.global_to_home
+                )
+            }
+
+            logInErrorResponse.observeNonNull(this@LoginFragment) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.incorrect_credentials)
+                )
+            }
+
+            isLoading.observeNonNull(this@LoginFragment) {
+                with(binding) {
+                    progressSpinner.visibility = when (it) {
+                        true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+
+                    logInButton.isEnabled = !it
                 }
             }
         }
 
-        viewModel.logInResponse.observeNonNull(this) {
-
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_JWT,
-                getString(R.string.token_api_v1, it.api_key),
-                requireContext()
-            )
-
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
-        }
-
-        viewModel.logInErrorResponse.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.incorrect_credentials)
-            )
-        }
-
         binding.logInButton.setOnClickListener {
-            viewModel.logIn(
-                SignUpRequest(
-                    email = viewModel.email.value,
-                    password = viewModel.password.value
+
+            validateEmail()
+            validatePassword()
+
+            if (binding.passwordField.error == null &&
+                binding.emailField.error == null
+            ) {
+                viewModel.logIn(
+                    SignUpRequest(
+                        email = viewModel.email.value,
+                        password = viewModel.password.value
+                    )
                 )
-            )
-        }
-
-        viewModel.loginData.observeNonNull(this) {
-
+            } else {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.all_fields_must_be_valid)
+                )
+            }
         }
     }
 }
