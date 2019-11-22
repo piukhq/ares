@@ -35,6 +35,7 @@ import kotlin.math.absoluteValue
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
     if (!item?.images.isNullOrEmpty()) {
+        visibility = View.VISIBLE
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
@@ -44,6 +45,8 @@ fun ImageView.loadImage(item: MembershipPlan?) {
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
         }
+    } else {
+        visibility = View.INVISIBLE
     }
 }
 
@@ -53,6 +56,7 @@ fun getIconTypeFromPlan(item: MembershipPlan?) =
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipCard?) {
     if (!item?.images.isNullOrEmpty()) {
+        visibility = View.VISIBLE
         // wrapped in a try/catch as it was throwing error on very strange situations
         try {
             Glide.with(context)
@@ -62,6 +66,8 @@ fun ImageView.loadImage(item: MembershipCard?) {
         } catch (e: NoSuchElementException) {
             Log.e("loadImage", e.localizedMessage, e)
         }
+    } else {
+        visibility = View.INVISIBLE
     }
 }
 
@@ -308,11 +314,9 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
             text =
                 this.context.getString(R.string.description_login_unavailable)
-        LoginStatus.STATUS_LOGIN_PENDING ->
+        LoginStatus.STATUS_PENDING ->
             text = this.context.getString(R.string.description_text)
-        LoginStatus.STATUS_SIGN_UP_PENDING ->
-            text = this.context.getString(R.string.description_text)
-        else -> text = this.context.getString(R.string.description_text)
+        else -> text = this.context.getString(R.string.empty_string)
     }
 }
 
@@ -359,9 +363,8 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
     text = when (loginStatus) {
         LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
         LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
-        LoginStatus.STATUS_LOGIN_PENDING -> this.context.getString(R.string.log_in_pending)
-        LoginStatus.STATUS_SIGN_UP_PENDING -> this.context.getString(R.string.sign_up_pending)
-        else -> this.context.getString(R.string.register_gc_pending)
+        LoginStatus.STATUS_PENDING -> this.context.getString(R.string.card_status_pending)
+        else -> this.context.getString(R.string.empty_string)
     }
 }
 

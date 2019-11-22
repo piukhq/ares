@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class LoyaltyCardDetailsRepository(
     private val apiService: ApiService,
@@ -20,7 +21,7 @@ class LoyaltyCardDetailsRepository(
     suspend fun deleteMembershipCard(
         id: String?,
         mutableDeleteCard: MutableLiveData<String>,
-        error: MutableLiveData<String>
+        error: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
@@ -29,8 +30,11 @@ class LoyaltyCardDetailsRepository(
                     request?.await()
                     membershipCardDao.deleteCard(id.toString())
                     mutableDeleteCard.value = id
+                } catch (e: HttpException) {
+                    error.value = e
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 } catch (e: Throwable) {
-                    error.value = e.toString()
+                    error.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

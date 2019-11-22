@@ -64,10 +64,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
                             android:layout_marginTop="@dimen/payment_card_logo_image_margin"
-                            android:text="Card name"
+                            android:text="@string/card_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_description_big"
                             android:textStyle="bold"
+                            android:fontFamily="@font/nunito_sans_bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,10 +78,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
                             android:layout_marginTop="@dimen/payment_card_number_top_margin"
-                            android:text="**** **** **** 1234"
+                            android:text="@string/_1234_mock_card_number"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_description_big"
                             android:textStyle="bold"
+                            android:fontFamily="@font/nunito_sans_bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -91,8 +93,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:text="@string/add_payment_card"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_title_big"
                         android:textStyle="bold"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         />
 
                 <TextView
@@ -100,7 +104,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_title_big"
+                        android:fontFamily="@font/nunito_sans_light"
                         />
 
                 <TextView
@@ -109,8 +115,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/payment_card_spacing_margin"
                         android:text="@string/card_number"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
                         android:textStyle="bold"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -127,6 +135,7 @@
                             android:hint="@string/card_number"
                             android:imeOptions="actionNext"
                             android:inputType="number"
+                            android:fontFamily="@font/nunito_sans_light"
                             android:maxLength="19"
                             android:nextFocusDown="@id/card_expiry" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -137,8 +146,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/payment_card_spacing_margin"
                         android:text="@string/expiry"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
                         android:textStyle="bold"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -155,6 +166,7 @@
                             android:hint="@string/expiry_format"
                             android:imeOptions="actionNext"
                             android:inputType="date"
+                            android:fontFamily="@font/nunito_sans_light"
                             android:maxLength="5"
                             android:nextFocusDown="@id/card_name" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -166,8 +178,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/payment_card_spacing_margin"
                         android:text="@string/name_on_card"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
                         android:textStyle="bold"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -182,6 +196,7 @@
                             android:layout_height="wrap_content"
                             android:minLines="2"
                             android:hint="@string/name_on_card"
+                            android:fontFamily="@font/nunito_sans_light"
                             android:imeOptions="actionDone"
                             android:inputType="textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -194,15 +209,7 @@
                         android:text="@string/privacy_and_security"
                         android:textColor="@color/blue_accent"
                         android:textSize="@dimen/text_size_description_big"
-                        />
-                <TextView
-                        android:id="@+id/more_info_link"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_large"
-                        android:text="@string/more_information"
-                        android:textColor="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         />
 
                 <Button
@@ -214,6 +221,8 @@
                         android:layout_marginStart="@dimen/custom_text_card_margin"
                         android:layout_marginEnd="@dimen/custom_text_card_margin"
                         android:text="@string/add"
+                        android:textAllCaps="false"
+                        android:fontFamily="@font/nunito_sans_bold"
                         />
             </LinearLayout>
         </ScrollView>
