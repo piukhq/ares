@@ -31,12 +31,32 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             .build()
     }
 
-    companion object {
-        private const val termsAndConditionsHyperlink = "Terms and Conditions"
-        private const val privacyPolicyHyperlink = "Privacy Policy"
+    override val viewModel: SignUpViewModel by viewModel()
+
+    private fun validateEmail() =
+        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
+            binding.emailField.error = getString(R.string.incorrect_email_text)
+        } else {
+            binding.emailField.error = null
+        }
+
+    private fun validatePassword() = if (!UtilFunctions.isValidField(
+            PASSWORD_REGEX,
+            viewModel.password.value ?: EMPTY_STRING
+        )
+    ) {
+        binding.passwordField.error =
+            getString(R.string.password_description)
+    } else {
+        binding.passwordField.error = null
     }
 
-    override val viewModel: SignUpViewModel by viewModel()
+    private fun checkPasswordsMatch() =
+        if (viewModel.password.value != viewModel.confirmPassword.value) {
+            binding.confirmPasswordField.error = getString(R.string.password_not_match)
+        } else {
+            binding.confirmPasswordField.error = null
+        }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -50,14 +70,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             buildHyperlinkSpanString(
                 binding.checkboxTermsConditions.text.toString(),
-                termsAndConditionsHyperlink,
+                getString(R.string.terms_conds_text),
                 getString(R.string.terms_and_conditions_url),
                 binding.checkboxTermsConditions
             )
 
             buildHyperlinkSpanString(
                 binding.checkboxPrivacyPolicy.text.toString(),
-                privacyPolicyHyperlink,
+                getString(R.string.privacy_policy_text),
                 getString(R.string.privacy_policy_url),
                 binding.checkboxPrivacyPolicy
             )
@@ -65,28 +85,15 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         with(viewModel) {
             email.observeNonNull(this@SignUpFragment) {
-                if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
-                    binding.emailField.error = getString(R.string.incorrect_email_text)
-                } else {
-                    binding.emailField.error = null
-                }
+                validateEmail()
             }
 
             password.observeNonNull(this@SignUpFragment) {
-                if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
-                    binding.passwordField.error =
-                        getString(R.string.password_description)
-                } else {
-                    binding.passwordField.error = null
-                }
+                validatePassword()
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
-                if (password.value != it) {
-                    binding.confirmPasswordField.error = getString(R.string.password_not_match)
-                } else {
-                    binding.confirmPasswordField.error = null
-                }
+                checkPasswordsMatch()
             }
 
             isLoading.observeNonNull(this@SignUpFragment) {
@@ -138,28 +145,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         binding.signUpButton.setOnClickListener {
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
-                binding.emailField.error = getString(R.string.incorrect_email_text)
-            } else {
-                binding.emailField.error = null
-            }
-
-            if (!UtilFunctions.isValidField(
-                    PASSWORD_REGEX,
-                    viewModel.password.value ?: EMPTY_STRING
-                )
-            ) {
-                binding.passwordField.error =
-                    getString(R.string.password_description)
-            } else {
-                binding.passwordField.error = null
-            }
-
-            if (viewModel.password.value != viewModel.confirmPassword.value) {
-                binding.confirmPasswordField.error = getString(R.string.password_not_match)
-            } else {
-                binding.confirmPasswordField.error = null
-            }
+            validateEmail()
+            validatePassword()
+            checkPasswordsMatch()
 
             with(viewModel) {
                 if (termsCondition.value == true &&
@@ -183,35 +171,30 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     }
                 } else {
-                    if (termsCondition.value != true &&
+                    val dialogDescription = if (termsCondition.value != true &&
                         privacyPolicy.value != true
                     ) {
-                        requireContext().displayModalPopup(
-                            EMPTY_STRING,
-                            getString(
-                                R.string.accept_tc_pp,
-                                "$termsAndConditionsHyperlink & $privacyPolicyHyperlink"
-                            )
+                        getString(
+                            R.string.accept_tc_pp,
+                            "${getString(R.string.terms_conds_text)} & ${getString(R.string.privacy_policy_text)}"
                         )
                     } else {
                         if (termsCondition.value != true) {
-                            requireContext().displayModalPopup(
-                                EMPTY_STRING,
-                                getString(
-                                    R.string.accept_tc_pp,
-                                    termsAndConditionsHyperlink
-                                )
+                            getString(
+                                R.string.accept_tc_pp,
+                                getString(R.string.terms_conds_text)
                             )
                         } else {
-                            requireContext().displayModalPopup(
-                                EMPTY_STRING,
-                                getString(
-                                    R.string.accept_tc_pp,
-                                    privacyPolicyHyperlink
-                                )
+                            getString(
+                                R.string.accept_tc_pp,
+                                getString(R.string.privacy_policy_text)
                             )
                         }
                     }
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        dialogDescription
+                    )
                 }
             }
         }
