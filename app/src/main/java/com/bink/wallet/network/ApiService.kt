@@ -1,6 +1,9 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -68,5 +71,15 @@ interface ApiService {
     @DELETE("/ubiquity/payment_card/{payment_id}")
     fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
+    ): Deferred<ResponseBody>
+
+    @POST("/users/register")
+    fun signUpAsync(
+        @Body signUpRequest: SignUpRequest
+    ): Deferred<SignUpResponse>
+
+    @PUT("/users/me/settings")
+    fun checkMarketingPrefAsync(
+        @Body checkedOption: MarketingOption
     ): Deferred<ResponseBody>
 }
