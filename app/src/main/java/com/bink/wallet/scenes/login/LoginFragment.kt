@@ -53,9 +53,9 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         with(binding.forgotPassword) {
             text = content
             setOnClickListener {
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.not_implemented_yet_text)
+                findNavController().navigateIfAdded(
+                    this@LoginFragment,
+                    R.id.login_to_forgot_password
                 )
             }
         }

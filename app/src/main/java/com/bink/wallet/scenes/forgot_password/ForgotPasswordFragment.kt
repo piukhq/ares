@@ -22,6 +22,16 @@ class ForgotPasswordFragment :
             .build()
     }
 
+    private fun validateEmail() =
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(
+                viewModel.email.value ?: EMPTY_STRING
+            ).matches()
+        ) {
+            binding.emailText.error = getString(R.string.invalid_email_text)
+        } else {
+            binding.emailText.error = null
+        }
+
     override val layoutRes: Int = R.layout.forgot_password_fragment
 
     override val viewModel: ForgotPasswordViewModel by viewModel()
@@ -32,18 +42,14 @@ class ForgotPasswordFragment :
         binding.viewModel = viewModel
 
         viewModel.email.observeNonNull(this) {
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
-                binding.emailText.error = getString(R.string.invalid_email_text)
-            } else {
-                binding.emailText.error = null
-            }
+            validateEmail()
         }
 
         binding.buttonContinueEmail.setOnClickListener {
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(
-                    viewModel.email.value ?: EMPTY_STRING
-                ).matches()
-            ) {
+
+            validateEmail()
+
+            if (binding.emailText.error != null) {
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.invalid_email_text)
