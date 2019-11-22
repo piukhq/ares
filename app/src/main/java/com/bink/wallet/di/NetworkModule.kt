@@ -1,7 +1,6 @@
 package com.bink.wallet.di
 
 import android.content.Context
-import android.util.Log
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.EMPTY_STRING
