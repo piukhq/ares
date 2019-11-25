@@ -47,4 +47,10 @@ object LocalStoreUtils {
         return context.getSharedPreferences(PREF_FILE_NAME, 0)
     }
 
+    fun clearPreferences(context: Context) {
+        val editor = getSharedEditor(context)
+        editor.clear()
+        editor.commit()
+    }
+
 }

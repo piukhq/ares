@@ -126,6 +126,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         requireContext()
                     )
 
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_EMAIL,
+                        CredentialsUtils.encrypt(it.email ?: EMPTY_STRING),
+                        requireContext()
+                    )
+
                     marketingPref(
                         MarketingOption(
                             when (marketingMessages.value) {

@@ -87,6 +87,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     requireContext()
                 )
 
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    CredentialsUtils.encrypt(it.email ?: EMPTY_STRING),
+                    requireContext()
+                )
+
                 findNavController().navigateIfAdded(
                     this@LoginFragment,
                     R.id.global_to_home
