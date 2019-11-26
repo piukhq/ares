@@ -6,9 +6,15 @@ import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
-class SettingsViewModel constructor(var loginRepository: LoginRepository) :
+class SettingsViewModel constructor(
+    var loginRepository: LoginRepository,
+    var loyaltyWalletRepository: LoyaltyWalletRepository,
+    var paymentWalletRepository: PaymentWalletRepository
+) :
     BaseViewModel() {
 
     var loginData = MutableLiveData<LoginData>()
@@ -18,5 +24,7 @@ class SettingsViewModel constructor(var loginRepository: LoginRepository) :
 
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
+        loyaltyWalletRepository.clearMembershipCards()
+        paymentWalletRepository.clearPaymentCards()
     }
 }

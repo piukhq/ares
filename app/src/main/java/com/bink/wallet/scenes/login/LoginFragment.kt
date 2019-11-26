@@ -122,6 +122,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             if (binding.passwordField.error == null &&
                 binding.emailField.error == null
             ) {
+                binding.progressSpinner.visibility = View.VISIBLE
                 viewModel.logIn(
                     SignUpRequest(
                         email = viewModel.email.value,
