@@ -21,7 +21,6 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
-import kotlinx.android.synthetic.main.empty_loyalty_item.*
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -105,7 +104,11 @@ class PaymentCardWalletFragment :
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
                     binding.progressSpinner.visibility = View.GONE
 
-                    if (paymentCards.isNullOrEmpty()) {
+                    SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
+
+                    if (!SharedPreferenceManager.isPaymentJoinHidden &&
+                        paymentCards.isNullOrEmpty()
+                    ) {
                         showEmptyScreen()
                     } else {
                         hideEmptyScreen()
@@ -152,7 +155,7 @@ class PaymentCardWalletFragment :
             }
         }
 
-        close.setOnClickListener {
+        binding.emptyLayout.close.setOnClickListener {
             SharedPreferenceManager.isPaymentJoinHidden = true
             hideEmptyScreen()
         }

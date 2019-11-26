@@ -269,9 +269,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             } == null
                 })
 
-                if (!SharedPreferenceManager.isPaymentEmpty &&
-                    (cardsReceived.isNotEmpty() ||
-                            walletItems.isNotEmpty())
+                if (!SharedPreferenceManager.isPaymentJoinHidden &&
+                    SharedPreferenceManager.isPaymentEmpty &&
+                    (cardsReceived.isNotEmpty() || walletItems.isNotEmpty())
                 ) {
                     walletItems.add(Any())
                 }
