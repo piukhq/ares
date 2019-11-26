@@ -69,9 +69,7 @@ class SettingsFragment :
                 val email =
                     LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL, requireContext())
                         ?.let {
-                            CredentialsUtils.decrypt(
-                                it
-                            )
+                            it
                         }
 
                 val newItem =

@@ -4,7 +4,6 @@ import android.content.Context
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.CredentialsUtils
 import com.bink.wallet.utils.LocalStoreUtils
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
@@ -27,10 +26,10 @@ fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
-        val jwtToken = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN, context)?.let {
-            CredentialsUtils.decrypt(
-                it
-            )
+        val jwtToken = LocalStoreUtils.getAppSharedPref(
+            LocalStoreUtils.KEY_TOKEN, context
+        )?.let {
+            it
         }
 
         val request = chain.request().url().newBuilder().build()

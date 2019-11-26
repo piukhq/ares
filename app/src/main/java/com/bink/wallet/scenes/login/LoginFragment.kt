@@ -79,17 +79,15 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             logInResponse.observeNonNull(this@LoginFragment) {
-                CredentialsUtils.createNewKey()
-
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN,
-                    CredentialsUtils.encrypt(getString(R.string.token_api_v1, it.api_key)),
+                    getString(R.string.token_api_v1, it.api_key),
                     requireContext()
                 )
 
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_EMAIL,
-                    CredentialsUtils.encrypt(it.email ?: EMPTY_STRING),
+                    it.email ?: EMPTY_STRING,
                     requireContext()
                 )
 
