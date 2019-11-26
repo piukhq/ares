@@ -67,7 +67,7 @@ class SettingsFragment :
             val item = items.list[i]
             if (item.type == SettingsItemType.EMAIL_ADDRESS) {
                 val email =
-                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL, requireContext())
+                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
                         ?.let {
                             it
                         }
@@ -203,7 +203,7 @@ class SettingsFragment :
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
-            LocalStoreUtils.clearPreferences(requireContext())
+            LocalStoreUtils.clearPreferences()
             findNavController().navigateIfAdded(
                 this@SettingsFragment,
                 R.id.settings_to_onboarding

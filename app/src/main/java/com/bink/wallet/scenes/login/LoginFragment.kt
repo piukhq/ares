@@ -81,14 +81,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             logInResponse.observeNonNull(this@LoginFragment) {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN,
-                    getString(R.string.token_api_v1, it.api_key),
-                    requireContext()
+                    getString(R.string.token_api_v1, it.api_key)
                 )
 
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_EMAIL,
-                    it.email ?: EMPTY_STRING,
-                    requireContext()
+                    it.email ?: EMPTY_STRING
                 )
 
                 findNavController().navigateIfAdded(

@@ -35,7 +35,7 @@ class SplashFragment : Fragment() {
     }
 
     private fun getUnRootedDirections(): Int {
-        return when (context?.let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN, it) }) {
+        return when (context?.let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             true -> R.id.global_to_home
             else -> R.id.splash_to_onboarding
         }

@@ -15,17 +15,17 @@ object LocalStoreUtils {
 
     private lateinit var encryptedSharedPreferences: SharedPreferences
 
-    fun setAppSharedPref(secretKey: String, secret: String, context: Context) {
+    fun setAppSharedPref(secretKey: String, secret: String) {
         try {
-            val editor = getSharedEditor(context)
+            val editor = encryptedSharedPreferences.edit()
             editor.putString(secretKey, secret)
-            editor.commit()
+            editor.apply()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun getAppSharedPref(secretKey: String, context: Context): String? {
+    fun getAppSharedPref(secretKey: String): String? {
         try {
             return encryptedSharedPreferences.getString(secretKey, null)
         } catch (e: Exception) {
@@ -44,21 +44,14 @@ object LocalStoreUtils {
         )
     }
 
-    fun isLoggedIn(key: String, context: Context): Boolean {
+    fun isLoggedIn(key: String): Boolean {
         return encryptedSharedPreferences.contains(key)
     }
 
-    private fun getSharedEditor(context: Context?): SharedPreferences.Editor {
-        if (context == null) {
-            throw Exception("Context null Exception")
-        }
-        return encryptedSharedPreferences.edit()
-    }
-
-    fun clearPreferences(context: Context) {
-        val editor = getSharedEditor(context)
+    fun clearPreferences() {
+        val editor = encryptedSharedPreferences.edit()
         editor.clear()
-        editor.commit()
+        editor.apply()
     }
 
 }

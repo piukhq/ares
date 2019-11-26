@@ -43,7 +43,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
         loginData.value = LoginData(
             DEFAULT_LOGIN_ID,
             LocalStoreUtils.getAppSharedPref(
-                LocalStoreUtils.KEY_EMAIL, context
+                LocalStoreUtils.KEY_EMAIL
             ) ?: EMPTY_STRING
         )
     }
