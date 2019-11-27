@@ -6,11 +6,11 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.pll.PllRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
 class PaymentCardWalletViewModel(
-    private var pllRepository: PllRepository,
+    private var paymentWalletRepository: PaymentWalletRepository,
     private var loyaltyWalletRepository: LoyaltyWalletRepository
 ) : BaseViewModel() {
     val paymentCards = MutableLiveData<List<PaymentCard>>()
@@ -29,14 +29,14 @@ class PaymentCardWalletViewModel(
     }
 
     suspend fun getPaymentCards() {
-        pllRepository.getPaymentCards(
+        paymentWalletRepository.getPaymentCards(
             paymentCards,
             fetchError
         )
     }
 
     fun fetchLocalPaymentCards() {
-        pllRepository.getLocalPaymentCards(
+        paymentWalletRepository.getLocalPaymentCards(
             paymentCards,
             fetchError
         )
@@ -55,6 +55,6 @@ class PaymentCardWalletViewModel(
     }
 
     suspend fun deletePaymentCard(paymentCardId: String) {
-        pllRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
+        paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
     }
 }

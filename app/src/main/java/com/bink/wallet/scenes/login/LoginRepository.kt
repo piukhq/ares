@@ -107,4 +107,21 @@ class LoginRepository(
             }
         }
     }
+
+    fun logOut(
+        logOutResponse: MutableLiveData<ResponseBody>,
+        logOutErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.logOutAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    logOutResponse.value = response
+                } catch (e: Throwable) {
+                    logOutErrorResponse.value = e
+                }
+            }
+        }
+    }
 }
