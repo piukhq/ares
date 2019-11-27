@@ -79,12 +79,14 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             logInResponse.observeNonNull(this@LoginFragment) {
-                CredentialsUtils.createNewKey()
-
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN,
-                    CredentialsUtils.encrypt(getString(R.string.token_api_v1, it.api_key)),
-                    requireContext()
+                    getString(R.string.token_api_v1, it.api_key)
+                )
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    it.email ?: EMPTY_STRING
                 )
 
                 findNavController().navigateIfAdded(
@@ -120,6 +122,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             if (binding.passwordField.error == null &&
                 binding.emailField.error == null
             ) {
+                binding.progressSpinner.visibility = View.VISIBLE
                 viewModel.logIn(
                     SignUpRequest(
                         email = viewModel.email.value,

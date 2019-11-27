@@ -48,6 +48,18 @@ class LoyaltyWalletRepository(
         }
     }
 
+    fun clearMembershipCards() {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    membershipCardDao.deleteAllCards()
+                    membershipPlanDao.deleteAllPlans()
+                } catch (e: Throwable) {
+                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
 
     suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
         CoroutineScope(Dispatchers.IO).launch {

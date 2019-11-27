@@ -302,7 +302,7 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
-    <string name="could_not_add_card">Something went wrong adding the card, please try again</string>
+    <string name="could_not_add_card">Your selected activity cannot be performed at this time due to a connection issue</string>
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>
@@ -321,7 +321,7 @@
     <string name="page_3_description">Show your loyalty cards\' barcodes on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
-    <string name="join_card_description">Link this card to your payment cards to automatically collect rewards</string>
+    <string name="join_card_description">You will need to add at least one to collect rewards automatically</string>
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
@@ -360,5 +360,6 @@
     <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent</string>
     <string name="invalid_email_text">Invalid email</string>
     <string name="error_description">Something went wrong</string>
+    <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 </resources>
