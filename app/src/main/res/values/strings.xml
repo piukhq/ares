@@ -361,4 +361,5 @@
     <string name="invalid_email_text">Invalid email</string>
     <string name="error_description">Something went wrong</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
+    <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 </resources>
