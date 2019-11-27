@@ -318,7 +318,7 @@
     <string name="page_2_title">All you cards in one place</string>
     <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
     <string name="page_3_title">Never miss out</string>
-    <string name="page_3_description">Show your loyalty cards\' balances on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
+    <string name="page_3_description">Show your loyalty cards\' barcodes on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
     <string name="join_card_description">Link this card to your payment cards to automatically collect rewards</string>
@@ -328,5 +328,36 @@
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
-    <string name="_1234_mock_card_number">**** **** **** 1234</string>
+    <string name="_mock_card_ending">**** **** **** 1234</string>
+    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers and updates!</b> \n You can opt out at any time.]]></string>
+    <string name="password_not_match">Passwords do not match</string>
+    <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
+    <string name="incorrect_email_text">Invalid email address</string>
+    <string name="sign_up_description">All it takes is an email and password</string>
+    <string name="password_text">Password</string>
+    <string name="confirm_password_text">Confirm password</string>
+    <string name="T_C_accept_description">I accept Bink\'s Terms and Conditions</string>
+    <string name="privacy_policy_description">I accept Bink\'s Privacy Policy</string>
+    <string name="marketing_messages">I opt in to receive marketing messages</string>
+    <string name="token_api_v1">Token %1$s</string>
+    <string name="enter_email_text">Enter email address</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="registration_failed_text">Registration failed</string>
+    <string name="log_in_email_text">Log in with email</string>
+    <string name="log_in_screen_description">Welcome back!</string>
+    <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
+    <string name="accept_tc_pp">Please accept %1$s</string>
+    <string name="terms_conds_text">Terms and Conditions</string>
+    <string name="privacy_policy_text">Privacy Policy</string>
+    <string name="forgot_password_text"><u>Forgot password</u></string>
+
+    <!--  Forgot password screen  -->
+    <string name="forgot_password_title">Forgot password</string>
+    <string name="forgot_password_description">Please enter your email address and it is associated with a Bink account, then a password reset email will be sent.</string>
+    <string name="continue_text">Continue</string>
+    <string name="email_text">Email</string>
+    <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent</string>
+    <string name="invalid_email_text">Invalid email</string>
+    <string name="error_description">Something went wrong</string>
 </resources>

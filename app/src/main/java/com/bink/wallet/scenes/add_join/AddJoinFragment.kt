@@ -69,7 +69,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.closeButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_join_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         binding.addJoinReward.setOnClickListener {

@@ -6,8 +6,8 @@ import android.content.SharedPreferences
 object LocalStoreUtils {
 
     private const val PREF_FILE_NAME = "com.bink.wallet"
-    const val KEY_SECRET = "api_secret"
-    const val KEY_JWT = "kwt_token"
+    const val KEY_EMAIL = "encrypted_email"
+    const val KEY_TOKEN = "encrypted_token"
 
     fun setAppSharedPref(secretKey: String, secret: String, context: Context) {
         try {
@@ -27,6 +27,10 @@ object LocalStoreUtils {
             e.printStackTrace()
         }
         return null
+    }
+
+    fun isLoggedIn(key: String, context: Context): Boolean {
+        return getSharedPreference(context).contains(key)
     }
 
     private fun getSharedEditor(context: Context?): SharedPreferences.Editor {
