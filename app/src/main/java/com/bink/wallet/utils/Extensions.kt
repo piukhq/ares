@@ -29,15 +29,35 @@ fun NavController.navigateIfAdded(fragment: Fragment, navDirections: NavDirectio
     }
 }
 
-fun Context.displayModalPopup(title: String?, message: String?) {
+fun Context.displayModalPopup(
+    title: String?,
+    message: String?,
+    okAction: () -> Unit = {},
+    buttonText: Int = R.string.ok,
+    hasNegativeButton: Boolean = false
+) {
     val builder = AlertDialog.Builder(this)
+
     title?.let {
         builder.setTitle(title)
     }
+
     message?.let {
         builder.setMessage(message)
     }
-    builder.setNeutralButton(R.string.ok) { _, _ -> }
+
+    builder.setNeutralButton(buttonText) { _, _ ->
+        okAction()
+    }
+
+    if (hasNegativeButton) {
+        builder.setNegativeButton(R.string.cancel_text) { dialogInterface, _ ->
+            dialogInterface.cancel()
+        }
+    }
+
+    builder.setOnCancelListener {}
+
     builder.create().show()
 }
 

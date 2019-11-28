@@ -58,7 +58,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
 
         binding.continueWithFacebook.setOnClickListener {
@@ -69,10 +69,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.signUpWithEmail.setOnClickListener {
-            requireContext().displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
 
         binding.pager.addOnPageChangeListener(object :
@@ -104,7 +101,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     pager.setCurrentItem(FIRST_PAGE_INDEX, true)
                     currentPage = FIRST_PAGE_INDEX
                 } else {
-                    pager.setCurrentItem(currentPage++, true)
+                    pager?.setCurrentItem(currentPage++, true)
                 }
             }
         }

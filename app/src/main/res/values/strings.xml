@@ -190,6 +190,9 @@
     <!-- 1.7, 1.9, 1.11 replacement -->
     <string name="title_lcd_pending">Request pending</string>
     <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn’t take long.</string>
+    <!-- 1.5 -->
+    <string name="title_1_5">Transaction history not supported</string>
+    <string name="description_1_5">Unfortunately we\'re not able to show your points balance and transaction history for this brand just yet.</string>
 
     <!-- 2.4 -->
     <string name="title_2_4">Error</string>
@@ -204,8 +207,8 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="register_ghost_card_title">Register your card</string>
     <string name="register_ghost_card_button">Register card</string>
-    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points</string>
-    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points.</string>
+    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
 
     <!-- Pll Screen -->
     <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
@@ -216,8 +219,8 @@
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text"><![CDATA[I authorise MasterCard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction for MasterCard, Visa and American Express to share such transaction details with Loyalty Angels Limited to enable my card-linked offer(s) and target offers that may be of interest to me. For information about Loyalty Angels Limited privacy practices, please see our <a href=\"https://bink.com/privacy-policy/\">Privacy Policy</a>. You may opt-out of transaction monitoring on the payment card(s) you entered at any time by deleting your payment card from your Bink wallet.]]></string>
     <string name="terms_and_conditions_title">Terms and conditions</string>
-    <string name="accept_button_text">Accept</string>
-    <string name="decline_button_text">Decline</string>
+    <string name="accept_button_text">I accept</string>
+    <string name="decline_button_text">I decline</string>
     <string name="popular_text">Popular</string>
 
     <!-- Settings screen -->
@@ -271,7 +274,8 @@
     <string name="cannot_complete_registration">Cannot complete the registration</string>
 
     <!-- Payment card wallet-->
-    <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
+    <string name="payment_card_linked_status">Linked to %1$d loyalty card</string>
+    <string name="payment_cards_linked_status">Linked to %1$d loyalty cards</string>
     <string name="payment_card_not_linked">Not linked</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="no_account_text">I don\'t have an account</string>
@@ -302,7 +306,7 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
-    <string name="could_not_add_card">Something went wrong adding the card, please try again</string>
+    <string name="could_not_add_card">Your selected activity cannot be performed at this time due to a connection issue</string>
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Native join unavailable</string>
@@ -318,15 +322,48 @@
     <string name="page_2_title">All you cards in one place</string>
     <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
     <string name="page_3_title">Never miss out</string>
-
-
-    <string name="page_3_description">Show your loyalty cards\' balances on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
+    <string name="page_3_description">Show your loyalty cards\' barcodes on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
-    <string name="join_card_description">Link this card to your payment cards to automatically collect rewards</string>
+    <string name="join_card_description">You will need to add at least one to collect rewards automatically</string>
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
+    <string name="card_name">Card name</string>
+    <string name="_mock_card_ending">**** **** **** 1234</string>
+    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers and updates!</b> \n You can opt out at any time.]]></string>
+    <string name="password_not_match">Passwords do not match</string>
+    <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
+    <string name="incorrect_email_text">Invalid email address</string>
+    <string name="sign_up_description">All it takes is an email and password</string>
+    <string name="password_text">Password</string>
+    <string name="confirm_password_text">Confirm password</string>
+    <string name="T_C_accept_description">I accept Bink\'s Terms and Conditions</string>
+    <string name="privacy_policy_description">I accept Bink\'s Privacy Policy</string>
+    <string name="marketing_messages">I opt in to receive marketing messages</string>
+    <string name="token_api_v1">Token %1$s</string>
+    <string name="enter_email_text">Enter email address</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="registration_failed_text">Registration failed</string>
+    <string name="log_in_email_text">Log in with email</string>
+    <string name="log_in_screen_description">Welcome back!</string>
+    <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
+    <string name="accept_tc_pp">Please accept %1$s</string>
+    <string name="terms_conds_text">Terms and Conditions</string>
+    <string name="privacy_policy_text">Privacy Policy</string>
+    <string name="forgot_password_text"><u>Forgot password</u></string>
+
+    <!--  Forgot password screen  -->
+    <string name="forgot_password_title">Forgot password</string>
+    <string name="forgot_password_description">Please enter your email address and it is associated with a Bink account, then a password reset email will be sent.</string>
+    <string name="continue_text">Continue</string>
+    <string name="email_text">Email</string>
+    <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent</string>
+    <string name="invalid_email_text">Invalid email</string>
+    <string name="error_description">Something went wrong</string>
+    <string name="log_out_confirmation">Are you sure you want to log out?</string>
+    <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 </resources>

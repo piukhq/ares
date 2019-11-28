@@ -1,21 +1,19 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.data.*
-import com.bink.wallet.data.LoginDataDao
-import com.bink.wallet.data.MembershipCardDao
-import com.bink.wallet.data.MembershipPlanDao
-import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.scenes.SignUpViewModel
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
+import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
@@ -26,8 +24,8 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
-import com.bink.wallet.scenes.pll.PllRepository
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
@@ -78,10 +76,14 @@ val viewModelModules = module {
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get(), get()) }
+
+    viewModel { SignUpViewModel(get()) }
 
     single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
     viewModel { CardTermsAndConditionsViewModel(get()) }
+
+    viewModel { ForgotPasswordViewModel(get()) }
 }
 
 fun provideLoginRepository(
@@ -110,7 +112,7 @@ fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndCon
 fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao
-): PllRepository = PllRepository(restApiService, paymentCardDao)
+): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
 
 fun provideCardTermsAndConditionsRepository(
     restApiService: ApiService,

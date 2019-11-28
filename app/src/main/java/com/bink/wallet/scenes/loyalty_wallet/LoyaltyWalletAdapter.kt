@@ -110,7 +110,7 @@ class LoyaltyWalletAdapter(
 
         override fun bind(item: Any) {
             with(binding) {
-                close.setOnClickListener {
+                dismissBanner.setOnClickListener {
                     SharedPreferenceManager.isPaymentJoinHidden = true
                     onRemoveListener(item)
                 }
@@ -137,14 +137,16 @@ class LoyaltyWalletAdapter(
                         MembershipCardStatus.AUTHORISED.status -> {
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
-                            val balance = item.balances?.first()
-                            when (balance?.prefix != null) {
-                                true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
-                                else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                            if (!item.balances.isNullOrEmpty()) {
+                                val balance = item.balances?.first()
+                                when (balance?.prefix != null) {
+                                    true ->
+                                        loyaltyValue.text =
+                                            balance?.prefix?.plus(balance.value)
+                                    else -> {
+                                        loyaltyValue.text = balance?.value
+                                        loyaltyValueExtra.text = balance?.suffix
+                                    }
                                 }
                             }
                         }
@@ -166,7 +168,7 @@ class LoyaltyWalletAdapter(
                         }
                     }
                     linkStatusWrapper.visibility = View.VISIBLE
-                    with (item.getLinkStatus()) {
+                    with(item.getLinkStatus()) {
                         if (linkImage == 0) {
                             linkStatusWrapper.visibility = View.GONE
                         } else {
@@ -190,7 +192,7 @@ class LoyaltyWalletAdapter(
         override fun bind(item: MembershipPlan) {
             with(binding) {
                 membershipPlan = item
-                close.setOnClickListener {
+                dismissBanner.setOnClickListener {
                     onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
                 }
                 joinCardMainLayout.setOnClickListener { onClickListener(item) }

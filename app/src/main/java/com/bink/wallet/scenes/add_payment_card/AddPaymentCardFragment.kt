@@ -101,7 +101,7 @@ class AddPaymentCardFragment :
         }
         with (binding.cardName) {
             addTextChangedListener(nameTextWatcher)
-            setOnFocusChangeListener { view, focus ->
+            setOnFocusChangeListener { _, focus ->
                 if (!focus) {
                     binding.cardNameInputLayout.error =
                         if (binding.cardName.text.toString().isEmpty()) {
@@ -152,7 +152,7 @@ class AddPaymentCardFragment :
         }
     }
 
-    fun cardExpiryErrorCheck(view: View): String {
+    private fun cardExpiryErrorCheck(view: View): String {
         with ((view as EditText).text.toString()) {
             if (!dateValidation()) {
                 return getString(R.string.incorrect_card_expiry)
