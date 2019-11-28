@@ -345,9 +345,9 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
                 paymentCard.membership_cards.filter { it.active_link == true }.size
 
             context.getString(
-                when (linkedCardsNumber > 1) {
-                    true -> R.string.payment_cards_linked_status
-                    else -> R.string.payment_card_linked_status
+                when (linkedCardsNumber) {
+                    1 -> R.string.payment_card_linked_status
+                    else -> R.string.payment_cards_linked_status
                 },
                 linkedCardsNumber
             )
