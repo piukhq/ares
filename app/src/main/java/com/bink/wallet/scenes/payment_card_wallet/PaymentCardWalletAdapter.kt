@@ -26,7 +26,6 @@ class PaymentCardWalletAdapter(
             val binding = EmptyLoyaltyItemBinding.inflate(inflater)
             binding.apply {
                 close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
                     notifyDataSetChanged()
                 }
             }

@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -269,7 +270,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             } == null
                 })
 
-                if (!SharedPreferenceManager.isPaymentJoinHidden &&
+                if (cardsReceived.firstOrNull { it.id == JOIN_CARD } == null &&
                     (cardsReceived.isNotEmpty() ||
                             walletItems.isNotEmpty())
                 ) {
@@ -287,7 +288,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun onBannerRemove(item: Any) {
         when (item) {
             is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
-            else -> SharedPreferenceManager.isPaymentJoinHidden = true
+            else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
         }
         viewModel.fetchDismissedCards()
     }

@@ -41,3 +41,4 @@ const val PAGE_3 = "Page3"
 const val ONBOARDING_SCROLL_DURATION_SECONDS = 12000L
 
 const val PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$"
+const val JOIN_CARD = "JOIN_CARD"

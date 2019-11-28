@@ -111,7 +111,6 @@ class LoyaltyWalletAdapter(
         override fun bind(item: Any) {
             with(binding) {
                 close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
                     onRemoveListener(item)
                 }
 
