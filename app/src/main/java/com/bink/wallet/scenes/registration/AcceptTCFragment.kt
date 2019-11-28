@@ -104,9 +104,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         viewModel.facebookAuthResult.observeNonNull(this) {
             runBlocking {
                 LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_JWT,
-                    getString(R.string.token_api_v1, it.api_key),
-                    requireContext()
+                    LocalStoreUtils.KEY_TOKEN,
+                    getString(R.string.token_api_v1, it.api_key)
                 )
             }
             if (binding.acceptMarketing.isChecked) {
