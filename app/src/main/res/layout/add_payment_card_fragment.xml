@@ -19,11 +19,10 @@
         <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -35,8 +34,7 @@
                         android:id="@+id/top_layout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/payment_card_height"
-                        android:background="@drawable/ic_card_payment_bkgr_visa"
-                        >
+                        android:background="@drawable/ic_card_payment_bkgr_visa">
 
                     <ImageView
                             android:id="@+id/top_layout_brand"
@@ -64,7 +62,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
                             android:layout_marginTop="@dimen/payment_card_logo_image_margin"
-                            android:text="Card name"
+                            android:fontFamily="@font/nunito_sans_bold"
+                            android:text="@string/card_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_description_big"
                             android:textStyle="bold"
@@ -77,7 +76,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/payment_card_logo_image_margin"
                             android:layout_marginTop="@dimen/payment_card_number_top_margin"
-                            android:text="**** **** **** 1234"
+                            android:fontFamily="@font/nunito_sans_bold"
+                            android:text="@string/_mock_card_ending"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_description_big"
                             android:textStyle="bold"
@@ -90,40 +90,43 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/add_payment_card"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_title_big"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 <TextView
                         android:id="@+id/add_card_subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/enter_your_details_below_to_add_your_payment_card_into_bink"
-                        android:textSize="@dimen/text_size_title_big"
-                        />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/size_sub_headline" />
 
                 <TextView
                         android:id="@+id/card_number_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/card_number"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/card_number_input_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true"
-                        >
+                        app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/card_number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_sans_light"
                             android:hint="@string/card_number"
                             android:imeOptions="actionNext"
                             android:inputType="number"
@@ -136,22 +139,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/expiry"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/card_expiry_input_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true"
-                        >
+                        app:errorEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/card_expiry"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_sans_light"
                             android:hint="@string/expiry_format"
                             android:imeOptions="actionNext"
                             android:inputType="date"
@@ -165,25 +169,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/payment_card_spacing_margin"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/name_on_card"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/card_name_input_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true"
-                        >
+                        app:errorEnabled="true">
+
                     <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/card_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:minLines="2"
+                            android:fontFamily="@font/nunito_sans_light"
                             android:hint="@string/name_on_card"
                             android:imeOptions="actionDone"
-                            android:inputType="textCapCharacters" />
+                            android:inputType="textVisiblePassword"
+                            android:digits="@string/only_letters_space"
+                            android:minLines="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -191,30 +198,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_size_large"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:text="@string/privacy_and_security"
                         android:textColor="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_big"
-                        />
-                <TextView
-                        android:id="@+id/more_info_link"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_large"
-                        android:text="@string/more_information"
-                        android:textColor="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_big"
-                        />
+                        android:textSize="@dimen/text_size_description_big" />
 
                 <Button
                         android:id="@+id/add_button"
                         style="@style/RoundedGradientButton"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/margin_padding_size_large"
-                        android:layout_marginBottom="@dimen/margin_padding_size_large"
                         android:layout_marginStart="@dimen/custom_text_card_margin"
+                        android:layout_marginTop="@dimen/margin_padding_size_large"
                         android:layout_marginEnd="@dimen/custom_text_card_margin"
+                        android:layout_marginBottom="@dimen/margin_padding_size_large"
+                        android:fontFamily="@font/nunito_sans_bold"
                         android:text="@string/add"
-                        />
+                        android:textAllCaps="false" />
             </LinearLayout>
         </ScrollView>
 

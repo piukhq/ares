@@ -1,7 +1,10 @@
 package com.bink.wallet.modal.generic
 
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
@@ -27,9 +30,9 @@ open class GenericModalFragment :
         val scrollBounds = Rect()
         binding.screenScrollView.getHitRect(scrollBounds)
         if (binding.title.getLocalVisibleRect(scrollBounds)) {
-            binding.toolbar.title = ""
+            binding.titleToolbar.text = ""
         } else {
-            binding.toolbar.title = binding.title.text
+            binding.titleToolbar.text = binding.title.text
         }
     }
 
@@ -79,7 +82,14 @@ open class GenericModalFragment :
             binding.toolbar.setNavigationIcon(parameters.topBarIconId)
         }
         binding.title.text = parameters.title
-        binding.description.text = parameters.description
+        binding.description.text =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                Html.fromHtml(parameters.description)
+            }
+        binding.description.movementMethod = LinkMovementMethod.getInstance()
+
         if (parameters.firstButtonText.isNotEmpty()) {
             binding.firstButton.visibility = View.VISIBLE
             binding.firstButton.text = parameters.firstButtonText

@@ -11,6 +11,7 @@ import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -68,7 +69,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.closeButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_join_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         binding.addJoinReward.setOnClickListener {
@@ -97,13 +98,14 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
-            if (currentMembershipPlan.account?.enrol_fields!!.isEmpty()) {
+            if (currentMembershipPlan.feature_set?.linking_support != null &&
+                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     getString(R.string.native_join_unavailable_title),
                     getString(R.string.native_join_unavailable_text)
                 )
-                if (currentMembershipPlan.account.plan_url?.isNotEmpty()!!) {
+                if (currentMembershipPlan.account?.plan_url?.isNotEmpty()!!) {
                     genericModalParameters.firstButtonText =
                         getString(R.string.native_join_unavailable_button_text)
                     genericModalParameters.link =

@@ -5,10 +5,11 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.pll.PllRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
-class PaymentCardsDetailsViewModel(private var pllRepository: PllRepository) : BaseViewModel() {
+class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentWalletRepository) :
+    BaseViewModel() {
 
     var paymentCard = MutableLiveData<PaymentCard>()
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
@@ -21,14 +22,19 @@ class PaymentCardsDetailsViewModel(private var pllRepository: PllRepository) : B
     var deleteError = MutableLiveData<Throwable>()
 
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
-        pllRepository.linkPaymentCard(cardId, paymentCardId, linkedPaymentCard, linkError)
+        paymentWalletRepository.linkPaymentCard(cardId, paymentCardId, linkedPaymentCard, linkError)
     }
 
     suspend fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
-        pllRepository.unlinkPaymentCard(paymentCardId, cardId, unlinkError, unlinkedRequestBody)
+        paymentWalletRepository.unlinkPaymentCard(
+            paymentCardId,
+            cardId,
+            unlinkError,
+            unlinkedRequestBody
+        )
     }
 
     suspend fun deletePaymentCard(paymentCardId: String) {
-        pllRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
+        paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
     }
 }

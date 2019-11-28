@@ -21,6 +21,7 @@
     <color name="black">#000000</color>
     <color name="gray_inactive">#d3d3d3</color>
     <color name="white_transparent">#00ffffff</color>
+    <color name="white_transparent_80">#ddffffff</color>
     <color name="white">#ffffffff</color>
     <color name="expired_background">#ccffff</color>
 
@@ -33,4 +34,5 @@
     <color name="amex_left">#006bcd</color>
     <color name="unknown_right">#b46fea</color>
     <color name="unknown_left">#4371fe</color>
+    <color name="white_50_alpha">#B3FFFFFF</color>
 </resources>

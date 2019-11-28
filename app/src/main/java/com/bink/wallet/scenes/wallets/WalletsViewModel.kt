@@ -6,11 +6,11 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.pll.PllRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 
 class WalletsViewModel(
     private var repository: LoyaltyWalletRepository,
-    private var pllRepository: PllRepository
+    private var paymentWalletRepository: PaymentWalletRepository
 ) : BaseViewModel() {
 
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
@@ -31,7 +31,7 @@ class WalletsViewModel(
     }
 
     suspend fun fetchPaymentCards() {
-        pllRepository.getPaymentCards(
+        paymentWalletRepository.getPaymentCards(
             paymentCards,
             fetchError
         )

@@ -14,17 +14,14 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.SignUpFormType
-import com.bink.wallet.utils.getElapsedTime
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 import java.util.*
 
 class LoyaltyCardDetailsFragment :
@@ -48,7 +45,7 @@ class LoyaltyCardDetailsFragment :
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.detail_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         setLoadingState(true)
@@ -95,18 +92,16 @@ class LoyaltyCardDetailsFragment :
 
 
         val titleMessage =
-            if (viewModel.membershipPlan.value?.account?.plan_name_card == null) {
-                getString(R.string.delete_card)
-            } else {
-                viewModel.membershipPlan.value?.account?.plan_name_card
-            }
-
+            viewModel.membershipPlan.value?.account?.plan_name_card
+                ?: getString(R.string.delete_card_ending)
 
         binding.footerDelete.binding.title.text =
             getString(
                 R.string.delete_card_plan,
                 titleMessage
             )
+        binding.footerDelete.binding.description.text =
+            getString(R.string.remove_card)
 
 
         val aboutTitle =
@@ -151,7 +146,6 @@ class LoyaltyCardDetailsFragment :
             (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
                     !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())
         ) {
-
             binding.cardHeader.setOnClickListener {
                 val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
                     viewModel.membershipPlan.value?.let { plan ->
@@ -221,6 +215,18 @@ class LoyaltyCardDetailsFragment :
         setPointsModuleClickListener()
         setLinkModuleClickListener()
 
+        binding.footerSecurity.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToSecurity(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        getString(R.string.security_and_privacy_title),
+                        getString(R.string.security_and_privacy_copy)
+                    )
+                )
+            findNavController().navigateIfAdded(this, action)
+        }
+
         binding.footerDelete.setOnClickListener { footerView ->
             val builder = AlertDialog.Builder(context)
             var dialog: AlertDialog? = null
@@ -232,12 +238,28 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        Snackbar.make(footerView, error, Snackbar.LENGTH_SHORT).show()
-                        dialog?.dismiss()
+                        with (viewModel.deleteError) {
+                            if (value is HttpException) {
+                                val error = value as HttpException
+                                requireContext().displayModalPopup(
+                                    getString(R.string.title_2_4),
+                                    getString(
+                                        R.string.description_2_4,
+                                        error.code().toString(),
+                                        error.localizedMessage
+                                    )
+                                )
+                            } else {
+                                requireContext().displayModalPopup(
+                                    getString(R.string.title_2_4),
+                                    getString(R.string.description_2_4)
+                                )
+                            }
+                        }
                     }
                     viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
                         dialog?.dismiss()
-                        findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                        findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
                 } else {
                     showNoInternetConnectionDialog()
@@ -309,20 +331,26 @@ class LoyaltyCardDetailsFragment :
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                val balance = viewModel.membershipCard.value?.balances?.first()
-                setBalanceText(balance)
-                val updateTime = balance?.updated_at
-                val currentTime = Calendar.getInstance().timeInMillis / 1000
-                updateTime?.let {
-                    val timeSinceUpdate = currentTime - it
-                    binding.pointsDescription.text =
-                        timeSinceUpdate.getElapsedTime(requireContext())
+                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    val balance = viewModel.membershipCard.value?.balances?.first()
+                    setBalanceText(balance)
+                    val updateTime = balance?.updated_at
+                    val currentTime = Calendar.getInstance().timeInMillis / 1000
+                    updateTime?.let {
+                        val timeSinceUpdate = currentTime - it
+                        binding.pointsDescription.text =
+                            timeSinceUpdate.getElapsedTime(requireContext())
+                    }
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                val balance = viewModel.membershipCard.value?.balances?.first()
-                if (balance != null) {
-                    setBalanceText(balance)
+                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    val balance = viewModel.membershipCard.value?.balances?.first()
+                    if (balance != null) {
+                        setBalanceText(balance)
+                    } else {
+                        binding.pointsText.text = getString(R.string.points_signing_up)
+                    }
                 } else {
                     binding.pointsText.text = getString(R.string.points_signing_up)
                 }
@@ -430,15 +458,7 @@ class LoyaltyCardDetailsFragment :
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
-                    val directions =
-                        LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                getString(R.string.title_1_7),
-                                getString(R.string.description_1_7)
-                            )
-                        )
-                    findNavController().navigateIfAdded(this, directions)
+                    pendingCardStatusModal()
                 }
                 LinkStatus.STATUS_UNLINKABLE -> {
                     val directions =
@@ -455,6 +475,18 @@ class LoyaltyCardDetailsFragment :
                 }
             }
         }
+    }
+
+    private fun pendingCardStatusModal() {
+        val directions =
+            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.title_lcd_pending),
+                    getString(R.string.description_lcd_pending)
+                )
+            )
+        findNavController().navigateIfAdded(this, directions)
     }
 
     private fun setPointsModuleClickListener() {
@@ -486,47 +518,8 @@ class LoyaltyCardDetailsFragment :
                         }
                     action.let { findNavController().navigateIfAdded(this, action) }
                 }
-                LoginStatus.STATUS_LOGIN_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_7),
-                        getString(R.string.description_1_7)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
-                }
-                LoginStatus.STATUS_SIGN_UP_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_9),
-                        getString(R.string.description_1_9)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
-                }
-                LoginStatus.STATUS_REGISTER_GHOST_CARD_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_11),
-                        getString(R.string.description_1_11)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                LoginStatus.STATUS_PENDING -> {
+                    pendingCardStatusModal()
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(

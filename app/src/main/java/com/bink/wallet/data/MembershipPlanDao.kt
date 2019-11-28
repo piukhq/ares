@@ -16,4 +16,7 @@ interface MembershipPlanDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun storeAll(plans: List<MembershipPlan>)
+
+    @Query("DELETE FROM membership_card ")
+    suspend fun deleteAllPlans()
 }
