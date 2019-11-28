@@ -12,10 +12,14 @@ object SharedPreferenceManager {
     //----- KEYS -----
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
     private const val IS_LOYALTY_WALLET = "isLoyaltyWalletActive"
+    private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinHidden"
+    private const val IS_PAYMENT_EMPTY_KEY = "isPaymentEmpty"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
     private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
+    private val IS_PAYMENT_JOIN_HIDDEN = Pair(IS_PAYMENT_JOIN_KEY, false)
+    private val IS_PAYMENT_EMPTY = Pair(IS_PAYMENT_EMPTY_KEY, false)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
@@ -37,5 +41,17 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(IS_LOYALTY_SELECTED.first, IS_LOYALTY_SELECTED.second)
         set(value) = preferences.edit {
             it.putBoolean(IS_LOYALTY_SELECTED.first, value)
+        }
+
+    var isPaymentJoinHidden: Boolean
+        get() = preferences.getBoolean(IS_PAYMENT_JOIN_HIDDEN.first, IS_PAYMENT_JOIN_HIDDEN.second)
+        set(value) = preferences.edit {
+            it.putBoolean(IS_PAYMENT_JOIN_HIDDEN.first, value)
+        }
+
+    var isPaymentEmpty: Boolean
+        get() = preferences.getBoolean(IS_PAYMENT_EMPTY.first, IS_PAYMENT_EMPTY.second)
+        set(value) = preferences.edit {
+            it.putBoolean(IS_PAYMENT_EMPTY.first, value)
         }
 }
