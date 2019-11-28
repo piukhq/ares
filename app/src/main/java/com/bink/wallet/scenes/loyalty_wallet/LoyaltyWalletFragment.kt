@@ -81,7 +81,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-
                     walletItems[position].let {
                         if (it is MembershipCard)
                             deleteDialog(it, position)
@@ -239,7 +238,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.progressSpinner.visibility = View.INVISIBLE
         binding.swipeLayout.isRefreshing = false
         super.onPause()
-
     }
 
     private fun merchantNoLoyalty(
@@ -270,8 +268,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 })
 
                 if (!SharedPreferenceManager.isPaymentJoinHidden &&
-                    (cardsReceived.isNotEmpty() ||
-                            walletItems.isNotEmpty())
+                    SharedPreferenceManager.isPaymentEmpty &&
+                    (cardsReceived.isNotEmpty() || walletItems.isNotEmpty())
                 ) {
                     walletItems.add(Any())
                 }
