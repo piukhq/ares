@@ -314,11 +314,9 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
             text =
                 this.context.getString(R.string.description_login_unavailable)
-        LoginStatus.STATUS_LOGIN_PENDING ->
+        LoginStatus.STATUS_PENDING ->
             text = this.context.getString(R.string.description_text)
-        LoginStatus.STATUS_SIGN_UP_PENDING ->
-            text = this.context.getString(R.string.description_text)
-        else -> text = this.context.getString(R.string.description_text)
+        else -> text = this.context.getString(R.string.empty_string)
     }
 }
 
@@ -342,10 +340,19 @@ fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
 fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
     text = when (!paymentCard.membership_cards.isNullOrEmpty() &&
             paymentCard.membership_cards.any { it.active_link == true }) {
-        true -> context.getString(
-            R.string.payment_card_linked_status,
-            paymentCard.membership_cards.filter { it.active_link == true }.size
-        )
+        true -> {
+            val linkedCardsNumber =
+                paymentCard.membership_cards.filter { it.active_link == true }.size
+
+            context.getString(
+                when (linkedCardsNumber) {
+                    1 -> R.string.payment_card_linked_status
+                    else -> R.string.payment_cards_linked_status
+                },
+                linkedCardsNumber
+            )
+        }
+
         false -> context.getString(R.string.payment_card_not_linked)
     }
 }
@@ -365,9 +372,8 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
     text = when (loginStatus) {
         LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> this.context.getString(R.string.transaction_not_supported_title)
         LoginStatus.STATUS_LOGIN_UNAVAILABLE -> this.context.getString(R.string.transaction_history_not_supported)
-        LoginStatus.STATUS_LOGIN_PENDING -> this.context.getString(R.string.log_in_pending)
-        LoginStatus.STATUS_SIGN_UP_PENDING -> this.context.getString(R.string.sign_up_pending)
-        else -> this.context.getString(R.string.register_gc_pending)
+        LoginStatus.STATUS_PENDING -> this.context.getString(R.string.card_status_pending)
+        else -> this.context.getString(R.string.empty_string)
     }
 }
 

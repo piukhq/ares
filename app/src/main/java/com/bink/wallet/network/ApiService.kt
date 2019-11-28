@@ -1,6 +1,10 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -19,6 +23,11 @@ interface ApiService {
         @Body loginResponse: LoginResponse
     ): Deferred<LoginResponse>
 
+    @POST("/users/forgotten_password/")
+    fun forgotPasswordAsync(
+        @Body forgotPasswordRequest: ForgotPasswordRequest
+    ): Deferred<ResponseBody>
+
     @GET("/ubiquity/membership_cards")
     fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
 
@@ -26,7 +35,9 @@ interface ApiService {
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
     @POST("/ubiquity/payment_cards")
-    fun addPaymentCardAsync(@Body cardAdd: PaymentCardAdd): Deferred<PaymentCard>
+    fun addPaymentCardAsync(
+        @Body cardAdd: PaymentCardAdd
+    ): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
     fun linkToPaymentCardAsync(
@@ -69,4 +80,22 @@ interface ApiService {
     fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
     ): Deferred<ResponseBody>
+
+    @POST("/users/register")
+    fun signUpAsync(
+        @Body signUpRequest: SignUpRequest
+    ): Deferred<SignUpResponse>
+
+    @PUT("/users/me/settings")
+    fun checkMarketingPrefAsync(
+        @Body checkedOption: MarketingOption
+    ): Deferred<ResponseBody>
+
+    @POST("/users/login")
+    fun logInAsync(
+        @Body signUpRequest: SignUpRequest
+    ): Deferred<SignUpResponse>
+
+    @POST("/users/me/logout")
+    fun logOutAsync(): Deferred<ResponseBody>
 }
