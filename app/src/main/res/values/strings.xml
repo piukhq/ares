@@ -271,7 +271,8 @@
     <string name="cannot_complete_registration">Cannot complete the registration</string>
 
     <!-- Payment card wallet-->
-    <string name="payment_card_linked_status">Linked to %1$d loyalty card(s)</string>
+    <string name="payment_card_linked_status">Linked to %1$d loyalty card</string>
+    <string name="payment_cards_linked_status">Linked to %1$d loyalty cards</string>
     <string name="payment_card_not_linked">Not linked</string>
     <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
     <string name="no_account_text">I don\'t have an account</string>
