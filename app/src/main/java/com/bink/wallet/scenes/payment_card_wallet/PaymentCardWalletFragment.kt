@@ -4,7 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +33,10 @@ class PaymentCardWalletFragment :
             .build()
     }
 
+    private val walletItems = ArrayList<Any>()
+
+    val walletAdapter = PaymentCardWalletAdapter()
+
     override val layoutRes: Int
         get() = R.layout.payment_card_wallet_fragment
 
@@ -46,22 +50,13 @@ class PaymentCardWalletFragment :
                 viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
                 direction == ItemTouchHelper.LEFT
             ) {
-                viewModel.paymentCards.value?.get(
-                    position - isJoinCardHiddenCount()
-                )?.let { deleteDialog(it) }
+                viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
             }
             if (direction == ItemTouchHelper.RIGHT) {
                 binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
             }
         }
     }
-
-    private fun isJoinCardHiddenCount() =
-        if (SharedPreferenceManager.isPaymentJoinHidden) {
-            0
-        } else {
-            1
-        }
 
     fun deleteDialog(paymentCard: PaymentCard) {
         val dialog: AlertDialog
@@ -112,23 +107,29 @@ class PaymentCardWalletFragment :
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
                     binding.progressSpinner.visibility = View.GONE
+
+                    SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
+
+                    walletItems.clear()
+
+                    if (!SharedPreferenceManager.isPaymentJoinHidden) {
+                        walletItems.add(Any())
+                    }
+
+                    walletAdapter.onClickListener = {
+                        clickHandler(it, plans, cards)
+                    }
+
+                    walletAdapter.onRemoveListener = {
+                        onBannerRemove(it)
+                    }
+
+                    walletAdapter.paymentCards = walletItems
+
                     binding.paymentCardRecycler.apply {
                         layoutManager = GridLayoutManager(context, 1)
-                        adapter =
-                            PaymentCardWalletAdapter(
-                                paymentCards,
-                                onClickListener = {
-                                    val action =
-                                        WalletsFragmentDirections.paymentWalletToDetails(
-                                            it,
-                                            plans.toTypedArray(),
-                                            cards.toTypedArray()
-                                        )
-                                    findNavController().navigateIfAdded(
-                                        this@PaymentCardWalletFragment,
-                                        action
-                                    )
-                                })
+                        adapter = walletAdapter
+
 
                         val helperListenerLeft =
                             RecyclerItemTouchHelper(
@@ -137,19 +138,39 @@ class PaymentCardWalletFragment :
                                 listener
                             )
 
-                        val helperListenerRight =
-                            RecyclerItemTouchHelper(
-                                0,
-                                ItemTouchHelper.RIGHT,
-                                listener
-                            )
-
                         ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-                        // remarked this out as the Swipe Right isn't used on Payment Cards
-                        // but leaving it here as it could be used for a future story
-                        //ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
                     }
                 }
+            }
+        }
+    }
+
+    private fun onBannerRemove(item: Any) {
+        SharedPreferenceManager.isPaymentJoinHidden = true
+        walletItems.remove(item)
+        walletAdapter.paymentCards = walletItems
+        binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+    }
+
+    private fun clickHandler(it: Any, plans: List<MembershipPlan>, cards: List<MembershipCard>) {
+        when (it) {
+            is PaymentCard -> {
+                val action =
+                    WalletsFragmentDirections.paymentWalletToDetails(
+                        it,
+                        plans.toTypedArray(),
+                        cards.toTypedArray()
+                    )
+                findNavController().navigateIfAdded(
+                    this@PaymentCardWalletFragment,
+                    action
+                )
+            }
+            else -> {
+                findNavController().navigateIfAdded(
+                    this@PaymentCardWalletFragment,
+                    WalletsFragmentDirections.homeToPcd()
+                )
             }
         }
     }

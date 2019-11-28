@@ -76,7 +76,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
         binding.continueWithFacebook.fragment = this
         binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY))
@@ -138,11 +138,13 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         var currentPage = pager.currentItem
         val pagerHandler = Handler()
         val update = Runnable {
-            if (currentPage == ONBOARDING_PAGES_NUMBER) {
-                pager.setCurrentItem(FIRST_PAGE_INDEX, true)
-                currentPage = FIRST_PAGE_INDEX
-            } else {
-                pager.setCurrentItem(currentPage++, true)
+            if (pager != null) {
+                if (currentPage == ONBOARDING_PAGES_NUMBER) {
+                    pager.setCurrentItem(FIRST_PAGE_INDEX, true)
+                    currentPage = FIRST_PAGE_INDEX
+                } else {
+                    pager?.setCurrentItem(currentPage++, true)
+                }
             }
         }
 

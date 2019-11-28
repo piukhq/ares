@@ -1,6 +1,5 @@
 package com.bink.wallet.di
 
-import android.content.Context
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.EMPTY_STRING
@@ -9,29 +8,28 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-
-    single { provideDefaultOkHttpClient(androidApplication().applicationContext) }
+    single { provideDefaultOkHttpClient() }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 }
 
-fun provideDefaultOkHttpClient(context: Context): OkHttpClient {
+fun provideDefaultOkHttpClient(): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
-        val jwtToken =
-            LocalStoreUtils.getAppSharedPref(
-                LocalStoreUtils.KEY_JWT,
-                context
-            )?.let { it }
+        val jwtToken = LocalStoreUtils.getAppSharedPref(
+            LocalStoreUtils.KEY_TOKEN
+        )?.let {
+            it
+        }
+
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")

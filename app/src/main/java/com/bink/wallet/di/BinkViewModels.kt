@@ -13,6 +13,7 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
+import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
@@ -23,8 +24,8 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
-import com.bink.wallet.scenes.pll.PllRepository
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
@@ -77,7 +78,7 @@ val viewModelModules = module {
     single { providePllRepository(get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get(), get()) }
 
     viewModel { SignUpViewModel(get()) }
 
@@ -87,6 +88,8 @@ val viewModelModules = module {
     viewModel { AcceptTCViewModel(get()) }
 
     viewModel { AddEmailViewModel() }
+
+    viewModel { ForgotPasswordViewModel(get()) }
 }
 
 fun provideLoginRepository(
@@ -115,7 +118,7 @@ fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndCon
 fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao
-): PllRepository = PllRepository(restApiService, paymentCardDao)
+): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
 
 fun provideCardTermsAndConditionsRepository(
     restApiService: ApiService,

@@ -8,6 +8,7 @@ import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.CoroutineScope
@@ -24,8 +25,6 @@ class LoginRepository(
         const val DEFAULT_LOGIN_ID = "0"
     }
 
-//    var loginEmail: String = "Bink20iteration1@testbink.com"
-
     fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.loginOrRegisterAsync(loginResponse)
@@ -39,53 +38,6 @@ class LoginRepository(
             }
         }
     }
-
-//    private fun updateLiveData(liveData: MutableLiveData<LoginData>, loginData: LoginData) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Main) {
-//                liveData.value = loginData
-//            }
-//        }
-//    }
-//
-//    suspend fun retrieveStoredLoginData(loginData: MutableLiveData<LoginData>) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Default) {
-//                try {
-//                    val response = loginDataDao.getLoginData()
-//                    // Note: the AS hint says that response should never be null,
-//                    // but it appears it can be during runtime... go figure!
-//                    if (response != null && response.email != null) {
-//                        loginEmail = response.email
-//                        updateLiveData(loginData, response)
-//                    } else {
-//                        updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, loginEmail))
-//                        storeLoginData(loginEmail, loginData)
-//                    }
-//                } catch (e: Throwable) {
-//                    Log.e(LoginRepository::class.simpleName, e.localizedMessage, e)
-//                }
-//            }
-//        }
-//    }
-//
-//    fun storeLoginData(email: String, loginData: MutableLiveData<LoginData>) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            withContext(Dispatchers.Default) {
-//                try {
-//                    runBlocking {
-//                        val pos = loginDataDao.store(LoginData(DEFAULT_LOGIN_ID, email))
-//                        if (pos >= 0) {
-//                            updateLiveData(loginData, LoginData(DEFAULT_LOGIN_ID, email))
-//                            loginEmail = email
-//                        }
-//                    }
-//                } catch (e: Throwable) {
-//                    Log.e(LoginDataDao::class.simpleName, e.toString(), e)
-//                }
-//            }
-//        }
-//    }
 
     fun authWithFacebook(
         facebookAuthRequest: FacebookAuthRequest,
@@ -123,10 +75,28 @@ class LoginRepository(
         }
     }
 
+    fun logIn(
+        logInRequest: SignUpRequest,
+        signUpResponse: MutableLiveData<SignUpResponse>,
+        signUpErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.logInAsync(logInRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    signUpResponse.value = response
+                } catch (e: Throwable) {
+                    signUpErrorResponse.value = e
+                }
+            }
+        }
+    }
+
     fun checkMarketingPref(
         checkedOption: MarketingOption,
         marketingResponse: MutableLiveData<ResponseBody>,
-        marketingPrefResponse: MutableLiveData<Throwable>
+        marketingError: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.checkMarketingPrefAsync(checkedOption)
@@ -135,7 +105,42 @@ class LoginRepository(
                     val response = request.await()
                     marketingResponse.value = response
                 } catch (e: Throwable) {
-                    marketingPrefResponse.value = e
+                    marketingError.value = e
+                }
+            }
+        }
+    }
+
+    fun forgotPassword(
+        email: String,
+        forgotPasswordResponse: MutableLiveData<ResponseBody>,
+        forgotPasswordError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    forgotPasswordResponse.value = response
+                } catch (e: Throwable) {
+                    forgotPasswordError.value = e
+                }
+            }
+        }
+    }
+
+    fun logOut(
+        logOutResponse: MutableLiveData<ResponseBody>,
+        logOutErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.logOutAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    logOutResponse.value = response
+                } catch (e: Throwable) {
+                    logOutErrorResponse.value = e
                 }
             }
         }

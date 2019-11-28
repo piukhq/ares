@@ -6,6 +6,7 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
 import android.util.Patterns
+import android.view.View
 import android.widget.CheckBox
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
@@ -18,7 +19,6 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.UnsupportedEncodingException
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
@@ -31,12 +31,32 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             .build()
     }
 
-    companion object {
-        private const val termsAndConditionsHyperlink = "Terms and Conditions"
-        private const val privacyPolicyHyperlink = "Privacy Policy"
+    override val viewModel: SignUpViewModel by viewModel()
+
+    private fun validateEmail() =
+        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
+            binding.emailField.error = getString(R.string.incorrect_email_text)
+        } else {
+            binding.emailField.error = null
+        }
+
+    private fun validatePassword() = if (!UtilFunctions.isValidField(
+            PASSWORD_REGEX,
+            viewModel.password.value ?: EMPTY_STRING
+        )
+    ) {
+        binding.passwordField.error =
+            getString(R.string.password_description)
+    } else {
+        binding.passwordField.error = null
     }
 
-    override val viewModel: SignUpViewModel by viewModel()
+    private fun checkPasswordsMatch() =
+        if (viewModel.password.value != viewModel.confirmPassword.value) {
+            binding.confirmPasswordField.error = getString(R.string.password_not_match)
+        } else {
+            binding.confirmPasswordField.error = null
+        }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -50,14 +70,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             buildHyperlinkSpanString(
                 binding.checkboxTermsConditions.text.toString(),
-                termsAndConditionsHyperlink,
+                getString(R.string.terms_conds_text),
                 getString(R.string.terms_and_conditions_url),
                 binding.checkboxTermsConditions
             )
 
             buildHyperlinkSpanString(
                 binding.checkboxPrivacyPolicy.text.toString(),
-                privacyPolicyHyperlink,
+                getString(R.string.privacy_policy_text),
                 getString(R.string.privacy_policy_url),
                 binding.checkboxPrivacyPolicy
             )
@@ -65,61 +85,74 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         with(viewModel) {
             email.observeNonNull(this@SignUpFragment) {
-                if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
-                    binding.emailField.error = getString(R.string.incorrect_email_text)
-                } else {
-                    binding.emailField.error = null
-                }
+                validateEmail()
             }
 
             password.observeNonNull(this@SignUpFragment) {
-                if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
-                    binding.passwordField.error =
-                        getString(R.string.password_description)
-                } else {
-                    binding.passwordField.error = null
-                }
+                validatePassword()
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
+                checkPasswordsMatch()
+            }
 
-                if (password.value != it) {
-                    binding.confirmPasswordField.error = getString(R.string.password_not_match)
-                } else {
-                    binding.confirmPasswordField.error = null
+            isLoading.observeNonNull(this@SignUpFragment) {
+                with(binding) {
+                    progressSpinner.visibility = when (it) {
+                        true -> View.VISIBLE
+                        else -> View.GONE
+                    }
+
+                    signUpButton.isEnabled = !it
+                }
+            }
+
+            signUpErrorResponse.observeNonNull(this@SignUpFragment) {
+                isLoading.value = false
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.registration_failed_text)
+                )
+            }
+
+            signUpResponse.observeNonNull(this@SignUpFragment) {
+                isLoading.value = false
+                runBlocking {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_TOKEN,
+                        getString(R.string.token_api_v1, it.api_key)
+                    )
+
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_EMAIL,
+                        it.email ?: EMPTY_STRING
+                    )
+
+                    marketingPref(
+                        MarketingOption(
+                            when (marketingMessages.value) {
+                                true -> 1
+                                else -> 0
+                            }
+                        )
+                    )
+
+                    findNavController().navigateIfAdded(
+                        this@SignUpFragment,
+                        R.id.global_to_home
+                    )
                 }
             }
         }
 
-        viewModel.signUpErrorResponse.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.registration_failed_text)
-            )
-        }
-
-        viewModel.signUpResponse.observeNonNull(this) {
-            runBlocking {
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_JWT,
-                    getString(R.string.token_api_v1, it.api_key),
-                    requireContext()
-                )
-
-                viewModel.marketingPref(
-                    MarketingOption(
-                        when (viewModel.marketingMessages.value) {
-                            true -> 1
-                            else -> 0
-                        }
-                    )
-                )
-
-                findNavController().navigateIfAdded(this@SignUpFragment, R.id.global_to_home)
-            }
-        }
+        binding.progressSpinner.setOnTouchListener { _, _ -> true }
 
         binding.signUpButton.setOnClickListener {
+
+            validateEmail()
+            validatePassword()
+            checkPasswordsMatch()
+
             with(viewModel) {
                 if (termsCondition.value == true &&
                     privacyPolicy.value == true
@@ -128,6 +161,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         binding.passwordField.error == null &&
                         binding.emailField.error == null
                     ) {
+                        isLoading.value = true
                         signUp(
                             SignUpRequest(
                                 email = email.value,
@@ -140,6 +174,31 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                             getString(R.string.all_fields_must_be_valid)
                         )
                     }
+                } else {
+                    val dialogDescription = if (termsCondition.value != true &&
+                        privacyPolicy.value != true
+                    ) {
+                        getString(
+                            R.string.accept_tc_pp,
+                            "${getString(R.string.terms_conds_text)} & ${getString(R.string.privacy_policy_text)}"
+                        )
+                    } else {
+                        if (termsCondition.value != true) {
+                            getString(
+                                R.string.accept_tc_pp,
+                                getString(R.string.terms_conds_text)
+                            )
+                        } else {
+                            getString(
+                                R.string.accept_tc_pp,
+                                getString(R.string.privacy_policy_text)
+                            )
+                        }
+                    }
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        dialogDescription
+                    )
                 }
             }
         }
@@ -154,7 +213,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         val spannableString = SpannableString(stringToSpan)
         spannableString.setSpan(
             URLSpan(url),
-            spannableString.indexOf(stringToHyperlink) - 1,
+            spannableString.indexOf(stringToHyperlink),
             spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
             Spanned.SPAN_INCLUSIVE_EXCLUSIVE
         )
