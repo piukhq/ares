@@ -36,15 +36,17 @@ class PaymentCardWalletAdapter(
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
 
-                if (currentNewItem is PaymentCard && currentOldItem is PaymentCard)
+                if (currentNewItem is PaymentCard &&
+                    currentOldItem is PaymentCard
+                )
                     return currentNewItem.id == currentOldItem.id
 
                 return false
             }
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldList[oldItemPosition] == newList[newItemPosition]
-            }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldList[oldItemPosition] == newList[newItemPosition]
+
 
             override fun getOldListSize() = oldList.size
 
