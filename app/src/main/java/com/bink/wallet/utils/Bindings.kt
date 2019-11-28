@@ -341,22 +341,18 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
     text = when (!paymentCard.membership_cards.isNullOrEmpty() &&
             paymentCard.membership_cards.any { it.active_link == true }) {
         true -> {
-
             val linkedCardsNumber =
                 paymentCard.membership_cards.filter { it.active_link == true }.size
 
-            val currentLinkedText = context.getString(
-                R.string.payment_card_linked_status,
+            context.getString(
+                when (linkedCardsNumber > 1) {
+                    true -> R.string.payment_cards_linked_status
+                    else -> R.string.payment_card_linked_status
+                },
                 linkedCardsNumber
             )
-
-            if (linkedCardsNumber > 1) {
-                currentLinkedText.plus("s")
-            } else {
-                currentLinkedText
-            }
-
         }
+
         false -> context.getString(R.string.payment_card_not_linked)
     }
 }
