@@ -190,6 +190,9 @@
     <!-- 1.7, 1.9, 1.11 replacement -->
     <string name="title_lcd_pending">Request pending</string>
     <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn’t take long.</string>
+    <!-- 1.5 -->
+    <string name="title_1_5">Transaction history not supported</string>
+    <string name="description_1_5">Unfortunately we\'re not able to show your points balance and transaction history for this brand just yet.</string>
 
     <!-- 2.4 -->
     <string name="title_2_4">Error</string>
