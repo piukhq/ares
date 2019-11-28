@@ -8,7 +8,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import okhttp3.ResponseBody
 
-class PllViewModel(private val pllRepository: PllRepository) : BaseViewModel() {
+class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {
     val membershipCard = MutableLiveData<MembershipCard>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
@@ -22,14 +22,14 @@ class PllViewModel(private val pllRepository: PllRepository) : BaseViewModel() {
     val localFetchError = MutableLiveData<Throwable>()
 
     suspend fun getPaymentCards() {
-        pllRepository.getPaymentCards(
+        paymentWalletRepository.getPaymentCards(
             paymentCards,
             fetchError
         )
     }
 
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
-        pllRepository.linkPaymentCard(
+        paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
             linkedPaymentCard,
@@ -38,7 +38,7 @@ class PllViewModel(private val pllRepository: PllRepository) : BaseViewModel() {
     }
 
     suspend fun unlinkPaymentCard(paymentCardId: String, cardId: String) {
-        pllRepository.unlinkPaymentCard(
+        paymentWalletRepository.unlinkPaymentCard(
             paymentCardId,
             cardId,
             unlinkError,
@@ -47,7 +47,7 @@ class PllViewModel(private val pllRepository: PllRepository) : BaseViewModel() {
     }
 
     suspend fun getLocalPaymentCards() {
-        pllRepository.getLocalPaymentCards(
+        paymentWalletRepository.getLocalPaymentCards(
             localPaymentCards,
             localFetchError
         )

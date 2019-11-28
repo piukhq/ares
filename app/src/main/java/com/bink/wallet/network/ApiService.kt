@@ -1,8 +1,8 @@
 package com.bink.wallet.network
 
-import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -95,4 +95,7 @@ interface ApiService {
     fun logInAsync(
         @Body signUpRequest: SignUpRequest
     ): Deferred<SignUpResponse>
+
+    @POST("/users/me/logout")
+    fun logOutAsync(): Deferred<ResponseBody>
 }

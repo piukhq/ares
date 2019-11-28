@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kotlin.reflect.KProperty
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         Fabric.with(this, Crashlytics())
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         setContentView(R.layout.activity_main)
+        LocalStoreUtils.createEncryptedPrefs(applicationContext)
     }
 
     override fun onBackPressed() {
