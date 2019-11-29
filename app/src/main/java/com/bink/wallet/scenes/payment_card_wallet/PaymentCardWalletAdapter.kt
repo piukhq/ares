@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.PaymentCardWalletItemBinding
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.getCardTypeFromProvider
@@ -20,7 +20,7 @@ class PaymentCardWalletAdapter(
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
-        private const val MEMBERSHIP_CARD = 0
+        private const val PAYMENT_CARD = 0
         private const val JOIN_PAYMENT = 2
     }
 
@@ -41,7 +41,8 @@ class PaymentCardWalletAdapter(
                 )
                     return currentNewItem.id == currentOldItem.id
 
-                return false
+                return currentNewItem is JoinCardItem &&
+                        currentOldItem is JoinCardItem
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
@@ -58,7 +59,7 @@ class PaymentCardWalletAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (paymentCards[position]) {
-            is PaymentCard -> MEMBERSHIP_CARD
+            is PaymentCard -> PAYMENT_CARD
             else -> JOIN_PAYMENT
         }
     }
@@ -67,17 +68,13 @@ class PaymentCardWalletAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            MEMBERSHIP_CARD -> PaymentCardWalletHolder(PaymentCardWalletItemBinding.inflate(inflater))
+            PAYMENT_CARD -> {
+                val binding = PaymentCardWalletItemBinding.inflate(inflater)
+                PaymentCardWalletHolder(binding)
+            }
             else -> {
                 val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-                binding.apply {
-                    root.apply {
-                        this.setOnClickListener {
-                            onClickListener(it)
-                        }
-                    }
-                }
-                return PaymentCardWalletJoinHolder(binding)
+                PaymentCardWalletJoinHolder(binding)
             }
         }
     }
@@ -99,17 +96,25 @@ class PaymentCardWalletAdapter(
         BaseViewHolder<PaymentCard>(binding) {
 
         override fun bind(item: PaymentCard) {
-            binding.paymentCard = item
-            binding.executePendingBindings()
-            item.card?.provider?.let {
-                binding.paymentCardWrapper.setBackgroundResource(
-                    it.getCardTypeFromProvider().background
-                )
-            }
-            if (item.card!!.isExpired()) {
-                binding.cardExpired.visibility = View.VISIBLE
-                binding.linkStatus.visibility = View.GONE
-                binding.imageStatus.visibility = View.GONE
+            with(binding) {
+                paymentCard = item
+                executePendingBindings()
+
+                item.card?.provider?.let {
+                    paymentCardWrapper.setBackgroundResource(
+                        it.getCardTypeFromProvider().background
+                    )
+                }
+
+                if (item.card!!.isExpired()) {
+                    cardExpired.visibility = View.VISIBLE
+                    linkStatus.visibility = View.GONE
+                    imageStatus.visibility = View.GONE
+                }
+
+                mainPayment.setOnClickListener {
+                    onClickListener(paymentCards[adapterPosition])
+                }
             }
         }
     }
@@ -119,8 +124,11 @@ class PaymentCardWalletAdapter(
 
         override fun bind(item: Any) {
             with(binding) {
+                joinCardMainLayout.setOnClickListener {
+                    onClickListener(paymentCards[adapterPosition])
+                }
+
                 dismissBanner.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
                     onRemoveListener(paymentCards[adapterPosition])
                 }
 

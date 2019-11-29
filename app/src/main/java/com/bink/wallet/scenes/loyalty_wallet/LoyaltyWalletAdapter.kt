@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
@@ -84,18 +84,24 @@ class LoyaltyWalletAdapter(
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
 
-                if (currentNewItem is MembershipCard && currentOldItem is MembershipCard)
+                if (currentNewItem is MembershipCard &&
+                    currentOldItem is MembershipCard
+                )
                     return currentNewItem.id == currentOldItem.id
 
-                if (currentNewItem is MembershipPlan && currentOldItem is MembershipPlan)
+                if (currentNewItem is MembershipPlan &&
+                    currentOldItem is MembershipPlan
+                )
                     return currentNewItem.id == currentOldItem.id
 
-                return false
+                return currentNewItem is JoinCardItem &&
+                        currentOldItem is JoinCardItem
+
             }
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldList[oldItemPosition] == newList[newItemPosition]
-            }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldList[oldItemPosition] == newList[newItemPosition]
+
 
             override fun getOldListSize() = oldList.size
 
@@ -111,7 +117,6 @@ class LoyaltyWalletAdapter(
         override fun bind(item: Any) {
             with(binding) {
                 dismissBanner.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
                     onRemoveListener(item)
                 }
 
