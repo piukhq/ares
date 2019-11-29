@@ -348,7 +348,7 @@
     <string name="facebook_cancelled">Facebook login was cancelled.</string>
 
     <!-- Accept T&Cs -->
-    <string name="one_last_step">One last step…</string>
+    <string name="one_last_step">One last step...</string>
     <string name="accept_tcs_disclaimer">I accept Bink\'s Terms and Conditions</string>
     <string name="accept_pp_disclaimer">I accept Bink\'s Privacy Policy</string>
     <string name="accept_marketing_disclaimer">I opt in to receive marketing messages</string>
@@ -374,9 +374,14 @@
     <string name="log_in_screen_description">Welcome back!</string>
     <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
     <string name="accept_tc_pp">Please accept %1$s</string>
-    <string name="terms_conds_text">Terms and Conditions</string>
+    <string name="terms_conditions_text">Terms and Conditions</string>
     <string name="privacy_policy_text">Privacy Policy</string>
     <string name="forgot_password_text"><u>Forgot password</u></string>
+    <string-array name="terms_bold_text_array">
+        <item>rewards</item>
+        <item>offers</item>
+        <item>updates</item>
+    </string-array>
 
     <!--  Forgot password screen  -->
     <string name="forgot_password_title">Forgot password</string>
