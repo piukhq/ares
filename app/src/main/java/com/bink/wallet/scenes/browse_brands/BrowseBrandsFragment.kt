@@ -54,10 +54,10 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             val plansList = ArrayList<Pair<String?, MembershipPlan>>()
 
             if (plans.isNotEmpty()) {
-                plans =
-                    plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
-                        comparePlans(membershipPlan1, membershipPlan2)
-                    }.thenBy { it.account?.company_name }).toTypedArray()
+                plans = plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1,
+                                                                      membershipPlan2 ->
+                    comparePlans(membershipPlan1, membershipPlan2)
+                }.thenBy { it.account?.company_name }).toTypedArray()
 
                 plansList.add(Pair(getString(R.string.pll_text), plans[0]))
             }
