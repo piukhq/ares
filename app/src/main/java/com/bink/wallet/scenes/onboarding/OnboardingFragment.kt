@@ -158,12 +158,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     private fun retrieveFacebookLoginInformation(accessToken: AccessToken) {
         val request = GraphRequest.newMeRequest(
             accessToken
-        ) { `object`, _ ->
+        ) { jsonObject, _ ->
             try {
                 this.accessToken = accessToken
-                facebookEmail = `object`.getString(EMAIL_KEY)
+                facebookEmail = jsonObject.getString(EMAIL_KEY)
             } catch (e: JSONException) {
-                if(!::facebookEmail.isInitialized){
+                if (!::facebookEmail.isInitialized) {
                     facebookEmail = getString(R.string.empty_string)
                 }
                 e.printStackTrace()
