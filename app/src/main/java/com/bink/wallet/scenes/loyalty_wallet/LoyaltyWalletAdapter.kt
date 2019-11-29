@@ -94,13 +94,9 @@ class LoyaltyWalletAdapter(
                 )
                     return currentNewItem.id == currentOldItem.id
 
-                if (currentNewItem is JoinCardItem &&
-                    currentOldItem is JoinCardItem
-                ) {
-                    return true
-                }
+                return currentNewItem is JoinCardItem &&
+                        currentOldItem is JoinCardItem
 
-                return false
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =

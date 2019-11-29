@@ -96,6 +96,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             logInErrorResponse.observeNonNull(this@LoginFragment) {
+                isLoading.value = false
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.incorrect_credentials)

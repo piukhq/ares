@@ -41,13 +41,8 @@ class PaymentCardWalletAdapter(
                 )
                     return currentNewItem.id == currentOldItem.id
 
-                if (currentNewItem is JoinCardItem &&
-                    currentOldItem is JoinCardItem
-                ) {
-                    return true
-                }
-
-                return false
+                return currentNewItem is JoinCardItem &&
+                        currentOldItem is JoinCardItem
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =

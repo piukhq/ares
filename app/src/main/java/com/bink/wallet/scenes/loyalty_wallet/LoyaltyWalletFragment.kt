@@ -117,9 +117,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         setHasOptionsMenu(true)
 
-        createLocalObservers()
-        createFetchObservers()
-
         viewModel.deleteCard.observeNonNull(this) { id ->
             viewModel.localMembershipCardData.value =
                 viewModel.localMembershipCardData.value?.filter { it.id != id }
@@ -151,6 +148,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         binding.progressSpinner.visibility = View.VISIBLE
+
+        createLocalObservers()
+        createFetchObservers()
 
         if (verifyAvailableNetwork(requireActivity())) {
             runBlocking {
@@ -291,7 +291,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.membershipCards = walletItems
                 walletAdapter.notifyDataSetChanged()
 
-                viewModel.dismissedCardData.removeObservers(this@LoyaltyWalletFragment)
+                if (plansReceived.isNotEmpty() &&
+                    cardsReceived.isNotEmpty()
+                ) {
+                    viewModel.dismissedCardData.removeObservers(this@LoyaltyWalletFragment)
+                }
             }
         }
         viewModel.fetchDismissedCards()
