@@ -21,7 +21,7 @@ class PaymentCardWalletViewModel(
     val deleteError = MutableLiveData<Throwable>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
-    val dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
+    val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
     val addError = MutableLiveData<Throwable>()
 
     suspend fun deleteCard(id: String?) {
