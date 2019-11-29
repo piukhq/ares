@@ -1,18 +1,17 @@
 package com.bink.wallet.scenes.registration
 
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddEmailFragmentBinding
 import com.bink.wallet.utils.SimplifiedTextWatcher
-import com.bink.wallet.utils.emailRegex
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.regex.Pattern.matches
 
 class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding>() {
     override val layoutRes: Int
@@ -37,10 +36,11 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
         binding.email.addTextChangedListener(object : SimplifiedTextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s?.let {
-                    if (!matches(emailRegex, it)) {
+                    val mailIsValid = Patterns.EMAIL_ADDRESS.matcher(it).matches()
+                    if (!mailIsValid) {
                         binding.email.error = getString(R.string.invalid_email_format)
                     }
-                    binding.continueButton.isEnabled = matches(emailRegex, it)
+                    binding.continueButton.isEnabled = mailIsValid
                 }
             }
 
