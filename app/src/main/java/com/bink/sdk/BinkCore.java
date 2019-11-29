@@ -11,14 +11,14 @@ public class BinkCore {
 
     SessionConfig sessionConfig;
 
-    BinkCore(Context context) {
+    public BinkCore(Context context) {
         this.context = context;
 
         PreferencesSessionConfig preferencesSessionConfig = new PreferencesSessionConfig(PREFERENCES_NAME, context);
         sessionConfig = preferencesSessionConfig;
     }
 
-    SessionConfig getSessionConfig() {
+    public SessionConfig getSessionConfig() {
         return sessionConfig;
     }
 

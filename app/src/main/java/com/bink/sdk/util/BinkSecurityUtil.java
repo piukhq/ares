@@ -196,11 +196,7 @@ public class BinkSecurityUtil {
             return encrypted;
         } else {
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    decryptCipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(128, FIXED_IV));
-                } else {
-                    decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
-                }
+                decryptCipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(128, FIXED_IV));
                 byte[] inputByte = encrypted.getBytes(CHAR_SET);
                 return new String(decryptCipher.doFinal(Base64.decode(inputByte, Base64.DEFAULT)), CHAR_SET);
             } catch (Exception e) {
