@@ -35,9 +35,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             .build()
     }
 
-    private val termsAndConditionsHyperlink = "Terms and Conditions"
-    private val privacyPolicyHyperlink = "Privacy Policy"
-    private val boldedTexts = arrayListOf("rewards", "offers", "updates")
+    private val termsAndConditionsHyperlink = getString(R.string.terms_conditions_text)
+    private val privacyPolicyHyperlink = getString(R.string.terms_conditions_text)
+    private val boldedTexts = resources.getStringArray(R.array.terms_bold_text_array)
     private var userEmail: String? = null
     private var accessToken: AccessToken? = null
 
@@ -70,12 +70,14 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         viewModel.facebookAuthError.observeNonNull(this) {
             binding.accept.isClickable = false
             val timer = Timer()
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    binding.accept.isClickable = true
+            context?.resources?.getInteger(R.integer.button_disabled_delay)?.toLong()
+                ?.let { delay ->
+                    timer.schedule(object : TimerTask() {
+                        override fun run() {
+                            binding.accept.isClickable = true
+                        }
+                    }, delay)
                 }
-
-            }, 3000)
             requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
         }
 
