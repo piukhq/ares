@@ -70,7 +70,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             buildHyperlinkSpanString(
                 binding.checkboxTermsConditions.text.toString(),
-                getString(R.string.terms_conds_text),
+                getString(R.string.terms_conditions_text),
                 getString(R.string.terms_and_conditions_url),
                 binding.checkboxTermsConditions
             )
@@ -180,13 +180,13 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     ) {
                         getString(
                             R.string.accept_tc_pp,
-                            "${getString(R.string.terms_conds_text)} & ${getString(R.string.privacy_policy_text)}"
+                            "${getString(R.string.terms_conditions_text)} & ${getString(R.string.privacy_policy_text)}"
                         )
                     } else {
                         if (termsCondition.value != true) {
                             getString(
                                 R.string.accept_tc_pp,
-                                getString(R.string.terms_conds_text)
+                                getString(R.string.terms_conditions_text)
                             )
                         } else {
                             getString(
