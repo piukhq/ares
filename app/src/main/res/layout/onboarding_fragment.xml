@@ -54,7 +54,7 @@
                 android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
                 android:text="@string/continue_with_facebook"
                 android:textAllCaps="false"
-                android:elevation="4dp"
+                android:elevation="@dimen/facebook_button_elevation"
                 android:fontFamily="@font/nunito_sans_bold"
                 app:barrierAllowsGoneWidgets="true"
                 app:layout_constraintBottom_toTopOf="@+id/sign_up_with_email"
