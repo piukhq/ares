@@ -9,6 +9,7 @@ data class GenericModalParameters(
     @DrawableRes var topBarIconId: Int = 0,
     var title: String,
     var description: String,
+    var description2: String = "",
     var firstButtonText: String = "",
     var secondButtonText: String = "",
     var link: String = ""

@@ -60,7 +60,8 @@ class PaymentCardsDetailsFragment :
                     GenericModalParameters(
                         R.drawable.ic_close,
                         getString(R.string.security_and_privacy_title),
-                        getString(R.string.security_and_privacy_copy)
+                        getString(R.string.security_and_privacy_copy),
+                        description2 = getString(R.string.security_and_privacy_copy_2)
                     )
                 )
             findNavController().navigateIfAdded(this, action)
