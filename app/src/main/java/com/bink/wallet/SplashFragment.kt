@@ -38,18 +38,24 @@ class SplashFragment : Fragment() {
     }
 
     private fun getUnRootedDirections(): Int {
-        val binkCore = BinkCore(requireContext())
-        val pack = requireActivity().packageName
-        val key = binkCore.sessionConfig.apiKey
-        val enc = binkCore.sessionConfig.encryptedKey
+        if (!requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
+            val binkCore = BinkCore(requireContext())
+            val key = binkCore.sessionConfig.apiKey
+            val email = binkCore.sessionConfig.userEmail
+            if (!key.isNullOrEmpty()) {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_TOKEN,
+                    getString(R.string.token_api_v1, key)
+                )
 
-        val key2 = BinkSecurityUtil.decrypt(enc)
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    email ?: EMPTY_STRING
+                )
+            }
+        }
 
-        val key3 = LocalStoreUtils.getAppSharedPref(
-                    LocalStoreUtils.KEY_TOKEN
-                ) ?: EMPTY_STRING
-
-        return when (context?.let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
+        return when (requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             true -> R.id.global_to_home
             else -> R.id.splash_to_onboarding
         }
