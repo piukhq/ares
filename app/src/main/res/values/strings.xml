@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">binkapp</string>
     <string name="ok">OK</string>
 
@@ -259,7 +259,7 @@
     <string name="contact_us_email_message">\n\n\n\nThe below information will help you, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
     <string name="contact_us_no_email_title">No email app installed</string>
     <string name="contact_us_no_email_message">No Mail accounts set up, please email us directly: support@bink.com.</string>
-    <string name="contact_us_select_email_client">Choose Email Client…</string>
+    <string name="contact_us_select_email_client" tools:ignore="TypographyEllipsis">Choose Email Client...</string>
 
     <string name="security_and_privacy_title">Security and privacy</string>
     <string name="security_and_privacy_copy">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
@@ -323,6 +323,8 @@
     <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
     <string name="page_3_title">Never miss out</string>
     <string name="page_3_description">Show your loyalty cards\' barcodes on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
+
+    <!-- Authentication -->
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
     <string name="join_card_description">You will need to add at least one to collect rewards automatically</string>
