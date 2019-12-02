@@ -9,9 +9,9 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -134,13 +134,12 @@ class AddPaymentCardFragment :
         }
     }
 
-    fun cardExpiryErrorCheck(view: View): String {
+    private fun cardExpiryErrorCheck(view: View): String {
         with((view as EditText).text.toString()) {
             if (!dateValidation()) {
                 return getString(R.string.incorrect_card_expiry)
-            } else {
-                binding.cardExpiry.setText(formatDate())
             }
+            binding.cardExpiry.setText(formatDate())
         }
         return getString(R.string.empty_string)
     }

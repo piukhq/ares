@@ -35,14 +35,18 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             .build()
     }
 
-    private val termsAndConditionsHyperlink = getString(R.string.terms_conditions_text)
-    private val privacyPolicyHyperlink = getString(R.string.terms_conditions_text)
-    private val boldedTexts = resources.getStringArray(R.array.terms_bold_text_array)
+    private lateinit var termsAndConditionsHyperlink: String
+    private lateinit var privacyPolicyHyperlink: String
+    private lateinit var boldedTexts: Array<String>
     private var userEmail: String? = null
     private var accessToken: AccessToken? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        termsAndConditionsHyperlink = getString(R.string.terms_conditions_text)
+        privacyPolicyHyperlink = getString(R.string.privacy_policy_text)
+        boldedTexts = resources.getStringArray(R.array.terms_bold_text_array)
 
         arguments?.let {
             with(AcceptTCFragmentArgs.fromBundle(it)) {

@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -90,19 +89,17 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 }
 
                 override fun onCancel() {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.facebook_cancelled),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.facebook_cancelled)
+                    )
                 }
 
                 override fun onError(error: FacebookException?) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.facebook_unavailable),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.facebook_unavailable)
+                    )
                 }
             })
 

@@ -7,8 +7,7 @@ import com.facebook.login.widget.LoginButton
 
 class FacebookButton @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
+    attrs: AttributeSet? = null
 ) : LoginButton(context, attrs, R.style.RoundedFacebookButton) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
