@@ -88,6 +88,13 @@ open class GenericModalFragment :
             } else {
                 Html.fromHtml(parameters.description)
             }
+
+        binding.description2.text =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                Html.fromHtml(parameters.description2)
+            }
         binding.description.movementMethod = LinkMovementMethod.getInstance()
 
         if (parameters.firstButtonText.isNotEmpty()) {
