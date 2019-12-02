@@ -100,7 +100,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    SharedPreferenceManager.isPaymentEmpty = paymentCards.isNotEmpty()
+                    SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
                     if (SharedPreferenceManager.isLoyaltySelected) {
                         loyaltyWalletsFragment.setData(cards, plans)
                     } else {
