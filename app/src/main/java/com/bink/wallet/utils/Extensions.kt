@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
+import androidx.annotation.IntegerRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -16,6 +17,9 @@ import com.bink.wallet.R
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
+
+fun Context.toPixelFromDip(@IntegerRes resId: Int) =
+    toPixelFromDip(resources.getInteger(resId).toFloat())
 
 fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int) {
     if (fragment.isAdded) {

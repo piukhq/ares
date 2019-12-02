@@ -344,17 +344,44 @@
     <string name="privacy_policy_description">I accept Bink\'s Privacy Policy</string>
     <string name="marketing_messages">I opt in to receive marketing messages</string>
     <string name="token_api_v1">Token %1$s</string>
+    <string name="facebook_unavailable">Facebook is currently unavailable.</string>
+    <string name="facebook_cancelled">Facebook login was cancelled.</string>
+
+    <!-- Accept T&Cs -->
+    <string name="one_last_step">One last step...</string>
+    <string name="accept_tcs_disclaimer">I accept Bink\'s Terms and Conditions</string>
+    <string name="accept_pp_disclaimer">I accept Bink\'s Privacy Policy</string>
+    <string name="accept_marketing_disclaimer">I opt in to receive marketing messages</string>
+    <string name="general_disclaimer">Make sure you’re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
+    <string name="facebook_failed">Continue with Facebook failed</string>
+
+    <!-- Add email -->
+    <string name="add_email">Add email</string>
+    <string name="add_email_subtitle">Please add your email address below</string>
+    <string name="continue_button">Continue</string>
+    <string name="email_label">Email</string>
+
+    <!-- Facebook -->
+    <string name="facebook_app_id">736124376499729</string>
+    <string name="fb_login_protocol_scheme">fb736124376499729</string>
+
     <string name="enter_email_text">Enter email address</string>
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="registration_failed_text">Registration failed</string>
+    <string name="invalid_email_format">Invalid mail format</string>
     <string name="log_in_email_text">Log in with email</string>
     <string name="log_in_screen_description">Welcome back!</string>
     <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
     <string name="accept_tc_pp">Please accept %1$s</string>
-    <string name="terms_conds_text">Terms and Conditions</string>
+    <string name="terms_conditions_text">Terms and Conditions</string>
     <string name="privacy_policy_text">Privacy Policy</string>
     <string name="forgot_password_text"><u>Forgot password</u></string>
+    <string-array name="terms_bold_text_array">
+        <item>rewards</item>
+        <item>offers</item>
+        <item>updates</item>
+    </string-array>
 
     <!--  Forgot password screen  -->
     <string name="forgot_password_title">Forgot password</string>
