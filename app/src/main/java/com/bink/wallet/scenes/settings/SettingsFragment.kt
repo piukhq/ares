@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bink.sdk.BinkCore
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
@@ -195,7 +196,11 @@ class SettingsFragment :
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.log_out_confirmation),
-                    okAction = { viewModel.logOut() },
+                    okAction = {
+                        BinkCore(requireContext()).logout()
+                        LocalStoreUtils.clearPreferences()
+                        viewModel.logOut()
+                    },
                     buttonText = R.string.settings_menu_log_out,
                     hasNegativeButton = true
                 )

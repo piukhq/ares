@@ -1,6 +1,7 @@
 package com.bink.sdk;
 
 import android.content.Context;
+
 import com.bink.sdk.config.PreferencesSessionConfig;
 import com.bink.sdk.config.SessionConfig;
 
@@ -22,10 +23,7 @@ public class BinkCore {
         return sessionConfig;
     }
 
-    /**
-     * @return true if there is a valid user authorization token
-     */
-    public boolean isUserAuthenticated() {
-        return sessionConfig.getAPIKey() != null;
+    public void logout() {
+        sessionConfig.clear();
     }
 }
