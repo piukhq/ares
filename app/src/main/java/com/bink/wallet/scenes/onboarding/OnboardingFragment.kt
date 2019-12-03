@@ -2,6 +2,11 @@ package com.bink.wallet.scenes.onboarding
 
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -14,6 +19,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
+
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.onboarding_fragment
@@ -21,15 +27,20 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     var timer = Timer()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(Toolbar(requireContext()))
             .build()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding: OnboardingFragmentBinding =
+            DataBindingUtil.inflate(inflater, R.layout.onboarding_fragment, container, false)
 
-        val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
-        adapter?.let {
+        val adapter = childFragmentManager.let { OnboardingPagerAdapter(it) }
+        adapter.let {
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,
@@ -84,6 +95,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         })
 
         scrollPagesAutomatically(binding.pager)
+        return binding.root
     }
 
     override fun onDestroy() {
