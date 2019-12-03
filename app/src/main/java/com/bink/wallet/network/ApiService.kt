@@ -1,5 +1,7 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.auth.FacebookAuthRequest
+import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
@@ -80,6 +82,9 @@ interface ApiService {
     fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
     ): Deferred<ResponseBody>
+
+    @POST("/users/auth/facebook")
+    fun authWithFacebookAsync(@Body facebookAuthRequest: FacebookAuthRequest): Deferred<FacebookAuthResponse>
 
     @POST("/users/register")
     fun signUpAsync(

@@ -6,6 +6,7 @@
             <enum name="security" value="1" />
             <enum name="delete" value="2" />
             <enum name="rename" value="3" />
+            <enum name="delete_payment" value="4"/>
         </attr>
     </declare-styleable>
 </resources>
