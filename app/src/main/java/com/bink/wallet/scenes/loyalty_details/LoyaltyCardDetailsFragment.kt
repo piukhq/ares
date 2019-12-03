@@ -35,7 +35,7 @@ class LoyaltyCardDetailsFragment :
     companion object {
         const val MAX_ALPHA = 127f
         const val MIN_ALPHA = 0f
-        const val SCROLL_DELAY = 100L
+        const val SCROLL_DELAY = 200L
     }
 
     private var scrollY = 0
