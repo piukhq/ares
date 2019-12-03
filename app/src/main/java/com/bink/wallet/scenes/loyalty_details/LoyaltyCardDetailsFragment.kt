@@ -35,6 +35,7 @@ class LoyaltyCardDetailsFragment :
     companion object {
         const val MAX_ALPHA = 127f
         const val MIN_ALPHA = 0f
+        const val SCROLL_DELAY = 100L
     }
 
     private var scrollY = 0
@@ -298,7 +299,7 @@ class LoyaltyCardDetailsFragment :
         super.onResume()
             binding.scrollView.postDelayed({
                 binding.scrollView.smoothScrollTo(0, scrollY)
-            }, 100)
+            }, SCROLL_DELAY)
     }
 
 
