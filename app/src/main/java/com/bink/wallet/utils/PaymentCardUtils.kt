@@ -177,7 +177,7 @@ fun String.dateValidation(): Boolean {
     val new = formatDate()
     if (new.isNotEmpty()) {
         val split = new.split(SEPARATOR_SLASH)
-        if (split.size > 1) {
+        if (split.size > 1 && !split[1].isBlank()) {
             val month = split[0].toInt()
             val year = split[1].toInt() + 2000
             if (month < 1 ||
@@ -213,7 +213,7 @@ fun String.formatDate(): String {
         val year: String
         var month: String
         if (parts.size == 1) {
-            val len = Math.max(0, length - 2)
+            val len = kotlin.math.max(0, length - 2)
             month = new.substring(0, len)
             year = new.substring(len)
         } else {

@@ -3,6 +3,14 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -131,7 +139,8 @@
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:maxLength="19"
-                            android:nextFocusDown="@id/card_expiry" />
+                            android:nextFocusDown="@id/card_expiry"
+                            android:text="@={viewModel.cardNumber}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -160,7 +169,8 @@
                             android:imeOptions="actionNext"
                             android:inputType="date"
                             android:maxLength="5"
-                            android:nextFocusDown="@id/card_name" />
+                            android:nextFocusDown="@id/card_name"
+                            android:text="@={viewModel.expiryDate}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -185,12 +195,13 @@
                             android:id="@+id/card_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:digits="@string/only_letters_space"
                             android:fontFamily="@font/nunito_sans_light"
                             android:hint="@string/name_on_card"
                             android:imeOptions="actionDone"
                             android:inputType="textVisiblePassword"
-                            android:digits="@string/only_letters_space"
-                            android:minLines="2" />
+                            android:minLines="2"
+                            android:text="@={viewModel.cardHolder}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
