@@ -28,13 +28,13 @@ object MembershipPlanUtils {
 
                 FAILED.status,
                 UNAUTHORISED.status -> {
-                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)) != null) {
+                    if (!membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)).isNullOrEmpty()) {
                         return LoginStatus.STATUS_SIGN_UP_FAILED
                     }
-                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X202.code)) != null) {
+                    if (!membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X202.code)).isNullOrEmpty()) {
                         return LoginStatus.STATUS_CARD_ALREADY_EXISTS
                     }
-                    if (membershipCard.status?.reason_codes?.intersect(
+                    if (!membershipCard.status?.reason_codes?.intersect(
                             listOf(
                                 CardCodes.X101.code,
                                 CardCodes.X102.code,
@@ -44,7 +44,7 @@ object MembershipPlanUtils {
                                 CardCodes.X303.code,
                                 CardCodes.X304.code
                             )
-                        ) != null
+                        ).isNullOrEmpty()
                     ) {
                         return LoginStatus.STATUS_LOGIN_FAILED
                     }
