@@ -48,6 +48,12 @@ class MainActivity : AppCompatActivity() {
             R.id.rooted_screen -> {
                 finish()
             }
+            R.id.add_email_fragment -> {
+                findNavController(R.id.main_fragment).navigate(R.id.add_email_to_onboarding)
+            }
+            R.id.accept_tcs_fragment -> {
+                findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
+            }
             else -> super.onBackPressed()
         }
     }

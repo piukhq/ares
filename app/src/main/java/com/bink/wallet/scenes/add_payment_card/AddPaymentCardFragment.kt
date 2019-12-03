@@ -1,8 +1,6 @@
 package com.bink.wallet.scenes.add_payment_card
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.core.content.ContextCompat
@@ -11,9 +9,9 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -40,18 +38,7 @@ class AddPaymentCardFragment :
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
-        val cardNumberTextWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
-            override fun beforeTextChanged(
-                p0: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-            }
-
+        val cardNumberTextWatcher = object : SimplifiedTextWatcher {
             override fun onTextChanged(
                 currentText: CharSequence?,
                 p1: Int,
@@ -63,7 +50,7 @@ class AddPaymentCardFragment :
                 updateEnteredCardNumber()
             }
         }
-        with (binding.cardNumber) {
+        with(binding.cardNumber) {
             addTextChangedListener(cardNumberTextWatcher)
             setOnFocusChangeListener { _, focus ->
                 if (!focus) {
@@ -83,13 +70,7 @@ class AddPaymentCardFragment :
             }
         }
 
-        val nameTextWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
+        val nameTextWatcher = object : SimplifiedTextWatcher {
             override fun onTextChanged(
                 currentText: CharSequence?,
                 p1: Int,
@@ -99,7 +80,7 @@ class AddPaymentCardFragment :
                 binding.displayCardName.text = currentText
             }
         }
-        with (binding.cardName) {
+        with(binding.cardName) {
             addTextChangedListener(nameTextWatcher)
             setOnFocusChangeListener { _, focus ->
                 if (!focus) {
@@ -121,7 +102,8 @@ class AddPaymentCardFragment :
         binding.addButton.setOnClickListener {
             if (binding.cardNumberInputLayout.error.isNullOrEmpty() &&
                 binding.cardExpiryInputLayout.error.isNullOrBlank() &&
-                !binding.cardName.text.isNullOrEmpty()) {
+                !binding.cardName.text.isNullOrEmpty()
+            ) {
 
                 val cardNo = binding.cardNumber.text.toString().numberSanitize()
                 val cardExp = binding.cardExpiry.text.toString().split("/")
@@ -153,18 +135,17 @@ class AddPaymentCardFragment :
     }
 
     private fun cardExpiryErrorCheck(view: View): String {
-        with ((view as EditText).text.toString()) {
+        with((view as EditText).text.toString()) {
             if (!dateValidation()) {
                 return getString(R.string.incorrect_card_expiry)
-            } else {
-                binding.cardExpiry.setText(formatDate())
             }
+            binding.cardExpiry.setText(formatDate())
         }
         return getString(R.string.empty_string)
     }
 
     fun cardSwitcher(card: String) {
-        with (card.presentedCardType()) {
+        with(card.presentedCardType()) {
             binding.topLayout.background = ContextCompat.getDrawable(
                 requireContext(),
                 background
@@ -189,7 +170,7 @@ class AddPaymentCardFragment :
      * cursor locations!
      */
     fun updateEnteredCardNumber() {
-        with (binding.cardNumber) {
+        with(binding.cardNumber) {
             val origNumber = text.toString()
             val newNumber = origNumber.cardFormatter()
             if (origNumber.isNotEmpty() &&
