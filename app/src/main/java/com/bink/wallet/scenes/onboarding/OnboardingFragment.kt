@@ -3,11 +3,7 @@ package com.bink.wallet.scenes.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toolbar
-import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -47,15 +43,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         callbackManager = CallbackManager.Factory.create()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val binding: OnboardingFragmentBinding =
-            DataBindingUtil.inflate(inflater, R.layout.onboarding_fragment, container, false)
-
-        val adapter = childFragmentManager.let { OnboardingPagerAdapter(it) }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val adapter = OnboardingPagerAdapter(childFragmentManager)
         adapter.let {
             it.addFragment(
                 OnboardingPageFragment.newInstance(
@@ -129,7 +119,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         })
 
         scrollPagesAutomatically(binding.pager)
-        return binding.root
     }
 
     override fun onDestroy() {
