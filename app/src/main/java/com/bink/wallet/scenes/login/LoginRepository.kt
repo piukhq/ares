@@ -3,6 +3,9 @@ package com.bink.wallet.scenes.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
+import com.bink.wallet.model.LoginData
+import com.bink.wallet.model.auth.FacebookAuthRequest
+import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
@@ -31,6 +34,24 @@ class LoginRepository(
                     loginData.value = response.consent
                 } catch (e: Throwable) {
                     Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                }
+            }
+        }
+    }
+
+    fun authWithFacebook(
+        facebookAuthRequest: FacebookAuthRequest,
+        authResult: MutableLiveData<FacebookAuthResponse>,
+        authError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.authWithFacebookAsync(facebookAuthRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    authResult.value = response
+                } catch (e: Throwable) {
+                    authError.value = e
                 }
             }
         }
