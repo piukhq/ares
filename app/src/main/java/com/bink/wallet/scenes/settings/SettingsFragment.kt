@@ -205,10 +205,14 @@ class SettingsFragment :
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
             LocalStoreUtils.clearPreferences()
-            findNavController().navigateIfAdded(
-                this@SettingsFragment,
-                R.id.settings_to_onboarding
-            )
+            try {
+                findNavController().navigateIfAdded(
+                    this@SettingsFragment,
+                    R.id.settings_to_onboarding
+                )
+            } catch (e: Exception) {
+            }
+            viewModel.logOutResponse.removeObservers(this@SettingsFragment)
         }
 
         viewModel.logOutErrorResponse.observeNonNull(this@SettingsFragment) {
