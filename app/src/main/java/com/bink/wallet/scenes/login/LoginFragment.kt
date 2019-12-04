@@ -44,6 +44,16 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         binding.passwordField.error = null
     }
 
+    private fun setLoginButtonEnableStatus() {
+        with(binding) {
+            logInButton.isEnabled = (passwordField.error == null &&
+                    emailField.error == null &&
+                    (viewModel!!.email.value ?: EMPTY_STRING).isNotBlank() &&
+                    (viewModel!!.password.value ?: EMPTY_STRING).isNotBlank()
+                    )
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -59,6 +69,9 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 )
             }
         }
+
+        binding.logInButton.isEnabled = false
+
         viewModel.retrieveStoredLoginData(requireContext())
         binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {
@@ -72,10 +85,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
                 validateEmail()
+                setLoginButtonEnableStatus()
             }
 
             password.observeNonNull(this@LoginFragment) {
                 validatePassword()
+                setLoginButtonEnableStatus()
             }
 
             logInResponse.observeNonNull(this@LoginFragment) {
