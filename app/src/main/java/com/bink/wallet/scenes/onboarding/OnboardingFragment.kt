@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -26,7 +27,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     var timer = Timer()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(Toolbar(requireContext()))
             .build()
     }
 
@@ -44,9 +45,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
-        adapter?.let {
+        val adapter = OnboardingPagerAdapter(childFragmentManager)
+        adapter.let {
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,

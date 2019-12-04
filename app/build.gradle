@@ -120,7 +120,7 @@ android {
             }
         }
     }
-    
+
     compileOptions {
         setTargetCompatibility(1.8)
         setSourceCompatibility(1.8)
