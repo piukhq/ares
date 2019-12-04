@@ -177,7 +177,7 @@ class PaymentCardsDetailsFragment :
         super.onResume()
         binding.scrollView.postDelayed({
             binding.scrollView.smoothScrollTo(0, scrollY)
-        }, LoyaltyCardDetailsFragment.SCROLL_DELAY)
+        }, SCROLL_DELAY)
     }
 
 

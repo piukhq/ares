@@ -35,7 +35,6 @@ class LoyaltyCardDetailsFragment :
     companion object {
         const val MAX_ALPHA = 127f
         const val MIN_ALPHA = 0f
-        const val SCROLL_DELAY = 200L
     }
 
     private var scrollY = 0
@@ -298,9 +297,9 @@ class LoyaltyCardDetailsFragment :
 
     override fun onResume() {
         super.onResume()
-            binding.scrollView.postDelayed({
-                binding.scrollView.smoothScrollTo(0, scrollY)
-            }, SCROLL_DELAY)
+        binding.scrollView.postDelayed({
+            binding.scrollView.smoothScrollTo(0, scrollY)
+        }, SCROLL_DELAY)
     }
 
 
