@@ -60,8 +60,6 @@ fun Context.displayModalPopup(
         }
     }
 
-    builder.setOnCancelListener {}
-
     builder.create().show()
 }
 
