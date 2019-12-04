@@ -202,8 +202,14 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            runBlocking {
-                viewModel.updateMembershipCard()
+            if (verifyAvailableNetwork(requireActivity())) {
+                runBlocking {
+                    viewModel.updateMembershipCard()
+                }
+            } else {
+                showNoInternetConnectionDialog()
+                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                setLoadingState(false)
             }
         }
 
@@ -239,7 +245,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        with (viewModel.deleteError) {
+                        with(viewModel.deleteError) {
                             if (value is HttpException) {
                                 val error = value as HttpException
                                 requireContext().displayModalPopup(
