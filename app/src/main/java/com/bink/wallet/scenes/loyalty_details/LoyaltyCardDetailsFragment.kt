@@ -186,8 +186,14 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            runBlocking {
-                viewModel.updateMembershipCard()
+            if (verifyAvailableNetwork(requireActivity())) {
+                runBlocking {
+                    viewModel.updateMembershipCard()
+                }
+            } else {
+                showNoInternetConnectionDialog()
+                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                setLoadingState(false)
             }
         }
 
@@ -223,11 +229,25 @@ class LoyaltyCardDetailsFragment :
                     runBlocking {
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
-                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                        requireContext().displayModalPopup(
-                            getString(R.string.title_2_4),
-                            getString(R.string.loyalty_card_delete_error_message)
-                        )
+                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                        with(viewModel.deleteError) {
+                            if (value is HttpException) {
+                                val error = value as HttpException
+                                requireContext().displayModalPopup(
+                                    getString(R.string.title_2_4),
+                                    getString(
+                                        R.string.description_2_4,
+                                        error.code().toString(),
+                                        error.localizedMessage
+                                    )
+                                )
+                            } else {
+                                requireContext().displayModalPopup(
+                                    getString(R.string.title_2_4),
+                                    getString(R.string.loyalty_card_delete_error_message)
+                                )
+                            }
+                        }
                     }
                     viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
                         dialog?.dismiss()

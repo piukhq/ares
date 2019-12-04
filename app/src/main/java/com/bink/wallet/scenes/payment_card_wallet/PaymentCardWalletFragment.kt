@@ -189,9 +189,14 @@ class PaymentCardWalletFragment :
     }
 
     private fun fetchPaymentCards() {
-        runBlocking {
-            binding.progressSpinner.visibility = View.VISIBLE
-            viewModel.getPaymentCards()
+
+        if (verifyAvailableNetwork(requireActivity())) {
+            runBlocking {
+                binding.progressSpinner.visibility = View.VISIBLE
+                viewModel.getPaymentCards()
+            }
+        } else {
+            showNoInternetConnectionDialog()
         }
     }
 
