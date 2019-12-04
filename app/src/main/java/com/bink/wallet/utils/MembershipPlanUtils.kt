@@ -22,19 +22,11 @@ object MembershipPlanUtils {
                     }
                 }
 
-                UNAUTHORISED.status -> {
-                    return if (membershipPlan.feature_set.transactions_available == true) {
-                        LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE
-                    } else {
-                        LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE
-                    }
-                }
-
                 PENDING.status -> {
                     return LoginStatus.STATUS_PENDING
                 }
 
-                FAILED.status -> {
+                FAILED.status, UNAUTHORISED.status -> {
                     if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)) != null) {
                         return LoginStatus.STATUS_SIGN_UP_FAILED
                     }
