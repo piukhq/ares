@@ -32,7 +32,7 @@ class AddPaymentCardFragment :
         get() = R.layout.add_payment_card_fragment
 
 
-    private fun isCardNameValid() {
+    private fun validateCardName() {
         binding.cardName.error =
             if (binding.cardName.text.isEmpty()) {
                 getString(R.string.incorrect_card_name)
@@ -41,7 +41,7 @@ class AddPaymentCardFragment :
             }
     }
 
-    private fun isCardNumberValid() {
+    private fun validateCardNumber() {
         binding.cardNumber.error =
             if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
                 getString(R.string.incorrect_card_error)
@@ -65,7 +65,7 @@ class AddPaymentCardFragment :
 
         binding.cardNumber.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                isCardNumberValid()
+                validateCardNumber()
             }
         }
 
@@ -78,7 +78,7 @@ class AddPaymentCardFragment :
 
         binding.cardName.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                isCardNameValid()
+                validateCardName()
             }
         }
 
@@ -89,8 +89,8 @@ class AddPaymentCardFragment :
 
         binding.addButton.setOnClickListener {
 
-            isCardNameValid()
-            isCardNumberValid()
+            validateCardName()
+            validateCardNumber()
             binding.cardExpiry.error =
                 cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
 
