@@ -298,7 +298,7 @@ class LoyaltyCardDetailsFragment :
     override fun onResume() {
         super.onResume()
         binding.scrollView.postDelayed({
-            binding.scrollView.smoothScrollTo(0, scrollY)
+            binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
     }
 
