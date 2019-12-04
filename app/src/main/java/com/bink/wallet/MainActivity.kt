@@ -14,6 +14,7 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import java.util.Locale
 import kotlin.reflect.KProperty
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != "mr") {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
     }
@@ -47,6 +50,12 @@ class MainActivity : AppCompatActivity() {
             R.id.onboarding_fragment,
             R.id.rooted_screen -> {
                 finish()
+            }
+            R.id.add_email_fragment -> {
+                findNavController(R.id.main_fragment).navigate(R.id.add_email_to_onboarding)
+            }
+            R.id.accept_tcs_fragment -> {
+                findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
             }
             else -> super.onBackPressed()
         }

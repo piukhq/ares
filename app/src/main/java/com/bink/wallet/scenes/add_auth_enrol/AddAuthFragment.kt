@@ -89,10 +89,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     viewModel.currentMembershipPlan.value!!.account?.company_name
                 )
 
-            if (!viewModel.currentMembershipPlan.value!!.account?.registration_fields?.isNullOrEmpty()!!) {
                 binding.noAccountText.visibility = View.VISIBLE
-            }
         }
+
         binding.close.setOnClickListener {
             windowFullscreenHandler.toNormalScreen()
             requireActivity().onBackPressed()

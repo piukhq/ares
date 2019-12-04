@@ -126,7 +126,8 @@ class SettingsFragment :
                         GenericModalParameters(
                             R.drawable.ic_back,
                             getString(R.string.security_and_privacy_title),
-                            getString(R.string.security_and_privacy_copy)
+                            getString(R.string.security_and_privacy_copy),
+                            description2 = getString(R.string.security_and_privacy_copy_2)
                         )
                     )
                 findNavController().navigateIfAdded(this, action)
@@ -209,10 +210,14 @@ class SettingsFragment :
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
             LocalStoreUtils.clearPreferences()
-            findNavController().navigateIfAdded(
-                this@SettingsFragment,
-                R.id.settings_to_onboarding
-            )
+            try {
+                findNavController().navigateIfAdded(
+                    this@SettingsFragment,
+                    R.id.settings_to_onboarding
+                )
+            } catch (e: Exception) {
+            }
+            viewModel.logOutResponse.removeObservers(this@SettingsFragment)
         }
 
         viewModel.logOutErrorResponse.observeNonNull(this@SettingsFragment) {
