@@ -164,6 +164,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
         } else {
             showNoInternetConnectionDialog()
+            binding.swipeLayout.isRefreshing = false
+            binding.progressSpinner.visibility = View.GONE
         }
 
         binding.swipeLayout.setOnRefreshListener {
@@ -175,6 +177,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             } else {
                 showNoInternetConnectionDialog()
+                binding.swipeLayout.isRefreshing = false
+                binding.progressSpinner.visibility = View.GONE
             }
         }
     }
