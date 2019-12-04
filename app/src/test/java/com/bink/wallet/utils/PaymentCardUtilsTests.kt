@@ -224,4 +224,23 @@ class PaymentCardUtilsTests {
         assertEquals("Test".getCardType(), PaymentCardType.NONE)
     }
 
+    @Test
+    fun testExpiryMissingYear() {
+        assertEquals("12/".dateValidation(), false)
+    }
+
+    @Test
+    fun testExpiryMissingMonth() {
+        assertEquals("/19".dateValidation(), false)
+    }
+
+    @Test
+    fun testExpiryMissingMonthAndYear() {
+        assertEquals("/".dateValidation(), false)
+    }
+
+    @Test
+    fun testExpiryValid() {
+        assertEquals("12/20".dateValidation(), true)
+    }
 }

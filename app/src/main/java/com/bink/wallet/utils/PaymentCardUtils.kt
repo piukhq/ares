@@ -36,7 +36,8 @@ fun String.presentedCardType(): PaymentCardType {
     }
     PaymentCardType.values().forEach {
         if (it != PaymentCardType.NONE &&
-            it.len >= sanitizedInput.length) {
+            it.len >= sanitizedInput.length
+        ) {
             val splits = it.prefix.split(SEPARATOR_PIPE)
             for (prefix in splits) {
                 if (splits.size <= 1 ||
@@ -88,7 +89,7 @@ fun String.luhnValidPopulated() = all(Char::isDigit) && length > 1
 
 fun String.luhnLengthInvalid() =
     !(length == DIGITS_VISA_MASTERCARD ||
-      length == DIGITS_AMERICAN_EXPRESS)
+            length == DIGITS_AMERICAN_EXPRESS)
 
 fun String.luhnChecksum() = luhnMultiply().sum()
 
@@ -177,7 +178,10 @@ fun String.dateValidation(): Boolean {
     val new = formatDate()
     if (new.isNotEmpty()) {
         val split = new.split(SEPARATOR_SLASH)
-        if (split.size > 1 && !split[1].isBlank()) {
+        if (split.size > 1 &&
+            !split[0].isBlank() &&
+            !split[1].isBlank()
+        ) {
             val month = split[0].toInt()
             val year = split[1].toInt() + 2000
             if (month < 1 ||
@@ -192,11 +196,9 @@ fun String.dateValidation(): Boolean {
                 year > cal.get(Calendar.YEAR) + 10
             ) {
                 return false
-            }
-            else if (year == cal.get(Calendar.YEAR) &&
+            } else if (year == cal.get(Calendar.YEAR) &&
                 month <= cal.get(Calendar.MONTH)
-            )
-            {
+            ) {
                 return false
             }
             return true
