@@ -31,6 +31,25 @@ class AddPaymentCardFragment :
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
 
+
+    private fun isCardNameValid() {
+        binding.cardName.error =
+            if (binding.cardName.text.isEmpty()) {
+                getString(R.string.incorrect_card_name)
+            } else {
+                null
+            }
+    }
+
+    private fun isCardNumberValid() {
+        binding.cardNumber.error =
+            if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
+                getString(R.string.incorrect_card_error)
+            } else {
+                null
+            }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         cardSwitcher(getString(R.string.empty_string))
@@ -42,25 +61,25 @@ class AddPaymentCardFragment :
             cardSwitcher(it)
             cardInfoDisplay()
             updateEnteredCardNumber()
-            binding.cardNumberInputLayout.error =
-                if (it.cardValidation() == PaymentCardType.NONE) {
-                    getString(R.string.incorrect_card_error)
-                } else {
-                    getString(R.string.empty_string)
-                }
         }
 
-        viewModel.expiryDate.observeNonNull(this) {
-            binding.cardExpiryInputLayout.error = cardExpiryErrorCheck(it)
+        binding.cardNumber.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                isCardNumberValid()
+            }
         }
 
-        viewModel.cardHolder.observeNonNull(this) {
-            binding.cardNameInputLayout.error =
-                if (it.isEmpty()) {
-                    getString(R.string.incorrect_card_name)
-                } else {
-                    getString(R.string.empty_string)
-                }
+        binding.cardExpiry.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                binding.cardExpiry.error =
+                    cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
+            }
+        }
+
+        binding.cardName.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                isCardNameValid()
+            }
         }
 
         binding.privacyLink.setOnClickListener {
@@ -69,8 +88,14 @@ class AddPaymentCardFragment :
         }
 
         binding.addButton.setOnClickListener {
-            if (binding.cardNumberInputLayout.error.isNullOrEmpty() &&
-                binding.cardExpiryInputLayout.error.isNullOrBlank() &&
+
+            isCardNameValid()
+            isCardNumberValid()
+            binding.cardExpiry.error =
+                cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
+
+            if (binding.cardNumber.error.isNullOrEmpty() &&
+                binding.cardExpiry.error.isNullOrBlank() &&
                 !binding.cardName.text.isNullOrEmpty()
             ) {
 
@@ -105,14 +130,15 @@ class AddPaymentCardFragment :
         }
     }
 
-    private fun cardExpiryErrorCheck(text: String): String {
+    private fun cardExpiryErrorCheck(text: String): String? {
         with(text) {
             if (!dateValidation()) {
                 return getString(R.string.incorrect_card_expiry)
             }
-            binding.cardExpiry.setText(formatDate())
+            if (!formatDate().contentEquals(text))
+                binding.cardExpiry.setText(formatDate())
         }
-        return getString(R.string.empty_string)
+        return null
     }
 
     private fun cardSwitcher(card: String) {

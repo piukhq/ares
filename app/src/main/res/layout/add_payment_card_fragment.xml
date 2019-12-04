@@ -124,24 +124,18 @@
                         android:textSize="@dimen/text_size_description_medium"
                         android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/card_number_input_layout"
+
+                <EditText
+                        android:id="@+id/card_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/card_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_sans_light"
-                            android:hint="@string/card_number"
-                            android:imeOptions="actionNext"
-                            android:inputType="number"
-                            android:maxLength="19"
-                            android:nextFocusDown="@id/card_expiry"
-                            android:text="@={viewModel.cardNumber}" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:hint="@string/card_number"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="19"
+                        android:nextFocusDown="@id/card_expiry"
+                        android:text="@={viewModel.cardNumber}" />
 
                 <TextView
                         android:id="@+id/card_expiry_label"
@@ -154,24 +148,17 @@
                         android:textSize="@dimen/text_size_description_medium"
                         android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/card_expiry_input_layout"
+                <EditText
+                        android:id="@+id/card_expiry"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/card_expiry"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_sans_light"
-                            android:hint="@string/expiry_format"
-                            android:imeOptions="actionNext"
-                            android:inputType="date"
-                            android:maxLength="5"
-                            android:nextFocusDown="@id/card_name"
-                            android:text="@={viewModel.expiryDate}" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:hint="@string/expiry_format"
+                        android:imeOptions="actionNext"
+                        android:inputType="date"
+                        android:maxLength="5"
+                        android:nextFocusDown="@id/card_name"
+                        android:text="@={viewModel.expiryDate}" />
 
 
                 <TextView
@@ -185,24 +172,17 @@
                         android:textSize="@dimen/text_size_description_medium"
                         android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/card_name_input_layout"
+                <EditText
+                        android:id="@+id/card_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/card_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:digits="@string/only_letters_space"
-                            android:fontFamily="@font/nunito_sans_light"
-                            android:hint="@string/name_on_card"
-                            android:imeOptions="actionDone"
-                            android:inputType="textVisiblePassword"
-                            android:minLines="2"
-                            android:text="@={viewModel.cardHolder}" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:digits="@string/only_letters_space"
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:hint="@string/name_on_card"
+                        android:imeOptions="actionDone"
+                        android:inputType="textVisiblePassword"
+                        android:minLines="2"
+                        android:text="@={viewModel.cardHolder}" />
 
                 <TextView
                         android:id="@+id/privacy_link"
