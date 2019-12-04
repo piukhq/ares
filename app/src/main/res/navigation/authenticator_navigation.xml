@@ -521,14 +521,15 @@
         <argument
                 android:name="bankCard"
                 app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
+
         <action
-                android:id="@+id/card_terms_to_details"
-                app:destination="@+id/payment_card_detail"
+                android:id="@+id/card_terms_to_add"
+                app:destination="@+id/add_payment_card"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/home_wallet" />
+                app:popUpTo="@id/add_fragment" />
     </fragment>
 
     <fragment
@@ -542,13 +543,7 @@
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
-        <action
-                android:id="@+id/add_payment_to_details"
-                app:destination="@+id/payment_card_detail"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/add_payment_to_terms"
                 app:destination="@+id/card_terms_and_conditions"
@@ -631,7 +626,8 @@
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpToInclusive="true" />
         <action
                 android:id="@+id/onboarding_to_accept_tc"
                 app:destination="@id/accept_tcs_fragment"
