@@ -59,6 +59,7 @@ class PaymentCardUtilsTests {
     fun visaTooLong() {
         assertEquals(PaymentCardType.NONE, "4242 4242 4242 4242 4".cardValidation())
     }
+
     @Test
     fun amexTooLong() {
         assertEquals(PaymentCardType.NONE, "3424 424242 424242 4".cardValidation())
@@ -113,14 +114,17 @@ class PaymentCardUtilsTests {
     fun checkLayoutShort() {
         assertEquals("4242 4242", "42424242".cardFormatter())
     }
+
     @Test
     fun checkLayoutMedium() {
         assertEquals("4242 4242 4242", "424242424242".cardFormatter())
     }
+
     @Test
     fun checkLayoutLong() {
         assertEquals("4242 4242 4242 4242", "4242424242424242".cardFormatter())
     }
+
     @Test
     fun checkAmExLayoutLong() {
         assertEquals("3424 242424 24242", "342424242424242".cardFormatter())
@@ -130,34 +134,42 @@ class PaymentCardUtilsTests {
     fun checkStarLayoutEmpty() {
         assertEquals("", "".cardStarFormatter())
     }
+
     @Test
     fun checkStarLayoutInvalid() {
         assertEquals("", "9427".cardStarFormatter())
     }
+
     @Test
     fun checkStarLayoutVeryShort() {
         assertEquals("****", "4242".cardStarFormatter())
     }
+
     @Test
     fun checkStarLayoutShort() {
         assertEquals("**** ****", "42424242".cardStarFormatter())
     }
+
     @Test
     fun checkStarLayoutMedium() {
         assertEquals("**** **** ****", "4242 4242 4242".cardStarFormatter())
     }
+
     @Test
     fun checkStarLayoutAlmostFull() {
         assertEquals("**** **** **** 42", "4242 4242 4242 42".cardStarFormatter())
     }
+
     @Test
     fun checkStarLayoutLong() {
         assertEquals("**** **** **** 4242", "4242 4242 4242 4242".cardStarFormatter())
     }
+
     @Test
     fun checkStarAmExLayoutAlmostFull() {
         assertEquals("**** **** **** 242", "3442 424242 4242".cardStarFormatter())
     }
+
     @Test
     fun checkStarAmExLayoutLong() {
         assertEquals("**** **** **** 2424", "3442 424242 42424".cardStarFormatter())
@@ -167,38 +179,47 @@ class PaymentCardUtilsTests {
     fun emptyDateTest() {
         assertFalse("".dateValidation())
     }
+
     @Test
     fun garbageDateTest() {
         assertFalse("abcde".dateValidation())
     }
+
     @Test
     fun testSimpleDateFormat() {
         assertEquals("01/01", "101".formatDate())
     }
+
     @Test
     fun testDateFormat() {
         assertEquals("11/21", "11/21".formatDate())
     }
+
     @Test
     fun validateMonthTooSmall() {
         assertFalse("00/20".dateValidation())
     }
+
     @Test
     fun validateMonthTooLarge() {
         assertFalse("13/20".dateValidation())
     }
+
     @Test
     fun validateYearTooSmall() {
         assertFalse("10/10".dateValidation())
     }
+
     @Test
     fun validateYearTooLarge() {
         assertFalse("10/40".dateValidation())
     }
+
     @Test
     fun validateDateNoSlash() {
         assertTrue("1021".dateValidation())
     }
+
     @Test
     fun validateDateWithSlash() {
         assertTrue("10/21".dateValidation())
@@ -226,21 +247,21 @@ class PaymentCardUtilsTests {
 
     @Test
     fun testExpiryMissingYear() {
-        assertEquals("12/".dateValidation(), false)
+        assertFalse("12/".dateValidation())
     }
 
     @Test
     fun testExpiryMissingMonth() {
-        assertEquals("/19".dateValidation(), false)
+        assertFalse("/19".dateValidation())
     }
 
     @Test
     fun testExpiryMissingMonthAndYear() {
-        assertEquals("/".dateValidation(), false)
+        assertFalse("/".dateValidation())
     }
 
     @Test
     fun testExpiryValid() {
-        assertEquals("12/20".dateValidation(), true)
+        assertTrue("12/20".dateValidation())
     }
 }
