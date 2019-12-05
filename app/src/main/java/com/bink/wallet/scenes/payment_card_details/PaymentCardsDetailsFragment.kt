@@ -165,6 +165,13 @@ class PaymentCardsDetailsFragment :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+//        runBlocking {
+            viewModel.getMembershipCards()
+//        }
+    }
+
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =
             PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
