@@ -7,6 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class GenericModalParameters(
     @DrawableRes var topBarIconId: Int = 0,
+    var isCloseModal: Boolean,
     var title: String,
     var description: String,
     var firstButtonText: String = "",

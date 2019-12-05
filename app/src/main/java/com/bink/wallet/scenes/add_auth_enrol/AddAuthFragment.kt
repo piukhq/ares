@@ -121,6 +121,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.currentMembershipPlan.value?.account?.plan_description?.let { message ->
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.plan_description),
                         message, getString(R.string.ok)
                     )
@@ -225,9 +226,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                val action =AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                val action = AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_ghost_card_not_available),
                         getString(R.string.description_ghost_card_not_available)
                     )

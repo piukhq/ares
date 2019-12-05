@@ -62,6 +62,7 @@ class PaymentCardsDetailsFragment :
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.security_and_privacy_title),
                         getString(R.string.security_and_privacy_copy),
                         description2 = getString(R.string.security_and_privacy_copy_2)
