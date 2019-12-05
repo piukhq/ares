@@ -26,7 +26,8 @@ object MembershipPlanUtils {
                     return LoginStatus.STATUS_PENDING
                 }
 
-                FAILED.status, UNAUTHORISED.status -> {
+                FAILED.status,
+                UNAUTHORISED.status -> {
                     if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)) != null) {
                         return LoginStatus.STATUS_SIGN_UP_FAILED
                     }
