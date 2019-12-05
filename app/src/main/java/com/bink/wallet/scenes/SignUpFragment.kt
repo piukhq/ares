@@ -35,16 +35,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     private fun setSignupButtonEnableStatus() {
         with(viewModel) {
-            binding.signUpButton.isEnabled = (binding.passwordField.error == null &&
-                    binding.emailField.error == null &&
-                    binding.confirmPasswordField.error == null &&
-                    (email.value ?: EMPTY_STRING).isNotBlank() &&
-                    (password.value ?: EMPTY_STRING).isNotBlank() &&
-                    (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
-                    confirmPassword.value == password.value &&
-                    termsCondition.value!! &&
-                    privacyPolicy.value!!
-                    )
+            binding.signUpButton.isEnabled =
+                (binding.passwordField.error == null &&
+                        binding.emailField.error == null &&
+                        binding.confirmPasswordField.error == null &&
+                        (email.value ?: EMPTY_STRING).isNotBlank() &&
+                        (password.value ?: EMPTY_STRING).isNotBlank() &&
+                        (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
+                        confirmPassword.value == password.value &&
+                        termsCondition.value!! &&
+                        privacyPolicy.value!!
+                        )
         }
     }
 
