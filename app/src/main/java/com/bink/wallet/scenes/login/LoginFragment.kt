@@ -46,11 +46,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     private fun setLoginButtonEnableStatus() {
         with(binding) {
-            logInButton.isEnabled = (passwordField.error == null &&
-                    emailField.error == null &&
-                    (viewModel!!.email.value ?: EMPTY_STRING).isNotBlank() &&
-                    (viewModel!!.password.value ?: EMPTY_STRING).isNotBlank()
-                    )
+            logInButton.isEnabled =
+                (passwordField.error == null &&
+                        emailField.error == null &&
+                        (viewModel!!.email.value ?: EMPTY_STRING).isNotBlank() &&
+                        (viewModel!!.password.value ?: EMPTY_STRING).isNotBlank()
+                        )
         }
     }
 
