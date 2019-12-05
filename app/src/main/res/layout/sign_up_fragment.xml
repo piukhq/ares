@@ -210,14 +210,16 @@
 
                 <Button
                         android:id="@+id/sign_up_button"
-                        style="@style/RoundedGradientButton"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/button_margin_start"
                         android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                         android:layout_marginEnd="@dimen/button_margin_end"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                        android:background="@drawable/gradient_button_selector"
                         android:text="@string/continue_text"
                         android:textAllCaps="false"
+                        android:textColor="@android:color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
