@@ -167,9 +167,7 @@ class PaymentCardsDetailsFragment :
 
     override fun onResume() {
         super.onResume()
-//        runBlocking {
-            viewModel.getMembershipCards()
-//        }
+        viewModel.getMembershipCards()
     }
 
     private fun addLoyaltyCard(plan: MembershipPlan) {
