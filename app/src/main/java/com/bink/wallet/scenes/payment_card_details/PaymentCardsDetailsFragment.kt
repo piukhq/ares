@@ -11,6 +11,7 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -30,6 +31,8 @@ class PaymentCardsDetailsFragment :
 
     override val layoutRes: Int
         get() = R.layout.payment_cards_details_fragment
+
+    private var scrollY = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -164,6 +167,19 @@ class PaymentCardsDetailsFragment :
             binding.paymentCardDetail = it
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        scrollY = binding.scrollView.scrollY
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
+    }
+
 
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =

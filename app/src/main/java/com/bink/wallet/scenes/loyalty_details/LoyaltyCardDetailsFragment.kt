@@ -37,6 +37,8 @@ class LoyaltyCardDetailsFragment :
         const val MIN_ALPHA = 0f
     }
 
+    private var scrollY = 0
+
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
@@ -163,23 +165,6 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        binding.footerSecurity.setOnClickListener {
-            val directions = LoyaltyCardDetailsFragmentDirections.detailToSecurity(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    getString(R.string.security_modal_title),
-                    getString(
-                        R.string.security_modal_body,
-                        getString(R.string.security_modal_body_1),
-                        getString(R.string.security_modal_body_2)
-                                + getString(R.string.security_modal_body_3)
-                    ),
-                    getString(R.string.ok)
-                )
-            )
-            findNavController().navigateIfAdded(this, directions)
-        }
-
         viewModel.linkStatus.observeNonNull(this)
         { status ->
             if (viewModel.accountStatus.value != null &&
@@ -198,7 +183,6 @@ class LoyaltyCardDetailsFragment :
             cd.alpha = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
-
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -228,7 +212,7 @@ class LoyaltyCardDetailsFragment :
             findNavController().navigateIfAdded(this, action)
         }
 
-        binding.footerDelete.setOnClickListener { footerView ->
+        binding.footerDelete.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             var dialog: AlertDialog? = null
             builder.setMessage(getString(R.string.delete_card_modal_body))
@@ -239,7 +223,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        with (viewModel.deleteError) {
+                        with(viewModel.deleteError) {
                             if (value is HttpException) {
                                 val error = value as HttpException
                                 requireContext().displayModalPopup(
@@ -306,10 +290,16 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-
     override fun onPause() {
         super.onPause()
-        viewModel.paymentCards.value = null
+        scrollY = binding.scrollView.scrollY
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
     }
 
 
