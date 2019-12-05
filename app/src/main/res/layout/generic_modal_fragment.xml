@@ -34,28 +34,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:orientation="vertical">
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium">
 
                 <TextView
                         android:id="@+id/title"
                         style="@style/HeaderTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="start" />
+                        android:gravity="start"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                         android:id="@+id/description"
                         style="@style/CustomTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/bottom_layout_height"
-                        android:paddingTop="@dimen/margin_padding_size_extra_small" />
-            </LinearLayout>
+                        android:paddingTop="@dimen/margin_padding_size_extra_small"
+                        android:textColorLink="@color/blue_accent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+                <TextView
+                        android:id="@+id/description_2"
+                        style="@style/CustomTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/margin_padding_size_extra_small"
+                        android:textColorLink="@color/blue_accent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/description" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
         <LinearLayout

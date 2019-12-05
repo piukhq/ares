@@ -37,6 +37,8 @@ class LoyaltyCardDetailsFragment :
         const val MIN_ALPHA = 0f
     }
 
+    private var scrollY = 0
+
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
@@ -45,7 +47,7 @@ class LoyaltyCardDetailsFragment :
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.detail_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         setLoadingState(true)
@@ -167,23 +169,6 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        binding.footerSecurity.setOnClickListener {
-            val directions = LoyaltyCardDetailsFragmentDirections.detailToSecurity(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    getString(R.string.security_modal_title),
-                    getString(
-                        R.string.security_modal_body,
-                        getString(R.string.security_modal_body_1),
-                        getString(R.string.security_modal_body_2)
-                                + getString(R.string.security_modal_body_3)
-                    ),
-                    getString(R.string.ok)
-                )
-            )
-            findNavController().navigateIfAdded(this, directions)
-        }
-
         viewModel.linkStatus.observeNonNull(this)
         { status ->
             if (viewModel.accountStatus.value != null &&
@@ -202,7 +187,6 @@ class LoyaltyCardDetailsFragment :
             cd.alpha = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
-
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -225,13 +209,14 @@ class LoyaltyCardDetailsFragment :
                     GenericModalParameters(
                         R.drawable.ic_close,
                         getString(R.string.security_and_privacy_title),
-                        getString(R.string.security_and_privacy_copy)
+                        getString(R.string.security_and_privacy_copy),
+                        description2 = getString(R.string.security_and_privacy_copy_2)
                     )
                 )
             findNavController().navigateIfAdded(this, action)
         }
 
-        binding.footerDelete.setOnClickListener { footerView ->
+        binding.footerDelete.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             var dialog: AlertDialog? = null
             builder.setMessage(getString(R.string.delete_card_modal_body))
@@ -242,7 +227,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        with (viewModel.deleteError) {
+                        with(viewModel.deleteError) {
                             if (value is HttpException) {
                                 val error = value as HttpException
                                 requireContext().displayModalPopup(
@@ -263,7 +248,7 @@ class LoyaltyCardDetailsFragment :
                     }
                     viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
                         dialog?.dismiss()
-                        findNavController().navigateIfAdded(this, R.id.detail_to_home)
+                        findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
                 } else {
                     showNoInternetConnectionDialog()
@@ -309,10 +294,16 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-
     override fun onPause() {
         super.onPause()
-        viewModel.paymentCards.value = null
+        scrollY = binding.scrollView.scrollY
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
     }
 
 
@@ -355,6 +346,8 @@ class LoyaltyCardDetailsFragment :
                     } else {
                         binding.pointsText.text = getString(R.string.points_signing_up)
                     }
+                } else {
+                    binding.pointsText.text = getString(R.string.points_signing_up)
                 }
             }
             else -> {
@@ -460,15 +453,7 @@ class LoyaltyCardDetailsFragment :
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
-                    val directions =
-                        LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                getString(R.string.title_1_7),
-                                getString(R.string.description_1_7)
-                            )
-                        )
-                    findNavController().navigateIfAdded(this, directions)
+                    pendingCardStatusModal()
                 }
                 LinkStatus.STATUS_UNLINKABLE -> {
                     val directions =
@@ -485,6 +470,18 @@ class LoyaltyCardDetailsFragment :
                 }
             }
         }
+    }
+
+    private fun pendingCardStatusModal() {
+        val directions =
+            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    getString(R.string.title_lcd_pending),
+                    getString(R.string.description_lcd_pending)
+                )
+            )
+        findNavController().navigateIfAdded(this, directions)
     }
 
     private fun setPointsModuleClickListener() {
@@ -516,39 +513,14 @@ class LoyaltyCardDetailsFragment :
                         }
                     action.let { findNavController().navigateIfAdded(this, action) }
                 }
-                LoginStatus.STATUS_LOGIN_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_7),
-                        getString(R.string.description_1_7)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                LoginStatus.STATUS_PENDING -> {
+                    pendingCardStatusModal()
                 }
-                LoginStatus.STATUS_SIGN_UP_PENDING -> {
+                LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
-                        getString(R.string.title_1_9),
-                        getString(R.string.description_1_9)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
-                }
-                LoginStatus.STATUS_REGISTER_GHOST_CARD_PENDING -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.title_1_11),
-                        getString(R.string.description_1_11)
+                        getString(R.string.title_1_5),
+                        getString(R.string.description_1_5)
                     )
                     val action =
                         genericModalParameters.let { params ->

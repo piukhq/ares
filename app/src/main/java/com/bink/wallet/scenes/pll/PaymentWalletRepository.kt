@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 
-class PllRepository(
+class PaymentWalletRepository(
     private val apiService: ApiService,
     private val paymentCardDao: PaymentCardDao
 ) {
@@ -27,7 +26,7 @@ class PllRepository(
                     paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -46,7 +45,7 @@ class PllRepository(
                     }
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -62,7 +61,7 @@ class PllRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     localFetchError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -72,7 +71,8 @@ class PllRepository(
         membershipCardId: String,
         paymentCardId: String,
         paymentCard: MutableLiveData<PaymentCard>,
-        linkError: MutableLiveData<Throwable>
+        linkError: MutableLiveData<Throwable>,
+        paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
@@ -80,9 +80,18 @@ class PllRepository(
                 try {
                     val response = request.await()
                     paymentCard.value = response
+
+                    val paymentCardValue = paymentCardMutableValue.value
+                    paymentCardValue?.membership_cards?.forEach {
+                        if (it.id == membershipCardId) {
+                            it.active_link = true
+                        }
+                    }
+
+                    paymentCardMutableValue.value = paymentCardValue
                 } catch (e: Throwable) {
                     linkError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -92,7 +101,8 @@ class PllRepository(
         paymentCardId: String,
         membershipCardId: String,
         unlinkError: MutableLiveData<Throwable>,
-        unlinkedBody: MutableLiveData<ResponseBody>
+        unlinkedBody: MutableLiveData<ResponseBody>,
+        paymentCard: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
@@ -100,9 +110,18 @@ class PllRepository(
                 try {
                     val response = request.await()
                     unlinkedBody.value = response
+
+                    val paymentCardValue = paymentCard.value
+                    paymentCardValue?.membership_cards?.forEach {
+                        if (it.id == membershipCardId) {
+                            it.active_link = false
+                        }
+                    }
+
+                    paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -122,7 +141,19 @@ class PllRepository(
                     mutableDeleteCard.value = response
                 } catch (e: Throwable) {
                     deleteError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
+    fun clearPaymentCards() {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    paymentCardDao.deleteAll()
+                } catch (e: Throwable) {
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

@@ -19,8 +19,6 @@ class OnboardingPageFragment : Fragment() {
         private const val EXTRA_TITLE = "extraTitle"
         private const val EXTRA_DESCRIPTION = "extraDescription"
         private const val EXTRA_PAGE_TITLE = "extraPageTitle"
-        private const val PAGE_IMAGE_HEIGHT_PX = 100f
-        private const val PAGE_MARGIN_HEIGHT_PX = 16f
 
         fun newInstance(
             pageTitle: String,
@@ -53,32 +51,11 @@ class OnboardingPageFragment : Fragment() {
             container,
             false
         )
-
         arguments?.let { bundle ->
             with(binding) {
                 pageTitle.text = bundle.getString(EXTRA_TITLE)
                 pageDescription.text = bundle.getString(EXTRA_DESCRIPTION)
                 pageImage.setImageResource(bundle.getInt(EXTRA_IMAGE))
-            }
-
-            if (bundle.getString(EXTRA_PAGE_TITLE).equals(PAGE_1)) {
-                binding.binkImage.visibility = View.VISIBLE
-                val layoutParams = binding.pageImage.layoutParams
-                layoutParams.height = requireContext().toPixelFromDip(PAGE_IMAGE_HEIGHT_PX).toInt()
-                binding.pageImage.layoutParams = layoutParams
-
-                val constraintSet = ConstraintSet()
-                with(constraintSet) {
-                    clone(binding.pageLayout)
-                    connect(
-                        R.id.page_image,
-                        ConstraintSet.TOP,
-                        R.id.bink_image,
-                        ConstraintSet.BOTTOM,
-                        requireContext().toPixelFromDip(PAGE_MARGIN_HEIGHT_PX).toInt()
-                    )
-                    applyTo(binding.pageLayout)
-                }
             }
         }
         return binding.root
