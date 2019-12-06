@@ -263,7 +263,7 @@ class LoyaltyCardDetailsFragment :
                         findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
                 } else {
-                    showNoInternetConnectionDialog()
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
