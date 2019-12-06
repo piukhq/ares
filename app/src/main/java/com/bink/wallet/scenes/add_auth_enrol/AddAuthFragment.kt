@@ -88,8 +88,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     R.string.enrol_description,
                     viewModel.currentMembershipPlan.value!!.account?.company_name
                 )
-
-                binding.noAccountText.visibility = View.VISIBLE
+            binding.noAccountText.visibility = View.VISIBLE
         }
 
         binding.close.setOnClickListener {
@@ -125,7 +124,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         message, getString(R.string.ok)
                     )
                 }?.let { params ->
-                   AddAuthFragmentDirections.signUpToBrandHeader(params)
+                    AddAuthFragmentDirections.signUpToBrandHeader(params)
                 }
             directions?.let { _ ->
                 findNavController().navigateIfAdded(this, directions)
@@ -217,7 +216,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 )!!
             ) {
                 if (viewModel.currentMembershipPlan.value != null) {
-                    val action =AddAuthFragmentDirections.toGhost(
+                    val action = AddAuthFragmentDirections.toGhost(
                         SignUpFormType.GHOST,
                         viewModel.currentMembershipPlan.value!!,
                         null
@@ -225,7 +224,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                val action =AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                val action = AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
                     GenericModalParameters(
                         R.drawable.ic_close,
                         getString(R.string.title_ghost_card_not_available),
@@ -342,10 +341,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.newMembershipCard.removeObservers(this)
             if (signUpFormType == SignUpFormType.GHOST) {
                 val currentRequest = MembershipCardRequest(
-                    Account(null,
+                    Account(
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields),
+                        null,
+                        addRegisterFieldsRequest.registration_fields
+                    ),
                     viewModel.currentMembershipPlan.value!!.id
                 )
                 viewModel.ghostMembershipCard(
@@ -371,22 +372,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST ||
-                        viewModel.paymentCards.value.isNullOrEmpty()
-                    ) {
-                        val directions =
-                           AddAuthFragmentDirections.signUpToDetails(
-                                viewModel.currentMembershipPlan.value!!,
-                                membershipCard
-                            )
-                        findNavController().navigateIfAdded(this, directions)
-                    } else {
-                        val directions =AddAuthFragmentDirections.signUpToPllEmpty(
+                    val directions =
+                        AddAuthFragmentDirections.signUpToDetails(
                             viewModel.currentMembershipPlan.value!!,
                             membershipCard
                         )
-                        findNavController().navigateIfAdded(this, directions)
-                    }
+                    findNavController().navigateIfAdded(this, directions)
                 }
                 CardType.PLL.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
