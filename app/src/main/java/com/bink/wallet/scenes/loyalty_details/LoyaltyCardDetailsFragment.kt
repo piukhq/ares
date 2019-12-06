@@ -326,7 +326,10 @@ class LoyaltyCardDetailsFragment :
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+                    binding.pointsText.text = getString(R.string.collecting)
+                    binding.pointsDescription.text = getString(R.string.towards_rewards)
+                } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
                     val updateTime = balance?.updated_at
@@ -339,7 +342,10 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+                    binding.pointsText.text = getString(R.string.collecting)
+                    binding.pointsDescription.text = getString(R.string.towards_rewards)
+                } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     if (balance != null) {
                         setBalanceText(balance)

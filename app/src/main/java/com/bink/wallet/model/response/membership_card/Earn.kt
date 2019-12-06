@@ -8,6 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class Earn(
     val type : String?,
-    val value : Int?,
-    val target_value: Int?
+    val value : Float?,
+    val target_value: Float?
 ) : Parcelable

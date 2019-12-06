@@ -398,6 +398,8 @@
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
     <!-- PLR screens -->
+    <string name="collecting">Collecting</string>
+    <string name="towards_rewards">Towards rewards</string>
     <string name="voucher_spent">Spent</string>
     <string name="voucher_goal">Goal</string>
 </resources>
