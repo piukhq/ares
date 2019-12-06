@@ -27,6 +27,7 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
@@ -90,6 +91,8 @@ val viewModelModules = module {
     viewModel { AddEmailViewModel() }
 
     viewModel { ForgotPasswordViewModel(get()) }
+
+    viewModel { PreferencesViewModel(get()) }
 }
 
 fun provideLoginRepository(

@@ -576,7 +576,20 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/settings_to_preferences"
+                app:destination="@+id/preference_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
+
+    <fragment
+            android:id="@+id/preference_fragment"
+            android:name="com.bink.wallet.scenes.preference.PreferencesFragment" />
+
     <fragment
             android:id="@+id/about_fragment"
             android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">

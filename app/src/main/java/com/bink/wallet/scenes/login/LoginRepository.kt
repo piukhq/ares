@@ -3,10 +3,10 @@ package com.bink.wallet.scenes.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
-import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 
 class LoginRepository(
@@ -142,6 +144,38 @@ class LoginRepository(
                 } catch (e: Throwable) {
                     logOutErrorResponse.value = e
                 }
+            }
+        }
+    }
+
+    fun getPreferences(
+        preferenceResponse: MutableLiveData<List<Preference>>,
+        preferenceErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.getPreferencesAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    preferenceResponse.value = response
+                } catch (e: Throwable) {
+                    preferenceErrorResponse.value = e
+                }
+            }
+        }
+    }
+
+    fun setPreference(
+        json: String
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            apiService.putPreferencesAsync(
+                RequestBody.create(
+                    MediaType.parse("application/json"),
+                    json
+                )
+            )
+            withContext(Dispatchers.Main) {
             }
         }
     }
