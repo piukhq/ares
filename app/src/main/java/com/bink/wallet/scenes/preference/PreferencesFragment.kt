@@ -1,0 +1,62 @@
+package com.bink.wallet.scenes.preference
+
+import android.os.Bundle
+import android.view.View
+import androidx.core.text.HtmlCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import com.bink.wallet.BaseFragment
+import com.bink.wallet.R
+import com.bink.wallet.databinding.PreferencesFragmentBinding
+import com.bink.wallet.model.request.Preference
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragmentBinding>() {
+
+    override val viewModel: PreferencesViewModel by viewModel()
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        binding.preferenceDescription.text = HtmlCompat.fromHtml(
+            getString(R.string.preference_description),
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        )
+
+        viewModel.preferences.observeNonNull(this) { preferences ->
+
+            binding.progressSpinner.visibility = View.GONE
+
+            binding.preferencesRecycler.apply {
+                adapter = PreferenceAdapter(
+                    preferences,
+                    onClickListener = { preference: Preference, state: Int ->
+                        viewModel.savePreference(
+                            json = JSONObject().put(
+                                preference.slug!!,
+                                state
+                            ).toString()
+                        )
+                    })
+                layoutManager = GridLayoutManager(requireContext(), 1)
+            }
+        }
+
+        viewModel.preferenceErrorResponse.observeNonNull(this) {
+            binding.progressSpinner.visibility = View.GONE
+        }
+
+        viewModel.getPreferences()
+        binding.progressSpinner.visibility = View.VISIBLE
+    }
+
+    override val layoutRes = R.layout.preferences_fragment
+
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
+            .build()
+    }
+}
