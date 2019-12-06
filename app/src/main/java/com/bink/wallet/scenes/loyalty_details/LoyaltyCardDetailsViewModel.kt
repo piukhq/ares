@@ -23,7 +23,6 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var deleteError = MutableLiveData<Throwable>()
     var accountStatus = MutableLiveData<LoginStatus>()
     var linkStatus = MutableLiveData<LinkStatus>()
-    var errorCodes = MutableLiveData<String>()
 
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, deleteError)
@@ -57,7 +56,8 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                                 linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
                             membershipCard.value?.payment_cards.isNullOrEmpty() ||
                                     !existLinkedPaymentCards() ->
-                                linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
+                                linkStatus.value =
+                                    LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
                             else ->
                                 linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
                         }
@@ -77,8 +77,6 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                 linkStatus.value = LinkStatus.STATUS_UNLINKABLE
             }
         }
-        errorCodes.value = null
-        membershipCard.value?.status?.reason_codes?.forEach { errorCodes.value += "$it " }
     }
 
     private fun existLinkedPaymentCards(): Boolean {
