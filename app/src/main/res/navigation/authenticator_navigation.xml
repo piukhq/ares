@@ -126,9 +126,9 @@
                 android:id="@+id/payment_detail_to_security"
                 app:destination="@+id/security_and_privacy"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
 
     <fragment
@@ -206,17 +206,17 @@
                 android:id="@+id/add_join_to_join_unavailable"
                 app:destination="@+id/join_unavailable"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
 
         <action
                 android:id="@+id/add_join_to_brand_header"
                 app:destination="@+id/brand_header"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up"/>
+                app:popExitAnim="@anim/slide_out_down"/>
 
     </fragment>
 
@@ -267,9 +267,9 @@
                 android:id="@+id/sign_up_to_brand_header"
                 app:destination="@id/brand_header"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up"/>
+                app:popExitAnim="@anim/slide_out_down"/>
         <action
                 android:id="@+id/sign_up_to_pll"
                 app:destination="@+id/pll_fragment"
@@ -281,9 +281,9 @@
                 android:id="@+id/sign_up_to_ghost_registration_unavailable"
                 app:destination="@+id/ghost_registration_unavailable"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -352,9 +352,9 @@
                 android:id="@+id/detail_to_error_modal"
                 app:destination="@+id/lcd_error_modal_fragment"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/detail_to_pll_empty"
                 app:destination="@+id/pll_empty_fragment"
@@ -374,16 +374,16 @@
                 android:id="@+id/detail_to_about"
                 app:destination="@+id/about_fragment"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/detail_to_security"
                 app:destination="@+id/security_and_privacy"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/detail_to_pll"
                 app:destination="@id/pll_fragment"
@@ -425,9 +425,9 @@
                 android:id="@+id/pll_empty_to_brand_header"
                 app:destination="@id/brand_header"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up"/>
+                app:popExitAnim="@anim/slide_out_down"/>
 
     </fragment>
 
@@ -445,9 +445,9 @@
                 android:id="@+id/transactions_to_brand_header"
                 app:destination="@+id/brand_header"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up"/>
+                app:popExitAnim="@anim/slide_out_down"/>
 
     </fragment>
 
@@ -494,9 +494,9 @@
                 android:id="@+id/pll_to_brand_header"
                 app:destination="@+id/brand_header"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up"/>
+                app:popExitAnim="@anim/slide_out_down"/>
     </fragment>
 
     <fragment
@@ -542,9 +542,9 @@
                 android:id="@+id/add_payment_to_terms"
                 app:destination="@+id/card_terms_and_conditions"
                 app:enterAnim="@anim/slide_in_up"
-                app:exitAnim="@anim/slide_out_up"
+                app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_up" />
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
