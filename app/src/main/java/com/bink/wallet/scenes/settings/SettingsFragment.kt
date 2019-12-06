@@ -194,7 +194,7 @@ class SettingsFragment :
 
             SettingsItemType.LOGOUT -> {
                 requireContext().displayModalPopup(
-                    EMPTY_STRING,
+                    getString(R.string.settings_menu_log_out),
                     getString(R.string.log_out_confirmation),
                     okAction = { viewModel.logOut() },
                     buttonText = R.string.settings_menu_log_out,
