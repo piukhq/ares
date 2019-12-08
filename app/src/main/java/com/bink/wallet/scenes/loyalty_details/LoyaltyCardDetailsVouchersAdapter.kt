@@ -49,7 +49,8 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                 )
             }
             when (voucher.state) {
-                VoucherStates.IN_PROGRESS.state -> {
+                VoucherStates.IN_PROGRESS.state,
+                VoucherStates.ISSUED.state -> {
                     if (voucher.earn?.value != null) {
                         binding.spentAmount.text = ValueDisplayUtils.displayValue(
                             voucher.earn.value,
@@ -74,6 +75,7 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                     fillProgressBar(voucher.state)
                 }
             }
+            setProgressDrawable(voucher.state)
             binding.executePendingBindings()
         }
 
@@ -87,6 +89,9 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
         private fun fillProgressBar(state: String?) {
             binding.progressBar.max = 100
             binding.progressBar.progress = 100
+        }
+
+        private fun setProgressDrawable(state: String?) {
             with(binding.progressBar) {
                 progressDrawable =
                     ContextCompat.getDrawable(

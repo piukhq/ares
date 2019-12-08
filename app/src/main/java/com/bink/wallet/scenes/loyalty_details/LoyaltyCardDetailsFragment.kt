@@ -18,6 +18,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -571,7 +572,13 @@ class LoyaltyCardDetailsFragment :
         with (binding.voucherTiles) {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = LoyaltyCardDetailsVouchersAdapter(viewModel.membershipCard.value!!.vouchers!!)
+            val vouchers = viewModel.membershipCard.value!!.vouchers!!.filter {
+                listOf(
+                    VoucherStates.IN_PROGRESS.state,
+                    VoucherStates.ISSUED.state
+                ).contains(it.state)
+            }
+            adapter = LoyaltyCardDetailsVouchersAdapter(vouchers)
         }
     }
 }
