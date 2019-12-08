@@ -195,9 +195,9 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        viewModel.accountStatus.observeNonNull(this)
-        { status ->
-            configureLoginStatus(status)
+        viewModel.accountStatus.observeNonNull(this) {
+                status ->
+                    configureLoginStatus(status)
         }
 
         setPointsModuleClickListener()
@@ -326,9 +326,9 @@ class LoyaltyCardDetailsFragment :
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
-                    binding.pointsText.text = getString(R.string.collecting)
-                    binding.pointsDescription.text = getString(R.string.towards_rewards)
+                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
+                    viewModel.membershipCard.value?.status?.state == "authorised") {
+                    setPlrPointsModuleText()
                 } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     setBalanceText(balance)
@@ -342,9 +342,9 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
-                    binding.pointsText.text = getString(R.string.collecting)
-                    binding.pointsDescription.text = getString(R.string.towards_rewards)
+                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
+                    viewModel.membershipCard.value?.status?.state == "authorised") {
+                    setPlrPointsModuleText()
                 } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
                     val balance = viewModel.membershipCard.value?.balances?.first()
                     if (balance != null) {
@@ -359,6 +359,11 @@ class LoyaltyCardDetailsFragment :
             else -> {
             }
         }
+    }
+
+    private fun setPlrPointsModuleText() {
+        binding.pointsText.text = getString(R.string.collecting)
+        binding.pointsDescription.text = getString(R.string.towards_rewards)
     }
 
     private fun configureLinkStatus(linkStatus: LinkStatus) {
