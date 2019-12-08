@@ -48,6 +48,7 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                     voucher.burn.type
                 )
             }
+            binding.executePendingBindings()
             when (voucher.state) {
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
@@ -60,14 +61,16 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                         )
                     }
                     if (voucher.earn?.target_value != null) {
-                        binding.progressBar.max = voucher.earn.target_value.roundToInt()
-                        binding.progressBar.progress = (voucher.earn.value ?: 0f).roundToInt()
-                        binding.goalAmount.text = ValueDisplayUtils.displayValue(
+                        val goal = ValueDisplayUtils.displayValue(
                             voucher.earn.target_value,
                             voucher.burn?.prefix,
                             voucher.burn?.suffix,
                             voucher.burn?.currency
                         )
+                        binding.subtitle.text = voucher.subtext.plus(" ").plus(goal)
+                        binding.progressBar.max = voucher.earn.target_value.roundToInt()
+                        binding.progressBar.progress = (voucher.earn.value ?: 0f).roundToInt()
+                        binding.goalAmount.text = goal
                     }
                 }
                 else -> {
@@ -76,7 +79,6 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                 }
             }
             setProgressDrawable(voucher.state)
-            binding.executePendingBindings()
         }
 
         private fun hideEarnBurnValues() {
