@@ -119,7 +119,6 @@ class LoyaltyWalletAdapter(
                 dismissBanner.setOnClickListener {
                     onRemoveListener(item)
                 }
-
                 joinCardDescription.text =
                     joinCardDescription.context.getString(R.string.payment_join_description)
             }

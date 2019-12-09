@@ -60,6 +60,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (direction == ItemTouchHelper.RIGHT &&
                     walletItems[position] is MembershipCard
                 ) {
+//                    viewHolder.binding.deleteLayout.visibility = View.GONE
+//                    viewHolder.binding.barcodeLayout.visibility = View.VISIBLE
                     val card = walletItems[position] as MembershipCard
                     if (viewModel.membershipPlanData.value != null) {
                         val plan =
@@ -83,6 +85,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
+//                    viewHolder.binding.deleteLayout.visibility = View.VISIBLE
+//                    viewHolder.binding.barcodeLayout.visibility = View.GONE
                     walletItems[position].let {
                         if (it is MembershipCard)
                             deleteDialog(it, position)

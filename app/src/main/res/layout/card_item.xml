@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardUseCompatPadding="false"
-            app:cardCornerRadius="@dimen/margin_padding_size_small">
+            app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:id="@+id/company_logo"
                     android:layout_width="@dimen/margin_padding_size_extra_large"
                     android:layout_height="@dimen/margin_padding_size_extra_large"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="18dp"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     app:imageUrl="@{plan}"
@@ -131,8 +131,8 @@
                         android:gravity="end"
                         android:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
-                        android:textSize="@dimen/size_body_small"
-                        android:fontFamily="@font/nunito_sans_bold"
+                        android:textSize="@dimen/size_body_medium"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
