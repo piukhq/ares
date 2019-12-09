@@ -19,12 +19,13 @@ object ValueDisplayUtils {
                 "%.0f".format(value)
             }
         )
-        if (prefix.isNullOrEmpty() &&
-            !suffix.isNullOrEmpty()) {
+        if (!suffix.isNullOrEmpty()) {
+            display.append(" ")
             display.append(suffix)
         }
         if (!type.isNullOrEmpty()) {
-            display.append(" %s".format(type))
+            display.append(" ")
+            display.append(type)
         }
         return display.toString()
     }
