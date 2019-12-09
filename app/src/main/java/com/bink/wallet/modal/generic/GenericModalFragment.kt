@@ -60,7 +60,6 @@ open class GenericModalFragment :
 
     override fun onStart() {
         super.onStart()
-
         binding.title.viewTreeObserver.addOnScrollChangedListener(
             scrollChangeListener
         )

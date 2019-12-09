@@ -21,6 +21,8 @@ class JoinUnavailableFragment : GenericModalFragment() {
     }
 
     override fun onFirstButtonClicked() {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+        if (link.isNotEmpty()) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+        }
     }
 }
