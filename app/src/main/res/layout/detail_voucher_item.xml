@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/rounded_background"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@color/white_transparent"
                 app:cardCornerRadius="@dimen/cardview_default_elevation"
                 app:cardElevation="@dimen/cardview_default_elevation"
                 app:layout_constraintEnd_toEndOf="parent"
