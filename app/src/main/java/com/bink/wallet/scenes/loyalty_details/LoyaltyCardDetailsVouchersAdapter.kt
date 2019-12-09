@@ -52,15 +52,16 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
             when (voucher.state) {
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
-                    if (voucher.earn?.value != null) {
-                        binding.spentAmount.text = ValueDisplayUtils.displayValue(
-                            voucher.earn.value,
-                            voucher.burn?.prefix,
-                            voucher.burn?.suffix,
-                            voucher.burn?.currency
-                        )
-                    }
-                    if (voucher.earn?.target_value != null) {
+                    if (voucher.earn?.target_value != null &&
+                        voucher.earn.target_value != 0f) {
+                        if (voucher.earn.value != null) {
+                            binding.spentAmount.text = ValueDisplayUtils.displayValue(
+                                voucher.earn.value,
+                                voucher.burn?.prefix,
+                                voucher.burn?.suffix,
+                                voucher.burn?.currency
+                            )
+                        }
                         val goal = ValueDisplayUtils.displayValue(
                             voucher.earn.target_value,
                             voucher.burn?.prefix,
@@ -68,9 +69,14 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                             voucher.burn?.currency
                         )
                         binding.subtitle.text = voucher.subtext.plus(" ").plus(goal)
-                        binding.progressBar.max = voucher.earn.target_value.roundToInt()
-                        binding.progressBar.progress = (voucher.earn.value ?: 0f).roundToInt()
+                        binding.progressBar.max = (voucher.earn.target_value * 100f).roundToInt()
+                        binding.progressBar.progress = ((voucher.earn.value ?: 0f) * 100f).roundToInt()
                         binding.goalAmount.text = goal
+                    } else {
+                        hideEarnBurnValues()
+                    }
+                    if (voucher.state == VoucherStates.ISSUED.state) {
+                        fillProgressBar(voucher.state)
                     }
                 }
                 else -> {
