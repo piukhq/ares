@@ -20,11 +20,11 @@ object ValueDisplayUtils {
             }
         )
         if (!suffix.isNullOrEmpty()) {
-            display.append(" ")
+            display.append(SPACE)
             display.append(suffix)
         }
         if (!type.isNullOrEmpty()) {
-            display.append(" ")
+            display.append(SPACE)
             display.append(type)
         }
         return display.toString()

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DetailVoucherItemBinding
 import com.bink.wallet.model.response.membership_card.Voucher
-import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.VoucherStates
 import kotlin.math.roundToInt
 
@@ -53,7 +53,7 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
                     if (voucher.earn?.target_value != null &&
-                        voucher.earn.target_value != 0f) {
+                        voucher.earn.target_value != FLOAT_ZERO) {
                         if (voucher.earn.value != null) {
                             binding.spentAmount.text = ValueDisplayUtils.displayValue(
                                 voucher.earn.value,
@@ -68,35 +68,44 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                             voucher.burn?.suffix,
                             voucher.burn?.currency
                         )
-                        binding.subtitle.text = voucher.subtext.plus(" ").plus(goal)
-                        binding.progressBar.max = (voucher.earn.target_value * 100f).roundToInt()
-                        binding.progressBar.progress = ((voucher.earn.value ?: 0f) * 100f).roundToInt()
-                        binding.goalAmount.text = goal
+                        with (binding) {
+                            subtitle.text = voucher.subtext.plus(SPACE).plus(goal)
+                            progressBar.max =
+                                (voucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
+                            progressBar.progress =
+                                ((voucher.earn.value
+                                    ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
+                            goalAmount.text = goal
+                        }
                     } else {
                         hideEarnBurnValues()
                     }
                     if (voucher.state == VoucherStates.ISSUED.state) {
-                        fillProgressBar(voucher.state)
+                        fillProgressBar()
                     }
                 }
                 else -> {
                     hideEarnBurnValues()
-                    fillProgressBar(voucher.state)
+                    fillProgressBar()
                 }
             }
             setProgressDrawable(voucher.state)
         }
 
         private fun hideEarnBurnValues() {
-            binding.goalTitle.visibility = View.GONE
-            binding.goalAmount.visibility = View.GONE
-            binding.spentTitle.visibility = View.GONE
-            binding.spentAmount.visibility = View.GONE
+            with (binding) {
+                goalTitle.visibility = View.GONE
+                goalAmount.visibility = View.GONE
+                spentTitle.visibility = View.GONE
+                spentAmount.visibility = View.GONE
+            }
         }
 
-        private fun fillProgressBar(state: String?) {
-            binding.progressBar.max = 100
-            binding.progressBar.progress = 100
+        private fun fillProgressBar() {
+            with (binding) {
+                progressBar.max = INT_ONE_HUNDRED
+                progressBar.progress = INT_ONE_HUNDRED
+            }
         }
 
         private fun setProgressDrawable(state: String?) {
