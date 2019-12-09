@@ -112,6 +112,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
+    private fun createAllObservers() {
+        createFetchObservers()
+        createLocalObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        createAllObservers()
+        runBlocking {
+            viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipCards()
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -149,8 +163,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         binding.progressSpinner.visibility = View.VISIBLE
 
-        createLocalObservers()
-        createFetchObservers()
+        createAllObservers()
 
         if (verifyAvailableNetwork(requireActivity())) {
             runBlocking {

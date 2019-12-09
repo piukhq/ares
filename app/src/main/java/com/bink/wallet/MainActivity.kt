@@ -14,10 +14,21 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-import java.util.Locale
+import kotlinx.coroutines.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KProperty
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope {
+
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+        job = startCoroutine()
     }
 
     override fun onBackPressed() {
@@ -58,6 +70,20 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
             }
             else -> super.onBackPressed()
+        }
+    }
+
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
+    }
+
+    private fun startCoroutine() = launch(Dispatchers.IO) {
+        while (true) {
+            delay(TimeUnit.HOURS.toMillis(1))
+            withContext(Dispatchers.Main) {
+
+            }
         }
     }
 

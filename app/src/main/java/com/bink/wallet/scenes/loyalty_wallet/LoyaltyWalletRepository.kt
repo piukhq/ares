@@ -21,7 +21,9 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
+    fun retrieveMembershipCards(
+        mutableMembershipCards: MutableLiveData<List<MembershipCard>> = MutableLiveData()
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipCardsAsync()
             withContext(Dispatchers.Main) {
@@ -61,7 +63,9 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+    fun retrieveMembershipPlans(
+        mutableMembershipPlans: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipPlansAsync()
             withContext(Dispatchers.Main) {

@@ -1,5 +1,6 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.MainViewModel
 import com.bink.wallet.data.*
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
@@ -36,6 +37,8 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModules = module {
+
+    viewModel { MainViewModel(get(), get()) }
 
     single { provideLoginRepository(get(), get()) }
     viewModel { LoginViewModel(get()) }
