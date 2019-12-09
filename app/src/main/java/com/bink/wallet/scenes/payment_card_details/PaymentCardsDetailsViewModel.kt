@@ -22,6 +22,8 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
     var deleteError = MutableLiveData<Throwable>()
 
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
+        updatePaymentCard(cardId)
+
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
@@ -43,5 +45,13 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
 
     suspend fun deletePaymentCard(paymentCardId: String) {
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
+    }
+
+    private fun updatePaymentCard(cardId: String) {
+        paymentCard.value?.let {
+            if (it.membership_cards.count { card -> card.id == cardId } < 1) {
+                it.addPaymentCard(cardId)
+            }
+        }
     }
 }

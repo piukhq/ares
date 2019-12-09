@@ -11,7 +11,6 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -103,7 +102,7 @@ class PaymentCardsDetailsFragment :
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             val pllPlansIds = mutableListOf<String>()
-            plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
+            plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
                 binding.apply {
@@ -122,17 +121,17 @@ class PaymentCardsDetailsFragment :
                     }
 
                     otherCardsList.apply {
-                        val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
+                        val unAddedCardsForPlan = mutableListOf<MembershipPlan>()
                         for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
                             if (cards.count { card -> card.membership_plan == plan.id } == 0) {
-                                unaddedCardsForPlan.add(plan)
+                                unAddedCardsForPlan.add(plan)
                             }
                         }
-                        if (unaddedCardsForPlan.isNotEmpty()) {
+                        if (unAddedCardsForPlan.isNotEmpty()) {
                             visibility = View.VISIBLE
                             layoutManager = GridLayoutManager(context, 1)
                             adapter = SuggestedCardsAdapter(
-                                unaddedCardsForPlan,
+                                unAddedCardsForPlan,
                                 itemClickListener = {
                                     val directions =
                                         PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
