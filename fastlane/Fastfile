@@ -62,8 +62,8 @@ platform :android do
     notifyBuild(notify_options)
     build(build_options)
 
-    buildFolder = ENV["BITRISE_BUILD_URL"]
-    puts "{buildFolder}/build/outputs/apk/mr/Bink_2.0.0_mr.apk"
+#    buildFolder = ENV["BITRISE_BUILD_URL"]
+#    puts "{buildFolder}/build/outputs/apk/mr/Bink_2.0.0_mr.apk"
 
     slackSuccess(slack_options)
   end
