@@ -196,7 +196,10 @@ class SettingsFragment :
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.log_out_confirmation),
-                    okAction = { viewModel.logOut() },
+                    okAction = {
+                        requireContext().let { LocalStoreUtils.clearPreferences() }
+                        viewModel.logOut()
+                    },
                     buttonText = R.string.settings_menu_log_out,
                     hasNegativeButton = true
                 )

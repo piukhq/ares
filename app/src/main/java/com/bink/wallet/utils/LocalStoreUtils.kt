@@ -20,6 +20,7 @@ object LocalStoreUtils {
             val editor = encryptedSharedPreferences.edit()
             editor.putString(secretKey, secret)
             editor.apply()
+            editor.commit()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -52,6 +53,6 @@ object LocalStoreUtils {
         val editor = encryptedSharedPreferences.edit()
         editor.clear()
         editor.apply()
+        editor.commit()
     }
-
 }

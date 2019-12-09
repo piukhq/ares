@@ -8,7 +8,7 @@
 
         <variable
                 name="viewModel"
-                type="com.bink.wallet.scenes.SignUpViewModel" />
+                type="com.bink.wallet.scenes.sign_up.SignUpViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,43 +145,77 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/confirm_password_description" />
 
-                <CheckBox
-                        android:id="@+id/checkbox_terms_conditions"
+                <LinearLayout
+                        android:id="@+id/terms_conditions_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:buttonTint="@color/black"
-                        android:checked="@={viewModel.termsCondition}"
-                        android:text="@string/T_C_accept_description"
-                        android:textColor="@color/black"
-                        android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/size_sub_headline"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/confirm_password_field" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/confirm_password_field"
+                        >
 
-                <CheckBox
-                        android:id="@+id/checkbox_privacy_policy"
+                    <CheckBox
+                            android:id="@+id/checkbox_terms_conditions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_gravity="center_vertical"
+                            android:buttonTint="@color/black"
+                            android:checked="@={viewModel.termsCondition}"
+                            />
+                    <TextView
+                            android:id="@+id/checkbox_terms_conditions_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_padding_size_medium"
+                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/T_C_accept_description"
+                            android:textColor="@color/black"
+                            android:textColorLink="@color/blue_accent"
+                            android:textSize="@dimen/size_sub_headline"
+                            />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:id="@+id/privacy_policy_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:buttonTint="@color/black"
-                        android:checked="@={viewModel.privacyPolicy}"
-                        android:text="@string/privacy_policy_description"
-                        android:textColor="@color/black"
-                        android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/size_sub_headline"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/terms_conditions_layout"
+                        >
+                    <CheckBox
+                            android:id="@+id/checkbox_privacy_policy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_gravity="center_vertical"
+                            android:buttonTint="@color/black"
+                            android:checked="@={viewModel.privacyPolicy}"
+                            />
+                    <TextView
+                            android:id="@+id/checkbox_privacy_policy_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_padding_size_medium"
+                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/privacy_policy_description"
+                            android:textColor="@color/black"
+                            android:textColorLink="@color/blue_accent"
+                            android:textSize="@dimen/size_sub_headline"
+                            />
+                </LinearLayout>
 
                 <CheckBox
                         android:id="@+id/checkbox_marketing_messages"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
@@ -191,9 +225,8 @@
                         android:text="@string/marketing_messages"
                         android:textColor="@color/black"
                         android:textSize="@dimen/size_sub_headline"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/checkbox_privacy_policy" />
+                        app:layout_constraintTop_toBottomOf="@+id/privacy_policy_layout" />
 
                 <TextView
                         android:id="@+id/sign_up_footer_message"
