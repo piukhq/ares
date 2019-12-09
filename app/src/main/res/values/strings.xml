@@ -398,4 +398,5 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="preferences_text">Preferences</string>
+    <string name="preferences_error">Cannot retrieve your preferences at the moment. Please try again later.</string>
 </resources>

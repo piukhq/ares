@@ -166,16 +166,22 @@ class LoginRepository(
     }
 
     fun setPreference(
-        json: String
+        json: String,
+        preferenceResponse: MutableLiveData<ResponseBody>,
+        preferenceErrorResponse: MutableLiveData<Throwable>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            apiService.putPreferencesAsync(
+            val request = apiService.putPreferencesAsync(
                 RequestBody.create(
                     MediaType.parse("application/json"),
                     json
                 )
             )
-            withContext(Dispatchers.Main) {
+            try {
+                val response = request.await()
+                preferenceResponse.value = response
+            } catch (e: Throwable) {
+                preferenceErrorResponse.value = e
             }
         }
     }

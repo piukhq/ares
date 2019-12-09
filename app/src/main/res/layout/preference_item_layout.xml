@@ -21,6 +21,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:buttonTint="@color/black"
+                android:checked="@{preference.value == 1}"
                 android:text="@{preference.label}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

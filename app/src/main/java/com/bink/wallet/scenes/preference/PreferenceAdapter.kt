@@ -2,13 +2,14 @@ package com.bink.wallet.scenes.preference
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PreferenceItemLayoutBinding
 import com.bink.wallet.model.request.Preference
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,
-    var onClickListener: (Preference, Int) -> Unit = { _, _ -> }
+    var onClickListener: (Preference, Int, CheckBox) -> Unit = { _, _, _ -> }
 ) : RecyclerView.Adapter<PreferenceAdapter.PreferenceItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreferenceItemHolder {
@@ -31,14 +32,14 @@ class PreferenceAdapter(
                 preference = item
                 executePendingBindings()
 
-                preferenceItem.isChecked = (item.value == 1)
-
                 preferenceItem.setOnCheckedChangeListener { _, isChecked ->
                     onClickListener(
-                        item, when (isChecked) {
+                        item,
+                        when (isChecked) {
                             true -> 1
                             else -> 0
-                        }
+                        },
+                        preferenceItem
                     )
                 }
             }

@@ -10,13 +10,15 @@ class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseV
 
     val preferences = MutableLiveData<List<Preference>>()
     val preferenceErrorResponse = MutableLiveData<Throwable>()
+    val savePreferenceError = MutableLiveData<Throwable>()
+    val savePreference = MutableLiveData<ResponseBody>()
 
     fun getPreferences() {
         loginRepository.getPreferences(preferences, preferenceErrorResponse)
     }
 
     fun savePreference(json: String) {
-        loginRepository.setPreference(json)
+        loginRepository.setPreference(json, savePreference, savePreferenceError)
     }
 
 }
