@@ -58,6 +58,7 @@
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/button_margin"
                         android:orientation="vertical"
                         >
 
@@ -174,6 +175,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
+                            android:layout_marginBottom="@dimen/title_image_size"
                             >
 
                         <ImageView
@@ -216,12 +218,6 @@
                                 app:layout_constraintTop_toBottomOf="@+id/add_join_link_title" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <View
-                            android:id="@+id/bottom_spacer1"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/title_image_size"
-                            />
-
                     <Button
                             android:id="@+id/add_card_button"
                             style="@style/RoundedGradientButton"
@@ -239,11 +235,6 @@
                             android:layout_marginStart="@dimen/button_margin"
                             android:layout_marginEnd="@dimen/button_margin"
                             android:text="@string/add_join_get_new_card"
-                            />
-                    <View
-                            android:id="@+id/bottom_spacer2"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/button_margin"
                             />
                 </LinearLayout>
             </ScrollView>
