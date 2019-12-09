@@ -15,10 +15,7 @@ import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.enums.LinkStatus
-import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.SignUpFormType
-import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -328,7 +325,7 @@ class LoyaltyCardDetailsFragment :
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                 if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
-                    viewModel.membershipCard.value?.status?.state == "authorised") {
+                    viewModel.membershipCard.value?.status?.state == MembershipCardStatus.AUTHORISED.status) {
                     setPlrPointsModuleText()
                 } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
                     val balance = viewModel.membershipCard.value?.balances?.first()
@@ -344,7 +341,7 @@ class LoyaltyCardDetailsFragment :
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                 if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
-                    viewModel.membershipCard.value?.status?.state == "authorised") {
+                    viewModel.membershipCard.value?.status?.state == MembershipCardStatus.AUTHORISED.status) {
                     setPlrPointsModuleText()
                 } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
                     val balance = viewModel.membershipCard.value?.balances?.first()
