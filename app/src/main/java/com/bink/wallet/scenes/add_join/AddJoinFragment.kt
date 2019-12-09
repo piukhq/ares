@@ -70,7 +70,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.visibility =
-            if (!currentMembershipPlan.feature_set!!.linking_support!!.contains("ADD")) {
+            if (!(currentMembershipPlan.feature_set?.linking_support ?: emptyList()).contains("ADD")) {
                 View.GONE
             } else {
                 View.VISIBLE
