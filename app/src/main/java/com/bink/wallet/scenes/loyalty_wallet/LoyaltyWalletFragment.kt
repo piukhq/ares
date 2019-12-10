@@ -60,12 +60,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (direction == ItemTouchHelper.RIGHT &&
                     walletItems[position] is MembershipCard
                 ) {
-//                    viewHolder.binding.deleteLayout.visibility = View.GONE
-//                    viewHolder.binding.barcodeLayout.visibility = View.VISIBLE
                     val card = walletItems[position] as MembershipCard
-                    if (viewModel.membershipPlanData.value != null) {
+                    if (viewModel.membershipPlanData.value != null ||
+                            viewModel.localMembershipPlanData != null) {
                         val plan =
-                            viewModel.membershipPlanData.value?.first {
+                            viewModel.localMembershipPlanData.value?.first {
                                 it.id == card.membership_plan
                             }!!
 
@@ -75,7 +74,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     plan, card
                                 )
                             }
-                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
+                        if (findNavController().currentDestination?.id == R.id.loyalty_wallet_fragment) {
                             directions?.let {
                                 findNavController().navigateIfAdded(
                                     this@LoyaltyWalletFragment, it
@@ -85,8 +84,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-//                    viewHolder.binding.deleteLayout.visibility = View.VISIBLE
-//                    viewHolder.binding.barcodeLayout.visibility = View.GONE
                     walletItems[position].let {
                         if (it is MembershipCard)
                             deleteDialog(it, position)
