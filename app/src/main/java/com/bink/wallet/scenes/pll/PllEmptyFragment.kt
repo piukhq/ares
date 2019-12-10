@@ -42,6 +42,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             val directions = currentMembershipPlan?.account?.plan_description?.let { message ->
                 GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.plan_description),
                     message, getString(R.string.ok)
                 )

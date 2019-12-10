@@ -76,6 +76,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             val directions = currentMembershipPlan.account?.plan_description?.let { message ->
                 GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.plan_description),
                     message, getString(R.string.ok)
                 )
@@ -102,6 +103,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
+                    true,
                     getString(R.string.native_join_unavailable_title),
                     getString(R.string.native_join_unavailable_text)
                 )

@@ -132,6 +132,7 @@ class LoyaltyCardDetailsFragment :
                 description?.let { _ ->
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         aboutText,
                         description,
                         getString(R.string.ok)
@@ -204,6 +205,7 @@ class LoyaltyCardDetailsFragment :
                 LoyaltyCardDetailsFragmentDirections.detailToSecurity(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.security_and_privacy_title),
                         getString(R.string.security_and_privacy_copy),
                         description2 = getString(R.string.security_and_privacy_copy_2)
@@ -441,6 +443,7 @@ class LoyaltyCardDetailsFragment :
                         LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                             GenericModalParameters(
                                 R.drawable.ic_close,
+                                true,
                                 getString(R.string.title_2_4),
                                 getString(R.string.description_2_4)
                             )
@@ -456,6 +459,7 @@ class LoyaltyCardDetailsFragment :
                         LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                             GenericModalParameters(
                                 R.drawable.ic_close,
+                                true,
                                 getString(R.string.title_2_8),
                                 getString(R.string.description_2_8)
                             )
@@ -473,6 +477,7 @@ class LoyaltyCardDetailsFragment :
             LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                 GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.title_lcd_pending),
                     getString(R.string.description_lcd_pending)
                 )
@@ -495,6 +500,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_1_2),
                         getString(
                             R.string.description_1_2,
@@ -515,6 +521,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_1_5),
                         getString(R.string.description_1_5)
                     )

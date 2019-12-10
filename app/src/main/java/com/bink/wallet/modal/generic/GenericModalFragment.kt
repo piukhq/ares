@@ -44,6 +44,9 @@ open class GenericModalFragment :
         binding.toolbar.setNavigationOnClickListener {
             onNavigationButtonClicked()
         }
+        binding.close.setOnClickListener {
+            onNavigationButtonClicked()
+        }
         binding.firstButton.setOnClickListener {
             onFirstButtonClicked()
         }
@@ -77,8 +80,12 @@ open class GenericModalFragment :
     }
 
     protected fun setupUi(parameters: GenericModalParameters) {
-        if (parameters.topBarIconId != 0) {
+        if (parameters.topBarIconId != 0 &&
+            !parameters.isCloseModal
+        ) {
+            binding.close.visibility = View.GONE
             binding.toolbar.setNavigationIcon(parameters.topBarIconId)
+
         }
         binding.title.text = parameters.title
         binding.description.text =
