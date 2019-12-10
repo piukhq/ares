@@ -284,6 +284,8 @@
     <string name="no_account_text">I don\'t have an account</string>
     <string name="payment_card_details_title_text">Linked cards</string>
     <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
+    <string name="payment_card_details_title_text_empty">No linked cards</string>
+    <string name="payment_card_details_description_text_empty">You do not have any linked loyalty cards. Add some cards to collect points.</string>
     <string name="other_cards_you_can_add_title">Other cards you can add</string>
     <string name="other_cards_you_can_add_description">You can also add the cards below and link them to your payment cards.</string>
     <string name="rename_card">Rename this card</string>

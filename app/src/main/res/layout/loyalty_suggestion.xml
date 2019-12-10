@@ -16,7 +16,7 @@
             android:layout_height="wrap_content">
 
         <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/membership_plan_image"
                 imageUrl="@{membershipPlan}"
                 android:layout_width="@dimen/margin_large"
                 android:layout_height="@dimen/margin_large"
@@ -36,10 +36,10 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:text="@{membershipPlan.account.company_name}"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_big"
+                android:textSize="@dimen/size_sub_headline"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/button_add_card"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/membership_plan_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -51,10 +51,10 @@
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 android:text="@string/card_suggestion_description"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_medium"
+                android:textSize="@dimen/size_body_large"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/company_name"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/membership_plan_image"
                 app:layout_constraintTop_toBottomOf="@+id/company_name" />
 
         <Button
