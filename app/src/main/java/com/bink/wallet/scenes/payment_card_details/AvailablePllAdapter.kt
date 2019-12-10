@@ -37,6 +37,7 @@ class AvailablePllAdapter(
             val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.membershipCard = item
+
             binding.toggle.isChecked =
                 if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
             if (isLinkedToPaymentCard(item) != null) {

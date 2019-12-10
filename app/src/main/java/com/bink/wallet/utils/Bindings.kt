@@ -374,5 +374,23 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
     }
 }
 
+@BindingAdapter("paymentCardDetailsTitle")
+fun TextView.setPcdTitle(hasAddedPlls: Boolean) {
+    text = if(hasAddedPlls) {
+        context.getString(R.string.payment_card_details_title_text)
+    } else {
+        context.getString(R.string.payment_card_details_title_text_empty)
+    }
+}
+
+@BindingAdapter("paymentCardDetailsSubtitle")
+fun TextView.setPcdSubtitle(hasAddedPlls: Boolean) {
+    text = if(hasAddedPlls) {
+        context.getString(R.string.payment_card_details_description_text)
+    } else {
+        context.getString(R.string.payment_card_details_description_text_empty)
+    }
+}
+
 
 
