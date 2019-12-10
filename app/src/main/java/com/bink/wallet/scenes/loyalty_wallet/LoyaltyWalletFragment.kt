@@ -1,15 +1,17 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
-import android.content.DialogInterface
+import android.content.*
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
@@ -46,9 +48,35 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         onRemoveListener = { onBannerRemove(it) }
     )
 
+    private val broadCastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(contxt: Context?, intent: Intent?) {
+
+            when (intent?.action) {
+                MainActivity.TOKEN_REFRESHED_EVENT -> {
+                    createLocalObservers()
+                    runBlocking {
+                        viewModel.fetchLocalMembershipPlans()
+                        viewModel.fetchLocalMembershipCards()
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(
+                broadCastReceiver,
+                IntentFilter(MainActivity.TOKEN_REFRESHED_EVENT)
+            )
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(requireContext())
+            .unregisterReceiver(broadCastReceiver)
+        super.onDestroy()
     }
 
     private var walletItems = ArrayList<Any>()
@@ -117,15 +145,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         createLocalObservers()
     }
 
-    override fun onResume() {
-        super.onResume()
-        createAllObservers()
-        runBlocking {
-            viewModel.fetchMembershipPlans()
-            viewModel.fetchMembershipCards()
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -186,6 +205,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     viewModel.fetchMembershipPlans()
                     viewModel.fetchMembershipCards()
                 }
+                (activity as MainActivity).resetCoroutine()
             } else {
                 showNoInternetConnectionDialog()
             }

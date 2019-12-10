@@ -26,7 +26,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 
-    suspend fun fetchMembershipPlans() {
+    fun fetchMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
     }
 
