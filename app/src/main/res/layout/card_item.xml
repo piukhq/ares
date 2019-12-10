@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardUseCompatPadding="false"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="@dimen/loyalty_card_corner_radius">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:id="@+id/company_logo"
                     android:layout_width="@dimen/margin_padding_size_extra_large"
                     android:layout_height="@dimen/margin_padding_size_extra_large"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="@dimen/loyalty_value_margin_end"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     app:imageUrl="@{plan}"
