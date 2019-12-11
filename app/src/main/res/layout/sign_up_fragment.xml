@@ -162,16 +162,19 @@
 
                 <TextView
                         android:id="@+id/checkbox_terms_conditions_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:gravity="start"
                         android:text="@string/T_C_accept_description"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
                         android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="@+id/checkbox_terms_conditions"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/checkbox_terms_conditions"
                         app:layout_constraintTop_toTopOf="@+id/checkbox_terms_conditions" />
 
@@ -190,18 +193,20 @@
 
                 <TextView
                         android:id="@+id/checkbox_privacy_policy_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:gravity="start"
                         android:text="@string/privacy_policy_description"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
                         android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="@+id/checkbox_privacy_policy"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/checkbox_privacy_policy"
                         app:layout_constraintTop_toTopOf="@+id/checkbox_privacy_policy" />
 
@@ -219,13 +224,16 @@
 
                 <TextView
                         android:id="@+id/checkbox_marketing_messages_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small"
+                        android:gravity="start"
                         android:text="@string/marketing_messages"
                         android:textColor="@color/black"
                         android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="@+id/checkbox_marketing_messages"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/checkbox_marketing_messages"
                         app:layout_constraintTop_toTopOf="@+id/checkbox_marketing_messages" />
 
