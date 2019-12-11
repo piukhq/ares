@@ -336,8 +336,8 @@
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
-    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers </b>and<b> updates!</b> \n You can opt out at any time.]]></string>
-    <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers </b>and<b> updates!</b>]]></string>
+    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers</b> and <b>updates!</b> \n You can opt out at any time.]]></string>
+    <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
     <string name="incorrect_email_text">Invalid email address</string>
@@ -399,4 +399,5 @@
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="preferences_text">Preferences</string>
     <string name="preferences_error">Cannot retrieve your preferences at the moment. Please try again later.</string>
+    <string name="preference_update_error">We can\'t update your preferences at the moment. Please try again later.</string>
 </resources>

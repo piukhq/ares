@@ -27,6 +27,13 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
+        viewModel.savePreferenceError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                EMPTY_STRING,
+                getString(R.string.preference_update_error)
+            )
+        }
+
         viewModel.preferences.observeNonNull(this) { preferences ->
 
             binding.progressSpinner.visibility = View.GONE
@@ -57,7 +64,8 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         viewModel.preferenceErrorResponse.observeNonNull(this) {
             binding.progressSpinner.visibility = View.GONE
             requireContext().displayModalPopup(
-                EMPTY_STRING, getString(
+                EMPTY_STRING,
+                getString(
                     R.string.preferences_error
                 )
             )

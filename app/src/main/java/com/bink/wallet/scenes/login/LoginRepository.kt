@@ -11,6 +11,7 @@ import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.CONTENT_TYPE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -173,7 +174,7 @@ class LoginRepository(
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.putPreferencesAsync(
                 RequestBody.create(
-                    MediaType.parse("application/json"),
+                    MediaType.parse(CONTENT_TYPE),
                     json
                 )
             )
