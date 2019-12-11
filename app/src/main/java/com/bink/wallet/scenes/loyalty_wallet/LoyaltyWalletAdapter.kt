@@ -13,6 +13,8 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.utils.FLOAT_ZERO
+import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
@@ -142,7 +144,33 @@ class LoyaltyWalletAdapter(
                         MembershipCardStatus.AUTHORISED.status -> {
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
-                            if (!item.balances.isNullOrEmpty()) {
+                            if (!item.vouchers.isNullOrEmpty()) {
+                                val voucher = item.vouchers?.first()
+                                if (voucher?.earn?.target_value != null &&
+                                    voucher.earn.target_value != FLOAT_ZERO) {
+                                    val earn = voucher.earn
+                                    val burn = voucher.burn
+                                    val balance = loyaltyValue.context.getString(
+                                        R.string.loyalty_wallet_plr_value,
+                                        ValueDisplayUtils.displayValue(
+                                            earn.value!!,
+                                            burn?.prefix,
+                                            burn?.suffix,
+                                            burn?.currency
+                                        ),
+                                        ValueDisplayUtils.displayValue(
+                                            earn.target_value!!,
+                                            burn?.prefix,
+                                            burn?.suffix,
+                                            burn?.currency
+                                        )
+                                    )
+                                    loyaltyValue.text = balance
+                                    loyaltyValueExtra.text = loyaltyValue.context.getString(
+                                        R.string.until_next_reward
+                                    )
+                                }
+                            } else if (!item.balances.isNullOrEmpty()) {
                                 val balance = item.balances?.first()
                                 when (balance?.prefix != null) {
                                     true ->
