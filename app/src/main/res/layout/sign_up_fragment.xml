@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -87,7 +88,8 @@
                         android:textSize="@dimen/text_size_description_big"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/email_description" />
+                        app:layout_constraintTop_toBottomOf="@+id/email_description"
+                        tools:ignore="Autofill" />
 
                 <TextView
                         android:id="@+id/password_description"
@@ -115,7 +117,8 @@
                         android:textSize="@dimen/text_size_description_big"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/password_description" />
+                        app:layout_constraintTop_toBottomOf="@+id/password_description"
+                        tools:ignore="Autofill" />
 
                 <TextView
                         android:id="@+id/confirm_password_description"
@@ -145,73 +148,62 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/confirm_password_description" />
 
-                <LinearLayout
-                        android:id="@+id/terms_conditions_layout"
-                        android:layout_width="match_parent"
+                <CheckBox
+                        android:id="@+id/checkbox_terms_conditions"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                        android:buttonTint="@color/black"
+                        android:checked="@={viewModel.termsCondition}"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/confirm_password_field"
-                        >
+                        app:layout_constraintTop_toBottomOf="@+id/confirm_password_field" />
 
-                    <CheckBox
-                            android:id="@+id/checkbox_terms_conditions"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_padding_size_medium"
-                            android:layout_gravity="center_vertical"
-                            android:buttonTint="@color/black"
-                            android:checked="@={viewModel.termsCondition}"
-                            />
-                    <TextView
-                            android:id="@+id/checkbox_terms_conditions_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_padding_size_medium"
-                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/T_C_accept_description"
-                            android:textColor="@color/black"
-                            android:textColorLink="@color/blue_accent"
-                            android:textSize="@dimen/size_sub_headline"
-                            />
-
-                </LinearLayout>
-
-                <LinearLayout
-                        android:id="@+id/privacy_policy_layout"
-                        android:layout_width="match_parent"
+                <TextView
+                        android:id="@+id/checkbox_terms_conditions_text"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:text="@string/T_C_accept_description"
+                        android:textColor="@color/black"
+                        android:textColorLink="@color/blue_accent"
+                        android:textSize="@dimen/size_sub_headline"
+                        app:layout_constraintBottom_toBottomOf="@+id/checkbox_terms_conditions"
+                        app:layout_constraintStart_toEndOf="@id/checkbox_terms_conditions"
+                        app:layout_constraintTop_toTopOf="@+id/checkbox_terms_conditions" />
+
+
+                <CheckBox
+                        android:id="@+id/checkbox_privacy_policy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:buttonTint="@color/black"
+                        android:checked="@={viewModel.privacyPolicy}"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/terms_conditions_layout"
-                        >
-                    <CheckBox
-                            android:id="@+id/checkbox_privacy_policy"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_padding_size_medium"
-                            android:layout_gravity="center_vertical"
-                            android:buttonTint="@color/black"
-                            android:checked="@={viewModel.privacyPolicy}"
-                            />
-                    <TextView
-                            android:id="@+id/checkbox_privacy_policy_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_padding_size_medium"
-                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/privacy_policy_description"
-                            android:textColor="@color/black"
-                            android:textColorLink="@color/blue_accent"
-                            android:textSize="@dimen/size_sub_headline"
-                            />
-                </LinearLayout>
+                        app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
+
+                <TextView
+                        android:id="@+id/checkbox_privacy_policy_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:text="@string/privacy_policy_description"
+                        android:textColor="@color/black"
+                        android:textColorLink="@color/blue_accent"
+                        android:textSize="@dimen/size_sub_headline"
+                        app:layout_constraintBottom_toBottomOf="@+id/checkbox_privacy_policy"
+                        app:layout_constraintStart_toEndOf="@+id/checkbox_privacy_policy"
+                        app:layout_constraintTop_toTopOf="@+id/checkbox_privacy_policy" />
 
                 <CheckBox
                         android:id="@+id/checkbox_marketing_messages"
@@ -222,11 +214,20 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.marketingMessages}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/checkbox_privacy_policy" />
+
+                <TextView
+                        android:id="@+id/checkbox_marketing_messages_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
                         android:text="@string/marketing_messages"
                         android:textColor="@color/black"
                         android:textSize="@dimen/size_sub_headline"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/privacy_policy_layout" />
+                        app:layout_constraintBottom_toBottomOf="@+id/checkbox_marketing_messages"
+                        app:layout_constraintStart_toEndOf="@+id/checkbox_marketing_messages"
+                        app:layout_constraintTop_toTopOf="@+id/checkbox_marketing_messages" />
 
                 <TextView
                         android:id="@+id/sign_up_footer_message"
@@ -276,7 +277,6 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
