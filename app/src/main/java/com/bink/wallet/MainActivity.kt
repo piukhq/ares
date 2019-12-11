@@ -103,17 +103,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         runCoroutine()
     }
 
-    private fun startCoroutine() = launch(Dispatchers.IO) {
-        while (true) {
-            delay(TimeUnit.HOURS.toMillis(1))
-            withContext(Dispatchers.Main) {
-                if (verifyAvailableNetwork(this@MainActivity)) {
-                    viewModel.fetchMembershipPlans()
-                    viewModel.fetchMembershipCards()
+    private fun startCoroutine() =
+        launch(Dispatchers.IO) {
+            withContext(Dispatchers.Default) {
+                repeat(TimeUnit.HOURS.toMillis(1).toInt()) {
+                    if (verifyAvailableNetwork(this@MainActivity)) {
+                        viewModel.fetchMembershipPlans()
+                        viewModel.fetchMembershipCards()
+                    }
                 }
             }
         }
-    }
 
     override fun onResume() {
         if (verifyAvailableNetwork(this@MainActivity)) {
