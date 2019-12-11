@@ -9,6 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.wallets.WalletsViewModel
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.verifyAvailableNetwork
@@ -18,21 +19,21 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KProperty
 
-class MainActivity : AppCompatActivity(), CoroutineScope {
+class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     companion object {
         const val TOKEN_REFRESHED_EVENT = "REFRESH_LOYALTY"
+        const val MINUTES_REFRESH: Long = 2
+        const val HOURS_REFRESH: Long = 1
     }
 
-    private var job: Job = Job()
+    private var jobHourly: Job = Job()
+    private var jobWallets: Job = Job()
 
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
 
-    val viewModel: MainViewModel by viewModel()
+    val viewModel: WalletsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,16 +42,35 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
 
-        viewModel.membershipCardData.observeNonNull(this@MainActivity) {
-            viewModel.membershipPlanData.observeNonNull(this@MainActivity) {
-                LocalBroadcastManager.getInstance(this@MainActivity)
-                    .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
-            }
-        }
-
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
-        runCoroutine()
+        runHourlyCoroutine()
+    }
+
+    private suspend fun createHourlyObservers() {
+        withContext(Dispatchers.Main) {
+            viewModel.membershipCardData.observeNonNull(this@MainActivity) {
+                viewModel.membershipPlanData.observeNonNull(this@MainActivity) {
+                    LocalBroadcastManager.getInstance(this@MainActivity)
+                        .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
+                    viewModel.membershipCardData.removeObservers(this@MainActivity)
+                    viewModel.membershipPlanData.removeObservers(this@MainActivity)
+                }
+            }
+        }
+    }
+
+    private suspend fun createWalletsObservers() {
+        withContext(Dispatchers.Main) {
+            viewModel.membershipCardData.observeNonNull(this@MainActivity) {
+                viewModel.paymentCards.observeNonNull(this@MainActivity) {
+                    LocalBroadcastManager.getInstance(this@MainActivity)
+                        .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
+                    viewModel.membershipCardData.removeObservers(this@MainActivity)
+                    viewModel.paymentCards.removeObservers(this@MainActivity)
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -86,30 +106,64 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onDestroy() {
-        cancelCoroutine()
+        cancelHourlyCoroutine()
+        cancelWalletCoroutine()
         super.onDestroy()
     }
 
-    private fun runCoroutine() {
-        job = startCoroutine()
+    private fun runHourlyCoroutine() {
+        jobHourly = startCoroutine(false)
     }
 
-    private fun cancelCoroutine() {
-        job.cancel()
+    private fun cancelHourlyCoroutine() {
+        jobHourly.cancel()
     }
 
-    fun resetCoroutine() {
-        cancelCoroutine()
-        runCoroutine()
+    fun resetHourlyCoroutine() {
+        cancelHourlyCoroutine()
+        runHourlyCoroutine()
     }
 
-    private fun startCoroutine() =
+    private fun runWalletCoroutine() {
+        jobWallets = startCoroutine(true)
+    }
+
+    fun cancelWalletCoroutine() {
+        jobWallets.cancel()
+    }
+
+    fun resetWalletCoroutine() {
+        cancelWalletCoroutine()
+        runWalletCoroutine()
+    }
+
+    private fun startCoroutine(isWalletCoroutine: Boolean) =
         launch(Dispatchers.IO) {
             withContext(Dispatchers.Default) {
-                repeat(TimeUnit.HOURS.toMillis(1).toInt()) {
-                    if (verifyAvailableNetwork(this@MainActivity)) {
-                        viewModel.fetchMembershipPlans()
-                        viewModel.fetchMembershipCards()
+
+                while (true) {
+                    if (isWalletCoroutine) {
+                        delay(TimeUnit.MINUTES.toMillis(MINUTES_REFRESH))
+                        withContext(Dispatchers.Main) {
+                            if (verifyAvailableNetwork(this@MainActivity) &&
+                                !LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN).isNullOrEmpty()
+                            ) {
+                                createWalletsObservers()
+                                viewModel.fetchPaymentCards()
+                                viewModel.fetchMembershipCards()
+                            }
+                        }
+                    } else {
+                        delay(TimeUnit.HOURS.toMillis(HOURS_REFRESH))
+                        withContext(Dispatchers.Main) {
+                            if (verifyAvailableNetwork(this@MainActivity) &&
+                                !LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN).isNullOrEmpty()
+                            ) {
+                                createHourlyObservers()
+                                viewModel.fetchMembershipPlans()
+                                viewModel.fetchMembershipCards()
+                            }
+                        }
                     }
                 }
             }
@@ -120,7 +174,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             viewModel.fetchMembershipPlans()
             viewModel.fetchMembershipCards()
         }
-        resetCoroutine()
+        resetHourlyCoroutine()
         super.onResume()
     }
 }

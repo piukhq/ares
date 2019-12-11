@@ -71,11 +71,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 broadCastReceiver,
                 IntentFilter(MainActivity.TOKEN_REFRESHED_EVENT)
             )
+        (activity as MainActivity).resetWalletCoroutine()
     }
 
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(requireContext())
             .unregisterReceiver(broadCastReceiver)
+        (activity as MainActivity).cancelWalletCoroutine()
         super.onDestroy()
     }
 
@@ -205,7 +207,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     viewModel.fetchMembershipPlans()
                     viewModel.fetchMembershipCards()
                 }
-                (activity as MainActivity).resetCoroutine()
+                (activity as MainActivity).resetHourlyCoroutine()
             } else {
                 showNoInternetConnectionDialog()
             }
@@ -283,6 +285,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onPause() {
         binding.progressSpinner.visibility = View.INVISIBLE
         binding.swipeLayout.isRefreshing = false
+        (activity as MainActivity).cancelWalletCoroutine()
         super.onPause()
     }
 

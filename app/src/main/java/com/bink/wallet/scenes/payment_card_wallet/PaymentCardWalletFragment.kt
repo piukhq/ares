@@ -1,14 +1,16 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
-import android.content.DialogInterface
+import android.content.*
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
@@ -35,6 +37,19 @@ class PaymentCardWalletFragment :
             .build()
     }
 
+    private val broadCastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(contxt: Context?, intent: Intent?) {
+
+            when (intent?.action) {
+                MainActivity.TOKEN_REFRESHED_EVENT -> {
+                    runBlocking {
+                        viewModel.fetchLocalPaymentCards()
+                    }
+                }
+            }
+        }
+    }
+
     private val walletItems = ArrayList<Any>()
 
     private val walletAdapter = PaymentCardWalletAdapter()
@@ -43,7 +58,6 @@ class PaymentCardWalletFragment :
         get() = R.layout.payment_card_wallet_fragment
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
-
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -165,6 +179,21 @@ class PaymentCardWalletFragment :
         walletAdapter.notifyDataSetChanged()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(
+                broadCastReceiver,
+                IntentFilter(MainActivity.TOKEN_REFRESHED_EVENT)
+            )
+        (activity as MainActivity).resetWalletCoroutine()
+    }
+
+    override fun onPause() {
+        (activity as MainActivity).resetWalletCoroutine()
+        super.onPause()
+    }
+
     private fun clickHandler(it: Any, plans: List<MembershipPlan>, cards: List<MembershipCard>) {
         when (it) {
             is PaymentCard -> {
@@ -186,6 +215,13 @@ class PaymentCardWalletFragment :
                 )
             }
         }
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(requireContext())
+            .unregisterReceiver(broadCastReceiver)
+        (activity as MainActivity).cancelWalletCoroutine()
+        super.onDestroy()
     }
 
     private fun fetchPaymentCards() {

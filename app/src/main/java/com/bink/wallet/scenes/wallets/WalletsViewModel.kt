@@ -26,7 +26,7 @@ class WalletsViewModel(
         repository.retrieveMembershipCards(membershipCardData)
     }
 
-    suspend fun fetchMembershipPlans() {
+    fun fetchMembershipPlans() {
         repository.retrieveMembershipPlans(membershipPlanData)
     }
 
