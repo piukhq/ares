@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import org.koin.android.ext.android.inject
@@ -58,6 +59,7 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (findNavController().currentDestination?.label != getString(R.string.root)) {
+                        view?.hideKeyboard()
                         windowFullscreenHandler.toNormalScreen()
                         findNavController().popBackStack()
                     } else {

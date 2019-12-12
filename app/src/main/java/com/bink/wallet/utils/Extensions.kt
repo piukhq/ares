@@ -109,21 +109,30 @@ fun String.headerTidy(): String {
 }
 
 fun Context.validateEmail(emailValue: String?, editText: EditText) {
-    if (!Patterns.EMAIL_ADDRESS.matcher(emailValue ?: EMPTY_STRING).matches()) {
-        editText.error = getString(R.string.incorrect_email_text)
-    } else {
-        editText.error = null
+    editText.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(emailValue ?: EMPTY_STRING).matches()) {
+                editText.error = getString(R.string.incorrect_email_text)
+            } else {
+                editText.error = null
+            }
+        }
     }
 }
 
-fun Context.validatePassword(passwordValue: String?, editText: EditText) =
-    if (!UtilFunctions.isValidField(
-            PASSWORD_REGEX,
-            passwordValue ?: EMPTY_STRING
-        )
-    ) {
-       editText.error =
-            getString(R.string.password_description)
-    } else {
-        editText.error = null
+fun Context.validatePassword(passwordValue: String?, editText: EditText) {
+    editText.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            if (!UtilFunctions.isValidField(
+                    PASSWORD_REGEX,
+                    passwordValue ?: EMPTY_STRING
+                )
+            ) {
+                editText.error =
+                    getString(R.string.password_description)
+            } else {
+                editText.error = null
+            }
+        }
     }
+}
