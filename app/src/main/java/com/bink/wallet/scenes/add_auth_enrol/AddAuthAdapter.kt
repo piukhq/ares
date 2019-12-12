@@ -12,14 +12,15 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBinding
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 
 
-class SignUpAdapter(
-    val brands: List<Pair<PlanFields, PlanFieldsRequest>>
+class AddAuthAdapter(
+    val brands: List<Pair<Any, PlanFieldsRequest>>
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -27,18 +28,18 @@ class SignUpAdapter(
         const val FALSE_TEXT = "false"
     }
 
-    private fun checkIfError(item: PlanFields, position: Int, text: AppCompatEditText) {
+    private fun checkIfError(position: Int, text: AppCompatEditText) {
 
         val currentItem = brands[position]
 
         if (!UtilFunctions.isValidField(
-                currentItem.first.validation,
+                (currentItem.first as PlanFields).validation,
                 currentItem.second.value
             )
         ) {
             text.error = text.resources?.getString(
                 R.string.add_auth_error_message,
-                item.column
+                (currentItem.first as PlanFields).column
             )
         }
     }
@@ -55,18 +56,25 @@ class SignUpAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (brands[position].first.type != null)
-            return brands[position].first.type!!
+        if (brands[position].first is PlanFields && (brands[position].first as PlanFields).type != null)
+            return (brands[position].first as PlanFields).type!!
+        if (brands[position].first is PlanDocuments) {
+            return FieldType.BOOLEAN_REQUIRED.type
+        }
         return 0
     }
 
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         brands[position].let {
-            when (holder) {
-                is TextFieldHolder -> holder.bind(it)
-                is SpinnerViewHolder -> holder.bind(it)
-                is CheckBoxHolder -> holder.bind(it)
+            if (it.first is PlanFields) {
+                when (holder) {
+                    is TextFieldHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
+                    is SpinnerViewHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
+                    is CheckBoxHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
+                }
+            } else {
+                (holder as CheckBoxHolder).bind(it as Pair<PlanDocuments, PlanFieldsRequest>)
             }
         }
     }
@@ -99,14 +107,14 @@ class SignUpAdapter(
                 if (brands[adapterPosition].second.value.isNullOrBlank())
                     error = null
                 else
-                    checkIfError(brands[adapterPosition].first, adapterPosition, this)
+                    checkIfError(adapterPosition, this)
 
                 setOnFocusChangeListener { _, isFocus ->
                     if (!isFocus)
                         try {
-                            checkIfError(brands[adapterPosition].first, adapterPosition, this)
+                            checkIfError(adapterPosition, this)
                         } catch (ex: Exception) {
-                            Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
+                            Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
                         }
                 }
             }
@@ -130,7 +138,7 @@ class SignUpAdapter(
                 id: Long
             ) {
                 brands[adapterPosition].second.value =
-                    brands[adapterPosition].first.choice?.get(position)
+                    (brands[adapterPosition].first as PlanFields).choice?.get(position)
             }
 
         }
@@ -149,14 +157,15 @@ class SignUpAdapter(
 
 
     inner class CheckBoxHolder(val binding: AddAuthSwitchItemBinding) :
-        BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
+        BaseViewHolder<Pair<Any, PlanFieldsRequest>>(binding) {
 
-        override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+        override fun bind(item: Pair<Any, PlanFieldsRequest>) {
             val switch = binding.contentAddAuthSwitch
-            binding.planField = item.first
             brands[adapterPosition].second.value = FALSE_TEXT
+
             with(switch) {
-                text = item.first.description
+                text = (item.first as PlanFields).description
+                    ?: (item.first as PlanDocuments).description
                 setOnCheckedChangeListener { _, isChecked ->
                     brands[adapterPosition].second.value = isChecked.toString()
                 }

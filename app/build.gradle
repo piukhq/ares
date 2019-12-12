@@ -18,15 +18,19 @@ android {
     signingConfigs {
         binkSigningConfig {
             storeFile file('keystore')
-            if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
-                keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
-                keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
-                storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
-            } else if (System.getenv("BINK_KEYSTORE_PASSWORD")) {
-                storePassword = System.getenv("BINK_KEYSTORE_PASSWORD")
-                keyPassword = System.getenv("BINK_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("BINK_KEYSTORE_ALIAS")
-            }
+            //            if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
+//                keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
+//                keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
+//                storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
+//            } else if (System.getenv("BINK_KEYSTORE_PASSWORD")) {
+//                storePassword = System.getenv("BINK_KEYSTORE_PASSWORD")
+//                keyPassword = System.getenv("BINK_KEYSTORE_PASSWORD")
+//                keyAlias = System.getenv("BINK_KEYSTORE_ALIAS")
+//            }
+            storeFile file('/Applications/Android Studio.app/Contents/bin/path4')
+            storePassword 'android'
+            keyAlias = 'key0'
+            keyPassword 'android'
         }
     }
     defaultConfig {

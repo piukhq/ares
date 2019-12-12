@@ -4,13 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="android.text.InputType" />
-
-        <variable
-                name="PlanField"
-                type="com.bink.wallet.model.response.membership_plan.PlanFields" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

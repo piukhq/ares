@@ -45,10 +45,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isPaymentWalletEmpty: Boolean? = null
 
-    private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+    private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
         mutableListOf()
 
-    private val planBooleanFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+    private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
         mutableListOf()
 
     private fun addFieldToList(planField: PlanFields) {
@@ -59,7 +59,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             )
         )
 
-        if (planField.type == FieldType.BOOLEAN.type) {
+        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
             planBooleanFieldsList?.add(
                 pairPlanField
             )
@@ -177,6 +177,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         it.typeOfField = TypeOfField.AUTH
                         addFieldToList(it)
                     }
+
                 }
             }
             SignUpFormType.ENROL -> {
@@ -242,17 +243,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val addRegisterFieldsRequest = Account()
 
         planFieldsList?.map {
-            when (it.first.typeOfField) {
-                TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
-                TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
-                TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
-                else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
-            }
+            if (it.first is PlanFields)
+                when ((it.first as PlanFields).typeOfField) {
+                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
+                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
+                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
+                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+                }
         }
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = SignUpAdapter(
+            adapter = AddAuthAdapter(
                 planFieldsList?.toList()!!
             )
         }

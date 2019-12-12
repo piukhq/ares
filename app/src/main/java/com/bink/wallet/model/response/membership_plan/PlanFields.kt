@@ -15,4 +15,17 @@ data class PlanFields(
     val choice: List<String>?,
     val description: String?,
     var typeOfField: TypeOfField?
-) : Parcelable
+) : Parcelable {
+
+    constructor(description: String?) : this(
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    )
+
+}
