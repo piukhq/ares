@@ -164,8 +164,23 @@ class AddAuthAdapter(
             brands[adapterPosition].second.value = FALSE_TEXT
 
             with(switch) {
-                text = (item.first as PlanFields).description
-                    ?: (item.first as PlanDocuments).description
+                when (item.first) {
+                    is PlanFields ->
+                        text =
+                            (item.first as PlanFields).description
+                    else -> {
+                        (item.first as PlanDocuments).let {
+                            UtilFunctions.buildHyperlinkSpanString(
+                                it.description!!.plus(
+                                    " ${it.name}"
+                                ),
+                                it.name!!,
+                                it.url!!,
+                                switch
+                            )
+                        }
+                    }
+                }
                 setOnCheckedChangeListener { _, isChecked ->
                     brands[adapterPosition].second.value = isChecked.toString()
                 }

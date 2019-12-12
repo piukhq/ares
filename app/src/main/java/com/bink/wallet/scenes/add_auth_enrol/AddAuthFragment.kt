@@ -13,6 +13,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.*
@@ -51,23 +52,37 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
         mutableListOf()
 
-    private fun addFieldToList(planField: PlanFields) {
+    private fun addFieldToList(planField: Any) {
 
-        val pairPlanField = Pair(
-            planField, PlanFieldsRequest(
-                planField.column, ""
+        if (planField is PlanFields) {
+            val pairPlanField = Pair(
+                planField, PlanFieldsRequest(
+                    planField.column, ""
+                )
             )
-        )
 
-        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+            if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+                planBooleanFieldsList?.add(
+                    pairPlanField
+                )
+            } else {
+                if (!planField.column.equals(BARCODE_TEXT))
+                    planFieldsList?.add(
+                        pairPlanField
+                    )
+            }
+        }
+
+        if (planField is PlanDocuments) {
+            val pairPlanField = Pair(
+                planField, PlanFieldsRequest(
+                    planField.name, ""
+                )
+            )
+
             planBooleanFieldsList?.add(
                 pairPlanField
             )
-        } else {
-            if (!planField.column.equals(BARCODE_TEXT))
-                planFieldsList?.add(
-                    pairPlanField
-                )
         }
     }
 
@@ -136,13 +151,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             SignUpFormType.ADD_AUTH -> {
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
-                with(viewModel) {
-                    if (currentMembershipCard.value != null) {
-                        if (currentMembershipPlan.value!!.feature_set?.has_points != null &&
-                            currentMembershipPlan.value!!.feature_set?.has_points == true &&
-                            currentMembershipPlan.value!!.feature_set?.transactions_available != null
+                with(viewModel.currentMembershipPlan.value!!) {
+                    if (viewModel.currentMembershipCard.value != null) {
+                        if (feature_set?.has_points != null &&
+                            feature_set.has_points == true &&
+                            feature_set.transactions_available != null
                         ) {
-                            if (currentMembershipPlan.value!!.feature_set?.transactions_available == true) {
+                            if (feature_set?.transactions_available == true) {
                                 binding.descriptionAddAuth.text = getString(
                                     R.string.log_in_transaction_available,
                                     viewModel.currentMembershipPlan.value!!.account?.plan_name_card
@@ -157,8 +172,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
 
                         if (MembershipPlanUtils.getAccountStatus(
-                                currentMembershipPlan.value!!,
-                                currentMembershipCard.value!!
+                                this,
+                                viewModel.currentMembershipCard.value!!
                             ) == LoginStatus.STATUS_LOGIN_FAILED
                         ) {
                             binding.descriptionAddAuth.text = getString(
@@ -167,15 +182,21 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             )
                         }
                     } else {
-                        currentMembershipPlan.value!!.account?.add_fields?.map {
+                        account?.add_fields?.map {
                             it.typeOfField = TypeOfField.ADD
                             addFieldToList(it)
                         }
                     }
 
-                    currentMembershipPlan.value!!.account?.authorise_fields?.map {
+                    account?.authorise_fields?.map {
                         it.typeOfField = TypeOfField.AUTH
                         addFieldToList(it)
+                    }
+
+                    account?.plan_documents?.map {
+                        if (it.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
+                            addFieldToList(it)
+                        }
                     }
 
                 }
@@ -194,6 +215,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                     noAccountText.visibility = View.GONE
                 }
+
+                viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
+                    if (it.display?.contains(SignUpFormType.ENROL.type)!!) {
+                        addFieldToList(it)
+                    }
+                }
+
             }
             SignUpFormType.GHOST -> {
                 binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
@@ -206,6 +234,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.currentMembershipPlan.value!!.account?.registration_fields?.map {
                     it.typeOfField = TypeOfField.REGISTRATION
                     addFieldToList(it)
+                }
+
+                viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
+                    if (it.display?.contains(SignUpFormType.GHOST.type)!!) {
+                        addFieldToList(it)
+                    }
                 }
 
                 binding.noAccountText.visibility = View.GONE
@@ -248,7 +282,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
                     TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
                     TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
-                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+                    TypeOfField.REGISTRATION -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+                    else -> {
+                    }
                 }
         }
 
@@ -264,7 +300,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 if (verifyAvailableNetwork(requireActivity())) {
                     planFieldsList?.map {
                         if (!UtilFunctions.isValidField(
-                                it.first.validation,
+                                (it.first as PlanFields).validation,
                                 it.second.value
                             )
                         ) {
