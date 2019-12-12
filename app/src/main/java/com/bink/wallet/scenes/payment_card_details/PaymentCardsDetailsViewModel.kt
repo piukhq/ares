@@ -5,10 +5,14 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
-class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentWalletRepository) :
+class PaymentCardsDetailsViewModel(
+        private var paymentWalletRepository: PaymentWalletRepository,
+        private var loyaltyWalletRepository: LoyaltyWalletRepository
+    ) :
     BaseViewModel() {
 
     var paymentCard = MutableLiveData<PaymentCard>()
@@ -43,5 +47,9 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
 
     suspend fun deletePaymentCard(paymentCardId: String) {
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
+    }
+
+    fun getMembershipCards() {
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 }

@@ -179,8 +179,8 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
+        viewModel.getMembershipCards()
     }
-
 
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =
