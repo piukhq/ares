@@ -200,8 +200,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        viewModel.accountStatus.observeNonNull(this)
-        { status ->
+        viewModel.accountStatus.observeNonNull(this) { status ->
             configureLoginStatus(status)
         }
 
