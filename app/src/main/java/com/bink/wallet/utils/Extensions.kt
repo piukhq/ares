@@ -2,9 +2,11 @@ package com.bink.wallet.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.annotation.IntegerRes
 import androidx.fragment.app.Fragment
@@ -105,3 +107,23 @@ fun String.headerTidy(): String {
         .replace("=", "")
         .replace("\n", "")
 }
+
+fun Context.validateEmail(emailValue: String?, editText: EditText) {
+    if (!Patterns.EMAIL_ADDRESS.matcher(emailValue ?: EMPTY_STRING).matches()) {
+        editText.error = getString(R.string.incorrect_email_text)
+    } else {
+        editText.error = null
+    }
+}
+
+fun Context.validatePassword(passwordValue: String?, editText: EditText) =
+    if (!UtilFunctions.isValidField(
+            PASSWORD_REGEX,
+            passwordValue ?: EMPTY_STRING
+        )
+    ) {
+       editText.error =
+            getString(R.string.password_description)
+    } else {
+        editText.error = null
+    }

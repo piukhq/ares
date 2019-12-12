@@ -49,24 +49,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
     }
 
-    private fun validateEmail() =
-        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
-            binding.emailField.error = getString(R.string.incorrect_email_text)
-        } else {
-            binding.emailField.error = null
-        }
-
-    private fun validatePassword() = if (!UtilFunctions.isValidField(
-            PASSWORD_REGEX,
-            viewModel.password.value ?: EMPTY_STRING
-        )
-    ) {
-        binding.passwordField.error =
-            getString(R.string.password_description)
-    } else {
-        binding.passwordField.error = null
-    }
-
     private fun checkPasswordsMatch() =
         if (viewModel.password.value != viewModel.confirmPassword.value) {
             binding.confirmPasswordField.error = getString(R.string.password_not_match)
@@ -108,12 +90,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             marketingMessages.value = false
 
             email.observeNonNull(this@SignUpFragment) {
-                validateEmail()
+                requireContext().validateEmail(it, binding.emailField)
                 setSignupButtonEnableStatus()
             }
 
             password.observeNonNull(this@SignUpFragment) {
-                validatePassword()
+                requireContext().validatePassword(it, binding.passwordField)
                 setSignupButtonEnableStatus()
             }
 
@@ -183,8 +165,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         binding.signUpButton.setOnClickListener {
 
-            validateEmail()
-            validatePassword()
+            requireContext().validateEmail(viewModel.email.value, binding.emailField)
+            requireContext().validatePassword(viewModel.password.value, binding.passwordField)
             checkPasswordsMatch()
 
             with(viewModel) {
