@@ -28,3 +28,8 @@ const val PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$"
 const val JOIN_CARD = "JOIN_CARD"
 
 const val SCROLL_DELAY = 200L
+
+const val FLOAT_ZERO = 0f
+const val FLOAT_ONE_HUNDRED = 100f
+const val INT_ZERO = 0
+const val INT_ONE_HUNDRED = 100
