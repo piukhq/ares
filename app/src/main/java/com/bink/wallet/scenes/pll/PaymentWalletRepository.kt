@@ -82,9 +82,11 @@ class PaymentWalletRepository(
                     paymentCard.value = response
 
                     val paymentCardValue = paymentCardMutableValue.value
-                    paymentCardValue?.membership_cards?.forEach {
-                        if (it.id == membershipCardId) {
-                            it.active_link = true
+                    paymentCardValue?.membership_cards?.forEach {pCV ->
+                        paymentCard.value?.membership_cards?.forEach { pC->
+                            if (pCV.id == pC.id) {
+                                pCV.active_link = pC.active_link
+                            }
                         }
                     }
 

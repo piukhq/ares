@@ -74,17 +74,22 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/available_pll_list"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:visibility="gone"
-                        app:layout_constraintTop_toBottomOf="@+id/payment_card_details_description" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/payment_card_details_description"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/linked_cards_list_item"
+                        tools:visibility="visible" />
 
                 <com.bink.wallet.FooterItem
                         android:id="@+id/footer_security"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/other_cards_list"
@@ -161,11 +166,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="16dp"
                         android:text="@string/other_cards_you_can_add_description"
-                        android:visibility="gone"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_medium"
-                        android:layout_marginEnd="16dp"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/other_cards_title" />
 

@@ -11,9 +11,9 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.MembershipCardStatus
 
 class AvailablePllAdapter(
-    private val currentPaymentCard: PaymentCard,
+    private var currentPaymentCard: PaymentCard,
     private val plans: List<MembershipPlan> = ArrayList(),
-    private val membershipCards: List<MembershipCard> = ArrayList(),
+    private var membershipCards: List<MembershipCard> = ArrayList(),
     private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {},
     private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
 ) : RecyclerView.Adapter<AvailablePllAdapter.AvailablePllViewHolder>() {
@@ -30,6 +30,23 @@ class AvailablePllAdapter(
 
     override fun getItemCount(): Int = membershipCards.size
 
+    fun updatePaymentCard(updatedPaymentCard: PaymentCard) {
+        val tempMembershipCards = membershipCards
+        updatedPaymentCard.membership_cards.forEach {uPC ->
+            tempMembershipCards.forEach { tempMembershipCard ->
+                tempMembershipCard.payment_cards?.forEach { pC ->
+
+                    if(uPC.id == tempMembershipCard.id) {
+                        pC.active_link = uPC.active_link
+                    }
+                }
+            }
+        }
+        currentPaymentCard = updatedPaymentCard
+        membershipCards = tempMembershipCards
+        notifyDataSetChanged()
+    }
+
     inner class AvailablePllViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -45,7 +62,8 @@ class AvailablePllAdapter(
                 binding.toggle.displayCustomSwitch(false)
             }
 
-            binding.toggle.setOnCheckedChangeListener { _, isChecked ->
+            binding.toggle.setOnClickListener {
+                val isChecked = binding.toggle.isChecked
                 onLinkStatusChange(Pair(item.id, isChecked))
                 binding.toggle.displayCustomSwitch(isChecked)
             }

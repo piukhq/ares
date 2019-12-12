@@ -11,7 +11,6 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -20,6 +19,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
+
+    private lateinit var availablePllAdapter: AvailablePllAdapter
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -106,19 +107,20 @@ class PaymentCardsDetailsFragment :
             plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
+                availablePllAdapter = AvailablePllAdapter(
+                    viewModel.paymentCard.value!!,
+                    plans,
+                    pllCards,
+                    onLinkStatusChange = ::onLinkStatusChange,
+                    onItemSelected = ::onItemSelected
+                )
                 binding.apply {
                     paymentCardDetailsTitle.visibility = View.VISIBLE
                     paymentCardDetailsDescription.visibility = View.VISIBLE
                     availablePllList.apply {
                         visibility = View.VISIBLE
                         layoutManager = GridLayoutManager(context, 1)
-                        adapter = AvailablePllAdapter(
-                            viewModel.paymentCard.value!!,
-                            plans,
-                            pllCards,
-                            onLinkStatusChange = ::onLinkStatusChange,
-                            onItemSelected = ::onItemSelected
-                        )
+                        adapter = availablePllAdapter
                     }
 
                     otherCardsList.apply {
@@ -165,6 +167,7 @@ class PaymentCardsDetailsFragment :
 
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
+            availablePllAdapter.updatePaymentCard(it)
         }
     }
 
