@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "membership_card")
-data class MembershipCard(
+data class  MembershipCard(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
     @ColumnInfo(name = "payment_cards") var payment_cards: List<PaymentMembershipCard>?,

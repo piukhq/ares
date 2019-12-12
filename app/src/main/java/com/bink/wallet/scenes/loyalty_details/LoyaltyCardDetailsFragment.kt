@@ -105,6 +105,14 @@ class LoyaltyCardDetailsFragment :
         binding.footerDelete.binding.description.text =
             getString(R.string.remove_card)
 
+        if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+            binding.footerPlrRewards.visibility = View.GONE
+            binding.footerPlrSeparator.visibility = View.GONE
+        } else {
+            binding.footerPlrRewards.setOnClickListener {
+
+            }
+        }
 
         val aboutTitle =
             if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
