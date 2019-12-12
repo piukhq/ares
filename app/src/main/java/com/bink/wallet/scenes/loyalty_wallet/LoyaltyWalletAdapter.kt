@@ -146,29 +146,33 @@ class LoyaltyWalletAdapter(
                             valueWrapper.visibility = View.VISIBLE
                             if (!item.vouchers.isNullOrEmpty()) {
                                 val voucher = item.vouchers?.first()
-                                if (voucher?.earn?.target_value != null &&
-                                    voucher.earn.target_value != FLOAT_ZERO) {
-                                    val earn = voucher.earn
-                                    val burn = voucher.burn
-                                    val balance = loyaltyValue.context.getString(
-                                        R.string.loyalty_wallet_plr_value,
-                                        ValueDisplayUtils.displayValue(
-                                            earn.value!!,
-                                            burn?.prefix,
-                                            burn?.suffix,
-                                            burn?.currency
-                                        ),
-                                        ValueDisplayUtils.displayValue(
-                                            earn.target_value!!,
-                                            burn?.prefix,
-                                            burn?.suffix,
-                                            burn?.currency
-                                        )
-                                    )
-                                    loyaltyValue.text = balance
-                                    loyaltyValueExtra.text = loyaltyValue.context.getString(
-                                        R.string.until_next_reward
-                                    )
+                                voucher?.earn?.target_value?.let { target_value ->
+                                    if (target_value != FLOAT_ZERO) {
+                                        val earn = voucher.earn
+                                        val burn = voucher.burn
+                                        earn.value?.let { earn_value ->
+                                            val balance = loyaltyValue.context.getString(
+                                                R.string.loyalty_wallet_plr_value,
+                                                ValueDisplayUtils.displayValue(
+                                                    earn_value,
+                                                    burn?.prefix,
+                                                    burn?.suffix,
+                                                    burn?.currency
+                                                ),
+                                                ValueDisplayUtils.displayValue(
+                                                    target_value,
+                                                    burn?.prefix,
+                                                    burn?.suffix,
+                                                    burn?.currency
+                                                )
+                                            )
+                                            loyaltyValue.text = balance
+                                            loyaltyValueExtra.text =
+                                                loyaltyValue.context.getString(
+                                                    R.string.until_next_reward
+                                                )
+                                        }
+                                    }
                                 }
                             } else if (!item.balances.isNullOrEmpty()) {
                                 val balance = item.balances?.first()
