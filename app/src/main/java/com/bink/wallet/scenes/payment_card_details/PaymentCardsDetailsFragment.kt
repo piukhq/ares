@@ -11,7 +11,6 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -90,21 +89,22 @@ class PaymentCardsDetailsFragment :
         }
 
         with(viewModel.paymentCard) {
-            if (value != null &&
-                value!!.card != null &&
-                value!!.card!!.isExpired()
-            ) {
-                with(binding.paymentHeader) {
-                    cardExpired.visibility = View.VISIBLE
-                    linkStatus.visibility = View.GONE
-                    imageStatus.visibility = View.GONE
+            value?.let {
+                it.card?.let { card ->
+                    if (card.isExpired()) {
+                        with(binding.paymentHeader) {
+                            cardExpired.visibility = View.VISIBLE
+                            linkStatus.visibility = View.GONE
+                            imageStatus.visibility = View.GONE
+                        }
+                    }
                 }
             }
         }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             val pllPlansIds = mutableListOf<String>()
-            plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
+            plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
                 binding.apply {
@@ -113,13 +113,15 @@ class PaymentCardsDetailsFragment :
                     availablePllList.apply {
                         visibility = View.VISIBLE
                         layoutManager = GridLayoutManager(context, 1)
-                        adapter = AvailablePllAdapter(
-                            viewModel.paymentCard.value!!,
-                            plans,
-                            pllCards,
-                            onLinkStatusChange = ::onLinkStatusChange,
-                            onItemSelected = ::onItemSelected
-                        )
+                        viewModel.paymentCard.value?.let {
+                            adapter = AvailablePllAdapter(
+                                it,
+                                plans,
+                                pllCards,
+                                onLinkStatusChange = ::onLinkStatusChange,
+                                onItemSelected = ::onItemSelected
+                            )
+                        }
                     }
 
                     otherCardsList.apply {
@@ -203,16 +205,18 @@ class PaymentCardsDetailsFragment :
     private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
         if (currentItem.first != null) {
             runBlocking {
-                if (currentItem.second) {
-                    viewModel.linkPaymentCard(
-                        currentItem.first!!,
-                        viewModel.paymentCard.value?.id.toString()
-                    )
-                } else {
-                    viewModel.unlinkPaymentCard(
-                        currentItem.first!!,
-                        viewModel.paymentCard.value?.id.toString()
-                    )
+                currentItem.first?.let {
+                    if (currentItem.second) {
+                        viewModel.linkPaymentCard(
+                            it,
+                            viewModel.paymentCard.value?.id.toString()
+                        )
+                    } else {
+                        viewModel.unlinkPaymentCard(
+                            it,
+                            viewModel.paymentCard.value?.id.toString()
+                        )
+                    }
                 }
             }
         }

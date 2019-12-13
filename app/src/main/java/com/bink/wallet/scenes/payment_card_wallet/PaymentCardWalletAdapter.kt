@@ -105,13 +105,13 @@ class PaymentCardWalletAdapter(
                         it.getCardTypeFromProvider().background
                     )
                 }
-
-                if (item.card!!.isExpired()) {
-                    cardExpired.visibility = View.VISIBLE
-                    linkStatus.visibility = View.GONE
-                    imageStatus.visibility = View.GONE
+                item.card?.let {
+                    if (it.isExpired()) {
+                        cardExpired.visibility = View.VISIBLE
+                        linkStatus.visibility = View.GONE
+                        imageStatus.visibility = View.GONE
+                    }
                 }
-
                 mainPayment.setOnClickListener {
                     onClickListener(paymentCards[adapterPosition])
                 }

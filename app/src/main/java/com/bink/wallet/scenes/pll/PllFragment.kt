@@ -42,7 +42,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             PllFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
-                displayTitle(membershipCard.payment_cards?.isNullOrEmpty()!!)
+                membershipCard.payment_cards?.isNullOrEmpty()
+                    ?.let { paymentCards -> displayTitle(paymentCards) }
                 if (isAddJourney) {
                     this@PllFragment.isAddJourney = isAddJourney
                     binding.toolbar.navigationIcon = null
@@ -96,14 +97,19 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 val isSelected = if (isAddJourney) {
                     true
                 } else {
-                    card.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                    viewModel.membershipCard.value?.let { membershipCard ->
+                        card.isLinkedToMembershipCard(membershipCard)
+                    }
                 }
-                listPaymentCards.add(
-                    PllPaymentCardWrapper(
-                        card,
-                        isSelected
+                isSelected?.let {is_selected->
+                    listPaymentCards.add(
+                        PllPaymentCardWrapper(
+                            card,
+                            is_selected
+                        )
                     )
-                )
+                }
+
             }
             adapter.paymentCards = listPaymentCards
             adapter.notifyDataSetChanged()
@@ -124,38 +130,40 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             if (viewModel.paymentCards.value.isNullOrEmpty()) {
                 findNavController().popBackStack()
             } else {
-                adapter.paymentCards?.forEach { card ->
-                    if (card.isSelected &&
-                        !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                    ) {
-                        runBlocking {
-                            viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
-                                card.paymentCard.id?.let { paymentCard ->
-                                    viewModel.linkPaymentCard(
-                                        membershipCard.toString(),
-                                        paymentCard.toString()
-                                    )
+                viewModel.membershipCard.value?.let {
+                    adapter.paymentCards?.forEach { card ->
+                        if (card.isSelected &&
+                            !card.paymentCard.isLinkedToMembershipCard(it)
+                        ) {
+                            runBlocking {
+                                viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
+                                    card.paymentCard.id?.let { paymentCard ->
+                                        viewModel.linkPaymentCard(
+                                            membershipCard.toString(),
+                                            paymentCard.toString()
+                                        )
+                                    }
                                 }
                             }
+                        } else if (viewModel.membershipCard.value != null &&
+                            !card.isSelected &&
+                            card.paymentCard.isLinkedToMembershipCard(it)
+                        ) {
+                            runBlocking {
+                                viewModel.unlinkPaymentCard(
+                                    card.paymentCard.id.toString(),
+                                    it.id
+                                )
+                            }
                         }
-                    } else if (viewModel.membershipCard.value != null &&
-                        !card.isSelected &&
-                        card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                    ) {
-                        runBlocking {
-                            viewModel.unlinkPaymentCard(
-                                card.paymentCard.id.toString(),
-                                viewModel.membershipCard.value!!.id
-                            )
-                        }
-                    }
 
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                        directions?.let { directions ->
-                            findNavController().navigateIfAdded(
-                                this@PllFragment,
-                                directions
-                            )
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
                         }
                     }
                 }

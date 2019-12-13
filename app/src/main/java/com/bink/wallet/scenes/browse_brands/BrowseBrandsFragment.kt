@@ -32,17 +32,26 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         membershipPlan1: MembershipPlan,
         membershipPlan2: MembershipPlan
     ): Int {
-        return when {
-            (isPlanPLL(membershipPlan1) ||
-                    isPlanPLL(membershipPlan2)) &&
-                    (membershipPlan1.getCardType()?.type!! >
-                            membershipPlan2.getCardType()?.type!!) -> -1
-            (isPlanPLL(membershipPlan1) ||
-                    isPlanPLL(membershipPlan2)) &&
-                    (membershipPlan1.getCardType()?.type!! <
-                            membershipPlan2.getCardType()?.type!!) -> 1
-            else -> 0
+        membershipPlan1.apply {
+            membershipPlan2.apply {
+                getCardType()?.type?.let {
+                    membershipPlan2.getCardType()?.type?.let { plan2Type ->
+                        return when {
+                            (isPlanPLL(this) ||
+                                    isPlanPLL(membershipPlan2)) &&
+                                    (it >
+                                            plan2Type) -> -1
+                            (isPlanPLL(this) ||
+                                    isPlanPLL(membershipPlan2)) &&
+                                    (it <
+                                            plan2Type) -> 1
+                            else -> 0
+                        }
+                    }
+                }
+            }
         }
+        return 0
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

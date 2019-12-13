@@ -123,17 +123,19 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         binding.accept.setOnClickListener {
-            if (accessToken?.token != null &&
-                userEmail != null &&
-                accessToken?.userId != null
-            )
-                viewModel.authWithFacebook(
-                    FacebookAuthRequest(
-                        accessToken?.token!!,
-                        userEmail!!,
-                        accessToken?.userId!!
-                    )
-                )
+            accessToken?.token?.let { token ->
+                accessToken?.userId?.let { userId ->
+                    userEmail?.let { email ->
+                        viewModel.authWithFacebook(
+                            FacebookAuthRequest(
+                                token,
+                                email,
+                                userId
+                            )
+                        )
+                    }
+                }
+            }
         }
         binding.decline.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)

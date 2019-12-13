@@ -100,18 +100,21 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
             if (currentMembershipPlan.feature_set?.linking_support != null &&
-                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
+                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+            ) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     true,
                     getString(R.string.native_join_unavailable_title),
                     getString(R.string.native_join_unavailable_text)
                 )
-                if (currentMembershipPlan.account?.plan_url?.isNotEmpty()!!) {
-                    genericModalParameters.firstButtonText =
-                        getString(R.string.native_join_unavailable_button_text)
-                    genericModalParameters.link =
-                        currentMembershipPlan.account.plan_url
+                currentMembershipPlan.account?.plan_url?.let {
+                    if (it.isNotEmpty()) {
+                        genericModalParameters.firstButtonText =
+                            getString(R.string.native_join_unavailable_button_text)
+                        genericModalParameters.link =
+                            currentMembershipPlan.account.plan_url
+                    }
                 }
                 action = AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
             } else {

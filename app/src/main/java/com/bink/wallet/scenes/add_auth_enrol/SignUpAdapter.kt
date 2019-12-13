@@ -54,12 +54,7 @@ class SignUpAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (brands[position].first.type != null)
-            return brands[position].first.type!!
-        return 0
-    }
-
+    override fun getItemViewType(position: Int) = brands[position].first.type ?: 0
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         brands[position].let {
