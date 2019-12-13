@@ -66,7 +66,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             ?.let {
                                 it
                             }
-                    pairPlanField.second.column = SignUpFieldTypes.EMAIL.common_name
+                    pairPlanField.second.disabled = true
                     pairPlanField.second.value = email
                 }
             }

@@ -16,7 +16,6 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
-import com.bink.wallet.utils.enums.SignUpFieldTypes
 
 
 class SignUpAdapter(
@@ -96,8 +95,10 @@ class SignUpAdapter(
             with(text) {
                 hint = item.first.description
                 setText(item.second.value)
-                if (item.second.column == SignUpFieldTypes.EMAIL.common_name) {
-                    isEnabled = false
+                item.second.disabled?.let {
+                    if (it) {
+                        isEnabled = false
+                    }
                 }
                 addTextChangedListener(textWatcher)
                 if (brands[adapterPosition].second.value.isNullOrBlank())
@@ -106,12 +107,14 @@ class SignUpAdapter(
                     checkIfError(brands[adapterPosition].first, adapterPosition, this)
 
                 setOnFocusChangeListener { _, isFocus ->
-                    if (!isFocus)
+                    if (!isFocus) {
+                        setText(getText().toString().trim())
                         try {
                             checkIfError(brands[adapterPosition].first, adapterPosition, this)
                         } catch (ex: Exception) {
                             Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
                         }
+                    }
                 }
             }
 
