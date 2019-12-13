@@ -173,8 +173,8 @@
     <string name="add_card_error_message">Please try again!</string>
     <string name="sign_up_text">Sign up</string>
     <string name="log_in_text">Log in</string>
-    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance. This is optional.</string>
-    <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your points balance. This is optional.</string>
+    <string name="log_in_transaction_available">You can log in to your %1$s account to see your %2$s details.</string>
+    <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your %2$s details.</string>
     <string name="temporary_log_in_screen_title">Welcome to splash page</string>
     <string name="login_screen_temporary_text">Login screen</string>
     <string name="brand_list_item_description">Can be linked to your payment cards</string>

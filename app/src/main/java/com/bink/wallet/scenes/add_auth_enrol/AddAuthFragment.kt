@@ -86,7 +86,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             binding.descriptionAddAuth.text =
                 getString(
                     R.string.enrol_description,
-                    it.account?.company_name
+                    it.account?.plan_name_card
                 )
             binding.noAccountText.visibility = View.VISIBLE
         }
@@ -143,13 +143,15 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                                     if (transactionsAvailable) {
                                                         getString(
                                                             R.string.log_in_transaction_available,
-                                                            membershipPlan.account?.plan_name_card
+                                                            membershipPlan.account?.company_name,
+                                                            membershipPlan.account?.plan_name
                                                         )
 
                                                     } else {
                                                         getString(
                                                             R.string.log_in_transaction_unavailable,
-                                                            membershipPlan.account?.plan_name_card
+                                                            membershipPlan.account?.company_name,
+                                                            membershipPlan.account?.plan_name
                                                         )
                                                     }
                                             }
@@ -163,7 +165,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 ) {
                                     binding.descriptionAddAuth.text = getString(
                                         R.string.log_in_transaction_available,
-                                        membershipPlan.account?.plan_name_card
+                                        membershipPlan.account?.company_name,
+                                        membershipPlan.account?.plan_name
                                     )
                                 }
                                 membershipPlan.account?.authorise_fields?.map {
@@ -187,7 +190,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     addCardButton.text = getString(R.string.sign_up_text)
                     descriptionAddAuth.text = getString(
                         R.string.enrol_description,
-                        viewModel.currentMembershipPlan.value?.account?.company_name
+                        viewModel.currentMembershipPlan.value?.account?.plan_name_card
                     )
                     viewModel.currentMembershipPlan.value?.account?.enrol_fields?.map {
                         it.typeOfField = TypeOfField.ENROL

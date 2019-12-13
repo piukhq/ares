@@ -32,22 +32,18 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         membershipPlan1: MembershipPlan,
         membershipPlan2: MembershipPlan
     ): Int {
-        membershipPlan1.apply {
-            membershipPlan2.apply {
-                getCardType()?.type?.let {
-                    membershipPlan2.getCardType()?.type?.let { plan2Type ->
-                        return when {
-                            (isPlanPLL(this) ||
-                                    isPlanPLL(membershipPlan2)) &&
-                                    (it >
-                                            plan2Type) -> -1
-                            (isPlanPLL(this) ||
-                                    isPlanPLL(membershipPlan2)) &&
-                                    (it <
-                                            plan2Type) -> 1
-                            else -> 0
-                        }
-                    }
+        membershipPlan1.getCardType()?.type?.let {
+            membershipPlan2.getCardType()?.type?.let { type2 ->
+                return when {
+                    (isPlanPLL(membershipPlan1) ||
+                            isPlanPLL(membershipPlan2)) &&
+                            (it >
+                                    type2) -> -1
+                    (isPlanPLL(membershipPlan1) ||
+                            isPlanPLL(membershipPlan2)) &&
+                            (it <
+                                    type2) -> 1
+                    else -> 0
                 }
             }
         }
