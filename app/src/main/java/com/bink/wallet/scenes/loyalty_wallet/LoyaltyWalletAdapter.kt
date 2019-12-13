@@ -13,6 +13,7 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FLOAT_ZERO
 import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.enums.MembershipCardStatus
@@ -167,10 +168,7 @@ class LoyaltyWalletAdapter(
                                                 )
                                             )
                                             loyaltyValue.text = balance
-                                            loyaltyValueExtra.text =
-                                                loyaltyValue.context.getString(
-                                                    R.string.until_next_reward
-                                                )
+                                            loyaltyValueExtra.text = EMPTY_STRING
                                         }
                                     }
                                 }
