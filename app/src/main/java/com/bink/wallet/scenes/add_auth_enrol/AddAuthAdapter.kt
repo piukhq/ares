@@ -95,6 +95,7 @@ class AddAuthAdapter(
                 p3: Int
             ) {
                 brands[adapterPosition].second.value = currentText.toString()
+                buttonRefresh()
             }
         }
 
