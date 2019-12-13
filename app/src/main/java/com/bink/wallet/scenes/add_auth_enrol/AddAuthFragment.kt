@@ -294,7 +294,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 planFieldsList?.toList()!!,
                 buttonRefresh = {
                     addRegisterFieldsRequest.plan_documents?.map {
-                        if (it.value != "true") {
+                        if (it.value != true.toString()) {
                             binding.addCardButton.isEnabled = false
                             return@AddAuthAdapter
                         }

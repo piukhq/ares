@@ -25,10 +25,6 @@ class AddAuthAdapter(
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    companion object {
-        const val FALSE_TEXT = "false"
-    }
-
     private fun checkIfError(position: Int, text: AppCompatEditText) {
 
         val currentItem = brands[position]
@@ -164,9 +160,13 @@ class AddAuthAdapter(
 
         override fun bind(item: Pair<Any, PlanFieldsRequest>) {
             val switch = binding.contentAddAuthSwitch
-            brands[adapterPosition].second.value = FALSE_TEXT
 
             with(switch) {
+                isChecked = when (brands[adapterPosition].second.value) {
+                    true.toString() -> true
+                    else -> false
+                }
+
                 when (item.first) {
                     is PlanFields ->
                         text =
