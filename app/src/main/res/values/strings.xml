@@ -400,4 +400,5 @@
     <!-- PLR -->
     <string name="rewards_history">Rewards history</string>
     <string name="see_your_past_rewards">See your past rewards</string>
+    <string name="your_past_rewards">Your past rewards</string>
 </resources>
