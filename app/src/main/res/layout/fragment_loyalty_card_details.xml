@@ -161,15 +161,6 @@
 
                     </androidx.cardview.widget.CardView>
 
-                    <View
-                            android:id="@+id/big_spacer"
-                            android:layout_width="match_parent"
-                            android:layout_height="2000dp"
-                            android:background="@color/blue_accent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/points_wrapper" />
-
                     <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/offer_tiles"
                             android:layout_width="0dp"
@@ -179,7 +170,7 @@
                             android:layout_marginEnd="@dimen/margin_padding_size_medium"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/big_spacer" />
+                            app:layout_constraintTop_toBottomOf="@+id/points_wrapper" />
 
                     <View
                             android:layout_width="match_parent"
