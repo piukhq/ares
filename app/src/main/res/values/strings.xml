@@ -72,6 +72,7 @@
     <string name="status_placeholder">Linked</string>
     <string name="status_number_placeholder">To 2 of 6 cards</string>
     <string name="about_membership">About membership</string>
+    <string name="about_membership_title_template">About %s</string>
     <string name="about_membership_plan_name">About %1$s</string>
     <string name="about_membership_plan">About %1$s</string>
     <string name="learn_more">Learn more about how it works</string>
