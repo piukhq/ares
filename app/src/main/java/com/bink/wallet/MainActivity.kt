@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     companion object {
         const val TOKEN_REFRESHED_EVENT = "REFRESH_LOYALTY"
-        const val MINUTES_REFRESH: Long = 2
-        const val HOURS_REFRESH: Long = 1
+        const val MINUTES_REFRESH = 2L
+        const val HOURS_REFRESH = 1L
     }
 
     private var jobHourly: Job = Job()
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         jobHourly = startCoroutine(false)
     }
 
-    private fun cancelHourlyCoroutine() {
+    fun cancelHourlyCoroutine() {
         jobHourly.cancel()
     }
 
@@ -137,8 +137,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         runWalletCoroutine()
     }
 
-    private fun startCoroutine(isWalletCoroutine: Boolean) =
-        launch(Dispatchers.IO) {
+    private fun startCoroutine(isWalletCoroutine: Boolean): Job {
+        return launch(Dispatchers.IO) {
             withContext(Dispatchers.Default) {
 
                 while (true) {
@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 }
             }
         }
+    }
 
     override fun onResume() {
         if (verifyAvailableNetwork(this@MainActivity)) {

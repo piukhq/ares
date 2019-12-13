@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -196,7 +197,11 @@ class SettingsFragment :
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.log_out_confirmation),
-                    okAction = { viewModel.logOut() },
+                    okAction = {
+                        (activity as MainActivity).cancelWalletCoroutine()
+                        (activity as MainActivity).cancelHourlyCoroutine()
+                        viewModel.logOut()
+                    },
                     buttonText = R.string.settings_menu_log_out,
                     hasNegativeButton = true
                 )
