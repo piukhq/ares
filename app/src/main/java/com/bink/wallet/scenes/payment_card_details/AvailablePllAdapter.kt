@@ -37,13 +37,8 @@ class AvailablePllAdapter(
             val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
             binding.membershipCard = item
-            binding.toggle.isChecked =
-                if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
-            if (isLinkedToPaymentCard(item) != null) {
-                binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item)!!)
-            } else {
-                binding.toggle.displayCustomSwitch(false)
-            }
+            binding.toggle.isChecked = isLinkedToPaymentCard(item)
+            binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item))
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 onLinkStatusChange(Pair(item.id, isChecked))
@@ -96,9 +91,10 @@ class AvailablePllAdapter(
             binding.retry.visibility = View.GONE
         }
 
-        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean? {
-            return membershipCard.payment_cards?.findLast { paymentCard -> paymentCard.id == currentPaymentCard.id.toString() }
-                ?.active_link
+        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean {
+            return membershipCard.payment_cards?.findLast { paymentCard ->
+                paymentCard.id == currentPaymentCard.id.toString()
+            }?.active_link ?: false
         }
     }
 }
