@@ -396,4 +396,8 @@
     <string name="error_description">Something went wrong</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+    <!-- PLR -->
+    <string name="payment_card_needed">Payment card needed</string>
+    <string name="you_currently_don_t_have_any_linked_payment_cards">You currently don\'t have any linked payment cards.\n\nYou can only earn rewards by shopping with a linked payment card.\n\nPlease add a card so you can start earning rewards.</string>
 </resources>

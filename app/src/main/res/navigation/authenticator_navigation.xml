@@ -218,6 +218,14 @@
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down"/>
 
+        <action
+                android:id="@+id/add_join_to_add_payment_card"
+                app:destination="@+id/add_payment_card_request"
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down"/>
+
     </fragment>
 
     <fragment
@@ -609,6 +617,15 @@
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
     </fragment>
+
+    <fragment
+            android:id="@+id/add_payment_card_request"
+            android:name="com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardFragment">
+        <argument
+                android:name="currentMembershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+    </fragment>
+
 
     <fragment
             android:id="@+id/onboarding_fragment"

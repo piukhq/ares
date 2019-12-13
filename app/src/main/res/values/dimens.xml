@@ -63,6 +63,7 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
+    <dimen name="text_size_title_large">21.7sp</dimen>
     <dimen name="text_size_title_big">25sp</dimen>
     <dimen name="text_size_description_big">18sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
