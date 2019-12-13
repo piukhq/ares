@@ -16,6 +16,7 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.SignUpFieldTypes
 
 
 class SignUpAdapter(
@@ -95,6 +96,9 @@ class SignUpAdapter(
             with(text) {
                 hint = item.first.description
                 setText(item.second.value)
+                if (item.second.column == SignUpFieldTypes.EMAIL.common_name) {
+                    isEnabled = false
+                }
                 addTextChangedListener(textWatcher)
                 if (brands[adapterPosition].second.value.isNullOrBlank())
                     error = null

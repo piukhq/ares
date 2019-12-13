@@ -63,6 +63,7 @@ class MembershipCardTests {
             ),
             null,
             null,
+            null,
             null
         )
         val card = makeMembershipCard(
@@ -86,6 +87,9 @@ class MembershipCardTests {
             null,
             null,
             null,
-            null)
+            null,
+            null,
+            null
+        )
     }
 }

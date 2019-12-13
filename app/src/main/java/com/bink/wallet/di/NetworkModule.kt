@@ -1,5 +1,6 @@
 package com.bink.wallet.di
 
+import android.util.Log
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.EMPTY_STRING
@@ -20,6 +21,7 @@ val networkModule = module {
 }
 
 fun provideDefaultOkHttpClient(): OkHttpClient {
+    val TAG = "provideDefaultOkHttp"
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -29,11 +31,12 @@ fun provideDefaultOkHttpClient(): OkHttpClient {
         )?.let {
             it
         }
-
+        Log.d(TAG, jwtToken)
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")
-            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
+            .header("Authorization", jwtToken ?: EMPTY_STRING)
+            .url(request)
             .build()
         chain.proceed(newRequest)
     }

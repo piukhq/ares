@@ -17,11 +17,13 @@ class MembershipPlan(
     @ColumnInfo(name = "feature_set") val feature_set: FeatureSet?,
     @ColumnInfo(name = "account") val account: Account?,
     @ColumnInfo(name = "images") val images: List<Images>?,
-    @ColumnInfo(name = "balances") val balances: List<Balances>?
+    @ColumnInfo(name = "balances") val balances: List<Balances>?,
+    @ColumnInfo(name = "has_vouchers") val has_vouchers: Boolean?
 ) : Parcelable {
 
     constructor(id: String) : this(
         id,
+        null,
         null,
         null,
         null,

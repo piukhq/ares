@@ -58,7 +58,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 planField.column, ""
             )
         )
-
+        viewModel.currentMembershipPlan.value?.has_vouchers?.let {
+            if (it) {
+                if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
+                    val email =
+                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                            ?.let {
+                                it
+                            }
+                    pairPlanField.second.column = SignUpFieldTypes.EMAIL.common_name
+                    pairPlanField.second.value = email
+                }
+            }
+        }
         if (planField.type == FieldType.BOOLEAN.type) {
             planBooleanFieldsList?.add(
                 pairPlanField
