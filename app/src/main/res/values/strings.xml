@@ -310,8 +310,8 @@
     <string name="could_not_add_card">Your selected activity cannot be performed at this time due to a connection issue</string>
 
     <!-- Native Ghost Card Registration N/A -->
-    <string name="title_ghost_card_not_available">Native join unavailable</string>
-    <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
+    <string name="title_ghost_card_not_available">Registration unavailable</string>
+    <string name="description_ghost_card_not_available">Please go to the merchant’s website to join this scheme. You can then come back and add your card.</string>
 
     <!-- Onboarding -->
     <string name="skip">Skip</string>
