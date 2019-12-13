@@ -118,45 +118,47 @@ class PaymentCardWalletFragment :
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
         }
 
-        viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
-            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
-                viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-                        binding.progressSpinner.visibility = View.GONE
+        viewModel.loyaltyUpdateDone.observeNonNull(this) { loyaltyUpdateDone ->
+            viewModel.paymentUpdateDone.observeNonNull(this) { paymentUpdateDone ->
+                if (loyaltyUpdateDone && paymentUpdateDone) {
+                    binding.progressSpinner.visibility = View.GONE
 
-                        SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
+                    SharedPreferenceManager.isPaymentEmpty =
+                        viewModel.paymentCards.value.isNullOrEmpty()
 
-                        walletItems.clear()
+                    walletItems.clear()
 
-                        if (dismissedCards.firstOrNull { it.id == JOIN_CARD } == null &&
-                            SharedPreferenceManager.isPaymentEmpty) {
-                            walletItems.add(JoinCardItem())
-                        }
-
-                        walletItems.addAll(paymentCards)
-
-                        walletAdapter.paymentCards = walletItems
-
-                        walletAdapter.onClickListener = {
-                            clickHandler(it, plans, cards)
-                        }
-
-                        walletAdapter.onRemoveListener = {
-                            onBannerRemove(it)
-                        }
-
-                        walletAdapter.notifyDataSetChanged()
+                    if (viewModel.dismissedCardData.value?.firstOrNull { it.id == JOIN_CARD } == null &&
+                        SharedPreferenceManager.isPaymentEmpty) {
+                        walletItems.add(JoinCardItem())
                     }
+
+                    viewModel.paymentCards.value?.let { paymentCards ->
+                        walletItems.addAll(paymentCards)
+                    }
+
+                    walletAdapter.paymentCards = walletItems
+
+                    viewModel.localMembershipPlanData.value?.let { plans ->
+                        viewModel.localMembershipCardData.value?.let { cards ->
+                            walletAdapter.onClickListener = {
+                                clickHandler(it, plans, cards)
+                            }
+                        }
+                    }
+
+                    walletAdapter.onRemoveListener = {
+                        onBannerRemove(it)
+                    }
+
+                    walletAdapter.notifyDataSetChanged()
                 }
             }
         }
     }
 
     private fun populateWallet() {
-        viewModel.fetchLocalMembershipPlans()
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchLocalPaymentCards()
-        viewModel.fetchDismissedCards()
+        viewModel.fetchData()
     }
 
     private fun onBannerRemove(item: Any) {

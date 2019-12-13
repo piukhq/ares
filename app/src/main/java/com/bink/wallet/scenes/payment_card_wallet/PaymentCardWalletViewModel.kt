@@ -23,6 +23,8 @@ class PaymentCardWalletViewModel(
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
     val addError = MutableLiveData<Throwable>()
+    val loyaltyUpdateDone = MutableLiveData<Boolean>()
+    val paymentUpdateDone = MutableLiveData<Boolean>()
 
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(
@@ -68,5 +70,16 @@ class PaymentCardWalletViewModel(
 
     fun addPlanIdAsDismissed(id: String) {
         loyaltyWalletRepository.addBannerAsDismissed(id, addError)
+    }
+
+    fun fetchData() {
+        loyaltyWalletRepository.getLocalData(
+            localMembershipPlanData,
+            localMembershipCardData,
+            dismissedCardData,
+            fetchError,
+            loyaltyUpdateDone
+        )
+        paymentWalletRepository.getLocalData(paymentCards, fetchError, paymentUpdateDone)
     }
 }

@@ -158,4 +158,25 @@ class PaymentWalletRepository(
             }
         }
     }
+
+    fun getLocalData(
+        localPaymentCards: MutableLiveData<List<PaymentCard>>,
+        localFetchError: MutableLiveData<Throwable>,
+        updateDone: MutableLiveData<Boolean>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val storedPaymentCards =
+                        async(Dispatchers.IO) { paymentCardDao.getAllAsync() }
+
+                    localPaymentCards.value = storedPaymentCards.await()
+                    updateDone.value = true
+                } catch (exception: Exception) {
+                    localFetchError.value = exception
+                    Log.e(PaymentWalletRepository::class.simpleName, exception.toString())
+                }
+            }
+        }
+    }
 }
