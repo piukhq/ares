@@ -14,8 +14,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.FLOAT_ZERO
-import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
@@ -146,32 +145,11 @@ class LoyaltyWalletAdapter(
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
                             if (!item.vouchers.isNullOrEmpty()) {
-                                val voucher = item.vouchers?.first()
-                                voucher?.earn?.target_value?.let { target_value ->
-                                    if (target_value != FLOAT_ZERO) {
-                                        val earn = voucher.earn
-                                        val burn = voucher.burn
-                                        earn.value?.let { earn_value ->
-                                            val balance = loyaltyValue.context.getString(
-                                                R.string.loyalty_wallet_plr_value,
-                                                ValueDisplayUtils.displayValue(
-                                                    earn_value,
-                                                    burn?.prefix,
-                                                    burn?.suffix,
-                                                    burn?.currency
-                                                ),
-                                                ValueDisplayUtils.displayValue(
-                                                    target_value,
-                                                    burn?.prefix,
-                                                    burn?.suffix,
-                                                    burn?.currency
-                                                )
-                                            )
-                                            loyaltyValue.text = balance
-                                            loyaltyValueExtra.text = EMPTY_STRING
-                                        }
-                                    }
+                                item.vouchers?.first()?.let { voucher ->
+                                    loyaltyValue.text =
+                                        root.context.displayVoucherEarnAndTarget(voucher)
                                 }
+                                loyaltyValueExtra.text = EMPTY_STRING
                             } else if (!item.balances.isNullOrEmpty()) {
                                 val balance = item.balances?.first()
                                 when (balance?.prefix != null) {
