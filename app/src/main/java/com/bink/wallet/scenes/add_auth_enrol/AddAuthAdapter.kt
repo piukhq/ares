@@ -20,7 +20,8 @@ import com.bink.wallet.utils.enums.FieldType
 
 
 class AddAuthAdapter(
-    val brands: List<Pair<Any, PlanFieldsRequest>>
+    val brands: List<Pair<Any, PlanFieldsRequest>>,
+    val buttonRefresh: () -> Unit = {}
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -113,6 +114,7 @@ class AddAuthAdapter(
                     if (!isFocus)
                         try {
                             checkIfError(adapterPosition, this)
+                            buttonRefresh()
                         } catch (ex: Exception) {
                             Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
                         }
@@ -183,6 +185,7 @@ class AddAuthAdapter(
                 }
                 setOnCheckedChangeListener { _, isChecked ->
                     brands[adapterPosition].second.value = isChecked.toString()
+                    buttonRefresh()
                 }
                 isFocusable = false
             }

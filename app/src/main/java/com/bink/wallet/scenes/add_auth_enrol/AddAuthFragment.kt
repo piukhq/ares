@@ -277,38 +277,77 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val addRegisterFieldsRequest = Account()
 
         planFieldsList?.map {
-            if (it.first is PlanFields)
+            if (it.first is PlanFields) {
                 when ((it.first as PlanFields).typeOfField) {
                     TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
                     TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
                     TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
-                    TypeOfField.REGISTRATION -> addRegisterFieldsRequest.registration_fields?.add(it.second)
-                    else -> {
-                    }
+                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
                 }
+            } else
+                addRegisterFieldsRequest.plan_documents?.add(it.second)
         }
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
             adapter = AddAuthAdapter(
-                planFieldsList?.toList()!!
+                planFieldsList?.toList()!!,
+                buttonRefresh = {
+                    addRegisterFieldsRequest.plan_documents?.map {
+                        if (it.value != "true") {
+                            binding.addCardButton.isEnabled = false
+                            return@AddAuthAdapter
+                        }
+                    }
+
+                    planFieldsList.map {
+                        if (it.first is PlanFields) {
+                            if (!UtilFunctions.isValidField(
+                                    (it.first as PlanFields).validation,
+                                    it.second.value
+                                )
+                            ) {
+                                binding.addCardButton.isEnabled = false
+                                return@AddAuthAdapter
+                            }
+                        }
+                    }
+
+                    binding.addCardButton.isEnabled = true
+
+                }
             )
         }
+
+        binding.addCardButton.isEnabled = false
 
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
-                    planFieldsList?.map {
-                        if (!UtilFunctions.isValidField(
-                                (it.first as PlanFields).validation,
-                                it.second.value
-                            )
-                        ) {
-                            context?.displayModalPopup(
-                                null,
-                                getString(R.string.all_fields_must_be_valid)
+
+                    addRegisterFieldsRequest.plan_documents?.map {
+                        if (it.value != "true") {
+                            requireContext().displayModalPopup(
+                                EMPTY_STRING,
+                                getString(R.string.required_fields)
                             )
                             return@setOnClickListener
+                        }
+                    }
+
+                    planFieldsList?.map {
+                        if (it.first is PlanFields) {
+                            if (!UtilFunctions.isValidField(
+                                    (it.first as PlanFields).validation,
+                                    it.second.value
+                                )
+                            ) {
+                                context?.displayModalPopup(
+                                    null,
+                                    getString(R.string.all_fields_must_be_valid)
+                                )
+                                return@setOnClickListener
+                            }
                         }
                     }
 
@@ -349,6 +388,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     addRegisterFieldsRequest.add_fields,
                                     null,
                                     null,
+                                    null,
                                     null
                                 ),
                                 viewModel.currentMembershipPlan.value!!.id
@@ -385,7 +425,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         null,
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields
+                        addRegisterFieldsRequest.registration_fields,
+                        null
                     ),
                     viewModel.currentMembershipPlan.value!!.id
                 )
@@ -400,7 +441,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         null,
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields
+                        addRegisterFieldsRequest.registration_fields,
+                        null
                     ),
                     viewModel.currentMembershipPlan.value!!.id
                 )
