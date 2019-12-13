@@ -178,14 +178,21 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
 
 @BindingAdapter("textBalance")
 fun TextView.textBalance(card: MembershipCard?) {
-    val balance = card?.balances?.first()
-    if (!card?.balances.isNullOrEmpty())
-        text = when (balance?.prefix != null) {
-            true -> balance?.prefix?.plus(balance.value)
-            else -> {
-                balance?.value.plus(balance?.suffix)
+    val vouchers = card?.vouchers
+    if (!vouchers.isNullOrEmpty()) {
+        val voucher = vouchers.first()
+        text = context.displayVoucherEarnAndTarget(voucher)
+    } else {
+        val balance = card?.balances?.first()
+        if (!card?.balances.isNullOrEmpty()) {
+            text = when (balance?.prefix != null) {
+                true -> balance?.prefix?.plus(balance.value)
+                else -> {
+                    balance?.value.plus(balance?.suffix)
+                }
             }
         }
+    }
 }
 
 @BindingAdapter("planField")

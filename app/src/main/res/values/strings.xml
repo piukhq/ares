@@ -396,4 +396,7 @@
     <string name="error_description">Something went wrong</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+    <!-- PLR -->
+    <string name="loyalty_wallet_plr_value">%s/%s</string>
 </resources>
