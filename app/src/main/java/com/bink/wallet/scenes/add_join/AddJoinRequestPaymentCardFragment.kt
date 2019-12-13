@@ -1,10 +1,12 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinRequestPaymentCardBinding
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,6 +30,9 @@ class AddJoinRequestPaymentCardFragment : BaseFragment<AddJoinViewModel, AddJoin
 
         viewModel.membershipPlan.value = args.currentMembershipPlan
 
-
+        binding.getCardButton.setOnClickListener {
+            val action = AddJoinRequestPaymentCardFragmentDirections.paymentRequestToAddPayment()
+            findNavController().navigateIfAdded(this, action)
+        }
     }
 }
