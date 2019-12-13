@@ -114,7 +114,7 @@
     <!-- 1.6 -->
     <string name="points_retry_login">Retry login</string>
     <!-- 1.7 -->
-    <string name="points_logging_in">Logging in</string>
+    <string name="points_pending">Pending</string>
     <string name="description_please_wait">Please wait</string>
     <!-- 1.8 -->
     <string name="points_sign_up_failed">Sign up failed</string>
