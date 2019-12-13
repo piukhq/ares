@@ -421,7 +421,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
             }
-
             hideLoadingViews()
         }
 

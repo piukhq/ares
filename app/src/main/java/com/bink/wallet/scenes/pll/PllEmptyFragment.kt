@@ -33,8 +33,10 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
         arguments.let { bundle ->
             if (bundle != null) {
-                currentMembershipCard = PllEmptyFragmentArgs.fromBundle(bundle).membershipCard
-                currentMembershipPlan = PllEmptyFragmentArgs.fromBundle(bundle).membershipPlan
+                PllEmptyFragmentArgs.fromBundle(bundle).apply {
+                    currentMembershipCard = membershipCard
+                    currentMembershipPlan = membershipPlan
+                }
             }
         }
 
@@ -51,7 +53,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         currentMembershipPlan?.let {
-            binding.membershipPlan = currentMembershipPlan
+            binding.membershipPlan = it
         }
 
         binding.buttonDone.setOnClickListener {
