@@ -130,10 +130,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
                     marketingPref(
                         MarketingOption(
-                            when (marketingMessages.value) {
-                                true -> 1
-                                else -> 0
-                            }
+                            marketingMessages.value!!.toInt()
                         )
                     )
 

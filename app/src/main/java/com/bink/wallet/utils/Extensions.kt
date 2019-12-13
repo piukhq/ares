@@ -69,6 +69,11 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
     })
 }
 
+fun Boolean.toInt(): Int = when (this) {
+    true -> 1
+    else -> 0
+}
+
 fun Long.getElapsedTime(context: Context): String {
     var elapsed = this / 60
     var suffix = MINUTES

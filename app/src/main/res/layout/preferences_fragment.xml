@@ -23,7 +23,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-                android:id="@+id/textView"
+                android:id="@+id/preferences_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -48,7 +48,7 @@
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/preferences_title" />
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/preferences_recycler"

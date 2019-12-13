@@ -157,8 +157,7 @@ class LoginRepository(
             val request = apiService.getPreferencesAsync()
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    preferenceResponse.value = response
+                    preferenceResponse.value = request.await()
                 } catch (e: Throwable) {
                     preferenceErrorResponse.value = e
                 }

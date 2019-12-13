@@ -6,6 +6,7 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PreferenceItemLayoutBinding
 import com.bink.wallet.model.request.Preference
+import com.bink.wallet.utils.toInt
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,
@@ -35,10 +36,7 @@ class PreferenceAdapter(
                 preferenceItem.setOnCheckedChangeListener { _, isChecked ->
                     onClickListener(
                         item,
-                        when (isChecked) {
-                            true -> 1
-                            else -> 0
-                        },
+                        isChecked.toInt(),
                         preferenceItem
                     )
                 }
