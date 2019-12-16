@@ -194,6 +194,11 @@
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="membershipCardId"
+                android:defaultValue="null"
+                app:argType="string"
+                app:nullable="true" />
 
         <action
                 android:id="@+id/add_join_to_ghost"
@@ -216,7 +221,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -269,7 +274,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/sign_up_to_pll"
                 app:destination="@+id/pll_fragment"
@@ -391,6 +396,14 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/detail_to_add_join"
+                app:destination="@+id/add_join"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
 
     </fragment>
 
@@ -427,7 +440,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -447,7 +460,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -496,7 +509,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
 
     <fragment

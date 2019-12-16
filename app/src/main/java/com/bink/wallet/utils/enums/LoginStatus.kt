@@ -35,7 +35,7 @@ enum class LoginStatus(
     STATUS_LOGIN_FAILED(
         1.6,
         R.drawable.ic_lcd_module_icons_points_login,
-        R.string.description_see_history,
+        R.string.description_error,
         R.string.points_retry_login
     ),
     STATUS_PENDING(

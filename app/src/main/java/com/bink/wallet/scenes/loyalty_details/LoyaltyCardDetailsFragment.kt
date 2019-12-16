@@ -17,7 +17,6 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -437,7 +436,14 @@ class LoyaltyCardDetailsFragment :
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
-                    pendingCardStatusModal()
+                    viewModel.membershipPlan.value?.let {
+                        val action =
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id
+                            )
+                        findNavController().navigateIfAdded(this, action)
+                    }
                 }
                 LinkStatus.STATUS_UNLINKABLE -> {
                     val directions =
@@ -520,13 +526,14 @@ class LoyaltyCardDetailsFragment :
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
-                    val action =
-                        LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                            SignUpFormType.ADD_AUTH,
-                            viewModel.membershipPlan.value!!,
-                            viewModel.membershipCard.value!!
-                        )
-                    findNavController().navigateIfAdded(this, action)
+                    viewModel.membershipPlan.value?.let {
+                        val action =
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id
+                            )
+                        findNavController().navigateIfAdded(this, action)
+                    }
                 }
                 else -> {
                 }
