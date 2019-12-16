@@ -93,6 +93,32 @@ class LoyaltyCardDetailsVouchersAdapter(
                         fillProgressBar()
                     }
                 }
+                VoucherStates.REDEEMED.state -> {
+                    fillProgressBar()
+                    hideEarnBurnValues()
+                    thisVoucher.date_redeemed?.let {
+                        if (thisVoucher.date_redeemed != LONG_ZERO) {
+                            binding.voucherDate.visibility = View.VISIBLE
+                            binding.voucherDate.setTimestamp(
+                                thisVoucher.date_redeemed,
+                                binding.root.context.getString(R.string.voucher_entry_date)
+                            )
+                        }
+                    }
+                }
+                VoucherStates.EXPIRED.state -> {
+                    fillProgressBar()
+                    hideEarnBurnValues()
+                    thisVoucher.expiry_date?.let {
+                        if (thisVoucher.expiry_date != LONG_ZERO) {
+                            binding.voucherDate.visibility = View.VISIBLE
+                            binding.voucherDate.setTimestamp(
+                                thisVoucher.expiry_date,
+                                binding.root.context.getString(R.string.voucher_entry_date)
+                            )
+                        }
+                    }
+                }
                 else -> {
                     hideEarnBurnValues()
                     fillProgressBar()

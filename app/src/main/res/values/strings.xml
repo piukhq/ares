@@ -407,5 +407,10 @@
     <string name="voucher_detail_title_issued">Your %s is ready!</string>
     <string name="voucher_detail_text_issued">Use the code above to redeem your reward. You will get %s off your purchase</string>
     <string name="voucher_detail_date_issued">Added %s</string>
+    <string name="voucher_detail_title_redeemed">Your %s %s was redeemed</string>
+    <string name="voucher_detail_text_redeemed">""</string>
+    <string name="voucher_detail_date_redeemed">Redeemed %s</string>
+    <string name="voucher_detail_title_expired">Your %s %s has expired</string>
+    <string name="voucher_detail_text_expired">""</string>
     <string name="voucher_detail_date_expired">Expired %s</string>
 </resources>

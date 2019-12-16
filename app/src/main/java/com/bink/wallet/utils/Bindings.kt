@@ -250,15 +250,21 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
 
 @BindingAdapter("transactionTime")
 fun TextView.setTimestamp(timeStamp: Long) {
-    this.text = DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
+    this.text = dateFormatTransactionTime(timeStamp)
 }
 @BindingAdapter("transactionTime", "format")
-fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
-    this.text = String.format(
-        format,
-        DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
-    )
+fun TextView.setTimestamp(timeStamp: Long, format: String = "%s") {
+    this.text = String.format(format, dateFormatTransactionTime(timeStamp))
 }
+private fun dateFormatTransactionTime(timeStamp: Long) =
+    DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
+
+@BindingAdapter("transactionTime", "format")
+fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
+    this.text = String.format(format, dateTimeFormatTransactionTime(timeStamp))
+}
+private fun dateTimeFormatTransactionTime(timeStamp: Long) =
+    DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
 
 @BindingAdapter("transactionArrow")
 fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
