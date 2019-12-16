@@ -9,6 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
+import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -72,19 +73,17 @@ class VoucherDetailsFragment :
                 }
             }
             var linkSet = false
-            viewModel.membershipPlan.value?.account?.plan_documents?.let { documents ->
-                for (document in documents) {
-                    document.display?.let {
-                        if (it.contains("VOUCHER")) {
-                            linkSet = true
-                            binding.linkText.setOnClickListener {
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(document.url)))
-                            }
+            viewModel.membershipPlan.value?.account?.plan_documents?.forEach { document ->
+                document.display?.let {
+                    if (it.contains(DocumentTypes.VOUCHER.type)) {
+                        linkSet = true
+                        binding.linkText.setOnClickListener {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(document.url)))
                         }
                     }
-                    if (linkSet)
-                        break
                 }
+                if (linkSet)
+                    return@forEach
             }
             if (!linkSet) {
                 binding.linkText.visibility = View.GONE
