@@ -18,6 +18,7 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
+import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -55,6 +56,8 @@ val viewModelModules = module {
 
     single { provideLoyaltyCardDetailsRepository(get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
+
+    viewModel { VoucherDetailsViewModel() }
 
     viewModel { PllEmptyViewModel() }
 

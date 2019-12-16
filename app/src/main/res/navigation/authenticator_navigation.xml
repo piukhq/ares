@@ -401,6 +401,18 @@
     </fragment>
 
     <fragment
+            android:id="@+id/voucher_details_fragment"
+            android:name="com.bink.wallet.scenes.loyalty_details.VoucherDetailsFragment"
+            >
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="voucher"
+                app:argType="com.bink.wallet.model.response.membership_card.Voucher" />
+    </fragment>
+
+    <fragment
             android:id="@+id/pll_empty_fragment"
             android:name="com.bink.wallet.scenes.pll.PllEmptyFragment">
 
