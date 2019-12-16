@@ -319,7 +319,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 currentRequest
                             )
                         }
-
                         SignUpFormType.ENROL -> {
                             viewModel.createMembershipCard(
                                 MembershipCardRequest(

@@ -436,6 +436,9 @@ class LoyaltyCardDetailsFragment :
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
+                    pendingCardStatusModal()
+                }
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
                     viewModel.membershipPlan.value?.let {
                         val action =
                             LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
