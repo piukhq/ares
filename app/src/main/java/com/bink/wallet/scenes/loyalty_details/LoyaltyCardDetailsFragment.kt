@@ -129,8 +129,14 @@ class LoyaltyCardDetailsFragment :
             }
 
             findNavController().navigateIfAdded(
-                this, LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                    GenericModalParameters(R.drawable.ic_close, true, aboutText, description)
+                this,
+                LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        aboutText,
+                        description
+                    )
                 )
             )
         }
