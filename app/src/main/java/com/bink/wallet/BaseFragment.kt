@@ -9,15 +9,18 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import java.net.HttpURLConnection
 
-abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
     @get:LayoutRes
     abstract val layoutRes: Int
@@ -50,8 +53,27 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
         return binding.root
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.errorCode.observe(viewLifecycleOwner, Observer {
+            if (it == HttpURLConnection.HTTP_UNAUTHORIZED) {
+//                    LocalStoreUtils.clearPreferences()
+
+                findNavController().navigateIfAdded(this, R.id.base_to_onboarding)
+            }
+        })
+
+        //TODO Check internet connection globally
+//            noInternetConnectionEvent.observe(viewLifecycleOwner, Observer {
+//
+//            })
+
+        //TODO Handle timeout globally
+//            connectTimeoutEvent.observe(viewLifecycleOwner, Observer {
+//
+//            })
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
