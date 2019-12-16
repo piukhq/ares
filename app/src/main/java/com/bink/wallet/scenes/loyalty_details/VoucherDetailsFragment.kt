@@ -8,9 +8,11 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.FLOAT_ZERO
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.setFullTimestamp
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,25 +52,62 @@ class VoucherDetailsFragment :
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
-                    if (earn.target_value != null &&
-                        burn.value != null) {
-                        binding.mainText.text =
-                            when (voucher.state) {
-                                VoucherStates.IN_PROGRESS.state -> {
+                    with(binding) {
+                        when (voucher.state) {
+                            VoucherStates.IN_PROGRESS.state -> {
+                                code.visibility = View.GONE
+                                mainTitle.visibility = View.GONE
+                                voucherDate.visibility = View.GONE
+                                mainText.text =
                                     getString(
                                         R.string.voucher_detail_text_in_progress,
-                                        displayValue(earn.target_value, burn.prefix, burn.suffix),
-                                        displayValue(burn.value, burn.prefix, burn.suffix),
+                                        displayValue(
+                                            earn.target_value,
+                                            earn.prefix,
+                                            earn.suffix
+                                        ),
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix
+                                        ),
                                         burn.type
                                     )
-                                }
-                                VoucherStates.ISSUED.state -> {
-                                    EMPTY_STRING
-                                }
-                                else -> {
-                                    EMPTY_STRING
+                            }
+                            VoucherStates.ISSUED.state -> {
+                                code.text = voucher.code
+                                mainTitle.text =
+                                    getString(
+                                        R.string.voucher_detail_title_issued,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix
+                                        )
+                                    )
+                                mainText.text =
+                                    getString(
+                                        R.string.voucher_detail_text_issued,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix
+                                        )
+                                    )
+                                voucher.date_issued?.let {
+                                    voucherDate.setFullTimestamp(
+                                        it,
+                                        getString(R.string.voucher_detail_date_issued)
+                                    )
                                 }
                             }
+                            else -> {
+                                code.visibility = View.GONE
+                                mainTitle.visibility = View.GONE
+                                mainText.text = EMPTY_STRING
+                                voucherDate.visibility = View.GONE
+                            }
+                        }
                     }
                 }
             }

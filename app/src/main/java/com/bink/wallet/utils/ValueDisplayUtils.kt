@@ -2,7 +2,7 @@ package com.bink.wallet.utils
 
 object ValueDisplayUtils {
     fun displayValue(
-        value: Float,
+        inValue: Float?,
         prefix: String?,
         suffix: String?,
         currency: String? = null,
@@ -12,6 +12,7 @@ object ValueDisplayUtils {
         if (!prefix.isNullOrEmpty()) {
             display.append(prefix)
         }
+        val value = inValue ?: FLOAT_ZERO
         display.append(
             if (value != value.toInt().toFloat()) {
                 "%.2f".format(value)

@@ -65,33 +65,29 @@ class LoyaltyCardDetailsVouchersAdapter(
             when (thisVoucher.state) {
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
-                    if (thisVoucher.earn?.target_value != null &&
-                        thisVoucher.earn.target_value != FLOAT_ZERO) {
-                        if (thisVoucher.earn.value != null) {
-                            binding.spentAmount.text = ValueDisplayUtils.displayValue(
-                                thisVoucher.earn.value,
-                                thisVoucher.burn?.prefix,
-                                thisVoucher.burn?.suffix,
-                                thisVoucher.burn?.currency
-                            )
-                        }
+                    thisVoucher.earn?.let { earn ->
+                        binding.spentAmount.text = ValueDisplayUtils.displayValue(
+                            earn.value,
+                            earn.prefix,
+                            earn.suffix,
+                            earn.currency
+                        )
                         val goal = ValueDisplayUtils.displayValue(
-                            thisVoucher.earn.target_value,
-                            thisVoucher.burn?.prefix,
-                            thisVoucher.burn?.suffix,
-                            thisVoucher.burn?.currency
+                            earn.target_value,
+                            earn.prefix,
+                            earn.suffix,
+                            earn.currency
                         )
                         with (binding) {
                             subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
                             progressBar.max =
-                                (thisVoucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
+                                (earn.target_value ?: FLOAT_ZERO)
+                                    .times(FLOAT_ONE_HUNDRED).roundToInt()
                             progressBar.progress =
-                                ((thisVoucher.earn.value
-                                    ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
+                                (earn.value ?: FLOAT_ZERO)
+                                    .times(FLOAT_ONE_HUNDRED).roundToInt()
                             goalAmount.text = goal
                         }
-                    } else {
-                        hideEarnBurnValues()
                     }
                     if (thisVoucher.state == VoucherStates.ISSUED.state) {
                         fillProgressBar()
