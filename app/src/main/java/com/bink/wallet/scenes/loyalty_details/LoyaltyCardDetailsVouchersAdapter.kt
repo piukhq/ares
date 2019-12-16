@@ -13,10 +13,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.VoucherStates
 import kotlin.math.roundToInt
 
-class LoyaltyCardDetailsVouchersAdapter(
-    private val vouchers: List<Voucher>,
-    val onClickListener: (Any) -> Unit = {}
-) :
+class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
     RecyclerView.Adapter<LoyaltyCardDetailsVouchersAdapter.LoyaltyCardDetailsVouchersViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -29,7 +26,7 @@ class LoyaltyCardDetailsVouchersAdapter(
             parent,
             false
         ) as DetailVoucherItemBinding
-        return LoyaltyCardDetailsVouchersViewHolder(binding, onClickListener)
+        return LoyaltyCardDetailsVouchersViewHolder(binding)
     }
 
     override fun getItemCount() = vouchers.size
@@ -39,8 +36,7 @@ class LoyaltyCardDetailsVouchersAdapter(
 
 
     class LoyaltyCardDetailsVouchersViewHolder(
-        var binding: DetailVoucherItemBinding,
-        val onClickListener: (Any) -> Unit = {}
+        var binding: DetailVoucherItemBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(thisVoucher: Voucher) {
@@ -54,11 +50,6 @@ class LoyaltyCardDetailsVouchersAdapter(
                         thisVoucher.burn.currency,
                         thisVoucher.burn.type
                     )
-                }
-                root.apply {
-                    this.setOnClickListener {
-                        onClickListener(thisVoucher)
-                    }
                 }
             }
             binding.executePendingBindings()

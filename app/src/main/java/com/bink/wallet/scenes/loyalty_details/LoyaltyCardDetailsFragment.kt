@@ -257,17 +257,6 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-    private fun viewVoucherDetails(voucher: Voucher) {
-        val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
-            LoyaltyCardDetailsFragmentDirections.detailToVoucher(
-                membershipPlan, voucher
-            )
-        }
-        if (directions != null) {
-            findNavController().navigateIfAdded(this, directions)
-        }
-    }
-
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
             if (balance.suffix.isNullOrEmpty()) {
@@ -592,12 +581,7 @@ class LoyaltyCardDetailsFragment :
                     VoucherStates.ISSUED.state
                 ).contains(it.state)
             }?.let {
-                adapter = LoyaltyCardDetailsVouchersAdapter(
-                    it,
-                    onClickListener = {
-                        viewVoucherDetails(it as Voucher)
-                    }
-                )
+                adapter = LoyaltyCardDetailsVouchersAdapter(it)
             }
         }
     }
