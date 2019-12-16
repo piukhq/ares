@@ -67,10 +67,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
 
         with(viewModel) {
-            email.observe(this@LoginFragment, androidx.lifecycle.Observer {
+            email.observeNonNull(this@LoginFragment) {
                 requireContext().validateEmail(it, binding.emailField)
                 setLoginButtonEnableStatus()
-            })
+            }
 
             password.observeNonNull(this@LoginFragment) {
                 requireContext().validatePassword(it, binding.passwordField)
