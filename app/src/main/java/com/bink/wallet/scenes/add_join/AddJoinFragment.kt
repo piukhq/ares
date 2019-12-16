@@ -98,16 +98,12 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.addCardButton.setOnClickListener {
             viewModel.membershipPlan.value?.let { membershipPlan ->
-                val action = if (membershipPlan.has_vouchers.toInt() == 1 &&
-                    viewModel.paymentCards.value.isNullOrEmpty()) {
-                    AddJoinFragmentDirections.addJoinToAddPaymentCard(membershipPlan)
-                } else {
+                val action =
                     AddJoinFragmentDirections.addJoinToGhost(
                         SignUpFormType.ADD_AUTH,
                         membershipPlan,
                         null
                     )
-                }
                 findNavController().navigateIfAdded(this, action)
             }
         }
