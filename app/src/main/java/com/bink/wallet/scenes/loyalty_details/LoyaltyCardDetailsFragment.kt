@@ -364,9 +364,14 @@ class LoyaltyCardDetailsFragment :
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
             LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
+                val membershipCardId = viewModel.membershipCard.value?.id.toString()
                 val activeLinkedParams =
                     listOf(
-                        viewModel.membershipCard.value?.payment_cards?.count { card -> card.active_link == true },
+                        viewModel.paymentCards.value?.count { card ->
+                            card.membership_cards.count { membershipCard ->
+                                membershipCard.active_link!! && membershipCardId == membershipCard.id
+                            } > 0
+                        },
                         viewModel.paymentCards.value?.size
                     )
                 linkStatus.descriptionParams = activeLinkedParams
