@@ -107,13 +107,15 @@ class PaymentCardsDetailsFragment :
             plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
-                availablePllAdapter = AvailablePllAdapter(
-                    viewModel.paymentCard.value!!,
-                    plans,
-                    pllCards,
-                    onLinkStatusChange = ::onLinkStatusChange,
-                    onItemSelected = ::onItemSelected
-                )
+                viewModel.paymentCard.value?.let { paymentCard ->
+                    availablePllAdapter = AvailablePllAdapter(
+                        paymentCard,
+                        plans,
+                        pllCards,
+                        onLinkStatusChange = ::onLinkStatusChange,
+                        onItemSelected = ::onItemSelected
+                    )
+                }
                 binding.apply {
                     paymentCardDetailsTitle.visibility = View.VISIBLE
                     paymentCardDetailsDescription.visibility = View.VISIBLE

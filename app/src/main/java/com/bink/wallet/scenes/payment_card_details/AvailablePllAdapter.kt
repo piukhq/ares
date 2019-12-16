@@ -31,19 +31,18 @@ class AvailablePllAdapter(
     override fun getItemCount(): Int = membershipCards.size
 
     fun updatePaymentCard(updatedPaymentCard: PaymentCard) {
-        val tempMembershipCards = membershipCards
-        updatedPaymentCard.membership_cards.forEach {uPC ->
-            tempMembershipCards.forEach { tempMembershipCard ->
-                tempMembershipCard.payment_cards?.forEach { pC ->
-
-                    if(uPC.id == tempMembershipCard.id) {
-                        pC.active_link = uPC.active_link
+        val currentMembershipCards = membershipCards
+        updatedPaymentCard.membership_cards.forEach { updatedMembershipCard ->
+            currentMembershipCards.forEach { currentMembershipCard ->
+                currentMembershipCard.payment_cards?.forEach { paymentCard ->
+                    if (updatedMembershipCard.id == currentMembershipCard.id) {
+                        paymentCard.active_link = updatedMembershipCard.active_link
                     }
                 }
             }
         }
         currentPaymentCard = updatedPaymentCard
-        membershipCards = tempMembershipCards
+        membershipCards = currentMembershipCards
         notifyDataSetChanged()
     }
 
