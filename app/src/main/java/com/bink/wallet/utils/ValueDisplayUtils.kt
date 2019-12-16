@@ -5,7 +5,7 @@ object ValueDisplayUtils {
         value: Float,
         prefix: String?,
         suffix: String?,
-        currency: String?,
+        currency: String? = null,
         type: String? = null
     ): String {
         val display = StringBuilder()

@@ -14,6 +14,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -167,8 +168,7 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        viewModel.linkStatus.observeNonNull(this)
-        { status ->
+        viewModel.linkStatus.observeNonNull(this) { status ->
             if (viewModel.accountStatus.value != null &&
                 viewModel.paymentCards.value != null
             ) {
@@ -257,6 +257,16 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
+    private fun viewVoucherDetails(voucher: Voucher) {
+        val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
+            LoyaltyCardDetailsFragmentDirections.detailToVoucher(
+                membershipPlan, voucher
+            )
+        }
+        if (directions != null) {
+            findNavController().navigateIfAdded(this, directions)
+        }
+    }
 
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
@@ -581,10 +591,13 @@ class LoyaltyCardDetailsFragment :
                     VoucherStates.IN_PROGRESS.state,
                     VoucherStates.ISSUED.state
                 ).contains(it.state)
-            }.let {
-                if (it != null) {
-                    adapter = LoyaltyCardDetailsVouchersAdapter(it)
-                }
+            }?.let {
+                adapter = LoyaltyCardDetailsVouchersAdapter(
+                    it,
+                    onClickListener = {
+                        viewVoucherDetails(it as Voucher)
+                    }
+                )
             }
         }
     }

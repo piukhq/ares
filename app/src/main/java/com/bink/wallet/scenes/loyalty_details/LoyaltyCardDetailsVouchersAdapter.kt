@@ -13,7 +13,10 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.VoucherStates
 import kotlin.math.roundToInt
 
-class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
+class LoyaltyCardDetailsVouchersAdapter(
+    private val vouchers: List<Voucher>,
+    val onClickListener: (Any) -> Unit = {}
+) :
     RecyclerView.Adapter<LoyaltyCardDetailsVouchersAdapter.LoyaltyCardDetailsVouchersViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -26,7 +29,7 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
             parent,
             false
         ) as DetailVoucherItemBinding
-        return LoyaltyCardDetailsVouchersViewHolder(binding)
+        return LoyaltyCardDetailsVouchersViewHolder(binding, onClickListener)
     }
 
     override fun getItemCount() = vouchers.size
@@ -35,52 +38,62 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
         holder.bind(vouchers[position])
 
 
-    class LoyaltyCardDetailsVouchersViewHolder(var binding: DetailVoucherItemBinding) :
+    class LoyaltyCardDetailsVouchersViewHolder(
+        var binding: DetailVoucherItemBinding,
+        val onClickListener: (Any) -> Unit = {}
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(voucher: Voucher) {
-            binding.voucher = voucher
-            if (voucher.burn?.value != null) {
-                binding.title.text = ValueDisplayUtils.displayValue(
-                    voucher.burn.value,
-                    voucher.burn.prefix,
-                    voucher.burn.suffix,
-                    voucher.burn.currency,
-                    voucher.burn.type
-                )
+        fun bind(thisVoucher: Voucher) {
+            with (binding) {
+                voucher = thisVoucher
+                if (thisVoucher.burn?.value != null) {
+                    title.text = ValueDisplayUtils.displayValue(
+                        thisVoucher.burn.value,
+                        thisVoucher.burn.prefix,
+                        thisVoucher.burn.suffix,
+                        thisVoucher.burn.currency,
+                        thisVoucher.burn.type
+                    )
+                }
+                root.apply {
+                    this.setOnClickListener {
+                        onClickListener(thisVoucher)
+                    }
+                }
             }
             binding.executePendingBindings()
-            when (voucher.state) {
+            when (thisVoucher.state) {
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
-                    if (voucher.earn?.target_value != null &&
-                        voucher.earn.target_value != FLOAT_ZERO) {
-                        if (voucher.earn.value != null) {
+                    if (thisVoucher.earn?.target_value != null &&
+                        thisVoucher.earn.target_value != FLOAT_ZERO) {
+                        if (thisVoucher.earn.value != null) {
                             binding.spentAmount.text = ValueDisplayUtils.displayValue(
-                                voucher.earn.value,
-                                voucher.burn?.prefix,
-                                voucher.burn?.suffix,
-                                voucher.burn?.currency
+                                thisVoucher.earn.value,
+                                thisVoucher.burn?.prefix,
+                                thisVoucher.burn?.suffix,
+                                thisVoucher.burn?.currency
                             )
                         }
                         val goal = ValueDisplayUtils.displayValue(
-                            voucher.earn.target_value,
-                            voucher.burn?.prefix,
-                            voucher.burn?.suffix,
-                            voucher.burn?.currency
+                            thisVoucher.earn.target_value,
+                            thisVoucher.burn?.prefix,
+                            thisVoucher.burn?.suffix,
+                            thisVoucher.burn?.currency
                         )
                         with (binding) {
-                            subtitle.text = voucher.subtext.plus(SPACE).plus(goal)
+                            subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
                             progressBar.max =
-                                (voucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
+                                (thisVoucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
                             progressBar.progress =
-                                ((voucher.earn.value
+                                ((thisVoucher.earn.value
                                     ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
                             goalAmount.text = goal
                         }
                     } else {
                         hideEarnBurnValues()
                     }
-                    if (voucher.state == VoucherStates.ISSUED.state) {
+                    if (thisVoucher.state == VoucherStates.ISSUED.state) {
                         fillProgressBar()
                     }
                 }
@@ -89,7 +102,7 @@ class LoyaltyCardDetailsVouchersAdapter(val vouchers: List<Voucher>) :
                     fillProgressBar()
                 }
             }
-            setProgressDrawable(voucher.state)
+            setProgressDrawable(thisVoucher.state)
         }
 
         private fun hideEarnBurnValues() {
