@@ -53,7 +53,10 @@ class AddAuthAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (brands[position].first is PlanFields && (brands[position].first as PlanFields).type != null)
+        if (brands[position].first != null &&
+            brands[position].first is PlanFields &&
+            (brands[position].first as PlanFields).type != null
+        )
             return (brands[position].first as PlanFields).type!!
         if (brands[position].first is PlanDocuments) {
             return FieldType.BOOLEAN_REQUIRED.type
