@@ -75,6 +75,7 @@ class PaymentCardWalletFragment :
                     } else {
                         showNoInternetConnectionDialog()
                     }
+                    binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
