@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -57,23 +58,25 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.errorCode.observe(viewLifecycleOwner, Observer {
-            if (it == HttpURLConnection.HTTP_UNAUTHORIZED) {
-//                    LocalStoreUtils.clearPreferences()
+        //TODO Handle error codes, for now just 401 needed
+        try {
+            viewModel.errorCode.observe(viewLifecycleOwner, Observer {
+                if (it == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    LocalStoreUtils.clearPreferences()
 
-                Navigation.findNavController(binding.root).navigate(R.id.global_to_onboarding)
-            }
-        })
+                    Navigation.findNavController(binding.root).navigate(R.id.global_to_onboarding)
+                    viewModel.errorCode.removeObservers(this)
+                }
+            })
+        } catch (e: Exception) {
+
+        }
 
         //TODO Check internet connection globally
-//            noInternetConnectionEvent.observe(viewLifecycleOwner, Observer {
-//
-//            })
+//            noInternetConnectionEvent.observe(viewLifecycleOwner, Observer { })
 
         //TODO Handle timeout globally
-//            connectTimeoutEvent.observe(viewLifecycleOwner, Observer {
-//
-//            })
+//            connectTimeoutEvent.observe(viewLifecycleOwner, Observer { })
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
