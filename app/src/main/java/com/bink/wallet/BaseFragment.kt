@@ -1,6 +1,7 @@
 package com.bink.wallet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +70,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             })
         } catch (e: Exception) {
-
+            Log.e(BaseFragment::class.simpleName, e.toString())
         }
 
         //TODO Check internet connection globally

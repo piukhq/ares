@@ -24,7 +24,7 @@ fun convertToBaseException(throwable: Throwable): BaseException =
             }
 
             val serverErrorResponseBody = try {
-                response?.errorBody()?.string() ?: ""
+                response?.errorBody()?.string() ?: EMPTY_STRING
             } catch (e: Exception) {
                 e.toString()
             }
