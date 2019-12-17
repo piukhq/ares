@@ -122,6 +122,7 @@ class PaymentCardWalletFragment :
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
                     viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
+                        binding.paymentCardRecycler.visibility = View.VISIBLE
                         binding.progressSpinner.visibility = View.GONE
 
                         SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
@@ -191,6 +192,7 @@ class PaymentCardWalletFragment :
     private fun fetchPaymentCards() {
         runBlocking {
             binding.progressSpinner.visibility = View.VISIBLE
+            binding.paymentCardRecycler.visibility = View.GONE
             viewModel.getPaymentCards()
         }
     }
