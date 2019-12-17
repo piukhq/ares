@@ -61,8 +61,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                             true,
                             viewModel.membershipPlan.value?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription,
-                            getString(R.string.ok)
+                            planDescription
                         )
                     )
                 )

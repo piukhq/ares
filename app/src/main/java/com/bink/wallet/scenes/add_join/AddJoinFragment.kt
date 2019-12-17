@@ -82,8 +82,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             true,
                             currentMembershipPlan.account.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription,
-                            getString(R.string.ok)
+                            planDescription
                         )
                     )
                 )

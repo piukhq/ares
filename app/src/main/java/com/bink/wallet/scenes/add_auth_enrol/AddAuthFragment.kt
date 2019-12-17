@@ -125,8 +125,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             true,
                             viewModel.currentMembershipPlan.value?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription,
-                            getString(R.string.ok)
+                            planDescription
                         )
                     )
                 )
