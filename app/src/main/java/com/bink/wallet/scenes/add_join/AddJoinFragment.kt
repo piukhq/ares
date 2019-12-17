@@ -82,7 +82,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             true,
                             currentMembershipPlan.account.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription
+                            planDescription,
+                            getString(R.string.ok)
                         )
                     )
                 )
@@ -101,7 +102,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
             if (currentMembershipPlan.feature_set?.linking_support != null &&
-                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
+                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+            ) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     true,

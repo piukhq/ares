@@ -52,16 +52,21 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.brandHeader.setOnClickListener {
-            val directions =
-                viewModel.membershipPlan.value?.account?.plan_description?.let { message ->
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.plan_description),
-                        message, getString(R.string.ok)
+            viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    PllFragmentDirections.pllToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            viewModel.membershipPlan.value?.account?.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription,
+                            getString(R.string.ok)
+                        )
                     )
-                }?.let { params -> PllFragmentDirections.pllToBrandHeader(params) }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                )
+            }
         }
 
         runBlocking {

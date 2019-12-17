@@ -34,20 +34,21 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
         }
 
         binding.loyaltyCardHeader.setOnClickListener {
-            val directions =
-                viewModel.membershipPlan.value?.account?.plan_description?.let { message ->
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.plan_description),
-                        message, getString(R.string.ok)
-                    )
-                }?.let { params ->
+            viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
                     TransactionsFragmentDirections.transactionsToBrandHeader(
-                        params
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            viewModel.membershipPlan.value?.account?.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription,
+                            getString(R.string.ok)
+                        )
                     )
-                }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                )
+            }
         }
 
         viewModel.membershipCard.observeForever {
