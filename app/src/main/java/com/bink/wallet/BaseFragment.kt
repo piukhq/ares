@@ -10,10 +10,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import org.koin.android.ext.android.inject
@@ -61,7 +61,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             if (it == HttpURLConnection.HTTP_UNAUTHORIZED) {
 //                    LocalStoreUtils.clearPreferences()
 
-                findNavController().navigateIfAdded(this, R.id.base_to_onboarding)
+                Navigation.findNavController(binding.root).navigate(R.id.global_to_onboarding)
             }
         })
 
