@@ -11,6 +11,7 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -30,6 +31,8 @@ class PaymentCardsDetailsFragment :
 
     override val layoutRes: Int
         get() = R.layout.payment_cards_details_fragment
+
+    private var scrollY = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,6 +62,7 @@ class PaymentCardsDetailsFragment :
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.security_and_privacy_title),
                         getString(R.string.security_and_privacy_copy),
                         description2 = getString(R.string.security_and_privacy_copy_2)
@@ -78,7 +82,7 @@ class PaymentCardsDetailsFragment :
                         viewModel.deletePaymentCard(viewModel.paymentCard.value?.id.toString())
                     }
                 } else {
-                    showNoInternetConnectionDialog()
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -163,6 +167,27 @@ class PaymentCardsDetailsFragment :
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
         }
+
+        viewModel.linkError.observeNonNull(viewLifecycleOwner) {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        }
+
+        viewModel.unlinkError.observeNonNull(viewLifecycleOwner) {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scrollY = binding.scrollView.scrollY
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
+        viewModel.getMembershipCards()
     }
 
     private fun addLoyaltyCard(plan: MembershipPlan) {

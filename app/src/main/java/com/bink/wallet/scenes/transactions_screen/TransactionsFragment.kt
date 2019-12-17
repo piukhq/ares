@@ -38,6 +38,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                 viewModel.membershipPlan.value?.account?.plan_description?.let { message ->
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.plan_description),
                         message, getString(R.string.ok)
                     )
