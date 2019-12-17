@@ -20,6 +20,8 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
     override val viewModel: PreferencesViewModel by viewModel()
 
+    override val layoutRes = R.layout.preferences_fragment
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.preferenceDescription.text = HtmlCompat.fromHtml(
@@ -74,8 +76,6 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         viewModel.getPreferences()
         binding.progressSpinner.visibility = View.VISIBLE
     }
-
-    override val layoutRes = R.layout.preferences_fragment
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
