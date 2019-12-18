@@ -21,7 +21,6 @@ import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
 import java.util.*
 
 class LoyaltyCardDetailsFragment :
@@ -36,6 +35,8 @@ class LoyaltyCardDetailsFragment :
         const val MAX_ALPHA = 127f
         const val MIN_ALPHA = 0f
     }
+
+    private var scrollY = 0
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -130,6 +131,7 @@ class LoyaltyCardDetailsFragment :
                 description?.let { _ ->
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         aboutText,
                         description,
                         getString(R.string.ok)
@@ -163,23 +165,6 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        binding.footerSecurity.setOnClickListener {
-            val directions = LoyaltyCardDetailsFragmentDirections.detailToSecurity(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    getString(R.string.security_modal_title),
-                    getString(
-                        R.string.security_modal_body,
-                        getString(R.string.security_modal_body_1),
-                        getString(R.string.security_modal_body_2)
-                                + getString(R.string.security_modal_body_3)
-                    ),
-                    getString(R.string.ok)
-                )
-            )
-            findNavController().navigateIfAdded(this, directions)
-        }
-
         viewModel.linkStatus.observeNonNull(this)
         { status ->
             if (viewModel.accountStatus.value != null &&
@@ -198,7 +183,6 @@ class LoyaltyCardDetailsFragment :
             cd.alpha = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
-
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -226,6 +210,7 @@ class LoyaltyCardDetailsFragment :
                 LoyaltyCardDetailsFragmentDirections.detailToSecurity(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.security_and_privacy_title),
                         getString(R.string.security_and_privacy_copy),
                         description2 = getString(R.string.security_and_privacy_copy_2)
@@ -234,7 +219,7 @@ class LoyaltyCardDetailsFragment :
             findNavController().navigateIfAdded(this, action)
         }
 
-        binding.footerDelete.setOnClickListener { footerView ->
+        binding.footerDelete.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             var dialog: AlertDialog? = null
             builder.setMessage(getString(R.string.delete_card_modal_body))
@@ -259,7 +244,7 @@ class LoyaltyCardDetailsFragment :
                             } else {
                                 requireContext().displayModalPopup(
                                     getString(R.string.title_2_4),
-                                    getString(R.string.description_2_4)
+                                    getString(R.string.loyalty_card_delete_error_message)
                                 )
                             }
                         }
@@ -312,10 +297,16 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-
     override fun onPause() {
         super.onPause()
-        viewModel.paymentCards.value = null
+        scrollY = binding.scrollView.scrollY
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
     }
 
 
@@ -457,6 +448,7 @@ class LoyaltyCardDetailsFragment :
                         LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                             GenericModalParameters(
                                 R.drawable.ic_close,
+                                true,
                                 getString(R.string.title_2_4),
                                 getString(R.string.description_2_4)
                             )
@@ -472,6 +464,7 @@ class LoyaltyCardDetailsFragment :
                         LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                             GenericModalParameters(
                                 R.drawable.ic_close,
+                                true,
                                 getString(R.string.title_2_8),
                                 getString(R.string.description_2_8)
                             )
@@ -489,6 +482,7 @@ class LoyaltyCardDetailsFragment :
             LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                 GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.title_lcd_pending),
                     getString(R.string.description_lcd_pending)
                 )
@@ -511,6 +505,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_1_2),
                         getString(
                             R.string.description_1_2,
@@ -531,6 +526,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_1_5),
                         getString(R.string.description_1_5)
                     )

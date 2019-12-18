@@ -33,6 +33,22 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val viewModel: SignUpViewModel by viewModel()
 
+    private fun setSignupButtonEnableStatus() {
+        with(viewModel) {
+            binding.signUpButton.isEnabled =
+                (binding.passwordField.error == null &&
+                        binding.emailField.error == null &&
+                        binding.confirmPasswordField.error == null &&
+                        (email.value ?: EMPTY_STRING).isNotBlank() &&
+                        (password.value ?: EMPTY_STRING).isNotBlank() &&
+                        (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
+                        confirmPassword.value == password.value &&
+                        termsCondition.value!! &&
+                        privacyPolicy.value!!
+                        )
+        }
+    }
+
     private fun validateEmail() =
         if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
             binding.emailField.error = getString(R.string.incorrect_email_text)
@@ -62,6 +78,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         with(binding) {
+            signUpButton.isEnabled = false
+
             signUpFooterMessage.text = HtmlCompat.fromHtml(
                 getString(R.string.sign_up_footer_text),
                 HtmlCompat.FROM_HTML_MODE_LEGACY
@@ -84,16 +102,32 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
 
         with(viewModel) {
+
+            privacyPolicy.value = false
+            termsCondition.value = false
+            marketingMessages.value = false
+
             email.observeNonNull(this@SignUpFragment) {
                 validateEmail()
+                setSignupButtonEnableStatus()
             }
 
             password.observeNonNull(this@SignUpFragment) {
                 validatePassword()
+                setSignupButtonEnableStatus()
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
                 checkPasswordsMatch()
+                setSignupButtonEnableStatus()
+            }
+
+            privacyPolicy.observeNonNull(this@SignUpFragment) {
+                setSignupButtonEnableStatus()
+            }
+
+            termsCondition.observeNonNull(this@SignUpFragment) {
+                setSignupButtonEnableStatus()
             }
 
             isLoading.observeNonNull(this@SignUpFragment) {

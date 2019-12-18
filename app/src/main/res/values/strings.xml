@@ -98,6 +98,8 @@
     <string name="loyalty_card_pll_link_now">Link now</string>
     <string name="loyalty_card_pll_retry">Retry</string>
     <string name="loyalty_card_pll_pending">Pending</string>
+    <string name="loyalty_card_delete_error_message">We encountered an error. Please try again later.</string>
+
 
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s%2$s</string>
@@ -114,7 +116,7 @@
     <!-- 1.6 -->
     <string name="points_retry_login">Retry login</string>
     <!-- 1.7 -->
-    <string name="points_logging_in">Logging in</string>
+    <string name="points_pending">Pending</string>
     <string name="description_please_wait">Please wait</string>
     <!-- 1.8 -->
     <string name="points_sign_up_failed">Sign up failed</string>
@@ -211,7 +213,7 @@
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
 
     <!-- Pll Screen -->
-    <string name="pll_description">The payment cards below will be linked to this loyalty card. Simply pay with them to collect points.</string>
+    <string name="pll_description">The payment cards below will be linked to your %s. Simply pay with them to collect points.</string>
     <string name="pll_linked_title">Link to payment cards</string>
     <string name="pll_unlinked_title">Add card</string>
     <string name="pll_last_digits">Card ending in %1$s</string>

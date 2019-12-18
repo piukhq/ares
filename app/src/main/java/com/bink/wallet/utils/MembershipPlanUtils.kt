@@ -3,8 +3,8 @@ package com.bink.wallet.utils
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardCodes
-import com.bink.wallet.utils.enums.MembershipCardStatus.*
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.MembershipCardStatus.*
 
 object MembershipPlanUtils {
 
@@ -12,7 +12,9 @@ object MembershipPlanUtils {
         membershipPlan: MembershipPlan,
         membershipCard: MembershipCard
     ): LoginStatus {
-        if (membershipPlan.feature_set?.has_points == true || membershipPlan.feature_set?.transactions_available == true) {
+        if (membershipPlan.feature_set?.has_points == true ||
+            membershipPlan.feature_set?.transactions_available == true
+        ) {
             when (membershipCard.status?.state) {
                 AUTHORISED.status -> {
                     return if (membershipPlan.feature_set.transactions_available == true) {
@@ -22,26 +24,19 @@ object MembershipPlanUtils {
                     }
                 }
 
-                UNAUTHORISED.status -> {
-                    return if (membershipPlan.feature_set.transactions_available == true) {
-                        LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE
-                    } else {
-                        LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE
-                    }
-                }
-
                 PENDING.status -> {
                     return LoginStatus.STATUS_PENDING
                 }
 
-                FAILED.status -> {
-                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)) != null) {
+                FAILED.status,
+                UNAUTHORISED.status -> {
+                    if (!membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)).isNullOrEmpty()) {
                         return LoginStatus.STATUS_SIGN_UP_FAILED
                     }
-                    if (membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X202.code)) != null) {
+                    if (!membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X202.code)).isNullOrEmpty()) {
                         return LoginStatus.STATUS_CARD_ALREADY_EXISTS
                     }
-                    if (membershipCard.status?.reason_codes?.intersect(
+                    if (!membershipCard.status?.reason_codes?.intersect(
                             listOf(
                                 CardCodes.X101.code,
                                 CardCodes.X102.code,
@@ -51,7 +46,7 @@ object MembershipPlanUtils {
                                 CardCodes.X303.code,
                                 CardCodes.X304.code
                             )
-                        ) != null
+                        ).isNullOrEmpty()
                     ) {
                         return LoginStatus.STATUS_LOGIN_FAILED
                     }
