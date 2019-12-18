@@ -393,4 +393,8 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean) {
 }
 
 
+@BindingAdapter("pllDescription")
+fun TextView.setPllDescription(planNameCard: String?) {
+    text = resources.getString(R.string.pll_description, planNameCard)
+}
 
