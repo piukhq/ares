@@ -11,11 +11,11 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -56,6 +56,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 viewModel.membershipPlan.value?.account?.plan_description?.let { message ->
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.plan_description),
                         message, getString(R.string.ok)
                     )
@@ -122,7 +123,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         binding.buttonDone.setOnClickListener {
             if (viewModel.paymentCards.value.isNullOrEmpty()) {
                 findNavController().popBackStack()
-            } else {
+            } else if (verifyAvailableNetwork(requireActivity())) {
                 adapter.paymentCards?.forEach { card ->
                     if (card.isSelected &&
                         !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
@@ -158,6 +159,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                         }
                     }
                 }
+            } else {
+                showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
             }
         }
 
@@ -170,25 +173,46 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         viewModel.linkError.observeNonNull(this) {
+            viewModel.linkError.removeObservers(this)
+            viewModel.unlinkError.removeObservers(this)
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.description_error))
-                .setMessage(it.toString())
+                .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
                 .setPositiveButton(
                     getString(R.string.ok)
                 ) { _, _ ->
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment)
+                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
                         directions?.let { directions ->
                             findNavController().navigateIfAdded(
                                 this@PllFragment,
                                 directions
                             )
                         }
+                    }
                 }
                 .show()
         }
 
         viewModel.unlinkError.observeNonNull(this) {
-            requireContext().displayModalPopup(getString(R.string.description_error), it.toString())
+            viewModel.unlinkError.removeObservers(this)
+            viewModel.linkError.removeObservers(this)
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.description_error))
+                .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                .setPositiveButton(
+                    getString(R.string.ok)
+                ) { _, _ ->
+                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                        directions?.let { directions ->
+                            findNavController().navigateIfAdded(
+                                this@PllFragment,
+                                directions
+                            )
+                        }
+                    }
+
+                }
+                .show()
         }
     }
 
