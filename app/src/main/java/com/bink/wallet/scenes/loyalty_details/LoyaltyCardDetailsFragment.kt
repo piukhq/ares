@@ -21,6 +21,7 @@ import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 import java.util.*
 
 class LoyaltyCardDetailsFragment :
