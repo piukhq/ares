@@ -73,7 +73,7 @@ class PaymentCardWalletFragment :
                             viewModel.deletePaymentCard(paymentCard.id.toString())
                         }
                     } else {
-                        showNoInternetConnectionDialog()
+                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
