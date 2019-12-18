@@ -45,6 +45,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.clearWallets()
+
         val adapter = OnboardingPagerAdapter(childFragmentManager)
         adapter.let {
             it.addFragment(
