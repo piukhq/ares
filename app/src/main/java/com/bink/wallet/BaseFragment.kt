@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -74,10 +75,10 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
 
     protected abstract fun builder(): FragmentToolbar
 
-    fun showNoInternetConnectionDialog() {
+    fun showNoInternetConnectionDialog(@StringRes dialogMessage: Int = R.string.no_internet_connection_dialog_message) {
         requireContext().displayModalPopup(
             null,
-            getString(R.string.no_internet_connection_dialog_message)
+            getString(dialogMessage)
         )
     }
 }
