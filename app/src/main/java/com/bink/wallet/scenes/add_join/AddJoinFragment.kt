@@ -73,18 +73,19 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
-            val directions = currentMembershipPlan.account?.plan_description?.let { message ->
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    getString(R.string.plan_description),
-                    message, getString(R.string.ok)
+            currentMembershipPlan.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    AddJoinFragmentDirections.addJoinToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            currentMembershipPlan.account.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
+                    )
                 )
-            }?.let { params ->
-                AddJoinFragmentDirections.addJoinToBrandHeader(params)
-            }
-            directions?.let { _ ->
-                findNavController().navigateIfAdded(this, directions)
             }
         }
 
@@ -100,7 +101,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
             if (currentMembershipPlan.feature_set?.linking_support != null &&
-                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
+                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+            ) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     true,
