@@ -227,7 +227,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 viewModel.deleteCard(membershipCard.id)
                             }
                         } else {
-                            showNoInternetConnectionDialog()
+                            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                         }
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
