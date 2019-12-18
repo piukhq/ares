@@ -229,6 +229,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         } else {
                             showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                         }
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(

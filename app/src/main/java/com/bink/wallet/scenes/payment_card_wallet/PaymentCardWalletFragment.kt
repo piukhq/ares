@@ -75,6 +75,7 @@ class PaymentCardWalletFragment :
                     } else {
                         showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
+                    binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
