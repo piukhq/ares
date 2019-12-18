@@ -443,7 +443,7 @@ class LoyaltyCardDetailsFragment :
                         val action =
                             LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
                                 it,
-                                viewModel.membershipCard.value?.id
+                                viewModel.membershipCard.value
                             )
                         findNavController().navigateIfAdded(this, action)
                     }
@@ -533,7 +533,7 @@ class LoyaltyCardDetailsFragment :
                         val action =
                             LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
                                 it,
-                                viewModel.membershipCard.value?.id
+                                viewModel.membershipCard.value
                             )
                         findNavController().navigateIfAdded(this, action)
                     }

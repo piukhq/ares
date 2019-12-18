@@ -136,6 +136,21 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             SignUpFormType.ADD_AUTH -> {
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
+//                func getDescription() -> String? {
+//                    switch formPurpose {
+//                        case .login:
+//                        guard let planName = membershipPlan.account?.planName, let companyName = membershipPlan.account?.companyName else { return nil }
+//                        return String(format: "auth_screen_description".localized, companyName, planName)
+//                        case .loginFailed:
+//                        return getDescriptionForOtherLogin()
+//                        case .signUp:
+//                        guard let companyName = membershipPlan.account?.companyName else { return nil }
+//                        return String(format: "sign_up_new_card_description".localized, companyName)
+//                        case .ghostCard:
+//                        guard let planNameCard = membershipPlan.account?.planNameCard else { return nil }
+//                        return String(format: "register_ghost_card_description".localized, planNameCard)
+//                    }
+//                }
                 with(viewModel) {
                     if (currentMembershipCard.value != null) {
                         if (currentMembershipPlan.value!!.feature_set?.has_points != null &&

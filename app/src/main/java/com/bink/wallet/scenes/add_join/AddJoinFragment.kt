@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -31,11 +32,17 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     override val viewModel: AddJoinViewModel by viewModel()
 
+    private var membershipCard : MembershipCard? = null
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val currentMembershipPlan = args.currentMembershipPlan
         binding.item = currentMembershipPlan
+
+        arguments?.let {
+             membershipCard = AddJoinFragmentArgs.fromBundle(it).membershipCard
+        }
 
         when (currentMembershipPlan.feature_set?.card_type) {
             CardType.STORE.type -> {
@@ -92,7 +99,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             val action = AddJoinFragmentDirections.addJoinToGhost(
                 SignUpFormType.ADD_AUTH,
                 currentMembershipPlan,
-                null
+                membershipCard
             )
             findNavController().navigateIfAdded(this, action)
         }
@@ -118,7 +125,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 action = AddJoinFragmentDirections.addJoinToGhost(
                     SignUpFormType.ENROL,
                     currentMembershipPlan,
-                    null
+                    membershipCard
                 )
             }
             findNavController().navigateIfAdded(this, action)

@@ -11,7 +11,6 @@ import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -104,7 +103,7 @@ class PaymentCardsDetailsFragment :
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             val pllPlansIds = mutableListOf<String>()
-            plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
+            plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
                 binding.apply {
@@ -137,7 +136,7 @@ class PaymentCardsDetailsFragment :
                                 itemClickListener = {
                                     val directions =
                                         PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
-                                            it
+                                            it, null
                                         )
                                     findNavController().navigateIfAdded(
                                         this@PaymentCardsDetailsFragment,
@@ -185,7 +184,7 @@ class PaymentCardsDetailsFragment :
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =
             PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
-                plan
+                plan, null
             )
         findNavController().navigateIfAdded(
             this@PaymentCardsDetailsFragment,

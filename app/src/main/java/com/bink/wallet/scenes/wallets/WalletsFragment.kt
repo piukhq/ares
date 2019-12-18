@@ -17,7 +17,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>() {
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
