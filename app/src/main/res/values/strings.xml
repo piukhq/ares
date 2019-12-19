@@ -311,7 +311,7 @@
 
     <!-- Native Ghost Card Registration N/A -->
     <string name="title_ghost_card_not_available">Registration unavailable</string>
-    <string name="description_ghost_card_not_available">Please go to the merchant’s website to join this scheme. You can then come back and add your card.</string>
+    <string name="description_ghost_card_not_available">Please go to the merchant\'s website to join this scheme. You can then come back and add your card.</string>
 
     <!-- Onboarding -->
     <string name="skip">Skip</string>
