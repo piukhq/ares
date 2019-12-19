@@ -9,6 +9,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.WalletsFragmentBinding
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
+import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -16,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>() {
+class WalletsFragment : BaseFragment<PaymentCardWalletViewModel, WalletsFragmentBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -24,7 +25,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             .build()
     }
 
-    override val viewModel: WalletsViewModel by viewModel()
+    override val viewModel: PaymentCardWalletViewModel by viewModel()
 
     override val layoutRes: Int
         get() = R.layout.wallets_fragment
@@ -36,9 +37,8 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         runBlocking {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchMembershipPlans()
-            viewModel.fetchMembershipCards()
-            viewModel.fetchPaymentCards()
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchLocalPaymentCards()
         }
 
         activity?.let {
@@ -62,18 +62,18 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
                     replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-                    if (viewModel.membershipCardData.value != null &&
-                        viewModel.membershipPlanData.value != null
+                    if (viewModel.localMembershipCardData.value != null &&
+                        viewModel.localMembershipCardData.value != null
                     ) {
                         loyaltyWalletsFragment.setData(
-                            viewModel.membershipCardData.value!!,
-                            viewModel.membershipPlanData.value!!
+                            viewModel.localMembershipCardData.value!!,
+                            viewModel.localMembershipPlanData.value!!
                         )
                     }
                 }
                 R.id.add_menu_item -> {
                     val directions =
-                        viewModel.membershipPlanData.value!!.toTypedArray().let { plans ->
+                        viewModel.localMembershipPlanData.value!!.toTypedArray().let { plans ->
                             WalletsFragmentDirections.homeToAdd(
                                 plans
                             )
@@ -83,12 +83,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 R.id.payment_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = false
                     replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
-                    if (viewModel.membershipCardData.value != null &&
-                        viewModel.membershipPlanData.value != null
+                    if (viewModel.localMembershipCardData.value != null &&
+                        viewModel.localMembershipPlanData.value != null
                     ) {
                         paymentCardWalletFragment.setData(
-                            viewModel.membershipCardData.value!!,
-                            viewModel.membershipPlanData.value!!
+                            viewModel.localMembershipCardData.value!!,
+                            viewModel.localMembershipPlanData.value!!
                         )
                     }
                 }
@@ -97,8 +97,8 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             true
         }
 
-        viewModel.membershipPlanData.observeNonNull(this) { plans ->
-            viewModel.membershipCardData.observeNonNull(this) { cards ->
+        viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
+            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
                     SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
                     if (SharedPreferenceManager.isLoyaltySelected) {

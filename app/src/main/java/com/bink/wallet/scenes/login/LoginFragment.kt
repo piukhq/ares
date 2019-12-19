@@ -7,11 +7,13 @@ import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
@@ -104,6 +106,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     LocalStoreUtils.KEY_EMAIL,
                     it.email ?: EMPTY_STRING
                 )
+
+                runBlocking {
+                    (activity as MainActivity).fetchData()
+                }
 
                 findNavController().navigateIfAdded(
                     this@LoginFragment,

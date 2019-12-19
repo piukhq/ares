@@ -137,6 +137,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         runWalletCoroutine()
     }
 
+    suspend fun fetchData() {
+        viewModel.fetchMembershipPlans()
+        viewModel.fetchMembershipCards()
+        viewModel.fetchPaymentCards()
+    }
+
     private fun startCoroutine(isWalletCoroutine: Boolean): Job {
         return launch(Dispatchers.IO) {
             withContext(Dispatchers.Default) {
@@ -172,8 +178,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     override fun onResume() {
         if (verifyAvailableNetwork(this@MainActivity)) {
-            viewModel.fetchMembershipPlans()
-            viewModel.fetchMembershipCards()
+            runBlocking {
+                fetchData()
+            }
         }
         resetHourlyCoroutine()
         super.onResume()

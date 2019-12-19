@@ -106,7 +106,7 @@ class PaymentCardWalletFragment :
 
         populateWallet()
 
-        fetchPaymentCards()
+        viewModel.fetchLocalPaymentCards()
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
@@ -227,7 +227,7 @@ class PaymentCardWalletFragment :
     private fun fetchPaymentCards() {
         runBlocking {
             binding.progressSpinner.visibility = View.VISIBLE
-            viewModel.getPaymentCards()
+            viewModel.fetchPaymentCards()
         }
     }
 

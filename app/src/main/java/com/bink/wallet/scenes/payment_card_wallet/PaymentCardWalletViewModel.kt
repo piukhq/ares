@@ -31,7 +31,7 @@ class PaymentCardWalletViewModel(
         )
     }
 
-    suspend fun getPaymentCards() {
+    suspend fun fetchPaymentCards() {
         paymentWalletRepository.getPaymentCards(
             paymentCards,
             fetchError
