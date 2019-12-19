@@ -41,6 +41,7 @@ class AvailablePllAdapter(
                 binding.root.context.matchSeparator(binding.separator.id, binding.itemLayout)
             }
             binding.membershipCard = item
+
             binding.toggle.isChecked =
                 if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
             if (isLinkedToPaymentCard(item) != null) {
