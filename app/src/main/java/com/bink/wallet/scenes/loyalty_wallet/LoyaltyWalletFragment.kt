@@ -136,8 +136,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
             viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
                 populateScreen(plansReceived, cardsReceived)
-                viewModel.localMembershipCardData.removeObservers(this@LoyaltyWalletFragment)
-                viewModel.localMembershipPlanData.removeObservers(this@LoyaltyWalletFragment)
             }
         }
     }
