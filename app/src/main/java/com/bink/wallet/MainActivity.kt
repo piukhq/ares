@@ -177,7 +177,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     override fun onResume() {
-        if (verifyAvailableNetwork(this@MainActivity)) {
+        if (verifyAvailableNetwork(this@MainActivity) &&
+            !LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN).isNullOrEmpty()
+        ) {
             runBlocking {
                 fetchData()
             }
