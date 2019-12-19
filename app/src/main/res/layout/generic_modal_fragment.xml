@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -13,6 +14,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+                android:id="@+id/close"
+                style="?actionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_close"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                tools:ignore="ContentDescription" />
 
         <TextView
                 android:id="@+id/title_toolbar"
@@ -47,7 +59,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="About Rewards" />
 
                 <TextView
                         android:id="@+id/description"
@@ -57,7 +70,8 @@
                         android:paddingTop="@dimen/margin_padding_size_extra_small"
                         android:textColorLink="@color/blue_accent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/title" />
+                        app:layout_constraintTop_toBottomOf="@+id/title"
+                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo interdum elit a tempus." />
 
                 <TextView
                         android:id="@+id/description_2"

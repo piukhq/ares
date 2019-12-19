@@ -72,13 +72,15 @@ class WalletsFragment : BaseFragment<PaymentCardWalletViewModel, WalletsFragment
                     }
                 }
                 R.id.add_menu_item -> {
-                    val directions =
-                        viewModel.localMembershipPlanData.value!!.toTypedArray().let { plans ->
-                            WalletsFragmentDirections.homeToAdd(
-                                plans
-                            )
-                        }
-                    directions.let { findNavController().navigateIfAdded(this, it) }
+                    viewModel.localMembershipPlanData.value?.let {
+                        val directions =
+                            it.toTypedArray().let { plans ->
+                                WalletsFragmentDirections.homeToAdd(
+                                    plans
+                                )
+                            }
+                        directions.let { findNavController().navigateIfAdded(this, it) }
+                    }
                 }
                 R.id.payment_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = false
