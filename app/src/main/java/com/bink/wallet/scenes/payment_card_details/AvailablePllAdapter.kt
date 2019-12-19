@@ -13,7 +13,7 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 class AvailablePllAdapter(
     private var currentPaymentCard: PaymentCard,
     private val plans: List<MembershipPlan> = ArrayList(),
-    private var membershipCards: List<MembershipCard> = ArrayList(),
+    private var membershipCards: List<MembershipCardAdapterItem> = ArrayList(),
     private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {},
     private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
 ) : RecyclerView.Adapter<AvailablePllAdapter.AvailablePllViewHolder>() {
@@ -34,8 +34,9 @@ class AvailablePllAdapter(
         val currentMembershipCards = membershipCards
         updatedPaymentCard.membership_cards.forEach { updatedMembershipCard ->
             currentMembershipCards.forEach { currentMembershipCard ->
-                currentMembershipCard.payment_cards?.forEach { paymentCard ->
-                    if (updatedMembershipCard.id == currentMembershipCard.id) {
+                currentMembershipCard.isChangeable = true
+                currentMembershipCard.membershipCard.payment_cards?.forEach { paymentCard ->
+                    if (updatedMembershipCard.id == currentMembershipCard.membershipCard.id) {
                         paymentCard.active_link = updatedMembershipCard.active_link
                     }
                 }
@@ -46,34 +47,44 @@ class AvailablePllAdapter(
         notifyDataSetChanged()
     }
 
+    fun setItemsClickableStatus(isClickable: Boolean) {
+        val tempList = membershipCards
+        tempList.forEach {
+            it.isChangeable = isClickable
+        }
+        membershipCards = tempList
+        notifyDataSetChanged()
+    }
+
     inner class AvailablePllViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MembershipCard) {
-            val currentMembershipPlan = getPlanByCardId(item)
+        fun bind(item: MembershipCardAdapterItem) {
+            val currentMembershipPlan = getPlanByCardId(item.membershipCard)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
-            binding.membershipCard = item
+            binding.membershipCard = item.membershipCard
+            binding.toggle.isEnabled = item.isChangeable
             binding.toggle.isChecked =
-                if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
-            if (isLinkedToPaymentCard(item) != null) {
-                binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item)!!)
+                if (isLinkedToPaymentCard(item.membershipCard) != null) isLinkedToPaymentCard(item.membershipCard)!! else false
+            if (isLinkedToPaymentCard(item.membershipCard) != null) {
+                binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item.membershipCard)!!)
             } else {
                 binding.toggle.displayCustomSwitch(false)
             }
 
             binding.toggle.setOnClickListener {
                 val isChecked = binding.toggle.isChecked
-                onLinkStatusChange(Pair(item.id, isChecked))
+                onLinkStatusChange(Pair(item.membershipCard.id, isChecked))
                 binding.toggle.displayCustomSwitch(isChecked)
             }
 
             binding.itemLayout.setOnClickListener {
                 currentMembershipPlan?.let { membershipPlan ->
-                    onItemSelected(membershipPlan, item)
+                    onItemSelected(membershipPlan, item.membershipCard)
                 }
             }
 
-            when (item.status?.state) {
+            when (item.membershipCard.status?.state) {
                 MembershipCardStatus.AUTHORISED.status -> {
                     showToggle()
                 }

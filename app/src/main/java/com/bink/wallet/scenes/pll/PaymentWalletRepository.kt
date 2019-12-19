@@ -72,11 +72,13 @@ class PaymentWalletRepository(
         paymentCardId: String,
         paymentCard: MutableLiveData<PaymentCard>,
         linkError: MutableLiveData<Throwable>,
-        paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData()
+        paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData(),
+        isLoading: MutableLiveData<Boolean> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
             withContext(Dispatchers.Main) {
+                isLoading.value = true
                 try {
                     val response = request.await()
                     paymentCard.value = response
@@ -91,9 +93,12 @@ class PaymentWalletRepository(
                     }
 
                     paymentCardMutableValue.value = paymentCardValue
+
                 } catch (e: Throwable) {
                     linkError.value = e
                     Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                } finally {
+                    isLoading.value = false
                 }
             }
         }
@@ -104,11 +109,13 @@ class PaymentWalletRepository(
         membershipCardId: String,
         unlinkError: MutableLiveData<Throwable>,
         unlinkedBody: MutableLiveData<ResponseBody>,
-        paymentCard: MutableLiveData<PaymentCard> = MutableLiveData()
+        paymentCard: MutableLiveData<PaymentCard> = MutableLiveData(),
+        isLoading: MutableLiveData<Boolean> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
             withContext(Dispatchers.Main) {
+                isLoading.value = true
                 try {
                     val response = request.await()
                     unlinkedBody.value = response
@@ -119,11 +126,12 @@ class PaymentWalletRepository(
                             it.active_link = false
                         }
                     }
-
                     paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
                     Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                } finally {
+                    isLoading.value = false
                 }
             }
         }

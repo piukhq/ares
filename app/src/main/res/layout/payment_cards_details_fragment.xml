@@ -8,6 +8,10 @@
         <variable
                 name="paymentCardDetail"
                 type="com.bink.wallet.model.response.payment_card.PaymentCard" />
+
+        <variable
+                name="linkingInProgress"
+                type="Boolean"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,6 +88,16 @@
                         tools:itemCount="2"
                         tools:listitem="@layout/linked_cards_list_item"
                         tools:visibility="visible" />
+
+                <ProgressBar
+                        android:id="@+id/available_pll_loading_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/available_pll_list"
+                        app:layout_constraintEnd_toEndOf="@id/available_pll_list"
+                        app:layout_constraintTop_toTopOf="@id/available_pll_list"
+                        app:layout_constraintBottom_toBottomOf="@id/available_pll_list"
+                        isVisible="@{linkingInProgress}"/>
 
                 <com.bink.wallet.FooterItem
                         android:id="@+id/footer_security"

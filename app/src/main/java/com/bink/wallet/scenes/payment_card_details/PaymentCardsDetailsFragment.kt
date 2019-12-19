@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.payment_card_details
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -57,6 +58,7 @@ class PaymentCardsDetailsFragment :
         }
 
         binding.paymentCardDetail = viewModel.paymentCard.value
+        binding.linkingInProgress = viewModel.linkingInProgress.value
 
         binding.footerSecurity.setOnClickListener {
             val action =
@@ -107,11 +109,15 @@ class PaymentCardsDetailsFragment :
             plans.forEach { plan -> if(plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id)}
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
+                val adapterItems = mutableListOf<MembershipCardAdapterItem>()
+                pllCards.forEach {
+                    adapterItems.add(MembershipCardAdapterItem(it))
+                }
                 viewModel.paymentCard.value?.let { paymentCard ->
                     availablePllAdapter = AvailablePllAdapter(
                         paymentCard,
                         plans,
-                        pllCards,
+                        adapterItems,
                         onLinkStatusChange = ::onLinkStatusChange,
                         onItemSelected = ::onItemSelected
                     )
@@ -171,6 +177,10 @@ class PaymentCardsDetailsFragment :
             binding.paymentCardDetail = it
             availablePllAdapter.updatePaymentCard(it)
         }
+
+        viewModel.linkingInProgress.observe(viewLifecycleOwner, Observer {
+            binding.linkingInProgress = it
+        })
     }
 
     override fun onPause() {
@@ -206,6 +216,7 @@ class PaymentCardsDetailsFragment :
 
     private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
         if (currentItem.first != null) {
+            availablePllAdapter.setItemsClickableStatus(false)
             runBlocking {
                 if (currentItem.second) {
                     viewModel.linkPaymentCard(

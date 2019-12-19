@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.payment_card_details
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -21,13 +22,18 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
     var unlinkError = MutableLiveData<Throwable>()
     var deleteError = MutableLiveData<Throwable>()
 
+    private val _linkingInProgress = MutableLiveData<Boolean>()
+    val linkingInProgress: LiveData<Boolean>
+        get() = _linkingInProgress
+
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
             linkedPaymentCard,
             linkError,
-            paymentCard
+            paymentCard,
+            _linkingInProgress
         )
     }
 
@@ -37,7 +43,8 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
             cardId,
             unlinkError,
             unlinkedRequestBody,
-            paymentCard
+            paymentCard,
+            _linkingInProgress
         )
     }
 
