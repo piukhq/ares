@@ -82,7 +82,7 @@ class PaymentCardsDetailsFragment :
                         viewModel.deletePaymentCard(viewModel.paymentCard.value?.id.toString())
                     }
                 } else {
-                    showNoInternetConnectionDialog()
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -167,6 +167,14 @@ class PaymentCardsDetailsFragment :
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
         }
+
+        viewModel.linkError.observeNonNull(viewLifecycleOwner) {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        }
+
+        viewModel.unlinkError.observeNonNull(viewLifecycleOwner) {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        }
     }
 
     override fun onPause() {
@@ -179,8 +187,8 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
+        viewModel.getMembershipCards()
     }
-
 
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =
