@@ -235,6 +235,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         } else {
                             disableIndicators()
                         }
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(
