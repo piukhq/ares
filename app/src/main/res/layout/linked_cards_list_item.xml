@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
                 name="membershipCard"
                 type="com.bink.wallet.model.response.membership_card.MembershipCard" />
@@ -24,39 +25,40 @@
                 app:layout_constraintEnd_toStartOf="@+id/company_name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@tools:sample/avatars"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:src="@tools:sample/avatars" />
 
         <TextView
                 android:id="@+id/company_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/loyalty_margins_vertical"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_headline"
                 android:fontFamily="@font/nunito_sans_extrabold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toStartOf="@+id/toggle"
                 app:layout_constraintStart_toEndOf="@+id/brand_image"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Co-op" />
 
         <TextView
                 android:id="@+id/card_value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/loyalty_margins_vertical"
+                android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_body"
-                android:fontFamily="@font/nunito_sans_light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/toggle"
                 app:layout_constraintStart_toEndOf="@+id/brand_image"
                 app:layout_constraintTop_toBottomOf="@+id/company_name"
-                app:textBalance="@{membershipCard}" />
+                app:textBalance="@{membershipCard}"
+                tools:text="415Points" />
 
         <com.bink.wallet.GradientSwitch
                 android:id="@+id/toggle"
@@ -72,24 +74,41 @@
                 android:id="@+id/pending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_sans_extrabold"
                 android:padding="@dimen/margin_padding_size_small"
                 android:text="@string/payment_card_pending"
                 android:textColor="@color/amber_pending"
+                android:textSize="@dimen/size_body"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/toggle"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
         <TextView
                 android:id="@+id/retry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_sans_extrabold"
                 android:padding="@dimen/margin_padding_size_small"
                 android:text="@string/payment_card_retry"
                 android:textColor="@color/red_attention"
+                android:textSize="@dimen/size_body"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/toggle"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+        <View
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_separator_line_height"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:background="@color/separator_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

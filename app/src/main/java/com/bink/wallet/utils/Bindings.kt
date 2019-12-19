@@ -5,7 +5,10 @@ import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -376,7 +379,7 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
 
 @BindingAdapter("paymentCardDetailsTitle")
 fun TextView.setPcdTitle(hasAddedPlls: Boolean) {
-    text = if(hasAddedPlls) {
+    text = if (hasAddedPlls) {
         context.getString(R.string.payment_card_details_title_text)
     } else {
         context.getString(R.string.payment_card_details_title_text_empty)
@@ -385,7 +388,7 @@ fun TextView.setPcdTitle(hasAddedPlls: Boolean) {
 
 @BindingAdapter("paymentCardDetailsSubtitle")
 fun TextView.setPcdSubtitle(hasAddedPlls: Boolean) {
-    text = if(hasAddedPlls) {
+    text = if (hasAddedPlls) {
         context.getString(R.string.payment_card_details_description_text)
     } else {
         context.getString(R.string.payment_card_details_description_text_empty)

@@ -128,7 +128,8 @@ class PaymentCardsDetailsFragment :
                         }
                     }
                     hasOtherCardsToAdd = unaddedCardsForPlan.isNotEmpty()
-                    shouldDisplayOtherCardsTitleAndDescription = pllCards.isNotEmpty() && unaddedCardsForPlan.isNullOrEmpty()
+                    shouldDisplayOtherCardsTitleAndDescription = pllCards.isNotEmpty() &&
+                            unaddedCardsForPlan.isNotEmpty()
                     otherCardsList.apply {
                         layoutManager = GridLayoutManager(context, 1)
                         adapter = SuggestedCardsAdapter(

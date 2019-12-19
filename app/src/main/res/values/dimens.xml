@@ -93,6 +93,7 @@
     <dimen name="add_card_button_width">82dp</dimen>
     <dimen name="add_card_button_height">28dp</dimen>
     <dimen name="link_icon_size">14.4dp</dimen>
+    <dimen name="loyalty_margins_vertical">30dp</dimen>
 
     <!-- Onboarding -->
     <dimen name="buttons_margin">48dp</dimen>
