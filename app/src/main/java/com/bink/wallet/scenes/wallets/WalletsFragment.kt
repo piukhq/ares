@@ -72,13 +72,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                     }
                 }
                 R.id.add_menu_item -> {
-                    val directions =
-                        viewModel.membershipPlanData.value!!.toTypedArray().let { plans ->
-                            WalletsFragmentDirections.homeToAdd(
-                                plans
-                            )
-                        }
-                    directions.let { findNavController().navigateIfAdded(this, it) }
+                    viewModel.membershipPlanData.value?.let {
+                        val directions =
+                            it.toTypedArray().let { plans ->
+                                WalletsFragmentDirections.homeToAdd(
+                                    plans
+                                )
+                            }
+                        directions.let { findNavController().navigateIfAdded(this, it) }
+                    }
                 }
                 R.id.payment_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = false
@@ -100,9 +102,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    if (paymentCards.isNotEmpty())
-                        SharedPreferenceManager.isPaymentJoinHidden = true
-
+                    SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
                     if (SharedPreferenceManager.isLoyaltySelected) {
                         loyaltyWalletsFragment.setData(cards, plans)
                     } else {

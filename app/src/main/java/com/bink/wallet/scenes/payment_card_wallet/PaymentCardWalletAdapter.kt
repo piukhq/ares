@@ -3,115 +3,135 @@ package com.bink.wallet.scenes.payment_card_wallet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.PaymentCardWalletItemBinding
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.getCardTypeFromProvider
+import kotlin.properties.Delegates
 
 class PaymentCardWalletAdapter(
-    private val paymentCards: List<PaymentCard>,
-    val onClickListener: (PaymentCard) -> Unit = {}
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    var onClickListener: (Any) -> Unit = {},
+    var onRemoveListener: (Any) -> Unit = {}
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
+
     companion object {
-        const val JOIN_CARD = 0
-        const val PAYMENT_CARD = 1
+        private const val PAYMENT_CARD = 0
+        private const val JOIN_PAYMENT = 2
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        if (viewType == JOIN_CARD) {
-            val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-            binding.apply {
-                close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
-                    notifyDataSetChanged()
-                }
+    var paymentCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
+        notifyChanges(oldList, newList)
+    }
+
+    private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
+
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val currentOldItem = oldList[oldItemPosition]
+                val currentNewItem = newList[newItemPosition]
+
+                if (currentNewItem is PaymentCard &&
+                    currentOldItem is PaymentCard
+                )
+                    return currentNewItem.id == currentOldItem.id
+
+                return currentNewItem is JoinCardItem &&
+                        currentOldItem is JoinCardItem
             }
-            return PaymentCardWalletJoinHolder(binding)
-        } else {
-            val binding = PaymentCardWalletItemBinding.inflate(inflater)
-            binding.apply {
-                root.setOnClickListener {
-                    paymentCard?.apply {
-                        onClickListener(this)
-                    }
-                }
-            }
-            return PaymentCardWalletHolder(
-                binding
-            )
-        }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldList[oldItemPosition] == newList[newItemPosition]
+
+
+            override fun getOldListSize() = oldList.size
+
+            override fun getNewListSize() = newList.size
+        })
+
+        diff.dispatchUpdatesTo(this)
     }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (!isJoinCard(position)) {
-            (holder as PaymentCardWalletHolder).bind(
-                paymentCards[
-                        position - isJoinCardHiddenCount()
-                ]
-            )
-        }
-    }
-
-    override fun getItemCount() =
-        paymentCards.size +
-                isJoinCardHiddenCount()
-
-    override fun getItemId(position: Int) =
-        position.toLong() +
-                isJoinCardHiddenCount()
 
     override fun getItemViewType(position: Int): Int {
-        return if (isJoinCard(position)) {
-            JOIN_CARD
-        } else {
-            PAYMENT_CARD
+        return when (paymentCards[position]) {
+            is PaymentCard -> PAYMENT_CARD
+            else -> JOIN_PAYMENT
         }
     }
 
-    private fun isJoinCard(position: Int) =
-        position == 0 &&
-                isJoinCardHiddenCount() == 1
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
+        val inflater = LayoutInflater.from(parent.context)
 
-    private fun isJoinCardHiddenCount() =
-        if (SharedPreferenceManager.isPaymentJoinHidden) {
-            0
-        } else {
-            1
+        return when (viewType) {
+            PAYMENT_CARD -> {
+                val binding = PaymentCardWalletItemBinding.inflate(inflater)
+                PaymentCardWalletHolder(binding)
+            }
+            else -> {
+                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
+                PaymentCardWalletJoinHolder(binding)
+            }
         }
+    }
+
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        paymentCards[position].let {
+            when (holder) {
+                is PaymentCardWalletHolder -> holder.bind(it as PaymentCard)
+                is PaymentCardWalletJoinHolder -> holder.bind(it)
+            }
+        }
+    }
+
+    override fun getItemCount() = paymentCards.size
+
+    override fun getItemId(position: Int) = position.toLong()
 
     inner class PaymentCardWalletHolder(val binding: PaymentCardWalletItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        BaseViewHolder<PaymentCard>(binding) {
 
-        fun bind(item: PaymentCard) {
-            binding.paymentCard = item
-            binding.executePendingBindings()
-            item.card?.provider?.let {
-                binding.paymentCardWrapper.setBackgroundResource(
-                    it.getCardTypeFromProvider().background
-                )
-            }
-            if (item.card!!.isExpired()) {
-                binding.cardExpired.visibility = View.VISIBLE
-                binding.linkStatus.visibility = View.GONE
-                binding.imageStatus.visibility = View.GONE
+        override fun bind(item: PaymentCard) {
+            with(binding) {
+                paymentCard = item
+                executePendingBindings()
+
+                item.card?.provider?.let {
+                    paymentCardWrapper.setBackgroundResource(
+                        it.getCardTypeFromProvider().background
+                    )
+                }
+
+                if (item.card!!.isExpired()) {
+                    cardExpired.visibility = View.VISIBLE
+                    linkStatus.visibility = View.GONE
+                    imageStatus.visibility = View.GONE
+                }
+
+                mainPayment.setOnClickListener {
+                    onClickListener(paymentCards[adapterPosition])
+                }
             }
         }
     }
 
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        BaseViewHolder<Any>(binding) {
 
-        fun bind() {
+        override fun bind(item: Any) {
             with(binding) {
-                close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
+                joinCardMainLayout.setOnClickListener {
+                    onClickListener(paymentCards[adapterPosition])
                 }
 
-                joinCardImage.setImageResource(R.drawable.ic_no_payment_card)
+                dismissBanner.setOnClickListener {
+                    onRemoveListener(paymentCards[adapterPosition])
+                }
+
                 joinCardDescription.text =
                     joinCardDescription.context.getString(R.string.payment_join_description)
             }

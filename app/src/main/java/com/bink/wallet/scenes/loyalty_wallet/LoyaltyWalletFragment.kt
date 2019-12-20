@@ -13,10 +13,12 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -81,12 +83,31 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-
                     walletItems[position].let {
                         if (it is MembershipCard)
                             deleteDialog(it, position)
                     }
                 }
+            }
+        }
+    }
+
+    private fun createFetchObservers() {
+        viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
+            viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
+                populateScreen(plansReceived, cardsReceived)
+                viewModel.membershipCardData.removeObservers(this@LoyaltyWalletFragment)
+                viewModel.membershipPlanData.removeObservers(this@LoyaltyWalletFragment)
+            }
+        }
+    }
+
+    private fun createLocalObservers() {
+        viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
+            viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
+                populateScreen(plansReceived, cardsReceived)
+                viewModel.localMembershipCardData.removeObservers(this@LoyaltyWalletFragment)
+                viewModel.localMembershipPlanData.removeObservers(this@LoyaltyWalletFragment)
             }
         }
     }
@@ -110,18 +131,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
         }
 
-        viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
-            viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
-                populateScreen(plansReceived, cardsReceived)
-            }
-        }
-
-        viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
-            viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
-                populateScreen(plansReceived, cardsReceived)
-            }
-        }
-
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
@@ -140,6 +149,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         binding.progressSpinner.visibility = View.VISIBLE
 
+        createLocalObservers()
+        createFetchObservers()
+
         if (verifyAvailableNetwork(requireActivity())) {
             runBlocking {
                 viewModel.fetchMembershipPlans()
@@ -156,10 +168,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         binding.swipeLayout.setOnRefreshListener {
             if (verifyAvailableNetwork(requireActivity())) {
+                createFetchObservers()
                 runBlocking {
                     viewModel.fetchMembershipPlans()
                     viewModel.fetchMembershipCards()
-                    viewModel.fetchDismissedCards()
                 }
             } else {
                 showNoInternetConnectionDialog()
@@ -215,8 +227,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 viewModel.deleteCard(membershipCard.id)
                             }
                         } else {
-                            showNoInternetConnectionDialog()
+                            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                         }
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(
@@ -239,7 +252,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.progressSpinner.visibility = View.INVISIBLE
         binding.swipeLayout.isRefreshing = false
         super.onPause()
-
     }
 
     private fun merchantNoLoyalty(
@@ -256,7 +268,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         cardsReceived: List<MembershipCard>
     ) {
         viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-            if (plansReceived.isNotEmpty() && cardsReceived.isNotEmpty()) {
+            if (plansReceived.isNotEmpty()) {
                 binding.swipeLayout.isRefreshing = false
                 binding.swipeLayout.isEnabled = true
                 binding.progressSpinner.visibility = View.GONE
@@ -269,27 +281,34 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             } == null
                 })
 
-                if (!SharedPreferenceManager.isPaymentJoinHidden &&
-                    (cardsReceived.isNotEmpty() ||
-                            walletItems.isNotEmpty())
-                ) {
-                    walletItems.add(Any())
+                if (dismissedCards.firstOrNull { it.id == JOIN_CARD } == null &&
+                    SharedPreferenceManager.isPaymentEmpty) {
+                    walletItems.add(JoinCardItem())
                 }
 
                 walletItems.addAll(cardsReceived)
 
                 walletAdapter.membershipPlans = plansReceived as ArrayList<MembershipPlan>
                 walletAdapter.membershipCards = walletItems
+                walletAdapter.notifyDataSetChanged()
+
+                if (plansReceived.isNotEmpty() &&
+                    cardsReceived.isNotEmpty()
+                ) {
+                    viewModel.dismissedCardData.removeObservers(this@LoyaltyWalletFragment)
+                }
             }
         }
+        viewModel.fetchDismissedCards()
     }
 
     private fun onBannerRemove(item: Any) {
         when (item) {
             is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
-            else -> SharedPreferenceManager.isPaymentJoinHidden = true
+            else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
         }
-        viewModel.fetchDismissedCards()
+        walletAdapter.membershipCards.remove(item)
+        walletAdapter.notifyDataSetChanged()
     }
 
     fun setData(

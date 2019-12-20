@@ -88,11 +88,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     R.string.enrol_description,
                     viewModel.currentMembershipPlan.value!!.account?.company_name
                 )
-
-            if (!viewModel.currentMembershipPlan.value!!.account?.registration_fields?.isNullOrEmpty()!!) {
-                binding.noAccountText.visibility = View.VISIBLE
-            }
+            binding.noAccountText.visibility = View.VISIBLE
         }
+
         binding.close.setOnClickListener {
             windowFullscreenHandler.toNormalScreen()
             requireActivity().onBackPressed()
@@ -118,18 +116,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
-            val directions =
-                viewModel.currentMembershipPlan.value?.account?.plan_description?.let { message ->
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        getString(R.string.plan_description),
-                        message, getString(R.string.ok)
+            viewModel.currentMembershipPlan.value?.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    AddAuthFragmentDirections.signUpToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            viewModel.currentMembershipPlan.value?.account?.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
                     )
-                }?.let { params ->
-                   AddAuthFragmentDirections.signUpToBrandHeader(params)
-                }
-            directions?.let { _ ->
-                findNavController().navigateIfAdded(this, directions)
+                )
             }
         }
 
@@ -218,7 +217,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 )!!
             ) {
                 if (viewModel.currentMembershipPlan.value != null) {
-                    val action =AddAuthFragmentDirections.toGhost(
+                    val action = AddAuthFragmentDirections.toGhost(
                         SignUpFormType.GHOST,
                         viewModel.currentMembershipPlan.value!!,
                         null
@@ -226,9 +225,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                val action =AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                val action = AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_ghost_card_not_available),
                         getString(R.string.description_ghost_card_not_available)
                     )
@@ -343,10 +343,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.newMembershipCard.removeObservers(this)
             if (signUpFormType == SignUpFormType.GHOST) {
                 val currentRequest = MembershipCardRequest(
-                    Account(null,
+                    Account(
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields),
+                        null,
+                        addRegisterFieldsRequest.registration_fields
+                    ),
                     viewModel.currentMembershipPlan.value!!.id
                 )
                 viewModel.ghostMembershipCard(
@@ -369,43 +371,43 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     currentRequest
                 )
             }
-
-            when (viewModel.currentMembershipPlan.value!!.feature_set?.card_type) {
-                CardType.VIEW.type, CardType.STORE.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST) {
+            viewModel.currentMembershipPlan.value?.let {
+                when (it.feature_set?.card_type) {
+                    CardType.VIEW.type,
+                    CardType.STORE.type -> {
                         val directions =
-                           AddAuthFragmentDirections.signUpToDetails(
+                            AddAuthFragmentDirections.signUpToDetails(
                                 viewModel.currentMembershipPlan.value!!,
                                 membershipCard
                             )
-                        findNavController().navigateIfAdded(this, directions)
-                    } else {
-                        val directions =AddAuthFragmentDirections.signUpToPllEmpty(
-                            viewModel.currentMembershipPlan.value!!,
-                            membershipCard
-                        )
                         findNavController().navigateIfAdded(this, directions)
                     }
-                }
-                CardType.PLL.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST) {
-                        if (membershipCard.membership_transactions != null &&
-                            membershipCard.membership_transactions?.isEmpty()!!
-                        ) {
-                            val directions =AddAuthFragmentDirections.signUpToPllEmpty(
-                                viewModel.currentMembershipPlan.value!!,
-                                membershipCard
-                            )
-                            findNavController().navigateIfAdded(this, directions)
-                        }
-                    } else {
-                        if (viewModel.currentMembershipPlan.value != null) {
-                            val directions =AddAuthFragmentDirections.signUpToPll(
-                                membershipCard,
-                                viewModel.currentMembershipPlan.value!!,
-                                true
-                            )
-                            findNavController().navigateIfAdded(this, directions)
+                    CardType.PLL.type -> {
+                        if (signUpFormType == SignUpFormType.GHOST) {
+                            if (membershipCard.membership_transactions.isNullOrEmpty()) {
+                                val directions = AddAuthFragmentDirections.signUpToPllEmpty(
+                                    viewModel.currentMembershipPlan.value!!,
+                                    membershipCard
+                                )
+                                findNavController().navigateIfAdded(this, directions)
+                            }
+                        } else {
+                            if (viewModel.currentMembershipPlan.value != null) {
+                                val directions =
+                                    if (viewModel.paymentCards.value.isNullOrEmpty()) {
+                                        AddAuthFragmentDirections.signUpToPllEmpty(
+                                            viewModel.currentMembershipPlan.value!!,
+                                            membershipCard
+                                        )
+                                    } else {
+                                        AddAuthFragmentDirections.signUpToPll(
+                                            membershipCard,
+                                            viewModel.currentMembershipPlan.value!!,
+                                            true
+                                        )
+                                    }
+                                findNavController().navigateIfAdded(this, directions)
+                            }
                         }
                     }
                 }

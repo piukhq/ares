@@ -125,10 +125,10 @@
         <action
                 android:id="@+id/payment_detail_to_security"
                 app:destination="@+id/security_and_privacy"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
 
     <fragment
@@ -138,7 +138,17 @@
 
     <fragment
             android:id="@+id/login_fragment"
-            android:name="com.bink.wallet.scenes.login.LoginFragment" />
+            android:name="com.bink.wallet.scenes.login.LoginFragment">
+
+        <action
+                android:id="@+id/login_to_forgot_password"
+                app:destination="@+id/forgot_password"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
 
     <fragment
             android:id="@+id/add_fragment"
@@ -157,13 +167,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
-        <action
-                android:id="@+id/add_to_terms_and_conditions"
-                app:destination="@+id/terms_and_conditions"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -201,25 +205,18 @@
         <action
                 android:id="@+id/add_join_to_join_unavailable"
                 app:destination="@+id/join_unavailable"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
 
         <action
                 android:id="@+id/add_join_to_brand_header"
                 app:destination="@+id/brand_header"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
-        <action
-                android:id="@+id/add_join_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down"/>
 
     </fragment>
 
@@ -269,10 +266,10 @@
         <action
                 android:id="@+id/sign_up_to_brand_header"
                 app:destination="@id/brand_header"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down"/>
         <action
                 android:id="@+id/sign_up_to_pll"
                 app:destination="@+id/pll_fragment"
@@ -283,10 +280,10 @@
         <action
                 android:id="@+id/sign_up_to_ghost_registration_unavailable"
                 app:destination="@+id/ghost_registration_unavailable"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -336,13 +333,6 @@
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
         <action
-                android:id="@+id/detail_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
-        <action
                 android:id="@+id/detail_to_barcode"
                 app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard"
                 app:destination="@+id/barcode_fragment"
@@ -361,10 +351,10 @@
         <action
                 android:id="@+id/detail_to_error_modal"
                 app:destination="@+id/lcd_error_modal_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/detail_to_pll_empty"
                 app:destination="@+id/pll_empty_fragment"
@@ -383,17 +373,17 @@
         <action
                 android:id="@+id/detail_to_about"
                 app:destination="@+id/about_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/detail_to_security"
                 app:destination="@+id/security_and_privacy"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/detail_to_pll"
                 app:destination="@id/pll_fragment"
@@ -434,10 +424,10 @@
         <action
                 android:id="@+id/pll_empty_to_brand_header"
                 app:destination="@id/brand_header"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down"/>
 
     </fragment>
 
@@ -454,10 +444,10 @@
         <action
                 android:id="@+id/transactions_to_brand_header"
                 app:destination="@+id/brand_header"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down"/>
 
     </fragment>
 
@@ -503,10 +493,10 @@
         <action
                 android:id="@+id/pll_to_brand_header"
                 app:destination="@+id/brand_header"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down"/>
     </fragment>
 
     <fragment
@@ -525,14 +515,15 @@
         <argument
                 android:name="bankCard"
                 app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
+
         <action
-                android:id="@+id/card_terms_to_details"
-                app:destination="@+id/payment_card_detail"
+                android:id="@+id/card_terms_to_add"
+                app:destination="@+id/add_payment_card"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/home_wallet" />
+                app:popUpTo="@id/add_fragment" />
     </fragment>
 
     <fragment
@@ -546,20 +537,14 @@
     <fragment
             android:id="@+id/add_payment_card"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment">
-        <action
-                android:id="@+id/add_payment_to_details"
-                app:destination="@+id/payment_card_detail"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/add_payment_to_terms"
                 app:destination="@+id/card_terms_and_conditions"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
     <fragment
             android:id="@+id/settings_screen"
@@ -574,6 +559,13 @@
         <action
                 android:id="@+id/settings_to_how_it_works"
                 app:destination="@+id/how_it_works"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/settings_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -621,9 +613,33 @@
     <fragment
             android:id="@+id/onboarding_fragment"
             android:name="com.bink.wallet.scenes.onboarding.OnboardingFragment">
+
         <action
-                android:id="@+id/onboarding_to_home"
-                app:destination="@+id/home_wallet"
+                android:id="@+id/onboarding_to_sign_up"
+                app:destination="@+id/sign_up_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/onboarding_to_accept_tc"
+                app:destination="@id/accept_tcs_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/onboarding_to_add_email"
+                app:destination="@+id/add_email_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/onboarding_to_log_in"
+                app:destination="@+id/login_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -631,11 +647,79 @@
     </fragment>
 
     <fragment
+            android:id="@+id/forgot_password"
+            android:name="com.bink.wallet.scenes.forgot_password.ForgotPasswordFragment">
+        <action
+                android:id="@+id/forgot_password_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/sign_up_fragment"
+            android:name="com.bink.wallet.scenes.SignUpFragment" />
+
+    <fragment
             android:id="@+id/ghost_registration_unavailable"
             android:name="com.bink.wallet.modal.GhostRegistrationUnavailableFragment">
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/accept_tcs_fragment"
+            android:name="com.bink.wallet.scenes.registration.AcceptTCFragment">
+        <argument
+                android:name="accessToken"
+                app:argType="com.facebook.AccessToken"
+                app:nullable="true" />
+        <argument
+                android:name="email"
+                app:argType="string" />
+        <action
+                android:id="@+id/accept_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+        <action
+                android:id="@+id/accept_to_lcd"
+                app:destination="@+id/home_wallet"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/add_email_fragment"
+            android:name="com.bink.wallet.scenes.registration.AddEmailFragment">
+        <action
+                android:id="@+id/add_email_to_accept_terms"
+                app:destination="@+id/accept_tcs_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/add_email_to_onboarding"
+                app:destination="@+id/onboarding_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+        <argument
+                android:name="accessToken"
+                app:argType="com.facebook.AccessToken"
+                app:nullable="true" />
     </fragment>
 
 </navigation>
