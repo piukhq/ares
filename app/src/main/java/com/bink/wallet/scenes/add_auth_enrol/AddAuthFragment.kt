@@ -52,7 +52,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         mutableListOf()
 
     private fun addFieldToList(planField: PlanFields) {
-
         val pairPlanField = Pair(
             planField, PlanFieldsRequest(
                 planField.column, ""
@@ -66,8 +65,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             ?.let {
                                 it
                             }
-                    pairPlanField.second.disabled = true
-                    pairPlanField.second.value = email
+                    with (pairPlanField) {
+                        second.disabled = true
+                        second.value = email
+                    }
                 }
             }
         }
@@ -85,8 +86,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.currentMembershipPlan.value = args.currentMembershipPlan
-        viewModel.currentMembershipCard.value = args.membershipCard
+        with (viewModel) {
+            currentMembershipPlan.value = args.currentMembershipPlan
+            currentMembershipCard.value = args.membershipCard
+        }
         planFieldsList?.clear()
         planBooleanFieldsList?.clear()
         val signUpFormType = args.signUpFormType
@@ -94,11 +97,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = viewModel.currentMembershipPlan.value
 
-        if (viewModel.currentMembershipPlan.value != null) {
+        viewModel.currentMembershipPlan.value?.let {
             binding.descriptionAddAuth.text =
                 getString(
                     R.string.enrol_description,
-                    viewModel.currentMembershipPlan.value!!.account?.company_name
+                    it.account?.company_name
                 )
             binding.noAccountText.visibility = View.VISIBLE
         }
@@ -146,15 +149,17 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
-                binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                binding.addCardButton.text = getString(R.string.log_in_text)
+                with (binding) {
+                    titleAddAuthText.text = getString(R.string.log_in_text)
+                    addCardButton.text = getString(R.string.log_in_text)
+                }
                 with(viewModel) {
                     if (currentMembershipCard.value != null) {
-                        if (currentMembershipPlan.value!!.feature_set?.has_points != null &&
-                            currentMembershipPlan.value!!.feature_set?.has_points == true &&
-                            currentMembershipPlan.value!!.feature_set?.transactions_available != null
+                        if (currentMembershipPlan.value?.feature_set?.has_points != null &&
+                            currentMembershipPlan.value?.feature_set?.has_points == true &&
+                            currentMembershipPlan.value?.feature_set?.transactions_available != null
                         ) {
-                            if (currentMembershipPlan.value!!.feature_set?.transactions_available == true) {
+                            if (currentMembershipPlan.value?.feature_set?.transactions_available == true) {
                                 binding.descriptionAddAuth.text = getString(
                                     R.string.log_in_transaction_available,
                                     viewModel.currentMembershipPlan.value!!.account?.plan_name_card
@@ -207,8 +212,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
             }
             SignUpFormType.GHOST -> {
-                binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
-                binding.addCardButton.text = getString(R.string.register_ghost_card_button)
+                with(binding) {
+                    titleAddAuthText.text = getString(R.string.register_ghost_card_title)
+                    addCardButton.text = getString(R.string.register_ghost_card_button)
+                }
                 viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
                     it.typeOfField = TypeOfField.ADD
                     addFieldToList(it)
@@ -288,30 +295,32 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
                     when (signUpFormType) {
                         SignUpFormType.ADD_AUTH -> {
-                            val currentRequest = MembershipCardRequest(
-                                addRegisterFieldsRequest,
-                                viewModel.currentMembershipPlan.value!!.id
-                            )
+                            with (viewModel) {
+                                val currentRequest = MembershipCardRequest(
+                                    addRegisterFieldsRequest,
+                                    currentMembershipPlan.value!!.id
+                                )
 
-                            if (viewModel.currentMembershipCard.value != null &&
-                                MembershipPlanUtils.getAccountStatus(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    viewModel.currentMembershipCard.value!!
-                                ) == LoginStatus.STATUS_LOGIN_FAILED
-                            ) {
-                                viewModel.updateMembershipCard(
-                                    viewModel.currentMembershipCard.value!!,
-                                    currentRequest
-                                )
-                            } else {
-                                viewModel.createMembershipCard(
-                                    currentRequest
-                                )
+                                if (currentMembershipCard.value != null &&
+                                    MembershipPlanUtils.getAccountStatus(
+                                        currentMembershipPlan.value!!,
+                                        currentMembershipCard.value!!
+                                    ) == LoginStatus.STATUS_LOGIN_FAILED
+                                ) {
+                                    updateMembershipCard(
+                                        currentMembershipCard.value!!,
+                                        currentRequest
+                                    )
+                                } else {
+                                    createMembershipCard(
+                                        currentRequest
+                                    )
+                                }
                             }
                         }
                         SignUpFormType.GHOST -> {
                             if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
-                                context?.displayModalPopup(
+                                requireContext().displayModalPopup(
                                     null,
                                     getString(R.string.cannot_complete_registration)
                                 )
@@ -345,8 +354,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 } else {
                     showNoInternetConnectionDialog()
                 }
-                binding.addCardButton.isEnabled = false
-                binding.progressSpinner.visibility = View.VISIBLE
+                with (binding) {
+                    addCardButton.isEnabled = false
+                    progressSpinner.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -438,8 +449,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private fun hideLoadingViews() {
-        binding.progressSpinner.visibility = View.GONE
-        viewModel.createCardError.value = null
-        binding.addCardButton.isEnabled = true
+        with (binding) {
+            progressSpinner.visibility = View.GONE
+            viewModel.createCardError.value = null
+            addCardButton.isEnabled = true
+        }
     }
 }
