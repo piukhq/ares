@@ -46,14 +46,16 @@ class LoyaltyCardDetailsVouchersAdapter(
         fun bind(thisVoucher: Voucher) {
             with (binding) {
                 voucher = thisVoucher
-                if (thisVoucher.burn?.value != null) {
-                    title.text = ValueDisplayUtils.displayValue(
-                        thisVoucher.burn.value,
-                        thisVoucher.burn.prefix,
-                        thisVoucher.burn.suffix,
-                        thisVoucher.burn.currency,
-                        thisVoucher.burn.type
-                    )
+                thisVoucher.burn?.let {
+                    if (it.value != null) {
+                        title.text = ValueDisplayUtils.displayValue(
+                            it.value,
+                            it.prefix,
+                            it.suffix,
+                            it.currency,
+                            it.type
+                        )
+                    }
                 }
                 root.apply {
                     this.setOnClickListener {
@@ -67,28 +69,30 @@ class LoyaltyCardDetailsVouchersAdapter(
                 VoucherStates.ISSUED.state -> {
                     if (thisVoucher.earn?.target_value != null &&
                         thisVoucher.earn.target_value != FLOAT_ZERO) {
-                        if (thisVoucher.earn.value != null) {
-                            binding.spentAmount.text = ValueDisplayUtils.displayValue(
-                                thisVoucher.earn.value,
-                                thisVoucher.burn?.prefix,
-                                thisVoucher.burn?.suffix,
-                                thisVoucher.burn?.currency
+                        with (thisVoucher.earn) {
+                            if (value != null) {
+                                binding.spentAmount.text = ValueDisplayUtils.displayValue(
+                                    value,
+                                    prefix,
+                                    suffix,
+                                    currency
+                                )
+                            }
+                            val goal = ValueDisplayUtils.displayValue(
+                                target_value!!,
+                                prefix,
+                                suffix,
+                                currency
                             )
-                        }
-                        val goal = ValueDisplayUtils.displayValue(
-                            thisVoucher.earn.target_value,
-                            thisVoucher.burn?.prefix,
-                            thisVoucher.burn?.suffix,
-                            thisVoucher.burn?.currency
-                        )
-                        with (binding) {
-                            subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
-                            progressBar.max =
-                                (thisVoucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
-                            progressBar.progress =
-                                ((thisVoucher.earn.value
-                                    ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
-                            goalAmount.text = goal
+                            with (binding) {
+                                subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
+                                progressBar.max =
+                                    (thisVoucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
+                                progressBar.progress =
+                                    ((thisVoucher.earn.value
+                                        ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
+                                goalAmount.text = goal
+                            }
                         }
                     } else {
                         hideEarnBurnValues()
