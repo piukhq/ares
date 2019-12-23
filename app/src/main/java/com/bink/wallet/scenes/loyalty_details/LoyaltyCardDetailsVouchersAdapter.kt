@@ -138,8 +138,10 @@ class LoyaltyCardDetailsVouchersAdapter(
 
         private fun fillProgressBar() {
             with (binding) {
-                progressBar.max = INT_ONE_HUNDRED
-                progressBar.progress = INT_ONE_HUNDRED
+                with (progressBar) {
+                    max = INT_ONE_HUNDRED
+                    progress = INT_ONE_HUNDRED
+                }
             }
         }
 

@@ -136,20 +136,20 @@ class VoucherDetailsFragment :
                     }
                 }
             }
-            var linkSet = false
+            var linkHasBeenSet = false
             viewModel.membershipPlan.value?.account?.plan_documents?.forEach { document ->
                 document.display?.let {
                     if (it.contains(DocumentTypes.VOUCHER.type)) {
-                        linkSet = true
+                        linkHasBeenSet = true
                         binding.linkText.setOnClickListener {
                             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(document.url)))
                         }
                     }
                 }
-                if (linkSet)
+                if (linkHasBeenSet)
                     return@forEach
             }
-            if (!linkSet) {
+            if (!linkHasBeenSet) {
                 binding.linkText.visibility = View.GONE
             }
         }
@@ -158,14 +158,14 @@ class VoucherDetailsFragment :
     private fun hideOrDisplay(
         display: Int?,
         textView: TextView,
-        val1: String?,
-        val2: String?,
-        val3: String? = null
+        value1: String?,
+        value2: String?,
+        value3: String? = null
     ) {
         if (display == null) {
             textView.visibility = View.GONE
         } else {
-            textView.text = getString(display, val1, val2, val3)
+            textView.text = getString(display, value1, value2, value3)
         }
     }
 }
