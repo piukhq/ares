@@ -130,7 +130,8 @@ class VoucherDetailsFragment :
                                     }
                                 }
                             }
-                            else -> {}
+                            else -> {
+                            }
                         }
                     }
                 }
@@ -154,7 +155,13 @@ class VoucherDetailsFragment :
         }
     }
 
-    private fun hideOrDisplay(display: Int?, textView: TextView, val1: String?, val2: String?, val3: String? = null) {
+    private fun hideOrDisplay(
+        display: Int?,
+        textView: TextView,
+        val1: String?,
+        val2: String?,
+        val3: String? = null
+    ) {
         if (display == null) {
             textView.visibility = View.GONE
         } else {

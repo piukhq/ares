@@ -398,12 +398,14 @@ class LoyaltyCardDetailsFragment :
                 linkDescription.text =
                     getString(linkStatus.descriptionText)
             } else {
-                linkDescription.text =
-                    getString(
-                        linkStatus.descriptionText,
-                        linkStatus.descriptionParams!![0],
-                        linkStatus.descriptionParams!![1]
-                    )
+                linkStatus.descriptionParams?.let {
+                    linkDescription.text =
+                        getString(
+                            linkStatus.descriptionText,
+                            it[0],
+                            it[1]
+                        )
+                }
             }
         }
     }
