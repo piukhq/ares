@@ -44,7 +44,7 @@ class LoyaltyCardDetailsVouchersAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(thisVoucher: Voucher) {
-            with (binding) {
+            with(binding) {
                 voucher = thisVoucher
                 thisVoucher.burn?.let {
                     if (it.value != null) {
@@ -67,34 +67,36 @@ class LoyaltyCardDetailsVouchersAdapter(
             when (thisVoucher.state) {
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
-                    if (thisVoucher.earn?.target_value != null &&
-                        thisVoucher.earn.target_value != FLOAT_ZERO) {
-                        with (thisVoucher.earn) {
-                            if (value != null) {
+                    thisVoucher.earn?.let { earn ->
+                        if (earn.target_value != null &&
+                            earn.target_value != FLOAT_ZERO
+                        ) {
+                            if (earn.value != null) {
                                 binding.spentAmount.text = ValueDisplayUtils.displayValue(
-                                    value,
-                                    prefix,
-                                    suffix,
-                                    currency
+                                    earn.value,
+                                    earn.prefix,
+                                    earn.suffix,
+                                    earn.currency
                                 )
                             }
                             val goal = ValueDisplayUtils.displayValue(
-                                target_value!!,
-                                prefix,
-                                suffix,
-                                currency
+                                earn.target_value,
+                                earn.prefix,
+                                earn.suffix,
+                                earn.currency
                             )
-                            with (binding) {
+                            with(binding) {
                                 subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
                                 progressBar.max =
-                                    (thisVoucher.earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
+                                    (earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
                                 progressBar.progress =
-                                    ((thisVoucher.earn.value
-                                        ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
+                                    ((earn.value ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
                                 goalAmount.text = goal
                             }
+                        } else {
+                            hideEarnBurnValues()
                         }
-                    } else {
+                    } ?: run {
                         hideEarnBurnValues()
                     }
                     if (thisVoucher.state == VoucherStates.ISSUED.state) {
@@ -110,7 +112,7 @@ class LoyaltyCardDetailsVouchersAdapter(
         }
 
         private fun hideEarnBurnValues() {
-            with (binding) {
+            with(binding) {
                 goalTitle.visibility = View.GONE
                 goalAmount.visibility = View.GONE
                 spentTitle.visibility = View.GONE
@@ -119,7 +121,7 @@ class LoyaltyCardDetailsVouchersAdapter(
         }
 
         private fun fillProgressBar() {
-            with (binding) {
+            with(binding) {
                 progressBar.max = INT_ONE_HUNDRED
                 progressBar.progress = INT_ONE_HUNDRED
             }
