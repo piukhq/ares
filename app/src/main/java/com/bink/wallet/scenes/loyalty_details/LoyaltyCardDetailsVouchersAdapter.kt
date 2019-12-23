@@ -46,14 +46,16 @@ class LoyaltyCardDetailsVouchersAdapter(
         fun bind(thisVoucher: Voucher) {
             with (binding) {
                 voucher = thisVoucher
-                if (thisVoucher.burn?.value != null) {
-                    title.text = ValueDisplayUtils.displayValue(
-                        thisVoucher.burn.value,
-                        thisVoucher.burn.prefix,
-                        thisVoucher.burn.suffix,
-                        thisVoucher.burn.currency,
-                        thisVoucher.burn.type
-                    )
+                thisVoucher.burn?.let {
+                    if (it.value != null) {
+                        title.text = ValueDisplayUtils.displayValue(
+                            it.value,
+                            it.prefix,
+                            it.suffix,
+                            it.currency,
+                            it.type
+                        )
+                    }
                 }
                 root.apply {
                     this.setOnClickListener {
@@ -80,12 +82,12 @@ class LoyaltyCardDetailsVouchersAdapter(
                         )
                         with (binding) {
                             subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
-                            progressBar.max =
-                                (earn.target_value ?: FLOAT_ZERO)
-                                    .times(FLOAT_ONE_HUNDRED).roundToInt()
-                            progressBar.progress =
-                                (earn.value ?: FLOAT_ZERO)
-                                    .times(FLOAT_ONE_HUNDRED).roundToInt()
+                            with (progressBar) {
+                                max = (earn.target_value ?: FLOAT_ZERO)
+                                        .times(FLOAT_ONE_HUNDRED).roundToInt()
+                                progress = (earn.value ?: FLOAT_ZERO)
+                                        .times(FLOAT_ONE_HUNDRED).roundToInt()
+                            }
                             goalAmount.text = goal
                         }
                     }
