@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+        <!--
         <Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -14,24 +14,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
+        -->
         <androidx.viewpager.widget.ViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="@dimen/onboarding_button_spacing"
                 android:overScrollMode="never"
                 app:layout_constraintBottom_toTopOf="@+id/pager_indicator"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
         <com.rd.PageIndicatorView
                 android:id="@+id/pager_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/margin_padding_size_small"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                android:layout_marginBottom="@dimen/onboarding_button_spacing"
                 app:layout_constraintBottom_toTopOf="@+id/continue_with_facebook"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/buttons_margin"
                 android:layout_marginEnd="@dimen/buttons_margin"
-                android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
+                android:layout_marginBottom="@dimen/onboarding_button_spacing"
                 android:text="@string/continue_with_facebook"
                 android:textAllCaps="false"
                 android:elevation="@dimen/facebook_button_elevation"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/buttons_margin"
                 android:layout_marginEnd="@dimen/buttons_margin"
-                android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
+                android:layout_marginBottom="@dimen/onboarding_button_spacing"
                 android:background="@drawable/rounded_corners_gradient_button"
                 android:text="@string/sign_up_with_email"
                 android:textAllCaps="false"
