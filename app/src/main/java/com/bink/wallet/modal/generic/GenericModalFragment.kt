@@ -106,14 +106,18 @@ open class GenericModalFragment :
         if (parameters.firstButtonText.isNotEmpty()) {
             binding.firstButton.visibility = View.VISIBLE
             binding.firstButton.text = parameters.firstButtonText
+            binding.firstButtonSpacer.visibility = View.VISIBLE
         } else {
             binding.firstButton.visibility = View.GONE
+            binding.firstButtonSpacer.visibility = View.GONE
         }
         if (parameters.secondButtonText.isNotEmpty()) {
             binding.secondButton.visibility = View.VISIBLE
             binding.secondButton.text = parameters.secondButtonText
+            binding.secondButtonSpacer.visibility = View.VISIBLE
         } else {
             binding.secondButton.visibility = View.GONE
+            binding.secondButtonSpacer.visibility = View.GONE
         }
     }
 
