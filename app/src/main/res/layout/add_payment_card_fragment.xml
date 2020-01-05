@@ -180,9 +180,11 @@
                         android:fontFamily="@font/nunito_sans_light"
                         android:hint="@string/name_on_card"
                         android:imeOptions="actionDone"
-                        android:inputType="textVisiblePassword"
-                        android:minLines="2"
-                        android:text="@={viewModel.cardHolder}" />
+                        android:inputType="textFilter"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:text="@={viewModel.cardHolder}"
+                        />
 
                 <TextView
                         android:id="@+id/privacy_link"
