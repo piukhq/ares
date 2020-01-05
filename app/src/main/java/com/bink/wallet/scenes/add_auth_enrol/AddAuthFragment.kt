@@ -38,11 +38,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override val viewModel: AddAuthViewModel by viewModel()
 
-    override fun onResume() {
-        super.onResume()
-        windowFullscreenHandler.toFullscreen()
-    }
-
     private var isPaymentWalletEmpty: Boolean? = null
 
     private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
@@ -92,18 +87,15 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.close.setOnClickListener {
-            windowFullscreenHandler.toNormalScreen()
             requireActivity().onBackPressed()
         }
         binding.cancel.setOnClickListener {
             view?.hideKeyboard()
-            windowFullscreenHandler.toNormalScreen()
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         binding.close.setOnClickListener {
             view?.hideKeyboard()
-            windowFullscreenHandler.toNormalScreen()
             findNavController().popBackStack()
         }
 

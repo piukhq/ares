@@ -11,12 +11,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
 abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragment() {
 
@@ -26,12 +23,6 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
     abstract val viewModel: VM
 
     open lateinit var binding: DB
-
-    open val windowFullscreenHandler: WindowFullscreenHandler by inject {
-        parametersOf(
-            requireActivity()
-        )
-    }
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
@@ -59,7 +50,6 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (findNavController().currentDestination?.label != getString(R.string.root)) {
-                        windowFullscreenHandler.toNormalScreen()
                         findNavController().popBackStack()
                     } else {
                         activity?.finish()
