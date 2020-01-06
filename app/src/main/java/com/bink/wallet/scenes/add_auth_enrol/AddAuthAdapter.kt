@@ -53,13 +53,12 @@ class AddAuthAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (brands[position].first != null &&
-            brands[position].first is PlanFields &&
-            (brands[position].first as PlanFields).type != null
-        )
-            return (brands[position].first as PlanFields).type!!
-        if (brands[position].first is PlanDocuments) {
-            return FieldType.BOOLEAN_REQUIRED.type
+        brands[position].first.apply {
+            if (this is PlanFields && type != null) {
+                return type
+            } else if (this is PlanDocuments) {
+                return FieldType.BOOLEAN_REQUIRED.type
+            }
         }
         return 0
     }
@@ -79,9 +78,7 @@ class AddAuthAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return brands.size
-    }
+    override fun getItemCount() = brands.size
 
     inner class TextFieldHolder(val binding: AddAuthTextItemBinding) :
         BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
@@ -100,8 +97,7 @@ class AddAuthAdapter(
 
         override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
             binding.planField = item.first
-            val text = binding.contentAddAuthText
-            with(text) {
+            with(binding.contentAddAuthText) {
                 hint = item.first.description
                 setText(item.second.value)
                 addTextChangedListener(textWatcher)
@@ -111,13 +107,14 @@ class AddAuthAdapter(
                     checkIfError(adapterPosition, this)
 
                 setOnFocusChangeListener { _, isFocus ->
-                    if (!isFocus)
+                    if (!isFocus) {
                         try {
                             checkIfError(adapterPosition, this)
                             buttonRefresh()
                         } catch (ex: Exception) {
                             Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
                         }
+                    }
                 }
             }
 
@@ -162,9 +159,8 @@ class AddAuthAdapter(
         BaseViewHolder<Pair<Any, PlanFieldsRequest>>(binding) {
 
         override fun bind(item: Pair<Any, PlanFieldsRequest>) {
-            val switch = binding.contentAddAuthSwitch
 
-            with(switch) {
+            with(binding.contentAddAuthSwitch) {
                 isChecked = when (brands[adapterPosition].second.value) {
                     true.toString() -> true
                     else -> false
@@ -176,14 +172,21 @@ class AddAuthAdapter(
                             (item.first as PlanFields).description
                     else -> {
                         (item.first as PlanDocuments).let {
-                            UtilFunctions.buildHyperlinkSpanString(
-                                it.description!!.plus(
-                                    " ${it.name}"
-                                ),
-                                it.name!!,
-                                it.url!!,
-                                switch
-                            )
+                            it.description?.let { description ->
+                                text = description
+                                it.name?.let { name ->
+                                    it.url?.let { url ->
+                                        UtilFunctions.buildHyperlinkSpanString(
+                                            description.plus(
+                                                " ${it.name}"
+                                            ),
+                                            name,
+                                            url,
+                                            this
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

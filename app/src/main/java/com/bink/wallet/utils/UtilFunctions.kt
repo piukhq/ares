@@ -23,16 +23,20 @@ object UtilFunctions {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        textView: CheckBox
+        checkBox: CheckBox
     ) {
         val spannableString = SpannableString(stringToSpan)
-        spannableString.setSpan(
-            URLSpan(url),
-            spannableString.indexOf(stringToHyperlink),
-            spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-        )
-        textView.text = spannableString
-        textView.movementMethod = LinkMovementMethod.getInstance()
+        if (spannableString.contains(stringToHyperlink)) {
+            spannableString.setSpan(
+                URLSpan(url),
+                spannableString.indexOf(stringToHyperlink),
+                spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+            )
+        }
+        checkBox.apply {
+            text = spannableString
+            movementMethod = LinkMovementMethod.getInstance()
+        }
     }
 }
