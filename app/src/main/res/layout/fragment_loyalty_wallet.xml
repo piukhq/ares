@@ -16,7 +16,9 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/loyalty_wallet_list"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/loyalty_wallet_item" />
 
             <ProgressBar
                     android:id="@+id/progress_spinner"

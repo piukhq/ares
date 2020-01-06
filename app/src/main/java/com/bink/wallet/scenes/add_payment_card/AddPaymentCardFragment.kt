@@ -118,6 +118,7 @@ class AddPaymentCardFragment :
 
                 val params = GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.terms_and_conditions_title),
                     getString(R.string.terms_and_conditions_text),
                     getString(R.string.accept_button_text),

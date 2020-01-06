@@ -118,30 +118,27 @@ class LoyaltyCardDetailsFragment :
         binding.footerAbout.binding.title.text = aboutTitle
 
         binding.footerAbout.setOnClickListener {
-            val aboutText =
-                if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
-                    getString(R.string.about_membership)
-                } else
-                    viewModel.membershipPlan.value?.account!!.plan_name!!
-            val description =
-                if (viewModel.membershipPlan.value?.account?.plan_description.isNullOrEmpty()) {
-                    getString(R.string.no_plan_description_available)
-                } else
-                    viewModel.membershipPlan.value?.account?.plan_description
-            val directions =
-                description?.let { _ ->
+            var aboutText = getString(R.string.about_membership)
+            var description = getString(R.string.no_plan_description_available)
+
+            viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
+                aboutText = getString(R.string.about_membership_title_template, plan_name)
+            }
+            viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
+                description = plan_description
+            }
+
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyCardDetailsFragmentDirections.detailToAbout(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         aboutText,
-                        description,
-                        getString(R.string.ok)
-                    ).let { arguments ->
-                        LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                            arguments
-                        )
-                    }
-                }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                        description
+                    )
+                )
+            )
         }
 
         if (viewModel.membershipCard.value?.card != null &&
@@ -186,8 +183,14 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            runBlocking {
-                viewModel.updateMembershipCard()
+            if (verifyAvailableNetwork(requireActivity())) {
+                runBlocking {
+                    viewModel.updateMembershipCard()
+                }
+            } else {
+                showNoInternetConnectionDialog()
+                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                setLoadingState(false)
             }
         }
 
@@ -204,6 +207,7 @@ class LoyaltyCardDetailsFragment :
                 LoyaltyCardDetailsFragmentDirections.detailToSecurity(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.security_and_privacy_title),
                         getString(R.string.security_and_privacy_copy),
                         description2 = getString(R.string.security_and_privacy_copy_2)
@@ -237,7 +241,7 @@ class LoyaltyCardDetailsFragment :
                             } else {
                                 requireContext().displayModalPopup(
                                     getString(R.string.title_2_4),
-                                    getString(R.string.description_2_4)
+                                    getString(R.string.loyalty_card_delete_error_message)
                                 )
                             }
                         }
@@ -247,7 +251,7 @@ class LoyaltyCardDetailsFragment :
                         findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
                 } else {
-                    showNoInternetConnectionDialog()
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -441,6 +445,7 @@ class LoyaltyCardDetailsFragment :
                         LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                             GenericModalParameters(
                                 R.drawable.ic_close,
+                                true,
                                 getString(R.string.title_2_4),
                                 getString(R.string.description_2_4)
                             )
@@ -456,6 +461,7 @@ class LoyaltyCardDetailsFragment :
                         LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                             GenericModalParameters(
                                 R.drawable.ic_close,
+                                true,
                                 getString(R.string.title_2_8),
                                 getString(R.string.description_2_8)
                             )
@@ -473,6 +479,7 @@ class LoyaltyCardDetailsFragment :
             LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
                 GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.title_lcd_pending),
                     getString(R.string.description_lcd_pending)
                 )
@@ -495,6 +502,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_1_2),
                         getString(
                             R.string.description_1_2,
@@ -515,6 +523,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.title_1_5),
                         getString(R.string.description_1_5)
                     )
