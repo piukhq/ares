@@ -548,7 +548,7 @@
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
         <action
-                android:id="@+id/action_add_payment_card_to_addPaymentCardPrivacyFragment"
+                android:id="@+id/action_add_payment_card_to_add_payment_card_privacy_fragment"
                 app:destination="@id/addPaymentCardPrivacyFragment"
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
