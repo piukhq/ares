@@ -80,53 +80,59 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
-        binding.continueWithFacebook.fragment = this
-        binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY))
-        binding.continueWithFacebook.registerCallback(
-            callbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult?) {
-                    result?.accessToken?.let {
-                        retrieveFacebookLoginInformation(it)
+
+        binding.continueWithFacebook.apply {
+            fragment = this@OnboardingFragment
+            setReadPermissions(listOf(EMAIL_KEY))
+            registerCallback(
+                callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(result: LoginResult?) {
+                        result?.accessToken?.let {
+                            retrieveFacebookLoginInformation(it)
+                        }
                     }
-                }
 
-                override fun onCancel() {
-                    requireContext().displayModalPopup(
-                        null,
-                        getString(R.string.facebook_cancelled)
-                    )
-                }
+                    override fun onCancel() {
+                        requireContext().displayModalPopup(
+                            null,
+                            getString(R.string.facebook_cancelled)
+                        )
+                    }
 
-                override fun onError(error: FacebookException?) {
-                    requireContext().displayModalPopup(
-                        null,
-                        getString(R.string.facebook_unavailable)
-                    )
-                }
-            })
+                    override fun onError(error: FacebookException?) {
+                        requireContext().displayModalPopup(
+                            null,
+                            getString(R.string.facebook_unavailable)
+                        )
+                    }
+                })
+        }
 
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
+        with(binding.pager) {
+            addOnPageChangeListener(object :
+                OnboardingPagerAdapter.CircularViewPagerHandler(this) {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    scrollPagesAutomatically(this@with)
+                    timer.cancel()
+                    timer = Timer()
+                    scrollPagesAutomatically(this@with)
+                }
+            })
 
-        binding.pager.addOnPageChangeListener(object :
-            OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager) {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                scrollPagesAutomatically(binding.pager)
-                timer.cancel()
-                timer = Timer()
-                scrollPagesAutomatically(binding.pager)
-            }
-        })
-
-        scrollPagesAutomatically(binding.pager)
+            scrollPagesAutomatically(this)
+        }
     }
 
     override fun onDestroy() {
-        timer.purge()
-        timer.cancel()
+        timer.apply {
+            purge()
+            cancel()
+        }
         super.onDestroy()
     }
 
@@ -138,13 +144,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         var currentPage = pager.currentItem
         val pagerHandler = Handler()
         val update = Runnable {
-            if (pager != null) {
-                if (currentPage == ONBOARDING_PAGES_NUMBER) {
-                    pager.setCurrentItem(FIRST_PAGE_INDEX, true)
-                    currentPage = FIRST_PAGE_INDEX
-                } else {
-                    pager?.setCurrentItem(currentPage++, true)
-                }
+            if (currentPage == ONBOARDING_PAGES_NUMBER) {
+                pager.setCurrentItem(FIRST_PAGE_INDEX, true)
+                currentPage = FIRST_PAGE_INDEX
+            } else {
+                pager.setCurrentItem(currentPage++, true)
             }
         }
 
