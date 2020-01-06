@@ -122,13 +122,15 @@ class LoyaltyCardDetailsFragment :
                 val aboutText =
                     if (it.plan_name.isNullOrEmpty()) {
                         getString(R.string.about_membership)
-                    } else
+                    } else {
                         it.plan_name
+                    }
                 val description =
                     if (it.plan_description.isNullOrEmpty()) {
                         getString(R.string.no_plan_description_available)
-                    } else
+                    } else {
                         it.plan_description
+                    }
                 val directions =
                     description.let {
                         GenericModalParameters(
