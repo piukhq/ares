@@ -193,7 +193,7 @@
     <string name="description_1_2">We are unable to currently show the transaction history for this loyalty scheme yet\n Your %1$s history is not available yet.</string>
     <!-- 1.7, 1.9, 1.11 replacement -->
     <string name="title_lcd_pending">Request pending</string>
-    <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn’t take long.</string>
+    <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn\'t take long.</string>
     <!-- 1.5 -->
     <string name="title_1_5">Transaction history not supported</string>
     <string name="description_1_5">Unfortunately we\'re not able to show your points balance and transaction history for this brand just yet.</string>
@@ -203,7 +203,7 @@
     <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
-    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
+    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
 
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
@@ -359,7 +359,7 @@
     <string name="accept_tcs_disclaimer">I accept Bink\'s Terms and Conditions</string>
     <string name="accept_pp_disclaimer">I accept Bink\'s Privacy Policy</string>
     <string name="accept_marketing_disclaimer">I opt in to receive marketing messages</string>
-    <string name="general_disclaimer">Make sure you’re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
+    <string name="general_disclaimer">Make sure you\'re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
     <string name="facebook_failed">Continue with Facebook failed</string>
 
     <!-- Add email -->
