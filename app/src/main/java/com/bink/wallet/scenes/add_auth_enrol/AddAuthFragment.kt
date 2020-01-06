@@ -85,7 +85,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         if (viewModel.currentMembershipPlan.value != null) {
             binding.descriptionAddAuth.text =
                 getString(
-                    R.string.enrol_description,
+                    R.string.enrol_new_card_description,
                     viewModel.currentMembershipPlan.value!!.account?.company_name
                 )
             binding.noAccountText.visibility = View.VISIBLE
@@ -131,57 +131,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 findNavController().navigateIfAdded(this, directions)
             }
         }
-
+        binding.descriptionAddAuth.text = handleDescriptionText(signUpFormType)
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
-//                func getDescription() -> String? {
-//                    switch formPurpose {
-//                        case .login:
-//                        guard let planName = membershipPlan.account?.planName, let companyName = membershipPlan.account?.companyName else { return nil }
-//                        return String(format: "auth_screen_description".localized, companyName, planName)
-//                        case .loginFailed:
-//                        return getDescriptionForOtherLogin()
-//                        case .signUp:
-//                        guard let companyName = membershipPlan.account?.companyName else { return nil }
-//                        return String(format: "sign_up_new_card_description".localized, companyName)
-//                        case .ghostCard:
-//                        guard let planNameCard = membershipPlan.account?.planNameCard else { return nil }
-//                        return String(format: "register_ghost_card_description".localized, planNameCard)
-//                    }
-//                }
                 with(viewModel) {
-                    if (currentMembershipCard.value != null) {
-                        if (currentMembershipPlan.value!!.feature_set?.has_points != null &&
-                            currentMembershipPlan.value!!.feature_set?.has_points == true &&
-                            currentMembershipPlan.value!!.feature_set?.transactions_available != null
-                        ) {
-                            if (currentMembershipPlan.value!!.feature_set?.transactions_available == true) {
-                                binding.descriptionAddAuth.text = getString(
-                                    R.string.log_in_transaction_available,
-                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                )
-                            } else {
-                                binding.descriptionAddAuth.text =
-                                    getString(
-                                        R.string.log_in_transaction_unavailable,
-                                        viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                    )
-                            }
-                        }
-
-                        if (MembershipPlanUtils.getAccountStatus(
-                                currentMembershipPlan.value!!,
-                                currentMembershipCard.value!!
-                            ) == LoginStatus.STATUS_LOGIN_FAILED
-                        ) {
-                            binding.descriptionAddAuth.text = getString(
-                                R.string.log_in_transaction_available,
-                                viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                            )
-                        }
-                    } else {
+                    if (currentMembershipCard.value == null) {
                         currentMembershipPlan.value!!.account?.add_fields?.map {
                             it.typeOfField = TypeOfField.ADD
                             addFieldToList(it)
@@ -199,7 +155,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     titleAddAuthText.text = getString(R.string.sign_up_enrol)
                     addCardButton.text = getString(R.string.sign_up_text)
                     descriptionAddAuth.text = getString(
-                        R.string.enrol_description,
+                        R.string.enrol_new_card_description,
                         viewModel.currentMembershipPlan.value?.account?.company_name
                     )
                     viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
@@ -288,7 +244,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             return@setOnClickListener
                         }
                     }
-
                     when (signUpFormType) {
                         SignUpFormType.ADD_AUTH -> {
                             val currentRequest = MembershipCardRequest(
@@ -436,6 +391,30 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 getString(R.string.add_card_error_message)
             )
             hideLoadingViews()
+        }
+    }
+
+    private fun handleDescriptionText(signUpType: SignUpFormType): String {
+        return when (signUpType) {
+            SignUpFormType.GHOST -> {
+                getString(
+                    R.string.enrol_ghost_card_description,
+                    viewModel.currentMembershipPlan.value?.account?.plan_name_card
+                )
+            }
+            SignUpFormType.ENROL -> {
+                getString(
+                    R.string.enrol_new_card_description,
+                    viewModel.currentMembershipPlan.value?.account?.company_name
+                )
+            }
+            SignUpFormType.ADD_AUTH -> {
+                getString(
+                    R.string.log_in_transaction_available,
+                    viewModel.currentMembershipPlan.value?.account?.company_name,
+                    viewModel.currentMembershipPlan.value?.account?.plan_name
+                )
+            }
         }
     }
 
