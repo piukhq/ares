@@ -36,6 +36,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private val args: AddAuthFragmentArgs by navArgs()
 
+    private var isRetryJourney = false
+
     override val viewModel: AddAuthViewModel by viewModel()
 
     override fun onResume() {
@@ -73,8 +75,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
         viewModel.currentMembershipCard.value = args.membershipCard
+
+        isRetryJourney = args.isRetryJourney
+
         planFieldsList?.clear()
         planBooleanFieldsList?.clear()
         val signUpFormType = args.signUpFormType
@@ -179,6 +185,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
 
                 binding.noAccountText.visibility = View.GONE
+            }
+            SignUpFormType.FAILED -> {
+
             }
         }
 
@@ -297,6 +306,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 )
                             )
                         }
+                        SignUpFormType.FAILED -> {
+
+                        }
                     }
 
                 } else {
@@ -414,6 +426,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     viewModel.currentMembershipPlan.value?.account?.company_name,
                     viewModel.currentMembershipPlan.value?.account?.plan_name
                 )
+            }
+            SignUpFormType.FAILED -> {
+                viewModel.currentMembershipPlan.value?.account?.plan_name_card ?: ""
             }
         }
     }

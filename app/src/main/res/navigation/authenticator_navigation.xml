@@ -198,6 +198,10 @@
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard"
                 app:nullable="true" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/add_join_to_ghost"
@@ -240,6 +244,10 @@
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard"
                 app:nullable="true" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/sign_up_to_details"
