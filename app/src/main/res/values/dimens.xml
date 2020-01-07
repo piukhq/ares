@@ -61,11 +61,9 @@
 
     <!-- Maximised Barcode -->
     <dimen name="barcode_side_margin">98dp</dimen>
-    <dimen name="barcode_top_margin">24dp</dimen>
-    <dimen name="maximized_barcode_height">124dp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
-
+    <dimen name="text_size_description_biggest">25sp</dimen>
     <dimen name="custom_add_fragment_image_size">31dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
     <dimen name="cancel_button_size">54dp</dimen>

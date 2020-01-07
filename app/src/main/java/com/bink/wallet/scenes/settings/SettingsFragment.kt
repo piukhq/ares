@@ -206,6 +206,13 @@ class SettingsFragment :
                     hasNegativeButton = true
                 )
             }
+
+            SettingsItemType.PREFERENCES -> {
+                findNavController().navigateIfAdded(
+                    this@SettingsFragment,
+                    R.id.settings_to_preferences
+                )
+            }
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
