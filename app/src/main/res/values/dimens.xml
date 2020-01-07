@@ -66,6 +66,7 @@
     <dimen name="text_size_title_large">21.7sp</dimen>
     <dimen name="text_size_title_big">25sp</dimen>
     <dimen name="text_size_description_big">18sp</dimen>
+    <dimen name="text_size_description_medium">14sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
     <dimen name="text_size_description_biggest">25sp</dimen>

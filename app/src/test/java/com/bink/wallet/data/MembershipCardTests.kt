@@ -89,10 +89,6 @@ class MembershipCardTests {
             null,
             null,
             null,
-            null,
-            null,
-            null,
-            null,
             null
         )
     }
