@@ -329,12 +329,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             )
                         }
                     }
-
+                    binding.addCardButton.isEnabled = false
+                    binding.progressSpinner.visibility = View.VISIBLE
                 } else {
                     showNoInternetConnectionDialog()
+                    binding.progressSpinner.visibility = View.GONE
                 }
-                binding.addCardButton.isEnabled = false
-                binding.progressSpinner.visibility = View.VISIBLE
             }
         }
 

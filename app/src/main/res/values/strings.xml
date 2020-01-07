@@ -402,4 +402,8 @@
     <string name="error_description">Something went wrong</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+    <!-- PLR -->
+    <string name="rewards_history">Rewards history</string>
+    <string name="see_your_past_rewards">See your past rewards</string>
 </resources>

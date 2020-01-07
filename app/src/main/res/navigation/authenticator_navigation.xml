@@ -660,7 +660,7 @@
 
     <fragment
             android:id="@+id/sign_up_fragment"
-            android:name="com.bink.wallet.scenes.SignUpFragment" />
+            android:name="com.bink.wallet.scenes.sign_up.SignUpFragment" />
 
     <fragment
             android:id="@+id/ghost_registration_unavailable"
