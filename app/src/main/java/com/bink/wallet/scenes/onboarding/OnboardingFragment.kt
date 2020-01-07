@@ -140,8 +140,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun scrollPagesAutomatically(pager: ViewPager) {
-        var currentPage = pager.currentItem
+    private fun scrollPagesAutomatically(pager: ViewPager?) {
+        var currentPage = pager?.currentItem as Int
         val pagerHandler = Handler()
         val update = Runnable {
             if (currentPage == ONBOARDING_PAGES_NUMBER) {
@@ -149,6 +149,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 currentPage = FIRST_PAGE_INDEX
             } else {
                 pager.setCurrentItem(currentPage++, true)
+
             }
         }
 
