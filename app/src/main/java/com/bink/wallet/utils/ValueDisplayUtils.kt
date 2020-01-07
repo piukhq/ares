@@ -6,7 +6,7 @@ import com.bink.wallet.model.response.membership_card.Voucher
 
 object ValueDisplayUtils {
     fun displayValue(
-        inValue: Float?,
+        value: Float?,
         prefix: String?,
         suffix: String?,
         currency: String?,
@@ -18,10 +18,12 @@ object ValueDisplayUtils {
                 append(prefix)
             }
             append(
-                if (value != value.toInt().toFloat()) {
-                    "%.2f".format(value)
-                } else {
-                    "%.0f".format(value)
+                value?.let {
+                    if (value != it.toInt().toFloat()) {
+                        "%.2f".format(it)
+                    } else {
+                        "%.0f".format(it)
+                    }
                 }
             )
             if (!suffix.isNullOrEmpty()) {

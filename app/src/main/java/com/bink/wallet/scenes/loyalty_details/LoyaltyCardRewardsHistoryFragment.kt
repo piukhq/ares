@@ -31,13 +31,13 @@ class LoyaltyCardRewardsHistoryFragment :
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
-        binding.plan = viewModel.membershipPlan.value
+        binding.membershipPlan = viewModel.membershipPlan.value
         binding.executePendingBindings()
         setupVouchers()
     }
 
     private fun setupVouchers() {
-        with (binding.voucherTiles) {
+        with (binding.recycler) {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             viewModel.membershipCard.value?.vouchers?.filterNot {
