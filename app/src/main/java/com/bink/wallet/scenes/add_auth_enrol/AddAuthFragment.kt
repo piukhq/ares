@@ -29,6 +29,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     companion object {
         const val BARCODE_TEXT = "Barcode"
+        const val EMPTY_STRING = ""
     }
 
     override val layoutRes: Int
@@ -57,7 +58,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         val pairPlanField = Pair(
             planField, PlanFieldsRequest(
-                planField.column, ""
+                planField.column, EMPTY_STRING
             )
         )
 
@@ -186,9 +187,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
                 binding.noAccountText.visibility = View.GONE
             }
-            SignUpFormType.FAILED -> {
-
-            }
         }
 
         binding.noAccountText.setOnClickListener {
@@ -306,9 +304,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 )
                             )
                         }
-                        SignUpFormType.FAILED -> {
-
-                        }
                     }
 
                 } else {
@@ -407,28 +402,29 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private fun handleDescriptionText(signUpType: SignUpFormType): String {
-        return when (signUpType) {
-            SignUpFormType.GHOST -> {
-                getString(
-                    R.string.enrol_ghost_card_description,
-                    viewModel.currentMembershipPlan.value?.account?.plan_name_card
-                )
-            }
-            SignUpFormType.ENROL -> {
-                getString(
-                    R.string.enrol_new_card_description,
-                    viewModel.currentMembershipPlan.value?.account?.company_name
-                )
-            }
-            SignUpFormType.ADD_AUTH -> {
-                getString(
-                    R.string.log_in_transaction_available,
-                    viewModel.currentMembershipPlan.value?.account?.company_name,
-                    viewModel.currentMembershipPlan.value?.account?.plan_name
-                )
-            }
-            SignUpFormType.FAILED -> {
-                viewModel.currentMembershipPlan.value?.account?.plan_name_card ?: ""
+        if (isRetryJourney) {
+            return viewModel.currentMembershipPlan.value?.account?.plan_name_card ?: EMPTY_STRING
+        } else {
+            return when (signUpType) {
+                SignUpFormType.GHOST -> {
+                    getString(
+                        R.string.enrol_ghost_card_description,
+                        viewModel.currentMembershipPlan.value?.account?.plan_name_card
+                    )
+                }
+                SignUpFormType.ENROL -> {
+                    getString(
+                        R.string.enrol_new_card_description,
+                        viewModel.currentMembershipPlan.value?.account?.company_name
+                    )
+                }
+                SignUpFormType.ADD_AUTH -> {
+                    getString(
+                        R.string.log_in_transaction_available,
+                        viewModel.currentMembershipPlan.value?.account?.company_name,
+                        viewModel.currentMembershipPlan.value?.account?.plan_name
+                    )
+                }
             }
         }
     }
