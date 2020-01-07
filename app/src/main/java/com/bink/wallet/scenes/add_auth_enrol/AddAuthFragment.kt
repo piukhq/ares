@@ -257,13 +257,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 addRegisterFieldsRequest,
                                 viewModel.currentMembershipPlan.value!!.id
                             )
-
-                            if (viewModel.currentMembershipCard.value != null &&
-                                MembershipPlanUtils.getAccountStatus(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    viewModel.currentMembershipCard.value!!
-                                ) == LoginStatus.STATUS_LOGIN_FAILED
-                            ) {
+                            if (isRetryJourney) {
                                 viewModel.updateMembershipCard(
                                     viewModel.currentMembershipCard.value!!,
                                     currentRequest
