@@ -13,6 +13,8 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
@@ -142,7 +144,13 @@ class LoyaltyWalletAdapter(
                         MembershipCardStatus.AUTHORISED.status -> {
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
-                            if (!item.balances.isNullOrEmpty()) {
+                            if (!item.vouchers.isNullOrEmpty()) {
+                                item.vouchers?.first()?.let { voucher ->
+                                    loyaltyValue.text =
+                                        root.context.displayVoucherEarnAndTarget(voucher)
+                                }
+                                loyaltyValueExtra.text = EMPTY_STRING
+                            } else if (!item.balances.isNullOrEmpty()) {
                                 val balance = item.balances?.first()
                                 when (balance?.prefix != null) {
                                     true ->
