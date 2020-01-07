@@ -35,6 +35,8 @@ class LoyaltyCardDetailsFragment :
     companion object {
         const val MAX_ALPHA = 127f
         const val MIN_ALPHA = 0f
+        const val MIN_DIST = 0
+        const val MAX_DIST = 650
     }
 
     private var scrollY = 0
@@ -170,8 +172,7 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        viewModel.linkStatus.observeNonNull(this)
-        { status ->
+        viewModel.linkStatus.observeNonNull(this) { status ->
             if (viewModel.accountStatus.value != null &&
                 viewModel.paymentCards.value != null
             ) {
@@ -185,9 +186,34 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            cd.alpha = v?.scrollY?.let {
-                getAlphaForActionBar(it)
-            }!!
+            v?.scrollY?.let { scrollY ->
+                cd.alpha = getAlphaForActionBar(scrollY)
+                if (scrollY > arrayOf(MAX_DIST, MIN_DIST).average()) {
+                    binding.toolbarTitle.text =
+                        viewModel.membershipPlan.value?.account?.company_name
+                    viewModel.membershipCard.value?.let { card ->
+                        binding.toolbarSubtitle.text =
+                            if (!card.vouchers.isNullOrEmpty()) {
+                                card.vouchers?.first()?.let { voucher ->
+                                    requireContext().displayVoucherEarnAndTarget(voucher)
+                                }
+                            } else {
+                                val balance = card.balances?.first()
+                                when (balance?.prefix != null) {
+                                    true ->
+                                        balance?.prefix?.plus(balance.value)
+                                    else -> {
+                                        balance?.value.plus(balance?.suffix)
+                                    }
+                                }
+
+                            }
+                    }
+                } else {
+                    binding.toolbarTitle.text = EMPTY_STRING
+                    binding.toolbarSubtitle.text = EMPTY_STRING
+                }
+            }
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -559,12 +585,10 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun getAlphaForActionBar(scrollY: Int): Int {
-        val minDist = 0
-        val maxDist = 650
         return when {
-            scrollY > maxDist -> MAX_ALPHA.toInt()
-            scrollY < minDist -> MIN_ALPHA.toInt()
-            else -> (MAX_ALPHA / maxDist * scrollY).toInt()
+            scrollY > MAX_DIST -> MAX_ALPHA.toInt()
+            scrollY < MIN_DIST -> MIN_ALPHA.toInt()
+            else -> (MAX_ALPHA / MAX_DIST * scrollY).toInt()
         }
     }
 }

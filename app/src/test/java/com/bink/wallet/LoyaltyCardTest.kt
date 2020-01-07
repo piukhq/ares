@@ -78,6 +78,8 @@ class LoyaltyCardTest {
                                         null,
                                         null,
                                         null,
+                                        null,
+                                        null,
                                         null
                                     )
                                 )
