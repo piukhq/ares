@@ -410,4 +410,6 @@
     <!-- PLR -->
     <string name="rewards_history">Rewards history</string>
     <string name="see_your_past_rewards">See your past rewards</string>
+    <string name="payment_card_needed">Payment card needed</string>
+    <string name="you_currently_don_t_have_any_linked_payment_cards">You currently don\'t have any linked payment cards.\n\nYou can only earn rewards by shopping with a linked payment card.\n\nPlease add a card so you can start earning rewards.</string>
 </resources>

@@ -14,7 +14,9 @@ import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>() {
@@ -35,10 +37,16 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel.fetchLocalPaymentCards()
+        runBlocking {
+            viewModel.getPaymentCards()
+        }
+
         val currentMembershipPlan = args.currentMembershipPlan
+        viewModel.membershipPlan.value = currentMembershipPlan
         binding.item = currentMembershipPlan
 
-        when (currentMembershipPlan.feature_set?.card_type) {
+        when (viewModel.membershipPlan.value?.feature_set?.card_type) {
             CardType.STORE.type -> {
                 binding.addJoinViewImage.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -98,12 +106,15 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            val action = AddJoinFragmentDirections.addJoinToGhost(
-                SignUpFormType.ADD_AUTH,
-                currentMembershipPlan,
-                null
-            )
-            findNavController().navigateIfAdded(this, action)
+            viewModel.membershipPlan.value?.let { membershipPlan ->
+                val action =
+                    AddJoinFragmentDirections.addJoinToGhost(
+                        SignUpFormType.ADD_AUTH,
+                        membershipPlan,
+                        null
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
         }
 
         binding.getCardButton.setOnClickListener {
@@ -125,11 +136,18 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 }
                 action = AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
             } else {
-                action = AddJoinFragmentDirections.addJoinToGhost(
-                    SignUpFormType.ENROL,
-                    currentMembershipPlan,
-                    null
-                )
+                action =
+                    if (currentMembershipPlan.has_vouchers.toInt() == 1 &&
+                        viewModel.paymentCards.value.isNullOrEmpty()
+                    ) {
+                        AddJoinFragmentDirections.addJoinToAddPaymentCard(currentMembershipPlan)
+                    } else {
+                        AddJoinFragmentDirections.addJoinToGhost(
+                            SignUpFormType.ENROL,
+                            currentMembershipPlan,
+                            null
+                        )
+                    }
             }
             findNavController().navigateIfAdded(this, action)
         }

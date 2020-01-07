@@ -10,6 +10,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
+import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
@@ -52,7 +53,9 @@ val viewModelModules = module {
 
     viewModel { AddViewModel() }
 
-    viewModel { AddJoinViewModel() }
+    viewModel { AddJoinViewModel(get()) }
+
+    viewModel { AddJoinRequestPaymentCardViewModel() }
 
     single { provideLoyaltyCardDetailsRepository(get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
