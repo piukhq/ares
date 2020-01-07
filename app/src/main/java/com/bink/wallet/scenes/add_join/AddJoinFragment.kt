@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -67,6 +68,13 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                     getString(R.string.add_join_inactive_link_description)
             }
         }
+
+        binding.addCardButton.visibility =
+            if (!(currentMembershipPlan.feature_set?.linking_support ?: emptyList()).contains("ADD")) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
 
         binding.closeButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
