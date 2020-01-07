@@ -115,7 +115,19 @@ class LoyaltyCardDetailsFragment :
             binding.footerPlrSeparator.visibility = View.GONE
         } else {
             binding.footerPlrRewards.setOnClickListener {
-
+                val directions =
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            LoyaltyCardDetailsFragmentDirections.detailToRewardsHistory(
+                                plan, card
+                            )
+                        }
+                    }
+                directions?.let {
+                    findNavController().navigateIfAdded(
+                        this@LoyaltyCardDetailsFragment, it
+                    )
+                }
             }
         }
 

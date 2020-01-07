@@ -418,4 +418,9 @@
     <string name="towards_rewards">Towards rewards</string>
     <string name="voucher_spent">Spent</string>
     <string name="voucher_goal">Goal</string>
+    <string name="your_past_rewards">Your past rewards</string>
+    <string name="collecting">Collecting</string>
+    <string name="towards_rewards">Towards rewards</string>
+    <string name="voucher_spent">Spent</string>
+    <string name="voucher_goal">Goal</string>
 </resources>
