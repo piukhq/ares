@@ -252,8 +252,15 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
 }
 
 @BindingAdapter("transactionTime")
-fun TextView.setTimestamp(timeStamp: Long) {
-    this.text = DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
+fun TextView.setTimestamp(transaction: MembershipTransactions) {
+    if (transaction.timestamp != null &&
+        transaction.description != null
+    ) {
+        this.text = "${DateFormat.format(
+            "dd MMMM yyyy",
+            transaction.timestamp * 1000
+        )}, ${transaction.description}"
+    }
 }
 
 @BindingAdapter("transactionArrow")
