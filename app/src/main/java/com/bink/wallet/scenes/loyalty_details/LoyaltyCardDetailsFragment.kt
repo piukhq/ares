@@ -265,45 +265,47 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.footerDelete.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            var dialog: AlertDialog? = null
-            builder.setMessage(getString(R.string.delete_card_modal_body))
-            builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-            builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                if (verifyAvailableNetwork(requireActivity())) {
-                    runBlocking {
-                        viewModel.deleteCard(viewModel.membershipCard.value?.id)
-                    }
-                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        with(viewModel.deleteError) {
-                            if (value is HttpException) {
-                                val error = value as HttpException
-                                requireContext().displayModalPopup(
-                                    getString(R.string.title_2_4),
-                                    getString(
-                                        R.string.description_2_4,
-                                        error.code().toString(),
-                                        error.localizedMessage
+            with (AlertDialog.Builder(requireContext())) {
+                setMessage(getString(R.string.delete_card_modal_body))
+                setNeutralButton(getString(R.string.no_text)) { _, _ -> }
+                setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
+                    if (verifyAvailableNetwork(requireActivity())) {
+                        runBlocking {
+                            viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                        }
+                        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
+                            with(viewModel.deleteError) {
+                                if (value is HttpException) {
+                                    val error = value as HttpException
+                                    requireContext().displayModalPopup(
+                                        getString(R.string.title_2_4),
+                                        getString(
+                                            R.string.description_2_4,
+                                            error.code().toString(),
+                                            error.localizedMessage
+                                        )
                                     )
-                                )
-                            } else {
-                                requireContext().displayModalPopup(
-                                    getString(R.string.title_2_4),
-                                    getString(R.string.loyalty_card_delete_error_message)
-                                )
+                                } else {
+                                    requireContext().displayModalPopup(
+                                        getString(R.string.title_2_4),
+                                        getString(R.string.loyalty_card_delete_error_message)
+                                    )
+                                }
                             }
                         }
+                        viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
+                            dialog.dismiss()
+                            findNavController().navigateIfAdded(
+                                this@LoyaltyCardDetailsFragment,
+                                R.id.global_to_home
+                            )
+                        }
+                    } else {
+                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
-                    viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                        dialog?.dismiss()
-                        findNavController().navigateIfAdded(this, R.id.global_to_home)
-                    }
-                } else {
-                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
+                create().show()
             }
-            dialog = builder.create()
-            dialog.show()
         }
     }
 
@@ -330,14 +332,16 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setLoadingState(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingIndicator.visibility = View.VISIBLE
-            binding.linkedWrapper.visibility = View.INVISIBLE
-            binding.pointsWrapper.visibility = View.INVISIBLE
-        } else {
-            binding.loadingIndicator.visibility = View.GONE
-            binding.linkedWrapper.visibility = View.VISIBLE
-            binding.pointsWrapper.visibility = View.VISIBLE
+        with (binding) {
+            if (isLoading) {
+                loadingIndicator.visibility = View.VISIBLE
+                linkedWrapper.visibility = View.INVISIBLE
+                pointsWrapper.visibility = View.INVISIBLE
+            } else {
+                loadingIndicator.visibility = View.GONE
+                linkedWrapper.visibility = View.VISIBLE
+                pointsWrapper.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -362,10 +366,10 @@ class LoyaltyCardDetailsFragment :
                     loginStatus.pointsImage
                 )
             )
-            if (loginStatus.pointsText != null) {
+            loginStatus.pointsText?.let {
                 pointsText.text = getString(R.string.points_login)
             }
-            if (loginStatus.pointsDescription != null) {
+            loginStatus.pointsDescription?.let {
                 pointsDescription.text = getString(R.string.description_see_history)
             }
             pointsText.text = loginStatus.pointsText?.let { getString(it) }
@@ -374,36 +378,41 @@ class LoyaltyCardDetailsFragment :
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
-                    viewModel.membershipCard.value?.status?.state == MembershipCardStatus.AUTHORISED.status) {
-                    setPlrPointsModuleText()
-                } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val updateTime: Long?
-                    viewModel.membershipCard.value?.balances?.first().let {
-                        setBalanceText(it)
-                        updateTime = it?.updated_at
-                    }
-                    val currentTime = Calendar.getInstance().timeInMillis / 1000
-                    updateTime?.let {
-                        val timeSinceUpdate = currentTime - it
-                        binding.pointsDescription.text =
-                            timeSinceUpdate.getElapsedTime(requireContext())
+                viewModel.membershipCard.value?.let { card ->
+                    if (!card.vouchers.isNullOrEmpty () &&
+                        card.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        setPlrPointsModuleText()
+                    } else if (!card.balances.isNullOrEmpty()) {
+                        val updateTime: Long?
+                        card.balances?.first().let { balance ->
+                            setBalanceText(balance)
+                            updateTime = balance?.updated_at
+                        }
+                        val currentTime = Calendar.getInstance().timeInMillis / 1000
+                        updateTime?.let {
+                            val timeSinceUpdate = currentTime - it
+                            binding.pointsDescription.text =
+                                timeSinceUpdate.getElapsedTime(requireContext())
+                        }
                     }
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
-                    viewModel.membershipCard.value?.status?.state == MembershipCardStatus.AUTHORISED.status) {
-                    setPlrPointsModuleText()
-                } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    viewModel.membershipCard.value?.balances?.first().let {
-                        if (it != null) {
-                            setBalanceText(it)
-                        } else {
-                            binding.pointsText.text = getString(R.string.points_signing_up)
+                viewModel.membershipCard.value?.let {
+                    if (!it.vouchers.isNullOrEmpty() &&
+                        it.status?.state == MembershipCardStatus.AUTHORISED.status) {
+                        setPlrPointsModuleText()
+                    } else if (!it.balances.isNullOrEmpty()) {
+                        it.balances?.first().let { balance ->
+                            if (balance != null) {
+                                setBalanceText(balance)
+                            } else {
+                                binding.pointsText.text = getString(R.string.points_signing_up)
+                            }
                         }
                     }
-                } else {
+                } ?: run {
                     binding.pointsText.text = getString(R.string.points_signing_up)
                 }
             }
@@ -446,12 +455,12 @@ class LoyaltyCardDetailsFragment :
                     getString(linkStatus.descriptionText)
             } else {
                 linkStatus.descriptionParams?.let { descParams ->
-                linkDescription.text =
-                    getString(
-                        linkStatus.descriptionText,
-                        descParams[0],
-                        descParams[1]
-                    )
+                    linkDescription.text =
+                        getString(
+                            linkStatus.descriptionText,
+                            descParams[0],
+                            descParams[1]
+                        )
                 }
                 linkStatus.descriptionParams?.let { descParams ->
                     linkDescription.text =

@@ -17,15 +17,15 @@ object ValueDisplayUtils {
             if (!prefix.isNullOrEmpty()) {
                 append(prefix)
             }
-            append(
-                value?.let {
+            value?.let {
+                append(
                     if (value != it.toInt().toFloat()) {
                         "%.2f".format(it)
                     } else {
                         "%.0f".format(it)
                     }
-                }
-            )
+                )
+            }
             if (!suffix.isNullOrEmpty()) {
                 append(SPACE)
                 append(suffix)
