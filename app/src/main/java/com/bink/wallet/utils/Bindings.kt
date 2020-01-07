@@ -269,6 +269,13 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
         )}, ${transaction.description}"
     }
 }
+@BindingAdapter("transactionTime", "format")
+fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
+    this.text = String.format(
+        format,
+        DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
+    )
+}
 
 @BindingAdapter("transactionArrow")
 fun TextView.setArrow(membershipTransactions: MembershipTransactions) {

@@ -446,6 +446,14 @@ class LoyaltyCardDetailsFragment :
                     getString(linkStatus.descriptionText)
             } else {
                 linkStatus.descriptionParams?.let { descParams ->
+                linkDescription.text =
+                    getString(
+                        linkStatus.descriptionText,
+                        descParams[0],
+                        descParams[1]
+                    )
+                }
+                linkStatus.descriptionParams?.let { descParams ->
                     linkDescription.text =
                         getString(
                             linkStatus.descriptionText,

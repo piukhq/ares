@@ -11,5 +11,9 @@ data class Voucher(
     val earn : Earn?,
     val state : String?,
     val subtext : String?,
-    val headline : String?
+    val headline : String?,
+    val code : String?,
+    val date_issued : Long?,
+    val expiry_date : Long?,
+    val barcode_type : Int?
 ) : Parcelable

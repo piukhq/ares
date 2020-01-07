@@ -6,7 +6,7 @@ import com.bink.wallet.model.response.membership_card.Voucher
 
 object ValueDisplayUtils {
     fun displayValue(
-        value: Float,
+        inValue: Float?,
         prefix: String?,
         suffix: String?,
         currency: String?,

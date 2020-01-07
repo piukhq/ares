@@ -9,8 +9,8 @@ import kotlinx.android.parcel.Parcelize
 data class Earn(
     val type : String?,
     val value : Float?,
+    val target_value: Float?,
     val prefix : String?,
     val suffix : String?,
-    val currency : String?,
-    val target_value: Float?
+    val currency : String?
 ) : Parcelable

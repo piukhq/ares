@@ -53,6 +53,11 @@ class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
                         )
                     }
                 }
+                root.apply {
+                    this.setOnClickListener {
+                        onClickListener(thisVoucher)
+                    }
+                }
             }
             binding.executePendingBindings()
             when (thisVoucher.state) {
