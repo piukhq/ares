@@ -85,7 +85,7 @@ class AddPaymentCardFragment :
         binding.privacyLink.setOnClickListener {
             findNavController().navigateIfAdded(
                 this,
-                AddPaymentCardFragmentDirections.actionAddPaymentCardToAddPaymentCardPrivacyFragment(
+                AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
                     GenericModalParameters(
                         R.drawable.ic_back,
                         false,
