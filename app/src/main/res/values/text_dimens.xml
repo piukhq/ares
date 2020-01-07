@@ -4,8 +4,14 @@
     <dimen name="size_headline">25sp</dimen>
     <dimen name="size_sub_headline">18sp</dimen>
     <dimen name="size_medium">16sp</dimen>
+    <dimen name="size_body_large">15sp</dimen>
     <dimen name="size_body">14sp</dimen>
     <dimen name="size_body_small">13sp</dimen>
 
     <dimen name="arrow_text_size">24sp</dimen>
+
+    <dimen name="payment_card_title_size">16.2sp</dimen>
+    <dimen name="link_status_text_size">13.5sp</dimen>
+
+    <dimen name="transaction_arrow_size">30sp</dimen>
 </resources>

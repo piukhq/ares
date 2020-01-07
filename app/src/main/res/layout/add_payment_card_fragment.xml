@@ -3,6 +3,14 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -65,7 +73,7 @@
                             android:fontFamily="@font/nunito_sans_bold"
                             android:text="@string/card_name"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_description_big"
+                            android:textSize="@dimen/size_sub_headline"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -79,7 +87,7 @@
                             android:fontFamily="@font/nunito_sans_bold"
                             android:text="@string/_mock_card_ending"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_description_big"
+                            android:textSize="@dimen/size_sub_headline"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -93,7 +101,7 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/add_payment_card"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold" />
 
                 <TextView
@@ -113,26 +121,21 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/card_number"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/card_number_input_layout"
+
+                <EditText
+                        android:id="@+id/card_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/card_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_sans_light"
-                            android:hint="@string/card_number"
-                            android:imeOptions="actionNext"
-                            android:inputType="number"
-                            android:maxLength="19"
-                            android:nextFocusDown="@id/card_expiry" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:hint="@string/card_number"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="19"
+                        android:nextFocusDown="@id/card_expiry"
+                        android:text="@={viewModel.cardNumber}" />
 
                 <TextView
                         android:id="@+id/card_expiry_label"
@@ -142,26 +145,20 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/expiry"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/card_expiry_input_layout"
+                <EditText
+                        android:id="@+id/card_expiry"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/card_expiry"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_sans_light"
-                            android:hint="@string/expiry_format"
-                            android:imeOptions="actionNext"
-                            android:inputType="date"
-                            android:maxLength="5"
-                            android:nextFocusDown="@id/card_name" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:hint="@string/expiry_format"
+                        android:imeOptions="actionNext"
+                        android:inputType="date"
+                        android:maxLength="5"
+                        android:nextFocusDown="@id/card_name"
+                        android:text="@={viewModel.expiryDate}" />
 
 
                 <TextView
@@ -172,26 +169,20 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/name_on_card"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/card_name_input_layout"
+                <EditText
+                        android:id="@+id/card_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/card_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_sans_light"
-                            android:hint="@string/name_on_card"
-                            android:imeOptions="actionDone"
-                            android:inputType="textVisiblePassword"
-                            android:digits="@string/only_letters_space"
-                            android:minLines="2" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:digits="@string/only_letters_space"
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:hint="@string/name_on_card"
+                        android:imeOptions="actionDone"
+                        android:inputType="textVisiblePassword"
+                        android:minLines="2"
+                        android:text="@={viewModel.cardHolder}" />
 
                 <TextView
                         android:id="@+id/privacy_link"
@@ -201,7 +192,7 @@
                         android:fontFamily="@font/nunito_sans_semibold"
                         android:text="@string/privacy_and_security"
                         android:textColor="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_big" />
+                        android:textSize="@dimen/size_sub_headline" />
 
                 <Button
                         android:id="@+id/add_button"

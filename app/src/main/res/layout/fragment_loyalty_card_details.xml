@@ -26,10 +26,10 @@
             <androidx.core.widget.NestedScrollView
                     android:id="@+id/scroll_view"
                     android:layout_width="match_parent"
-                    android:fillViewport="true"
-                    android:clipToPadding="true"
-                    android:fitsSystemWindows="true"
                     android:layout_height="wrap_content"
+                    android:clipToPadding="true"
+                    android:fillViewport="true"
+                    android:fitsSystemWindows="true"
                     android:scrollbars="none">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -181,14 +181,36 @@
                             tools:layout_editor_absoluteX="-15dp" />
 
                     <com.bink.wallet.FooterItem
-                            android:id="@+id/footer_about"
+                            android:id="@+id/footer_plr_rewards"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/loyalty_details_margin_top"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/offer_tiles"
+                            app:type="rewards" />
+
+                    <View
+                            android:id="@+id/footer_plr_separator"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/item_separator_line_height"
+                            android:layout_marginTop="@dimen/margin_padding_size_medium"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                            android:background="@android:color/darker_gray"
+                            app:layout_constraintTop_toBottomOf="@+id/footer_plr_rewards"
+                            tools:layout_editor_absoluteX="-15dp" />
+
+                    <com.bink.wallet.FooterItem
+                            android:id="@+id/footer_about"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/footer_plr_rewards"
                             app:type="about" />
 
                     <View
@@ -230,11 +252,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
-                            android:layout_marginTop="@dimen/margin_padding_size_large"
-                            android:layout_marginBottom="@dimen/margin_padding_size_small"
+                            android:layout_marginTop="@dimen/margin_padding_size_medium"
+                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/footer_security"
+                            app:layout_constraintTop_toBottomOf="@+id/security_separator"
                             app:type="delete" />
 
                     <ProgressBar

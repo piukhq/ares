@@ -124,6 +124,7 @@ class SettingsFragment :
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
                         GenericModalParameters(
                             R.drawable.ic_back,
+                            false,
                             getString(R.string.security_and_privacy_title),
                             getString(R.string.security_and_privacy_copy),
                             description2 = getString(R.string.security_and_privacy_copy_2)
@@ -136,6 +137,7 @@ class SettingsFragment :
                     SettingsFragmentDirections.settingsToHowItWorks(
                         GenericModalParameters(
                             R.drawable.ic_back,
+                            false,
                             getString(R.string.how_it_works_title),
                             getString(R.string.how_it_works_copy)
                         )
@@ -194,9 +196,12 @@ class SettingsFragment :
 
             SettingsItemType.LOGOUT -> {
                 requireContext().displayModalPopup(
-                    EMPTY_STRING,
+                    getString(R.string.settings_menu_log_out),
                     getString(R.string.log_out_confirmation),
-                    okAction = { viewModel.logOut() },
+                    okAction = {
+                        requireContext().let { LocalStoreUtils.clearPreferences() }
+                        viewModel.logOut()
+                    },
                     buttonText = R.string.settings_menu_log_out,
                     hasNegativeButton = true
                 )
