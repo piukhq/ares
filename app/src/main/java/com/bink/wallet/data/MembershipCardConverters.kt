@@ -91,6 +91,7 @@ class MembershipCardConverters {
         val type = object : TypeToken<List<MembershipTransactions>>() {}.type
         return gson.fromJson(value, type)
     }
+
     @TypeConverter
     fun fromAccount(value: Account?): String? {
         val gson = Gson()

@@ -15,6 +15,8 @@
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
     <dimen name="loyalty_value_margin_end">18dp</dimen>
+    <dimen name="loyalty_voucher_margin">20dp</dimen>
+    <dimen name="loyalty_voucher_progress_height">14dp</dimen>
     <dimen name="card_login_width">80dp</dimen>
     <dimen name="card_login_height">28dp</dimen>
     <dimen name="card_login_margin_end">12dp</dimen>
@@ -69,6 +71,9 @@
     <dimen name="text_size_description_medium">14sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
+    <dimen name="text_size_description_smaller">14sp</dimen>
+    <dimen name="text_size_description_medium">15sp</dimen>
+    <dimen name="text_size_description_medium_bigger">16.2sp</dimen>
     <dimen name="text_size_description_biggest">25sp</dimen>
     <dimen name="custom_add_fragment_image_size">31dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
@@ -105,4 +110,7 @@
     <dimen name="page_image_height">200dp</dimen>
     <dimen name="separator_height">1dp</dimen>
     <dimen name="facebook_button_elevation">4dp</dimen>
+
+    <!-- PLR -->
+    <dimen name="move_up_slightly">-2dp</dimen>
 </resources>

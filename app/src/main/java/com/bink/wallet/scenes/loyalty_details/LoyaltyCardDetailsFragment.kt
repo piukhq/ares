@@ -14,10 +14,9 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.enums.LinkStatus
-import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -89,6 +88,10 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.membershipCard.observeNonNull(this) {
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+
+            if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+                setupVouchers()
+            }
         }
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
@@ -292,7 +295,6 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
-
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
             if (balance.suffix.isNullOrEmpty()) {
@@ -341,28 +343,34 @@ class LoyaltyCardDetailsFragment :
 
 
     private fun configureLoginStatus(loginStatus: LoginStatus) {
-        binding.pointsImage.setImageDrawable(
-            getDrawable(
-                requireContext(),
-                loginStatus.pointsImage
+        with (binding) {
+            pointsImage.setImageDrawable(
+                getDrawable(
+                    requireContext(),
+                    loginStatus.pointsImage
+                )
             )
-        )
-        if (loginStatus.pointsText != null) {
-            binding.pointsText.text = getString(R.string.points_login)
+            if (loginStatus.pointsText != null) {
+                pointsText.text = getString(R.string.points_login)
+            }
+            if (loginStatus.pointsDescription != null) {
+                pointsDescription.text = getString(R.string.description_see_history)
+            }
+            pointsText.text = loginStatus.pointsText?.let { getString(it) }
+            pointsDescription.text = loginStatus.pointsDescription?.let { getString(it) }
         }
-        if (loginStatus.pointsDescription != null) {
-            binding.pointsDescription.text = getString(R.string.description_see_history)
-        }
-
-        binding.pointsText.text = loginStatus.pointsText?.let { getString(it) }
-        binding.pointsDescription.text = loginStatus.pointsDescription?.let { getString(it) }
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val balance = viewModel.membershipCard.value?.balances?.first()
-                    setBalanceText(balance)
-                    val updateTime = balance?.updated_at
+                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
+                    viewModel.membershipCard.value?.status?.state == MembershipCardStatus.AUTHORISED.status) {
+                    setPlrPointsModuleText()
+                } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    val updateTime: Long?
+                    viewModel.membershipCard.value?.balances?.first().let {
+                        setBalanceText(it)
+                        updateTime = it?.updated_at
+                    }
                     val currentTime = Calendar.getInstance().timeInMillis / 1000
                     updateTime?.let {
                         val timeSinceUpdate = currentTime - it
@@ -372,12 +380,16 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val balance = viewModel.membershipCard.value?.balances?.first()
-                    if (balance != null) {
-                        setBalanceText(balance)
-                    } else {
-                        binding.pointsText.text = getString(R.string.points_signing_up)
+                if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty() &&
+                    viewModel.membershipCard.value?.status?.state == MembershipCardStatus.AUTHORISED.status) {
+                    setPlrPointsModuleText()
+                } else if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
+                    viewModel.membershipCard.value?.balances?.first().let {
+                        if (it != null) {
+                            setBalanceText(it)
+                        } else {
+                            binding.pointsText.text = getString(R.string.points_signing_up)
+                        }
                     }
                 } else {
                     binding.pointsText.text = getString(R.string.points_signing_up)
@@ -385,6 +397,13 @@ class LoyaltyCardDetailsFragment :
             }
             else -> {
             }
+        }
+    }
+
+    private fun setPlrPointsModuleText() {
+        with (binding) {
+            pointsText.text = getString(R.string.collecting)
+            pointsDescription.text = getString(R.string.towards_rewards)
         }
     }
 
@@ -400,26 +419,27 @@ class LoyaltyCardDetailsFragment :
             }
             else -> linkStatus.descriptionParams = null
         }
-
-        binding.activeLinked.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                linkStatus.drawable
-            )
-        )
-        binding.linkStatusText.text =
-            getString(linkStatus.statusText)
-
-        if (linkStatus.descriptionParams.isNullOrEmpty()) {
-            binding.linkDescription.text =
-                getString(linkStatus.descriptionText)
-        } else {
-            binding.linkDescription.text =
-                getString(
-                    linkStatus.descriptionText,
-                    linkStatus.descriptionParams!![0],
-                    linkStatus.descriptionParams!![1]
+        with (binding) {
+            activeLinked.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    linkStatus.drawable
                 )
+            )
+            linkStatusText.text =
+                getString(linkStatus.statusText)
+
+            if (linkStatus.descriptionParams.isNullOrEmpty()) {
+                linkDescription.text =
+                    getString(linkStatus.descriptionText)
+            } else {
+                linkDescription.text =
+                    getString(
+                        linkStatus.descriptionText,
+                        linkStatus.descriptionParams!![0],
+                        linkStatus.descriptionParams!![1]
+                    )
+            }
         }
     }
 
@@ -589,6 +609,21 @@ class LoyaltyCardDetailsFragment :
             scrollY > MAX_DIST -> MAX_ALPHA.toInt()
             scrollY < MIN_DIST -> MIN_ALPHA.toInt()
             else -> (MAX_ALPHA / MAX_DIST * scrollY).toInt()
+        }
+    }
+
+    private fun setupVouchers() {
+        with (binding.voucherTiles) {
+            visibility = View.VISIBLE
+            layoutManager = LinearLayoutManager(requireContext())
+            viewModel.membershipCard.value?.vouchers?.filter {
+                listOf(
+                    VoucherStates.IN_PROGRESS.state,
+                    VoucherStates.ISSUED.state
+                ).contains(it.state)
+            }?.let {
+                adapter = LoyaltyCardDetailsVouchersAdapter(it)
+            }
         }
     }
 }
