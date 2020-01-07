@@ -239,7 +239,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
                     viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        with (viewModel.deleteError) {
+                        with(viewModel.deleteError) {
                             if (value is HttpException) {
                                 val error = value as HttpException
                                 requireContext().displayModalPopup(
@@ -369,7 +369,7 @@ class LoyaltyCardDetailsFragment :
                     listOf(
                         viewModel.paymentCards.value?.count { card ->
                             card.membership_cards.count { membershipCard ->
-                                membershipCard.active_link!! && membershipCardId == membershipCard.id
+                                membershipCard.active_link == true && membershipCardId == membershipCard.id
                             } > 0
                         },
                         viewModel.paymentCards.value?.size
