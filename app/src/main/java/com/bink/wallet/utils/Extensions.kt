@@ -7,6 +7,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
 import androidx.annotation.IntegerRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -104,4 +106,24 @@ fun String.headerTidy(): String {
     return this
         .replace("=", "")
         .replace("\n", "")
+}
+
+fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
+    val constraintSet = ConstraintSet()
+    constraintSet.clone(parentLayout)
+    constraintSet.connect(
+        separatorId,
+        ConstraintSet.END,
+        parentLayout.id,
+        ConstraintSet.START,
+        0
+    )
+    constraintSet.connect(
+        separatorId,
+        ConstraintSet.START,
+        parentLayout.id,
+        ConstraintSet.END,
+        0
+    )
+    constraintSet.applyTo(parentLayout)
 }

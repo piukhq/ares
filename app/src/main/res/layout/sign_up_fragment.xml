@@ -43,7 +43,7 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:text="@string/sign_up_with_email"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
                         android:layout_marginTop="@dimen/margin_padding_size_small"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:text="@string/sign_up_description"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sign_up_title" />
@@ -85,7 +85,7 @@
                         android:hint="@string/enter_email_text"
                         android:inputType="textEmailAddress"
                         android:text="@={viewModel.email}"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/email_description"
@@ -114,7 +114,7 @@
                         android:hint="@string/enter_password"
                         android:inputType="textPassword"
                         android:text="@={viewModel.password}"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/password_description"
@@ -143,7 +143,7 @@
                         android:hint="@string/confirm_password"
                         android:inputType="textPassword"
                         android:text="@={viewModel.confirmPassword}"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/confirm_password_description" />
@@ -157,6 +157,7 @@
                         android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.termsCondition}"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/confirm_password_field" />
 
@@ -172,7 +173,7 @@
                         android:text="@string/T_C_accept_description"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintBottom_toBottomOf="@+id/checkbox_terms_conditions"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/checkbox_terms_conditions"
@@ -188,6 +189,7 @@
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.privacyPolicy}"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
 
@@ -204,7 +206,7 @@
                         android:text="@string/privacy_policy_description"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintBottom_toBottomOf="@+id/checkbox_privacy_policy"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/checkbox_privacy_policy"
@@ -219,6 +221,7 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.marketingMessages}"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkbox_privacy_policy" />
 
@@ -231,7 +234,7 @@
                         android:gravity="start"
                         android:text="@string/marketing_messages"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintBottom_toBottomOf="@+id/checkbox_marketing_messages"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/checkbox_marketing_messages"
@@ -245,7 +248,7 @@
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkbox_marketing_messages" />
