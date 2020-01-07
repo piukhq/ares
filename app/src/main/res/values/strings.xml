@@ -414,10 +414,6 @@
     <string name="you_currently_don_t_have_any_linked_payment_cards">You currently don\'t have any linked payment cards.\n\nYou can only earn rewards by shopping with a linked payment card.\n\nPlease add a card so you can start earning rewards.</string>
     <string name="loyalty_wallet_plr_value">%s/%s</string>
     <string name="until_next_reward">Until next reward</string>
-    <string name="collecting">Collecting</string>
-    <string name="towards_rewards">Towards rewards</string>
-    <string name="voucher_spent">Spent</string>
-    <string name="voucher_goal">Goal</string>
     <string name="your_past_rewards">Your past rewards</string>
     <string name="collecting">Collecting</string>
     <string name="towards_rewards">Towards rewards</string>
