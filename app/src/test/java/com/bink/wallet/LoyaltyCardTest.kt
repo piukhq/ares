@@ -76,6 +76,8 @@ class LoyaltyCardTest {
                                         null,
                                         null,
                                         null,
+                                        null,
+                                        null,
                                         null
                                     )
                                 )
@@ -101,6 +103,7 @@ class LoyaltyCardTest {
                                         MembershipPlan(
                                             "1234",
                                             "plan",
+                                            null,
                                             null,
                                             null,
                                             null,

@@ -95,6 +95,11 @@ class SignUpAdapter(
             with(text) {
                 hint = item.first.description
                 setText(item.second.value)
+                item.second.disabled?.let {
+                    if (it) {
+                        isEnabled = false
+                    }
+                }
                 addTextChangedListener(textWatcher)
                 if (brands[adapterPosition].second.value.isNullOrBlank())
                     error = null
@@ -102,12 +107,14 @@ class SignUpAdapter(
                     checkIfError(brands[adapterPosition].first, adapterPosition, this)
 
                 setOnFocusChangeListener { _, isFocus ->
-                    if (!isFocus)
+                    if (!isFocus) {
+                        setText(getText().toString().trim())
                         try {
                             checkIfError(brands[adapterPosition].first, adapterPosition, this)
                         } catch (ex: Exception) {
                             Log.e(SignUpAdapter::class.simpleName, "Invalid regex : $ex")
                         }
+                    }
                 }
             }
 

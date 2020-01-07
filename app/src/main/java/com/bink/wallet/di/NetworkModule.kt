@@ -29,11 +29,11 @@ fun provideDefaultOkHttpClient(): OkHttpClient {
         )?.let {
             it
         }
-
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")
-            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
+            .header("Authorization", jwtToken ?: EMPTY_STRING)
+            .url(request)
             .build()
         chain.proceed(newRequest)
     }
