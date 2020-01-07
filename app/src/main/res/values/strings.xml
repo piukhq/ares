@@ -27,6 +27,7 @@
     <string name="barcode_card_number">Card number:</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
     <string name="card_status_pending">Pending</string>
+    <string name="card_status_retry">Retry</string>
     <string name="link_status_cannot_link">Cannot link</string>
     <string name="plan_name_card_extra"><![CDATA[info >]]></string>
 
