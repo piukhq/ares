@@ -65,23 +65,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 planBooleanFieldsList?.add(
                     pairPlanField
                 )
-            } else {
-                if (!planField.column.equals(BARCODE_TEXT))
-                    planFieldsList?.add(
-                        pairPlanField
-                    )
-            }
+            } else if (!planField.column.equals(BARCODE_TEXT))
+                planFieldsList?.add(
+                    pairPlanField
+                )
         }
 
         if (planField is PlanDocuments) {
-            val pairPlanField = Pair(
-                planField, PlanFieldsRequest(
-                    planField.name, ""
-                )
-            )
-
             planBooleanFieldsList?.add(
-                pairPlanField
+                Pair(
+                    planField, PlanFieldsRequest(
+                        planField.name, ""
+                    )
+                )
             )
         }
     }
@@ -188,14 +184,15 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     }
 
-                    account?.authorise_fields?.map {
-                        it.typeOfField = TypeOfField.AUTH
-                        addFieldToList(it)
-                    }
-
-                    account?.plan_documents?.map {
-                        if (it.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
+                    account?.let {
+                        account.authorise_fields?.map {
+                            it.typeOfField = TypeOfField.AUTH
                             addFieldToList(it)
+                        }
+                        account.plan_documents?.map {
+                            if (it.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
+                                addFieldToList(it)
+                            }
                         }
                     }
 
