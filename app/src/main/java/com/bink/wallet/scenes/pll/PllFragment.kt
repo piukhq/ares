@@ -42,7 +42,9 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             PllFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
-                membershipCard.payment_cards?.isNullOrEmpty()?.let { paymentCards -> displayTitle(paymentCards) }
+                membershipCard.payment_cards?.isNullOrEmpty()?.let { paymentCards ->
+                    displayTitle(paymentCards)
+                }
                 if (isAddJourney) {
                     this@PllFragment.isAddJourney = isAddJourney
                     binding.toolbar.navigationIcon = null
