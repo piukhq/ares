@@ -129,7 +129,7 @@
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 android:text="@string/no_account_text"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_big"
+                android:textSize="@dimen/size_sub_headline"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

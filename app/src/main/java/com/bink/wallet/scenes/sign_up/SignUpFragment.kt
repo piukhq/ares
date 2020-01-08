@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes
+package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
 import android.text.SpannableString
@@ -7,7 +7,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
 import android.util.Patterns
 import android.view.View
-import android.widget.CheckBox
+import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -86,18 +86,24 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             )
             viewModel = this@SignUpFragment.viewModel
 
+            binding.checkboxTermsConditionsText.setOnClickListener {
+                binding.checkboxTermsConditions.performClick()
+            }
             buildHyperlinkSpanString(
-                binding.checkboxTermsConditions.text.toString(),
+                binding.checkboxTermsConditionsText.text.toString(),
                 getString(R.string.terms_conditions_text),
                 getString(R.string.terms_and_conditions_url),
-                binding.checkboxTermsConditions
+                binding.checkboxTermsConditionsText
             )
 
+            binding.checkboxPrivacyPolicyText.setOnClickListener {
+                binding.checkboxPrivacyPolicy.performClick()
+            }
             buildHyperlinkSpanString(
-                binding.checkboxPrivacyPolicy.text.toString(),
+                binding.checkboxPrivacyPolicyText.text.toString(),
                 getString(R.string.privacy_policy_text),
                 getString(R.string.privacy_policy_url),
-                binding.checkboxPrivacyPolicy
+                binding.checkboxPrivacyPolicyText
             )
         }
 
@@ -164,10 +170,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
                     marketingPref(
                         MarketingOption(
-                            when (marketingMessages.value) {
-                                true -> 1
-                                else -> 0
-                            }
+                            marketingMessages.value.toInt()
                         )
                     )
 
@@ -242,7 +245,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        textView: CheckBox
+        textView: TextView
     ) {
         val spannableString = SpannableString(stringToSpan)
         spannableString.setSpan(
