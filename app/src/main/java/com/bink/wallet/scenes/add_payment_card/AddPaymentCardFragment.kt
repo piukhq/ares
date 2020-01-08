@@ -87,10 +87,9 @@ class AddPaymentCardFragment :
                 this,
                 AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
                     GenericModalParameters(
-                        R.drawable.ic_back,
-                        false,
-                        getString(R.string.privacy_and_security),
-                        getString(R.string.privacy_and_security_description)
+                        isCloseModal =true,
+                        title = getString(R.string.privacy_and_security),
+                        description = getString(R.string.privacy_and_security_description)
                     )
                 )
             )
