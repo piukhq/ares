@@ -402,13 +402,16 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean) {
     }
 }
 
-
 @BindingAdapter("pllDescription")
 fun TextView.setPllDescription(planNameCard: String?) {
     text = resources.getString(R.string.pll_description, planNameCard)
 }
 
-
-
-
-
+@BindingAdapter("preferenceLabel", "preferenceSlug", requireAll = true)
+fun TextView.setPreferenceLabel(preferenceLabel: String?, preferenceSlug: String?) {
+    text = if (preferenceSlug == PREFERENCE_MARKETING_SLUG) {
+        context.getString(R.string.preference_marketing_bink)
+    } else {
+        preferenceLabel
+    }
+}
