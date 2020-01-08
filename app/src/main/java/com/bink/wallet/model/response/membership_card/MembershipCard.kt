@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "membership_card")
-data class MembershipCard(
+data class  MembershipCard(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
     @ColumnInfo(name = "payment_cards") var payment_cards: List<PaymentMembershipCard>?,
@@ -22,13 +22,17 @@ data class MembershipCard(
     @ColumnInfo(name = "bankCard") var card: Card?,
     @ColumnInfo(name = "card_images") var images: List<CardImages>?,
     @ColumnInfo(name = "balances") var balances: List<CardBalance>?,
-    @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>?
+    @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>?,
+    @ColumnInfo(name = "account") var account: Account?,
+    @ColumnInfo(name = "vouchers") var vouchers: List<Voucher>?
 ) : Parcelable {
     @Ignore
     var plan: MembershipPlan? = null
 
     constructor(id: String) : this(
         id,
+        null,
+        null,
         null,
         null,
         null,

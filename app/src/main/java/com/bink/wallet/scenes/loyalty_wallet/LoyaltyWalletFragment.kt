@@ -161,7 +161,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchLocalMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
-            showNoInternetConnectionDialog()
+            disableIndicators()
         }
 
         binding.swipeLayout.setOnRefreshListener {
@@ -172,9 +172,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     viewModel.fetchMembershipCards()
                 }
             } else {
-                showNoInternetConnectionDialog()
+                disableIndicators()
             }
         }
+    }
+
+    private fun disableIndicators() {
+        showNoInternetConnectionDialog()
+        binding.swipeLayout.isRefreshing = false
+        binding.progressSpinner.visibility = View.GONE
     }
 
     private fun onCardClicked(item: Any) {
@@ -225,8 +231,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 viewModel.deleteCard(membershipCard.id)
                             }
                         } else {
-                            showNoInternetConnectionDialog()
+                            disableIndicators()
                         }
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(

@@ -5,7 +5,10 @@ import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -249,8 +252,15 @@ fun TextView.setValue(membershipTransactions: MembershipTransactions) {
 }
 
 @BindingAdapter("transactionTime")
-fun TextView.setTimestamp(timeStamp: Long) {
-    this.text = DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
+fun TextView.setTimestamp(transaction: MembershipTransactions) {
+    if (transaction.timestamp != null &&
+        transaction.description != null
+    ) {
+        this.text = "${DateFormat.format(
+            "dd MMMM yyyy",
+            transaction.timestamp * 1000
+        )}, ${transaction.description}"
+    }
 }
 
 @BindingAdapter("transactionArrow")
@@ -373,6 +383,32 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
         else -> this.context.getString(R.string.empty_string)
     }
 }
+
+@BindingAdapter("paymentCardDetailsTitle")
+fun TextView.setPcdTitle(hasAddedPlls: Boolean) {
+    text = if (hasAddedPlls) {
+        context.getString(R.string.payment_card_details_title_text)
+    } else {
+        context.getString(R.string.payment_card_details_title_text_empty)
+    }
+}
+
+@BindingAdapter("paymentCardDetailsSubtitle")
+fun TextView.setPcdSubtitle(hasAddedPlls: Boolean) {
+    text = if (hasAddedPlls) {
+        context.getString(R.string.payment_card_details_description_text)
+    } else {
+        context.getString(R.string.payment_card_details_description_text_empty)
+    }
+}
+
+
+@BindingAdapter("pllDescription")
+fun TextView.setPllDescription(planNameCard: String?) {
+    text = resources.getString(R.string.pll_description, planNameCard)
+}
+
+
 
 
 
