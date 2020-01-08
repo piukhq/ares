@@ -59,7 +59,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        //TODO Handle error codes, for now just 401 needed
         try {
             viewModel.errorCode.observe(viewLifecycleOwner, Observer {
                 if (it == HttpURLConnection.HTTP_UNAUTHORIZED) {
@@ -73,12 +72,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             Log.e(BaseFragment::class.simpleName, e.toString())
         }
 
-        //TODO Check internet connection globally
-//            noInternetConnectionEvent.observe(viewLifecycleOwner, Observer { })
-
-        //TODO Handle timeout globally
-//            connectTimeoutEvent.observe(viewLifecycleOwner, Observer { })
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -87,7 +80,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                         windowFullscreenHandler.toNormalScreen()
                         findNavController().popBackStack()
                     } else {
-                        activity?.finish()
+                        requireActivity().finish()
                     }
                 }
             })

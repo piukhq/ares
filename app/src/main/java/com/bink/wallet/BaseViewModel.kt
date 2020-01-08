@@ -45,25 +45,9 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
                 }
                 else -> {
                     val baseException = convertToBaseException(throwable)
-
                     errorCode.value = baseException.httpCode
-
-                    //TODO Logic example for error handling, for now just unauthorised needed
-//                    when (baseException.httpCode) {
-//                        HttpURLConnection.HTTP_UNAUTHORIZED -> {
-//                            errorMessage.value = baseException.message
-//                        }
-//                        HttpURLConnection.HTTP_INTERNAL_ERROR -> {
-//                            errorMessage.value = baseException.message
-//                        }
-//                        else -> {
-//                            errorMessage.value = baseException.message
-//                        }
-//                    }
                 }
             }
-
-            //TODO Should be implemented something to disable loading spinner and here it should be dismissed
         }
     }
 }
