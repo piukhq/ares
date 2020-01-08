@@ -80,40 +80,41 @@ open class GenericModalFragment :
     }
 
     protected fun setupUi(parameters: GenericModalParameters) {
-        if (parameters.topBarIconId != 0 &&
-            !parameters.isCloseModal
-        ) {
-            binding.close.visibility = View.GONE
-            binding.toolbar.setNavigationIcon(parameters.topBarIconId)
-
-        }
-        binding.title.text = parameters.title
-        binding.description.text =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                Html.fromHtml(parameters.description)
+        with (binding) {
+            if (!parameters.isCloseModal) {
+                close.visibility = View.GONE
             }
-
-        binding.description2.text =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                Html.fromHtml(parameters.description2)
+            if (parameters.topBarIconId != 0) {
+                toolbar.setNavigationIcon(parameters.topBarIconId)
             }
-        binding.description.movementMethod = LinkMovementMethod.getInstance()
+            title.text = parameters.title
+            description.text =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    Html.fromHtml(parameters.description)
+                }
 
-        if (parameters.firstButtonText.isNotEmpty()) {
-            binding.firstButton.visibility = View.VISIBLE
-            binding.firstButton.text = parameters.firstButtonText
-        } else {
-            binding.firstButton.visibility = View.GONE
-        }
-        if (parameters.secondButtonText.isNotEmpty()) {
-            binding.secondButton.visibility = View.VISIBLE
-            binding.secondButton.text = parameters.secondButtonText
-        } else {
-            binding.secondButton.visibility = View.GONE
+            description2.text =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    Html.fromHtml(parameters.description2)
+                }
+            description.movementMethod = LinkMovementMethod.getInstance()
+
+            if (parameters.firstButtonText.isNotEmpty()) {
+                firstButton.visibility = View.VISIBLE
+                firstButton.text = parameters.firstButtonText
+            } else {
+                firstButton.visibility = View.GONE
+            }
+            if (parameters.secondButtonText.isNotEmpty()) {
+                secondButton.visibility = View.VISIBLE
+                secondButton.text = parameters.secondButtonText
+            } else {
+                secondButton.visibility = View.GONE
+            }
         }
     }
 
