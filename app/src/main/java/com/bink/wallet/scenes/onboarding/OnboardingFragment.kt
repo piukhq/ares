@@ -14,7 +14,10 @@ import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOAR
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
+import com.facebook.login.LoginBehavior
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -40,12 +43,14 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(context)
+        LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val adapter = OnboardingPagerAdapter(childFragmentManager)
+
         adapter.let {
             it.addFragment(
                 OnboardingPageFragment.newInstance(
@@ -79,6 +84,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
         binding.continueWithFacebook.fragment = this
         binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY))
+        binding.continueWithFacebook.loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         binding.continueWithFacebook.registerCallback(
             callbackManager,
             object : FacebookCallback<LoginResult> {
@@ -87,15 +93,15 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                         retrieveFacebookLoginInformation(it)
                     }
                 }
-
                 override fun onCancel() {
+                    hideKeyboard(requireContext(), binding.continueWithFacebook)
                     requireContext().displayModalPopup(
                         null,
                         getString(R.string.facebook_cancelled)
                     )
                 }
-
                 override fun onError(error: FacebookException?) {
+                    hideKeyboard(requireContext(), binding.continueWithFacebook)
                     requireContext().displayModalPopup(
                         null,
                         getString(R.string.facebook_unavailable)
@@ -170,6 +176,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         val parameters = Bundle()
         parameters.putString(FIELDS_KEY, EMAIL_KEY)
         request.parameters = parameters
+
         request.executeAsync()
     }
 
