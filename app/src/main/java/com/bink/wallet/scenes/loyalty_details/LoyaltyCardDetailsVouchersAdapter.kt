@@ -13,7 +13,10 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.VoucherStates
 import kotlin.math.roundToInt
 
-class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
+class LoyaltyCardDetailsVouchersAdapter(
+    private val vouchers: List<Voucher>,
+    val onClickListener: (Any) -> Unit = {}
+) :
     RecyclerView.Adapter<LoyaltyCardDetailsVouchersAdapter.LoyaltyCardDetailsVouchersViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -26,7 +29,7 @@ class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
             parent,
             false
         ) as DetailVoucherItemBinding
-        return LoyaltyCardDetailsVouchersViewHolder(binding)
+        return LoyaltyCardDetailsVouchersViewHolder(binding, onClickListener)
     }
 
     override fun getItemCount() = vouchers.size
@@ -36,7 +39,8 @@ class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
 
 
     class LoyaltyCardDetailsVouchersViewHolder(
-        var binding: DetailVoucherItemBinding
+        var binding: DetailVoucherItemBinding,
+        val onClickListener: (Any) -> Unit = {}
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(thisVoucher: Voucher) {
@@ -51,6 +55,11 @@ class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
                             it.currency,
                             it.type
                         )
+                    }
+                }
+                root.apply {
+                    this.setOnClickListener {
+                        onClickListener(thisVoucher)
                     }
                 }
             }
@@ -94,32 +103,6 @@ class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
                         fillProgressBar()
                     }
                 }
-                VoucherStates.REDEEMED.state -> {
-                    fillProgressBar()
-                    hideEarnBurnValues()
-                    thisVoucher.date_redeemed?.let {
-                        if (thisVoucher.date_redeemed != LONG_ZERO) {
-                            binding.voucherDate.visibility = View.VISIBLE
-                            binding.voucherDate.setTimestamp(
-                                thisVoucher.date_redeemed,
-                                binding.root.context.getString(R.string.voucher_entry_date)
-                            )
-                        }
-                    }
-                }
-                VoucherStates.EXPIRED.state -> {
-                    fillProgressBar()
-                    hideEarnBurnValues()
-                    thisVoucher.expiry_date?.let {
-                        if (thisVoucher.expiry_date != LONG_ZERO) {
-                            binding.voucherDate.visibility = View.VISIBLE
-                            binding.voucherDate.setTimestamp(
-                                thisVoucher.expiry_date,
-                                binding.root.context.getString(R.string.voucher_entry_date)
-                            )
-                        }
-                    }
-                }
                 else -> {
                     hideEarnBurnValues()
                     fillProgressBar()
@@ -138,9 +121,9 @@ class LoyaltyCardDetailsVouchersAdapter(private val vouchers: List<Voucher>) :
         }
 
         private fun fillProgressBar() {
-            with (binding.progressBar) {
-                max = INT_ONE_HUNDRED
-                progress = INT_ONE_HUNDRED
+            with(binding) {
+                progressBar.max = INT_ONE_HUNDRED
+                progressBar.progress = INT_ONE_HUNDRED
             }
         }
 
