@@ -94,7 +94,7 @@ class LoyaltyWalletRepository(
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
                 try {
-                    request?.await()
+                    val response = request?.await()
                     mutableDeleteCard.value = id
                     membershipCardDao.deleteCard(id.toString())
                 } catch (e: Throwable) {

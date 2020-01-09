@@ -216,7 +216,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -269,7 +269,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
         <action
                 android:id="@+id/sign_up_to_pll"
                 app:destination="@+id/pll_fragment"
@@ -427,7 +427,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -447,7 +447,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
 
     </fragment>
 
@@ -496,7 +496,7 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
 
     <fragment
@@ -519,6 +519,15 @@
         <action
                 android:id="@+id/card_terms_to_add"
                 app:destination="@+id/add_payment_card"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/add_fragment" />
+
+        <action
+                android:id="@+id/card_terms_to_details"
+                app:destination="@+id/payment_card_detail"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
