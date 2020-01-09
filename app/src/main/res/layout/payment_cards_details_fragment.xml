@@ -12,6 +12,19 @@
         <variable
                 name="linkingInProgress"
                 type="Boolean"/>
+
+        <variable
+                name="hasAddedPllCards"
+                type="Boolean" />
+
+        <variable
+                name="shouldDisplayOtherCardsTitleAndDescription"
+                type="Boolean" />
+
+        <variable
+                name="hasOtherCardsToAdd"
+                type="Boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,41 +60,39 @@
 
                 <TextView
                         android:id="@+id/payment_card_details_title"
+                        style="@style/HeaderTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:text="@string/payment_card_details_title_text"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
-                        android:textStyle="bold"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/payment_header" />
+                        app:layout_constraintTop_toBottomOf="@+id/payment_header"
+                        app:paymentCardDetailsTitle="@{hasAddedPllCards}"
+                        tools:text="@string/payment_card_details_title_text" />
 
                 <TextView
                         android:id="@+id/payment_card_details_description"
+                        style="@style/CustomTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_small"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:text="@string/payment_card_details_description_text"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title" />
+                        app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title"
+                        app:paymentCardDetailsSubtitle="@{hasAddedPllCards}"
+                        tools:text="@string/payment_card_details_description_text" />
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/available_pll_list"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:visibility="gone"
+                        app:isVisible="@{hasAddedPllCards}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/payment_card_details_description"
@@ -119,7 +130,7 @@
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/separator_color"
                         android:visibility="gone"
                         app:layout_constraintBottom_toTopOf="@+id/footer_rename"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +155,7 @@
                         android:layout_marginTop="@dimen/margin_padding_size_small"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/separator_color"
                         app:layout_constraintBottom_toTopOf="@+id/footer_delete"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -164,39 +175,38 @@
 
                 <TextView
                         android:id="@+id/other_cards_title"
-                        style="@style/TitleTextView"
+                        style="@style/HeaderTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:text="@string/other_cards_you_can_add_title"
-                        android:visibility="gone"
+                        app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/available_pll_list" />
 
                 <TextView
                         android:id="@+id/other_cards_description"
+                        style="@style/CustomTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:text="@string/other_cards_you_can_add_description"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
-                        android:visibility="gone"
+                        app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/other_cards_title" />
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/other_cards_list"
+                        isVisible="@{hasOtherCardsToAdd}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
                         app:layout_constraintEnd_toStartOf="@+id/footer_delete"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/other_cards_description" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

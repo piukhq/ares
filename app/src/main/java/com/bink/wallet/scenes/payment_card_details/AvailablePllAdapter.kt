@@ -9,6 +9,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.matchSeparator
+
 
 class AvailablePllAdapter(
     private var currentPaymentCard: PaymentCard,
@@ -21,12 +23,11 @@ class AvailablePllAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailablePllViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = LinkedCardsListItemBinding.inflate(inflater)
-
         return AvailablePllViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AvailablePllViewHolder, position: Int) =
-        membershipCards[position].let { holder.bind(it) }
+        membershipCards[position].let { holder.bind(it, membershipCards.lastIndex == position) }
 
     override fun getItemCount(): Int = membershipCards.size
 
@@ -59,9 +60,12 @@ class AvailablePllAdapter(
     inner class AvailablePllViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MembershipCardAdapterItem) {
+        fun bind(item: MembershipCardAdapterItem, isLastItem: Boolean) {
             val currentMembershipPlan = getPlanByCardId(item.membershipCard)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
+            if (isLastItem) {
+                binding.root.context.matchSeparator(binding.separator.id, binding.itemLayout)
+            }
             binding.membershipCard = item.membershipCard
             binding.toggle.isEnabled = item.isChangeable
             binding.toggle.isChecked =
