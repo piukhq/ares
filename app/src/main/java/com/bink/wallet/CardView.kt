@@ -35,7 +35,6 @@ class CardView : View {
         val a = context.obtainStyledAttributes(
             attrs, R.styleable.CardView, defStyle, 0
         )
-
         firstColor = a.getInteger(R.styleable.CardView_firstColor, 0)
         secondColor = a.getInteger(R.styleable.CardView_secondColor, 0)
 

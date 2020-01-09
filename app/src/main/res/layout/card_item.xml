@@ -13,12 +13,12 @@
 
     <androidx.cardview.widget.CardView
             android:id="@+id/main_layout"
-            android:background="@color/white"
-            app:cardBackgroundColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardUseCompatPadding="false"
-            app:cardCornerRadius="@dimen/loyalty_card_corner_radius">
+            android:background="@color/white"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/loyalty_card_corner_radius"
+            app:cardUseCompatPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -78,11 +78,10 @@
                 <TextView
                         android:id="@+id/loyalty_value"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_medium"
-                        android:fontFamily="@font/nunito_sans_extrabold"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -92,10 +91,9 @@
                         android:id="@+id/loyalty_value_extra"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:layout_gravity="end"
+                        android:fontFamily="@font/nunito_sans"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_body"
-                        android:fontFamily="@font/nunito_sans"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/loyalty_value"
                         tools:text="Points" />
@@ -128,11 +126,11 @@
                         android:id="@+id/link_status_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:gravity="end"
                         android:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
                         android:textSize="@dimen/size_body_medium"
-                        android:fontFamily="@font/nunito_sans_semibold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
