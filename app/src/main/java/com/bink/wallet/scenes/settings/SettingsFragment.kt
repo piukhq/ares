@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -218,22 +219,24 @@ class SettingsFragment :
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
-            LocalStoreUtils.clearPreferences()
-            try {
-                findNavController().navigateIfAdded(
-                    this@SettingsFragment,
-                    R.id.settings_to_onboarding
-                )
-            } catch (e: Exception) {
-            }
-            viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+            clearUserDetails()
         }
 
         viewModel.logOutErrorResponse.observeNonNull(this@SettingsFragment) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.error_description)
+            clearUserDetails()
+        }
+    }
+
+    private fun clearUserDetails() {
+        viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+        LocalStoreUtils.clearPreferences()
+        try {
+            findNavController().navigateIfAdded(
+                this@SettingsFragment,
+                R.id.settings_to_onboarding
             )
+        } catch (e: Exception) {
+            (requireActivity() as MainActivity).restartApp()
         }
     }
 }
