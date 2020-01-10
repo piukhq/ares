@@ -88,6 +88,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         binding.acceptTc.isChecked = false
         binding.acceptPrivacyPolicy.isChecked = false
         binding.acceptMarketing.isChecked = false
+        viewModel.shouldAcceptBeEnabledTC.value = false
 
         binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
             viewModel.shouldAcceptBeEnabledTC.value = isChecked
@@ -98,9 +99,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
-            viewModel.shouldAcceptBeEnabledPrivacy.value?.let {
+            viewModel.shouldAcceptBeEnabledPrivacy.value?.let { enabledPrivacy ->
                 binding.accept.isEnabled = enabledTc == true &&
-                        it == true
+                        enabledPrivacy == true
             }
         }
 
