@@ -25,7 +25,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
                             android:fontFamily="@font/nunito_sans_bold"
                             android:text="@string/card_name"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_description_big"
+                            android:textSize="@dimen/size_sub_headline"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -87,7 +87,7 @@
                             android:fontFamily="@font/nunito_sans_bold"
                             android:text="@string/_mock_card_ending"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_description_big"
+                            android:textSize="@dimen/size_sub_headline"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -101,7 +101,7 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/add_payment_card"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         android:textStyle="bold" />
 
                 <TextView
@@ -121,7 +121,7 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/card_number"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:textStyle="bold" />
 
 
@@ -135,7 +135,8 @@
                         android:inputType="number"
                         android:maxLength="19"
                         android:nextFocusDown="@id/card_expiry"
-                        android:text="@={viewModel.cardNumber}" />
+                        android:text="@={viewModel.cardNumber}"
+                        tools:ignore="Autofill" />
 
                 <TextView
                         android:id="@+id/card_expiry_label"
@@ -145,7 +146,7 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/expiry"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:textStyle="bold" />
 
                 <EditText
@@ -158,7 +159,8 @@
                         android:inputType="date"
                         android:maxLength="5"
                         android:nextFocusDown="@id/card_name"
-                        android:text="@={viewModel.expiryDate}" />
+                        android:text="@={viewModel.expiryDate}"
+                        tools:ignore="Autofill" />
 
 
                 <TextView
@@ -169,7 +171,7 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/name_on_card"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:textStyle="bold" />
 
                 <EditText
@@ -182,7 +184,8 @@
                         android:imeOptions="actionDone"
                         android:inputType="textVisiblePassword"
                         android:minLines="2"
-                        android:text="@={viewModel.cardHolder}" />
+                        android:text="@={viewModel.cardHolder}"
+                        tools:ignore="Autofill" />
 
                 <TextView
                         android:id="@+id/privacy_link"
@@ -192,7 +195,7 @@
                         android:fontFamily="@font/nunito_sans_semibold"
                         android:text="@string/privacy_and_security"
                         android:textColor="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_big" />
+                        android:textSize="@dimen/size_sub_headline" />
 
                 <Button
                         android:id="@+id/add_button"
