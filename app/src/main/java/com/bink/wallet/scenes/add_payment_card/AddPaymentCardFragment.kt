@@ -83,8 +83,16 @@ class AddPaymentCardFragment :
         }
 
         binding.privacyLink.setOnClickListener {
-            val securityDialog = SecurityDialogs(requireContext())
-            securityDialog.openDialog(layoutInflater)
+            findNavController().navigateIfAdded(
+                this,
+                AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
+                    GenericModalParameters(
+                        isCloseModal = true,
+                        title = getString(R.string.privacy_and_security),
+                        description = getString(R.string.privacy_and_security_description)
+                    )
+                )
+            )
         }
 
         binding.addButton.setOnClickListener {
