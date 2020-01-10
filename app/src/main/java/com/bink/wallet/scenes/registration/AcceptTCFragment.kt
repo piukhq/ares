@@ -90,7 +90,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             acceptMarketing.isChecked = false
 
         }
-        
+
         viewModel.shouldAcceptBeEnabledTC.value = false
 
         binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
