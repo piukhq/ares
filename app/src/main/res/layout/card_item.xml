@@ -44,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/margin_padding_size_triple_small"
-                    app:cardCornerRadius="@dimen/margin_padding_size_small"
+                    app:cardCornerRadius="@dimen/margin_padding_size_triple_small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/company_logo"
