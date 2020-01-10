@@ -100,16 +100,20 @@ class PaymentCardWalletAdapter(
                 paymentCard = item
                 executePendingBindings()
 
-                item.card?.provider?.let {
-                    paymentCardWrapper.setBackgroundResource(
-                        it.getCardTypeFromProvider().background
-                    )
-                }
+                item.card?.let { card ->
+                    card.provider?.let { provider ->
+                        paymentCardWrapper.setBackgroundResource(
+                            provider.getCardTypeFromProvider().background
+                        )
+                    }
 
-                if (item.card!!.isExpired()) {
-                    cardExpired.visibility = View.VISIBLE
-                    linkStatus.visibility = View.GONE
-                    imageStatus.visibility = View.GONE
+                    if (card.isExpired()) {
+                        cardExpired.visibility = View.VISIBLE
+                        linkStatus.visibility = View.GONE
+                        imageStatus.visibility = View.GONE
+                    } else {
+                        cardExpired.visibility = View.GONE
+                    }
                 }
 
                 mainPayment.setOnClickListener {

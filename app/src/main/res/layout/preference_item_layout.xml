@@ -22,7 +22,8 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:buttonTint="@color/black"
                 android:checked="@{preference.value == 1}"
-                android:text="@{preference.label}"
+                app:preferenceLabel="@{preference.label}"
+                app:preferenceSlug="@{preference.slug}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -172,7 +172,7 @@ class LoyaltyWalletAdapter(
                         MembershipCardStatus.FAILED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.card_status_retry)
                         }
                         MembershipCardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
