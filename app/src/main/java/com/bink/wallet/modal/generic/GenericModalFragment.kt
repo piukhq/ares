@@ -89,9 +89,9 @@ open class GenericModalFragment :
         with (binding) {
             if (!parameters.isCloseModal) {
                 close.visibility = View.GONE
-            }
-            if (parameters.topBarIconId != 0) {
-                toolbar.setNavigationIcon(parameters.topBarIconId)
+                if (parameters.topBarIconId != 0) {
+                    toolbar.setNavigationIcon(parameters.topBarIconId)
+                }
             }
             title.text = parameters.title
             description.text =
