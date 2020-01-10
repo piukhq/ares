@@ -61,6 +61,7 @@
     <string name="browse_brands_text">Browse brands</string>
     <string name="scan_a_card_you_already_have">Scan a card you already have</string>
     <string name="add_loyalty_card">Add loyalty card</string>
+    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
     <string name="add_payment_card_button_description">Fill in your card details and link your payment card</string>
 
     <!-- Brand Header -->
