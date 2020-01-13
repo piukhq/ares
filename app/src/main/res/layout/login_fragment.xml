@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -30,10 +31,10 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_extrabold"
                 android:text="@string/log_in_email_text"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_headline"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -43,10 +44,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_light"
                 android:text="@string/log_in_screen_description"
-                android:textSize="@dimen/size_sub_headline"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/log_in_screen_title" />
@@ -58,9 +60,10 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_extrabold"
                 android:text="@string/email_text"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textSize="@dimen/size_body_large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/log_in_screen_description" />
@@ -72,12 +75,16 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_email_text"
                 android:inputType="textEmailAddress"
                 android:text="@={viewModel.email}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/email_description" />
+                app:layout_constraintTop_toBottomOf="@+id/email_description"
+                tools:ignore="Autofill" />
 
         <TextView
                 android:id="@+id/password_description"
@@ -86,9 +93,10 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_extrabold"
                 android:text="@string/password_text"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textSize="@dimen/size_body_large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/email_field" />
@@ -100,12 +108,16 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_password"
                 android:inputType="textPassword"
                 android:text="@={viewModel.password}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password_description" />
+                app:layout_constraintTop_toBottomOf="@+id/password_description"
+                tools:ignore="Autofill" />
 
         <TextView
                 android:id="@+id/forgot_password"
@@ -113,8 +125,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_large"
+                android:fontFamily="@font/nunito_sans_semibold"
                 android:textColor="@color/blue_accent"
-                android:textSize="@dimen/size_sub_headline"
+                android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/password_field" />
 
@@ -122,14 +135,15 @@
                 android:id="@+id/log_in_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/button_margin_start"
-                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                android:layout_marginEnd="@dimen/button_margin_end"
+                android:layout_marginStart="@dimen/continue_button_margin"
+                android:layout_marginEnd="@dimen/continue_button_margin"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
                 android:background="@drawable/gradient_button_selector"
+                android:fontFamily="@font/nunito_sans_bold"
                 android:text="@string/continue_text"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

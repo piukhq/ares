@@ -86,6 +86,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 }
             requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
         }
+        viewModel.shouldAcceptBeEnabledTC.value = false
 
         binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
             viewModel.shouldAcceptBeEnabledTC.value = isChecked
@@ -96,9 +97,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
-            viewModel.shouldAcceptBeEnabledPrivacy.value?.let {
+            viewModel.shouldAcceptBeEnabledPrivacy.value?.let { enabledPrivacy ->
                 binding.accept.isEnabled = enabledTc == true &&
-                        it == true
+                        enabledPrivacy == true
             }
         }
 
