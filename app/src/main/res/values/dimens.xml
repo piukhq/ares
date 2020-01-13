@@ -111,6 +111,9 @@
     <dimen name="separator_height">1dp</dimen>
     <dimen name="facebook_button_elevation">4dp</dimen>
 
+    <!-- Login Screen -->
+    <dimen name="continue_button_margin">52dp</dimen>
+
     <!-- PLR -->
     <dimen name="move_up_slightly">-2dp</dimen>
 </resources>

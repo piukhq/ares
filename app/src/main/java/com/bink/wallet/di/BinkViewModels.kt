@@ -25,6 +25,7 @@ import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
@@ -102,6 +103,8 @@ val viewModelModules = module {
     viewModel { ForgotPasswordViewModel(get()) }
 
     viewModel { PreferencesViewModel(get()) }
+
+    viewModel { OnboardingViewModel(get(), get()) }
 }
 
 fun provideLoginRepository(
