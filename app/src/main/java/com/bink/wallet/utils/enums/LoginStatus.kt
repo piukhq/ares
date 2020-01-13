@@ -2,7 +2,7 @@ package com.bink.wallet.utils.enums
 
 import com.bink.wallet.R
 
-enum class LoginStatus(
+enum class  LoginStatus(
     val status: Double,
     val pointsImage: Int,
     val pointsDescription: Int? = null,

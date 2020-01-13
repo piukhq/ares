@@ -91,7 +91,7 @@
     <dimen name="payment_card_height">120dp</dimen>
     <dimen name="payment_card_logo_image_margin">20dp</dimen>
     <dimen name="payment_card_number_top_margin">54dp</dimen>
-    <dimen name="payment_card_spacing_margin">17dp</dimen>
+    <dimen name="payment_card_spacing_margin">16dp</dimen>
     <dimen name="add_card_button_width">82dp</dimen>
     <dimen name="add_card_button_height">28dp</dimen>
     <dimen name="link_icon_size">14.4dp</dimen>
@@ -103,4 +103,8 @@
     <dimen name="page_image_height">200dp</dimen>
     <dimen name="separator_height">1dp</dimen>
     <dimen name="facebook_button_elevation">4dp</dimen>
+
+
+    <!-- Login Screen -->
+    <dimen name="continue_button_margin">52dp</dimen>
 </resources>

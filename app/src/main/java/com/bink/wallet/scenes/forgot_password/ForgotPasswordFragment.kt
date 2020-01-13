@@ -6,10 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ForgotPasswordFragmentBinding
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,16 +20,6 @@ class ForgotPasswordFragment :
             .build()
     }
 
-    private fun validateEmail() =
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(
-                viewModel.email.value ?: EMPTY_STRING
-            ).matches()
-        ) {
-            binding.emailText.error = getString(R.string.invalid_email_text)
-        } else {
-            binding.emailText.error = null
-        }
-
     override val layoutRes: Int = R.layout.forgot_password_fragment
 
     override val viewModel: ForgotPasswordViewModel by viewModel()
@@ -43,12 +30,12 @@ class ForgotPasswordFragment :
         binding.viewModel = viewModel
 
         viewModel.email.observeNonNull(this) {
-            validateEmail()
+            requireContext().validateEmail(it, binding.emailText)
+            setLoginButtonEnableStatus()
         }
 
         binding.buttonContinueEmail.setOnClickListener {
-
-            validateEmail()
+            requireContext().validateEmail(viewModel.email.value, binding.emailText)
 
             if (binding.emailText.error != null) {
                 requireContext().displayModalPopup(
@@ -93,7 +80,15 @@ class ForgotPasswordFragment :
                 getString(R.string.error_description)
             )
         }
-
     }
 
+    private fun setLoginButtonEnableStatus() {
+        with(binding) {
+            viewModel?.let {
+                buttonContinueEmail.isEnabled =
+                    (binding.emailText.error == null &&
+                            (it.email.value ?: EMPTY_STRING).isNotBlank())
+            }
+        }
+    }
 }

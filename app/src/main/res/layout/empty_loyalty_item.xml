@@ -31,7 +31,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground">
 
                 <ImageView
                         android:id="@+id/join_card_image"
@@ -79,13 +80,9 @@
 
                 <ImageView
                         android:id="@+id/dismiss_banner"
+                        style="?actionButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_margin="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:src="@drawable/ic_close"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"

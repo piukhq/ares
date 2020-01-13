@@ -6,11 +6,6 @@
     <data>
 
         <import type="android.text.InputType" />
-
-        <variable
-                name="PlanField"
-                type="com.bink.wallet.model.response.membership_plan.PlanFields" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +20,9 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:buttonTint="@color/black"
                 android:textColor="@color/cool_grey"
+                android:textColorLink="@color/blue_accent"
                 android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

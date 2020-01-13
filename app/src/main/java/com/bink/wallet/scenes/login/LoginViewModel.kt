@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.login
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
@@ -39,7 +38,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
         loginRepository.logIn(loginRequest, logInResponse, logInErrorResponse)
     }
 
-    fun retrieveStoredLoginData(context: Context) = viewModelScope.launch {
+    fun retrieveStoredLoginData() = viewModelScope.launch {
         loginData.value = LoginData(
             DEFAULT_LOGIN_ID,
             LocalStoreUtils.getAppSharedPref(
