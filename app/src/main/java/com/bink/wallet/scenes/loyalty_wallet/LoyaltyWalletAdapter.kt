@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
-import com.bink.wallet.utils.enums.CardStatus
-import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -77,14 +76,6 @@ class LoyaltyWalletAdapter(
 
     override fun getItemId(position: Int): Long = position.toLong()
 
-    private fun getItemPosition(cardId: String): Int =
-        membershipCards.indexOfFirst { card -> (card as MembershipCard).id == cardId }
-
-    fun deleteCard(cardId: String) {
-        membershipCards.removeAt(getItemPosition(cardId))
-        notifyItemRemoved(getItemPosition(cardId))
-    }
-
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
 
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
@@ -93,18 +84,24 @@ class LoyaltyWalletAdapter(
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
 
-                if (currentNewItem is MembershipCard && currentOldItem is MembershipCard)
+                if (currentNewItem is MembershipCard &&
+                    currentOldItem is MembershipCard
+                )
                     return currentNewItem.id == currentOldItem.id
 
-                if (currentNewItem is MembershipPlan && currentOldItem is MembershipPlan)
+                if (currentNewItem is MembershipPlan &&
+                    currentOldItem is MembershipPlan
+                )
                     return currentNewItem.id == currentOldItem.id
 
-                return false
+                return currentNewItem is JoinCardItem &&
+                        currentOldItem is JoinCardItem
+
             }
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldList[oldItemPosition] == newList[newItemPosition]
-            }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldList[oldItemPosition] == newList[newItemPosition]
+
 
             override fun getOldListSize() = oldList.size
 
@@ -119,8 +116,7 @@ class LoyaltyWalletAdapter(
 
         override fun bind(item: Any) {
             with(binding) {
-                close.setOnClickListener {
-                    SharedPreferenceManager.isPaymentJoinHidden = true
+                dismissBanner.setOnClickListener {
                     onRemoveListener(item)
                 }
 
@@ -139,55 +135,51 @@ class LoyaltyWalletAdapter(
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
                 with(cardBinding) {
                     plan = currentMembershipPlan
+                    item.plan = plan
                     mainLayout.setOnClickListener { onClickListener(item) }
 
                     when (item.status?.state) {
-                        CardStatus.AUTHORISED.status -> {
+                        MembershipCardStatus.AUTHORISED.status -> {
                             cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
-                            val balance = item.balances?.first()
-                            when (balance?.prefix != null) {
-                                true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
-                                else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                            if (!item.balances.isNullOrEmpty()) {
+                                val balance = item.balances?.first()
+                                when (balance?.prefix != null) {
+                                    true ->
+                                        loyaltyValue.text =
+                                            balance?.prefix?.plus(balance.value)
+                                    else -> {
+                                        loyaltyValue.text = balance?.value
+                                        loyaltyValueExtra.text = balance?.suffix
+                                    }
                                 }
                             }
                         }
-                        CardStatus.PENDING.status -> {
+                        MembershipCardStatus.PENDING.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
                             loyaltyValue.text =
                                 mainLayout.context.getString(R.string.card_status_pending)
                         }
-                        CardStatus.FAILED.status -> {
+                        MembershipCardStatus.FAILED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
+                            loyaltyValue.text = mainLayout.context.getString(R.string.card_status_retry)
                         }
-                        CardStatus.UNAUTHORISED.status -> {
+                        MembershipCardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
                             cardLogin.visibility = View.GONE
                             loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                     }
-                    if (currentMembershipPlan.feature_set?.card_type != CardType.PLL.type) {
-                        linkStatusWrapper.visibility = View.VISIBLE
-                        linkStatusImg.setImageResource(R.drawable.ic_unlinked)
-                        linkStatusText.text =
-                            mainLayout.context.getString(R.string.link_status_cannot_link)
-                    } else {
-                        when (item.payment_cards?.size) {
-                            0 -> {
-                                linkStatusWrapper.visibility = View.GONE
-                            }
-                            else -> {
-                                linkStatusWrapper.visibility = View.VISIBLE
-                                linkStatusText.text =
-                                    mainLayout.context.getString(R.string.loyalty_card_linked)
-                            }
+                    linkStatusWrapper.visibility = View.VISIBLE
+                    with(item.getLinkStatus()) {
+                        if (linkImage == 0) {
+                            linkStatusWrapper.visibility = View.GONE
+                        } else {
+                            linkStatusImg.setImageResource(linkImage)
+                            linkStatusText.text =
+                                mainLayout.context.getString(display)
                         }
                     }
                 }
@@ -205,7 +197,7 @@ class LoyaltyWalletAdapter(
         override fun bind(item: MembershipPlan) {
             with(binding) {
                 membershipPlan = item
-                close.setOnClickListener {
+                dismissBanner.setOnClickListener {
                     onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
                 }
                 joinCardMainLayout.setOnClickListener { onClickListener(item) }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -37,11 +37,15 @@
         <TextView
                 android:id="@+id/title"
                 style="@style/HeaderTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/title_margin_top"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:text="@{viewModel.title}"
+                app:layout_constraintBottom_toTopOf="@+id/description"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/brand_header"
                 tools:text="Add card" />
@@ -49,13 +53,16 @@
         <TextView
                 android:id="@+id/description"
                 style="@style/DescriptionTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:text="@string/pll_description"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                app:pllDescription="@{viewModel.membershipPlan.account.plan_name_card}"
+                tools:text="The payment cards below will be linked to your Rewards. Simply pay with them to collect points." />
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/payment_cards"
@@ -75,8 +82,8 @@
                 style="@style/RoundedGradientButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/brand_logo_size"
-                android:layout_marginEnd="@dimen/brand_logo_size"
+                android:layout_marginStart="@dimen/pll_done_button_margin_horizontal"
+                android:layout_marginEnd="@dimen/pll_done_button_margin_horizontal"
                 android:layout_marginBottom="@dimen/margin_padding_size_large"
                 android:text="@string/done_button"
                 android:textAllCaps="false"

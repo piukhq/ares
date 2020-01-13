@@ -1,19 +1,15 @@
 package com.bink.wallet.scenes.add_payment_card
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,93 +31,80 @@ class AddPaymentCardFragment :
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
 
+
+    private fun validateCardName() {
+        binding.cardName.error =
+            if (binding.cardName.text.isEmpty()) {
+                getString(R.string.incorrect_card_name)
+            } else {
+                null
+            }
+    }
+
+    private fun validateCardNumber() {
+        binding.cardNumber.error =
+            if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
+                getString(R.string.incorrect_card_error)
+            } else {
+                null
+            }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
-        val cardNumberTextWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-            }
+        binding.viewModel = viewModel
 
-            override fun beforeTextChanged(
-                p0: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                currentText: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-                cardSwitcher(currentText.toString())
-                cardInfoDisplay()
-                updateEnteredCardNumber()
-            }
-        }
-        with (binding.cardNumber) {
-            addTextChangedListener(cardNumberTextWatcher)
-            setOnFocusChangeListener { _, focus ->
-                if (!focus) {
-                    binding.cardNumberInputLayout.error =
-                        if (text.toString().cardValidation() == PaymentCardType.NONE) {
-                            getString(R.string.incorrect_card_error)
-                        } else {
-                            getString(R.string.empty_string)
-                        }
-                }
-            }
+        viewModel.cardNumber.observeNonNull(this) {
+            cardSwitcher(it)
+            cardInfoDisplay()
+            updateEnteredCardNumber()
         }
 
-        binding.cardExpiry.setOnFocusChangeListener { view, focus ->
+        binding.cardNumber.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                binding.cardExpiryInputLayout.error = cardExpiryErrorCheck(view)
+                validateCardNumber()
             }
         }
 
-        val nameTextWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(
-                currentText: CharSequence?,
-                p1: Int,
-                p2: Int,
-                p3: Int
-            ) {
-                binding.displayCardName.text = currentText
+        binding.cardExpiry.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                binding.cardExpiry.error =
+                    cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
             }
         }
-        with (binding.cardName) {
-            addTextChangedListener(nameTextWatcher)
-            setOnFocusChangeListener { view, focus ->
-                if (!focus) {
-                    binding.cardNameInputLayout.error =
-                        if (binding.cardName.text.toString().isEmpty()) {
-                            getString(R.string.incorrect_card_name)
-                        } else {
-                            getString(R.string.empty_string)
-                        }
-                }
+
+        binding.cardName.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                validateCardName()
             }
         }
 
         binding.privacyLink.setOnClickListener {
-            val securityDialog = SecurityDialogs(requireContext())
-            securityDialog.openDialog(layoutInflater)
+            findNavController().navigateIfAdded(
+                this,
+                AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
+                    GenericModalParameters(
+                        isCloseModal = true,
+                        title = getString(R.string.privacy_and_security),
+                        description = getString(R.string.privacy_and_security_description)
+                    )
+                )
+            )
         }
 
         binding.addButton.setOnClickListener {
-            if (binding.cardNumberInputLayout.error.isNullOrEmpty() &&
-                binding.cardExpiryInputLayout.error.isNullOrBlank() &&
-                !binding.cardName.text.isNullOrEmpty()) {
+            validateCardName()
+            validateCardNumber()
+            binding.cardExpiry.error =
+                cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
+
+            if (binding.cardNumber.error.isNullOrEmpty() &&
+                binding.cardExpiry.error.isNullOrBlank() &&
+                !binding.cardName.text.isNullOrEmpty()
+            ) {
 
                 val cardNo = binding.cardNumber.text.toString().numberSanitize()
                 val cardExp = binding.cardExpiry.text.toString().split("/")
@@ -139,32 +122,36 @@ class AddPaymentCardFragment :
                     BankCard.tokenGenerator(),
                     BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
                 )
+
                 val params = GenericModalParameters(
                     R.drawable.ic_close,
+                    true,
                     getString(R.string.terms_and_conditions_title),
                     getString(R.string.terms_and_conditions_text),
                     getString(R.string.accept_button_text),
                     getString(R.string.decline_button_text)
                 )
-                val action = AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                findNavController().navigateIfAdded(this, action)
+                findNavController().navigateIfAdded(
+                    this,
+                    AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                )
             }
         }
     }
 
-    fun cardExpiryErrorCheck(view: View): String {
-        with ((view as EditText).text.toString()) {
+    private fun cardExpiryErrorCheck(text: String): String? {
+        with(text) {
             if (!dateValidation()) {
                 return getString(R.string.incorrect_card_expiry)
-            } else {
-                binding.cardExpiry.setText(formatDate())
             }
+            if (!formatDate().contentEquals(text))
+                binding.cardExpiry.setText(formatDate())
         }
-        return getString(R.string.empty_string)
+        return null
     }
 
-    fun cardSwitcher(card: String) {
-        with (card.presentedCardType()) {
+    private fun cardSwitcher(card: String) {
+        with(card.presentedCardType()) {
             binding.topLayout.background = ContextCompat.getDrawable(
                 requireContext(),
                 background
@@ -174,7 +161,7 @@ class AddPaymentCardFragment :
         }
     }
 
-    fun cardInfoDisplay() {
+    private fun cardInfoDisplay() {
         binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
         binding.displayCardName.text = binding.cardName.text
     }
@@ -188,8 +175,8 @@ class AddPaymentCardFragment :
      * go from "4242 4242 4242" to "3424 242424 242", and that causes a bit of insanity on
      * cursor locations!
      */
-    fun updateEnteredCardNumber() {
-        with (binding.cardNumber) {
+    private fun updateEnteredCardNumber() {
+        with(binding.cardNumber) {
             val origNumber = text.toString()
             val newNumber = origNumber.cardFormatter()
             if (origNumber.isNotEmpty() &&

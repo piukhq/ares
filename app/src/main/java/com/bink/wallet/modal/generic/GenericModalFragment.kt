@@ -1,7 +1,10 @@
 package com.bink.wallet.modal.generic
 
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
@@ -41,6 +44,9 @@ open class GenericModalFragment :
         binding.toolbar.setNavigationOnClickListener {
             onNavigationButtonClicked()
         }
+        binding.close.setOnClickListener {
+            onNavigationButtonClicked()
+        }
         binding.firstButton.setOnClickListener {
             onFirstButtonClicked()
         }
@@ -57,7 +63,6 @@ open class GenericModalFragment :
 
     override fun onStart() {
         super.onStart()
-
         binding.title.viewTreeObserver.addOnScrollChangedListener(
             scrollChangeListener
         )
@@ -75,11 +80,29 @@ open class GenericModalFragment :
     }
 
     protected fun setupUi(parameters: GenericModalParameters) {
-        if (parameters.topBarIconId != 0) {
+        if (parameters.topBarIconId != 0 &&
+            !parameters.isCloseModal
+        ) {
+            binding.close.visibility = View.GONE
             binding.toolbar.setNavigationIcon(parameters.topBarIconId)
+
         }
         binding.title.text = parameters.title
-        binding.description.text = parameters.description
+        binding.description.text =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                Html.fromHtml(parameters.description)
+            }
+
+        binding.description2.text =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                Html.fromHtml(parameters.description2)
+            }
+        binding.description.movementMethod = LinkMovementMethod.getInstance()
+
         if (parameters.firstButtonText.isNotEmpty()) {
             binding.firstButton.visibility = View.VISIBLE
             binding.firstButton.text = parameters.firstButtonText

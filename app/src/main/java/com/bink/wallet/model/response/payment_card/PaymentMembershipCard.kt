@@ -8,5 +8,5 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class PaymentMembershipCard(
     val id: String?,
-    val active_link: Boolean?
+    var active_link: Boolean?
 ) : Parcelable
