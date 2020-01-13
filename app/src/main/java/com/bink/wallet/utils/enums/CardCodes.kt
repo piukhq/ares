@@ -1,5 +1,9 @@
 package com.bink.wallet.utils.enums
 
+/*
+    Unused reason codes - are currently overtaken by the received statuses - pending or failed
+                        - should not be removed as they can be used in the future
+ */
 enum class CardCodes(val code: String) {
     X100("X100"),
     X101("X101"),
