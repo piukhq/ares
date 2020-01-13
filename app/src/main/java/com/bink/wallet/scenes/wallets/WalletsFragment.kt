@@ -35,7 +35,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
         runBlocking {
-            viewModel.fetchLocalMembershipPlans()
             viewModel.fetchMembershipPlans()
             viewModel.fetchMembershipCards()
             viewModel.fetchPaymentCards()

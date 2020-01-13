@@ -61,7 +61,6 @@ class PaymentCardWalletViewModel(
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
     }
 
-
     fun fetchDismissedCards() {
         loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, fetchError)
     }
