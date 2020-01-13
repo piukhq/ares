@@ -52,48 +52,51 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
         mutableListOf()
 
-    private fun addFieldToList(planField: PlanFields) {
-        viewModel.currentMembershipPlan.value?.has_vouchers?.let {
-            if (it) {
-                if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
-                    val email =
-                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                            ?.let {
-                                it
-                            }
-                    with (pairPlanField) {
-                        second.disabled = true
-                        second.value = email
-                    }
-                }
-            }
-        }
-        if (planField is PlanFields) {
-            val pairPlanField = Pair(
-                planField, PlanFieldsRequest(
-                    planField.column, ""
-                )
-            )
-
-            if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-                planBooleanFieldsList?.add(
-                    pairPlanField
-                )
-            } else if (!planField.column.equals(BARCODE_TEXT)) {
-                planFieldsList?.add(
-                    pairPlanField
-                )
-            }
-        }
-
-        if (planField is PlanDocuments) {
-            planBooleanFieldsList?.add(
-                Pair(
+    private fun addFieldToList(planField: Any) {
+        when (planField) {
+            is PlanFields -> {
+                val pairPlanField = Pair(
                     planField, PlanFieldsRequest(
-                        planField.name, ""
+                        planField.column, ""
                     )
                 )
-            )
+
+                viewModel.currentMembershipPlan.value?.has_vouchers?.let {
+                    if (it) {
+                        if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
+                            val email =
+                                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                                    ?.let {
+                                        it
+                                    }
+                            with(pairPlanField) {
+                                second.disabled = true
+                                second.value = email
+                            }
+                        }
+                    }
+                }
+
+                if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+                    planBooleanFieldsList?.add(
+                        pairPlanField
+                    )
+                } else if (!planField.column.equals(BARCODE_TEXT)) {
+                    planFieldsList?.add(
+                        pairPlanField
+                    )
+                }
+            }
+
+            is PlanDocuments -> {
+                planBooleanFieldsList?.add(
+                    Pair(
+                        planField, PlanFieldsRequest(
+                            planField.name, ""
+                        )
+                    )
+                )
+            }
         }
     }
 
@@ -168,27 +171,29 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
                 with(viewModel) {
                     if (currentMembershipCard.value != null) {
-                        if (currentMembershipPlan.value?.feature_set?.has_points != null &&
-                            currentMembershipPlan.value?.feature_set?.has_points == true &&
-                            currentMembershipPlan.value?.feature_set?.transactions_available != null
-                        ) {
-                            if (currentMembershipPlan.value?.feature_set?.transactions_available == true) {
-                                binding.descriptionAddAuth.text = getString(
-                                    R.string.log_in_transaction_available,
-                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                )
-                            } else {
-                                binding.descriptionAddAuth.text =
-                                    getString(
-                                        R.string.log_in_transaction_unavailable,
+                        currentMembershipPlan.value?.feature_set?.let {
+                            if (it.has_points != null &&
+                                it.has_points == true &&
+                                it.transactions_available != null
+                            ) {
+                                if (it.transactions_available == true) {
+                                    binding.descriptionAddAuth.text = getString(
+                                        R.string.log_in_transaction_available,
                                         viewModel.currentMembershipPlan.value!!.account?.plan_name_card
                                     )
+                                } else {
+                                    binding.descriptionAddAuth.text =
+                                        getString(
+                                            R.string.log_in_transaction_unavailable,
+                                            viewModel.currentMembershipPlan.value!!.account?.plan_name_card
+                                        )
+                                }
                             }
                         }
 
                         if (MembershipPlanUtils.getAccountStatus(
-                                this,
-                                viewModel.currentMembershipCard.value!!
+                                currentMembershipPlan.value!!,
+                                currentMembershipCard.value!!
                             ) == LoginStatus.STATUS_LOGIN_FAILED
                         ) {
                             binding.descriptionAddAuth.text = getString(
@@ -197,13 +202,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             )
                         }
                     } else {
-                        account?.add_fields?.map {
+                        currentMembershipPlan.value?.account?.add_fields?.map {
                             it.typeOfField = TypeOfField.ADD
                             addFieldToList(it)
                         }
                     }
 
-                    account?.let {
+                    currentMembershipPlan.value?.account?.let { account ->
                         account.authorise_fields?.map {
                             it.typeOfField = TypeOfField.AUTH
                             addFieldToList(it)
@@ -214,7 +219,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             }
                         }
                     }
-
                 }
             }
             SignUpFormType.ENROL -> {
