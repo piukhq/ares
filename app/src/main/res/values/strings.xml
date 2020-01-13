@@ -340,7 +340,7 @@
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
-    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
+    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
