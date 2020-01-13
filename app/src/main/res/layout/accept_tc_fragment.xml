@@ -63,7 +63,6 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:buttonTint="@color/black"
-                android:checked="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/one_last_step_disclaimer" />
 
@@ -74,7 +73,6 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:buttonTint="@color/black"
-                android:checked="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/accept_tc" />
 

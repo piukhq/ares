@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes
+package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
 import android.text.SpannableString
@@ -7,7 +7,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
 import android.util.Patterns
 import android.view.View
-import android.widget.CheckBox
+import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -32,6 +32,22 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     }
 
     override val viewModel: SignUpViewModel by viewModel()
+
+    private fun setSignupButtonEnableStatus() {
+        with(viewModel) {
+            binding.signUpButton.isEnabled =
+                (binding.passwordField.error == null &&
+                        binding.emailField.error == null &&
+                        binding.confirmPasswordField.error == null &&
+                        (email.value ?: EMPTY_STRING).isNotBlank() &&
+                        (password.value ?: EMPTY_STRING).isNotBlank() &&
+                        (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
+                        confirmPassword.value == password.value &&
+                        termsCondition.value!! &&
+                        privacyPolicy.value!!
+                        )
+        }
+    }
 
     private fun validateEmail() =
         if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
@@ -62,38 +78,62 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         with(binding) {
+            signUpButton.isEnabled = false
+
             signUpFooterMessage.text = HtmlCompat.fromHtml(
                 getString(R.string.sign_up_footer_text),
                 HtmlCompat.FROM_HTML_MODE_LEGACY
             )
             viewModel = this@SignUpFragment.viewModel
 
+            binding.checkboxTermsConditionsText.setOnClickListener {
+                binding.checkboxTermsConditions.performClick()
+            }
             buildHyperlinkSpanString(
-                binding.checkboxTermsConditions.text.toString(),
+                binding.checkboxTermsConditionsText.text.toString(),
                 getString(R.string.terms_conditions_text),
                 getString(R.string.terms_and_conditions_url),
-                binding.checkboxTermsConditions
+                binding.checkboxTermsConditionsText
             )
 
+            binding.checkboxPrivacyPolicyText.setOnClickListener {
+                binding.checkboxPrivacyPolicy.performClick()
+            }
             buildHyperlinkSpanString(
-                binding.checkboxPrivacyPolicy.text.toString(),
+                binding.checkboxPrivacyPolicyText.text.toString(),
                 getString(R.string.privacy_policy_text),
                 getString(R.string.privacy_policy_url),
-                binding.checkboxPrivacyPolicy
+                binding.checkboxPrivacyPolicyText
             )
         }
 
         with(viewModel) {
+
+            privacyPolicy.value = false
+            termsCondition.value = false
+            marketingMessages.value = false
+
             email.observeNonNull(this@SignUpFragment) {
                 validateEmail()
+                setSignupButtonEnableStatus()
             }
 
             password.observeNonNull(this@SignUpFragment) {
                 validatePassword()
+                setSignupButtonEnableStatus()
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
                 checkPasswordsMatch()
+                setSignupButtonEnableStatus()
+            }
+
+            privacyPolicy.observeNonNull(this@SignUpFragment) {
+                setSignupButtonEnableStatus()
+            }
+
+            termsCondition.observeNonNull(this@SignUpFragment) {
+                setSignupButtonEnableStatus()
             }
 
             isLoading.observeNonNull(this@SignUpFragment) {
@@ -130,10 +170,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
                     marketingPref(
                         MarketingOption(
-                            when (marketingMessages.value) {
-                                true -> 1
-                                else -> 0
-                            }
+                            marketingMessages.value.toInt()
                         )
                     )
 
@@ -208,7 +245,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        textView: CheckBox
+        textView: TextView
     ) {
         val spannableString = SpannableString(stringToSpan)
         spannableString.setSpan(
