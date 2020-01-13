@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes
+package com.bink.wallet.scenes.sign_up
 
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel

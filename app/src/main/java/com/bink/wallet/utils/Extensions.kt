@@ -7,6 +7,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
 import androidx.annotation.IntegerRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -60,8 +62,6 @@ fun Context.displayModalPopup(
         }
     }
 
-    builder.setOnCancelListener {}
-
     builder.create().show()
 }
 
@@ -70,6 +70,9 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
         it?.let(observer)
     })
 }
+
+
+fun Boolean?.toInt() = if (this != null && this) 1 else 0
 
 fun Long.getElapsedTime(context: Context): String {
     var elapsed = this / 60
@@ -106,4 +109,24 @@ fun String.headerTidy(): String {
     return this
         .replace("=", "")
         .replace("\n", "")
+}
+
+fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
+    val constraintSet = ConstraintSet()
+    constraintSet.clone(parentLayout)
+    constraintSet.connect(
+        separatorId,
+        ConstraintSet.END,
+        parentLayout.id,
+        ConstraintSet.START,
+        0
+    )
+    constraintSet.connect(
+        separatorId,
+        ConstraintSet.START,
+        parentLayout.id,
+        ConstraintSet.END,
+        0
+    )
+    constraintSet.applyTo(parentLayout)
 }
