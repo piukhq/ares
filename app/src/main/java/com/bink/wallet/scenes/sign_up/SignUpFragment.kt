@@ -5,7 +5,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.util.Patterns
 import android.view.View
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
@@ -68,29 +67,22 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             )
             viewModel = this@SignUpFragment.viewModel
 
-            binding.checkboxTermsConditionsText.setOnClickListener {
-                binding.checkboxTermsConditions.performClick()
-            }
             buildHyperlinkSpanString(
-                binding.checkboxTermsConditionsText.text.toString(),
+                binding.checkboxTermsConditions.text.toString(),
                 getString(R.string.terms_conditions_text),
                 getString(R.string.terms_and_conditions_url),
-                binding.checkboxTermsConditionsText
+                binding.checkboxTermsConditions
             )
 
-            binding.checkboxPrivacyPolicyText.setOnClickListener {
-                binding.checkboxPrivacyPolicy.performClick()
-            }
             buildHyperlinkSpanString(
-                binding.checkboxPrivacyPolicyText.text.toString(),
+                binding.checkboxPrivacyPolicy.text.toString(),
                 getString(R.string.privacy_policy_text),
                 getString(R.string.privacy_policy_url),
-                binding.checkboxPrivacyPolicyText
+                binding.checkboxPrivacyPolicy
             )
         }
 
         with(viewModel) {
-
             privacyPolicy.value = false
             termsCondition.value = false
             marketingMessages.value = false

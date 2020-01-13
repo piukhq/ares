@@ -44,7 +44,7 @@
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/sign_up_with_email"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_title_big"
+                        android:textSize="@dimen/size_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -172,9 +172,8 @@
                         android:textColorLink="@color/blue_accent"
                         android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/checkbox_terms_conditions"
-                        app:layout_constraintTop_toTopOf="@+id/checkbox_terms_conditions" />
-
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/confirm_password_field" />
 
                 <CheckBox
                         android:id="@+id/checkbox_privacy_policy"
@@ -190,8 +189,8 @@
                         android:textColorLink="@color/blue_accent"
                         android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/checkbox_privacy_policy"
-                        app:layout_constraintTop_toTopOf="@+id/checkbox_privacy_policy" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
 
                 <CheckBox
                         android:id="@+id/checkbox_marketing_messages"
