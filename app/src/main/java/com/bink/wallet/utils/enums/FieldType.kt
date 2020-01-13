@@ -4,5 +4,6 @@ enum class FieldType(val type: Int) {
     TEXT(0),
     PASSWORD(1),
     SPINNER(2),
-    BOOLEAN(3)
+    BOOLEAN_OPTIONAL(3),
+    BOOLEAN_REQUIRED(4)
 }

@@ -1,7 +1,7 @@
 package com.bink.wallet.utils.enums
 
-enum class SignUpFormType(val type: Int) {
-    ADD_AUTH(0),
-    ENROL(1),
-    GHOST(2)
+enum class SignUpFormType(val type: String) {
+    ADD_AUTH("ADD"),
+    ENROL("ENROL"),
+    GHOST("REGISTRATION")
 }

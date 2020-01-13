@@ -22,6 +22,13 @@ object SettingsItemsPopulation {
         )
         itemsList.add(
             SettingsItem(
+                res.getString(R.string.preferences_text),
+                null,
+                SettingsItemType.PREFERENCES
+            )
+        )
+        itemsList.add(
+            SettingsItem(
                 res.getString(R.string.settings_menu_log_out),
                 null,
                 SettingsItemType.LOGOUT
@@ -132,5 +139,9 @@ object SettingsItemsPopulation {
     }
 
     private fun versionName(res: Resources): String =
-        res.getString(R.string.version_name_format, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+        res.getString(
+            R.string.version_name_format,
+            BuildConfig.VERSION_NAME,
+            BuildConfig.VERSION_CODE
+        )
 }

@@ -2,13 +2,14 @@
 
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
                 name="viewModel"
-                type="com.bink.wallet.scenes.SignUpViewModel" />
+                type="com.bink.wallet.scenes.sign_up.SignUpViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,10 +41,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/sign_up_with_email"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_title_big"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/size_headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +56,9 @@
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_small"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/sign_up_description"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_big"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -68,9 +71,10 @@
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/email_text"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sign_up_description" />
@@ -81,13 +85,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans"
                         android:hint="@string/enter_email_text"
+                        android:importantForAutofill="no"
                         android:inputType="textEmailAddress"
                         android:text="@={viewModel.email}"
                         android:textSize="@dimen/text_size_description_big"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/email_description" />
+                        app:layout_constraintTop_toBottomOf="@+id/email_description"
+                        tools:ignore="Autofill" />
 
                 <TextView
                         android:id="@+id/password_description"
@@ -96,9 +103,10 @@
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/password_text"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/email_field" />
@@ -109,7 +117,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans"
                         android:hint="@string/enter_password"
+                        android:importantForAutofill="no"
                         android:inputType="textPassword"
                         android:text="@={viewModel.password}"
                         android:textSize="@dimen/text_size_description_big"
@@ -124,9 +134,10 @@
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@string/confirm_password_text"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/size_body_large"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/password_field" />
@@ -137,6 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans"
                         android:hint="@string/confirm_password"
                         android:inputType="textPassword"
                         android:text="@={viewModel.confirmPassword}"
@@ -150,14 +162,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.termsCondition}"
+                        android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/T_C_accept_description"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/confirm_password_field" />
@@ -168,13 +181,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.privacyPolicy}"
+                        android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/privacy_policy_description"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
@@ -188,9 +201,10 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.marketingMessages}"
+                        android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/marketing_messages"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkbox_privacy_policy" />
@@ -212,9 +226,9 @@
                         android:id="@+id/sign_up_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/button_margin_start"
+                        android:layout_marginStart="@dimen/continue_button_margin"
                         android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                        android:layout_marginEnd="@dimen/button_margin_end"
+                        android:layout_marginEnd="@dimen/continue_button_margin"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
                         android:background="@drawable/gradient_button_selector"
                         android:text="@string/continue_text"
@@ -245,7 +259,6 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

@@ -17,9 +17,11 @@ object LocalStoreUtils {
 
     fun setAppSharedPref(secretKey: String, secret: String) {
         try {
-            val editor = encryptedSharedPreferences.edit()
-            editor.putString(secretKey, secret)
-            editor.apply()
+            encryptedSharedPreferences.edit().let {
+                it.putString(secretKey, secret)
+                it.apply()
+                it.commit()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -49,9 +51,10 @@ object LocalStoreUtils {
     }
 
     fun clearPreferences() {
-        val editor = encryptedSharedPreferences.edit()
-        editor.clear()
-        editor.apply()
+        encryptedSharedPreferences.edit().let {
+            it.clear()
+            it.apply()
+            it.commit()
+        }
     }
-
 }
