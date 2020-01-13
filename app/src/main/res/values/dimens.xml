@@ -63,19 +63,16 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
-    <dimen name="text_size_title_big">25sp</dimen>
     <dimen name="text_size_description_big">18sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
-    <dimen name="text_size_description_medium">15sp</dimen>
-    <dimen name="text_size_description_medium_bigger">16.2sp</dimen>
+    <dimen name="text_size_description_biggest">25sp</dimen>
     <dimen name="custom_add_fragment_image_size">31dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
     <dimen name="cancel_button_size">54dp</dimen>
     <dimen name="brand_logo_size">50dp</dimen>
     <dimen name="custom_text_card_margin">30dp</dimen>
     <dimen name="custom_login_image_size">89dp</dimen>
-    <dimen name="transaction_arrow_size">30sp</dimen>
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
@@ -83,6 +80,7 @@
     <!--Pll Screen -->
     <dimen name="title_margin_top">@dimen/margin_padding_size_medium_large</dimen>
     <dimen name="toggle_width">42dp</dimen>
+    <dimen name="pll_done_button_margin_horizontal">48dp</dimen>
 
     <!--T&C Screen -->
     <dimen name="bottom_layout_height">160dp</dimen>
@@ -92,12 +90,20 @@
     <dimen name="payment_card_height">120dp</dimen>
     <dimen name="payment_card_logo_image_margin">20dp</dimen>
     <dimen name="payment_card_number_top_margin">54dp</dimen>
-    <dimen name="payment_card_spacing_margin">17dp</dimen>
+    <dimen name="payment_card_spacing_margin">16dp</dimen>
     <dimen name="add_card_button_width">82dp</dimen>
-    <dimen name="add_card_button_height">32dp</dimen>
+    <dimen name="add_card_button_height">28dp</dimen>
+    <dimen name="link_icon_size">14.4dp</dimen>
+    <dimen name="loyalty_margins_vertical">30dp</dimen>
 
     <!-- Onboarding -->
     <dimen name="buttons_margin">48dp</dimen>
     <dimen name="image_suggested_pll_size">60dp</dimen>
     <dimen name="page_image_height">200dp</dimen>
+    <dimen name="separator_height">1dp</dimen>
+    <dimen name="facebook_button_elevation">4dp</dimen>
+
+
+    <!-- Login Screen -->
+    <dimen name="continue_button_margin">52dp</dimen>
 </resources>

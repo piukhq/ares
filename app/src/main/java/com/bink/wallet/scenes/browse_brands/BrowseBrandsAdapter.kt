@@ -12,8 +12,7 @@ import com.bink.wallet.utils.enums.CardType
 class BrowseBrandsAdapter(
     private val brands: List<Pair<String?, MembershipPlan>>,
     val itemClickListener: (MembershipPlan) -> Unit = {}
-) :
-    RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {
+) : RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BrandsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,7 +31,7 @@ class BrowseBrandsAdapter(
         brands[position].let { holder.bind(it, position == brands.lastIndex) }
     }
 
-    override fun getItemCount(): Int = brands.size
+    override fun getItemCount() = brands.size
 
     class BrandsViewHolder(val binding: BrandListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {

@@ -9,7 +9,6 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragmentDirections
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -42,17 +41,19 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         viewModel.fetchLocalMembershipCards()
         viewModel.fetchLocalMembershipPlans()
 
-        viewModel.paymentCard.observeNonNull(this) {
-            val action =
-                CardTermsAndConditionsFragmentDirections.cardTermsToDetails(
-                    it,
-                    viewModel.localMembershipPlanData.value!!.toTypedArray(),
-                    viewModel.localMembershipCardData.value!!.toTypedArray()
-                )
-            findNavController().navigateIfAdded(
-                this,
-                action
-            )
+        viewModel.paymentCard.observeNonNull(this) { paymentCard ->
+            viewModel.localMembershipPlanData.value?.let { plans ->
+                viewModel.localMembershipCardData.value?.let { cards ->
+                    findNavController().navigateIfAdded(
+                        this,
+                        CardTermsAndConditionsFragmentDirections.cardTermsToDetails(
+                            paymentCard,
+                            plans.toTypedArray(),
+                            cards.toTypedArray()
+                        )
+                    )
+                }
+            }
         }
         viewModel.error.observeNonNull(this) {
             if (viewModel.error.value != null) {

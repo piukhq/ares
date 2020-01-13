@@ -9,7 +9,9 @@
     <color name="cool_grey">#99a7ae</color>
     <color name="green_blue">#00c176</color>
     <color name="light_purple">#b46fea</color>
+    <color name="light_purple_inactive">#4Db46fea</color>
     <color name="blue_accent">#4371fe</color>
+    <color name="blue_accent_inactive">#4D4371fe</color>
     <color name="blue_inactive">#b1c2cb</color>
     <color name="grey_50">#7f7f7f</color>
     <color name="red_attention">#eb001b</color>
@@ -25,6 +27,8 @@
     <color name="white">#ffffffff</color>
     <color name="expired_background">#ccffff</color>
 
+    <color name="separator_color">#e5e5e5</color>
+
     <!--    Payment card colors-->
     <color name="visa_right">#13288d</color>
     <color name="visa_left">#181c51</color>
@@ -34,4 +38,5 @@
     <color name="amex_left">#006bcd</color>
     <color name="unknown_right">#b46fea</color>
     <color name="unknown_left">#4371fe</color>
+    <color name="white_50_alpha">#B3FFFFFF</color>
 </resources>

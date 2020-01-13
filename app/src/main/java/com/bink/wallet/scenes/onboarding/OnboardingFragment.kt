@@ -1,7 +1,9 @@
 package com.bink.wallet.scenes.onboarding
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -11,8 +13,12 @@ import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.facebook.*
+import com.facebook.login.LoginResult
+import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+
 
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
     override val layoutRes: Int
@@ -21,19 +27,33 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     var timer = Timer()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(Toolbar(requireContext()))
             .build()
+    }
+
+    private val EMAIL_KEY = "email"
+    private val FIELDS_KEY = "fields"
+    private lateinit var callbackManager: CallbackManager
+    private lateinit var facebookEmail: String
+    private var accessToken: AccessToken? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        FacebookSdk.sdkInitialize(context)
+        callbackManager = CallbackManager.Factory.create()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val adapter = fragmentManager?.let { OnboardingPagerAdapter(it) }
-        adapter?.let {
+        viewModel.clearWallets()
+
+        val adapter = OnboardingPagerAdapter(childFragmentManager)
+        adapter.let {
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,
-                    R.drawable.logo_page_1,
+                    R.drawable.onboarding_page_1,
                     getString(R.string.page_1_title),
                     getString(R.string.page_1_description)
                 )
@@ -41,7 +61,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_2,
-                    R.drawable.onb_2,
+                    R.drawable.onboarding_page_2,
                     getString(R.string.page_2_title),
                     getString(R.string.page_2_description)
                 )
@@ -49,7 +69,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_3,
-                    R.drawable.onb_3,
+                    R.drawable.onboarding_page_3,
                     getString(R.string.page_3_title),
                     getString(R.string.page_3_description)
                 )
@@ -58,54 +78,78 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_home)
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
 
-        binding.continueWithFacebook.setOnClickListener {
-            requireContext().displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+        binding.continueWithFacebook.apply {
+            fragment = this@OnboardingFragment
+            setReadPermissions(listOf(EMAIL_KEY))
+            registerCallback(
+                callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(result: LoginResult?) {
+                        result?.accessToken?.let {
+                            retrieveFacebookLoginInformation(it)
+                        }
+                    }
+
+                    override fun onCancel() {
+                        requireContext().displayModalPopup(
+                            null,
+                            getString(R.string.facebook_cancelled)
+                        )
+                    }
+
+                    override fun onError(error: FacebookException?) {
+                        requireContext().displayModalPopup(
+                            null,
+                            getString(R.string.facebook_unavailable)
+                        )
+                    }
+                })
         }
 
         binding.signUpWithEmail.setOnClickListener {
-            requireContext().displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
+        with(binding.pager) {
+            addOnPageChangeListener(object :
+                OnboardingPagerAdapter.CircularViewPagerHandler(this) {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    scrollPagesAutomatically(this@with)
+                    timer.cancel()
+                    timer = Timer()
+                    scrollPagesAutomatically(this@with)
+                }
+            })
 
-        binding.pager.addOnPageChangeListener(object :
-            OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager) {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                scrollPagesAutomatically(binding.pager)
-                timer.cancel()
-                timer = Timer()
-                scrollPagesAutomatically(binding.pager)
-            }
-        })
-
-        scrollPagesAutomatically(binding.pager)
+            scrollPagesAutomatically(this)
+        }
     }
 
     override fun onDestroy() {
-        timer.purge()
-        timer.cancel()
+        timer.apply {
+            purge()
+            cancel()
+        }
         super.onDestroy()
     }
 
-    private fun scrollPagesAutomatically(pager: ViewPager) {
-        var currentPage = pager.currentItem
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun scrollPagesAutomatically(pager: ViewPager?) {
+        var currentPage = pager?.currentItem as Int
         val pagerHandler = Handler()
         val update = Runnable {
-            if (pager != null) {
-                if (currentPage == ONBOARDING_PAGES_NUMBER) {
-                    pager.setCurrentItem(FIRST_PAGE_INDEX, true)
-                    currentPage = FIRST_PAGE_INDEX
-                } else {
-                    pager.setCurrentItem(currentPage++, true)
-                }
+            if (currentPage == ONBOARDING_PAGES_NUMBER) {
+                pager.setCurrentItem(FIRST_PAGE_INDEX, true)
+                currentPage = FIRST_PAGE_INDEX
+            } else {
+                pager.setCurrentItem(currentPage++, true)
+
             }
         }
 
@@ -114,5 +158,46 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 pagerHandler.post(update)
             }
         }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
+    }
+
+    private fun retrieveFacebookLoginInformation(accessToken: AccessToken) {
+        val request = GraphRequest.newMeRequest(
+            accessToken
+        ) { jsonObject, _ ->
+            try {
+                this.accessToken = accessToken
+                facebookEmail = jsonObject.getString(EMAIL_KEY)
+            } catch (e: JSONException) {
+                if (!::facebookEmail.isInitialized) {
+                    facebookEmail = getString(R.string.empty_string)
+                }
+                e.printStackTrace()
+            }
+            handleFacebookNavigation(facebookEmail)
+        }
+        val parameters = Bundle()
+        parameters.putString(FIELDS_KEY, EMAIL_KEY)
+        request.parameters = parameters
+        request.executeAsync()
+    }
+
+    private fun handleFacebookNavigation(email: String?) {
+        if (email.isNullOrEmpty()) {
+            val directions =
+                accessToken?.let { OnboardingFragmentDirections.onboardingToAddEmail(it) }
+            directions?.let { findNavController().navigateIfAdded(this, it) }
+        } else {
+            val directions =
+                accessToken?.let {
+                    OnboardingFragmentDirections.onboardingToAcceptTc(
+                        it,
+                        facebookEmail
+                    )
+                }
+
+            directions.let { _ ->
+                directions?.let { findNavController().navigateIfAdded(this, it) }
+            }
+        }
     }
 }

@@ -1,32 +1,23 @@
 package com.bink.wallet.scenes.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
-import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
-import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AlertDialog
-import com.bink.wallet.BuildConfig
-import com.bink.wallet.utils.displayModalPopup
-import java.lang.Exception
 
 
 class SettingsFragment :
@@ -58,7 +49,7 @@ class SettingsFragment :
             viewModel.itemsList.addItem(item)
         }
 
-        with (binding.toolbar) {
+        with(binding.toolbar) {
             title = getString(R.string.settings)
             setNavigationIcon(R.drawable.ic_close)
         }
@@ -72,22 +63,26 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
 
-        viewModel.retrieveStoredLoginData()
-        viewModel.loginData.observeNonNull(this) {
-            val items = viewModel.itemsList.value!!
-            for (i in 0 until items.list.size) {
-                val item = items.list[i]
-                if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-                    val newItem =
-                        SettingsItem(
-                            item.title,
-                            it.email,
-                            item.type
-                        )
-                    viewModel.itemsList.setItem(i, newItem)
-                }
+        val items = viewModel.itemsList.value!!
+        for (i in 0 until items.list.size) {
+            val item = items.list[i]
+            if (item.type == SettingsItemType.EMAIL_ADDRESS) {
+                val email =
+                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                        ?.let {
+                            it
+                        }
+
+                val newItem =
+                    SettingsItem(
+                        item.title,
+                        email,
+                        item.type
+                    )
+                viewModel.itemsList.setItem(i, newItem)
             }
         }
+
         viewModel.itemsList.observe(this, this)
     }
 
@@ -95,11 +90,11 @@ class SettingsFragment :
         when (item.type) {
             SettingsItemType.VERSION_NUMBER,
             SettingsItemType.BASE_URL,
+            SettingsItemType.EMAIL_ADDRESS,
             SettingsItemType.HEADER -> {
                 // these items are to do nothing at all, as they'll never be clickable
             }
-            SettingsItemType.EMAIL_ADDRESS ->
-                emailDialogOpen()
+
             SettingsItemType.RATE_APP -> {
                 val appPackageName = requireContext().packageName
                 try {
@@ -130,8 +125,10 @@ class SettingsFragment :
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
                         GenericModalParameters(
                             R.drawable.ic_back,
+                            false,
                             getString(R.string.security_and_privacy_title),
-                            getString(R.string.security_and_privacy_copy)
+                            getString(R.string.security_and_privacy_copy),
+                            description2 = getString(R.string.security_and_privacy_copy_2)
                         )
                     )
                 findNavController().navigateIfAdded(this, action)
@@ -141,6 +138,7 @@ class SettingsFragment :
                     SettingsFragmentDirections.settingsToHowItWorks(
                         GenericModalParameters(
                             R.drawable.ic_back,
+                            false,
                             getString(R.string.how_it_works_title),
                             getString(R.string.how_it_works_copy)
                         )
@@ -167,18 +165,28 @@ class SettingsFragment :
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.data = Uri.parse("mailto:")
                 intent.type = "message/rfc822+1"
-                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.contact_us_email_address)))
+                intent.putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf(getString(R.string.contact_us_email_address))
+                )
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
-                intent.putExtra(Intent.EXTRA_TEXT, getString(
-                    R.string.contact_us_email_message,
-                    viewModel.loginData.value?.email,
-                    BuildConfig.VERSION_NAME,
-                    BuildConfig.VERSION_CODE.toString(),
-                    android.os.Build.VERSION.RELEASE,
-                    android.os.Build.VERSION.SDK_INT.toString()
-                    ))
+                intent.putExtra(
+                    Intent.EXTRA_TEXT, getString(
+                        R.string.contact_us_email_message,
+                        viewModel.loginData.value?.email,
+                        BuildConfig.VERSION_NAME,
+                        BuildConfig.VERSION_CODE.toString(),
+                        android.os.Build.VERSION.RELEASE,
+                        android.os.Build.VERSION.SDK_INT.toString()
+                    )
+                )
                 try {
-                    startActivity(Intent.createChooser(intent, getString(R.string.contact_us_select_email_client)))
+                    startActivity(
+                        Intent.createChooser(
+                            intent,
+                            getString(R.string.contact_us_select_email_client)
+                        )
+                    )
                 } catch (e: Exception) {
                     requireContext().displayModalPopup(
                         null,
@@ -187,48 +195,46 @@ class SettingsFragment :
                 }
             }
 
-            else ->
+            SettingsItemType.LOGOUT -> {
                 requireContext().displayModalPopup(
-                    getString(R.string.missing_destination_dialog_title),
-                    getString(R.string.not_implemented_yet_text)
+                    getString(R.string.settings_menu_log_out),
+                    getString(R.string.log_out_confirmation),
+                    okAction = {
+                        requireContext().let { LocalStoreUtils.clearPreferences() }
+                        viewModel.logOut()
+                    },
+                    buttonText = R.string.settings_menu_log_out,
+                    hasNegativeButton = true
                 )
+            }
+
+            SettingsItemType.PREFERENCES -> {
+                findNavController().navigateIfAdded(
+                    this@SettingsFragment,
+                    R.id.settings_to_preferences
+                )
+            }
+        }
+
+        viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
+            clearUserDetails()
+        }
+
+        viewModel.logOutErrorResponse.observeNonNull(this@SettingsFragment) {
+            clearUserDetails()
         }
     }
 
-    private fun emailDialogOpen() {
-        if(viewModel.loginData.value != null) {
-            val dialog =
-                SettingsEmailDialog(requireContext(), viewModel.loginData.value!!.email!!)
-            dialog.newEmail.observeNonNull(this) {
-                dialog.dismiss()
-                val email = dialog.newEmail.value!!
-
-                binding.progressSpinner.visibility = View.VISIBLE
-
-                val data = MutableLiveData<LoginData>()
-                data.value = LoginData(DEFAULT_LOGIN_ID, email)
-                viewModel.storeLoginData(email)
-                viewModel.loginData.observeNonNull(this) {
-                    viewModel.loginData.value.let {
-                        if (it != null &&
-                            it.email.equals(email)
-                        ) {
-                            restartApp()
-                        }
-                    }
-                }
-            }
-            dialog.show()
-        }
-    }
-
-    private fun restartApp() {
-        // wait 3 seconds before kicking the app
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                delay(3000)
-                (activity as MainActivity).restartApp()
-            }
+    private fun clearUserDetails() {
+        viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+        LocalStoreUtils.clearPreferences()
+        try {
+            findNavController().navigateIfAdded(
+                this@SettingsFragment,
+                R.id.settings_to_onboarding
+            )
+        } catch (e: Exception) {
+            (requireActivity() as MainActivity).restartApp()
         }
     }
 }

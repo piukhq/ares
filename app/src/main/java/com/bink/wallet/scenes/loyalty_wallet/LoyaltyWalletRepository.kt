@@ -21,18 +21,12 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipCardsAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipCards(response)
-                    mutableMembershipCards.value = response.toMutableList()
-                } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
+    suspend fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
+        val request = apiService.getMembershipCardsAsync()
+        withContext(Dispatchers.Main) {
+            val response = request.await()
+            storeMembershipCards(response)
+            mutableMembershipCards.postValue(response.toMutableList())
         }
     }
 
@@ -48,19 +42,25 @@ class LoyaltyWalletRepository(
         }
     }
 
-
-    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+    fun clearMembershipCards() {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipPlansAsync()
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    storeMembershipPlans(response)
-                    mutableMembershipPlans.value = response.toMutableList()
+                    membershipCardDao.deleteAllCards()
+                    membershipPlanDao.deleteAllPlans()
                 } catch (e: Throwable) {
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
+        }
+    }
+
+    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+        val request = apiService.getMembershipPlansAsync()
+        withContext(Dispatchers.Main) {
+            val response = request.await()
+            storeMembershipPlans(response)
+            mutableMembershipPlans.value = response.toMutableList()
         }
     }
 
@@ -189,7 +189,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCards.value = response
+                    paymentCards.postValue(response)
                 } catch (e: Throwable) {
                     fetchError.value = e
                     Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())

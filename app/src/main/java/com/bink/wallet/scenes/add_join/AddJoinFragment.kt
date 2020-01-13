@@ -69,21 +69,23 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.closeButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_join_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         binding.addJoinReward.setOnClickListener {
-            val directions = currentMembershipPlan.account?.plan_description?.let { message ->
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    getString(R.string.plan_description),
-                    message, getString(R.string.ok)
+            currentMembershipPlan.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    AddJoinFragmentDirections.addJoinToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            currentMembershipPlan.account.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
+                    )
                 )
-            }?.let { params ->
-                AddJoinFragmentDirections.addJoinToBrandHeader(params)
-            }
-            directions?.let { _ ->
-                findNavController().navigateIfAdded(this, directions)
             }
         }
 
@@ -99,9 +101,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
             if (currentMembershipPlan.feature_set?.linking_support != null &&
-                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
+                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+            ) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
+                    true,
                     getString(R.string.native_join_unavailable_title),
                     getString(
                         R.string.native_join_unavailable_text,
