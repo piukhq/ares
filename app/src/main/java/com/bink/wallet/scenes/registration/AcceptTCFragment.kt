@@ -138,6 +138,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
         }
         binding.decline.setOnClickListener {
+            LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
 
