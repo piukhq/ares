@@ -96,7 +96,6 @@ class AddPaymentCardFragment :
         }
 
         binding.addButton.setOnClickListener {
-
             validateCardName()
             validateCardNumber()
             binding.cardExpiry.error =
@@ -132,9 +131,10 @@ class AddPaymentCardFragment :
                     getString(R.string.accept_button_text),
                     getString(R.string.decline_button_text)
                 )
-
-                val action = AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                findNavController().navigateIfAdded(this, action)
+                findNavController().navigateIfAdded(
+                    this,
+                    AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                )
             }
         }
     }

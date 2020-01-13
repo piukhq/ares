@@ -13,6 +13,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.*
@@ -45,18 +46,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isPaymentWalletEmpty: Boolean? = null
 
-    private val planFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+    private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
         mutableListOf()
 
-    private val planBooleanFieldsList: MutableList<Pair<PlanFields, PlanFieldsRequest>>? =
+    private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
         mutableListOf()
 
     private fun addFieldToList(planField: PlanFields) {
-        val pairPlanField = Pair(
-            planField, PlanFieldsRequest(
-                planField.column, ""
-            )
-        )
         viewModel.currentMembershipPlan.value?.has_vouchers?.let {
             if (it) {
                 if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
@@ -72,15 +68,32 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
             }
         }
-        if (planField.type == FieldType.BOOLEAN.type) {
-            planBooleanFieldsList?.add(
-                pairPlanField
+        if (planField is PlanFields) {
+            val pairPlanField = Pair(
+                planField, PlanFieldsRequest(
+                    planField.column, ""
+                )
             )
-        } else {
-            if (!planField.column.equals(BARCODE_TEXT))
+
+            if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+                planBooleanFieldsList?.add(
+                    pairPlanField
+                )
+            } else if (!planField.column.equals(BARCODE_TEXT)) {
                 planFieldsList?.add(
                     pairPlanField
                 )
+            }
+        }
+
+        if (planField is PlanDocuments) {
+            planBooleanFieldsList?.add(
+                Pair(
+                    planField, PlanFieldsRequest(
+                        planField.name, ""
+                    )
+                )
+            )
         }
     }
 
@@ -174,8 +187,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
 
                         if (MembershipPlanUtils.getAccountStatus(
-                                currentMembershipPlan.value!!,
-                                currentMembershipCard.value!!
+                                this,
+                                viewModel.currentMembershipCard.value!!
                             ) == LoginStatus.STATUS_LOGIN_FAILED
                         ) {
                             binding.descriptionAddAuth.text = getString(
@@ -184,16 +197,24 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             )
                         }
                     } else {
-                        currentMembershipPlan.value!!.account?.add_fields?.map {
+                        account?.add_fields?.map {
                             it.typeOfField = TypeOfField.ADD
                             addFieldToList(it)
                         }
                     }
 
-                    currentMembershipPlan.value!!.account?.authorise_fields?.map {
-                        it.typeOfField = TypeOfField.AUTH
-                        addFieldToList(it)
+                    account?.let {
+                        account.authorise_fields?.map {
+                            it.typeOfField = TypeOfField.AUTH
+                            addFieldToList(it)
+                        }
+                        account.plan_documents?.map {
+                            if (it.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
+                                addFieldToList(it)
+                            }
+                        }
                     }
+
                 }
             }
             SignUpFormType.ENROL -> {
@@ -210,6 +231,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                     noAccountText.visibility = View.GONE
                 }
+
+                viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
+                    if (it.display?.contains(SignUpFormType.ENROL.type)!!) {
+                        addFieldToList(it)
+                    }
+                }
+
             }
             SignUpFormType.GHOST -> {
                 with(binding) {
@@ -224,6 +252,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.currentMembershipPlan.value!!.account?.registration_fields?.map {
                     it.typeOfField = TypeOfField.REGISTRATION
                     addFieldToList(it)
+                }
+
+                viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
+                    if (it.display?.contains(SignUpFormType.GHOST.type)!!) {
+                        addFieldToList(it)
+                    }
                 }
 
                 binding.noAccountText.visibility = View.GONE
@@ -261,35 +295,77 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         val addRegisterFieldsRequest = Account()
 
         planFieldsList?.map {
-            when (it.first.typeOfField) {
-                TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
-                TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
-                TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
-                else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
-            }
+            if (it.first is PlanFields) {
+                when ((it.first as PlanFields).typeOfField) {
+                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
+                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
+                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
+                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+                }
+            } else
+                addRegisterFieldsRequest.plan_documents?.add(it.second)
         }
 
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
-            adapter = SignUpAdapter(
-                planFieldsList?.toList()!!
+            adapter = AddAuthAdapter(
+                planFieldsList?.toList()!!,
+                buttonRefresh = {
+                    addRegisterFieldsRequest.plan_documents?.map {
+                        if (it.value != true.toString()) {
+                            binding.addCardButton.isEnabled = false
+                            return@AddAuthAdapter
+                        }
+                    }
+
+                    planFieldsList.map {
+                        if (it.first is PlanFields) {
+                            if (!UtilFunctions.isValidField(
+                                    (it.first as PlanFields).validation,
+                                    it.second.value
+                                )
+                            ) {
+                                binding.addCardButton.isEnabled = false
+                                return@AddAuthAdapter
+                            }
+                        }
+                    }
+
+                    binding.addCardButton.isEnabled = true
+
+                }
             )
         }
+
+        binding.addCardButton.isEnabled = false
 
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (verifyAvailableNetwork(requireActivity())) {
-                    planFieldsList?.map {
-                        if (!UtilFunctions.isValidField(
-                                it.first.validation,
-                                it.second.value
-                            )
-                        ) {
-                            context?.displayModalPopup(
-                                null,
-                                getString(R.string.all_fields_must_be_valid)
+
+                    addRegisterFieldsRequest.plan_documents?.map {
+                        if (it.value != "true") {
+                            requireContext().displayModalPopup(
+                                EMPTY_STRING,
+                                getString(R.string.required_fields)
                             )
                             return@setOnClickListener
+                        }
+                    }
+
+                    planFieldsList?.map {
+                        if (it.first is PlanFields) {
+                            if (!UtilFunctions.isValidField(
+                                    (it.first as PlanFields).validation,
+                                    it.second.value
+                                )
+                            ) {
+                                context?.displayModalPopup(
+                                    null,
+                                    getString(R.string.all_fields_must_be_valid)
+                                )
+                                return@setOnClickListener
+                            }
                         }
                     }
 
@@ -332,6 +408,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     addRegisterFieldsRequest.add_fields,
                                     null,
                                     null,
+                                    null,
                                     null
                                 ),
                                 viewModel.currentMembershipPlan.value!!.id
@@ -368,7 +445,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         null,
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields
+                        addRegisterFieldsRequest.registration_fields,
+                        null
                     ),
                     viewModel.currentMembershipPlan.value!!.id
                 )
@@ -383,7 +461,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         null,
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields
+                        addRegisterFieldsRequest.registration_fields,
+                        null
                     ),
                     viewModel.currentMembershipPlan.value!!.id
                 )

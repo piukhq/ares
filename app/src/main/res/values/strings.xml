@@ -408,6 +408,7 @@
     <string name="preferences_text">Preferences</string>
     <string name="preferences_error">Cannot retrieve your preferences at the moment. Please try again later.</string>
     <string name="preference_update_error">We can\'t update your preferences at the moment. Please try again later.</string>
+    <string name="required_fields">Please check all the required fields</string>
 
     <!-- PLR -->
     <string name="rewards_history">Rewards history</string>
@@ -433,4 +434,5 @@
     <string name="voucher_detail_text_expired">""</string>
     <string name="voucher_detail_date_expired">Expired %s</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
+
 </resources>
