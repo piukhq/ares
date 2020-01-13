@@ -73,8 +73,9 @@ class PaymentCardWalletFragment :
                             viewModel.deletePaymentCard(paymentCard.id.toString())
                         }
                     } else {
-                        showNoInternetConnectionDialog()
+                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
+                    binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
@@ -121,6 +122,7 @@ class PaymentCardWalletFragment :
         viewModel.loyaltyUpdateDone.observeNonNull(this) { loyaltyUpdateDone ->
             viewModel.paymentUpdateDone.observeNonNull(this) { paymentUpdateDone ->
                 if (loyaltyUpdateDone && paymentUpdateDone) {
+                    binding.paymentCardRecycler.visibility = View.VISIBLE
                     binding.progressSpinner.visibility = View.GONE
 
                     SharedPreferenceManager.isPaymentEmpty =
@@ -191,9 +193,15 @@ class PaymentCardWalletFragment :
     }
 
     private fun fetchPaymentCards() {
-        runBlocking {
-            binding.progressSpinner.visibility = View.VISIBLE
-            viewModel.getPaymentCards()
+
+        if (verifyAvailableNetwork(requireActivity())) {
+            runBlocking {
+                binding.progressSpinner.visibility = View.VISIBLE
+                binding.paymentCardRecycler.visibility = View.GONE
+                viewModel.getPaymentCards()
+            }
+        } else {
+            showNoInternetConnectionDialog()
         }
     }
 

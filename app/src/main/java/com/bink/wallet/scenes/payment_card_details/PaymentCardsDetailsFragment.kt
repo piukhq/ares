@@ -61,6 +61,7 @@ class PaymentCardsDetailsFragment :
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(
                     GenericModalParameters(
                         R.drawable.ic_close,
+                        true,
                         getString(R.string.security_and_privacy_title),
                         getString(R.string.security_and_privacy_copy),
                         description2 = getString(R.string.security_and_privacy_copy_2)
@@ -80,7 +81,7 @@ class PaymentCardsDetailsFragment :
                         viewModel.deletePaymentCard(viewModel.paymentCard.value?.id.toString())
                     }
                 } else {
-                    showNoInternetConnectionDialog()
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -88,14 +89,15 @@ class PaymentCardsDetailsFragment :
         }
 
         with(viewModel.paymentCard) {
-            if (value != null &&
-                value!!.card != null &&
-                value!!.card!!.isExpired()
-            ) {
-                with(binding.paymentHeader) {
-                    cardExpired.visibility = View.VISIBLE
-                    linkStatus.visibility = View.GONE
-                    imageStatus.visibility = View.GONE
+            value?.let {
+                it.card?.let { bankCard ->
+                    if (bankCard.isExpired()) {
+                        with(binding.paymentHeader) {
+                            cardExpired.visibility = View.VISIBLE
+                            linkStatus.visibility = View.GONE
+                            imageStatus.visibility = View.GONE
+                        }
+                    }
                 }
             }
         }
@@ -106,47 +108,44 @@ class PaymentCardsDetailsFragment :
             viewModel.membershipCardData.observeNonNull(this) { cards ->
                 val pllCards = cards.filter { card -> pllPlansIds.contains(card.membership_plan) }
                 binding.apply {
-                    paymentCardDetailsTitle.visibility = View.VISIBLE
-                    paymentCardDetailsDescription.visibility = View.VISIBLE
+                    hasAddedPllCards = pllCards.isNotEmpty()
                     availablePllList.apply {
-                        visibility = View.VISIBLE
                         layoutManager = GridLayoutManager(context, 1)
-                        adapter = AvailablePllAdapter(
-                            viewModel.paymentCard.value!!,
-                            plans,
-                            pllCards,
-                            onLinkStatusChange = ::onLinkStatusChange,
-                            onItemSelected = ::onItemSelected
-                        )
-                    }
-
-                    otherCardsList.apply {
-                        val unAddedCardsForPlan = mutableListOf<MembershipPlan>()
-                        for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
-                            if (cards.count { card -> card.membership_plan == plan.id } == 0) {
-                                unAddedCardsForPlan.add(plan)
-                            }
-                        }
-                        if (unAddedCardsForPlan.isNotEmpty()) {
-                            visibility = View.VISIBLE
-                            layoutManager = GridLayoutManager(context, 1)
-                            adapter = SuggestedCardsAdapter(
-                                unAddedCardsForPlan,
-                                itemClickListener = {
-                                    val directions =
-                                        PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
-                                            it
-                                        )
-                                    findNavController().navigateIfAdded(
-                                        this@PaymentCardsDetailsFragment,
-                                        directions
-                                    )
-                                }
+                        viewModel.paymentCard.value?.let {
+                            adapter = AvailablePllAdapter(
+                                it,
+                                plans,
+                                pllCards,
+                                onLinkStatusChange = ::onLinkStatusChange,
+                                onItemSelected = ::onItemSelected
                             )
                         }
                     }
-                    otherCardsDescription.visibility = View.VISIBLE
-                    otherCardsTitle.visibility = View.VISIBLE
+                    val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
+                    for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
+                        if (cards.none { card -> card.membership_plan == plan.id }) {
+                            unaddedCardsForPlan.add(plan)
+                        }
+                    }
+                    hasOtherCardsToAdd = unaddedCardsForPlan.isNotEmpty()
+                    shouldDisplayOtherCardsTitleAndDescription = pllCards.isNotEmpty() &&
+                            unaddedCardsForPlan.isNotEmpty()
+                    otherCardsList.apply {
+                        layoutManager = GridLayoutManager(context, 1)
+                        adapter = SuggestedCardsAdapter(
+                            unaddedCardsForPlan,
+                            itemClickListener = {
+                                val directions =
+                                    PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
+                                        it
+                                    )
+                                findNavController().navigateIfAdded(
+                                    this@PaymentCardsDetailsFragment,
+                                    directions
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -165,6 +164,14 @@ class PaymentCardsDetailsFragment :
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
         }
+
+        viewModel.linkError.observeNonNull(viewLifecycleOwner) {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        }
+
+        viewModel.unlinkError.observeNonNull(viewLifecycleOwner) {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        }
     }
 
     override fun onPause() {
@@ -177,8 +184,8 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
+        viewModel.getMembershipCards()
     }
-
 
     private fun addLoyaltyCard(plan: MembershipPlan) {
         val directions =
