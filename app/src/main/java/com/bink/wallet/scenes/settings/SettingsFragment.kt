@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -198,30 +199,42 @@ class SettingsFragment :
                 requireContext().displayModalPopup(
                     getString(R.string.settings_menu_log_out),
                     getString(R.string.log_out_confirmation),
-                    okAction = { viewModel.logOut() },
+                    okAction = {
+                        requireContext().let { LocalStoreUtils.clearPreferences() }
+                        viewModel.logOut()
+                    },
                     buttonText = R.string.settings_menu_log_out,
                     hasNegativeButton = true
+                )
+            }
+
+            SettingsItemType.PREFERENCES -> {
+                findNavController().navigateIfAdded(
+                    this@SettingsFragment,
+                    R.id.settings_to_preferences
                 )
             }
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
-            LocalStoreUtils.clearPreferences()
-            try {
-                findNavController().navigateIfAdded(
-                    this@SettingsFragment,
-                    R.id.settings_to_onboarding
-                )
-            } catch (e: Exception) {
-            }
-            viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+            clearUserDetails()
         }
 
         viewModel.logOutErrorResponse.observeNonNull(this@SettingsFragment) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.error_description)
+            clearUserDetails()
+        }
+    }
+
+    private fun clearUserDetails() {
+        viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+        LocalStoreUtils.clearPreferences()
+        try {
+            findNavController().navigateIfAdded(
+                this@SettingsFragment,
+                R.id.settings_to_onboarding
             )
+        } catch (e: Exception) {
+            (requireActivity() as MainActivity).restartApp()
         }
     }
 }
