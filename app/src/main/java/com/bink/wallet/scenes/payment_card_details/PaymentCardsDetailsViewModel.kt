@@ -1,14 +1,19 @@
 package com.bink.wallet.scenes.payment_card_details
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
-class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentWalletRepository) :
+class PaymentCardsDetailsViewModel(
+        private var paymentWalletRepository: PaymentWalletRepository,
+        private var loyaltyWalletRepository: LoyaltyWalletRepository
+    ) :
     BaseViewModel() {
 
     var paymentCard = MutableLiveData<PaymentCard>()
@@ -17,8 +22,15 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
     var linkedPaymentCard = MutableLiveData<PaymentCard>()
     var unlinkedRequestBody = MutableLiveData<ResponseBody>()
     var deleteRequest = MutableLiveData<ResponseBody>()
-    var linkError = MutableLiveData<Throwable>()
-    var unlinkError = MutableLiveData<Throwable>()
+
+    private val _linkError = MutableLiveData<Throwable>()
+    val linkError: LiveData<Throwable>
+        get() = _linkError
+
+    private val _unlinkError = MutableLiveData<Throwable>()
+    val unlinkError: LiveData<Throwable>
+        get() = _unlinkError
+
     var deleteError = MutableLiveData<Throwable>()
 
     suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
@@ -26,7 +38,7 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
             cardId,
             paymentCardId,
             linkedPaymentCard,
-            linkError,
+            _linkError,
             paymentCard
         )
     }
@@ -35,7 +47,7 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
         paymentWalletRepository.unlinkPaymentCard(
             paymentCardId,
             cardId,
-            unlinkError,
+            _unlinkError,
             unlinkedRequestBody,
             paymentCard
         )
@@ -43,5 +55,9 @@ class PaymentCardsDetailsViewModel(private var paymentWalletRepository: PaymentW
 
     suspend fun deletePaymentCard(paymentCardId: String) {
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
+    }
+
+    suspend fun getMembershipCards() {
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 }

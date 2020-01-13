@@ -2,11 +2,15 @@ package com.bink.wallet.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.annotation.IntegerRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -60,8 +64,6 @@ fun Context.displayModalPopup(
         }
     }
 
-    builder.setOnCancelListener {}
-
     builder.create().show()
 }
 
@@ -70,6 +72,9 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
         it?.let(observer)
     })
 }
+
+
+fun Boolean?.toInt() = if (this != null && this) 1 else 0
 
 fun Long.getElapsedTime(context: Context): String {
     var elapsed = this / 60
@@ -106,4 +111,53 @@ fun String.headerTidy(): String {
     return this
         .replace("=", "")
         .replace("\n", "")
+}
+
+fun Context.validateEmail(emailValue: String?, editText: EditText) {
+    editText.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(emailValue ?: EMPTY_STRING).matches()) {
+                editText.error = getString(R.string.incorrect_email_text)
+            } else {
+                editText.error = null
+            }
+        }
+    }
+}
+
+fun Context.validatePassword(passwordValue: String?, editText: EditText) {
+    editText.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            if (!UtilFunctions.isValidField(
+                    PASSWORD_REGEX,
+                    passwordValue ?: EMPTY_STRING
+                )
+            ) {
+                editText.error =
+                    getString(R.string.password_description)
+            } else {
+                editText.error = null
+            }
+        }
+    }
+}
+
+fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
+    val constraintSet = ConstraintSet()
+    constraintSet.clone(parentLayout)
+    constraintSet.connect(
+        separatorId,
+        ConstraintSet.END,
+        parentLayout.id,
+        ConstraintSet.START,
+        0
+    )
+    constraintSet.connect(
+        separatorId,
+        ConstraintSet.START,
+        parentLayout.id,
+        ConstraintSet.END,
+        0
+    )
+    constraintSet.applyTo(parentLayout)
 }
