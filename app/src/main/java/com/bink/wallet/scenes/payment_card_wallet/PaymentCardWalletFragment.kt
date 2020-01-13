@@ -126,15 +126,13 @@ class PaymentCardWalletFragment :
                         binding.paymentCardRecycler.visibility = View.VISIBLE
                         binding.progressSpinner.visibility = View.GONE
 
-
-
                         SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
 
                         walletItems.clear()
 
                         if (dismissedCards.firstOrNull { it.id == JOIN_CARD } == null &&
                             SharedPreferenceManager.isPaymentEmpty) {
-                            if (!SharedPreferenceManager.isPaymentJoinHidden) {
+                            if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
                                 walletItems.add(JoinCardItem())
                             }
                         }
@@ -166,7 +164,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun onBannerRemove(item: Any) {
-        SharedPreferenceManager.isPaymentJoinHidden = true
+        SharedPreferenceManager.isPaymentJoinBannerDismissed = true
         viewModel.addPlanIdAsDismissed(JOIN_CARD)
         walletAdapter.paymentCards.remove(item)
         walletAdapter.notifyDataSetChanged()

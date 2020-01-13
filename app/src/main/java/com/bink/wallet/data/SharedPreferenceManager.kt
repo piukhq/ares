@@ -13,7 +13,7 @@ object SharedPreferenceManager {
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
     private const val IS_LOYALTY_WALLET = "isLoyaltyWalletActive"
     private const val IS_PAYMENT_EMPTY_KEY = "isPaymentEmpty"
-    private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinHidden"
+    private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinBannerDismissed"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -49,7 +49,7 @@ object SharedPreferenceManager {
             it.putBoolean(IS_PAYMENT_EMPTY.first, value)
         }
 
-    var isPaymentJoinHidden: Boolean
+    var isPaymentJoinBannerDismissed: Boolean
         get() = preferences.getBoolean(IS_PAYMENT_JOIN_HIDDEN.first, IS_PAYMENT_JOIN_HIDDEN.second)
         set(value) = preferences.edit {
             it.putBoolean(IS_PAYMENT_JOIN_HIDDEN.first, value)
