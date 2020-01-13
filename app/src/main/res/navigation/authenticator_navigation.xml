@@ -14,6 +14,15 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/home_wallet" />
 
+    <action
+            android:id="@+id/global_to_onboarding"
+            app:destination="@id/onboarding_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/onboarding_fragment" />
+
     <fragment
             android:id="@+id/splash"
             android:name="com.bink.wallet.SplashFragment">

@@ -57,7 +57,7 @@ class PaymentCardsDetailsViewModel(
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
     }
 
-    fun getMembershipCards() {
+    suspend fun getMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 }
