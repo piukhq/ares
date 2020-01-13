@@ -231,7 +231,7 @@ class PaymentCardWalletFragment :
             runBlocking {
                 binding.progressSpinner.visibility = View.VISIBLE
                 binding.paymentCardRecycler.visibility = View.GONE
-                viewModel.getPaymentCards()
+                viewModel.fetchPaymentCards()
             }
         } else {
             showNoInternetConnectionDialog()

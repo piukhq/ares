@@ -1,5 +1,8 @@
 package com.bink.wallet
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -186,6 +189,20 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         }
         resetHourlyCoroutine()
         super.onResume()
+    }
+
+    fun restartApp() {
+        val startActivity = Intent(this, MainActivity::class.java)
+        val pendingIntentId = 123456
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            pendingIntentId,
+            startActivity,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+        val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
+        finish()
     }
 }
 
