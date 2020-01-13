@@ -1,10 +1,12 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import kotlinx.coroutines.launch
 
 class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
@@ -23,11 +25,23 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun fetchMembershipCards() {
-        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
+        viewModelScope.launch {
+            try {
+                loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
+            } catch (e: Exception) {
+                onLoadFail(e)
+            }
+        }
     }
 
-    fun fetchMembershipPlans() {
-        loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
+    suspend fun fetchMembershipPlans() {
+        viewModelScope.launch {
+            try {
+                loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
+            } catch (e: Exception) {
+                onLoadFail(e)
+            }
+        }
     }
 
     fun fetchLocalMembershipCards() {

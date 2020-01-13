@@ -83,12 +83,19 @@ class AddPaymentCardFragment :
         }
 
         binding.privacyLink.setOnClickListener {
-            val securityDialog = SecurityDialogs(requireContext())
-            securityDialog.openDialog(layoutInflater)
+            findNavController().navigateIfAdded(
+                this,
+                AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
+                    GenericModalParameters(
+                        isCloseModal = true,
+                        title = getString(R.string.privacy_and_security),
+                        description = getString(R.string.privacy_and_security_description)
+                    )
+                )
+            )
         }
 
         binding.addButton.setOnClickListener {
-
             validateCardName()
             validateCardNumber()
             binding.cardExpiry.error =
@@ -124,9 +131,10 @@ class AddPaymentCardFragment :
                     getString(R.string.accept_button_text),
                     getString(R.string.decline_button_text)
                 )
-
-                val action = AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                findNavController().navigateIfAdded(this, action)
+                findNavController().navigateIfAdded(
+                    this,
+                    AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                )
             }
         }
     }

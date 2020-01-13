@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.login
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -28,32 +27,16 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         get() = R.layout.login_fragment
     override val viewModel: LoginViewModel by viewModel()
 
-    private fun validateEmail() =
-        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
-            binding.emailField.error = getString(R.string.incorrect_email_text)
-        } else {
-            binding.emailField.error = null
-        }
-
-    private fun validatePassword() = if (!UtilFunctions.isValidField(
-            PASSWORD_REGEX,
-            viewModel.password.value ?: EMPTY_STRING
-        )
-    ) {
-        binding.passwordField.error =
-            getString(R.string.password_description)
-    } else {
-        binding.passwordField.error = null
-    }
-
     private fun setLoginButtonEnableStatus() {
         with(binding) {
-            logInButton.isEnabled =
-                (passwordField.error == null &&
-                        emailField.error == null &&
-                        (viewModel!!.email.value ?: EMPTY_STRING).isNotBlank() &&
-                        (viewModel!!.password.value ?: EMPTY_STRING).isNotBlank()
-                        )
+            viewModel?.let {
+                logInButton.isEnabled =
+                    (passwordField.error == null &&
+                            emailField.error == null &&
+                            (it.email.value ?: EMPTY_STRING).isNotBlank() &&
+                            (it.password.value ?: EMPTY_STRING).isNotBlank()
+                            )
+            }
         }
     }
 
@@ -75,7 +58,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         binding.logInButton.isEnabled = false
 
-        viewModel.retrieveStoredLoginData(requireContext())
+        viewModel.retrieveStoredLoginData()
         binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {
             if (verifyAvailableNetwork(requireActivity())) {
@@ -87,12 +70,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
-                validateEmail()
+                requireContext().validateEmail(it, binding.emailField)
                 setLoginButtonEnableStatus()
             }
 
             password.observeNonNull(this@LoginFragment) {
-                validatePassword()
+                requireContext().validatePassword(it, binding.passwordField)
                 setLoginButtonEnableStatus()
             }
 
@@ -138,9 +121,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
 
         binding.logInButton.setOnClickListener {
-
-            validateEmail()
-            validatePassword()
+            requireContext().validateEmail(viewModel.email.value, binding.emailField)
+            requireContext().validatePassword(viewModel.password.value, binding.passwordField)
 
             if (binding.passwordField.error == null &&
                 binding.emailField.error == null

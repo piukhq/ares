@@ -27,6 +27,7 @@
     <string name="barcode_card_number">Card number:</string>
     <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
     <string name="card_status_pending">Pending</string>
+    <string name="card_status_retry">Retry</string>
     <string name="link_status_cannot_link">Cannot link</string>
     <string name="plan_name_card_extra"><![CDATA[info >]]></string>
 
@@ -160,12 +161,12 @@
     <string name="arrow_left">&#9664;</string>
     <string name="up_arrow">&#9650;</string>
     <string name="arrow_down">▼</string>
-    <string name="recent_history_text">Your recent transaction history</string>
+    <string name="recent_history_text">Your recent transaction history.</string>
     <string name="right_arrow">></string>
-    <string name="transaction_not_supported_title">Transaction history not supported</string>
+    <string name="transaction_not_supported_title">Transaction history not supported.</string>
     <string name="transaction_not_supported_description">Points updated %1$s %2$s ago. \nText explaining to the user that history is not supported for this brand yet.</string>
     <string name="log_in_pending">Log in pending</string>
-    <string name="transaction_history_not_supported">Transaction history not supported</string>
+    <string name="transaction_history_not_supported">Transaction history not supported.</string>
     <string name="sign_up_pending">Sign up pending</string>
     <string name="register_gc_pending">Register GC pending</string>
     <string name="description_login_unavailable"> Text explaining to the user: \n - that points are not supported for this brand yet \n - that history is not supported for this brand yet</string>
@@ -193,7 +194,7 @@
     <string name="description_1_2">We are unable to currently show the transaction history for this loyalty scheme yet\n Your %1$s history is not available yet.</string>
     <!-- 1.7, 1.9, 1.11 replacement -->
     <string name="title_lcd_pending">Request pending</string>
-    <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn’t take long.</string>
+    <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn\'t take long.</string>
     <!-- 1.5 -->
     <string name="title_1_5">Transaction history not supported</string>
     <string name="description_1_5">Unfortunately we\'re not able to show your points balance and transaction history for this brand just yet.</string>
@@ -203,7 +204,7 @@
     <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
-    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers’ payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
+    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
 
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
@@ -286,6 +287,8 @@
     <string name="no_account_text">I don\'t have an account</string>
     <string name="payment_card_details_title_text">Linked cards</string>
     <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
+    <string name="payment_card_details_title_text_empty">No linked cards</string>
+    <string name="payment_card_details_description_text_empty">You do not have any linked loyalty cards. Add some cards to collect points.</string>
     <string name="other_cards_you_can_add_title">Other cards you can add</string>
     <string name="other_cards_you_can_add_description">You can also add the cards below and link them to your payment cards.</string>
     <string name="rename_card">Rename this card</string>
@@ -307,15 +310,16 @@
     <string name="incorrect_card_error">Please enter a valid card number</string>
     <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
     <string name="incorrect_card_name">Please enter the name on the card</string>
-    <string name="privacy_and_security"><u>Privacy and security</u></string>
+    <string name="privacy_and_security"><u>Security and privacy</u></string>
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
     <string name="could_not_add_card">Your selected activity cannot be performed at this time due to a connection issue</string>
+    <string name="privacy_and_security_description">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
 
     <!-- Native Ghost Card Registration N/A -->
-    <string name="title_ghost_card_not_available">Native join unavailable</string>
-    <string name="description_ghost_card_not_available">Go to merchant website and join and then come back and add your card.</string>
+    <string name="title_ghost_card_not_available">Registration unavailable</string>
+    <string name="description_ghost_card_not_available">Please go to the merchant\'s website to join this scheme. You can then come back and add your card.</string>
 
     <!-- Onboarding -->
     <string name="skip">Skip</string>
@@ -340,10 +344,11 @@
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
-    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards, offers and updates!</b> \n You can opt out at any time.]]></string>
+    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b> \n You can opt out at any time.]]></string>
+    <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
-    <string name="incorrect_email_text">Invalid email address</string>
+    <string name="incorrect_email_text">Incorrect email format</string>
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
@@ -359,7 +364,7 @@
     <string name="accept_tcs_disclaimer">I accept Bink\'s Terms and Conditions</string>
     <string name="accept_pp_disclaimer">I accept Bink\'s Privacy Policy</string>
     <string name="accept_marketing_disclaimer">I opt in to receive marketing messages</string>
-    <string name="general_disclaimer">Make sure you’re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
+    <string name="general_disclaimer">Make sure you\'re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
     <string name="facebook_failed">Continue with Facebook failed</string>
 
     <!-- Add email -->
@@ -400,4 +405,14 @@
     <string name="error_description">Something went wrong</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="preferences_text">Preferences</string>
+    <string name="preferences_error">Cannot retrieve your preferences at the moment. Please try again later.</string>
+    <string name="preference_update_error">We can\'t update your preferences at the moment. Please try again later.</string>
+    <string name="required_fields">Please check all the required fields</string>
+
+    <!-- PLR -->
+    <string name="rewards_history">Rewards history</string>
+    <string name="see_your_past_rewards">See your past rewards</string>
+    <string name="preference_marketing_bink">Receive marketing messages</string>
+
 </resources>

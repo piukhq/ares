@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{item.title}"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_title_big"
+                android:textSize="@dimen/size_headline"
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:paddingStart="@dimen/margin_padding_size_small"
                 android:paddingEnd="@dimen/margin_padding_size_small"

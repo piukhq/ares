@@ -137,8 +137,9 @@ class PaymentCardWalletFragment :
             viewModel.localMembershipCardData.observeNonNull(this) { cards ->
                 viewModel.paymentCards.observeNonNull(this) { paymentCards ->
                     viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-                        binding.progressSpinner.visibility = View.GONE
                         binding.paymentCardRecycler.visibility = View.VISIBLE
+                        binding.progressSpinner.visibility = View.GONE
+
                         SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
 
                         walletItems.clear()
@@ -229,8 +230,8 @@ class PaymentCardWalletFragment :
         if (verifyAvailableNetwork(requireActivity())) {
             runBlocking {
                 binding.progressSpinner.visibility = View.VISIBLE
-                binding.paymentCardRecycler.visibility = View.INVISIBLE
-                viewModel.fetchPaymentCards()
+                binding.paymentCardRecycler.visibility = View.GONE
+                viewModel.getPaymentCards()
             }
         } else {
             showNoInternetConnectionDialog()
