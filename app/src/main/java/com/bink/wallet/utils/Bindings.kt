@@ -329,7 +329,9 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
 @BindingAdapter("backgroundGradient")
 fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
-    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.background)
+    paymentCard.card?.provider?.getCardType()?.let {
+        setBackgroundResource(it.background)
+    }
 }
 
 @BindingAdapter("linkedStatus")

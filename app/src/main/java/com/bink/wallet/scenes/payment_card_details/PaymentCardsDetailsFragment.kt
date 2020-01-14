@@ -14,7 +14,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardsDetailsFragment :
@@ -184,7 +184,9 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
-        viewModel.getMembershipCards()
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.getMembershipCards()
+        }
     }
 
     private fun addLoyaltyCard(plan: MembershipPlan) {

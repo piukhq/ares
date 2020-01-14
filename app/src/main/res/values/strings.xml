@@ -341,7 +341,7 @@
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
-    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
+    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
@@ -349,7 +349,7 @@
     <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
-    <string name="incorrect_email_text">Invalid email address</string>
+    <string name="incorrect_email_text">Incorrect email format</string>
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
@@ -409,9 +409,11 @@
     <string name="preferences_text">Preferences</string>
     <string name="preferences_error">Cannot retrieve your preferences at the moment. Please try again later.</string>
     <string name="preference_update_error">We can\'t update your preferences at the moment. Please try again later.</string>
+    <string name="required_fields">Please check all the required fields</string>
 
     <!-- PLR -->
     <string name="rewards_history">Rewards history</string>
     <string name="see_your_past_rewards">See your past rewards</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
+
 </resources>
