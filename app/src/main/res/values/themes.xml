@@ -17,7 +17,7 @@
         <item name="colorControlActivated">@color/grey_10</item>
         <item name="colorControlHighlight">@color/grey_10</item>
         <item name="android:fontFamily">@font/nunitosans</item>
-        <item name="fontFamily">@font/nunitosans</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -26,4 +26,12 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="TextViewStyle" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textAppearance">@style/DefaultTextAppearance</item>
+    </style>
+
+    <style name="DefaultTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle">normal</item>
+        <item name="fontFamily">@font/nunitosans</item>
+    </style>
 </resources>
