@@ -13,7 +13,11 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.utils.MembershipPlanUtils
+import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.PLLCardStatus
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -133,6 +137,7 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
+
                 with(cardBinding) {
                     plan = currentMembershipPlan
                     item.plan = plan
@@ -140,35 +145,41 @@ class LoyaltyWalletAdapter(
 
                     when (item.status?.state) {
                         MembershipCardStatus.AUTHORISED.status -> {
-                            cardLogin.visibility = View.GONE
                             valueWrapper.visibility = View.VISIBLE
-                            if (!item.balances.isNullOrEmpty()) {
-                                val balance = item.balances?.first()
-                                when (balance?.prefix != null) {
-                                    true ->
-                                        loyaltyValue.text =
-                                            balance?.prefix?.plus(balance.value)
-                                    else -> {
-                                        loyaltyValue.text = balance?.value
-                                        loyaltyValueExtra.text = balance?.suffix
+                            if (MembershipPlanUtils.getAccountStatus(
+                                    currentMembershipPlan,
+                                    item
+                                ) == LoginStatus.STATUS_PENDING
+                            ) {
+                                loyaltyValue.text =
+                                    mainLayout.context.getString(R.string.card_status_pending)
+                            } else {
+                                if (!item.balances.isNullOrEmpty()) {
+                                    val balance = item.balances?.first()
+                                    when (balance?.prefix != null) {
+                                        true ->
+                                            loyaltyValue.text =
+                                                balance?.prefix?.plus(balance.value)
+                                        else -> {
+                                            loyaltyValue.text = balance?.value
+                                            loyaltyValueExtra.text = balance?.suffix
+                                        }
                                     }
                                 }
                             }
                         }
                         MembershipCardStatus.PENDING.status -> {
                             valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
                             loyaltyValue.text =
                                 mainLayout.context.getString(R.string.card_status_pending)
                         }
                         MembershipCardStatus.FAILED.status -> {
                             valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.card_status_retry)
+                            loyaltyValue.text =
+                                mainLayout.context.getString(R.string.card_status_retry)
                         }
                         MembershipCardStatus.UNAUTHORISED.status -> {
                             valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
                             loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
                         }
                     }
@@ -189,6 +200,52 @@ class LoyaltyWalletAdapter(
                 }
             }
         }
+//
+//        private fun shouldShowRetryStatus(
+//            membershipCard: MembershipCard,
+//            membershipPlan: MembershipPlan
+//        ) =
+//            membershipCard.status?.state == MembershipCardStatus.FAILED.status ||
+//                    membershipCard.status?.state == MembershipCardStatus.UNAUTHORISED.status &&
+//                    membershipPlan.getCardType() != CardType.STORE
+
+//        private fun shouldShowLinkStatus(membershipPlan: MembershipPlan) =
+//            membershipPlan.getCardType() == CardType.PLL
+//
+//        private fun shouldShowPendingStatus(
+//            membershipCard: MembershipCard,
+//            membershipPlan: MembershipPlan
+//        ) = membershipCard.status?.state == MembershipCardStatus.PENDING.status ||
+//                (membershipCard.status?.state == MembershipCardStatus.AUTHORISED.status &&
+//                        MembershipPlanUtils.getAccountStatus(
+//                            membershipPlan,
+//                            membershipCard
+//                        ) == LoginStatus.STATUS_PENDING)
+//
+//
+//        private fun retrieveLinkStatusText(
+//            membershipCard: MembershipCard,
+//            membershipPlan: MembershipPlan
+//        ): String {
+//            when {
+//                shouldShowRetryStatus(
+//                    membershipCard,
+//                    membershipPlan
+//                ) -> return binding.root.context.getString(R.string.card_status_retry)
+//                shouldShowPendingStatus(
+//                    membershipCard,
+//                    membershipPlan
+//                ) -> return binding.root.context.getString(R.string.card_status_pending)
+//                shouldShowLinkStatus(membershipPlan) -> {
+//                    if (membershipCard.getLinkStatus() == PLLCardStatus.LINK_NOW) {
+//
+//                    } else if (membershipCard.getLinkStatus() == PLLCardStatus.LINKED) {
+//
+//                    }
+//                }
+//            }
+//            return ""
+//        }
     }
 
     inner class PlanSuggestionHolder(val binding: EmptyLoyaltyItemBinding) :
