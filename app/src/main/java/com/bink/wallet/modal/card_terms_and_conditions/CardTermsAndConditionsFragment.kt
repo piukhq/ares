@@ -60,7 +60,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     override fun onFirstButtonClicked() {
-        super.onFirstButtonClicked()
         binding.firstButton.isEnabled = false
         binding.progressSpinner.visibility = View.VISIBLE
         viewModel.sendAddCard(
@@ -83,7 +82,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     override fun onSecondButtonClicked() {
-        super.onSecondButtonClicked()
-        requireActivity().onBackPressed()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 }

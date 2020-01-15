@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        when (findNavController(R.id.main_fragment).currentDestination?.id) {
+        val navId = findNavController(R.id.main_fragment).currentDestination?.id
+        when (navId) {
             R.id.maximised_barcode_fragment -> {
                 findNavController(R.id.main_fragment).popBackStack()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.accept_tcs_fragment -> {
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
+            }
+            R.id.card_terms_and_conditions -> {
+                // do nothing (back button is prohibited here)
             }
             else -> super.onBackPressed()
         }
