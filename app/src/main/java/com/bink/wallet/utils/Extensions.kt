@@ -2,6 +2,7 @@ package com.bink.wallet.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.DisplayMetrics
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
@@ -24,6 +25,9 @@ fun Context.toPixelFromDip(value: Float) =
 
 fun Context.toPixelFromDip(@IntegerRes resId: Int) =
     toPixelFromDip(resources.getInteger(resId).toFloat())
+
+fun Context.toDipFromPixel(value: Float) =
+    value / (resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
 fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int) {
     if (fragment.isAdded) {
