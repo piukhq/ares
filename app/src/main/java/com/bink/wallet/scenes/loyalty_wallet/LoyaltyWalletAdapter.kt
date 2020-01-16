@@ -164,8 +164,13 @@ class LoyaltyWalletAdapter(
                         }
                     loyaltyValueExtra.text = retrieveAuthSuffix()
 
-                    retrieveLinkStatusText()?.let {
-                        linkStatusText.text = root.context.getString(it)
+
+                    if (!shouldShowLinkStatus()) {
+                        linkStatusText.visibility = View.GONE
+                    } else {
+                        retrieveLinkStatusText()?.let {
+                            linkStatusText.text = root.context.getString(it)
+                        }
                     }
                     if (shouldShowLinkImages()) {
                         linkStatusImg.visibility = View.VISIBLE

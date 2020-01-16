@@ -30,7 +30,7 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
 
 
     // Region Linking Wrapper
-    private fun shouldShowLinkStatus() =
+    fun shouldShowLinkStatus() =
         membershipPlan.getCardType() == CardType.PLL
 
     fun shouldShowLinkImages() =
