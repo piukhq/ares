@@ -273,8 +273,8 @@
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
 
     <!-- Native Join Unavailable-->
-    <string name="native_join_unavailable_title">Native join unavailable</string>
-    <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
+    <string name="native_join_unavailable_title">Sign up currently unavailable</string>
+    <string name="native_join_unavailable_text">Go to the %1$s website to join then come back and add your card.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
