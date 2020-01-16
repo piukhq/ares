@@ -87,7 +87,6 @@ class PaymentWalletRepository(
     suspend fun linkPaymentCard(
         membershipCardId: String,
         paymentCardId: String,
-        paymentCard: MutableLiveData<PaymentCard>,
         linkError: MutableLiveData<Throwable>,
         paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
@@ -96,7 +95,6 @@ class PaymentWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCard.value = response
                     paymentCardMutableValue.value = response
                 } catch (e: Throwable) {
                     linkError.value = e

@@ -19,7 +19,6 @@ class PaymentCardsDetailsViewModel(
     var paymentCard = MutableLiveData<PaymentCard>()
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
-    var linkedPaymentCard = MutableLiveData<PaymentCard>()
     var unlinkedRequestBody = MutableLiveData<ResponseBody>()
     var deleteRequest = MutableLiveData<ResponseBody>()
 
@@ -37,7 +36,6 @@ class PaymentCardsDetailsViewModel(
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
-            linkedPaymentCard,
             _linkError,
             paymentCard
         )
