@@ -16,6 +16,7 @@
             android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+                style="@style/ShadowedCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -24,7 +25,6 @@
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:background="@android:color/white"
                 android:orientation="vertical"
-                app:cardCornerRadius="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
