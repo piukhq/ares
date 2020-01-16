@@ -39,6 +39,11 @@
     <dimen name="list_margin">64dp</dimen>
     <dimen name="search_bar_height">42dp</dimen>
 
+    <!-- Add Screen -->
+    <dimen name="add_card_margin">20dp</dimen>
+    <dimen name="add_card_margin_end">12dp</dimen>
+    <dimen name="shadowed_card_elevation">5dp</dimen>
+
     <!-- Add Join Screen -->
     <dimen name="logo_height">98dp</dimen>
     <dimen name="title_image_size">32dp</dimen>

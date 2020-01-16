@@ -26,7 +26,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override val viewModel: AddViewModel by viewModel()
 
-    private val percent = 75
+    private val marginPercent = 75
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -55,7 +55,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private fun setCardMarginRelativeToButton() {
         val lastCardHeight = binding.paymentCardContainer.height
-
         val constraintSet = ConstraintSet()
         constraintSet.clone(binding.root)
         constraintSet.connect(
@@ -63,7 +62,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             ConstraintSet.BOTTOM,
             R.id.cancel_button,
             ConstraintSet.TOP,
-            percent * lastCardHeight / INT_ONE_HUNDRED
+            marginPercent * lastCardHeight / INT_ONE_HUNDRED
         )
 
         constraintSet.applyTo(binding.root)
