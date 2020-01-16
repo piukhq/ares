@@ -272,13 +272,6 @@
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
         <action
-                android:id="@+id/sign_up_to_home"
-                app:destination="@+id/home_wallet"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
-        <action
                 android:id="@+id/sign_up_to_ghost_registration_unavailable"
                 app:destination="@+id/ghost_registration_unavailable"
                 app:enterAnim="@anim/slide_in_up"

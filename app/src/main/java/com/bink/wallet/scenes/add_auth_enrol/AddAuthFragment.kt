@@ -13,8 +13,8 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
-import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.*
@@ -467,7 +467,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private fun handlePllGhost(membershipCard: MembershipCard) {
-        if (membershipCard.membership_transactions.isNullOrEmpty()        ) {
+        if (membershipCard.membership_transactions.isNullOrEmpty()) {
             val directions = AddAuthFragmentDirections.signUpToPllEmpty(
                 viewModel.currentMembershipPlan.value!!,
                 membershipCard
@@ -478,7 +478,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private fun handlePll() {
         SharedPreferenceManager.isLoyaltySelected = false
-        findNavController().navigateIfAdded(this, AddAuthFragmentDirections.signUpToHome())
+        findNavController().navigateIfAdded(this, AddAuthFragmentDirections.globalToHome())
     }
 
     private fun hideLoadingViews() {
