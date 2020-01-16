@@ -17,7 +17,6 @@ import com.facebook.*
 import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
