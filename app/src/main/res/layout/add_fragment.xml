@@ -153,14 +153,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="112dp"
                 android:elevation="6dp"
                 android:foreground="?selectableItemBackground"
                 app:cardCornerRadius="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/cancel_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:elevation="2dp">
+                tools:elevation="2dp"
+                tools:layout_editor_absoluteY="466dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
