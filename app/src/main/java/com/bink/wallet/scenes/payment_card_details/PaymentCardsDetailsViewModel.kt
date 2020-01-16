@@ -11,9 +11,9 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
-        private var paymentWalletRepository: PaymentWalletRepository,
-        private var loyaltyWalletRepository: LoyaltyWalletRepository
-    ) :
+    private var paymentWalletRepository: PaymentWalletRepository,
+    private var loyaltyWalletRepository: LoyaltyWalletRepository
+) :
     BaseViewModel() {
 
     var paymentCard = MutableLiveData<PaymentCard>()
@@ -59,5 +59,9 @@ class PaymentCardsDetailsViewModel(
 
     suspend fun getMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
+    }
+
+    suspend fun getPaymentCard(paymentCardId: String) {
+        paymentWalletRepository.getPaymentCard(paymentCardId, paymentCard)
     }
 }

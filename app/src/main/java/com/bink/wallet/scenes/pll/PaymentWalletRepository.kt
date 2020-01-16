@@ -67,6 +67,23 @@ class PaymentWalletRepository(
         }
     }
 
+    suspend fun getPaymentCard(
+        paymentCardId: String,
+        mutablePaymentCard: MutableLiveData<PaymentCard>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.getPaymentCardAsync(paymentCardId)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    mutablePaymentCard.value = response
+                } catch (e: Throwable) {
+                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                }
+            }
+        }
+    }
+
     suspend fun linkPaymentCard(
         membershipCardId: String,
         paymentCardId: String,
@@ -80,15 +97,7 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     paymentCard.value = response
-
-                    val paymentCardValue = paymentCardMutableValue.value
-                    paymentCardValue?.membership_cards?.forEach {
-                        if (it.id == membershipCardId) {
-                            it.active_link = true
-                        }
-                    }
-
-                    paymentCardMutableValue.value = paymentCardValue
+                    paymentCardMutableValue.value = response
                 } catch (e: Throwable) {
                     linkError.value = e
                     Log.e(PaymentWalletRepository::class.simpleName, e.toString())

@@ -14,7 +14,10 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardsDetailsFragment :
@@ -51,6 +54,10 @@ class PaymentCardsDetailsFragment :
                 paymentCard.value = currentBundle.paymentCard
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                viewModel.getPaymentCard(currentBundle.paymentCard.id.toString())
             }
         }
 
@@ -163,6 +170,10 @@ class PaymentCardsDetailsFragment :
 
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
+
+            CoroutineScope(Dispatchers.Main).launch {
+                viewModel.getMembershipCards()
+            }
         }
 
         viewModel.linkError.observeNonNull(viewLifecycleOwner) {
