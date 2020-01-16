@@ -4,10 +4,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.databinding.AddAuthDisplayItemBinding
 import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBinding
 import com.bink.wallet.databinding.AddAuthTextItemBinding
@@ -24,6 +26,15 @@ class AddAuthAdapter(
     val buttonRefresh: () -> Unit = {}
 ) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
+
+    private var finalTextField: String = ""
+    init {
+        brands.map {
+            if (it.first is PlanFields) {
+                finalTextField = (it.first as PlanFields).column!!
+            }
+        }
+    }
 
     private fun checkIfError(position: Int, text: AppCompatEditText) {
 
@@ -48,6 +59,7 @@ class AddAuthAdapter(
             FieldType.TEXT.type,
             FieldType.PASSWORD.type -> TextFieldHolder(AddAuthTextItemBinding.inflate(inflater))
             FieldType.SPINNER.type -> SpinnerViewHolder(AddAuthSpinnerItemBinding.inflate(inflater))
+            FieldType.DISPLAY.type -> DisplayHolder(AddAuthDisplayItemBinding.inflate(inflater))
             else -> CheckBoxHolder(AddAuthSwitchItemBinding.inflate(inflater))
         }
     }
@@ -57,12 +69,16 @@ class AddAuthAdapter(
             if (this is PlanFields && type != null) {
                 return type
             } else if (this is PlanDocuments) {
-                return FieldType.BOOLEAN_REQUIRED.type
+                return if (this.checkbox == null ||
+                           this.checkbox) {
+                    FieldType.BOOLEAN_REQUIRED.type
+                } else {
+                    FieldType.DISPLAY.type
+                }
             }
         }
         return 0
     }
-
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         brands[position].let {
@@ -71,9 +87,15 @@ class AddAuthAdapter(
                     is TextFieldHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
                     is SpinnerViewHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
                     is CheckBoxHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
+                    is DisplayHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
                 }
             } else {
-                (holder as CheckBoxHolder).bind(it as Pair<PlanDocuments, PlanFieldsRequest>)
+                when (getItemViewType(position)) {
+                    FieldType.DISPLAY.type ->
+                        (holder as DisplayHolder).bind(it as Pair<PlanDocuments, PlanFieldsRequest>)
+                    else ->
+                        (holder as CheckBoxHolder).bind(it as Pair<PlanDocuments, PlanFieldsRequest>)
+                }
             }
         }
     }
@@ -106,19 +128,37 @@ class AddAuthAdapter(
                 else
                     checkIfError(adapterPosition, this)
 
+                imeOptions =
+                    if (item.second.column == finalTextField) {
+                        EditorInfo.IME_ACTION_DONE
+                    } else {
+                        EditorInfo.IME_ACTION_NEXT
+                    }
                 setOnFocusChangeListener { _, isFocus ->
                     if (!isFocus) {
-                        try {
-                            checkIfError(adapterPosition, this)
-                            buttonRefresh()
-                        } catch (ex: Exception) {
-                            Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
-                        }
+                        checkIfFieldIsValid()
+                    }
+                }
+                setOnEditorActionListener { _, actionId, _ ->
+                    if(actionId == EditorInfo.IME_ACTION_DONE){
+                        checkIfFieldIsValid()
+                        false
+                    } else {
+                        true
                     }
                 }
             }
 
             binding.executePendingBindings()
+        }
+
+        private fun AppCompatEditText.checkIfFieldIsValid() {
+            try {
+                checkIfError(adapterPosition, this)
+                buttonRefresh()
+            } catch (ex: Exception) {
+                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+            }
         }
     }
 
@@ -195,6 +235,41 @@ class AddAuthAdapter(
                     buttonRefresh()
                 }
                 isFocusable = false
+            }
+            binding.executePendingBindings()
+        }
+    }
+
+    inner class DisplayHolder(val binding: AddAuthDisplayItemBinding) :
+        BaseViewHolder<Pair<Any, PlanFieldsRequest>>(binding) {
+
+        override fun bind(item: Pair<Any, PlanFieldsRequest>) {
+
+            with(binding.contentAddAuthDisplay) {
+                when (item.first) {
+                    is PlanFields ->
+                        text =
+                            (item.first as PlanFields).description
+                    else -> {
+                        (item.first as PlanDocuments).let {
+                            it.description?.let { description ->
+                                text = description
+                                it.name?.let { name ->
+                                    it.url?.let { url ->
+                                        UtilFunctions.buildHyperlinkSpanString(
+                                            description.plus(
+                                                " ${it.name}"
+                                            ),
+                                            name,
+                                            url,
+                                            this
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             binding.executePendingBindings()
         }
