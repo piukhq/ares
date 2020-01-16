@@ -169,6 +169,7 @@ class LoyaltyWalletAdapter(
                         linkStatusText.visibility = View.GONE
                     } else {
                         retrieveLinkStatusText()?.let {
+                            linkStatusText.visibility = View.VISIBLE
                             linkStatusText.text = root.context.getString(it)
                         }
                     }
