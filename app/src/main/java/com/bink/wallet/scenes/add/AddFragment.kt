@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
+import com.bink.wallet.utils.INT_ONE_HUNDRED
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,6 +25,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         get() = R.layout.add_fragment
 
     override val viewModel: AddViewModel by viewModel()
+
+    private val percent = 75
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -47,10 +50,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.paymentCardContainer.viewTreeObserver.addOnGlobalLayoutListener {
-           // binding.paymentCardContainer.viewTreeObserver.removeOnGlobalLayoutListener()
-            setCardMarginRelativeToButton()
-        }
+        binding.paymentCardContainer.waitForLayout { setCardMarginRelativeToButton() }
     }
 
     private fun setCardMarginRelativeToButton() {
@@ -63,9 +63,18 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             ConstraintSet.BOTTOM,
             R.id.cancel_button,
             ConstraintSet.TOP,
-            75 * lastCardHeight / 100
+            percent * lastCardHeight / INT_ONE_HUNDRED
         )
-        constraintSet.applyTo(binding.root)
 
+        constraintSet.applyTo(binding.root)
+    }
+
+    private inline fun View.waitForLayout(crossinline f: () -> Unit) = with(viewTreeObserver) {
+        addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                removeOnGlobalLayoutListener(this)
+                f()
+            }
+        })
     }
 }
