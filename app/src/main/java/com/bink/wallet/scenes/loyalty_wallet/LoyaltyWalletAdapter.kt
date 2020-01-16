@@ -168,6 +168,7 @@ class LoyaltyWalletAdapter(
                         linkStatusText.text = root.context.getString(it)
                     }
                     if (shouldShowLinkImages()) {
+                        linkStatusImg.visibility = View.VISIBLE
                         retrieveLinkImage()?.let {
                             linkStatusImg.setImageDrawable(
                                 root.context.getDrawable(it)
