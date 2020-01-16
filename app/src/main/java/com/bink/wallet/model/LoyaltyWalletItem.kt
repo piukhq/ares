@@ -12,8 +12,8 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
 
     // Region common use
     private fun shouldShowRetryStatus() =
-        membershipCard.status?.state == MembershipCardStatus.FAILED.status ||
-                membershipCard.status?.state == MembershipCardStatus.UNAUTHORISED.status &&
+        (membershipCard.status?.state == MembershipCardStatus.FAILED.status ||
+                membershipCard.status?.state == MembershipCardStatus.UNAUTHORISED.status) &&
                 membershipPlan.getCardType() != CardType.STORE
 
 
