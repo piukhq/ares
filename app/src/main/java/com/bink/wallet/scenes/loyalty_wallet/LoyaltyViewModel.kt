@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_wallet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
@@ -12,6 +13,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
+import kotlinx.coroutines.launch
 
 class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
@@ -22,6 +24,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
+    val dismissedCardDataForLocal: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
     val addError = MutableLiveData<Throwable>()
     val fetchError = MutableLiveData<Throwable>()
 
@@ -32,6 +35,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
+
+    private val _localCardsDataMerger = MediatorLiveData<UserDataResult>()
+    val localCardsDataMerger: LiveData<UserDataResult>
+        get() = _localCardsDataMerger
 
     init {
         _cardsDataMerger.addSource(membershipCardData) {
@@ -47,6 +54,33 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         _cardsDataMerger.addSource(dismissedCardData) {
             _cardsDataMerger.value =
                 combineCardsData(membershipCardData, membershipPlanData, dismissedCardData)
+        }
+
+        _localCardsDataMerger.addSource(localMembershipCardData) {
+            _localCardsDataMerger.value =
+                combineCardsData(
+                    localMembershipCardData,
+                    localMembershipPlanData,
+                    dismissedCardDataForLocal
+                )
+        }
+
+        _localCardsDataMerger.addSource(localMembershipPlanData) {
+            _localCardsDataMerger.value =
+                combineCardsData(
+                    localMembershipCardData,
+                    localMembershipPlanData,
+                    dismissedCardDataForLocal
+                )
+        }
+
+        _localCardsDataMerger.addSource(dismissedCardDataForLocal) {
+            _localCardsDataMerger.value =
+                combineCardsData(
+                    localMembershipCardData,
+                    localMembershipPlanData,
+                    dismissedCardDataForLocal
+                )
         }
     }
 
@@ -93,8 +127,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 
-    suspend fun fetchMembershipPlans() {
-        loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
+    fun fetchMembershipPlans() {
+        viewModelScope.launch {
+            loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
+        }
     }
 
     fun fetchLocalMembershipCards() {
@@ -103,6 +139,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
 
     fun fetchLocalMembershipPlans() {
         loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
+    }
+
+    fun fetchDismissedCardsDataForLocal() {
+        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardDataForLocal, fetchError)
     }
 
     fun fetchDismissedCards() {
