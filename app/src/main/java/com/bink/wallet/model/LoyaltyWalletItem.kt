@@ -3,6 +3,7 @@ package com.bink.wallet.model
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LoginStatus
@@ -101,6 +102,6 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
     fun retrieveAuthSuffix(): String {
         return if (shouldShowPointsSuffix()) membershipCard.balances?.first()
             ?.suffix.toString()
-        else ""
+        else EMPTY_STRING
     }
 }
