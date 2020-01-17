@@ -30,7 +30,8 @@ class AddAuthAdapter(
     private var finalTextField: String = ""
     init {
         brands.map {
-            if (it.first is PlanFields) {
+            if (it.first is PlanFields &&
+                (it.first as PlanFields).type == FieldType.TEXT.type) {
                 finalTextField = (it.first as PlanFields).column!!
             }
         }
@@ -140,12 +141,10 @@ class AddAuthAdapter(
                     }
                 }
                 setOnEditorActionListener { _, actionId, _ ->
-                    if(actionId == EditorInfo.IME_ACTION_DONE){
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
                         checkIfFieldIsValid()
-                        false
-                    } else {
-                        true
                     }
+                    false
                 }
             }
 
