@@ -52,8 +52,12 @@ class LoyaltyCardDetailsFragment :
 
         setLoadingState(true)
 
-        runBlocking {
-            viewModel.fetchPaymentCards()
+        if (verifyAvailableNetwork(requireActivity())) {
+            runBlocking {
+                viewModel.fetchPaymentCards()
+            }
+        } else {
+            showNoInternetConnectionDialog()
         }
 
         val cd = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
@@ -73,9 +77,12 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            runBlocking { viewModel.updateMembershipCard() }
+            if (verifyAvailableNetwork(requireActivity())) {
+                runBlocking { viewModel.updateMembershipCard() }
+            }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
+            viewModel.setLinkStatus()
         }
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
@@ -178,91 +185,93 @@ class LoyaltyCardDetailsFragment :
                 setLoadingState(false)
             } else {
                 runBlocking {
-                    viewModel.fetchPaymentCards()
+                    if (verifyAvailableNetwork(requireActivity())) {
+                        viewModel.fetchPaymentCards()
+                    }
                 }
+                configureLinkStatus(status)
             }
-            configureLinkStatus(status)
-        }
 
-        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            cd.alpha = v?.scrollY?.let {
-                getAlphaForActionBar(it)
-            }!!
-        }
-
-        binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            if (verifyAvailableNetwork(requireActivity())) {
-                runBlocking {
-                    viewModel.updateMembershipCard()
-                }
-            } else {
-                showNoInternetConnectionDialog()
-                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-                setLoadingState(false)
+            binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+                cd.alpha = v?.scrollY?.let {
+                    getAlphaForActionBar(it)
+                }!!
             }
-        }
 
-        viewModel.accountStatus.observeNonNull(this) { status ->
-            configureLoginStatus(status)
-        }
-
-        setPointsModuleClickListener()
-        setLinkModuleClickListener()
-
-        binding.footerSecurity.setOnClickListener {
-            val action =
-                LoyaltyCardDetailsFragmentDirections.detailToSecurity(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.security_and_privacy_title),
-                        getString(R.string.security_and_privacy_copy),
-                        description2 = getString(R.string.security_and_privacy_copy_2)
-                    )
-                )
-            findNavController().navigateIfAdded(this, action)
-        }
-
-        binding.footerDelete.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            var dialog: AlertDialog? = null
-            builder.setMessage(getString(R.string.delete_card_modal_body))
-            builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-            builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
+            binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
                 if (verifyAvailableNetwork(requireActivity())) {
                     runBlocking {
-                        viewModel.deleteCard(viewModel.membershipCard.value?.id)
-                    }
-                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
-                        with(viewModel.deleteError) {
-                            if (value is HttpException) {
-                                val error = value as HttpException
-                                requireContext().displayModalPopup(
-                                    getString(R.string.title_2_4),
-                                    getString(
-                                        R.string.description_2_4,
-                                        error.code().toString(),
-                                        error.localizedMessage
-                                    )
-                                )
-                            } else {
-                                requireContext().displayModalPopup(
-                                    getString(R.string.title_2_4),
-                                    getString(R.string.loyalty_card_delete_error_message)
-                                )
-                            }
-                        }
-                    }
-                    viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                        dialog?.dismiss()
-                        findNavController().navigateIfAdded(this, R.id.global_to_home)
+                        viewModel.updateMembershipCard()
                     }
                 } else {
-                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+                    showNoInternetConnectionDialog()
+                    binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                    setLoadingState(false)
                 }
             }
-            dialog = builder.create()
-            dialog.show()
+
+            viewModel.accountStatus.observeNonNull(this) { status ->
+                configureLoginStatus(status)
+            }
+
+            setPointsModuleClickListener()
+            setLinkModuleClickListener()
+
+            binding.footerSecurity.setOnClickListener {
+                val action =
+                    LoyaltyCardDetailsFragmentDirections.detailToSecurity(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            getString(R.string.security_and_privacy_title),
+                            getString(R.string.security_and_privacy_copy),
+                            description2 = getString(R.string.security_and_privacy_copy_2)
+                        )
+                    )
+                findNavController().navigateIfAdded(this, action)
+            }
+
+            binding.footerDelete.setOnClickListener {
+                val builder = AlertDialog.Builder(context)
+                var dialog: AlertDialog? = null
+                builder.setMessage(getString(R.string.delete_card_modal_body))
+                builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
+                builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
+                    if (verifyAvailableNetwork(requireActivity())) {
+                        runBlocking {
+                            viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                        }
+                        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                            with(viewModel.deleteError) {
+                                if (value is HttpException) {
+                                    val error = value as HttpException
+                                    requireContext().displayModalPopup(
+                                        getString(R.string.title_2_4),
+                                        getString(
+                                            R.string.description_2_4,
+                                            error.code().toString(),
+                                            error.localizedMessage
+                                        )
+                                    )
+                                } else {
+                                    requireContext().displayModalPopup(
+                                        getString(R.string.title_2_4),
+                                        getString(R.string.loyalty_card_delete_error_message)
+                                    )
+                                }
+                            }
+                        }
+                        viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
+                            dialog?.dismiss()
+                            findNavController().navigateIfAdded(this, R.id.global_to_home)
+                        }
+                    } else {
+                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+                    }
+                }
+                dialog = builder.create()
+                dialog.show()
+            }
         }
     }
 
@@ -361,6 +370,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
     }
+
 
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {

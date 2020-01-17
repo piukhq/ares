@@ -14,7 +14,10 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardsDetailsFragment :
@@ -184,8 +187,12 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
-        CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getMembershipCards()
+        if (verifyAvailableNetwork(requireActivity())) {
+            CoroutineScope(Dispatchers.Main).launch {
+                viewModel.getMembershipCards()
+            }
+        } else {
+            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
         }
     }
 

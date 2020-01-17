@@ -159,12 +159,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
             binding.swipeLayout.isEnabled = false
             binding.swipeLayout.isRefreshing = false
-            viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchDismissedCards()
         } else {
             disableIndicators()
         }
+
+        viewModel.fetchLocalMembershipPlans()
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchDismissedCards()
 
         binding.swipeLayout.setOnRefreshListener {
             if (verifyAvailableNetwork(requireActivity())) {
