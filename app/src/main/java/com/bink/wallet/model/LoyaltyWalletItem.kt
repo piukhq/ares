@@ -54,10 +54,14 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
     fun retrieveLinkStatusText(): Int? {
         if (shouldShowLinkStatus()) {
             when {
-                shouldShowRetryStatus() -> return R.string.card_status_retry
+                shouldShowRetryStatus() -> {
+                    return R.string.card_status_retry
+                }
                 isPendingStatus(
                     membershipCard
-                ) -> return R.string.card_status_pending
+                ) -> {
+                    return R.string.card_status_pending
+                }
                 shouldShowLinkStatus() -> {
                     membershipCard.hasLinkedPaymentCards()?.let {
                         return if (it) {
@@ -82,17 +86,24 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
 
     fun retrieveAuthStatusText(): Int? {
         return when {
-            shouldShowPendingStatus() -> R.string.card_status_pending
-            shouldShowRetryStatus() -> R.string.card_status_retry
-            else -> null
+            shouldShowPendingStatus() -> {
+                R.string.card_status_pending
+            }
+            shouldShowRetryStatus() -> {
+                R.string.card_status_retry
+            }
+            else -> {
+                null
+            }
         }
     }
 
     fun retrievePointsText(): String {
         val balance = membershipCard.balances?.first()
         return when (balance?.prefix != null) {
-            true ->
+            true -> {
                 balance?.prefix?.plus(balance.value).toString()
+            }
             else -> {
                 balance?.value.toString()
             }
