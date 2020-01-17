@@ -63,6 +63,10 @@ class AddPaymentCardFragment :
             updateEnteredCardNumber()
         }
 
+        viewModel.cardHolder.observeNonNull(this) {
+            cardInfoDisplay()
+        }
+
         binding.cardNumber.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 validateCardNumber()
