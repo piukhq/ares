@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,6 +16,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
@@ -45,12 +47,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         },
         onRemoveListener = { onBannerRemove(it) }
     )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     private var walletItems = ArrayList<Any>()
 
     val listener = object :
@@ -92,25 +88,60 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    private fun createFetchObservers() {
-        viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
-            viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
-                populateScreen(plansReceived, cardsReceived)
-                viewModel.membershipCardData.removeObservers(this@LoyaltyWalletFragment)
-                viewModel.membershipPlanData.removeObservers(this@LoyaltyWalletFragment)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.cardsDataMerger.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is UserDataResult.UserDataLoading -> {
+                    binding.progressSpinner.visibility = View.VISIBLE
+                }
+                is UserDataResult.UserDataSuccess -> {
+                    it.result.third.forEach { item ->
+                        when (item) {
+                            is JoinCardItem -> Log.d("WRKRJoin", item.toString())
+                            is MembershipPlan -> Log.d("WRKRPlan", item.toString())
+                            is MembershipCard -> Log.d("WRKRCard", item.toString())
+                        }
+                    }
+                    binding.progressSpinner.visibility = View.GONE
+                    binding.swipeLayout.isRefreshing = false
+                    walletAdapter.membershipPlans = ArrayList(it.result.second)
+                    walletAdapter.membershipCards = ArrayList(it.result.third)
+                    walletAdapter.notifyDataSetChanged()
+                }
             }
+        })
+        runBlocking {
+            viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipCards()
+            viewModel.fetchDismissedCards()
         }
     }
 
-    private fun createLocalObservers() {
-        viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
-            viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
-                populateScreen(plansReceived, cardsReceived)
-                viewModel.localMembershipCardData.removeObservers(this@LoyaltyWalletFragment)
-                viewModel.localMembershipPlanData.removeObservers(this@LoyaltyWalletFragment)
-            }
-        }
-    }
+//    private fun createFetchObservers() {
+//        viewModel.membershipPlanData.observeNonNull(this) { plansReceived ->
+//            viewModel.membershipCardData.observeNonNull(this) { cardsReceived ->
+//                populateScreen(plansReceived, cardsReceived)
+//                viewModel.membershipCardData.removeObservers(this@LoyaltyWalletFragment)
+//                viewModel.membershipPlanData.removeObservers(this@LoyaltyWalletFragment)
+//            }
+//        }
+//    }
+//
+//    private fun createLocalObservers() {
+//        viewModel.localMembershipPlanData.observeNonNull(this) { plansReceived ->
+//            viewModel.localMembershipCardData.observeNonNull(this) { cardsReceived ->
+//                populateScreen(plansReceived, cardsReceived)
+//                viewModel.localMembershipCardData.removeObservers(this@LoyaltyWalletFragment)
+//                viewModel.localMembershipPlanData.removeObservers(this@LoyaltyWalletFragment)
+//            }
+//        }
+//    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -149,27 +180,28 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         binding.progressSpinner.visibility = View.VISIBLE
 
-        createLocalObservers()
-        createFetchObservers()
+//        createLocalObservers()
+//        createFetchObservers()
 
-        if (verifyAvailableNetwork(requireActivity())) {
-            runBlocking {
-                viewModel.fetchMembershipPlans()
-                viewModel.fetchMembershipCards()
-            }
-            binding.swipeLayout.isEnabled = false
-            binding.swipeLayout.isRefreshing = false
-            viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchDismissedCards()
-        } else {
-            disableIndicators()
-        }
+//        if (verifyAvailableNetwork(requireActivity())) {
+//            runBlocking {
+//                viewModel.fetchMembershipPlans()
+//                viewModel.fetchMembershipCards()
+//            }
+//            binding.swipeLayout.isEnabled = false
+//            binding.swipeLayout.isRefreshing = false
+//            viewModel.fetchLocalMembershipPlans()
+//            viewModel.fetchLocalMembershipCards()
+//            viewModel.fetchDismissedCards()
+//        } else {
+//            disableIndicators()
+//        }
 
         binding.swipeLayout.setOnRefreshListener {
             if (verifyAvailableNetwork(requireActivity())) {
-                createFetchObservers()
+//                createFetchObservers()
                 runBlocking {
+                    viewModel.fetchDismissedCards()
                     viewModel.fetchMembershipPlans()
                     viewModel.fetchMembershipCards()
                 }

@@ -37,4 +37,8 @@ class MembershipPlan(
             else -> null
         }
     }
+
+    override fun toString(): String {
+        return this.id + " " + this.status + " " + this.feature_set + " " + this.account + " " + this.balances
+    }
 }
