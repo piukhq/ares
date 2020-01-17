@@ -116,6 +116,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
         })
+
+        viewModel.dismissedBannerDisplay.observe(viewLifecycleOwner, Observer {
+            Log.d("WRKR", it)
+            walletAdapter.deleteBannerDisplayById(it)
+            viewModel.fetchDismissedCards()
+            binding.progressSpinner.visibility = View.VISIBLE
+            binding.swipeLayout.isEnabled = true
+        })
         runBlocking {
             viewModel.fetchMembershipPlans()
             viewModel.fetchMembershipCards()
@@ -341,12 +349,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun onBannerRemove(item: Any) {
+        binding.swipeLayout.isEnabled = false
+        binding.progressSpinner.visibility = View.GONE
         when (item) {
             is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
             else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
         }
-        walletAdapter.membershipCards.remove(item)
-        walletAdapter.notifyDataSetChanged()
     }
 
     fun setData(

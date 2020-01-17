@@ -29,6 +29,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val cardsDataMerger: LiveData<UserDataResult>
         get() = _cardsDataMerger
 
+    private val _dismissedBannerDisplay = MutableLiveData<String>()
+    val dismissedBannerDisplay: LiveData<String>
+        get() = _dismissedBannerDisplay
+
     init {
         _cardsDataMerger.addSource(membershipCardData) {
             _cardsDataMerger.value =
@@ -106,6 +110,6 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id, addError)
+        loyaltyWalletRepository.addBannerAsDismissed(id, addError, _dismissedBannerDisplay)
     }
 }

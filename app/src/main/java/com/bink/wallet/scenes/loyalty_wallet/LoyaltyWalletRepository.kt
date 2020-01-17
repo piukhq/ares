@@ -210,11 +210,16 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun addBannerAsDismissed(id: String, addError: MutableLiveData<Throwable>) {
+    fun addBannerAsDismissed(
+        id: String,
+        addError: MutableLiveData<Throwable>,
+        dismissedBannerDisplay: MutableLiveData<String> = MutableLiveData()
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
+                    dismissedBannerDisplay.value = id
                 } catch (e: Throwable) {
                     addError.value = e
                 }
