@@ -21,18 +21,12 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipCardsAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipCards(response)
-                    mutableMembershipCards.postValue(response.toMutableList())
-                } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
+    suspend fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
+        val request = apiService.getMembershipCardsAsync()
+        withContext(Dispatchers.Main) {
+            val response = request.await()
+            storeMembershipCards(response)
+            mutableMembershipCards.postValue(response.toMutableList())
         }
     }
 
@@ -61,18 +55,12 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipPlansAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipPlans(response)
-                    mutableMembershipPlans.value = response.toMutableList()
-                } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
+    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+        val request = apiService.getMembershipPlansAsync()
+        withContext(Dispatchers.Main) {
+            val response = request.await()
+            storeMembershipPlans(response)
+            mutableMembershipPlans.value = response.toMutableList()
         }
     }
 

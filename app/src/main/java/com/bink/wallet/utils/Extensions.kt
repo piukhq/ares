@@ -2,9 +2,11 @@ package com.bink.wallet.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.annotation.IntegerRes
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -109,6 +111,35 @@ fun String.headerTidy(): String {
     return this
         .replace("=", "")
         .replace("\n", "")
+}
+
+fun Context.validateEmail(emailValue: String?, editText: EditText) {
+    editText.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(emailValue ?: EMPTY_STRING).matches()) {
+                editText.error = getString(R.string.incorrect_email_text)
+            } else {
+                editText.error = null
+            }
+        }
+    }
+}
+
+fun Context.validatePassword(passwordValue: String?, editText: EditText) {
+    editText.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            if (!UtilFunctions.isValidField(
+                    PASSWORD_REGEX,
+                    passwordValue ?: EMPTY_STRING
+                )
+            ) {
+                editText.error =
+                    getString(R.string.password_description)
+            } else {
+                editText.error = null
+            }
+        }
+    }
 }
 
 fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {

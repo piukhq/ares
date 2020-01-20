@@ -13,6 +13,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
+import com.facebook.login.LoginManager
 import io.fabric.sdk.android.Fabric
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        when (findNavController(R.id.main_fragment).currentDestination?.id) {
+        val navId = findNavController(R.id.main_fragment).currentDestination?.id
+        when (navId) {
             R.id.maximised_barcode_fragment -> {
                 findNavController(R.id.main_fragment).popBackStack()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -52,10 +54,15 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
             R.id.add_email_fragment -> {
+                LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.add_email_to_onboarding)
             }
             R.id.accept_tcs_fragment -> {
+                LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
+            }
+            R.id.card_terms_and_conditions -> {
+                // do nothing (back button is prohibited here)
             }
             else -> super.onBackPressed()
         }

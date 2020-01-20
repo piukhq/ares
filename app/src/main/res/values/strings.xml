@@ -178,7 +178,7 @@
     <string name="add_card_error_message">Please try again!</string>
     <string name="sign_up_text">Sign up</string>
     <string name="log_in_text">Log in</string>
-    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance. This is optional.</string>
+    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance and transaction history. This is optional.</string>
     <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your points balance. This is optional.</string>
     <string name="temporary_log_in_screen_title">Welcome to splash page</string>
     <string name="login_screen_temporary_text">Login screen</string>
@@ -273,8 +273,8 @@
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
 
     <!-- Native Join Unavailable-->
-    <string name="native_join_unavailable_title">Native join unavailable</string>
-    <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
+    <string name="native_join_unavailable_title">Sign up currently unavailable</string>
+    <string name="native_join_unavailable_text">Go to the %1$s website to join then come back and add your card.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
@@ -335,12 +335,11 @@
 
     <!-- Authentication -->
     <string name="add_your_payment_cards">Add your payment cards</string>
-    <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
-    <string name="join_card_description">You will need to add at least one to collect rewards automatically</string>
+    <string name="join_card_description">Link this card to your payment cards to automatically collect rewards</string>
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
-    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
+    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
@@ -348,7 +347,7 @@
     <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
-    <string name="incorrect_email_text">Invalid email address</string>
+    <string name="incorrect_email_text">Incorrect email format</string>
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
