@@ -153,7 +153,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             feature_set.has_points == true &&
                             feature_set.transactions_available != null
                         ) {
-                            if (feature_set?.transactions_available == true) {
+                            if (feature_set.transactions_available == true) {
                                 binding.descriptionAddAuth.text = getString(
                                     R.string.log_in_transaction_available,
                                     viewModel.currentMembershipPlan.value!!.account?.plan_name_card

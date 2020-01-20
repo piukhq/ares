@@ -17,6 +17,7 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.facebook.login.LoginManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -196,11 +197,11 @@ class SettingsFragment :
             }
 
             SettingsItemType.LOGOUT -> {
+                LoginManager.getInstance().logOut()
                 requireContext().displayModalPopup(
                     getString(R.string.settings_menu_log_out),
                     getString(R.string.log_out_confirmation),
                     okAction = {
-                        requireContext().let { LocalStoreUtils.clearPreferences() }
                         viewModel.logOut()
                     },
                     buttonText = R.string.settings_menu_log_out,

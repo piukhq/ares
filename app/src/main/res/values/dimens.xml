@@ -19,9 +19,10 @@
     <dimen name="card_login_height">28dp</dimen>
     <dimen name="card_login_margin_end">12dp</dimen>
     <dimen name="link_status_wrapper_margin_end">18dp</dimen>
-    <dimen name="delete_icon_size">30dp</dimen>
+    <dimen name="delete_icon_size">36dp</dimen>
     <dimen name="delete_icon_padding">7dp</dimen>
-    <dimen name="card_item_linear_layout_margin">10dp</dimen>
+    <dimen name="card_item_linear_layout_margin">36dp</dimen>
+    <dimen name="loyalty_card_corner_radius">10dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
