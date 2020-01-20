@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
                 name="membershipPlan"
                 type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
@@ -30,94 +31,62 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintBottom_toBottomOf="@id/toolbar"
-                app:layout_constraintTop_toTopOf="@id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/toolbar" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fillViewport="true"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <TextView
-                android:id="@+id/code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:textColor="@color/green_ok"
-                android:textSize="@dimen/text_size_title_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <TextView
-                android:id="@+id/main_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_title_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/code" />
+                <TextView
+                        android:id="@+id/top_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        android:text="@string/rewards_history"
+                        android:textSize="@dimen/text_size_title_big"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-                android:id="@+id/main_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_title" />
+                <TextView
+                        android:id="@+id/second_line_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:text="@string/your_past_rewards"
+                        android:textSize="@dimen/text_size_title_large"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/top_text" />
 
-        <TextView
-                android:id="@+id/voucher_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_smaller"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_text" />
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/second_line_text" />
 
-        <TextView
-                android:id="@+id/link_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_large"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_semibold"
-                android:text="@string/terms_conditions_text"
-                android:textColor="@color/blue_accent"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/voucher_date" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

@@ -18,11 +18,13 @@
         <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/shadowed_card_elevation"
+                android:layout_marginTop="@dimen/shadowed_card_elevation"
                 android:orientation="vertical"
-                android:background="@drawable/rounded_background"
-                app:cardBackgroundColor="@color/white_transparent"
-                app:cardCornerRadius="@dimen/cardview_default_elevation"
-                app:cardElevation="@dimen/cardview_default_elevation"
+                app:cardCornerRadius="@dimen/loyalty_card_corner_radius"
+                app:cardElevation="@dimen/margin_padding_size_extra_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

@@ -40,6 +40,7 @@ class LoyaltyCardRewardsHistoryFragment :
         with (binding.recycler) {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
+            isNestedScrollingEnabled = true
             viewModel.membershipCard.value?.vouchers?.filterNot {
                 listOf(
                     VoucherStates.IN_PROGRESS.state,
