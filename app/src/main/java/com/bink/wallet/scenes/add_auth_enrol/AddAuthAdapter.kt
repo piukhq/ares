@@ -29,10 +29,12 @@ class AddAuthAdapter(
 
     private var finalTextField: String = ""
     init {
-        brands.map {
-            if (it.first is PlanFields &&
-                (it.first as PlanFields).type == FieldType.TEXT.type) {
-                finalTextField = (it.first as PlanFields).column!!
+        brands.map { pair ->
+            if (pair.first is PlanFields &&
+                (pair.first as PlanFields).type == FieldType.TEXT.type) {
+                (pair.first as PlanFields).column?.let { column ->
+                    finalTextField = column
+                }
             }
         }
     }
