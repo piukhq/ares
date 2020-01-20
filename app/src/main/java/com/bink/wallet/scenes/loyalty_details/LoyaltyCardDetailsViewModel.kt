@@ -6,10 +6,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.MembershipPlanUtils
-import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.MembershipCardStatus
 
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
@@ -53,45 +51,18 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     }
 
     fun setLinkStatus() {
-        when (membershipPlan.value?.feature_set?.card_type) {
-            CardType.PLL.type -> {
-                when (membershipCard.value?.status?.state) {
-                    MembershipCardStatus.AUTHORISED.status -> {
-                        when {
-                            localPaymentCards.value.isNullOrEmpty() ->
-                                linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
-                            membershipCard.value?.payment_cards.isNullOrEmpty() ||
-                                    !existLinkedPaymentCards() ->
-                                linkStatus.value =
-                                    LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
-                            else ->
-                                linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
-                        }
-                    }
-                    MembershipCardStatus.UNAUTHORISED.status -> {
-                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH
-                    }
-                    MembershipCardStatus.PENDING.status -> {
-                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
-                    }
-                    MembershipCardStatus.FAILED.status -> {
-                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
-                    }
+        membershipPlan.value?.let { membershipPlan ->
+            membershipCard.value?.let { membershipCard ->
+                localPaymentCards.value?.let { paymentCards ->
+                    linkStatus.value = MembershipPlanUtils.getLinkStatus(
+                        membershipPlan,
+                        membershipCard,
+                        paymentCards.toMutableList()
+                    )
+
                 }
             }
-            CardType.VIEW.type, CardType.STORE.type -> {
-                linkStatus.value = LinkStatus.STATUS_UNLINKABLE
-            }
         }
-    }
-
-    private fun existLinkedPaymentCards(): Boolean {
-        membershipCard.value?.payment_cards?.forEach { card ->
-            if (card.active_link == true) {
-                return true
-            }
-        }
-        return false
     }
 }
 

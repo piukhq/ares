@@ -277,7 +277,7 @@ class LoyaltyCardDetailsFragment :
             dialog.show()
         }
     }
-    
+
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
             if (balance.suffix.isNullOrEmpty()) {

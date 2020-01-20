@@ -17,7 +17,6 @@ import com.facebook.*
 import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -85,35 +84,36 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
 
-        binding.continueWithFacebook.apply {
-            fragment = this@OnboardingFragment
-            setReadPermissions(listOf(EMAIL_KEY))
-            loginBehavior = LoginBehavior.WEB_VIEW_ONLY
-            registerCallback(
-                callbackManager,
-                object : FacebookCallback<LoginResult> {
-                    override fun onSuccess(result: LoginResult?) {
-                        result?.accessToken?.let {
-                            retrieveFacebookLoginInformation(it)
+        binding.continueWithFacebook.setOnClickListener {
+            binding.continueWithFacebook.apply {
+                fragment = this@OnboardingFragment
+                setReadPermissions(listOf(EMAIL_KEY))
+                loginBehavior = LoginBehavior.WEB_VIEW_ONLY
+                registerCallback(
+                    callbackManager,
+                    object : FacebookCallback<LoginResult> {
+                        override fun onSuccess(result: LoginResult?) {
+                            result?.accessToken?.let {
+                                retrieveFacebookLoginInformation(it)
+                            }
                         }
-                    }
 
-                    override fun onCancel() {
-                        requireContext().displayModalPopup(
-                            null,
-                            getString(R.string.facebook_cancelled)
-                        )
-                    }
+                        override fun onCancel() {
+                            requireContext().displayModalPopup(
+                                null,
+                                getString(R.string.facebook_cancelled)
+                            )
+                        }
 
-                    override fun onError(error: FacebookException?) {
-                        requireContext().displayModalPopup(
-                            null,
-                            getString(R.string.facebook_unavailable)
-                        )
-                    }
-                })
+                        override fun onError(error: FacebookException?) {
+                            requireContext().displayModalPopup(
+                                null,
+                                getString(R.string.facebook_unavailable)
+                            )
+                        }
+                    })
+            }
         }
-
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
@@ -142,7 +142,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        callbackManager.onActivityResult(requestCode, resultCode, data)
+        if (isNetworkAvailable(requireActivity(), true)) {
+            callbackManager.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     private fun scrollPagesAutomatically(pager: ViewPager?) {

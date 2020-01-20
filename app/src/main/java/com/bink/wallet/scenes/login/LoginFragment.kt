@@ -59,9 +59,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         viewModel.retrieveStoredLoginData()
         binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {
-            if (isNetworkAvailable(requireActivity(), true)) {
-                viewModel.authenticate()
-            }
+            viewModel.authenticate()
         }
 
         with(viewModel) {
@@ -113,24 +111,27 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
 
         binding.logInButton.setOnClickListener {
-            requireContext().validateEmail(viewModel.email.value, binding.emailField)
-            requireContext().validatePassword(viewModel.password.value, binding.passwordField)
-
-            if (binding.passwordField.error == null &&
-                binding.emailField.error == null
-            ) {
-                binding.progressSpinner.visibility = View.VISIBLE
-                viewModel.logIn(
-                    SignUpRequest(
-                        email = viewModel.email.value,
-                        password = viewModel.password.value
+            if (isNetworkAvailable(requireActivity(), true)) {
+                requireContext().apply {
+                    validateEmail(viewModel.email.value, binding.emailField)
+                    validatePassword(viewModel.password.value, binding.passwordField)
+                }
+                if (binding.passwordField.error == null &&
+                    binding.emailField.error == null
+                ) {
+                    binding.progressSpinner.visibility = View.VISIBLE
+                    viewModel.logIn(
+                        SignUpRequest(
+                            email = viewModel.email.value,
+                            password = viewModel.password.value
+                        )
                     )
-                )
-            } else {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.all_fields_must_be_valid)
-                )
+                } else {
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.all_fields_must_be_valid)
+                    )
+                }
             }
         }
     }

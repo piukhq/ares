@@ -35,16 +35,17 @@ class ForgotPasswordFragment :
         }
 
         binding.buttonContinueEmail.setOnClickListener {
-            requireContext().validateEmail(viewModel.email.value, binding.emailText)
-
-            if (binding.emailText.error != null) {
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.invalid_email_text)
-                )
-            } else {
-                viewModel.isLoading.value = true
-                viewModel.forgotPassword()
+            if (isNetworkAvailable(requireActivity(), true)) {
+                requireContext().validateEmail(viewModel.email.value, binding.emailText)
+                if (binding.emailText.error != null) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.invalid_email_text)
+                    )
+                } else {
+                    viewModel.isLoading.value = true
+                    viewModel.forgotPassword()
+                }
             }
         }
 
