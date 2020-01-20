@@ -64,23 +64,24 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
 
-        val items = viewModel.itemsList.value!!
-        for (i in 0 until items.list.size) {
-            val item = items.list[i]
-            if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-                val email =
-                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                        ?.let {
-                            it
-                        }
+        viewModel.itemsList.value?.let {
+            for (i in 0 until it.list.size) {
+                val item = it.list[i]
+                if (item.type == SettingsItemType.EMAIL_ADDRESS) {
+                    val email =
+                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                            ?.let { localEmail ->
+                                localEmail
+                            }
 
-                val newItem =
-                    SettingsItem(
-                        item.title,
-                        email,
-                        item.type
-                    )
-                viewModel.itemsList.setItem(i, newItem)
+                    val newItem =
+                        SettingsItem(
+                            item.title,
+                            email,
+                            item.type
+                        )
+                    viewModel.itemsList.setItem(i, newItem)
+                }
             }
         }
 
