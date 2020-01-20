@@ -111,5 +111,5 @@
 
 
     <!-- Login Screen -->
-    <dimen name="continue_button_margin">52dp</dimen>
+    <dimen name="gradient_button_margin">52dp</dimen>
 </resources>
