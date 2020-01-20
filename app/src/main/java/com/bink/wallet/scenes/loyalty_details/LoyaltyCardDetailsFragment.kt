@@ -52,12 +52,12 @@ class LoyaltyCardDetailsFragment :
 
         setLoadingState(true)
 
-        if (verifyAvailableNetwork(requireActivity())) {
-            runBlocking {
+        runBlocking {
+            if (isNetworkAvailable(requireActivity(), false)) {
                 viewModel.fetchPaymentCards()
+            } else {
+                viewModel.fetchLocalPaymentCards()
             }
-        } else {
-            showNoInternetConnectionDialog()
         }
 
         val cd = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
@@ -77,7 +77,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            if (verifyAvailableNetwork(requireActivity())) {
+            if (isNetworkAvailable(requireActivity(), false)) {
                 runBlocking { viewModel.updateMembershipCard() }
             }
             binding.viewModel = viewModel
@@ -185,7 +185,7 @@ class LoyaltyCardDetailsFragment :
                 setLoadingState(false)
             } else {
                 runBlocking {
-                    if (verifyAvailableNetwork(requireActivity())) {
+                    if (isNetworkAvailable(requireActivity(), false)) {
                         viewModel.fetchPaymentCards()
                     }
                 }
@@ -199,12 +199,11 @@ class LoyaltyCardDetailsFragment :
             }
 
             binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-                if (verifyAvailableNetwork(requireActivity())) {
+                if (isNetworkAvailable(requireActivity(), true)) {
                     runBlocking {
                         viewModel.updateMembershipCard()
                     }
                 } else {
-                    showNoInternetConnectionDialog()
                     binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                     setLoadingState(false)
                 }
@@ -237,7 +236,7 @@ class LoyaltyCardDetailsFragment :
                 builder.setMessage(getString(R.string.delete_card_modal_body))
                 builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
                 builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                    if (verifyAvailableNetwork(requireActivity())) {
+                    if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
                             viewModel.deleteCard(viewModel.membershipCard.value?.id)
                         }
@@ -265,8 +264,6 @@ class LoyaltyCardDetailsFragment :
                             dialog?.dismiss()
                             findNavController().navigateIfAdded(this, R.id.global_to_home)
                         }
-                    } else {
-                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
                 }
                 dialog = builder.create()

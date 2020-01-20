@@ -12,7 +12,6 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,14 +36,12 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         }
 
         viewModel.preferences.observeNonNull(this) { preferences ->
-
             binding.progressSpinner.visibility = View.GONE
-
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
                     onClickListener = { preference: Preference, state: Int, checkBox ->
-                        if (verifyAvailableNetwork(requireActivity())) {
+                        if (isNetworkAvailable(requireActivity(), true)) {
                             viewModel.savePreference(
                                 json = JSONObject().put(
                                     preference.slug!!,

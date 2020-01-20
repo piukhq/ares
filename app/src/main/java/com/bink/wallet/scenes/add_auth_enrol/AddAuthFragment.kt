@@ -320,8 +320,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
-                if (verifyAvailableNetwork(requireActivity())) {
-
+                if (isNetworkAvailable(requireActivity(), true)) {
                     addRegisterFieldsRequest.plan_documents?.map {
                         if (it.value != "true") {
                             requireContext().displayModalPopup(
@@ -407,7 +406,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     binding.addCardButton.isEnabled = false
                     binding.progressSpinner.visibility = View.VISIBLE
                 } else {
-                    showNoInternetConnectionDialog()
                     binding.progressSpinner.visibility = View.GONE
                 }
             }

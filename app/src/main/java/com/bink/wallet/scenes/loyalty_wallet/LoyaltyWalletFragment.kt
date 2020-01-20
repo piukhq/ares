@@ -23,7 +23,6 @@ import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -152,7 +151,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         createLocalObservers()
         createFetchObservers()
 
-        if (verifyAvailableNetwork(requireActivity())) {
+        if (isNetworkAvailable(requireActivity(), false)) {
             runBlocking {
                 viewModel.fetchMembershipPlans()
                 viewModel.fetchMembershipCards()
@@ -168,7 +167,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
 
         binding.swipeLayout.setOnRefreshListener {
-            if (verifyAvailableNetwork(requireActivity())) {
+            if (isNetworkAvailable(requireActivity(), true)) {
                 createFetchObservers()
                 runBlocking {
                     viewModel.fetchMembershipPlans()
@@ -181,7 +180,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun disableIndicators() {
-        showNoInternetConnectionDialog()
         binding.swipeLayout.isRefreshing = false
         binding.progressSpinner.visibility = View.GONE
     }
@@ -229,7 +227,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        if (verifyAvailableNetwork(requireActivity())) {
+                        if (isNetworkAvailable(requireActivity(), true)) {
                             runBlocking {
                                 viewModel.deleteCard(membershipCard.id)
                             }

@@ -15,7 +15,6 @@ import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -69,7 +68,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         runBlocking {
-            viewModel.getPaymentCards()
+            if(isNetworkAvailable(requireActivity(), false)) {
+                viewModel.getPaymentCards()
+            } else {
+                viewModel.getLocalPaymentCards()
+            }
         }
 
         binding.toolbar.setNavigationOnClickListener {
@@ -127,7 +130,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         binding.buttonDone.setOnClickListener {
             if (viewModel.paymentCards.value.isNullOrEmpty()) {
                 findNavController().popBackStack()
-            } else if (verifyAvailableNetwork(requireActivity())) {
+            } else if (isNetworkAvailable(requireActivity(), true)) {
                 adapter.paymentCards?.forEach { card ->
                     if (card.isSelected &&
                         !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
@@ -163,8 +166,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                         }
                     }
                 }
-            } else {
-                showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
             }
         }
 

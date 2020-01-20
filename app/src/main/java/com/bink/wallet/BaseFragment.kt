@@ -1,5 +1,7 @@
 package com.bink.wallet
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -96,10 +98,24 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected abstract fun builder(): FragmentToolbar
 
-    fun showNoInternetConnectionDialog(@StringRes dialogMessage: Int = R.string.no_internet_connection_dialog_message) {
+    private fun showNoInternetConnectionDialog() {
         requireContext().displayModalPopup(
             null,
-            getString(dialogMessage)
+            requireContext().getString(R.string.no_internet_connection_dialog_message)
         )
+    }
+
+    fun isNetworkAvailable(
+        activity: FragmentActivity,
+        isUserAction: Boolean
+    ): Boolean {
+        val connectivityManager =
+            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        val isNetworkAvailable = networkInfo != null && networkInfo.isConnected
+        if (isUserAction && !isNetworkAvailable) {
+            showNoInternetConnectionDialog()
+        }
+        return isNetworkAvailable
     }
 }

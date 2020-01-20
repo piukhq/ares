@@ -79,12 +79,10 @@ class PaymentCardsDetailsFragment :
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                if (verifyAvailableNetwork(requireActivity())) {
+                if (isNetworkAvailable(requireActivity(), true)) {
                     runBlocking {
                         viewModel.deletePaymentCard(viewModel.paymentCard.value?.id.toString())
                     }
-                } else {
-                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -159,7 +157,7 @@ class PaymentCardsDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             requireContext().displayModalPopup(
-                "",
+                EMPTY_STRING,
                 getString(R.string.card_error_dialog)
             )
         }
@@ -169,11 +167,15 @@ class PaymentCardsDetailsFragment :
         }
 
         viewModel.linkError.observeNonNull(viewLifecycleOwner) {
-            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+            if(isNetworkAvailable(requireActivity(),true)) {
+               //TODO handle error
+            }
         }
 
         viewModel.unlinkError.observeNonNull(viewLifecycleOwner) {
-            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+            if(isNetworkAvailable(requireActivity(),true)) {
+                //TODO handle error
+            }
         }
     }
 
@@ -187,12 +189,10 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
-        if (verifyAvailableNetwork(requireActivity())) {
+        if (isNetworkAvailable(requireActivity(), false)) {
             CoroutineScope(Dispatchers.Main).launch {
                 viewModel.getMembershipCards()
             }
-        } else {
-            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
         }
     }
 
