@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
@@ -13,7 +12,6 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
-import kotlinx.coroutines.launch
 
 class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
@@ -23,8 +21,8 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val membershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
-    val dismissedCardData: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
-    val dismissedCardDataForLocal: MutableLiveData<List<BannerDisplay>> = MutableLiveData()
+    val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
+    val dismissedCardDataForLocal = MutableLiveData<List<BannerDisplay>>()
     val addError = MutableLiveData<Throwable>()
     val fetchError = MutableLiveData<Throwable>()
 
@@ -89,25 +87,31 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         plansReceived: LiveData<List<MembershipPlan>>,
         dismissedCards: LiveData<List<BannerDisplay>>
     ): UserDataResult {
-        val cR = cardsReceived.value
-        val pR = plansReceived.value
-        val dC = dismissedCards.value
-        if (cR == null || pR == null || dC == null) {
+        val cardsReceivedValue = cardsReceived.value
+        val plansReceivedValue = plansReceived.value
+        val dismissedCardsValue = dismissedCards.value
+        if (cardsReceivedValue == null || plansReceivedValue == null || dismissedCardsValue == null) {
             return UserDataResult.UserDataLoading
         }
-        val walletItems = ArrayList<Any>(pR.filter {
+        val walletItems = ArrayList<Any>(plansReceivedValue.filter {
             it.getCardType() == CardType.PLL &&
-                    merchantNoLoyalty(cR, it) &&
-                    dC.firstOrNull { currentId ->
+                    merchantNoLoyalty(cardsReceivedValue, it) &&
+                    dismissedCardsValue.firstOrNull { currentId ->
                         it.id == currentId.id
                     } == null
         })
-        if (dC.firstOrNull { it.id == JOIN_CARD } == null &&
+        if (dismissedCardsValue.firstOrNull { it.id == JOIN_CARD } == null &&
             SharedPreferenceManager.isPaymentEmpty) {
             walletItems.add(JoinCardItem())
         }
-        walletItems.addAll(cR)
-        return UserDataResult.UserDataSuccess(Triple(cR, pR, walletItems))
+        walletItems.addAll(cardsReceivedValue)
+        return UserDataResult.UserDataSuccess(
+            Triple(
+                cardsReceivedValue,
+                plansReceivedValue,
+                walletItems
+            )
+        )
     }
 
     private fun merchantNoLoyalty(
@@ -128,9 +132,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun fetchMembershipPlans() {
-        viewModelScope.launch {
-            loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
-        }
+        loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
     }
 
     fun fetchLocalMembershipCards() {

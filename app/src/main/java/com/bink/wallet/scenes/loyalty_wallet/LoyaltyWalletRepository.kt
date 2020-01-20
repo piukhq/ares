@@ -61,7 +61,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+    fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipPlansAsync()
             withContext(Dispatchers.Main) {
@@ -234,8 +234,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    val response = bannersDisplayDao.getDismissedBanners()
-                    localMembershipCards.value = response
+                    localMembershipCards.value = bannersDisplayDao.getDismissedBanners()
                 } catch (e: Throwable) {
                     fetchError.value = e
                 }

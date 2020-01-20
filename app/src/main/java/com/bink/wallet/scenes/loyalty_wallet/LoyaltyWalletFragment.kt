@@ -138,12 +138,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         if (verifyAvailableNetwork(requireActivity())) {
-            viewModel.fetchDismissedCards()
+            binding.progressSpinner.visibility = View.VISIBLE
             viewModel.fetchMembershipPlans()
+            viewModel.fetchDismissedCards()
             viewModel.fetchMembershipCards()
         } else {
-            viewModel.fetchDismissedCardsDataForLocal()
+            binding.progressSpinner.visibility = View.VISIBLE
             viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchDismissedCardsDataForLocal()
             viewModel.fetchLocalMembershipCards()
             disableIndicators()
         }
@@ -151,9 +153,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             if (verifyAvailableNetwork(requireActivity())) {
                 binding.progressSpinner.visibility = View.VISIBLE
-                viewModel.fetchDismissedCards()
                 viewModel.fetchMembershipPlans()
                 viewModel.fetchMembershipCards()
+                viewModel.fetchDismissedCards()
             } else {
                 disableIndicators()
             }
@@ -179,8 +181,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.progressSpinner.visibility = View.GONE
                 binding.swipeLayout.isRefreshing = false
                 walletItems.addAll(userDataResult.result.third)
-                walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
+                walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
             }
         }
@@ -195,8 +197,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun onCardClicked(item: Any) {
         when (item) {
             is MembershipCard -> {
-                val list = viewModel.localMembershipPlanData.value ?:
-                    viewModel.membershipPlanData.value
+                val list =
+                    viewModel.localMembershipPlanData.value ?: viewModel.membershipPlanData.value
                 list?.let {
                     for (membershipPlan in it) {
                         if (item.membership_plan == membershipPlan.id) {
@@ -278,9 +280,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         membershipCards: List<MembershipCard>,
         membershipPlans: List<MembershipPlan>
     ) {
-        viewModel.run {
-            membershipCardData.value = membershipCards
-            membershipPlanData.value = membershipPlans
-        }
+        viewModel.membershipCardData.value = membershipCards
+        viewModel.membershipPlanData.value = membershipPlans
     }
 }
