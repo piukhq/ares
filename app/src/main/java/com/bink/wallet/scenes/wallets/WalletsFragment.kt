@@ -35,18 +35,17 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
         runBlocking {
-            viewModel.apply {
-                fetchLocalMembershipPlans()
-                fetchMembershipPlans()
-                fetchMembershipCards()
-                fetchPaymentCards()
-            }
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipCards()
+            viewModel.fetchPaymentCards()
         }
 
-        requireActivity().apply {
-            setActionBar(binding.toolbar)
-            actionBar?.setDisplayShowTitleEnabled(false)
+        activity?.let {
+            it.setActionBar(binding.toolbar)
+            it.actionBar?.setDisplayShowTitleEnabled(false)
         }
+
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
             binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
@@ -59,38 +58,43 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            viewModel.membershipCardData.value?.let { membershipCardData ->
-                viewModel.membershipPlanData.value?.let { membershipPlanData ->
-                    when (menuItem.itemId) {
-                        R.id.loyalty_menu_item -> {
-                            SharedPreferenceManager.isLoyaltySelected = true
-                            replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-                            loyaltyWalletsFragment.setData(
-                                membershipCardData,
-                                membershipPlanData
-                            )
-                        }
-                        R.id.add_menu_item -> {
-                            val directions =
-                                membershipPlanData.toTypedArray().let { plans ->
-                                    WalletsFragmentDirections.homeToAdd(
-                                        plans
-                                    )
-                                }
-                            directions.let { findNavController().navigateIfAdded(this, it) }
-                        }
-                        R.id.payment_menu_item -> {
-                            SharedPreferenceManager.isLoyaltySelected = false
-                            replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
-                            paymentCardWalletFragment.setData(
-                                membershipCardData,
-                                membershipPlanData
-                            )
-
-                        }
-
+            when (menuItem.itemId) {
+                R.id.loyalty_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = true
+                    replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
+                    if (viewModel.membershipCardData.value != null &&
+                        viewModel.membershipPlanData.value != null
+                    ) {
+                        loyaltyWalletsFragment.setData(
+                            viewModel.membershipCardData.value!!,
+                            viewModel.membershipPlanData.value!!
+                        )
                     }
                 }
+                R.id.add_menu_item -> {
+                    viewModel.membershipPlanData.value?.let {
+                        val directions =
+                            it.toTypedArray().let { plans ->
+                                WalletsFragmentDirections.homeToAdd(
+                                    plans
+                                )
+                            }
+                        directions.let { findNavController().navigateIfAdded(this, it) }
+                    }
+                }
+                R.id.payment_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = false
+                    replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
+                    if (viewModel.membershipCardData.value != null &&
+                        viewModel.membershipPlanData.value != null
+                    ) {
+                        paymentCardWalletFragment.setData(
+                            viewModel.membershipCardData.value!!,
+                            viewModel.membershipPlanData.value!!
+                        )
+                    }
+                }
+
             }
             true
         }

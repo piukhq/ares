@@ -61,28 +61,26 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     walletItems[position] is MembershipCard
                 ) {
                     val card = walletItems[position] as MembershipCard
-                    if (viewModel.membershipPlanData.value != null) {
-                        val plan =
-                            viewModel.membershipPlanData.value?.firstOrNull {
-                                it.id == card.membership_plan
-                            }
+                    val plan =
+                        viewModel.localMembershipPlanData.value?.firstOrNull {
+                            it.id == card.membership_plan
+                        }
 
-                        val directions =
-                            card.card?.barcode_type?.let {
-                                plan?.let {
-                                    WalletsFragmentDirections.homeToBarcode(
-                                        it, card
-                                    )
-                                }
-                            }
-                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                            directions?.let {
-                                findNavController().navigateIfAdded(
-                                    this@LoyaltyWalletFragment, it
+                    val directions =
+                        card.card?.barcode_type?.let {
+                            plan?.let {
+                                WalletsFragmentDirections.homeToBarcode(
+                                    plan, card
                                 )
                             }
-                            this@LoyaltyWalletFragment.onDestroy()
                         }
+                    if (findNavController().currentDestination?.id == R.id.home_wallet) {
+                        directions?.let {
+                            findNavController().navigateIfAdded(
+                                this@LoyaltyWalletFragment, it
+                            )
+                        }
+                        this@LoyaltyWalletFragment.onDestroy()
                     }
                 } else {
                     walletItems[position].let {
@@ -144,9 +142,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
 
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-            ItemTouchHelper(helperListenerRight).attachToRecyclerView(
-                this
-            )
+            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
         }
 
         binding.progressSpinner.visibility = View.VISIBLE
@@ -165,7 +161,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchLocalMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
-            showNoInternetConnectionDialog()
+            disableIndicators()
         }
 
         binding.swipeLayout.setOnRefreshListener {
@@ -176,27 +172,31 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     viewModel.fetchMembershipCards()
                 }
             } else {
-                showNoInternetConnectionDialog()
+                disableIndicators()
             }
         }
+    }
+
+    private fun disableIndicators() {
+        showNoInternetConnectionDialog()
+        binding.swipeLayout.isRefreshing = false
+        binding.progressSpinner.visibility = View.GONE
     }
 
     private fun onCardClicked(item: Any) {
         when (item) {
             is MembershipCard -> {
-                viewModel.localMembershipPlanData.value?.let {
-                    for (membershipPlan in it) {
-                        if (item.membership_plan == membershipPlan.id) {
-                            val directions =
-                                WalletsFragmentDirections.homeToDetail(
-                                    membershipPlan,
-                                    item
-                                )
-                            findNavController().navigateIfAdded(
-                                this@LoyaltyWalletFragment,
-                                directions
+                for (membershipPlan in viewModel.localMembershipPlanData.value!!) {
+                    if (item.membership_plan == membershipPlan.id) {
+                        val directions =
+                            WalletsFragmentDirections.homeToDetail(
+                                membershipPlan,
+                                item
                             )
-                        }
+                        findNavController().navigateIfAdded(
+                            this@LoyaltyWalletFragment,
+                            directions
+                        )
                     }
                 }
             }
@@ -231,8 +231,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 viewModel.deleteCard(membershipCard.id)
                             }
                         } else {
-                            showNoInternetConnectionDialog()
+                            disableIndicators()
                         }
+                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(
@@ -241,7 +242,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         )
                         binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
-
                 }
             }
             builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)

@@ -29,9 +29,7 @@ class PaymentCardWalletAdapter(
     }
 
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
-
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
@@ -40,7 +38,6 @@ class PaymentCardWalletAdapter(
                     currentOldItem is PaymentCard
                 )
                     return currentNewItem.id == currentOldItem.id
-
                 return currentNewItem is JoinCardItem &&
                         currentOldItem is JoinCardItem
             }
@@ -100,18 +97,22 @@ class PaymentCardWalletAdapter(
                 paymentCard = item
                 executePendingBindings()
 
-                item.card?.provider?.let {
-                    paymentCardWrapper.setBackgroundResource(
-                        it.getCardTypeFromProvider().background
-                    )
-                }
-                item.card?.let {
-                    if (it.isExpired()) {
+                item.card?.let { card ->
+                    card.provider?.let { provider ->
+                        paymentCardWrapper.setBackgroundResource(
+                            provider.getCardTypeFromProvider().background
+                        )
+                    }
+
+                    if (card.isExpired()) {
                         cardExpired.visibility = View.VISIBLE
                         linkStatus.visibility = View.GONE
                         imageStatus.visibility = View.GONE
+                    } else {
+                        cardExpired.visibility = View.GONE
                     }
                 }
+
                 mainPayment.setOnClickListener {
                     onClickListener(paymentCards[adapterPosition])
                 }

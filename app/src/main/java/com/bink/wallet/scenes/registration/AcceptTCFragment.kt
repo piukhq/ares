@@ -20,6 +20,8 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
+import com.facebook.login.LoginManager
+import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -84,6 +86,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 }
             requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
         }
+        viewModel.shouldAcceptBeEnabledTC.value = false
 
         binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
             viewModel.shouldAcceptBeEnabledTC.value = isChecked
@@ -94,9 +97,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
-            viewModel.shouldAcceptBeEnabledPrivacy.value?.let {
+            viewModel.shouldAcceptBeEnabledPrivacy.value?.let { enabledPrivacy ->
                 binding.accept.isEnabled = enabledTc == true &&
-                        it == true
+                        enabledPrivacy == true
             }
         }
 
@@ -138,10 +141,13 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
         }
         binding.decline.setOnClickListener {
+            LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
 
         binding.back.setOnClickListener {
+            LoginManager.getInstance().logOut()
+            hideKeyboard(requireContext(), binding.root)
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
     }

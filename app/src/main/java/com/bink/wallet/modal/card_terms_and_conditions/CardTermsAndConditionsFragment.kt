@@ -41,11 +41,19 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         viewModel.fetchLocalMembershipCards()
         viewModel.fetchLocalMembershipPlans()
 
-        viewModel.paymentCard.observeNonNull(this) {
-            findNavController().navigateIfAdded(
-                this,
-                R.id.card_terms_to_add
-            )
+        viewModel.paymentCard.observeNonNull(this) { paymentCard ->
+            viewModel.localMembershipPlanData.value?.let { plans ->
+                viewModel.localMembershipCardData.value?.let { cards ->
+                    findNavController().navigateIfAdded(
+                        this,
+                        CardTermsAndConditionsFragmentDirections.cardTermsToDetails(
+                            paymentCard,
+                            plans.toTypedArray(),
+                            cards.toTypedArray()
+                        )
+                    )
+                }
+            }
         }
         viewModel.error.observeNonNull(this) {
             if (viewModel.error.value != null) {
@@ -60,7 +68,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     override fun onFirstButtonClicked() {
-        super.onFirstButtonClicked()
         binding.firstButton.isEnabled = false
         binding.progressSpinner.visibility = View.VISIBLE
         userBankCard?.let {
@@ -85,7 +92,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     override fun onSecondButtonClicked() {
-        super.onSecondButtonClicked()
-        requireActivity().onBackPressed()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 }

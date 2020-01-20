@@ -1,13 +1,12 @@
-package com.bink.wallet.scenes
+package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.util.Patterns
 import android.view.View
-import android.widget.CheckBox
+import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -53,24 +52,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
     }
 
-    private fun validateEmail() =
-        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
-            binding.emailField.error = getString(R.string.incorrect_email_text)
-        } else {
-            binding.emailField.error = null
-        }
-
-    private fun validatePassword() = if (!UtilFunctions.isValidField(
-            PASSWORD_REGEX,
-            viewModel.password.value ?: EMPTY_STRING
-        )
-    ) {
-        binding.passwordField.error =
-            getString(R.string.password_description)
-    } else {
-        binding.passwordField.error = null
-    }
-
     private fun checkPasswordsMatch() =
         if (viewModel.password.value != viewModel.confirmPassword.value) {
             binding.confirmPasswordField.error = getString(R.string.password_not_match)
@@ -106,18 +87,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
 
         with(viewModel) {
-
             privacyPolicy.value = false
             termsCondition.value = false
             marketingMessages.value = false
 
             email.observeNonNull(this@SignUpFragment) {
-                validateEmail()
+                requireContext().validateEmail(it, binding.emailField)
                 setSignupButtonEnableStatus()
             }
 
             password.observeNonNull(this@SignUpFragment) {
-                validatePassword()
+                requireContext().validatePassword(it, binding.passwordField)
                 setSignupButtonEnableStatus()
             }
 
@@ -168,10 +148,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
                     marketingPref(
                         MarketingOption(
-                            when (marketingMessages.value) {
-                                true -> 1
-                                else -> 0
-                            }
+                            marketingMessages.value.toInt()
                         )
                     )
 
@@ -187,8 +164,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         binding.signUpButton.setOnClickListener {
 
-            validateEmail()
-            validatePassword()
+            requireContext().validateEmail(viewModel.email.value, binding.emailField)
+            requireContext().validatePassword(viewModel.password.value, binding.passwordField)
             checkPasswordsMatch()
 
             with(viewModel) {
@@ -246,7 +223,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        textView: CheckBox
+        textView: TextView
     ) {
         val spannableString = SpannableString(stringToSpan)
         spannableString.setSpan(

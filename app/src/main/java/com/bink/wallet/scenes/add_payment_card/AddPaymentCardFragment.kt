@@ -63,6 +63,10 @@ class AddPaymentCardFragment :
             updateEnteredCardNumber()
         }
 
+        viewModel.cardHolder.observeNonNull(this) {
+            cardInfoDisplay()
+        }
+
         binding.cardNumber.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 validateCardNumber()
@@ -83,12 +87,19 @@ class AddPaymentCardFragment :
         }
 
         binding.privacyLink.setOnClickListener {
-            val securityDialog = SecurityDialogs(requireContext())
-            securityDialog.openDialog(layoutInflater)
+            findNavController().navigateIfAdded(
+                this,
+                AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
+                    GenericModalParameters(
+                        isCloseModal = true,
+                        title = getString(R.string.privacy_and_security),
+                        description = getString(R.string.privacy_and_security_description)
+                    )
+                )
+            )
         }
 
         binding.addButton.setOnClickListener {
-
             validateCardName()
             validateCardNumber()
             binding.cardExpiry.error =
@@ -117,16 +128,17 @@ class AddPaymentCardFragment :
                 )
 
                 val params = GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
+                    0,
+                    false,
                     getString(R.string.terms_and_conditions_title),
                     getString(R.string.terms_and_conditions_text),
                     getString(R.string.accept_button_text),
                     getString(R.string.decline_button_text)
                 )
-
-                val action = AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                findNavController().navigateIfAdded(this, action)
+                findNavController().navigateIfAdded(
+                    this,
+                    AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                )
             }
         }
     }

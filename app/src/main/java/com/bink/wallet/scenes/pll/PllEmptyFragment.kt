@@ -41,15 +41,20 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.header.setOnClickListener {
-            val directions = currentMembershipPlan?.account?.plan_description?.let { message ->
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    getString(R.string.plan_description),
-                    message, getString(R.string.ok)
+            currentMembershipPlan?.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    PllEmptyFragmentDirections.pllEmptyToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            currentMembershipPlan?.account?.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
+                    )
                 )
-            }?.let { params -> PllEmptyFragmentDirections.pllEmptyToBrandHeader(params) }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+            }
         }
 
         currentMembershipPlan?.let {

@@ -105,83 +105,68 @@ class LoyaltyCardDetailsFragment :
         binding.footerDelete.binding.description.text =
             getString(R.string.remove_card)
 
+        if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+            binding.footerPlrRewards.visibility = View.GONE
+            binding.footerPlrSeparator.visibility = View.GONE
+        } else {
+            binding.footerPlrRewards.setOnClickListener {
+
+            }
+        }
 
         val aboutTitle =
-            if (viewModel.membershipPlan.value?.account?.plan_name.isNullOrEmpty()) {
+            if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
                 getString(R.string.about_membership)
             } else
                 getString(
                     R.string.about_membership_plan_name,
-                    viewModel.membershipPlan.value?.account?.plan_name
+                    viewModel.membershipPlan.value?.account!!.plan_name!!
                 )
 
         binding.footerAbout.binding.title.text = aboutTitle
 
         binding.footerAbout.setOnClickListener {
-            viewModel.membershipPlan.value?.account?.let {
-                val aboutText =
-                    if (it.plan_name.isNullOrEmpty()) {
-                        getString(R.string.about_membership)
-                    } else {
-                        it.plan_name
-                    }
-                val description =
-                    if (it.plan_description.isNullOrEmpty()) {
-                        getString(R.string.no_plan_description_available)
-                    } else {
-                        it.plan_description
-                    }
-                val directions =
-                    description.let {
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            aboutText,
-                            description,
-                            getString(R.string.ok)
-                        ).let { arguments ->
-                            LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                                arguments
+            var aboutText = getString(R.string.about_membership)
+            var description = getString(R.string.no_plan_description_available)
+
+            viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
+                aboutText = getString(R.string.about_membership_title_template, plan_name)
+            }
+            viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
+                description = plan_description
+            }
+
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        aboutText,
+                        description
+                    )
+                )
+            )
+        }
+
+        if (viewModel.membershipCard.value?.card != null &&
+            (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
+                    !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())
+        ) {
+            binding.cardHeader.setOnClickListener {
+                val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
+                    viewModel.membershipPlan.value?.let { plan ->
+                        type?.let {
+                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                plan, viewModel.membershipCard.value!!
                             )
                         }
                     }
-                directions.let { findNavController().navigateIfAdded(this, directions) }
-            }
-        }
-
-        viewModel.membershipCard.value?.card?.let {
-            it.barcode?.let { barcode ->
-                it.membership_id?.let { membershipId ->
-                    if (barcode.isNotEmpty() &&
-                        membershipId.isNotEmpty()
-                    ) {
-                        binding.cardHeader.setOnClickListener { _ ->
-                            val directions =
-                                viewModel.membershipCard.value?.card?.barcode_type.let { type ->
-                                    viewModel.membershipPlan.value?.let { plan ->
-                                        type?.let { _ ->
-                                            viewModel.membershipCard.value?.let { card ->
-                                                LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                                    plan, card
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-
-                            directions?.let {
-                                findNavController().navigateIfAdded(
-                                    this,
-                                    directions
-                                )
-                            }
-                        }
-                    }
                 }
-            }
-        }
 
-        if (viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty()) {
+                directions?.let { findNavController().navigateIfAdded(this, directions) }
+            }
+        } else if (viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty()) {
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
@@ -206,13 +191,18 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            runBlocking {
-                viewModel.updateMembershipCard()
+            if (verifyAvailableNetwork(requireActivity())) {
+                runBlocking {
+                    viewModel.updateMembershipCard()
+                }
+            } else {
+                showNoInternetConnectionDialog()
+                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                setLoadingState(false)
             }
         }
 
-        viewModel.accountStatus.observeNonNull(this)
-        { status ->
+        viewModel.accountStatus.observeNonNull(this) { status ->
             configureLoginStatus(status)
         }
 
@@ -258,7 +248,7 @@ class LoyaltyCardDetailsFragment :
                             } else {
                                 requireContext().displayModalPopup(
                                     getString(R.string.title_2_4),
-                                    getString(R.string.description_2_4)
+                                    getString(R.string.loyalty_card_delete_error_message)
                                 )
                             }
                         }
@@ -268,7 +258,7 @@ class LoyaltyCardDetailsFragment :
                         findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
                 } else {
-                    showNoInternetConnectionDialog()
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -300,14 +290,16 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setLoadingState(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingIndicator.visibility = View.VISIBLE
-            binding.linkedWrapper.visibility = View.INVISIBLE
-            binding.pointsWrapper.visibility = View.INVISIBLE
-        } else {
-            binding.loadingIndicator.visibility = View.GONE
-            binding.linkedWrapper.visibility = View.VISIBLE
-            binding.pointsWrapper.visibility = View.VISIBLE
+        with(binding) {
+            if (isLoading) {
+                loadingIndicator.visibility = View.VISIBLE
+                linkedWrapper.visibility = View.INVISIBLE
+                pointsWrapper.visibility = View.INVISIBLE
+            } else {
+                loadingIndicator.visibility = View.GONE
+                linkedWrapper.visibility = View.VISIBLE
+                pointsWrapper.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -356,16 +348,7 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val balance = viewModel.membershipCard.value?.balances?.first()
-                    if (balance != null) {
-                        setBalanceText(balance)
-                    } else {
-                        binding.pointsText.text = getString(R.string.points_signing_up)
-                    }
-                } else {
-                    binding.pointsText.text = getString(R.string.points_signing_up)
-                }
+                setBalanceText(viewModel.membershipCard.value?.balances?.first())
             }
             else -> {
             }
@@ -398,16 +381,12 @@ class LoyaltyCardDetailsFragment :
             binding.linkDescription.text =
                 getString(linkStatus.descriptionText)
         } else {
-            linkStatus.apply {
-                descriptionParams?.let {
-                    binding.linkDescription.text =
-                        getString(
-                            descriptionText,
-                            it[0],
-                            it[1]
-                        )
-                }
-            }
+            binding.linkDescription.text =
+                getString(
+                    linkStatus.descriptionText,
+                    linkStatus.descriptionParams!![0],
+                    linkStatus.descriptionParams!![1]
+                )
         }
     }
 
@@ -513,16 +492,12 @@ class LoyaltyCardDetailsFragment :
             val genericModalParameters: GenericModalParameters?
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                    viewModel.membershipCard.value?.let { card ->
-                        viewModel.membershipPlan.value?.let { plan ->
-                            val action =
-                                LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                                    card,
-                                    plan
-                                )
-                            findNavController().navigateIfAdded(this, action)
-                        }
-                    }
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                            viewModel.membershipCard.value!!,
+                            viewModel.membershipPlan.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
@@ -562,17 +537,13 @@ class LoyaltyCardDetailsFragment :
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
-                    viewModel.membershipPlan.value?.let { plan ->
-                        viewModel.membershipCard.value?.let { card ->
-                            val action =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.ADD_AUTH,
-                                    plan,
-                                    card
-                                )
-                            findNavController().navigateIfAdded(this, action)
-                        }
-                    }
+                    val action =
+                        LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                            SignUpFormType.ADD_AUTH,
+                            viewModel.membershipPlan.value!!,
+                            viewModel.membershipCard.value!!
+                        )
+                    findNavController().navigateIfAdded(this, action)
                 }
                 else -> {
                 }

@@ -16,16 +16,15 @@
             android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+                style="@style/ShadowedCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/shadowed_card_elevation"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 android:background="@android:color/white"
-                android:elevation="@dimen/margin_padding_size_extra_small"
                 android:orientation="vertical"
-                app:cardCornerRadius="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,9 +33,9 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:baselineAligned="false">
+                    android:weightSum="2">
 
                 <RelativeLayout
                         android:id="@+id/barcode_layout"
@@ -114,10 +113,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
+                            android:fontFamily="@font/nunito_sans_extrabold"
                             android:text="@{paymentCard.card.name_on_card}"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_description_medium_bigger"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/payment_card_title_size"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -127,10 +126,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_medium"
+                            android:fontFamily="@font/nunito_sans_bold"
                             android:text="@{@string/payment_card_number(paymentCard.card.last_four_digits)}"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_description_medium_bigger"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/payment_card_title_size"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/card_nickname" />
 
@@ -138,7 +137,7 @@
                             android:id="@+id/card_logo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/text_size_description_medium"
+                            android:layout_marginTop="@dimen/margin_padding_size_medium"
                             android:layout_marginEnd="@dimen/margin_padding_size_medium"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -169,8 +168,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="@dimen/margin_padding_size_small"
+                                android:fontFamily="@font/nunito_sans_semibold"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_description_medium_bigger"
+                                android:textSize="@dimen/link_status_text_size"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@+id/image_status"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -178,29 +178,30 @@
 
                         <ImageView
                                 android:id="@+id/image_status"
-                                android:layout_width="@dimen/margin_padding_size_medium"
-                                android:layout_height="@dimen/margin_padding_size_medium"
+                                android:layout_width="@dimen/link_icon_size"
+                                android:layout_height="@dimen/link_icon_size"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:linkedStatus="@{paymentCard}"
                                 tools:ignore="ContentDescription" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
                     <TextView
                             android:id="@+id/card_expired"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/card_login_margin_end"
-                            android:paddingTop="@dimen/margin_padding_size_really_small"
-                            android:paddingBottom="@dimen/margin_padding_size_really_small"
-                            android:paddingStart="@dimen/margin_padding_size_extra_small"
-                            android:paddingEnd="@dimen/margin_padding_size_small"
-                            android:text="@string/expired"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_size_description_medium"
-                            android:textStyle="bold"
+                            android:background="@drawable/expired_background"
                             android:drawableStart="@drawable/ic_attention"
                             android:drawablePadding="@dimen/margin_padding_size_extra_small"
-                            android:background="@drawable/expired_background"
+                            android:paddingStart="@dimen/margin_padding_size_extra_small"
+                            android:paddingTop="@dimen/margin_padding_size_really_small"
+                            android:paddingEnd="@dimen/margin_padding_size_small"
+                            android:paddingBottom="@dimen/margin_padding_size_really_small"
+                            android:text="@string/expired"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/size_body_large"
+                            android:textStyle="bold"
                             android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent" />
