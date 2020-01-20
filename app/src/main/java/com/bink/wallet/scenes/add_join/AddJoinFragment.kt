@@ -126,7 +126,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                     R.drawable.ic_back,
                     true,
                     getString(R.string.native_join_unavailable_title),
-                    getString(R.string.native_join_unavailable_text)
+                    getString(
+                        R.string.native_join_unavailable_text,
+                        currentMembershipPlan.account?.company_name
+                    )
                 )
                 if (currentMembershipPlan.account?.plan_url?.isNotEmpty()!!) {
                     genericModalParameters.firstButtonText =

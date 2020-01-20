@@ -14,7 +14,10 @@ import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOAR
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
+import com.facebook.login.LoginBehavior
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -40,6 +43,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(context)
+        LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
     }
 
@@ -84,6 +88,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         binding.continueWithFacebook.apply {
             fragment = this@OnboardingFragment
             setReadPermissions(listOf(EMAIL_KEY))
+            loginBehavior = LoginBehavior.WEB_VIEW_ONLY
             registerCallback(
                 callbackManager,
                 object : FacebookCallback<LoginResult> {
