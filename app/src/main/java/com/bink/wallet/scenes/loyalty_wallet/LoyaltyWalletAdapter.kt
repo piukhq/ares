@@ -191,7 +191,7 @@ class LoyaltyWalletAdapter(
                         } else {
                             linkStatusImg.setImageResource(linkImage)
                             linkStatusText.text =
-                                mainLayout.context.getString(display)
+                                mainLayout.context.getString(displayText)
                         }
                     }
                 }
