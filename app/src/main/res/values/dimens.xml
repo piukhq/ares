@@ -42,7 +42,7 @@
     <!-- Add Screen -->
     <dimen name="add_card_margin">20dp</dimen>
     <dimen name="add_card_margin_end">12dp</dimen>
-    <dimen name="shadowed_card_elevation">5dp</dimen>
+    <dimen name="shadowed_card_elevation">6dp</dimen>
 
     <!-- Add Join Screen -->
     <dimen name="logo_height">98dp</dimen>
