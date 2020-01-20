@@ -97,7 +97,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 requireContext().validatePassword(it, binding.passwordField)
                 setSignupButtonEnableStatus()
             }
-            
+
             confirmPassword.observeNonNull(this@SignUpFragment) {
                 checkPasswordsMatch()
                 setSignupButtonEnableStatus()
