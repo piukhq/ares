@@ -32,7 +32,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{item.title}"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/size_sub_headline"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         />
                 <TextView
@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{item.value}"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_medium"
+                        android:textSize="@dimen/size_body_large"
                         android:fontFamily="@font/nunito_sans_light"
                         />
         </LinearLayout>

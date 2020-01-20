@@ -91,4 +91,29 @@ class MembershipCardConverters {
         val type = object : TypeToken<List<MembershipTransactions>>() {}.type
         return gson.fromJson(value, type)
     }
+    @TypeConverter
+    fun fromAccount(value: Account?): String? {
+        val gson = Gson()
+        val type = object : TypeToken<Account?>() {}.type
+        return gson.toJson(value, type)
+    }
+    @TypeConverter
+    fun toAccount(value: String?): Account? {
+        val gson = Gson()
+        val type = object : TypeToken<Account?>() {}.type
+        return gson.fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromVouchers(value: List<Voucher?>?): String? {
+        val gson = Gson()
+        val type = object : TypeToken<List<Voucher?>?>() {}.type
+        return gson.toJson(value, type)
+    }
+    @TypeConverter
+    fun toVouchers(value: String): List<Voucher?>? {
+        val gson = Gson()
+        val type = object : TypeToken<List<Voucher>>() {}.type
+        return gson.fromJson(value, type)
+    }
 }

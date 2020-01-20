@@ -7,7 +7,7 @@ import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.SignUpViewModel
+import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
@@ -22,11 +22,13 @@ import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
+import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
@@ -90,6 +92,10 @@ val viewModelModules = module {
     viewModel { AddEmailViewModel() }
 
     viewModel { ForgotPasswordViewModel(get()) }
+
+    viewModel { PreferencesViewModel(get()) }
+
+    viewModel { OnboardingViewModel(get(), get()) }
 }
 
 fun provideLoginRepository(
