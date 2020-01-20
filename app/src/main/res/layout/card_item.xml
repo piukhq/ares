@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/loyalty_card_corner_radius"
+            style="@style/ShadowedCardView"
             app:cardUseCompatPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
