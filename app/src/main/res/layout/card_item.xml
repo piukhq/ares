@@ -70,7 +70,6 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:visibility="visible">
@@ -117,7 +116,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:visibility="visible">
@@ -128,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_sans_semibold"
                         android:gravity="end"
-                        android:text="@string/link_status_linked"
+                        tools:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
                         android:textSize="@dimen/size_body_medium"
                         app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +137,7 @@
                         android:layout_width="@dimen/margin_padding_size_medium"
                         android:layout_height="@dimen/margin_padding_size_medium"
                         android:layout_marginStart="@dimen/margin_padding_size_extra_small"
-                        android:src="@drawable/ic_linked"
+                        tools:src="@drawable/ic_linked"
                         app:layout_constraintStart_toEndOf="@id/link_status_text"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="ContentDescription" />
