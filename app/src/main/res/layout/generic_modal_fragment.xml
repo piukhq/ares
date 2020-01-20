@@ -74,7 +74,7 @@
                         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo interdum elit a tempus." />
 
                 <TextView
-                        android:id="@+id/description_2"
+                        android:id="@+id/description_second_part"
                         style="@style/CustomTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
