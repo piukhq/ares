@@ -296,14 +296,16 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setLoadingState(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingIndicator.visibility = View.VISIBLE
-            binding.linkedWrapper.visibility = View.INVISIBLE
-            binding.pointsWrapper.visibility = View.INVISIBLE
-        } else {
-            binding.loadingIndicator.visibility = View.GONE
-            binding.linkedWrapper.visibility = View.VISIBLE
-            binding.pointsWrapper.visibility = View.VISIBLE
+        with(binding) {
+            if (isLoading) {
+                loadingIndicator.visibility = View.VISIBLE
+                linkedWrapper.visibility = View.INVISIBLE
+                pointsWrapper.visibility = View.INVISIBLE
+            } else {
+                loadingIndicator.visibility = View.GONE
+                linkedWrapper.visibility = View.VISIBLE
+                pointsWrapper.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -352,16 +354,7 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val balance = viewModel.membershipCard.value?.balances?.first()
-                    if (balance != null) {
-                        setBalanceText(balance)
-                    } else {
-                        binding.pointsText.text = getString(R.string.points_signing_up)
-                    }
-                } else {
-                    binding.pointsText.text = getString(R.string.points_signing_up)
-                }
+                setBalanceText(viewModel.membershipCard.value?.balances?.first())
             }
             else -> {
             }

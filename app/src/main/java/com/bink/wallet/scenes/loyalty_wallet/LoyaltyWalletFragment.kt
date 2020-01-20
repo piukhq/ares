@@ -243,7 +243,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         )
                         binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
-
                 }
             }
             builder.setPositiveButton(getString(R.string.yes_text), dialogClickListener)
