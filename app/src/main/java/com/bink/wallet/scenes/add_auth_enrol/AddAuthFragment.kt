@@ -449,7 +449,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     if (signUpFormType == SignUpFormType.GHOST) {
                         handlePllGhost(membershipCard)
                     } else {
-                        handlePll()
+                        handlePll(membershipCard)
                     }
                 }
             }
@@ -468,17 +468,39 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private fun handlePllGhost(membershipCard: MembershipCard) {
         if (membershipCard.membership_transactions.isNullOrEmpty()) {
-            val directions = AddAuthFragmentDirections.signUpToPllEmpty(
-                viewModel.currentMembershipPlan.value!!,
-                membershipCard
-            )
-            findNavController().navigateIfAdded(this, directions)
+            viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+                findNavController().navigateIfAdded(
+                    this,
+                    AddAuthFragmentDirections.signUpToPllEmpty(
+                        membershipPlan,
+                        membershipCard
+                    )
+                )
+            }
         }
     }
 
-    private fun handlePll() {
-        SharedPreferenceManager.isLoyaltySelected = false
-        findNavController().navigateIfAdded(this, AddAuthFragmentDirections.globalToHome())
+    private fun handlePll(membershipCard: MembershipCard) {
+        viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+            if (membershipCard.payment_cards.isNullOrEmpty()) {
+                findNavController().navigateIfAdded(
+                    this,
+                    AddAuthFragmentDirections.signUpToPllEmpty(
+                        membershipPlan,
+                        membershipCard
+                    )
+                )
+            } else {
+                findNavController().navigateIfAdded(
+                    this,
+                    AddAuthFragmentDirections.signUpToPll(
+                        membershipCard,
+                        membershipPlan,
+                        true
+                    )
+                )
+            }
+        }
     }
 
     private fun hideLoadingViews() {
