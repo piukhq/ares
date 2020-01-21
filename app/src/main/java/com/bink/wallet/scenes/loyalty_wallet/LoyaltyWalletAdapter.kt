@@ -82,7 +82,7 @@ class LoyaltyWalletAdapter(
         var indexToDelete = -1
         var currentId = ""
         tempMembershipCards.forEachIndexed { index, card ->
-            when(card){
+            when (card) {
                 is MembershipCard -> currentId = card.id
                 is MembershipPlan -> currentId = card.id
                 is JoinCardItem -> currentId = card.id
@@ -92,7 +92,7 @@ class LoyaltyWalletAdapter(
                 indexToDelete = index
             }
         }
-        if(indexToDelete != -1) {
+        if (indexToDelete != -1) {
             tempMembershipCards.removeAt(indexToDelete)
             membershipCards = ArrayList(tempMembershipCards)
             notifyDataSetChanged()
