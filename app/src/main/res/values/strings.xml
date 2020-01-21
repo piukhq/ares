@@ -259,6 +259,7 @@
     <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
     <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
     <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
+    <string name="contact_us_mailto">mailto:%s</string>
     <string name="contact_us_email_address">support@bink.com</string>
     <string name="contact_us_email_subject">Bink App Support</string>
     <string name="contact_us_email_message">\n\n\n\nThe below information will help you, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
