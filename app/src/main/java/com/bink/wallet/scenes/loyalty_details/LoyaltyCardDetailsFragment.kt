@@ -670,11 +670,11 @@ class LoyaltyCardDetailsFragment :
                     VoucherStates.IN_PROGRESS.state,
                     VoucherStates.ISSUED.state
                 ).contains(it.state)
-            }?.let {
+            }?.let { vouchers ->
                 adapter = LoyaltyCardDetailsVouchersAdapter(
-                    it,
-                    onClickListener = {
-                        viewVoucherDetails(it as Voucher)
+                    vouchers,
+                    onClickListener = { thisVoucher ->
+                        viewVoucherDetails(thisVoucher as Voucher)
                     }
                 )
             }

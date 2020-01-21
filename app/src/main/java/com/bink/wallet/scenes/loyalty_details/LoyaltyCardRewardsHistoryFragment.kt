@@ -2,11 +2,14 @@ package com.bink.wallet.scenes.loyalty_details
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.LoyaltyCardRewardsHistoryBinding
+import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -46,9 +49,24 @@ class LoyaltyCardRewardsHistoryFragment :
                     VoucherStates.IN_PROGRESS.state,
                     VoucherStates.ISSUED.state
                 ).contains(it.state)
-            }?.let {
-                adapter = LoyaltyCardDetailsVouchersAdapter(it)
+            }?.let { vouchers ->
+                adapter = LoyaltyCardDetailsVouchersAdapter(vouchers,
+                        onClickListener = { thisVoucher ->
+                           viewVoucherDetails(thisVoucher as Voucher)
+                        }
+                )
             }
+        }
+    }
+
+    private fun viewVoucherDetails(voucher: Voucher) {
+        val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
+            LoyaltyCardRewardsHistoryFragmentDirections.historyToVoucher(
+                membershipPlan, voucher
+            )
+        }
+        if (directions != null) {
+            findNavController().navigateIfAdded(this, directions)
         }
     }
 }
