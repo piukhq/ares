@@ -139,7 +139,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         }
     }
 
-    suspend fun fetchMembershipPlans() {
+    fun fetchMembershipPlans() {
         viewModelScope.launch {
             try {
                 loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
