@@ -207,7 +207,9 @@ class SettingsFragment :
                         getString(R.string.settings_menu_log_out),
                         getString(R.string.log_out_confirmation),
                         okAction = {
-                            viewModel.logOut()
+                            if (isNetworkAvailable(requireContext(), true)) {
+                                viewModel.logOut()
+                            }
                         },
                         buttonText = R.string.settings_menu_log_out,
                         hasNegativeButton = true

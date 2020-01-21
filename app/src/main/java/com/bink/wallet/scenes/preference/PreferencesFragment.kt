@@ -24,16 +24,21 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        binding.progressSpinner.visibility = View.VISIBLE
+
         binding.preferenceDescription.text = HtmlCompat.fromHtml(
             getString(R.string.preference_description),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
         viewModel.savePreferenceError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.preference_update_error)
-            )
+            if (isNetworkAvailable(requireContext(), false)) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.preference_update_error)
+                )
+            }
         }
 
         viewModel.preferences.observeNonNull(this) { preferences ->
@@ -51,10 +56,6 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
                             )
                         } else {
                             checkBox.isChecked = !checkBox.isChecked
-                            requireContext().displayModalPopup(
-                                EMPTY_STRING,
-                                getString(R.string.no_internet_connection_dialog_message)
-                            )
                         }
                     })
                 layoutManager = GridLayoutManager(requireContext(), 1)
@@ -73,8 +74,11 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             binding.progressSpinner.visibility = View.GONE
         }
 
-        viewModel.getPreferences()
-        binding.progressSpinner.visibility = View.VISIBLE
+        if (isNetworkAvailable(requireContext(), true)) {
+            viewModel.getPreferences()
+        } else {
+            binding.progressSpinner.visibility = View.GONE
+        }
     }
 
     override fun builder(): FragmentToolbar {
