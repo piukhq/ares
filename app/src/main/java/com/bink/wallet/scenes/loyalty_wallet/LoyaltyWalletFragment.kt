@@ -48,26 +48,26 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     walletItems[position] is MembershipCard
                 ) {
                     val card = walletItems[position] as MembershipCard
-                    if (viewModel.membershipPlanData.value != null) {
-                        val plan =
-                            viewModel.membershipPlanData.value?.first {
-                                it.id == card.membership_plan
-                            }!!
+                    val plan =
+                        viewModel.localMembershipPlanData.value?.firstOrNull {
+                            it.id == card.membership_plan
+                        }
 
-                        val directions =
-                            card.card?.barcode_type?.let {
+                    val directions =
+                        card.card?.barcode_type?.let {
+                            plan?.let {
                                 WalletsFragmentDirections.homeToBarcode(
                                     plan, card
                                 )
                             }
-                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                            directions?.let {
-                                findNavController().navigateIfAdded(
-                                    this@LoyaltyWalletFragment, it
-                                )
-                            }
-                            this@LoyaltyWalletFragment.onDestroy()
                         }
+                    if (findNavController().currentDestination?.id == R.id.home_wallet) {
+                        directions?.let {
+                            findNavController().navigateIfAdded(
+                                this@LoyaltyWalletFragment, it
+                            )
+                        }
+                        this@LoyaltyWalletFragment.onDestroy()
                     }
                 } else {
                     walletItems[position].let {
@@ -112,9 +112,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
 
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-            ItemTouchHelper(helperListenerRight).attachToRecyclerView(
-                this
-            )
+            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
         }
     }
 

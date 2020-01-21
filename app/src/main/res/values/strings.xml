@@ -59,9 +59,10 @@
     <string name="add_payment_card">Add payment card</string>
     <string name="scan_and_link_your_payment_card">Scan and link your payment card</string>
     <string name="browse_brands_text">Browse brands</string>
-    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
     <string name="scan_a_card_you_already_have">Scan a card you already have</string>
     <string name="add_loyalty_card">Add loyalty card</string>
+    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
+    <string name="add_payment_card_button_description">Fill in your card details and link your payment card</string>
 
     <!-- Brand Header -->
     <string name="loyalty_info"> %1$s info &gt;</string>
@@ -154,8 +155,8 @@
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
-    <string name="link_payment_card_text">You have not added any payment cards yet.
-        Add them to link to this card and others. </string>
+    <string name="link_payment_card_description_part_1">You have not added any payment cards yet.</string>
+    <string name="link_payment_card_description_part_2">Add them to link to this card and others.</string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
@@ -212,8 +213,9 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="register_ghost_card_title">Register your card</string>
     <string name="register_ghost_card_button">Register card</string>
-    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points.</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s, and start collecting rewards.</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
+    <string name="login_description">You can log in to your %1$s account to view your %2$s details.</string>
 
     <!-- Pll Screen -->
     <string name="pll_description">The payment cards below will be linked to your %s. Simply pay with them to collect points.</string>

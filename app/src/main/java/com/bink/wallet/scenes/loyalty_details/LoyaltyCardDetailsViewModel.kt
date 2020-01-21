@@ -6,10 +6,10 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.MembershipPlanUtils
-import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.MembershipCardStatus
 
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
@@ -42,8 +42,12 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     }
 
     fun setAccountStatus() {
-        accountStatus.value =
-            MembershipPlanUtils.getAccountStatus(membershipPlan.value!!, membershipCard.value!!)
+        membershipPlan.value?.let { plan ->
+            membershipCard.value?.let { card ->
+                accountStatus.value =
+                    MembershipPlanUtils.getAccountStatus(plan, card)
+            }
+        }
     }
 
     fun setLinkStatus() {

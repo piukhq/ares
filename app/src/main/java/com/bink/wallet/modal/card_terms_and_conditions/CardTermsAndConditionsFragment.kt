@@ -70,23 +70,25 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     override fun onFirstButtonClicked() {
         binding.firstButton.isEnabled = false
         binding.progressSpinner.visibility = View.VISIBLE
-        viewModel.sendAddCard(
-            PaymentCardAdd(
-                userBankCard!!,
-                Account(
-                    false,
-                    DEFAULT_ACCOUNT_STATUS,
-                    listOf(
-                        Consent(
-                            DEFAULT_CONSENT_TYPE,
-                            DEFAULT_LATITUDE,
-                            DEFAULT_LONGITUDE,
-                            System.currentTimeMillis() / DIVISOR_MILLISECONDS
+        userBankCard?.let {
+            viewModel.sendAddCard(
+                PaymentCardAdd(
+                    it,
+                    Account(
+                        false,
+                        DEFAULT_ACCOUNT_STATUS,
+                        listOf(
+                            Consent(
+                                DEFAULT_CONSENT_TYPE,
+                                DEFAULT_LATITUDE,
+                                DEFAULT_LONGITUDE,
+                                System.currentTimeMillis() / DIVISOR_MILLISECONDS
+                            )
                         )
                     )
                 )
             )
-        )
+        }
     }
 
     override fun onSecondButtonClicked() {
