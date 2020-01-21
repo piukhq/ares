@@ -7,30 +7,28 @@ class ToolbarManager constructor(
     private var builder: FragmentToolbar
 ) {
     fun prepareToolbar() {
-        if (builder.resId != FragmentToolbar.NO_TOOLBAR) {
-            if (builder.toolbar != null) {
-
-                val fragmentToolbar = builder.toolbar!!
-
-                if (builder.title != -1) {
-                    fragmentToolbar.setTitle(builder.title)
-                }
-
-                if (builder.menuId != -1) {
-                    fragmentToolbar.inflateMenu(builder.menuId)
-                }
-
-                if (builder.menuItems.isNotEmpty() && builder.menuClicks.isNotEmpty()) {
-                    val menu = fragmentToolbar.menu
-                    for ((index, menuItemId) in builder.menuItems.withIndex()) {
-                        (menu.findItem(menuItemId) as MenuItem).setOnMenuItemClickListener(builder.menuClicks[index])
+        builder.apply {
+            if(resId != FragmentToolbar.NO_TOOLBAR) {
+                toolbar?.let {
+                    if(title != -1) {
+                        it.setTitle(title)
                     }
-                }
-
-                if (builder.activity != null) {
-                    fragmentToolbar.setNavigationIcon(R.drawable.ic_back)
-                    fragmentToolbar.setNavigationOnClickListener {
-                        builder.activity?.onBackPressed()
+                    if(menuId != -1){
+                        it.inflateMenu(menuId)
+                    }
+                    if(menuItems.isNotEmpty() &&
+                            menuClicks.isNotEmpty()) {
+                        for ((index, menuItemId) in menuItems.withIndex()) {
+                            (it.menu.findItem(menuItemId) as MenuItem).setOnMenuItemClickListener(menuClicks[index])
+                        }
+                    }
+                    activity?.let { activity ->
+                        it.apply {
+                            setNavigationIcon(R.drawable.ic_back)
+                            setNavigationOnClickListener {
+                                activity.onBackPressed()
+                            }
+                        }
                     }
                 }
             }

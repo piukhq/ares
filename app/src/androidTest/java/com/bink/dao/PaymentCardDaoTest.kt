@@ -42,7 +42,7 @@ class PaymentCardDaoTest {
     }
 
 
-    private fun getCardsFromJon(): List<PaymentCard> {
+    private fun getCardsFromJon(): List<PaymentCard>? {
         val moshi = Moshi.Builder().build()
         val listType = Types.newParameterizedType(List::class.java, PaymentCard::class.java)
         val adapter: JsonAdapter<List<PaymentCard>> = moshi.adapter(listType)
@@ -51,6 +51,9 @@ class PaymentCardDaoTest {
                 .bufferedReader().use {
                     it.readText()
                 }
-        return adapter.fromJson(json)!!
+        adapter.fromJson(json)?.let {
+            return it
+        }
+        return null
     }
 }

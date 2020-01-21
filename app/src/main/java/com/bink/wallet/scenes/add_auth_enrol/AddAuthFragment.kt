@@ -53,14 +53,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         mutableListOf()
 
     private fun addFieldToList(planField: Any) {
-
         if (planField is PlanFields) {
             val pairPlanField = Pair(
                 planField, PlanFieldsRequest(
-                    planField.column, ""
+                    planField.column, EMPTY_STRING
                 )
             )
-
             if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
                 planBooleanFieldsList?.add(
                     pairPlanField
@@ -70,12 +68,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     pairPlanField
                 )
         }
-
         if (planField is PlanDocuments) {
             planBooleanFieldsList?.add(
                 Pair(
                     planField, PlanFieldsRequest(
-                        planField.name, ""
+                        planField.name, EMPTY_STRING
                     )
                 )
             )
@@ -96,8 +93,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         if (viewModel.currentMembershipPlan.value != null) {
             binding.descriptionAddAuth.text =
                 getString(
-                    R.string.enrol_description,
-                    viewModel.currentMembershipPlan.value!!.account?.company_name
+                    R.string.login_description,
+                    viewModel.currentMembershipPlan.value!!.account?.company_name,
+                    viewModel.currentMembershipPlan.value?.account?.plan_name
                 )
             binding.noAccountText.visibility = View.VISIBLE
         }
@@ -153,7 +151,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             feature_set.has_points == true &&
                             feature_set.transactions_available != null
                         ) {
-                            if (feature_set?.transactions_available == true) {
+                            if (feature_set.transactions_available == true) {
                                 binding.descriptionAddAuth.text = getString(
                                     R.string.log_in_transaction_available,
                                     viewModel.currentMembershipPlan.value!!.account?.plan_name_card
@@ -204,7 +202,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     addCardButton.text = getString(R.string.sign_up_text)
                     descriptionAddAuth.text = getString(
                         R.string.enrol_description,
-                        viewModel.currentMembershipPlan.value?.account?.company_name
+                        viewModel.currentMembershipPlan.value?.account?.plan_name_card
                     )
                     viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
                         it.typeOfField = TypeOfField.ENROL

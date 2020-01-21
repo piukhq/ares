@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bink.sdk.BinkCore
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
@@ -18,6 +17,7 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.facebook.login.LoginManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -64,23 +64,24 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
 
-        val items = viewModel.itemsList.value!!
-        for (i in 0 until items.list.size) {
-            val item = items.list[i]
-            if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-                val email =
-                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                        ?.let {
-                            it
-                        }
+        viewModel.itemsList.value?.let {
+            for (i in 0 until it.list.size) {
+                val item = it.list[i]
+                if (item.type == SettingsItemType.EMAIL_ADDRESS) {
+                    val email =
+                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                            ?.let { localEmail ->
+                                localEmail
+                            }
 
-                val newItem =
-                    SettingsItem(
-                        item.title,
-                        email,
-                        item.type
-                    )
-                viewModel.itemsList.setItem(i, newItem)
+                    val newItem =
+                        SettingsItem(
+                            item.title,
+                            email,
+                            item.type
+                        )
+                    viewModel.itemsList.setItem(i, newItem)
+                }
             }
         }
 
@@ -197,12 +198,11 @@ class SettingsFragment :
             }
 
             SettingsItemType.LOGOUT -> {
+                LoginManager.getInstance().logOut()
                 requireContext().displayModalPopup(
                     getString(R.string.settings_menu_log_out),
                     getString(R.string.log_out_confirmation),
                     okAction = {
-                        BinkCore(requireContext()).logout()
-                        LocalStoreUtils.clearPreferences()
                         viewModel.logOut()
                     },
                     buttonText = R.string.settings_menu_log_out,
