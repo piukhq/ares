@@ -51,13 +51,13 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
         }
 
         viewModel.membershipCard.observeForever {
-            if (it.membership_transactions != null) {
-                if (it.membership_transactions!!.isEmpty()) {
+            it.membership_transactions?.let { transactions ->
+                if (transactions.isEmpty()) {
                     binding.pointsDescription.text = getString(R.string.no_transactions_text)
                 }
                 binding.transactionsList.apply {
                     layoutManager = GridLayoutManager(activity, 1)
-                    adapter = TransactionAdapter(it.membership_transactions!!)
+                    adapter = TransactionAdapter(transactions)
                 }
             }
         }

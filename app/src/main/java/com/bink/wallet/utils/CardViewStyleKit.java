@@ -35,7 +35,7 @@ public class CardViewStyleKit {
         rectangleRect.set(0f, 0f, 427.54f, 333.64f);
         Path rectanglePath = CacheForCanvas.rectanglePath;
         rectanglePath.reset();
-        rectanglePath.addRoundRect(rectangleRect, 8f, 8f, Path.Direction.CW);
+        rectanglePath.addRoundRect(rectangleRect, 16f, 16f, Path.Direction.CW);
 
         paint.reset();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -54,7 +54,7 @@ public class CardViewStyleKit {
         rectangle2Rect.set(0f, 0f, 514.29f, 370.52f);
         Path rectangle2Path = CacheForCanvas.rectangle2Path;
         rectangle2Path.reset();
-        rectangle2Path.addRoundRect(rectangle2Rect, 8f, 8f, Path.Direction.CW);
+        rectangle2Path.addRoundRect(rectangle2Rect, 16f, 16f, Path.Direction.CW);
 
         paint.reset();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);

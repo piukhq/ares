@@ -13,12 +13,12 @@
 
     <androidx.cardview.widget.CardView
             android:id="@+id/main_layout"
-            android:background="@color/white"
-            app:cardBackgroundColor="@color/white"
+            style="@style/ShadowedCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardUseCompatPadding="false"
-            app:cardCornerRadius="@dimen/margin_padding_size_small">
+            android:background="@color/white"
+            app:cardBackgroundColor="@color/white"
+            app:cardUseCompatPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:id="@+id/company_logo"
                     android:layout_width="@dimen/margin_padding_size_extra_large"
                     android:layout_height="@dimen/margin_padding_size_extra_large"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/loyalty_value_margin_end"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     app:imageUrl="@{plan}"
@@ -44,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/margin_padding_size_triple_small"
-                    app:cardCornerRadius="@dimen/margin_padding_size_small"
+                    app:cardCornerRadius="@dimen/margin_padding_size_triple_small"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/company_logo"
@@ -77,11 +77,10 @@
                 <TextView
                         android:id="@+id/loyalty_value"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/nunito_sans_extrabold"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_medium"
-                        android:fontFamily="@font/nunito_sans_extrabold"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -91,10 +90,9 @@
                         android:id="@+id/loyalty_value_extra"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:layout_gravity="end"
+                        android:fontFamily="@font/nunito_sans"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/size_body"
-                        android:fontFamily="@font/nunito_sans"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/loyalty_value"
                         tools:text="Points" />
@@ -126,23 +124,23 @@
                         android:id="@+id/link_status_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:gravity="end"
-                        tools:text="@string/link_status_linked"
                         android:textColor="@android:color/background_light"
-                        android:textSize="@dimen/size_body_small"
-                        android:fontFamily="@font/nunito_sans_bold"
+                        android:textSize="@dimen/size_body_medium"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/link_status_linked" />
 
                 <ImageView
                         android:id="@+id/link_status_img"
                         android:layout_width="@dimen/margin_padding_size_medium"
                         android:layout_height="@dimen/margin_padding_size_medium"
                         android:layout_marginStart="@dimen/margin_padding_size_extra_small"
-                        tools:src="@drawable/ic_linked"
                         app:layout_constraintStart_toEndOf="@id/link_status_text"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"
+                        tools:src="@drawable/ic_linked" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
