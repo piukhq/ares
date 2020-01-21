@@ -1,12 +1,15 @@
 package com.bink.wallet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.scottyab.rootbeer.RootBeer
 
@@ -22,7 +25,6 @@ class SplashFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         findNavController().navigateIfAdded(this, getDirections())
     }
 
@@ -37,7 +39,11 @@ class SplashFragment : Fragment() {
     private fun getUnRootedDirections(): Int {
         return when (context?.let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             true -> R.id.global_to_home
-            else -> R.id.splash_to_onboarding
+            else ->
+                when (requireActivity().intent.getSessionHandlerNavigationDestination()) {
+                    SESSION_HANDLER_DESTINATION_ONBOARDING -> R.id.splash_to_onboarding
+                    else -> R.id.splash_to_onboarding
+                }
         }
     }
 }

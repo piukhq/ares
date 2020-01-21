@@ -2,6 +2,7 @@ package com.bink.wallet.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.util.DisplayMetrics
 import android.util.Patterns
 import android.util.TypedValue
@@ -165,3 +166,10 @@ fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
     )
     constraintSet.applyTo(parentLayout)
 }
+
+fun Intent.putSessionHandlerNavigationDestination(destination: String) {
+    putExtra(SESSION_HANDLER_NAVIGATION_KEY, destination)
+}
+
+fun Intent.getSessionHandlerNavigationDestination(): String =
+    getStringExtra(SESSION_HANDLER_NAVIGATION_KEY) ?: ""

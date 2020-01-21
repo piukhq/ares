@@ -5,8 +5,7 @@ import android.content.Intent
 import com.bink.wallet.MainActivity
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.*
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -44,10 +43,13 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             LocalStoreUtils.clearPreferences()
             appContext.startActivity(
-                Intent(
-                    appContext,
-                    MainActivity::class.java
-                ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                Intent(appContext, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .apply {
+                        putSessionHandlerNavigationDestination(
+                            SESSION_HANDLER_DESTINATION_ONBOARDING
+                        )
+                    }
             )
             return@Interceptor response
         }
