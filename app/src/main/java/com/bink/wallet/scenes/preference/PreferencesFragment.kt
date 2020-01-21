@@ -9,6 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -61,13 +62,15 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         }
 
         viewModel.preferenceErrorResponse.observeNonNull(this) {
-            binding.progressSpinner.visibility = View.GONE
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(
-                    R.string.preferences_error
+            if (isNetworkAvailable(requireContext(), true)) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(
+                        R.string.preferences_error
+                    )
                 )
-            )
+            }
+            binding.progressSpinner.visibility = View.GONE
         }
 
         viewModel.getPreferences()

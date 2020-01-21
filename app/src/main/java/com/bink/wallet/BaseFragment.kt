@@ -97,25 +97,4 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected abstract fun builder(): FragmentToolbar
-
-    private fun showNoInternetConnectionDialog() {
-        requireContext().displayModalPopup(
-            null,
-            requireContext().getString(R.string.no_internet_connection_dialog_message)
-        )
-    }
-
-    fun isNetworkAvailable(
-        activity: FragmentActivity,
-        isUserAction: Boolean
-    ): Boolean {
-        val connectivityManager =
-            activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        val isNetworkAvailable = networkInfo != null && networkInfo.isConnected
-        if (isUserAction && !isNetworkAvailable) {
-            showNoInternetConnectionDialog()
-        }
-        return isNetworkAvailable
-    }
 }

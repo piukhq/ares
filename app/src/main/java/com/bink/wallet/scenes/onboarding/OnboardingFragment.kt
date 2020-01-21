@@ -12,6 +12,7 @@ import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
 import com.facebook.login.LoginBehavior

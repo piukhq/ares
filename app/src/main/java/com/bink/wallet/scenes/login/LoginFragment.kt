@@ -10,6 +10,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

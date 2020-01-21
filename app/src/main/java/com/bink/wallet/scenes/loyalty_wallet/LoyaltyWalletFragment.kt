@@ -19,6 +19,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.JOIN_CARD
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -60,9 +61,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     walletItems[position] is MembershipCard
                 ) {
                     val card = walletItems[position] as MembershipCard
-                    if (viewModel.membershipPlanData.value != null) {
+                    if (viewModel.localMembershipPlanData.value != null) {
                         val plan =
-                            viewModel.membershipPlanData.value?.first {
+                            viewModel.localMembershipPlanData.value?.first {
                                 it.id == card.membership_plan
                             }!!
 

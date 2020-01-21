@@ -12,6 +12,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.CoroutineScope
@@ -165,18 +166,6 @@ class PaymentCardsDetailsFragment :
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
         }
-
-        viewModel.linkError.observeNonNull(viewLifecycleOwner) {
-            if(isNetworkAvailable(requireActivity(),true)) {
-               //TODO handle error
-            }
-        }
-
-        viewModel.unlinkError.observeNonNull(viewLifecycleOwner) {
-            if(isNetworkAvailable(requireActivity(),true)) {
-                //TODO handle error
-            }
-        }
     }
 
     override fun onPause() {
@@ -215,16 +204,16 @@ class PaymentCardsDetailsFragment :
     }
 
     private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
-        if (currentItem.first != null) {
+        currentItem.first?.let {
             runBlocking {
                 if (currentItem.second) {
                     viewModel.linkPaymentCard(
-                        currentItem.first!!,
+                        it,
                         viewModel.paymentCard.value?.id.toString()
                     )
                 } else {
                     viewModel.unlinkPaymentCard(
-                        currentItem.first!!,
+                        it,
                         viewModel.paymentCard.value?.id.toString()
                     )
                 }

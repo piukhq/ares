@@ -51,6 +51,7 @@ class PllPaymentCardAdapter(
                 if (type != null)
                     setImageResource(type.addLogo)
             }
+
             with(binding.toggle) {
                 isChecked = paymentCard.isSelected
                 displayCustomSwitch(paymentCard.isSelected)

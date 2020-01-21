@@ -9,6 +9,7 @@ import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -100,45 +101,47 @@ class AddPaymentCardFragment :
         }
 
         binding.addButton.setOnClickListener {
-            validateCardName()
-            validateCardNumber()
-            binding.cardExpiry.error =
-                cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
+            if (isNetworkAvailable(requireActivity(), true)) {
+                validateCardName()
+                validateCardNumber()
+                binding.cardExpiry.error =
+                    cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
 
-            if (binding.cardNumber.error.isNullOrEmpty() &&
-                binding.cardExpiry.error.isNullOrBlank() &&
-                !binding.cardName.text.isNullOrEmpty()
-            ) {
+                if (binding.cardNumber.error.isNullOrEmpty() &&
+                    binding.cardExpiry.error.isNullOrBlank() &&
+                    !binding.cardName.text.isNullOrEmpty()
+                ) {
 
-                val cardNo = binding.cardNumber.text.toString().numberSanitize()
-                val cardExp = binding.cardExpiry.text.toString().split("/")
+                    val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                    val cardExp = binding.cardExpiry.text.toString().split("/")
 
-                val bankCard = BankCard(
-                    cardNo.substring(0, 6),
-                    cardNo.substring(cardNo.length - 4),
-                    cardExp[0].toInt(),
-                    cardExp[1].toInt() + YEAR_BASE_ADDITION,
-                    getString(R.string.country_code_gb),
-                    getString(R.string.currency_code_gbp),
-                    binding.cardName.text.toString(),
-                    cardNo.cardValidation().type,
-                    cardNo.cardValidation().type,
-                    BankCard.tokenGenerator(),
-                    BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
-                )
+                    val bankCard = BankCard(
+                        cardNo.substring(0, 6),
+                        cardNo.substring(cardNo.length - 4),
+                        cardExp[0].toInt(),
+                        cardExp[1].toInt() + YEAR_BASE_ADDITION,
+                        getString(R.string.country_code_gb),
+                        getString(R.string.currency_code_gbp),
+                        binding.cardName.text.toString(),
+                        cardNo.cardValidation().type,
+                        cardNo.cardValidation().type,
+                        BankCard.tokenGenerator(),
+                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                    )
 
-                val params = GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    getString(R.string.terms_and_conditions_title),
-                    getString(R.string.terms_and_conditions_text),
-                    getString(R.string.accept_button_text),
-                    getString(R.string.decline_button_text)
-                )
-                findNavController().navigateIfAdded(
-                    this,
-                    AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                )
+                    val params = GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        getString(R.string.terms_and_conditions_title),
+                        getString(R.string.terms_and_conditions_text),
+                        getString(R.string.accept_button_text),
+                        getString(R.string.decline_button_text)
+                    )
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                    )
+                }
             }
         }
     }
