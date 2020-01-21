@@ -40,6 +40,15 @@ class SplashFragment : Fragment() {
         return when (context?.let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             true -> R.id.global_to_home
             else ->
+                /**
+                 *      Since in the future we might want to redirect the user to
+                 * different screens we can do that based on a destination
+                 * string in the intent
+                 *      If the user isn't logged in then it is sent to onboadring.
+                 * Since an 'else' branch can't be merged together with another
+                 * option in a when clause, we will have for two clauses with the
+                 * same destination for now.
+                 **/
                 when (requireActivity().intent.getSessionHandlerNavigationDestination()) {
                     SESSION_HANDLER_DESTINATION_ONBOARDING -> R.id.splash_to_onboarding
                     else -> R.id.splash_to_onboarding
