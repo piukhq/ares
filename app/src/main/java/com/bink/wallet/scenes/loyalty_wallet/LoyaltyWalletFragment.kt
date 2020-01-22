@@ -188,17 +188,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun onCardClicked(item: Any) {
         when (item) {
             is MembershipCard -> {
-                for (membershipPlan in viewModel.membershipPlanData.value!!) {
-                    if (item.membership_plan == membershipPlan.id) {
-                        val directions =
-                            WalletsFragmentDirections.homeToDetail(
-                                membershipPlan,
-                                item
+                viewModel.localMembershipPlanData.value?.let {
+                    for (membershipPlan in it) {
+                        if (item.membership_plan == membershipPlan.id) {
+                            val directions =
+                                WalletsFragmentDirections.homeToDetail(
+                                    membershipPlan,
+                                    item
+                                )
+                            findNavController().navigateIfAdded(
+                                this@LoyaltyWalletFragment,
+                                directions
                             )
-                        findNavController().navigateIfAdded(
-                            this@LoyaltyWalletFragment,
-                            directions
-                        )
+                        }
                     }
                 }
             }
