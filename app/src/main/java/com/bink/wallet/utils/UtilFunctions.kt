@@ -4,7 +4,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.widget.CheckBox
+import android.widget.TextView
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 
@@ -23,7 +23,7 @@ object UtilFunctions {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        checkBox: CheckBox
+        textView: TextView
     ) {
         val spannableString = SpannableString(stringToSpan)
         if (spannableString.contains(stringToHyperlink)) {
@@ -34,7 +34,7 @@ object UtilFunctions {
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             )
         }
-        checkBox.apply {
+        textView.apply {
             text = spannableString
             movementMethod = LinkMovementMethod.getInstance()
         }
