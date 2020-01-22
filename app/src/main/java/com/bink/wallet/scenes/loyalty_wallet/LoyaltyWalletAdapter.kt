@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
+import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.LoyaltyWalletItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -75,6 +76,28 @@ class LoyaltyWalletAdapter(
     override fun getItemCount(): Int = membershipCards.size
 
     override fun getItemId(position: Int): Long = position.toLong()
+
+    fun deleteBannerDisplayById(id: String) {
+        val tempMembershipCards = membershipCards.toMutableList()
+        var indexToDelete = -1
+        var currentId = ""
+        tempMembershipCards.forEachIndexed { index, card ->
+            when (card) {
+                is MembershipCard -> currentId = card.id
+                is MembershipPlan -> currentId = card.id
+                is JoinCardItem -> currentId = card.id
+                is BannerDisplay -> currentId = card.id
+            }
+            if (currentId == id) {
+                indexToDelete = index
+            }
+        }
+        if (indexToDelete != -1) {
+            tempMembershipCards.removeAt(indexToDelete)
+            membershipCards = ArrayList(tempMembershipCards)
+            notifyDataSetChanged()
+        }
+    }
 
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
 
