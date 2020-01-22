@@ -14,10 +14,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
@@ -84,7 +81,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }, delay)
                 }
-            requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
+            if(UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
+            }
         }
         viewModel.shouldAcceptBeEnabledTC.value = false
 
