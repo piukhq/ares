@@ -63,19 +63,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        try {
-            viewModel.errorCode.observe(viewLifecycleOwner, Observer {
-                if (it == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                    LocalStoreUtils.clearPreferences()
-
-                    Navigation.findNavController(binding.root).navigate(R.id.global_to_onboarding)
-                    viewModel.errorCode.removeObservers(this)
-                }
-            })
-        } catch (e: Exception) {
-            Log.e(BaseFragment::class.simpleName, e.toString())
-        }
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {

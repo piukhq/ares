@@ -28,10 +28,7 @@ class PllPaymentCardAdapter(
         return PllPaymentCardViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = if (!paymentCards.isNullOrEmpty()) {
-        paymentCards?.size!!
-    } else 0
-
+    override fun getItemCount() = paymentCards?.size ?: 0
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
         paymentCards?.get(position).let { cardWrapper ->

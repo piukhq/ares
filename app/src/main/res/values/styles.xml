@@ -83,6 +83,11 @@
         <item name="android:fontFamily">@font/nunito_sans_light</item>
     </style>
 
+    <style name="ShadowedCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/margin_padding_size_small</item>
+        <item name="cardElevation">@dimen/shadowed_card_elevation</item>
+    </style>
+
     <style name="StandardModalButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

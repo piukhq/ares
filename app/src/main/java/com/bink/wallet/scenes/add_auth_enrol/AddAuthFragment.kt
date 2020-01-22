@@ -47,36 +47,33 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isPaymentWalletEmpty: Boolean? = null
 
-    private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
+    private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
-    private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>>? =
+    private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
     private fun addFieldToList(planField: Any) {
-
         if (planField is PlanFields) {
             val pairPlanField = Pair(
                 planField, PlanFieldsRequest(
-                    planField.column, ""
+                    planField.column, EMPTY_STRING
                 )
             )
-
             if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-                planBooleanFieldsList?.add(
+                planBooleanFieldsList.add(
                     pairPlanField
                 )
             } else if (!planField.column.equals(BARCODE_TEXT))
-                planFieldsList?.add(
+                planFieldsList.add(
                     pairPlanField
                 )
         }
-
         if (planField is PlanDocuments) {
-            planBooleanFieldsList?.add(
+            planBooleanFieldsList.add(
                 Pair(
                     planField, PlanFieldsRequest(
-                        planField.name, ""
+                        planField.name, EMPTY_STRING
                     )
                 )
             )
@@ -87,8 +84,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         super.onActivityCreated(savedInstanceState)
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
         viewModel.currentMembershipCard.value = args.membershipCard
-        planFieldsList?.clear()
-        planBooleanFieldsList?.clear()
+        planFieldsList.clear()
+        planBooleanFieldsList.clear()
         val signUpFormType = args.signUpFormType
         SharedPreferenceManager.isLoyaltySelected = true
 
@@ -97,8 +94,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         if (viewModel.currentMembershipPlan.value != null) {
             binding.descriptionAddAuth.text =
                 getString(
-                    R.string.enrol_description,
-                    viewModel.currentMembershipPlan.value!!.account?.company_name
+                    R.string.login_description,
+                    viewModel.currentMembershipPlan.value!!.account?.company_name,
+                    viewModel.currentMembershipPlan.value?.account?.plan_name
                 )
             binding.noAccountText.visibility = View.VISIBLE
         }
@@ -205,7 +203,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     addCardButton.text = getString(R.string.sign_up_text)
                     descriptionAddAuth.text = getString(
                         R.string.enrol_description,
-                        viewModel.currentMembershipPlan.value?.account?.company_name
+                        viewModel.currentMembershipPlan.value?.account?.plan_name_card
                     )
                     viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
                         it.typeOfField = TypeOfField.ENROL
@@ -270,11 +268,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         }
 
-        planBooleanFieldsList?.map { planFieldsList?.add(it) }
+        planBooleanFieldsList.map { planFieldsList.add(it) }
 
         val addRegisterFieldsRequest = Account()
 
-        planFieldsList?.map {
+        planFieldsList.map {
             if (it.first is PlanFields) {
                 when ((it.first as PlanFields).typeOfField) {
                     TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
@@ -289,10 +287,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.authAddFields.apply {
             layoutManager = GridLayoutManager(activity, 1)
             adapter = AddAuthAdapter(
-                planFieldsList?.toList()!!,
+                planFieldsList.toList(),
                 buttonRefresh = {
-                    addRegisterFieldsRequest.plan_documents?.map {
-                        if (it.value != true.toString()) {
+                    addRegisterFieldsRequest.plan_documents?.map { plan ->
+                        var required = true
+                        planBooleanFieldsList.map { field ->
+                            if (field.second.column == plan.column) {
+                                (field.first as PlanDocuments).checkbox?.let { bool ->
+                                    if (!bool) {
+                                        required = false
+                                    }
+                                }
+                            }
+                        }
+                        if (required && plan.value != true.toString()) {
                             binding.addCardButton.isEnabled = false
                             return@AddAuthAdapter
                         }
@@ -332,7 +340,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         }
                     }
 
-                    planFieldsList?.map {
+                    planFieldsList.map {
                         if (it.first is PlanFields) {
                             if (!UtilFunctions.isValidField(
                                     (it.first as PlanFields).validation,

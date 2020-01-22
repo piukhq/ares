@@ -214,41 +214,40 @@ fun Spinner.setValues(
 
 @BindingAdapter("transactionValue")
 fun TextView.setValue(membershipTransactions: MembershipTransactions) {
-    val value = membershipTransactions.amounts?.get(0)?.value!!
     val sign: String
-
-    when {
-        value < 0 -> {
-            sign = "-"
-            setTextColor(ContextCompat.getColor(context, R.color.black))
+    membershipTransactions.amounts?.get(0)?.value?.let {
+        when {
+            it < 0 -> {
+                sign = "-"
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+            }
+            it == 0.0 -> {
+                sign = " "
+                setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+            }
+            else -> {
+                sign = "+"
+                setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+            }
         }
-        value == 0.0 -> {
-            sign = " "
-            setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
-        }
-        else -> {
-            sign = "+"
-            setTextColor(ContextCompat.getColor(context, R.color.green_ok))
-        }
-    }
+        val currentValue = it.absoluteValue.toInt()
 
-    val currentValue = membershipTransactions.amounts[0].value?.absoluteValue?.toInt()
-
-    if (membershipTransactions.amounts[0].prefix != null)
-        text =
-            resources.getString(
-                R.string.transactions_prefix,
+        if (membershipTransactions.amounts[0].prefix != null)
+            text =
+                resources.getString(
+                    R.string.transactions_prefix,
+                    sign,
+                    membershipTransactions.amounts[0].prefix,
+                    currentValue.toString()
+                )
+        else if (membershipTransactions.amounts[0].suffix != null)
+            text = resources.getString(
+                R.string.transactions_suffix,
                 sign,
-                membershipTransactions.amounts[0].prefix,
-                currentValue.toString()
+                currentValue.toString(),
+                membershipTransactions.amounts[0].currency
             )
-    else if (membershipTransactions.amounts[0].suffix != null)
-        text = resources.getString(
-            R.string.transactions_suffix,
-            sign,
-            currentValue.toString(),
-            membershipTransactions.amounts[0].currency
-        )
+    }
 }
 
 @BindingAdapter("transactionTime")
@@ -265,19 +264,19 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
 
 @BindingAdapter("transactionArrow")
 fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
-    val value = membershipTransactions.amounts?.get(0)?.value!!
-
-    when {
-        value < 0 -> {
-            setTextColor(ContextCompat.getColor(context, R.color.black))
-        }
-        value == 0.0 -> {
-            setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
-            text = context.getString(R.string.arrow_left)
-        }
-        else -> {
-            setTextColor(ContextCompat.getColor(context, R.color.green_ok))
-            text = context.getString(R.string.up_arrow)
+    membershipTransactions.amounts?.get(0)?.value?.let {
+        when {
+            it < 0 -> {
+                setTextColor(ContextCompat.getColor(context, R.color.black))
+            }
+            it == 0.0 -> {
+                setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
+                text = context.getString(R.string.arrow_left)
+            }
+            else -> {
+                setTextColor(ContextCompat.getColor(context, R.color.green_ok))
+                text = context.getString(R.string.up_arrow)
+            }
         }
     }
 }
@@ -287,35 +286,40 @@ fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
 fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
     when (loginStatus) {
         LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-            if (card != null && card.balances.isNullOrEmpty()) {
-                var elapsed =
-                    (System.currentTimeMillis() / 1000 - card.balances?.first()?.updated_at!!) / NUMBER_SECONDS_IN_MINUTE
-                var suffix = MINUTES
-                if (elapsed >= NUMBER_MINUTES_IN_HOUR) {
-                    elapsed /= NUMBER_MINUTES_IN_HOUR
-                    suffix = HOURS
-                    if (elapsed >= NUMBER_HOURS_IN_DAY) {
-                        elapsed /= NUMBER_HOURS_IN_DAY
-                        suffix = DAYS
-                        if (elapsed >= NUMBER_DAYS_IN_WEEK) {
-                            elapsed /= NUMBER_DAYS_IN_WEEK
-                            suffix = WEEKS
-                            if (elapsed >= NUMBER_WEEKS_IN_MONTH) {
-                                elapsed /= NUMBER_WEEKS_IN_MONTH
-                                suffix = MONTHS
-                                if (elapsed >= NUMBER_MONTHS_IN_YEAR) {
-                                    elapsed /= NUMBER_MONTHS_IN_YEAR
-                                    suffix = YEARS
+            card?.let { membershipCard ->
+                if (membershipCard.balances.isNullOrEmpty()) {
+                    membershipCard.balances?.first()?.updated_at?.let {
+                        var elapsed =
+                            (System.currentTimeMillis() / 1000 - it) / NUMBER_SECONDS_IN_MINUTE
+                        var suffix = MINUTES
+                        if (elapsed >= NUMBER_MINUTES_IN_HOUR) {
+                            elapsed /= NUMBER_MINUTES_IN_HOUR
+                            suffix = HOURS
+                            if (elapsed >= NUMBER_HOURS_IN_DAY) {
+                                elapsed /= NUMBER_HOURS_IN_DAY
+                                suffix = DAYS
+                                if (elapsed >= NUMBER_DAYS_IN_WEEK) {
+                                    elapsed /= NUMBER_DAYS_IN_WEEK
+                                    suffix = WEEKS
+                                    if (elapsed >= NUMBER_WEEKS_IN_MONTH) {
+                                        elapsed /= NUMBER_WEEKS_IN_MONTH
+                                        suffix = MONTHS
+                                        if (elapsed >= NUMBER_MONTHS_IN_YEAR) {
+                                            elapsed /= NUMBER_MONTHS_IN_YEAR
+                                            suffix = YEARS
+                                        }
+                                    }
                                 }
                             }
                         }
+                        text = this.context.getString(
+                            R.string.transaction_not_supported_description,
+                            elapsed.toInt().toString(),
+                            suffix
+                        )
                     }
+
                 }
-                text = this.context.getString(
-                    R.string.transaction_not_supported_description,
-                    elapsed.toInt().toString(),
-                    suffix
-                )
             }
         }
         LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
@@ -368,12 +372,16 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
 
 @BindingAdapter("paymentCardLogo")
 fun ImageView.setPaymentCardLogo(paymentCard: PaymentCard) {
-    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.logo)
+    paymentCard.card?.provider?.getCardType()?.let {
+        setBackgroundResource(it.logo)
+    }
 }
 
 @BindingAdapter("paymentCardSubLogo")
 fun ImageView.setPaymentCardSubLogo(paymentCard: PaymentCard) {
-    setBackgroundResource(paymentCard.card?.provider?.getCardType()!!.subLogo)
+    paymentCard.card?.provider?.getCardType()?.let {
+        setBackgroundResource(it.subLogo)
+    }
 }
 
 @BindingAdapter("loginStatus")

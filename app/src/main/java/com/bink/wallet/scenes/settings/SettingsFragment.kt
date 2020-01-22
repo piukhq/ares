@@ -68,23 +68,24 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
 
-        val items = viewModel.itemsList.value!!
-        for (i in 0 until items.list.size) {
-            val item = items.list[i]
-            if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-                val email =
-                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                        ?.let {
-                            it
-                        }
+        viewModel.itemsList.value?.let {
+            for (i in 0 until it.list.size) {
+                val item = it.list[i]
+                if (item.type == SettingsItemType.EMAIL_ADDRESS) {
+                    val email =
+                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                            ?.let { localEmail ->
+                                localEmail
+                            }
 
-                val newItem =
-                    SettingsItem(
-                        item.title,
-                        email,
-                        item.type
-                    )
-                viewModel.itemsList.setItem(i, newItem)
+                    val newItem =
+                        SettingsItem(
+                            item.title,
+                            email,
+                            item.type
+                        )
+                    viewModel.itemsList.setItem(i, newItem)
+                }
             }
         }
 
@@ -167,12 +168,11 @@ class SettingsFragment :
                 )
 
             SettingsItemType.CONTACT_US -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.data = Uri.parse("mailto:")
-                intent.type = "message/rfc822+1"
-                intent.putExtra(
-                    Intent.EXTRA_EMAIL,
-                    arrayOf(getString(R.string.contact_us_email_address))
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse(
+                    getString(R.string.contact_us_mailto,
+                        getString(R.string.contact_us_email_address)
+                    )
                 )
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
                 intent.putExtra(

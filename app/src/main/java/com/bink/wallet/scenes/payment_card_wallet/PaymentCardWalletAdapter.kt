@@ -29,9 +29,7 @@ class PaymentCardWalletAdapter(
     }
 
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
-
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
@@ -40,7 +38,6 @@ class PaymentCardWalletAdapter(
                     currentOldItem is PaymentCard
                 )
                     return currentNewItem.id == currentOldItem.id
-
                 return currentNewItem is JoinCardItem &&
                         currentOldItem is JoinCardItem
             }
