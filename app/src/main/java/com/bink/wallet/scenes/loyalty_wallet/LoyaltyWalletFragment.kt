@@ -19,9 +19,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -137,49 +135,25 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
         }
 
-        binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
-            adapter = walletAdapter
-
-            val helperListenerLeft =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-            val helperListenerRight =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
-
-            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-            ItemTouchHelper(helperListenerRight).attachToRecyclerView(
-                this
-            )
-        }
-
-        binding.progressSpinner.visibility = View.VISIBLE
-
-        createLocalObservers()
-        createFetchObservers()
-
-        if (isNetworkAvailable(requireActivity(), false)) {
-            runBlocking {
-                viewModel.fetchMembershipPlans()
-                viewModel.fetchMembershipCards()
-            }
-            binding.swipeLayout.isEnabled = false
-            binding.swipeLayout.isRefreshing = false
+        if (UtilFunctions.isNetworkAvailable(requireActivity(), false)) {
+            binding.progressSpinner.visibility = View.VISIBLE
+            viewModel.fetchMembershipPlans()
+            viewModel.fetchDismissedCards()
+            viewModel.fetchMembershipCards()
         } else {
+            binding.progressSpinner.visibility = View.VISIBLE
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchDismissedCardsDataForLocal()
+            viewModel.fetchLocalMembershipCards()
             disableIndicators()
         }
 
-        viewModel.fetchLocalMembershipPlans()
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchDismissedCards()
-
         binding.swipeLayout.setOnRefreshListener {
-            if (isNetworkAvailable(requireActivity(), true)) {
-                createFetchObservers()
-                runBlocking {
-                    viewModel.fetchMembershipPlans()
-                    viewModel.fetchMembershipCards()
-                }
+            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                binding.progressSpinner.visibility = View.VISIBLE
+                viewModel.fetchMembershipPlans()
+                viewModel.fetchMembershipCards()
+                viewModel.fetchDismissedCards()
             } else {
                 disableIndicators()
             }
@@ -273,7 +247,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        if (isNetworkAvailable(requireActivity(), true)) {
+                        if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                             runBlocking {
                                 viewModel.deleteCard(membershipCard.id)
                             }

@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
 import android.widget.TextView
+import com.bink.wallet.R
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 
