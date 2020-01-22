@@ -18,7 +18,7 @@ import java.net.HttpURLConnection
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-    single { provideDefaultOkHttpClient(androidContext()) }
+    single { provideDefaultOkHttpClient(get()) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 }

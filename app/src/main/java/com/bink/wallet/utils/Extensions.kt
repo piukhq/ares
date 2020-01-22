@@ -172,4 +172,4 @@ fun Intent.putSessionHandlerNavigationDestination(destination: String) {
 }
 
 fun Intent.getSessionHandlerNavigationDestination(): String =
-    getStringExtra(SESSION_HANDLER_NAVIGATION_KEY) ?: ""
+    getStringExtra(SESSION_HANDLER_NAVIGATION_KEY) ?: EMPTY_STRING
