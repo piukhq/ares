@@ -72,11 +72,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.buttonAddPaymentCard.setOnClickListener {
-            //TODO PCD is not implemented yet, for moment a dialog is displayed -> AB20-35(CTA change)
-            context?.displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard()
+            findNavController().navigateIfAdded(this, directions)
         }
     }
 }
