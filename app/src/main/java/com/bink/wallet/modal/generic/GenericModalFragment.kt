@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.GenericModalFragmentBinding
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -31,7 +32,7 @@ open class GenericModalFragment :
         with (binding) {
             screenScrollView.getHitRect(scrollBounds)
             if (title.getLocalVisibleRect(scrollBounds)) {
-                titleToolbar.text = ""
+                titleToolbar.text = EMPTY_STRING
             } else {
                 titleToolbar.text = binding.title.text
             }
