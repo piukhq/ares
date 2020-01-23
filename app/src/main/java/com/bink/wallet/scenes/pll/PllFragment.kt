@@ -129,7 +129,15 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.buttonDone.setOnClickListener {
-            if (isNetworkAvailable(requireActivity(), true)) {
+            if (isNetworkAvailable(requireActivity(), true, okButtonAction = {
+                    directions?.let { directions ->
+                        findNavController().navigateIfAdded(
+                            this@PllFragment,
+                            directions
+                        )
+                    }
+
+                })) {
                 if (viewModel.paymentCards.value.isNullOrEmpty()) {
                     findNavController().popBackStack()
                 } else if (isNetworkAvailable(requireActivity(), true)) {

@@ -46,17 +46,13 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
-                    onClickListener = { preference: Preference, state: Int, checkBox ->
-                        if (isNetworkAvailable(requireActivity(), true)) {
-                            viewModel.savePreference(
-                                json = JSONObject().put(
-                                    preference.slug!!,
-                                    state
-                                ).toString()
-                            )
-                        } else {
-                            checkBox.isChecked = !checkBox.isChecked
-                        }
+                    onClickListener = { preference: Preference, state: Int, _ ->
+                        viewModel.savePreference(
+                            json = JSONObject().put(
+                                preference.slug!!,
+                                state
+                            ).toString()
+                        )
                     })
                 layoutManager = GridLayoutManager(requireContext(), 1)
             }

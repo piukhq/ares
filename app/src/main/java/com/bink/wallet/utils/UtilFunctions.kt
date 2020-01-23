@@ -43,21 +43,29 @@ object UtilFunctions {
         }
     }
 
-    fun isNetworkAvailable(context: Context, isUserAction: Boolean): Boolean {
+    fun isNetworkAvailable(context: Context, isUserAction: Boolean, okButtonAction: () -> Unit = {}): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         val isNetworkAvailable = networkInfo != null && networkInfo.isConnected
         if (isUserAction && !isNetworkAvailable) {
-            showNoInternetConnectionDialog(context)
+            showNoInternetConnectionDialog(context, okButtonAction)
         }
         return isNetworkAvailable
     }
 
-    private fun showNoInternetConnectionDialog(context: Context) {
+    private fun showNoInternetConnectionDialog(context: Context, okButtonAction: () -> Unit = {}) {
         context.displayModalPopup(
             null,
-            context.getString(R.string.no_internet_connection_dialog_message)
+            context.getString(R.string.no_internet_connection_dialog_message),
+            okButtonAction
         )
     }
+
+//    private fun showNoInternetConnectionDialog(context: Context) {
+//        context.displayModalPopup(
+//            null,
+//            context.getString(R.string.no_internet_connection_dialog_message)
+//        )
+//    }
 }

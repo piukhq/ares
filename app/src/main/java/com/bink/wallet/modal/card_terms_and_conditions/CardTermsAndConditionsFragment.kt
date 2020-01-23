@@ -36,9 +36,10 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
         }
 
-        // pre-load the cards on screen open, so we have them ready after card is added
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchLocalMembershipPlans()
+        if (UtilFunctions.isNetworkAvailable(requireContext(), false)) {
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipPlans()
+        }
 
         viewModel.paymentCard.observeNonNull(this) { paymentCard ->
             viewModel.localMembershipPlanData.value?.let { plans ->
@@ -66,30 +67,34 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     override fun onFirstButtonClicked() {
-        binding.firstButton.isEnabled = false
-        binding.progressSpinner.visibility = View.VISIBLE
-        userBankCard?.let {
-            viewModel.sendAddCard(
-                PaymentCardAdd(
-                    it,
-                    Account(
-                        false,
-                        DEFAULT_ACCOUNT_STATUS,
-                        listOf(
-                            Consent(
-                                DEFAULT_CONSENT_TYPE,
-                                DEFAULT_LATITUDE,
-                                DEFAULT_LONGITUDE,
-                                System.currentTimeMillis() / DIVISOR_MILLISECONDS
+        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            binding.firstButton.isEnabled = false
+            binding.progressSpinner.visibility = View.VISIBLE
+            userBankCard?.let {
+                viewModel.sendAddCard(
+                    PaymentCardAdd(
+                        it,
+                        Account(
+                            false,
+                            DEFAULT_ACCOUNT_STATUS,
+                            listOf(
+                                Consent(
+                                    DEFAULT_CONSENT_TYPE,
+                                    DEFAULT_LATITUDE,
+                                    DEFAULT_LONGITUDE,
+                                    System.currentTimeMillis() / DIVISOR_MILLISECONDS
+                                )
                             )
                         )
                     )
                 )
-            )
+            }
         }
     }
 
     override fun onSecondButtonClicked() {
-        requireActivity().supportFragmentManager.popBackStack()
+        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 }
