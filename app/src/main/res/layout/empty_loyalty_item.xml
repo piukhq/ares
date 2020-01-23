@@ -20,12 +20,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium_large"
-                android:layout_marginTop="@dimen/shadowed_card_elevation"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium_large"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:background="@drawable/bg_round_background"
-                android:orientation="vertical"
-                app:cardCornerRadius="@dimen/loyalty_card_corner_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +30,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?selectableItemBackground">
+                    android:background="@drawable/bg_join_card">
 
                 <ImageView
                         android:id="@+id/join_card_image"
