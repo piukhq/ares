@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bink.sdk.BinkCore
+import com.bink.sdk.util.BinkSecurityUtil
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
@@ -37,7 +40,24 @@ class SplashFragment : Fragment() {
     }
 
     private fun getUnRootedDirections(): Int {
-        return when (context?.let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
+        if (!requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
+            val binkCore = BinkCore(requireContext())
+            val key = binkCore.sessionConfig.apiKey
+            val email = binkCore.sessionConfig.userEmail
+            if (!key.isNullOrEmpty()) {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_TOKEN,
+                    getString(R.string.token_api_v1, key)
+                )
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    email ?: EMPTY_STRING
+                )
+            }
+        }
+
+        return when (requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             true -> R.id.global_to_home
             else ->
                 /**
