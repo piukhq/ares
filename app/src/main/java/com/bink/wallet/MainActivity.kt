@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -14,14 +15,17 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
+import com.livefront.bridge.Bridge
 import io.fabric.sdk.android.Fabric
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KProperty
+
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Bridge.restoreInstanceState(this, savedInstanceState);
         Fabric.with(this, Crashlytics())
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != "mr") {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
     }
+
 
     override fun onBackPressed() {
         val navId = findNavController(R.id.main_fragment).currentDestination?.id
@@ -80,6 +85,16 @@ class MainActivity : AppCompatActivity() {
         val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         finish()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState)
+        Bridge.saveInstanceState(this, outState)
+    }
+
+    override fun onDestroy() {
+        Bridge.clear(this)
+        super.onDestroy()
     }
 }
 

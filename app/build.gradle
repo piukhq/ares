@@ -9,6 +9,7 @@ plugins {
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
@@ -204,6 +205,9 @@ dependencies {
 
     implementation 'com.scottyab:rootbeer-lib:0.0.7'
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+
+    implementation 'com.github.livefront:bridge:v1.2.1'
+    implementation 'com.github.tinsukE:icekick:0.4'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
