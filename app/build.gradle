@@ -49,6 +49,7 @@ android {
             }
         }
         debug {
+//            signingConfig signingConfigs.binkSigningConfig
             applicationIdSuffix ".debug"
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
