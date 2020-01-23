@@ -98,7 +98,8 @@ object MembershipPlanUtils {
                     }
                 }
             }
-            CardType.VIEW.type, CardType.STORE.type -> {
+            CardType.VIEW.type,
+            CardType.STORE.type -> {
                 return LinkStatus.STATUS_UNLINKABLE
             }
         }
