@@ -1,6 +1,5 @@
 package com.bink.wallet
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.utils.SingleLiveEvent
@@ -22,8 +21,6 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
         }
     }
 
-    val errorCode = MutableLiveData<Int>()
-
     protected val viewModelScopeExceptionHandler = viewModelScope + exceptionHandler
 
     override val coroutineContext: CoroutineContext
@@ -44,8 +41,7 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
                     connectTimeoutEvent.call()
                 }
                 else -> {
-                    val baseException = convertToBaseException(throwable)
-                    errorCode.value = baseException.httpCode
+                    convertToBaseException(throwable)
                 }
             }
         }

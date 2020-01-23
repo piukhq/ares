@@ -164,12 +164,11 @@ class SettingsFragment :
                 )
 
             SettingsItemType.CONTACT_US -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.data = Uri.parse("mailto:")
-                intent.type = "message/rfc822+1"
-                intent.putExtra(
-                    Intent.EXTRA_EMAIL,
-                    arrayOf(getString(R.string.contact_us_email_address))
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse(
+                    getString(R.string.contact_us_mailto,
+                        getString(R.string.contact_us_email_address)
+                    )
                 )
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
                 intent.putExtra(
