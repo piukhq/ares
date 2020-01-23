@@ -19,8 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium_large"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:background="@drawable/loyalty_wallet_item_shadow">
+                android:background="@drawable/shadow_114927">
 
             <androidx.cardview.widget.CardView
                     style="@style/ShadowedCardView"
