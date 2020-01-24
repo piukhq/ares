@@ -64,8 +64,8 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     val hosts = arrayOf("api.dev.gb.bink.com", "api.staging.gb.bink.com")
     val builder = CertificatePinner.Builder()
     hosts.forEach { host ->
-//        builder.add(host, "sha256/35Y7j68+91YIgnJV8bQQfGfqwLP1OPnM6PZAjVw79P4=")
-        builder.add(host, "sha1/AAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+        builder.add(host, "sha256/35Y7j68+91YIgnJV8bQQfGfqwLP1OPnM6PZAjVw79P4=")
+//        builder.add(host, "sha1/AAAAAAAAAAAAAAAAAAAAAAAAAAA=")
     }
     val certificatePinner = builder.build()
 
