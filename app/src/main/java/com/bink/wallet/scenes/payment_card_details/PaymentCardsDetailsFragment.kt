@@ -178,7 +178,7 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
-        if (isNetworkAvailable(requireActivity(), false)) {
+        if (isNetworkAvailable(requireActivity())) {
             CoroutineScope(Dispatchers.Main).launch {
                 viewModel.getMembershipCards()
             }

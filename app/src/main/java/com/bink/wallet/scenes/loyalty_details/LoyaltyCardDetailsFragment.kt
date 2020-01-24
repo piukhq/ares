@@ -54,7 +54,7 @@ class LoyaltyCardDetailsFragment :
         setLoadingState(true)
 
         runBlocking {
-            if (isNetworkAvailable(requireActivity(), false)) {
+            if (isNetworkAvailable(requireActivity())) {
                 viewModel.fetchPaymentCards()
             } else {
                 viewModel.fetchLocalPaymentCards()
@@ -83,7 +83,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            if (isNetworkAvailable(requireActivity(), false)) {
+            if (isNetworkAvailable(requireActivity())) {
                 runBlocking { viewModel.updateMembershipCard() }
             }
             binding.viewModel = viewModel
@@ -183,15 +183,14 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        viewModel.linkStatus.observeNonNull(this)
-        { status ->
+        viewModel.linkStatus.observeNonNull(this) { status ->
             if (viewModel.accountStatus.value != null &&
                 viewModel.localPaymentCards.value != null
             ) {
                 setLoadingState(false)
             } else {
                 runBlocking {
-                    if (isNetworkAvailable(requireActivity(), false)) {
+                    if (isNetworkAvailable(requireActivity())) {
                         viewModel.fetchPaymentCards()
                     }
                 }

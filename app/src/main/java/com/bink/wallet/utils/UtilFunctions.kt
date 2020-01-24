@@ -45,9 +45,10 @@ object UtilFunctions {
 
     fun isNetworkAvailable(
         context: Context,
-        isUserAction: Boolean,
+        isUserAction: Boolean = false,
         okButtonAction: () -> Unit = {}
     ): Boolean {
+        // TODO: At some point we need to update to using NetworkCallbacks, but that's long term
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo

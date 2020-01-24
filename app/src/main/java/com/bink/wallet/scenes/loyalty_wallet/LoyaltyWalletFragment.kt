@@ -135,7 +135,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
         }
 
-        if (UtilFunctions.isNetworkAvailable(requireActivity(), false)) {
+        if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             binding.progressSpinner.visibility = View.VISIBLE
             viewModel.fetchMembershipPlans()
             viewModel.fetchDismissedCards()

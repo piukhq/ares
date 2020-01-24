@@ -33,7 +33,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         )
 
         viewModel.savePreferenceError.observeNonNull(this) {
-            if (isNetworkAvailable(requireContext(), false)) {
+            if (isNetworkAvailable(requireContext())) {
                 requireContext().displayModalPopup(
                     EMPTY_STRING,
                     getString(R.string.preference_update_error)

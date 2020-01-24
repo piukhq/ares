@@ -36,7 +36,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
         }
 
-        if (UtilFunctions.isNetworkAvailable(requireContext(), false)) {
+        if (UtilFunctions.isNetworkAvailable(requireContext())) {
             viewModel.fetchLocalMembershipCards()
             viewModel.fetchLocalMembershipPlans()
         }

@@ -69,7 +69,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         runBlocking {
-            if (isNetworkAvailable(requireActivity(), false)) {
+            if (isNetworkAvailable(requireActivity())) {
                 viewModel.getPaymentCards()
             } else {
                 viewModel.getLocalPaymentCards()
