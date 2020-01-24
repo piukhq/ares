@@ -13,7 +13,7 @@ const val DIGITS_VISA_MASTERCARD = 16
 const val DIGITS_AMERICAN_EXPRESS = 15
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolean {
-    membership_cards?.forEach { paymentMembershipCard ->
+    membership_cards.forEach { paymentMembershipCard ->
         if (paymentMembershipCard.id.toString() == membershipCard.id &&
             paymentMembershipCard.active_link == true
         ) {

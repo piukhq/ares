@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -329,8 +330,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
-                if (verifyAvailableNetwork(requireActivity())) {
-
+                if (isNetworkAvailable(requireActivity(), true)) {
                     addRegisterFieldsRequest.plan_documents?.map {
                         if (it.value != "true") {
                             requireContext().displayModalPopup(
@@ -416,7 +416,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     binding.addCardButton.isEnabled = false
                     binding.progressSpinner.visibility = View.VISIBLE
                 } else {
-                    showNoInternetConnectionDialog()
                     binding.progressSpinner.visibility = View.GONE
                 }
             }

@@ -11,11 +11,11 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_loyalty_card_details.*
 import kotlinx.coroutines.Deferred
@@ -72,7 +72,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         runBlocking {
-            viewModel.getPaymentCards()
+            if (isNetworkAvailable(requireActivity())) {
+                viewModel.getPaymentCards()
+            } else {
+                viewModel.getLocalPaymentCards()
+            }
         }
 
         binding.toolbar.setNavigationOnClickListener {
@@ -129,10 +133,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         binding.buttonDone.setOnClickListener {
             when {
-                viewModel.paymentCards.value.isNullOrEmpty() -> {
+                viewModel.paymentCards.value.isNullOrEmpty() &&
+                viewModel.localPaymentCards.value.isNullOrEmpty() -> {
                     findNavController().popBackStack()
                 }
-                verifyAvailableNetwork(requireActivity()) -> {
+                isNetworkAvailable(requireActivity(), true) -> {
                     // display loading indicator?
                     val jobs = ArrayList<Deferred<Unit>>()
 
@@ -184,9 +189,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                             }
                         }
                     }
-                }
-                else -> {
-                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
         }

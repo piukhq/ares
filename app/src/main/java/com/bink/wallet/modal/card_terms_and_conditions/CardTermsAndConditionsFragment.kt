@@ -3,13 +3,12 @@ package com.bink.wallet.modal.card_terms_and_conditions
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalFragment
 import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -37,9 +36,10 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
         }
 
-        // pre-load the cards on screen open, so we have them ready after card is added
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchLocalMembershipPlans()
+        if (UtilFunctions.isNetworkAvailable(requireContext())) {
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipPlans()
+        }
 
         viewModel.paymentCard.observeNonNull(this) { paymentCard ->
             viewModel.localMembershipPlanData.value?.let { plans ->
@@ -58,40 +58,43 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         viewModel.error.observeNonNull(this) {
             if (viewModel.error.value != null) {
                 binding.progressSpinner.visibility = View.GONE
-                binding.firstButton.isEnabled = true
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.could_not_add_card)
-                )
+                if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                    binding.firstButton.isEnabled = true
+                }
+
             }
         }
     }
 
     override fun onFirstButtonClicked() {
-        binding.firstButton.isEnabled = false
-        binding.progressSpinner.visibility = View.VISIBLE
-        userBankCard?.let {
-            viewModel.sendAddCard(
-                PaymentCardAdd(
-                    it,
-                    Account(
-                        false,
-                        DEFAULT_ACCOUNT_STATUS,
-                        listOf(
-                            Consent(
-                                DEFAULT_CONSENT_TYPE,
-                                DEFAULT_LATITUDE,
-                                DEFAULT_LONGITUDE,
-                                System.currentTimeMillis() / DIVISOR_MILLISECONDS
+        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            binding.firstButton.isEnabled = false
+            binding.progressSpinner.visibility = View.VISIBLE
+            userBankCard?.let {
+                viewModel.sendAddCard(
+                    PaymentCardAdd(
+                        it,
+                        Account(
+                            false,
+                            DEFAULT_ACCOUNT_STATUS,
+                            listOf(
+                                Consent(
+                                    DEFAULT_CONSENT_TYPE,
+                                    DEFAULT_LATITUDE,
+                                    DEFAULT_LONGITUDE,
+                                    System.currentTimeMillis() / DIVISOR_MILLISECONDS
+                                )
                             )
                         )
                     )
                 )
-            )
+            }
         }
     }
 
     override fun onSecondButtonClicked() {
-        requireActivity().supportFragmentManager.popBackStack()
+        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 }
