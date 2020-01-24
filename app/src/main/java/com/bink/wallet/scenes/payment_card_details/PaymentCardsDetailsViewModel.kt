@@ -22,6 +22,7 @@ class PaymentCardsDetailsViewModel(
     var linkedPaymentCard = MutableLiveData<PaymentCard>()
     var unlinkedRequestBody = MutableLiveData<ResponseBody>()
     var deleteRequest = MutableLiveData<ResponseBody>()
+    val loadCardsError = MutableLiveData<Throwable>()
 
     private val _linkError = MutableLiveData<Throwable>()
     val linkError: LiveData<Throwable>
@@ -58,6 +59,6 @@ class PaymentCardsDetailsViewModel(
     }
 
     suspend fun getMembershipCards() {
-        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, loadCardsError)
     }
 }

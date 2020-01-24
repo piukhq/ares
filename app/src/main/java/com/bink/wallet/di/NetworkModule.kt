@@ -61,10 +61,13 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     // sets desired log level
     logging.level = HttpLoggingInterceptor.Level.BODY
 
-    val hostname = "bink.com"
-    val certificatePinner = CertificatePinner.Builder()
-        .add(hostname, "sha1/Mjc6OTI6QkM6QTE6REQ6RDQ6RkU6NDM6OUI6OUQ6REU6Nzc6MDQ6ODA6MTI6Qjg6QTE6QzI6MTM6MTQ=")
-        .build()
+    val hosts = arrayOf("api.dev.gb.bink.com", "api.staging.gb.bink.com")
+    val builder = CertificatePinner.Builder()
+    hosts.forEach { host ->
+        builder.add(host, "sha256/35Y7j68+91YIgnJV8bQQfGfqwLP1OPnM6PZAjVw79P4=")
+//        builder.add(host, "sha1/AAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+    }
+    val certificatePinner = builder.build()
 
     return OkHttpClient.Builder()
         .certificatePinner(certificatePinner)

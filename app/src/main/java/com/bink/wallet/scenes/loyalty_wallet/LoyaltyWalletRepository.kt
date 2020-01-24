@@ -21,12 +21,19 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    suspend fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
+    suspend fun retrieveMembershipCards(
+        mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
+        loadCardsError: MutableLiveData<Throwable>
+    ) {
         val request = apiService.getMembershipCardsAsync()
         withContext(Dispatchers.Main) {
-            val response = request.await()
-            storeMembershipCards(response)
-            mutableMembershipCards.postValue(response.toMutableList())
+            try {
+                val response = request.await()
+                storeMembershipCards(response)
+                mutableMembershipCards.postValue(response.toMutableList())
+            } catch (e: Exception) {
+                loadCardsError.value = e
+            }
         }
     }
 
@@ -55,12 +62,19 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+    suspend fun retrieveMembershipPlans(
+        mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
+        loadPlansError: MutableLiveData<Throwable>
+    ) {
         val request = apiService.getMembershipPlansAsync()
         withContext(Dispatchers.Main) {
-            val response = request.await()
-            storeMembershipPlans(response)
-            mutableMembershipPlans.value = response.toMutableList()
+            try {
+                val response = request.await()
+                storeMembershipPlans(response)
+                mutableMembershipPlans.value = response.toMutableList()
+            } catch (e: java.lang.Exception) {
+                loadPlansError.value = e
+            }
         }
     }
 
