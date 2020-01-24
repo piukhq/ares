@@ -17,6 +17,9 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.verifyAvailableNetwork
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_loyalty_card_details.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -125,46 +128,66 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.buttonDone.setOnClickListener {
-            if (viewModel.paymentCards.value.isNullOrEmpty()) {
-                findNavController().popBackStack()
-            } else if (verifyAvailableNetwork(requireActivity())) {
-                adapter.paymentCards?.forEach { card ->
-                    if (card.isSelected &&
-                        !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                    ) {
-                        runBlocking {
-                            viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
-                                card.paymentCard.id?.let { paymentCard ->
-                                    viewModel.linkPaymentCard(
-                                        membershipCard.toString(),
-                                        paymentCard.toString()
-                                    )
+            when {
+                viewModel.paymentCards.value.isNullOrEmpty() -> {
+                    findNavController().popBackStack()
+                }
+                verifyAvailableNetwork(requireActivity()) -> {
+                    // display loading indicator?
+                    val jobs = ArrayList<Deferred<Unit>>()
+
+                    adapter.paymentCards?.forEach { card ->
+                        if (card.isSelected &&
+                            !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                        ) {
+                            runBlocking {
+                                viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
+                                    card.paymentCard.id?.let { paymentCard ->
+                                        jobs.add(
+                                            async {
+                                                viewModel.linkPaymentCard(
+                                                    membershipCard.toString(),
+                                                    paymentCard.toString()
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
-                        }
-                    } else if (viewModel.membershipCard.value != null &&
-                        !card.isSelected &&
-                        card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                    ) {
-                        runBlocking {
-                            viewModel.unlinkPaymentCard(
-                                card.paymentCard.id.toString(),
-                                viewModel.membershipCard.value!!.id
-                            )
+                        } else if (viewModel.membershipCard.value != null &&
+                            !card.isSelected &&
+                            card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                        ) {
+                            runBlocking {
+                                jobs.add(
+                                    async {
+                                        viewModel.unlinkPaymentCard(
+                                            card.paymentCard.id.toString(),
+                                            viewModel.membershipCard.value!!.id
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
 
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                        directions?.let { directions ->
-                            findNavController().navigateIfAdded(
-                                this@PllFragment,
-                                directions
-                            )
+                    runBlocking {
+                        jobs.forEach {
+                            it.await()
+                        }
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
                         }
                     }
                 }
-            } else {
-                showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+                else -> {
+                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+                }
             }
         }
 
@@ -221,10 +244,12 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     }
 
     private fun displayTitle(hasLinkedCards: Boolean) {
-        if (hasLinkedCards) {
-            viewModel.title.set(getString(R.string.pll_linked_title))
-        } else {
-            viewModel.title.set(getString(R.string.pll_unlinked_title))
-        }
+        viewModel.title.set(getString(
+            if (hasLinkedCards) {
+                R.string.pll_linked_title
+            } else {
+                R.string.pll_unlinked_title
+            }
+        ))
     }
 }

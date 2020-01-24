@@ -9,7 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
@@ -49,6 +49,8 @@ class PllPaymentCardAdapter(
                     setImageResource(type.addLogo)
             }
             with(binding.toggle) {
+                setOnCheckedChangeListener(null)
+
                 isChecked = paymentCard.isSelected
                 displayCustomSwitch(paymentCard.isSelected)
 
@@ -59,7 +61,9 @@ class PllPaymentCardAdapter(
             }
 
             if (paymentCards?.last() == paymentCard) {
-                binding.view.visibility = View.GONE
+                binding.separator.visibility = View.GONE
+            } else {
+                binding.separator.visibility = View.VISIBLE
             }
         }
     }
