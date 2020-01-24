@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.GenericModalFragmentBinding
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -28,11 +29,13 @@ open class GenericModalFragment :
 
     private val scrollChangeListener = ViewTreeObserver.OnScrollChangedListener {
         val scrollBounds = Rect()
-        binding.screenScrollView.getHitRect(scrollBounds)
-        if (binding.title.getLocalVisibleRect(scrollBounds)) {
-            binding.titleToolbar.text = ""
-        } else {
-            binding.titleToolbar.text = binding.title.text
+        with (binding) {
+            screenScrollView.getHitRect(scrollBounds)
+            if (title.getLocalVisibleRect(scrollBounds)) {
+                titleToolbar.text = EMPTY_STRING
+            } else {
+                titleToolbar.text = binding.title.text
+            }
         }
     }
 
@@ -41,23 +44,27 @@ open class GenericModalFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.toolbar.setNavigationOnClickListener {
-            onNavigationButtonClicked()
+        with (binding) {
+            toolbar.setNavigationOnClickListener {
+                onNavigationButtonClicked()
+            }
+            close.setOnClickListener {
+                onNavigationButtonClicked()
+            }
+            firstButton.setOnClickListener {
+                onFirstButtonClicked()
+            }
+            secondButton.setOnClickListener {
+                onSecondButtonClicked()
+            }
         }
-        binding.close.setOnClickListener {
-            onNavigationButtonClicked()
-        }
-        binding.firstButton.setOnClickListener {
-            onFirstButtonClicked()
-        }
-        binding.secondButton.setOnClickListener {
-            onSecondButtonClicked()
-        }
-        viewModel.destinationLiveData.observeNonNull(this) {
-            goTo(it)
-        }
-        viewModel.toolbarIconLiveData.observeNonNull(this) {
-            binding.toolbar.setNavigationIcon(it)
+        with (viewModel) {
+            destinationLiveData.observeNonNull(this@GenericModalFragment) {
+                goTo(it)
+            }
+            toolbarIconLiveData.observeNonNull(this@GenericModalFragment) {
+                binding.toolbar.setNavigationIcon(it)
+            }
         }
     }
 
@@ -80,40 +87,42 @@ open class GenericModalFragment :
     }
 
     protected fun setupUi(parameters: GenericModalParameters) {
-        if (parameters.topBarIconId != 0 &&
-            !parameters.isCloseModal
-        ) {
-            binding.close.visibility = View.GONE
-            binding.toolbar.setNavigationIcon(parameters.topBarIconId)
-
-        }
-        binding.title.text = parameters.title
-        binding.description.text =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                Html.fromHtml(parameters.description)
+        with (binding) {
+            if (!parameters.isCloseModal) {
+                close.visibility = View.GONE
+                if (parameters.topBarIconId != 0) {
+                    toolbar.setNavigationIcon(parameters.topBarIconId)
+                }
             }
+            title.text = parameters.title
+            description.text =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    Html.fromHtml(parameters.description)
+                }
+            description.movementMethod = LinkMovementMethod.getInstance()
 
-        binding.description2.text =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
+            descriptionSecondPart.text =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    Html.fromHtml(parameters.description2)
+                }
+            descriptionSecondPart.movementMethod = LinkMovementMethod.getInstance()
+
+            if (parameters.firstButtonText.isNotEmpty()) {
+                firstButton.visibility = View.VISIBLE
+                firstButton.text = parameters.firstButtonText
             } else {
-                Html.fromHtml(parameters.description2)
+                firstButton.visibility = View.GONE
             }
-        binding.description.movementMethod = LinkMovementMethod.getInstance()
-
-        if (parameters.firstButtonText.isNotEmpty()) {
-            binding.firstButton.visibility = View.VISIBLE
-            binding.firstButton.text = parameters.firstButtonText
-        } else {
-            binding.firstButton.visibility = View.GONE
-        }
-        if (parameters.secondButtonText.isNotEmpty()) {
-            binding.secondButton.visibility = View.VISIBLE
-            binding.secondButton.text = parameters.secondButtonText
-        } else {
-            binding.secondButton.visibility = View.GONE
+            if (parameters.secondButtonText.isNotEmpty()) {
+                secondButton.visibility = View.VISIBLE
+                secondButton.text = parameters.secondButtonText
+            } else {
+                secondButton.visibility = View.GONE
+            }
         }
     }
 

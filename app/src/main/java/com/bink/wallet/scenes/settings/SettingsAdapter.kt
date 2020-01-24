@@ -37,8 +37,7 @@ class SettingsAdapter(
     override fun getItemCount(): Int = itemsList.size
 
     override fun getItemViewType(position: Int): Int {
-        val item = itemsList[position]
-        return if (item!!.type == SettingsItemType.HEADER) {
+        return if (itemsList[position]?.type == SettingsItemType.HEADER) {
             HEADER
         } else {
             ITEM
@@ -46,14 +45,13 @@ class SettingsAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        itemsList[position].let {
-            if (it!!.type == SettingsItemType.HEADER) {
+        itemsList[position]?.let {
+            if (it.type == SettingsItemType.HEADER) {
                 (holder as SettingsHeaderViewHolder).bind(it)
             } else {
-                var separator: Boolean = false
+                var separator = false
                 if (position < itemsList.size - 1) {
-                    val next = itemsList[position + 1]
-                    if (next!!.type != SettingsItemType.HEADER) {
+                    if (itemsList[position + 1]?.type != SettingsItemType.HEADER) {
                         separator = true
                     }
                 }
@@ -67,29 +65,31 @@ class SettingsAdapter(
         val itemClickListener: (SettingsItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SettingsItem, separator: Boolean) {
-            binding.item = item
-            binding.value.visibility =
-                if (item.value.isNullOrEmpty()) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
-            binding.rightArrow.visibility =
-                if (listOf(SettingsItemType.VERSION_NUMBER, SettingsItemType.BASE_URL)
-                        .contains(item.type)
-                ) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
-            binding.environmentSpacer.visibility =
-                if (separator) {
-                    View.VISIBLE
-                } else {
-                    View.INVISIBLE
-                }
-            binding.root.setOnClickListener { itemClickListener(item) }
-            binding.executePendingBindings()
+            with(binding) {
+                this.item = item
+                value.visibility =
+                    if (item.value.isNullOrEmpty()) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+                rightArrow.visibility =
+                    if (listOf(SettingsItemType.VERSION_NUMBER, SettingsItemType.BASE_URL)
+                            .contains(item.type)
+                    ) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+                environmentSpacer.visibility =
+                    if (separator) {
+                        View.VISIBLE
+                    } else {
+                        View.INVISIBLE
+                    }
+                root.setOnClickListener { itemClickListener(item) }
+                executePendingBindings()
+            }
         }
     }
 

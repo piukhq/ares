@@ -14,7 +14,10 @@ import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOAR
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
+import com.facebook.login.LoginBehavior
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -40,11 +43,15 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FacebookSdk.sdkInitialize(context)
+        LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.clearWallets()
+
         val adapter = OnboardingPagerAdapter(childFragmentManager)
         adapter.let {
             it.addFragment(
@@ -77,53 +84,60 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
-        binding.continueWithFacebook.fragment = this
-        binding.continueWithFacebook.setReadPermissions(listOf(EMAIL_KEY))
-        binding.continueWithFacebook.registerCallback(
-            callbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult?) {
-                    result?.accessToken?.let {
-                        retrieveFacebookLoginInformation(it)
+
+        binding.continueWithFacebook.apply {
+            fragment = this@OnboardingFragment
+            setReadPermissions(listOf(EMAIL_KEY))
+            loginBehavior = LoginBehavior.WEB_VIEW_ONLY
+            registerCallback(
+                callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(result: LoginResult?) {
+                        result?.accessToken?.let {
+                            retrieveFacebookLoginInformation(it)
+                        }
                     }
-                }
 
-                override fun onCancel() {
-                    requireContext().displayModalPopup(
-                        null,
-                        getString(R.string.facebook_cancelled)
-                    )
-                }
+                    override fun onCancel() {
+                        requireContext().displayModalPopup(
+                            null,
+                            getString(R.string.facebook_cancelled)
+                        )
+                    }
 
-                override fun onError(error: FacebookException?) {
-                    requireContext().displayModalPopup(
-                        null,
-                        getString(R.string.facebook_unavailable)
-                    )
-                }
-            })
+                    override fun onError(error: FacebookException?) {
+                        requireContext().displayModalPopup(
+                            null,
+                            getString(R.string.facebook_unavailable)
+                        )
+                    }
+                })
+        }
 
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
+        with(binding.pager) {
+            addOnPageChangeListener(object :
+                OnboardingPagerAdapter.CircularViewPagerHandler(this) {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    scrollPagesAutomatically(this@with)
+                    timer.cancel()
+                    timer = Timer()
+                    scrollPagesAutomatically(this@with)
+                }
+            })
 
-        binding.pager.addOnPageChangeListener(object :
-            OnboardingPagerAdapter.CircularViewPagerHandler(binding.pager) {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                scrollPagesAutomatically(binding.pager)
-                timer.cancel()
-                timer = Timer()
-                scrollPagesAutomatically(binding.pager)
-            }
-        })
-
-        scrollPagesAutomatically(binding.pager)
+            scrollPagesAutomatically(this)
+        }
     }
 
     override fun onDestroy() {
-        timer.purge()
-        timer.cancel()
+        timer.apply {
+            purge()
+            cancel()
+        }
         super.onDestroy()
     }
 
@@ -131,17 +145,16 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun scrollPagesAutomatically(pager: ViewPager) {
-        var currentPage = pager.currentItem
+    private fun scrollPagesAutomatically(pager: ViewPager?) {
+        var currentPage = pager?.currentItem as Int
         val pagerHandler = Handler()
         val update = Runnable {
-            if (pager != null) {
-                if (currentPage == ONBOARDING_PAGES_NUMBER) {
-                    pager.setCurrentItem(FIRST_PAGE_INDEX, true)
-                    currentPage = FIRST_PAGE_INDEX
-                } else {
-                    pager?.setCurrentItem(currentPage++, true)
-                }
+            if (currentPage == ONBOARDING_PAGES_NUMBER) {
+                pager.setCurrentItem(FIRST_PAGE_INDEX, true)
+                currentPage = FIRST_PAGE_INDEX
+            } else {
+                pager.setCurrentItem(currentPage++, true)
+
             }
         }
 

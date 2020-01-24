@@ -59,9 +59,10 @@
     <string name="add_payment_card">Add payment card</string>
     <string name="scan_and_link_your_payment_card">Scan and link your payment card</string>
     <string name="browse_brands_text">Browse brands</string>
-    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
     <string name="scan_a_card_you_already_have">Scan a card you already have</string>
     <string name="add_loyalty_card">Add loyalty card</string>
+    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
+    <string name="add_payment_card_button_description">Fill in your card details and link your payment card</string>
 
     <!-- Brand Header -->
     <string name="loyalty_info"> %1$s info &gt;</string>
@@ -152,8 +153,8 @@
 
     <!-- PLL empty -->
     <string name="link_payment_cards">Link to payment cards</string>
-    <string name="link_payment_card_text">You have not added any payment cards yet.
-        Add them to link to this card and others. </string>
+    <string name="link_payment_card_description_part_1">You have not added any payment cards yet.</string>
+    <string name="link_payment_card_description_part_2">Add them to link to this card and others.</string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
@@ -176,7 +177,7 @@
     <string name="add_card_error_message">Please try again!</string>
     <string name="sign_up_text">Sign up</string>
     <string name="log_in_text">Log in</string>
-    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance. This is optional.</string>
+    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance and transaction history. This is optional.</string>
     <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your points balance. This is optional.</string>
     <string name="temporary_log_in_screen_title">Welcome to splash page</string>
     <string name="login_screen_temporary_text">Login screen</string>
@@ -202,7 +203,8 @@
     <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
-    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
+    <string name="description_2_8_1">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
+    <string name="description_2_8_2">This is currently not available for this merchant.</string>
 
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
@@ -210,8 +212,9 @@
     <string name="sign_up_enrol">Sign up for a new card</string>
     <string name="register_ghost_card_title">Register your card</string>
     <string name="register_ghost_card_button">Register card</string>
-    <string name="enrol_description">Fill out the form below to get a new %1$s card, and start earning points.</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s, and start collecting rewards.</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
+    <string name="login_description">You can log in to your %1$s account to view your %2$s details.</string>
 
     <!-- Pll Screen -->
     <string name="pll_description">The payment cards below will be linked to your %s. Simply pay with them to collect points.</string>
@@ -257,6 +260,7 @@
     <string name="faq_url">"http://help.bink.com/en/collections/321300-bink-faq-s"</string>
     <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
     <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
+    <string name="contact_us_mailto">mailto:%s</string>
     <string name="contact_us_email_address">support@bink.com</string>
     <string name="contact_us_email_subject">Bink App Support</string>
     <string name="contact_us_email_message">\n\n\n\nThe below information will help you, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
@@ -271,8 +275,8 @@
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
 
     <!-- Native Join Unavailable-->
-    <string name="native_join_unavailable_title">Native join unavailable</string>
-    <string name="native_join_unavailable_text">You can go to the merchant website to join then come back and add your card. Or we can email you the link so you can sign up on your computer. Copy needed.</string>
+    <string name="native_join_unavailable_title">Sign up currently unavailable</string>
+    <string name="native_join_unavailable_text">Go to the %1$s website to join then come back and add your card.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
@@ -333,12 +337,11 @@
 
     <!-- Authentication -->
     <string name="add_your_payment_cards">Add your payment cards</string>
-    <string name="you_will_need_to_add_at_least_one_to_collect_rewards_automatically">You will need to add at least one\nto collect rewards automatically.</string>
-    <string name="join_card_description">You will need to add at least one to collect rewards automatically</string>
+    <string name="join_card_description">Link this card to your payment cards to automatically collect rewards.</string>
     <string name="payment_join_title">Add your payment cards</string>
     <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
     <string name="expired">Expired</string>
-    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update</string>
+    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
@@ -346,7 +349,7 @@
     <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
-    <string name="incorrect_email_text">Invalid email address</string>
+    <string name="incorrect_email_text">Incorrect email format</string>
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>

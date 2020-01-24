@@ -1,6 +1,7 @@
 package com.bink.wallet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,20 @@ import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import java.net.HttpURLConnection
 
-abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
     @get:LayoutRes
     abstract val layoutRes: Int
@@ -51,6 +57,7 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
         return binding.root
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -59,10 +66,11 @@ abstract class BaseFragment<VM : BaseViewModel?, DB : ViewDataBinding> : Fragmen
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (findNavController().currentDestination?.label != getString(R.string.root)) {
+                        view?.hideKeyboard()
                         windowFullscreenHandler.toNormalScreen()
                         findNavController().popBackStack()
                     } else {
-                        activity?.finish()
+                        requireActivity().finish()
                     }
                 }
             })

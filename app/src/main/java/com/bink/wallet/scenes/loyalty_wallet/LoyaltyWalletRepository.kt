@@ -21,18 +21,12 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipCardsAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipCards(response)
-                    mutableMembershipCards.postValue(response.toMutableList())
-                } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
+    suspend fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
+        val request = apiService.getMembershipCardsAsync()
+        withContext(Dispatchers.Main) {
+            val response = request.await()
+            storeMembershipCards(response)
+            mutableMembershipCards.postValue(response.toMutableList())
         }
     }
 
@@ -62,17 +56,11 @@ class LoyaltyWalletRepository(
     }
 
     suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getMembershipPlansAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipPlans(response)
-                    mutableMembershipPlans.value = response.toMutableList()
-                } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
+        val request = apiService.getMembershipPlansAsync()
+        withContext(Dispatchers.Main) {
+            val response = request.await()
+            storeMembershipPlans(response)
+            mutableMembershipPlans.value = response.toMutableList()
         }
     }
 
@@ -210,11 +198,16 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun addBannerAsDismissed(id: String, addError: MutableLiveData<Throwable>) {
+    fun addBannerAsDismissed(
+        id: String,
+        addError: MutableLiveData<Throwable>,
+        dismissedBannerDisplay: MutableLiveData<String> = MutableLiveData()
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
+                    dismissedBannerDisplay.value = id
                 } catch (e: Throwable) {
                     addError.value = e
                 }
@@ -229,8 +222,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    val response = bannersDisplayDao.getDismissedBanners()
-                    localMembershipCards.value = response
+                    localMembershipCards.value = bannersDisplayDao.getDismissedBanners()
                 } catch (e: Throwable) {
                     fetchError.value = e
                 }
