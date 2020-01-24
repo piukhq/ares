@@ -10,6 +10,7 @@ import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.bink.wallet.utils.enums.LoyaltyCardLinkStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -27,6 +28,7 @@ data class MembershipCard(
     @ColumnInfo(name = "account") var account: Account?,
     @ColumnInfo(name = "vouchers") var vouchers: List<Voucher>?
 ) : Parcelable {
+    @IgnoredOnParcel
     @Ignore
     var plan: MembershipPlan? = null
 

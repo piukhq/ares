@@ -119,7 +119,7 @@ fun String.headerTidy(): String {
 }
 
 fun Context.validateEmail(emailValue: String?, editText: EditText) {
-    editText.setOnFocusChangeListener { v, hasFocus ->
+    editText.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
             if (!Patterns.EMAIL_ADDRESS.matcher(emailValue ?: EMPTY_STRING).matches()) {
                 editText.error = getString(R.string.incorrect_email_text)
@@ -131,7 +131,7 @@ fun Context.validateEmail(emailValue: String?, editText: EditText) {
 }
 
 fun Context.validatePassword(passwordValue: String?, editText: EditText) {
-    editText.setOnFocusChangeListener { v, hasFocus ->
+    editText.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
             if (!UtilFunctions.isValidField(
                     PASSWORD_REGEX,
