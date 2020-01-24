@@ -71,8 +71,6 @@
 
     <!-- Loyalty Card Details -->
     <string name="view_history">View History</string>
-    <string name="status_placeholder">Linked</string>
-    <string name="status_number_placeholder">To 2 of 6 cards</string>
     <string name="about_membership">About membership</string>
     <string name="about_membership_title_template">About %s</string>
     <string name="about_membership_plan_name">About %1$s</string>
@@ -205,7 +203,8 @@
     <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
-    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
+    <string name="description_2_8_1">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
+    <string name="description_2_8_2">This is currently not available for this merchant.</string>
 
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>

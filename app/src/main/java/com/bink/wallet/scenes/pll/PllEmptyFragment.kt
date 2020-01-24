@@ -75,9 +75,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.buttonAddPaymentCard.setOnClickListener {
-            if(isNetworkAvailable(requireActivity(), true)) {
-                //TODO PCD is not implemented yet, for moment a dialog is displayed -> AB20-35(CTA change)
-            }
+            val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard()
+            findNavController().navigateIfAdded(this, directions)
         }
     }
 }
