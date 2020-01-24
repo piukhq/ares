@@ -90,7 +90,7 @@ class PaymentWalletRepository(
                     paymentCardMutableValue.value = paymentCardValue
                 } catch (e: Throwable) {
                     linkError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -120,7 +120,7 @@ class PaymentWalletRepository(
                     paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

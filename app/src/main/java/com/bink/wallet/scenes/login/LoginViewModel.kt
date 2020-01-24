@@ -17,6 +17,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     var loginData = MutableLiveData<LoginData>()
     val logInResponse = MutableLiveData<SignUpResponse>()
     val logInErrorResponse = MutableLiveData<Throwable>()
+    val authErrorResponse = MutableLiveData<Throwable>()
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
@@ -30,7 +31,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
                     0.0,
                     0.0
                 )
-            ), loginBody
+            ), loginBody, authErrorResponse
         )
     }
 

@@ -111,6 +111,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     logInButton.isEnabled = !it
                 }
             }
+
+            authErrorResponse.observeNonNull(this@LoginFragment) {
+                // this is here for monitoring, but we don't need to report to the user at the moment
+            }
         }
 
         binding.logInButton.setOnClickListener {
