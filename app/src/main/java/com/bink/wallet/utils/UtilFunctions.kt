@@ -67,4 +67,18 @@ object UtilFunctions {
             okButtonAction
         )
     }
+
+    fun hasCertificatePinningFailed(error: Throwable, context: Context): Boolean {
+        if (error.toString().contains("SSLPeerUnverifiedException")) {
+            showCertificatePinningDialog(context)
+            return true
+        }
+        return false
+    }
+    private fun showCertificatePinningDialog(context: Context) {
+        context.displayModalPopup(
+            context.getString(R.string.ssl_pinning_failure_title),
+            context.getString(R.string.ssl_pinning_failure_text)
+        )
+    }
 }

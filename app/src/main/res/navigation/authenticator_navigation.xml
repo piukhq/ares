@@ -612,7 +612,7 @@
 
         <action
                 android:id="@+id/action_add_payment_card_to_privacy_fragment"
-                app:destination="@id/addPaymentCardPrivacyFragment"
+                app:destination="@id/add_payment_card_privacy_fragment"
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
@@ -825,7 +825,7 @@
                 app:nullable="true" />
     </fragment>
     <fragment
-            android:id="@+id/addPaymentCardPrivacyFragment"
+            android:id="@+id/add_payment_card_privacy_fragment"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardPrivacyFragment"
             android:label="AddPaymentCardPrivacyFragment"
             tools:layout="@layout/generic_modal_fragment">
