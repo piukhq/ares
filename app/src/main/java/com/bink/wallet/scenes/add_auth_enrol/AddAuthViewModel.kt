@@ -12,7 +12,7 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     BaseViewModel() {
 
     var newMembershipCard = MutableLiveData<MembershipCard>()
-    val createCardError = MutableLiveData<String>()
+    val createCardError = MutableLiveData<Throwable>()
     var paymentCards = MutableLiveData<List<PaymentCard>>()
     var fetchCardsError = MutableLiveData<Throwable>()
     var currentMembershipPlan = MutableLiveData<MembershipPlan>()
