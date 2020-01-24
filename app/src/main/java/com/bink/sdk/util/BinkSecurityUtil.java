@@ -37,7 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
  * <p>
  * Created by kkulendiran on 24/08/2017.
  */
-
+@SuppressWarnings("deprecation")
 public class BinkSecurityUtil {
     private String TAG = getClass().getSimpleName();
 
@@ -124,7 +124,6 @@ public class BinkSecurityUtil {
         return null;
     }
 
-    @SuppressWarnings("deprecation")
     private X509Certificate createCertificate(String dn, PublicKey publicKey,
                                               PrivateKey privateKey) throws Exception {
         X509V3CertificateGenerator certGenerator = new X509V3CertificateGenerator();

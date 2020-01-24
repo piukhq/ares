@@ -23,6 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.onboarding_fragment

@@ -86,6 +86,7 @@ open class GenericModalFragment :
         findNavController().navigateIfAdded(this, destination)
     }
 
+    @Suppress("DEPRECATION")
     protected fun setupUi(parameters: GenericModalParameters) {
         with (binding) {
             if (!parameters.isCloseModal) {

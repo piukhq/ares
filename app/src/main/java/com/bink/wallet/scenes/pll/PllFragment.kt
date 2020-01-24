@@ -133,7 +133,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         binding.buttonDone.setOnClickListener {
             when {
-                viewModel.paymentCards.value.isNullOrEmpty() -> {
+                viewModel.paymentCards.value.isNullOrEmpty() &&
+                viewModel.localPaymentCards.value.isNullOrEmpty() -> {
                     findNavController().popBackStack()
                 }
                 isNetworkAvailable(requireActivity(), true) -> {

@@ -247,7 +247,7 @@ class LoyaltyCardDetailsFragment :
                     runBlocking {
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
-                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
                         with(viewModel.deleteError) {
                             if (value is HttpException) {
                                 val error = value as HttpException

@@ -46,8 +46,6 @@ class PaymentCardsDetailsFragment :
             }
         }
 
-        val securityDialog = SecurityDialogs(requireContext())
-
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
 

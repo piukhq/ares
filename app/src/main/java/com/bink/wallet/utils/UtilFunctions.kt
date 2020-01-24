@@ -43,6 +43,7 @@ object UtilFunctions {
         }
     }
 
+    @Suppress("DEPRECATION")
     fun isNetworkAvailable(
         context: Context,
         isUserAction: Boolean = false,
