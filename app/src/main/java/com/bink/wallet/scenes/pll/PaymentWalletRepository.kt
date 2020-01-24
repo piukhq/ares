@@ -12,7 +12,6 @@ class PaymentWalletRepository(
     private val apiService: ApiService,
     private val paymentCardDao: PaymentCardDao
 ) {
-
     suspend fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Throwable>
@@ -39,7 +38,7 @@ class PaymentWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    runBlocking {
+                    withContext(Dispatchers.IO) {
                         paymentCardDao.deleteAll()
                         paymentCardDao.storeAll(cards)
                     }
