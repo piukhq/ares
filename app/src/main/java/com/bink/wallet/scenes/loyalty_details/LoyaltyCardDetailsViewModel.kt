@@ -19,7 +19,8 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     var paymentCards = MutableLiveData<List<PaymentCard>>()
     var localPaymentCards = MutableLiveData<List<PaymentCard>>()
     var localPaymentFetchError = MutableLiveData<Throwable>()
-    var updatedMembershipCard = MutableLiveData<MembershipCard>()
+    val updatedMembershipCard = MutableLiveData<MembershipCard>()
+    val refreshError = MutableLiveData<Throwable>()
     var deletedCard = MutableLiveData<String>()
     var deleteError = MutableLiveData<Throwable>()
     var accountStatus = MutableLiveData<LoginStatus>()
@@ -29,16 +30,18 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         repository.deleteMembershipCard(id, deletedCard, deleteError)
     }
 
-    suspend fun updateMembershipCard() {
+    fun updateMembershipCard(bool: Boolean = false) {
         membershipCard.value?.id?.let {
             repository.refreshMembershipCard(
                 it,
-                updatedMembershipCard
+                updatedMembershipCard,
+                refreshError,
+                bool
             )
         }
     }
 
-    suspend fun fetchPaymentCards() {
+    fun fetchPaymentCards() {
         repository.getPaymentCards(paymentCards)
     }
 

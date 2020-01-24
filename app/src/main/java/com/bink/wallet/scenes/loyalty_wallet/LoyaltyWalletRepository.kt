@@ -43,7 +43,7 @@ class LoyaltyWalletRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -56,7 +56,7 @@ class LoyaltyWalletRepository(
                     membershipCardDao.deleteAllCards()
                     membershipPlanDao.deleteAllPlans()
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -85,7 +85,7 @@ class LoyaltyWalletRepository(
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -110,11 +110,11 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    runBlocking {
+                    withContext(Dispatchers.IO) {
                         membershipPlanDao.storeAll(plans)
                     }
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -124,12 +124,12 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    runBlocking {
+                    withContext(Dispatchers.IO) {
                         membershipCardDao.deleteAllCards()
                         membershipCardDao.storeAll(cards)
                     }
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -148,7 +148,6 @@ class LoyaltyWalletRepository(
                     mutableMembershipCard.value = response
                 } catch (e: Throwable) {
                     createError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -168,7 +167,6 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Throwable) {
                     createCardError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -206,7 +204,6 @@ class LoyaltyWalletRepository(
                     paymentCards.postValue(response)
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

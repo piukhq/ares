@@ -53,12 +53,10 @@ class LoyaltyCardDetailsFragment :
 
         setLoadingState(true)
 
-        runBlocking {
-            if (isNetworkAvailable(requireActivity())) {
-                viewModel.fetchPaymentCards()
-            } else {
-                viewModel.fetchLocalPaymentCards()
-            }
+        if (isNetworkAvailable(requireActivity())) {
+            viewModel.fetchPaymentCards()
+        } else {
+            viewModel.fetchLocalPaymentCards()
         }
 
         val colorDrawable =
@@ -84,7 +82,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             if (isNetworkAvailable(requireActivity())) {
-                runBlocking { viewModel.updateMembershipCard() }
+                viewModel.updateMembershipCard()
             }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
@@ -189,10 +187,8 @@ class LoyaltyCardDetailsFragment :
             ) {
                 setLoadingState(false)
             } else {
-                runBlocking {
-                    if (isNetworkAvailable(requireActivity())) {
-                        viewModel.fetchPaymentCards()
-                    }
+                if (isNetworkAvailable(requireActivity())) {
+                    viewModel.fetchPaymentCards()
                 }
             }
             configureLinkStatus(status)
@@ -207,9 +203,7 @@ class LoyaltyCardDetailsFragment :
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                runBlocking {
-                    viewModel.updateMembershipCard()
-                }
+                viewModel.updateMembershipCard(true)
             } else {
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                 setLoadingState(false)
