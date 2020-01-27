@@ -8,6 +8,7 @@ import com.bink.wallet.databinding.FragmentPllEmptyBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -74,11 +75,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.buttonAddPaymentCard.setOnClickListener {
-            //TODO PCD is not implemented yet, for moment a dialog is displayed -> AB20-35(CTA change)
-            context?.displayModalPopup(
-                getString(R.string.missing_destination_dialog_title),
-                getString(R.string.not_implemented_yet_text)
-            )
+            val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard()
+            findNavController().navigateIfAdded(this, directions)
         }
     }
 }

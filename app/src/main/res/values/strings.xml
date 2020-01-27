@@ -71,8 +71,6 @@
 
     <!-- Loyalty Card Details -->
     <string name="view_history">View History</string>
-    <string name="status_placeholder">Linked</string>
-    <string name="status_number_placeholder">To 2 of 6 cards</string>
     <string name="about_membership">About membership</string>
     <string name="about_membership_title_template">About %s</string>
     <string name="about_membership_plan_name">About %1$s</string>
@@ -172,7 +170,7 @@
     <string name="register_gc_pending">Register GC pending</string>
     <string name="description_login_unavailable"> Text explaining to the user: \n - that points are not supported for this brand yet \n - that history is not supported for this brand yet</string>
     <string name="description_text"> "  Text explaining to the user that it sometimes takes a while to log in with the merchant.\n   In the meantime they should not attempt to log in again, but they can use their card and receive their benefits as usual.\n   After the log in they will be able to see their points balance." </string>
-    <string name="no_internet_connection_dialog_message">Your selected activity cannot be performed at this time due to a connection issue</string>
+    <string name="no_internet_connection_dialog_message">You are currently offline. This action cannot be performed whilst offline. Please check your internet connection and try again.</string>
     <string name="delete_and_update_card_internet_connection_error_message">You are currently offline. This action cannot be performed whilst offline.\nPlease check your internet connection and try again.</string>
 
     <string name="add_card_error_title">Cannot add card</string>
@@ -205,7 +203,8 @@
     <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
-    <string name="description_2_8">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.\nThis is currently not available for this merchant</string>
+    <string name="description_2_8_1">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
+    <string name="description_2_8_2">This is currently not available for this merchant.</string>
 
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
@@ -317,7 +316,6 @@
     <string name="more_information"><u>More information</u></string>
     <string name="country_code_gb">GB</string>
     <string name="currency_code_gbp">GBP</string>
-    <string name="could_not_add_card">Your selected activity cannot be performed at this time due to a connection issue</string>
     <string name="privacy_and_security_description">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
 
     <!-- Native Ghost Card Registration N/A -->
