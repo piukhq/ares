@@ -11,10 +11,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.isLinkedToMembershipCard
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_loyalty_card_details.*
@@ -193,55 +191,58 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        viewModel.fetchError.observeNonNull(this) { throwable ->
-            Snackbar.make(binding.root, throwable.toString(), Snackbar.LENGTH_SHORT).show()
-        }
-
-        viewModel.localFetchError.observeNonNull(this) { throwable ->
-            Snackbar.make(binding.root, throwable.toString(), Snackbar.LENGTH_SHORT).show()
+        viewModel.fetchError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
         }
 
         viewModel.linkError.observeNonNull(this) {
-            viewModel.linkError.removeObservers(this)
-            viewModel.unlinkError.removeObservers(this)
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.description_error))
-                .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
-                .setPositiveButton(
-                    getString(R.string.ok)
-                ) { _, _ ->
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                        directions?.let { directions ->
-                            findNavController().navigateIfAdded(
-                                this@PllFragment,
-                                directions
-                            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.description_error))
+                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                    .setPositiveButton(
+                        getString(R.string.ok)
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
                         }
                     }
-                }
-                .show()
+                    .show()
+            }
         }
 
         viewModel.unlinkError.observeNonNull(this) {
-            viewModel.unlinkError.removeObservers(this)
-            viewModel.linkError.removeObservers(this)
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.description_error))
-                .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
-                .setPositiveButton(
-                    getString(R.string.ok)
-                ) { _, _ ->
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                        directions?.let { directions ->
-                            findNavController().navigateIfAdded(
-                                this@PllFragment,
-                                directions
-                            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.description_error))
+                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                    .setPositiveButton(
+                        getString(R.string.ok)
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
                         }
-                    }
 
-                }
-                .show()
+                    }
+                    .show()
+            }
         }
     }
 

@@ -167,10 +167,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.deleteCardError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                null,
-                getString(R.string.error_description)
-            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
         }
     }
 
