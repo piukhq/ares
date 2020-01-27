@@ -84,7 +84,7 @@
     </style>
 
     <style name="ShadowedCardView" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">8dp</item>
+        <item name="cardCornerRadius">6dp</item>
         <item name="cardElevation">0dp</item>
     </style>
 
@@ -100,6 +100,7 @@
         <item name="android:paddingBottom">@dimen/margin_padding_size_small</item>
         <item name="android:textSize">@dimen/size_sub_headline</item>
     </style>
+
     <style name="SwitchCompatTheme" parent="@style/Widget.AppCompat.CompoundButton.Switch">
         <item name="android:colorControlNormal">@color/green_ok</item>
     </style>
