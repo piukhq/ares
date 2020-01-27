@@ -14,6 +14,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.setTimestamp
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -65,15 +66,77 @@ class VoucherDetailsFragment :
                                     )
                                 }
                                 VoucherStates.ISSUED.state -> {
-                                    EMPTY_STRING
+                                    getString(R.string.plr_explain_redeeming)
+                                }
+                                VoucherStates.EXPIRED.state -> {
+                                    getString(R.string.plr_explain_redeeming)
+                                }
+                                VoucherStates.REDEEMED.state -> {
+                                    getString(R.string.plr_explain_redeeming)
                                 }
                                 else -> {
                                     EMPTY_STRING
                                 }
                             }
+                        when (voucher.state) {
+                            VoucherStates.ISSUED.state -> {
+                                with (binding) {
+                                    redeemText.text = getString(
+                                        R.string.plr_redeem_instructions,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            null
+                                        )
+                                    )
+                                    dateOne.setTimestamp(
+                                        voucher.date_issued!!,
+                                        getString(R.string.voucher_detail_date_issued),
+                                        true
+                                    )
+                                    dateTwo.setTimestamp(
+                                        voucher.expiry_date!!,
+                                        getString(R.string.voucher_detail_date_expires),
+                                        true
+                                    )
+                                }
+                            }
+                            VoucherStates.EXPIRED.state -> {
+                                with (binding) {
+                                    mainTitle.text =
+                                        getString(
+                                            R.string.voucher_detail_title_expired,
+                                            displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
+                                        )
+                                    dateOne.setTimestamp(
+                                        voucher.expiry_date!!,
+                                        getString(R.string.voucher_detail_date_expired),
+                                        true
+                                    )
+                                }
+                            }
+                            VoucherStates.REDEEMED.state -> {
+                                with (binding) {
+                                    mainTitle.text =
+                                        getString(
+                                            R.string.voucher_detail_title_redeemed,
+                                            displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
+                                        )
+                                    dateOne.setTimestamp(
+                                        voucher.date_redeemed!!,
+                                        getString(R.string.voucher_detail_date_redeemed),
+                                        true
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+
             var linkSet = false
             viewModel.membershipPlan.value?.account?.plan_documents?.forEach { document ->
                 document.display?.let {

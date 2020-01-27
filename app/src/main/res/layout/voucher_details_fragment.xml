@@ -48,10 +48,23 @@
                 app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <TextView
-                android:id="@+id/main_text"
+                android:id="@+id/main_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_extrabold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_title_big"
+                android:lineSpacingExtra="-6sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recycler" />
+        <TextView
+                android:id="@+id/redeem_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_light"
@@ -59,7 +72,43 @@
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler" />
+                app:layout_constraintTop_toBottomOf="@id/main_title" />
+        <TextView
+                android:id="@+id/main_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_light"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_big"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/redeem_text" />
+        <TextView
+                android:id="@+id/date_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_light"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_smaller"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_text" />
+        <TextView
+                android:id="@+id/date_two"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_light"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_description_smaller"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_one" />
         <TextView
                 android:id="@+id/link_text"
                 android:layout_width="match_parent"
@@ -73,6 +122,6 @@
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_text" />
+                app:layout_constraintTop_toBottomOf="@id/date_two" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
