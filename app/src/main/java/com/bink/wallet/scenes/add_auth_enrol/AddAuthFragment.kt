@@ -115,12 +115,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = viewModel.currentMembershipPlan.value
 
-        viewModel.currentMembershipPlan.value?.let {
+        viewModel.currentMembershipPlan.value?.let { plan ->
             binding.descriptionAddAuth.text =
                 getString(
-                    R.string.enrol_description,
-                    it.account?.company_name
-                    it.account?.plan_name
+                    R.string.login_description,
+                    plan.account?.company_name,
+                    plan.account?.plan_name
                 )
             binding.noAccountText.visibility = View.VISIBLE
         }

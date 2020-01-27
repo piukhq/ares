@@ -217,34 +217,9 @@ class LoyaltyCardDetailsFragment :
 
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            v?.scrollY?.let { scrollY ->
-                cd.alpha = getAlphaForActionBar(scrollY)
-                if (scrollY > arrayOf(MAX_DIST, MIN_DIST).average()) {
-                    binding.toolbarTitle.text =
-                        viewModel.membershipPlan.value?.account?.company_name
-                    viewModel.membershipCard.value?.let { card ->
-                        binding.toolbarSubtitle.text =
-                            if (!card.vouchers.isNullOrEmpty()) {
-                                card.vouchers?.first()?.let { voucher ->
-                                    requireContext().displayVoucherEarnAndTarget(voucher)
-                                }
-                            } else {
-                                val balance = card.balances?.first()
-                                when (balance?.prefix != null) {
-                                    true ->
-                                        balance?.prefix?.plus(balance.value)
-                                    else -> {
-                                        balance?.value.plus(balance?.suffix)
-                                    }
-                                }
-
-                            }
-                    }
-                } else {
-                    binding.toolbarTitle.text = EMPTY_STRING
-                    binding.toolbarSubtitle.text = EMPTY_STRING
-                }
-            }
+            colorDrawable.alpha = v?.scrollY?.let {
+                getAlphaForActionBar(it)
+            }!!
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -284,7 +259,7 @@ class LoyaltyCardDetailsFragment :
                 setMessage(getString(R.string.delete_card_modal_body))
                 setNeutralButton(getString(R.string.no_text)) { _, _ -> }
                 setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
-                    if (verifyAvailableNetwork(requireActivity())) {
+                    if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
                             viewModel.deleteCard(viewModel.membershipCard.value?.id)
                         }
@@ -315,8 +290,6 @@ class LoyaltyCardDetailsFragment :
                                 R.id.global_to_home
                             )
                         }
-                    } else {
-                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
                 }
                 create().show()
