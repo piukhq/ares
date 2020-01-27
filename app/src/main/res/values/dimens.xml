@@ -52,6 +52,8 @@
     <dimen name="logo_height">98dp</dimen>
     <dimen name="title_image_size">32dp</dimen>
     <dimen name="button_margin">48dp</dimen>
+    <dimen name="add_card_corner_radius">12dp</dimen>
+    <dimen name="add_card_elevation">2dp</dimen>
 
     <!-- Brand Header -->
     <dimen name="brand_image_height">98dp</dimen>
@@ -118,6 +120,7 @@
     <dimen name="facebook_button_elevation">4dp</dimen>
 
     <!-- Login Screen -->
+    <dimen name="gradient_button_margin">52dp</dimen>
     <dimen name="continue_button_margin">52dp</dimen>
 
     <!-- PLR -->

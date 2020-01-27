@@ -18,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -54,14 +55,23 @@ class LoyaltyCardDetailsFragment :
         setLoadingState(true)
 
         runBlocking {
-            viewModel.fetchPaymentCards()
+            if (isNetworkAvailable(requireActivity())) {
+                viewModel.fetchPaymentCards()
+            } else {
+                viewModel.fetchLocalPaymentCards()
+            }
         }
 
-        val cd = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
-        cd.alpha = MIN_ALPHA.toInt()
-        binding.toolbar.background = cd
+        val colorDrawable =
+            ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
+        colorDrawable.alpha = MIN_ALPHA.toInt()
+        binding.toolbar.background = colorDrawable
 
         viewModel.paymentCards.observeNonNull(this) {
+            viewModel.fetchLocalPaymentCards()
+        }
+
+        viewModel.localPaymentCards.observeNonNull(this) {
             viewModel.setLinkStatus()
         }
 
@@ -74,9 +84,12 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            runBlocking { viewModel.updateMembershipCard() }
+            if (isNetworkAvailable(requireActivity())) {
+                runBlocking { viewModel.updateMembershipCard() }
+            }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
+            viewModel.setLinkStatus()
         }
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
@@ -189,16 +202,19 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.linkStatus.observeNonNull(this) { status ->
             if (viewModel.accountStatus.value != null &&
-                viewModel.paymentCards.value != null
+                viewModel.localPaymentCards.value != null
             ) {
                 setLoadingState(false)
             } else {
                 runBlocking {
-                    viewModel.fetchPaymentCards()
+                    if (isNetworkAvailable(requireActivity())) {
+                        viewModel.fetchPaymentCards()
+                    }
                 }
             }
             configureLinkStatus(status)
         }
+
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
             v?.scrollY?.let { scrollY ->
@@ -232,12 +248,11 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            if (verifyAvailableNetwork(requireActivity())) {
+            if (isNetworkAvailable(requireActivity(), true)) {
                 runBlocking {
                     viewModel.updateMembershipCard()
                 }
             } else {
-                showNoInternetConnectionDialog()
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                 setLoadingState(false)
             }
@@ -443,9 +458,15 @@ class LoyaltyCardDetailsFragment :
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
             LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
+                val membershipCardId = viewModel.membershipCard.value?.id.toString()
                 val activeLinkedParams =
                     listOf(
-                        viewModel.membershipCard.value?.payment_cards?.count { card -> card.active_link == true },
+                        viewModel.paymentCards.value?.count { card ->
+                            card.membership_cards.count { membershipCard ->
+                                membershipCard.active_link == true &&
+                                membershipCardId == membershipCard.id
+                            } > 0
+                        },
                         viewModel.paymentCards.value?.size
                     )
                 linkStatus.descriptionParams = activeLinkedParams
@@ -557,7 +578,11 @@ class LoyaltyCardDetailsFragment :
                                 R.drawable.ic_close,
                                 true,
                                 getString(R.string.title_2_8),
-                                getString(R.string.description_2_8)
+                                getString(R.string.description_2_8_1),
+                                EMPTY_STRING,
+                                EMPTY_STRING,
+                                EMPTY_STRING,
+                                getString(R.string.description_2_8_2)
                             )
                         )
                     findNavController().navigateIfAdded(this, directions)

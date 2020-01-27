@@ -1,25 +1,29 @@
 package com.bink.wallet.di
 
+import android.content.Context
+import android.content.Intent
+import com.bink.wallet.MainActivity
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.*
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.net.HttpURLConnection
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-    single { provideDefaultOkHttpClient() }
+    single { provideDefaultOkHttpClient(get()) }
     single { provideRetrofit(get()) }
     single { provideApiService(get()) }
 }
 
-fun provideDefaultOkHttpClient(): OkHttpClient {
+fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -35,7 +39,21 @@ fun provideDefaultOkHttpClient(): OkHttpClient {
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .url(request)
             .build()
-        chain.proceed(newRequest)
+        val response = chain.proceed(newRequest)
+        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            LocalStoreUtils.clearPreferences()
+            appContext.startActivity(
+                Intent(appContext, MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .apply {
+                        putSessionHandlerNavigationDestination(
+                            SESSION_HANDLER_DESTINATION_ONBOARDING
+                        )
+                    }
+            )
+            return@Interceptor response
+        }
+        response
     }
 
     val logging = HttpLoggingInterceptor()
