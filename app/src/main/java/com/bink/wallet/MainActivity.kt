@@ -15,8 +15,9 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import io.fabric.sdk.android.Fabric
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KProperty
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +29,12 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear()
     }
 
     override fun onBackPressed() {

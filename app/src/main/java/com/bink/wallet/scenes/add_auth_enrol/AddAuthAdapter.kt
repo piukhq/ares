@@ -21,6 +21,7 @@ import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 
 
+@Suppress("UNCHECKED_CAST")
 class AddAuthAdapter(
     val brands: List<Pair<Any, PlanFieldsRequest>>,
     val buttonRefresh: () -> Unit = {}

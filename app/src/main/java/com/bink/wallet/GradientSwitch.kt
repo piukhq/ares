@@ -7,7 +7,7 @@ import androidx.appcompat.widget.SwitchCompat
 
 class GradientSwitch @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null, defStyle: Int = 0
+    attrs: AttributeSet? = null
 ) : SwitchCompat(context, attrs) {
 
     fun displayCustomSwitch(isEnabled: Boolean) {

@@ -19,10 +19,10 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -137,7 +137,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
         }
 
-        if (verifyAvailableNetwork(requireActivity())) {
+        if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             binding.progressSpinner.visibility = View.VISIBLE
             viewModel.fetchMembershipPlans()
             viewModel.fetchDismissedCards()
@@ -151,7 +151,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         binding.swipeLayout.setOnRefreshListener {
-            if (verifyAvailableNetwork(requireActivity())) {
+            if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 binding.progressSpinner.visibility = View.VISIBLE
                 viewModel.fetchMembershipPlans()
                 viewModel.fetchMembershipCards()
@@ -189,7 +189,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun disableIndicators() {
-        showNoInternetConnectionDialog()
         binding.swipeLayout.isRefreshing = false
         binding.progressSpinner.visibility = View.GONE
     }
@@ -250,7 +249,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
-                        if (verifyAvailableNetwork(requireActivity())) {
+                        if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                             runBlocking {
                                 viewModel.deleteCard(membershipCard.id)
                             }
