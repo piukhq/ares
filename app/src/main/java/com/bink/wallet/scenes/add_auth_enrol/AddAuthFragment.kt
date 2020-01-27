@@ -80,18 +80,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
 
                 if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-                    planBooleanFieldsList?.add(
+                    planBooleanFieldsList.add(
                         pairPlanField
                     )
                 } else if (!planField.column.equals(BARCODE_TEXT)) {
-                    planFieldsList?.add(
+                    planFieldsList.add(
                         pairPlanField
                     )
                 }
             }
 
             is PlanDocuments -> {
-                planBooleanFieldsList?.add(
+                planBooleanFieldsList.add(
                     Pair(
                         planField, PlanFieldsRequest(
                             planField.name, EMPTY_STRING
@@ -108,8 +108,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             currentMembershipPlan.value = args.currentMembershipPlan
             currentMembershipCard.value = args.membershipCard
         }
-        planFieldsList?.clear()
-        planBooleanFieldsList?.clear()
+        planFieldsList.clear()
+        planBooleanFieldsList.clear()
         val signUpFormType = args.signUpFormType
         SharedPreferenceManager.isLoyaltySelected = true
 

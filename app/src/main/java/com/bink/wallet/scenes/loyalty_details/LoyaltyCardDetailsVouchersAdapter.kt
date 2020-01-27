@@ -34,9 +34,12 @@ class LoyaltyCardDetailsVouchersAdapter(
 
     override fun getItemCount() = vouchers.size
 
-    override fun onBindViewHolder(holder: LoyaltyCardDetailsVouchersViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: LoyaltyCardDetailsVouchersViewHolder, position: Int) {
         holder.bind(vouchers[position])
-
+        if (position == 0) {
+            //holder.cardView.cardUseCompatPadding = true
+        }
+    }
 
     class LoyaltyCardDetailsVouchersViewHolder(
         var binding: DetailVoucherItemBinding,

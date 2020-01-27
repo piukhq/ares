@@ -37,5 +37,4 @@ object ValueDisplayUtils {
             return toString()
         }
     }
-
 }

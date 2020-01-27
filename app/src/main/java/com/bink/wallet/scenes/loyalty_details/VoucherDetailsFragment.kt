@@ -4,6 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.text.style.UnderlineSpan
+import android.text.SpannableString
+import android.text.Spanned
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
@@ -57,9 +60,8 @@ class VoucherDetailsFragment :
                                 VoucherStates.IN_PROGRESS.state -> {
                                     getString(
                                         R.string.voucher_detail_text_in_progress,
-                                        displayValue(earn.target_value, earn.prefix, earn.suffix, earn.currency, earn.type),
-                                        displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type),
-                                        burn.type
+                                        displayValue(earn.target_value, earn.prefix, earn.suffix, earn.currency, null),
+                                        displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
                                     )
                                 }
                                 VoucherStates.ISSUED.state -> {
@@ -87,6 +89,12 @@ class VoucherDetailsFragment :
             }
             if (!linkSet) {
                 binding.linkText.visibility = View.GONE
+            } else {
+                with (binding.linkText) {
+                    val builder = SpannableString(text.toString())
+                    builder.setSpan(UnderlineSpan(), 0, text.toString().length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    text = builder
+                }
             }
         }
     }
