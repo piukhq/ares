@@ -19,6 +19,7 @@ class PaymentCardWalletViewModel(
     val deleteCard = MutableLiveData<String>()
     val deleteRequest = MutableLiveData<ResponseBody>()
     val deleteError = MutableLiveData<Throwable>()
+    val deleteCardError = MutableLiveData<Throwable>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
@@ -27,7 +28,8 @@ class PaymentCardWalletViewModel(
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(
             id,
-            deleteCard
+            deleteCard,
+            deleteCardError
         )
     }
 

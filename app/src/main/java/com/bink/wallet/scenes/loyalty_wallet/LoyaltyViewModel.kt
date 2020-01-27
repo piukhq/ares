@@ -30,6 +30,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val fetchError = MutableLiveData<Throwable>()
     val loadPlansError = MutableLiveData<Throwable>()
     val loadCardsError = MutableLiveData<Throwable>()
+    val deleteCardError = MutableLiveData<Throwable>()
 
     private val _cardsDataMerger = MediatorLiveData<UserDataResult>()
     val cardsDataMerger: LiveData<UserDataResult>
@@ -120,7 +121,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     suspend fun deleteCard(id: String?) {
-        loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
+        loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
     fun fetchMembershipCards() {

@@ -85,13 +85,18 @@ class LoyaltyWalletRepository(
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
+                    // TODO: Have error catching here in a mutable
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
     }
 
-    suspend fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
+    suspend fun deleteMembershipCard(
+            id: String?,
+            mutableDeleteCard: MutableLiveData<String>,
+            deleteCardError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
@@ -100,7 +105,7 @@ class LoyaltyWalletRepository(
                     mutableDeleteCard.value = id
                     membershipCardDao.deleteCard(id.toString())
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    deleteCardError.value = e
                 }
             }
         }
@@ -114,6 +119,7 @@ class LoyaltyWalletRepository(
                         membershipPlanDao.storeAll(plans)
                     }
                 } catch (e: Throwable) {
+                    // TODO: Have error catching here in a mutable
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
@@ -186,7 +192,6 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Throwable) {
                     createCardError.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

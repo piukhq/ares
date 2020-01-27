@@ -20,6 +20,7 @@ import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -100,6 +101,13 @@ class PaymentCardWalletFragment :
 
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchLocalPaymentCards()
+        }
+
+        viewModel.deleteCardError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                null,
+                getString(R.string.error_description)
+            )
         }
 
         binding.paymentCardRecycler.apply {

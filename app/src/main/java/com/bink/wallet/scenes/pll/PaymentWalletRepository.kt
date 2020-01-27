@@ -25,7 +25,6 @@ class PaymentWalletRepository(
                     paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -44,7 +43,6 @@ class PaymentWalletRepository(
                     }
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -60,7 +58,6 @@ class PaymentWalletRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     localFetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -90,7 +87,6 @@ class PaymentWalletRepository(
                     paymentCardMutableValue.value = paymentCardValue
                 } catch (e: Throwable) {
                     linkError.value = e
-                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -120,7 +116,6 @@ class PaymentWalletRepository(
                     paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
-                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -140,7 +135,6 @@ class PaymentWalletRepository(
                     mutableDeleteCard.value = response
                 } catch (e: Throwable) {
                     deleteError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -152,7 +146,8 @@ class PaymentWalletRepository(
                 try {
                     paymentCardDao.deleteAll()
                 } catch (e: Throwable) {
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                    // TODO: Have error catching here in a mutable
+                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

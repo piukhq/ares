@@ -70,7 +70,8 @@ class LoyaltyCardDetailsRepository(
                     val response = request.await()
                     paymentCards.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    // TODO: Have error catching here in a mutable
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -86,7 +87,6 @@ class LoyaltyCardDetailsRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     localFetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
