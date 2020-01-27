@@ -82,19 +82,12 @@ class LoyaltyCardDetailsVouchersAdapter(
                                     earn.currency
                                 )
                             }
-                            val goal = ValueDisplayUtils.displayValue(
-                                earn.target_value,
-                                earn.prefix,
-                                earn.suffix,
-                                earn.currency
-                            )
+                            displayForEarning(thisVoucher)
                             with(binding) {
-                                subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
                                 progressBar.max =
                                     (earn.target_value * FLOAT_ONE_HUNDRED).roundToInt()
                                 progressBar.progress =
                                     ((earn.value ?: FLOAT_ZERO) * FLOAT_ONE_HUNDRED).roundToInt()
-                                goalAmount.text = goal
                             }
                         } else {
                             hideEarnBurnValues()
@@ -106,12 +99,50 @@ class LoyaltyCardDetailsVouchersAdapter(
                         fillProgressBar()
                     }
                 }
+                VoucherStates.EXPIRED.state -> {
+                    thisVoucher.expiry_date?.let {
+                        displayDate(it)
+                    }
+                    displayForEarning(thisVoucher)
+                    hideEarnBurnValues()
+                    fillProgressBar()
+                }
+                VoucherStates.REDEEMED.state -> {
+                    thisVoucher.date_redeemed?.let {
+                        displayDate(it)
+                    }
+                    displayForEarning(thisVoucher)
+                    hideEarnBurnValues()
+                    fillProgressBar()
+                }
                 else -> {
                     hideEarnBurnValues()
                     fillProgressBar()
                 }
             }
             setProgressDrawable(thisVoucher.state)
+        }
+
+        private fun displayForEarning(thisVoucher: Voucher) {
+            thisVoucher.earn?.let { earn ->
+                val goal = ValueDisplayUtils.displayValue(
+                    earn.target_value,
+                    earn.prefix,
+                    earn.suffix,
+                    earn.currency
+                )
+                with(binding) {
+                    subtitle.text = thisVoucher.subtext.plus(SPACE).plus(goal)
+                    goalAmount.text = goal
+                }
+            }
+        }
+
+        private fun displayDate(date: Long) {
+            with (binding.voucherDate) {
+                visibility = View.VISIBLE
+                setTimestamp(date, binding.root.context.getString(R.string.voucher_entry_date))
+            }
         }
 
         private fun hideEarnBurnValues() {

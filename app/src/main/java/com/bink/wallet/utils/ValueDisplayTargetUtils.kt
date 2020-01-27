@@ -14,9 +14,9 @@ fun Context.displayVoucherEarnAndTarget(voucher: Voucher): String {
                     R.string.loyalty_wallet_plr_value,
                     ValueDisplayUtils.displayValue(
                         earn_value,
-                        burn?.prefix,
-                        burn?.suffix,
-                        burn?.currency
+                        earn.prefix,
+                        earn.suffix,
+                        earn.currency
                     ),
                     ValueDisplayUtils.displayValue(
                         target_value,

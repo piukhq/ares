@@ -270,12 +270,20 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
 fun TextView.setTimestamp(timeStamp: Long) {
     this.text = dateFormatTransactionTime(timeStamp)
 }
-@BindingAdapter("transactionTime", "format")
-fun TextView.setTimestamp(timeStamp: Long, format: String = "%s") {
-    this.text = String.format(format, dateFormatTransactionTime(timeStamp))
+@BindingAdapter("transactionTime", "format", "shortMonth")
+fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Boolean = false) {
+    this.text = String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
 }
-private fun dateFormatTransactionTime(timeStamp: Long) =
-    DateFormat.format("dd MMMM yyyy", timeStamp * 1000).toString()
+private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
+    DateFormat.format(getDateFormat(shortMonth), timeStamp * 1000).toString()
+
+private fun getDateFormat(shortMonth: Boolean): String {
+    val builder = StringBuilder("dd MMM")
+    if (shortMonth)
+        builder.append("M")
+    builder.append(" yyyy")
+    return builder.toString()
+}
 
 @BindingAdapter("transactionTime", "format")
 fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
