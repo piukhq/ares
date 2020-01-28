@@ -48,8 +48,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     walletItems[position] is MembershipCard
                 ) {
                     val card = walletItems[position] as MembershipCard
+                    val membershipPlanData = viewModel.membershipPlanData.value
+                        ?: viewModel.localMembershipPlanData.value
                     val plan =
-                        viewModel.localMembershipPlanData.value?.firstOrNull {
+                        membershipPlanData?.firstOrNull {
                             it.id == card.membership_plan
                         }
 
