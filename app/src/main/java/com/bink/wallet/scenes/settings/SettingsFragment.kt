@@ -15,7 +15,11 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.login.LoginManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -197,16 +201,20 @@ class SettingsFragment :
             }
 
             SettingsItemType.LOGOUT -> {
-                LoginManager.getInstance().logOut()
-                requireContext().displayModalPopup(
-                    getString(R.string.settings_menu_log_out),
-                    getString(R.string.log_out_confirmation),
-                    okAction = {
-                        viewModel.logOut()
-                    },
-                    buttonText = R.string.settings_menu_log_out,
-                    hasNegativeButton = true
-                )
+                if (isNetworkAvailable(requireActivity(), true)) {
+                    LoginManager.getInstance().logOut()
+                    requireContext().displayModalPopup(
+                        getString(R.string.settings_menu_log_out),
+                        getString(R.string.log_out_confirmation),
+                        okAction = {
+                            if (isNetworkAvailable(requireContext(), true)) {
+                                viewModel.logOut()
+                            }
+                        },
+                        buttonText = R.string.settings_menu_log_out,
+                        hasNegativeButton = true
+                    )
+                }
             }
 
             SettingsItemType.PREFERENCES -> {
