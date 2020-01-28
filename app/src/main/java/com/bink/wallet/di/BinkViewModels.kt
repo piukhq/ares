@@ -8,7 +8,6 @@ import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
@@ -33,6 +32,7 @@ import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
+import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -58,7 +58,7 @@ val viewModelModules = module {
 
     viewModel { AddJoinViewModel() }
 
-    single { provideLoyaltyCardDetailsRepository(get(), get()) }
+    single { provideLoyaltyCardDetailsRepository(get(), get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
     viewModel { PllEmptyViewModel() }
@@ -117,9 +117,10 @@ fun provideLoyaltyCardRepository(
 
 fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
-    membershipCardDao: MembershipCardDao
+    membershipCardDao: MembershipCardDao,
+    paymentCardDao: PaymentCardDao
 ): LoyaltyCardDetailsRepository =
-    LoyaltyCardDetailsRepository(restApiService, membershipCardDao)
+    LoyaltyCardDetailsRepository(restApiService, membershipCardDao, paymentCardDao)
 
 fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndConditionsRepository =
     TermsAndConditionsRepository(restApiService)

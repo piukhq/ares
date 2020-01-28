@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddEmailFragmentBinding
 import com.bink.wallet.utils.SimplifiedTextWatcher
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
@@ -56,13 +57,15 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
 
 
         binding.continueButton.setOnClickListener {
-            findNavController().navigateIfAdded(
-                this,
-                AddEmailFragmentDirections.addEmailToAcceptTerms(
-                    accessToken,
-                    binding.email.text.toString()
+            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                findNavController().navigateIfAdded(
+                    this,
+                    AddEmailFragmentDirections.addEmailToAcceptTerms(
+                        accessToken,
+                        binding.email.text.toString()
+                    )
                 )
-            )
+            }
         }
 
     }

@@ -1,16 +1,14 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
-import android.content.*
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
-import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
@@ -21,10 +19,10 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.JOIN_CARD
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,19 +35,6 @@ class PaymentCardWalletFragment :
             .build()
     }
 
-    private val broadCastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(contxt: Context?, intent: Intent?) {
-
-            when (intent?.action) {
-                MainActivity.TOKEN_REFRESHED_EVENT -> {
-                    runBlocking {
-                        viewModel.fetchLocalPaymentCards()
-                    }
-                }
-            }
-        }
-    }
-
     private val walletItems = ArrayList<Any>()
 
     private val walletAdapter = PaymentCardWalletAdapter()
@@ -58,6 +43,7 @@ class PaymentCardWalletFragment :
         get() = R.layout.payment_card_wallet_fragment
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
+
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -82,12 +68,10 @@ class PaymentCardWalletFragment :
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    if (verifyAvailableNetwork(requireActivity())) {
+                    if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
                             viewModel.deletePaymentCard(paymentCard.id.toString())
                         }
-                    } else {
-                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
@@ -107,11 +91,11 @@ class PaymentCardWalletFragment :
 
         populateWallet()
 
-        viewModel.fetchLocalPaymentCards()
+        fetchPaymentCards(false)
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            fetchPaymentCards()
+            fetchPaymentCards(true)
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
@@ -184,21 +168,6 @@ class PaymentCardWalletFragment :
         walletAdapter.notifyDataSetChanged()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(requireContext())
-            .registerReceiver(
-                broadCastReceiver,
-                IntentFilter(MainActivity.TOKEN_REFRESHED_EVENT)
-            )
-        (activity as MainActivity).resetWalletCoroutine()
-    }
-
-    override fun onPause() {
-        (activity as MainActivity).resetWalletCoroutine()
-        super.onPause()
-    }
-
     private fun clickHandler(it: Any, plans: List<MembershipPlan>, cards: List<MembershipCard>) {
         when (it) {
             is PaymentCard -> {
@@ -222,22 +191,13 @@ class PaymentCardWalletFragment :
         }
     }
 
-    override fun onDestroy() {
-        LocalBroadcastManager.getInstance(requireContext())
-            .unregisterReceiver(broadCastReceiver)
-        (activity as MainActivity).cancelWalletCoroutine()
-        super.onDestroy()
-    }
-
-    private fun fetchPaymentCards() {
-        if (verifyAvailableNetwork(requireActivity())) {
+    private fun fetchPaymentCards(isRefreshing: Boolean) {
+        if (isNetworkAvailable(requireActivity(), isRefreshing)) {
             runBlocking {
                 binding.progressSpinner.visibility = View.VISIBLE
                 binding.paymentCardRecycler.visibility = View.GONE
-                viewModel.fetchPaymentCards()
+                viewModel.getPaymentCards()
             }
-        } else {
-            showNoInternetConnectionDialog()
         }
     }
 
