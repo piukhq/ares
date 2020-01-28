@@ -369,6 +369,14 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         else -> text = this.context.getString(R.string.empty_string)
     }
 }
+fun TextView.textAndShow(string: String?) {
+    string?.let {
+        with(this) {
+            visibility = View.VISIBLE
+            text = it
+        }
+    }
+}
 
 @BindingAdapter("backgroundGradient")
 fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {

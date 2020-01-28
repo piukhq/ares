@@ -16,6 +16,7 @@ import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.setTimestamp
+import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -85,9 +86,8 @@ class VoucherDetailsFragment :
                             }
                             VoucherStates.ISSUED.state -> {
                                 with (binding) {
-                                    textAndShow(code, voucher.code)
-                                    textAndShow(
-                                        mainTitle,
+                                    code.textAndShow(voucher.code)
+                                    mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_issued,
                                             displayValue(
@@ -99,8 +99,7 @@ class VoucherDetailsFragment :
                                             )
                                         )
                                     )
-                                    textAndShow(
-                                        redeemText,
+                                    redeemText.textAndShow(
                                         getString(
                                             R.string.plr_redeem_instructions,
                                             displayValue(
@@ -126,8 +125,7 @@ class VoucherDetailsFragment :
                             }
                             VoucherStates.EXPIRED.state -> {
                                 with (binding) {
-                                    textAndShow(
-                                        mainTitle,
+                                    mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_expired,
                                             displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
@@ -184,13 +182,6 @@ class VoucherDetailsFragment :
                     text = builder
                 }
             }
-        }
-    }
-
-    private fun textAndShow(view: TextView, string: String?) {
-        string?.let {
-            view.visibility = View.VISIBLE
-            view.text = string
         }
     }
 }
