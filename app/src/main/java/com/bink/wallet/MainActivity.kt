@@ -14,8 +14,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.verifyAvailableNetwork
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import io.fabric.sdk.android.Fabric
@@ -132,6 +132,32 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         viewModel.fetchPaymentCards()
     }
 
+    private suspend fun createHourlyObservers() {
+        withContext(Dispatchers.Main) {
+            viewModel.membershipCardData.observeNonNull(this@MainActivity) {
+                viewModel.membershipPlanData.observeNonNull(this@MainActivity) {
+                    LocalBroadcastManager.getInstance(this@MainActivity)
+                        .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
+                    viewModel.membershipCardData.removeObservers(this@MainActivity)
+                    viewModel.membershipPlanData.removeObservers(this@MainActivity)
+                }
+            }
+        }
+    }
+
+    private suspend fun createWalletsObservers() {
+        withContext(Dispatchers.Main) {
+            viewModel.membershipCardData.observeNonNull(this@MainActivity) {
+                viewModel.paymentCards.observeNonNull(this@MainActivity) {
+                    LocalBroadcastManager.getInstance(this@MainActivity)
+                        .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
+                    viewModel.membershipCardData.removeObservers(this@MainActivity)
+                    viewModel.paymentCards.removeObservers(this@MainActivity)
+                }
+            }
+        }
+    }
+
     private fun startCoroutine(isWalletCoroutine: Boolean): Job {
         return launch(Dispatchers.IO) {
             withContext(Dispatchers.Default) {
@@ -140,7 +166,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                     if (isWalletCoroutine) {
                         delay(TimeUnit.MINUTES.toMillis(MINUTES_REFRESH))
                         withContext(Dispatchers.Main) {
-                            if (verifyAvailableNetwork(this@MainActivity) &&
+                            if (UtilFunctions.isNetworkAvailable(this@MainActivity) &&
                                 !LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN).isNullOrEmpty()
                             ) {
                                 createWalletsObservers()
@@ -151,7 +177,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                     } else {
                         delay(TimeUnit.HOURS.toMillis(HOURS_REFRESH))
                         withContext(Dispatchers.Main) {
-                            if (verifyAvailableNetwork(this@MainActivity) &&
+                            if (UtilFunctions.isNetworkAvailable(this@MainActivity) &&
                                 !LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN).isNullOrEmpty()
                             ) {
                                 createHourlyObservers()
@@ -166,7 +192,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     override fun onResume() {
-        if (verifyAvailableNetwork(this@MainActivity) &&
+        if (UtilFunctions.isNetworkAvailable(this@MainActivity) &&
             !LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_TOKEN).isNullOrEmpty()
         ) {
             runBlocking {

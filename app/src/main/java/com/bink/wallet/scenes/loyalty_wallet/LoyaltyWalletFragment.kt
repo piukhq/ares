@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -21,7 +22,9 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -46,7 +49,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             when (intent?.action) {
                 MainActivity.TOKEN_REFRESHED_EVENT -> {
-                    createLocalObservers()
                     runBlocking {
                         viewModel.fetchLocalMembershipPlans()
                         viewModel.fetchLocalMembershipCards()
@@ -115,11 +117,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -199,12 +196,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    override fun onPause() {
-        binding.progressSpinner.visibility = View.INVISIBLE
-        binding.swipeLayout.isRefreshing = false
-        super.onPause()
-    }
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -266,15 +257,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     this@LoyaltyWalletFragment,
                     WalletsFragmentDirections.homeToPcd()
                 )
-        }
-    }
-
-    private fun onBannerRemove(item: Any) {
-        binding.swipeLayout.isEnabled = false
-        binding.progressSpinner.visibility = View.GONE
-        when (item) {
-            is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
-            else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
         }
     }
 
