@@ -7,6 +7,7 @@ import android.view.View
 import android.text.style.UnderlineSpan
 import android.text.SpannableString
 import android.text.Spanned
+import android.widget.TextView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
@@ -79,27 +80,36 @@ class VoucherDetailsFragment :
                                 }
                             }
                         when (voucher.state) {
+                            VoucherStates.IN_PROGRESS.state -> {
+                                binding.spacingView.visibility = View.GONE
+                            }
                             VoucherStates.ISSUED.state -> {
                                 with (binding) {
-                                    code.text = voucher.code
-                                    mainTitle.text = getString(
-                                        R.string.voucher_detail_title_issued,
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            burn.type
+                                    textAndShow(code, voucher.code)
+                                    textAndShow(
+                                        mainTitle,
+                                        getString(
+                                            R.string.voucher_detail_title_issued,
+                                            displayValue(
+                                                burn.value,
+                                                burn.prefix,
+                                                burn.suffix,
+                                                burn.currency,
+                                                burn.type
+                                            )
                                         )
                                     )
-                                    redeemText.text = getString(
-                                        R.string.plr_redeem_instructions,
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            null
+                                    textAndShow(
+                                        redeemText,
+                                        getString(
+                                            R.string.plr_redeem_instructions,
+                                            displayValue(
+                                                burn.value,
+                                                burn.prefix,
+                                                burn.suffix,
+                                                burn.currency,
+                                                null
+                                            )
                                         )
                                     )
                                     dateOne.setTimestamp(
@@ -116,11 +126,13 @@ class VoucherDetailsFragment :
                             }
                             VoucherStates.EXPIRED.state -> {
                                 with (binding) {
-                                    mainTitle.text =
+                                    textAndShow(
+                                        mainTitle,
                                         getString(
                                             R.string.voucher_detail_title_expired,
                                             displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
                                         )
+                                    )
                                     dateOne.setTimestamp(
                                         voucher.expiry_date!!,
                                         getString(R.string.voucher_detail_date_expired),
@@ -130,11 +142,13 @@ class VoucherDetailsFragment :
                             }
                             VoucherStates.REDEEMED.state -> {
                                 with (binding) {
-                                    mainTitle.text =
+                                    textAndShow(
+                                        mainTitle,
                                         getString(
                                             R.string.voucher_detail_title_redeemed,
                                             displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
                                         )
+                                    )
                                     dateOne.setTimestamp(
                                         voucher.date_redeemed!!,
                                         getString(R.string.voucher_detail_date_redeemed),
@@ -170,6 +184,13 @@ class VoucherDetailsFragment :
                     text = builder
                 }
             }
+        }
+    }
+
+    private fun textAndShow(view: TextView, string: String?) {
+        string?.let {
+            view.visibility = View.VISIBLE
+            view.text = string
         }
     }
 }

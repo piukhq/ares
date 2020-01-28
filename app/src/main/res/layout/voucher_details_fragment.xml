@@ -41,23 +41,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/voucher_card_margin_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
+        <View
+                android:id="@+id/spacing_view"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/voucher_card_margin_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recycler" />
         <TextView
                 android:id="@+id/code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:textColor="@color/green_ok"
                 android:textSize="@dimen/text_size_title_big"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler" />
+                app:layout_constraintTop_toBottomOf="@id/spacing_view" />
         <TextView
                 android:id="@+id/main_title"
                 android:layout_width="match_parent"
@@ -68,6 +75,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_title_big"
                 android:lineSpacingExtra="@dimen/title_line_spacing_extra"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/code" />
@@ -80,6 +88,7 @@
                 android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_big"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/main_title" />
@@ -104,6 +113,7 @@
                 android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_smaller"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/main_text" />
@@ -116,6 +126,7 @@
                 android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_smaller"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/date_one" />

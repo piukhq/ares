@@ -27,6 +27,8 @@
     <dimen name="card_item_linear_layout_margin">36dp</dimen>
     <dimen name="loyalty_card_corner_radius">10dp</dimen>
     <dimen name="voucher_card_bar_bottom_margin">10dp</dimen>
+    <dimen name="voucher_card_margin_bottom">24dp</dimen>
+    <dimen name="voucher_code_margin_top">12dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
