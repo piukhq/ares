@@ -15,7 +15,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
-import com.bink.wallet.utils.setTimestamp
+import com.bink.wallet.utils.setFullTimestamp
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,34 +58,31 @@ class VoucherDetailsFragment :
                 voucher.burn?.let { burn ->
                     if (earn.target_value != null &&
                         burn.value != null) {
-                        binding.mainText.text =
-                            when (voucher.state) {
-                                VoucherStates.IN_PROGRESS.state -> {
-                                    getString(
-                                        R.string.voucher_detail_text_in_progress,
-                                        displayValue(earn.target_value, earn.prefix, earn.suffix, earn.currency, null),
-                                        displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
-                                    )
-                                }
-                                VoucherStates.ISSUED.state,
-                                VoucherStates.REDEEMED.state,
-                                VoucherStates.EXPIRED.state -> {
-                                    getString(
-                                        R.string.plr_explain_redeeming,
-                                        viewModel.membershipPlan.value?.account?.company_name
-                                    )
-                                }
-                                else -> {
-                                    EMPTY_STRING
-                                }
-                            }
+                        binding.code.textAndShow(voucher.code)
                         when (voucher.state) {
                             VoucherStates.IN_PROGRESS.state -> {
+                                binding.mainText.text =
+                                    getString(
+                                        R.string.voucher_detail_text_in_progress,
+                                        displayValue(
+                                            earn.target_value,
+                                            earn.prefix,
+                                            earn.suffix,
+                                            earn.currency,
+                                            null
+                                        ),
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            burn.type
+                                        )
+                                    )
                                 binding.spacingView.visibility = View.GONE
                             }
                             VoucherStates.ISSUED.state -> {
                                 with (binding) {
-                                    code.textAndShow(voucher.code)
                                     mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_issued,
@@ -98,7 +95,7 @@ class VoucherDetailsFragment :
                                             )
                                         )
                                     )
-                                    redeemText.textAndShow(
+                                    mainText.textAndShow(
                                         getString(
                                             R.string.plr_redeem_instructions,
                                             displayValue(
@@ -110,15 +107,9 @@ class VoucherDetailsFragment :
                                             )
                                         )
                                     )
-                                    dateOne.setTimestamp(
+                                    dateOne.setFullTimestamp(
                                         voucher.date_issued!!,
-                                        getString(R.string.voucher_detail_date_issued),
-                                        true
-                                    )
-                                    dateTwo.setTimestamp(
-                                        voucher.expiry_date!!,
-                                        getString(R.string.voucher_detail_date_expires),
-                                        true
+                                        getString(R.string.voucher_detail_date_issued)
                                     )
                                 }
                             }
@@ -130,10 +121,13 @@ class VoucherDetailsFragment :
                                             displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
                                         )
                                     )
-                                    dateOne.setTimestamp(
+                                    dateOne.setFullTimestamp(
                                         voucher.expiry_date!!,
-                                        getString(R.string.voucher_detail_date_expired),
-                                        true
+                                        getString(R.string.voucher_detail_date_issued)
+                                    )
+                                    dateTwo.setFullTimestamp(
+                                        voucher.expiry_date!!,
+                                        getString(R.string.voucher_detail_date_expired)
                                     )
                                 }
                             }
@@ -145,10 +139,9 @@ class VoucherDetailsFragment :
                                             displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
                                         )
                                     )
-                                    dateOne.setTimestamp(
+                                    dateOne.setFullTimestamp(
                                         voucher.date_redeemed!!,
-                                        getString(R.string.voucher_detail_date_redeemed),
-                                        true
+                                        getString(R.string.voucher_detail_date_redeemed)
                                     )
                                 }
                             }

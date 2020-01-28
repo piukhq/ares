@@ -435,7 +435,6 @@
     <string name="voucher_detail_date_expired">Expired %s</string>
     <string name="voucher_detail_date_expires">Expires %s</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
-    <string name="plr_explain_redeeming">More text explaining the mechanics of earning and redeeming rewards for %s.</string>
     <string name="plr_redeem_instructions">Use the code above to redeem your reward. You will get %s off your purchase.</string>
 
     <!-- Certificate Pinning -->
