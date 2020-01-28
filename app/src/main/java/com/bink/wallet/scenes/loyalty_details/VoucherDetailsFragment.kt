@@ -81,6 +81,17 @@ class VoucherDetailsFragment :
                         when (voucher.state) {
                             VoucherStates.ISSUED.state -> {
                                 with (binding) {
+                                    code.text = voucher.code
+                                    mainTitle.text = getString(
+                                        R.string.voucher_detail_title_issued,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            burn.type
+                                        )
+                                    )
                                     redeemText.text = getString(
                                         R.string.plr_redeem_instructions,
                                         displayValue(

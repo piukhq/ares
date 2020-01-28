@@ -14,4 +14,6 @@
     <dimen name="link_status_text_size">13.5sp</dimen>
 
     <dimen name="transaction_arrow_size">30sp</dimen>
+
+    <dimen name="title_line_spacing_extra">-8sp</dimen>
 </resources>
