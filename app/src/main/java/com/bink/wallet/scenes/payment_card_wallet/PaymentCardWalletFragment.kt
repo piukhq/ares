@@ -146,7 +146,9 @@ class PaymentCardWalletFragment :
 
                         if (dismissedCards.firstOrNull { it.id == JOIN_CARD } == null &&
                             SharedPreferenceManager.isPaymentEmpty) {
-                            walletItems.add(JoinCardItem())
+                            if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
+                                walletItems.add(JoinCardItem())
+                            }
                         }
 
                         walletItems.addAll(paymentCards)
@@ -176,6 +178,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun onBannerRemove(item: Any) {
+        SharedPreferenceManager.isPaymentJoinBannerDismissed = true
         viewModel.addPlanIdAsDismissed(JOIN_CARD)
         walletAdapter.paymentCards.remove(item)
         walletAdapter.notifyDataSetChanged()

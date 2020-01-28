@@ -17,6 +17,7 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.verifyAvailableNetwork
 import com.crashlytics.android.Crashlytics
+import com.facebook.login.LoginManager
 import io.fabric.sdk.android.Fabric
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,37 +48,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
-        runHourlyCoroutine()
     }
 
-    private suspend fun createHourlyObservers() {
-        withContext(Dispatchers.Main) {
-            viewModel.membershipCardData.observeNonNull(this@MainActivity) {
-                viewModel.membershipPlanData.observeNonNull(this@MainActivity) {
-                    LocalBroadcastManager.getInstance(this@MainActivity)
-                        .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
-                    viewModel.membershipCardData.removeObservers(this@MainActivity)
-                    viewModel.membershipPlanData.removeObservers(this@MainActivity)
-                }
-            }
-        }
-    }
-
-    private suspend fun createWalletsObservers() {
-        withContext(Dispatchers.Main) {
-            viewModel.membershipCardData.observeNonNull(this@MainActivity) {
-                viewModel.paymentCards.observeNonNull(this@MainActivity) {
-                    LocalBroadcastManager.getInstance(this@MainActivity)
-                        .sendBroadcast(Intent(TOKEN_REFRESHED_EVENT))
-                    viewModel.membershipCardData.removeObservers(this@MainActivity)
-                    viewModel.paymentCards.removeObservers(this@MainActivity)
-                }
-            }
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear()
     }
 
     override fun onBackPressed() {
-        when (findNavController(R.id.main_fragment).currentDestination?.id) {
+        val navId = findNavController(R.id.main_fragment).currentDestination?.id
+        when (navId) {
             R.id.maximised_barcode_fragment -> {
                 findNavController(R.id.main_fragment).popBackStack()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -99,10 +80,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 finish()
             }
             R.id.add_email_fragment -> {
+                LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.add_email_to_onboarding)
             }
             R.id.accept_tcs_fragment -> {
+                LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
+            }
+            R.id.card_terms_and_conditions -> {
+                // do nothing (back button is prohibited here)
             }
             else -> super.onBackPressed()
         }
