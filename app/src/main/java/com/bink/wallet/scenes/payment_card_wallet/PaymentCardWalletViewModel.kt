@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.BannerDisplay
@@ -15,35 +16,44 @@ class PaymentCardWalletViewModel(
     private var loyaltyWalletRepository: LoyaltyWalletRepository
 ) : BaseViewModel() {
     val paymentCards = MutableLiveData<List<PaymentCard>>()
-    val fetchError = MutableLiveData<Throwable>()
     val deleteCard = MutableLiveData<String>()
     val deleteRequest = MutableLiveData<ResponseBody>()
-    val deleteError = MutableLiveData<Throwable>()
-    val deleteCardError = MutableLiveData<Throwable>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
-    val addError = MutableLiveData<Throwable>()
+
+    private val _fetchError = MutableLiveData<Throwable>()
+    val fetchError : LiveData<Throwable>
+        get() = _fetchError
+    private val _deleteError = MutableLiveData<Throwable>()
+    val deleteError : LiveData<Throwable>
+        get() = _deleteError
+    private val _deleteCardError = MutableLiveData<Throwable>()
+    val deleteCardError : LiveData<Throwable>
+        get() = _deleteCardError
+    private val _addError = MutableLiveData<Throwable>()
+    val addError : LiveData<Throwable>
+        get() = _addError
 
     suspend fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(
             id,
             deleteCard,
-            deleteCardError
+            _deleteCardError
         )
     }
 
     suspend fun getPaymentCards() {
         paymentWalletRepository.getPaymentCards(
             paymentCards,
-            fetchError
+            _fetchError
         )
     }
 
     fun fetchLocalPaymentCards() {
         paymentWalletRepository.getLocalPaymentCards(
             paymentCards,
-            fetchError
+            _fetchError
         )
     }
 
@@ -60,15 +70,15 @@ class PaymentCardWalletViewModel(
     }
 
     suspend fun deletePaymentCard(paymentCardId: String) {
-        paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
+        paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, _deleteError)
     }
 
 
     fun fetchDismissedCards() {
-        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, fetchError)
+        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, _fetchError)
     }
 
     fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id, addError)
+        loyaltyWalletRepository.addBannerAsDismissed(id, _addError)
     }
 }

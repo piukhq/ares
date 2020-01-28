@@ -69,7 +69,7 @@ object UtilFunctions {
     }
 
     fun hasCertificatePinningFailed(error: Throwable, context: Context): Boolean {
-        if (error.toString().contains("SSLPeerUnverifiedException")) {
+        if (error.toString().contains(CERT_PINNING_ERROR)) {
             showCertificatePinningDialog(context)
             return true
         }
