@@ -68,9 +68,7 @@ class LoyaltyCardDetailsVouchersAdapter(
                 VoucherStates.IN_PROGRESS.state,
                 VoucherStates.ISSUED.state -> {
                     thisVoucher.earn?.let { earn ->
-                        if (earn.target_value != null &&
-                            earn.target_value != FLOAT_ZERO
-                        ) {
+                        if (earn.target_value != null) {
                             if (earn.value != null) {
                                 binding.spentAmount.text = ValueDisplayUtils.displayValue(
                                     earn.value,
