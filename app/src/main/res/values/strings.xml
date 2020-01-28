@@ -437,4 +437,8 @@
     <string name="preference_marketing_bink">Receive marketing messages</string>
     <string name="plr_explain_redeeming">More text explaining the mechanics of earning and redeeming rewards for FatFace.</string>
     <string name="plr_redeem_instructions">Use the code above to redeem your reward. You will get %s off your purchase.</string>
+
+    <!-- Certificate Pinning -->
+    <string name="ssl_pinning_failure_title">Error</string>
+    <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
 </resources>

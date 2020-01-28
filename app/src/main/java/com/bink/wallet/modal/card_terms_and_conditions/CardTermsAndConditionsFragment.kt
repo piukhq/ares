@@ -9,6 +9,7 @@ import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.UtilFunctions.hasCertificatePinningFailed
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -58,7 +59,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         viewModel.error.observeNonNull(this) {
             if (viewModel.error.value != null) {
                 binding.progressSpinner.visibility = View.GONE
-                if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                if (hasCertificatePinningFailed(it, requireContext()) ||
+                    UtilFunctions.isNetworkAvailable(requireContext(), true)) {
                     binding.firstButton.isEnabled = true
                 }
 

@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.wallets
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
@@ -18,7 +19,12 @@ class WalletsViewModel(
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
-    val fetchError = MutableLiveData<Throwable>()
+    private val _fetchError = MutableLiveData<Throwable>()
+    val fetchError : LiveData<Throwable>
+        get() = _fetchError
+    private val _loadCardsError = MutableLiveData<Throwable>()
+    val loadCardsError : LiveData<Throwable>
+        get() = _loadCardsError
 
     fun fetchLocalMembershipPlans() {
         repository.retrieveStoredMembershipPlans(membershipPlanData)
@@ -26,28 +32,20 @@ class WalletsViewModel(
 
     suspend fun fetchMembershipCards() {
         viewModelScope.launch {
-            try {
-                repository.retrieveMembershipCards(membershipCardData)
-            } catch (e: Exception) {
-                onLoadFail(e)
-            }
+            repository.retrieveMembershipCards(membershipCardData, _loadCardsError)
         }
     }
 
     suspend fun fetchMembershipPlans() {
         viewModelScope.launch {
-            try {
-                repository.retrieveMembershipPlans(membershipPlanData)
-            } catch (e: Exception) {
-                onLoadFail(e)
-            }
+            repository.retrieveMembershipPlans(membershipPlanData, _loadCardsError)
         }
     }
 
     suspend fun fetchPaymentCards() {
         paymentWalletRepository.getPaymentCards(
             paymentCards,
-            fetchError
+            _fetchError
         )
     }
 }

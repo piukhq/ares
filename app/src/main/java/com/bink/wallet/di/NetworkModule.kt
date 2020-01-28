@@ -8,6 +8,7 @@ import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.*
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,7 +64,15 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     // sets desired log level
     logging.level = HttpLoggingInterceptor.Level.BODY
 
+    val builder = CertificatePinner.Builder()
+    for (host in  CertificatePins.values()) {
+//        builder.add(host.domain, "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+        builder.add(host.domain, host.hash)
+    }
+    val certificatePinner = builder.build()
+
     return OkHttpClient.Builder()
+        .certificatePinner(certificatePinner)
         .addNetworkInterceptor(interceptor)
         .addInterceptor(logging)
         .addInterceptor(headerAuthorizationInterceptor)
