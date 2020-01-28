@@ -140,8 +140,7 @@ class VoucherDetailsFragment :
                             }
                             VoucherStates.REDEEMED.state -> {
                                 with (binding) {
-                                    textAndShow(
-                                        mainTitle,
+                                    mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_redeemed,
                                             displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
