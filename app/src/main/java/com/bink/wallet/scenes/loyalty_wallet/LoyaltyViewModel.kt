@@ -24,9 +24,21 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
-    val dismissedCardDataForLocal = MutableLiveData<List<BannerDisplay>>()
-    val addError = MutableLiveData<Throwable>()
-    val fetchError = MutableLiveData<Throwable>()
+    private val _addError = MutableLiveData<Throwable>()
+    val addError : LiveData<Throwable>
+        get() = _addError
+    private val _fetchError = MutableLiveData<Throwable>()
+    val fetchError : LiveData<Throwable>
+        get() = _fetchError
+    private val _loadPlansError = MutableLiveData<Throwable>()
+    val loadPlansError : MutableLiveData<Throwable>
+        get() = _loadPlansError
+    private val _loadCardsError = MutableLiveData<Throwable>()
+    val loadCardsError : LiveData<Throwable>
+        get() = _loadCardsError
+    private val _deleteCardError = MutableLiveData<Throwable>()
+    val deleteCardError : MutableLiveData<Throwable>
+        get() = _deleteCardError
 
     private val _cardsDataMerger = MediatorLiveData<UserDataResult>()
     val cardsDataMerger: LiveData<UserDataResult>
@@ -61,7 +73,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
                 combineCardsData(
                     localMembershipCardData,
                     localMembershipPlanData,
-                    dismissedCardDataForLocal
+                    dismissedCardData
                 )
         }
 
@@ -70,16 +82,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
                 combineCardsData(
                     localMembershipCardData,
                     localMembershipPlanData,
-                    dismissedCardDataForLocal
-                )
-        }
-
-        _localCardsDataMerger.addSource(dismissedCardDataForLocal) {
-            _localCardsDataMerger.value =
-                combineCardsData(
-                    localMembershipCardData,
-                    localMembershipPlanData,
-                    dismissedCardDataForLocal
+                    dismissedCardData
                 )
         }
     }
@@ -126,26 +129,18 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     suspend fun deleteCard(id: String?) {
-        loyaltyWalletRepository.deleteMembershipCard(id, deleteCard)
+        loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
     fun fetchMembershipCards() {
         viewModelScope.launch {
-            try {
-                loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
-            } catch (e: Exception) {
-                onLoadFail(e)
-            }
+            loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
         }
     }
 
     fun fetchMembershipPlans() {
         viewModelScope.launch {
-            try {
-                loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData)
-            } catch (e: Exception) {
-                onLoadFail(e)
-            }
+            loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData, loadPlansError)
         }
     }
 
@@ -157,15 +152,11 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
     }
 
-    fun fetchDismissedCardsDataForLocal() {
-        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardDataForLocal, fetchError)
-    }
-
     fun fetchDismissedCards() {
-        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, fetchError)
+        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, _fetchError)
     }
 
     fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id, addError, _dismissedBannerDisplay)
+        loyaltyWalletRepository.addBannerAsDismissed(id, _addError, _dismissedBannerDisplay)
     }
 }

@@ -468,10 +468,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         viewModel.createCardError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                getString(R.string.add_card_error_title),
-                getString(R.string.add_card_error_message)
-            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    getString(R.string.add_card_error_title),
+                    getString(R.string.add_card_error_message)
+                )
+            }
             hideLoadingViews()
         }
     }
