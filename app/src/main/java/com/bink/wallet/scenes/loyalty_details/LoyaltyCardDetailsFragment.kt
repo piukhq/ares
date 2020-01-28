@@ -15,6 +15,7 @@ import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.SignUpFormType
@@ -53,14 +54,23 @@ class LoyaltyCardDetailsFragment :
         setLoadingState(true)
 
         runBlocking {
-            viewModel.fetchPaymentCards()
+            if (isNetworkAvailable(requireActivity())) {
+                viewModel.fetchPaymentCards()
+            } else {
+                viewModel.fetchLocalPaymentCards()
+            }
         }
 
-        val cd = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
-        cd.alpha = MIN_ALPHA.toInt()
-        binding.toolbar.background = cd
+        val colorDrawable =
+            ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
+        colorDrawable.alpha = MIN_ALPHA.toInt()
+        binding.toolbar.background = colorDrawable
 
         viewModel.paymentCards.observeNonNull(this) {
+            viewModel.fetchLocalPaymentCards()
+        }
+
+        viewModel.localPaymentCards.observeNonNull(this) {
             viewModel.setLinkStatus()
         }
 
@@ -73,9 +83,12 @@ class LoyaltyCardDetailsFragment :
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            runBlocking { viewModel.updateMembershipCard() }
+            if (isNetworkAvailable(requireActivity())) {
+                runBlocking { viewModel.updateMembershipCard() }
+            }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
+            viewModel.setLinkStatus()
         }
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
@@ -170,33 +183,34 @@ class LoyaltyCardDetailsFragment :
             binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
 
-        viewModel.linkStatus.observeNonNull(this)
-        { status ->
+        viewModel.linkStatus.observeNonNull(this) { status ->
             if (viewModel.accountStatus.value != null &&
-                viewModel.paymentCards.value != null
+                viewModel.localPaymentCards.value != null
             ) {
                 setLoadingState(false)
             } else {
                 runBlocking {
-                    viewModel.fetchPaymentCards()
+                    if (isNetworkAvailable(requireActivity())) {
+                        viewModel.fetchPaymentCards()
+                    }
                 }
             }
             configureLinkStatus(status)
         }
 
+
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            cd.alpha = v?.scrollY?.let {
+            colorDrawable.alpha = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            if (verifyAvailableNetwork(requireActivity())) {
+            if (isNetworkAvailable(requireActivity(), true)) {
                 runBlocking {
                     viewModel.updateMembershipCard()
                 }
             } else {
-                showNoInternetConnectionDialog()
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                 setLoadingState(false)
             }
@@ -229,11 +243,11 @@ class LoyaltyCardDetailsFragment :
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                if (verifyAvailableNetwork(requireActivity())) {
+                if (isNetworkAvailable(requireActivity(), true)) {
                     runBlocking {
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
-                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) { error ->
+                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
                         with(viewModel.deleteError) {
                             if (value is HttpException) {
                                 val error = value as HttpException
@@ -257,15 +271,12 @@ class LoyaltyCardDetailsFragment :
                         dialog?.dismiss()
                         findNavController().navigateIfAdded(this, R.id.global_to_home)
                     }
-                } else {
-                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
             dialog.show()
         }
     }
-
 
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
@@ -290,14 +301,16 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setLoadingState(isLoading: Boolean) {
-        if (isLoading) {
-            binding.loadingIndicator.visibility = View.VISIBLE
-            binding.linkedWrapper.visibility = View.INVISIBLE
-            binding.pointsWrapper.visibility = View.INVISIBLE
-        } else {
-            binding.loadingIndicator.visibility = View.GONE
-            binding.linkedWrapper.visibility = View.VISIBLE
-            binding.pointsWrapper.visibility = View.VISIBLE
+        with(binding) {
+            if (isLoading) {
+                loadingIndicator.visibility = View.VISIBLE
+                linkedWrapper.visibility = View.INVISIBLE
+                pointsWrapper.visibility = View.INVISIBLE
+            } else {
+                loadingIndicator.visibility = View.GONE
+                linkedWrapper.visibility = View.VISIBLE
+                pointsWrapper.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -346,28 +359,26 @@ class LoyaltyCardDetailsFragment :
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val balance = viewModel.membershipCard.value?.balances?.first()
-                    if (balance != null) {
-                        setBalanceText(balance)
-                    } else {
-                        binding.pointsText.text = getString(R.string.points_signing_up)
-                    }
-                } else {
-                    binding.pointsText.text = getString(R.string.points_signing_up)
-                }
+                setBalanceText(viewModel.membershipCard.value?.balances?.first())
             }
             else -> {
             }
         }
     }
 
+
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
             LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
+                val membershipCardId = viewModel.membershipCard.value?.id.toString()
                 val activeLinkedParams =
                     listOf(
-                        viewModel.membershipCard.value?.payment_cards?.count { card -> card.active_link == true },
+                        viewModel.paymentCards.value?.count { card ->
+                            card.membership_cards.count { membershipCard ->
+                                membershipCard.active_link == true &&
+                                membershipCardId == membershipCard.id
+                            } > 0
+                        },
                         viewModel.paymentCards.value?.size
                     )
                 linkStatus.descriptionParams = activeLinkedParams
@@ -470,7 +481,11 @@ class LoyaltyCardDetailsFragment :
                                 R.drawable.ic_close,
                                 true,
                                 getString(R.string.title_2_8),
-                                getString(R.string.description_2_8)
+                                getString(R.string.description_2_8_1),
+                                EMPTY_STRING,
+                                EMPTY_STRING,
+                                EMPTY_STRING,
+                                getString(R.string.description_2_8_2)
                             )
                         )
                     findNavController().navigateIfAdded(this, directions)

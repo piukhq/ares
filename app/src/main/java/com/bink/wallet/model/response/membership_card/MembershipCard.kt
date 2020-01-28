@@ -7,14 +7,16 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
-import com.bink.wallet.utils.enums.PLLCardStatus
+import com.bink.wallet.utils.enums.LoyaltyCardLinkStatus
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
 @Entity(tableName = "membership_card")
-data class  MembershipCard(
+data class MembershipCard(
     @PrimaryKey @ColumnInfo(name = "id") var id: String,
     @ColumnInfo(name = "membership_plan") var membership_plan: String?,
     @ColumnInfo(name = "payment_cards") var payment_cards: List<PaymentMembershipCard>?,
@@ -26,6 +28,7 @@ data class  MembershipCard(
     @ColumnInfo(name = "account") var account: Account?,
     @ColumnInfo(name = "vouchers") var vouchers: List<Voucher>?
 ) : Parcelable {
+    @IgnoredOnParcel
     @Ignore
     var plan: MembershipPlan? = null
 
@@ -48,28 +51,33 @@ data class  MembershipCard(
         } else null
     }
 
-    fun getLinkStatus(): PLLCardStatus {
+    fun hasLinkedPaymentCards() =
+        payment_cards?.any { paymentCard -> paymentCard.active_link == true }
+
+
+    fun getLinkStatus(): LoyaltyCardLinkStatus {
         if (plan?.feature_set?.card_type in 0..1) {
-            return PLLCardStatus.NONE
+            return LoyaltyCardLinkStatus.NONE
         }
         return when (status?.state) {
-            com.bink.wallet.utils.enums.MembershipCardStatus.AUTHORISED.status -> {
-                val pc = payment_cards
-                if (pc.isNullOrEmpty()) {
-                    PLLCardStatus.LINK_NOW
+            MembershipCardStatus.AUTHORISED.status -> {
+                val linkedPaymentCards =
+                    payment_cards?.filter { paymentCard -> paymentCard.active_link == true }
+                if (linkedPaymentCards.isNullOrEmpty()) {
+                    LoyaltyCardLinkStatus.LINK_NOW
                 } else {
-                    PLLCardStatus.LINKED
+                    LoyaltyCardLinkStatus.LINKED
                 }
             }
 
-            com.bink.wallet.utils.enums.MembershipCardStatus.UNAUTHORISED.status,
-            com.bink.wallet.utils.enums.MembershipCardStatus.FAILED.status ->
-                PLLCardStatus.RETRY
+            MembershipCardStatus.UNAUTHORISED.status,
+            MembershipCardStatus.FAILED.status ->
+                LoyaltyCardLinkStatus.RETRY
 
-            com.bink.wallet.utils.enums.MembershipCardStatus.PENDING.status ->
-                PLLCardStatus.PENDING
+            MembershipCardStatus.PENDING.status ->
+                LoyaltyCardLinkStatus.PENDING
 
-            else -> PLLCardStatus.NONE
+            else -> LoyaltyCardLinkStatus.NONE
         }
     }
 }

@@ -44,7 +44,7 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         )
     }
 
-    suspend fun getLocalPaymentCards() {
+    fun getLocalPaymentCards() {
         paymentWalletRepository.getLocalPaymentCards(
             localPaymentCards,
             localFetchError
