@@ -67,14 +67,13 @@ class VoucherDetailsFragment :
                                         displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
                                     )
                                 }
-                                VoucherStates.ISSUED.state -> {
-                                    getString(R.string.plr_explain_redeeming)
-                                }
+                                VoucherStates.ISSUED.state,
+                                VoucherStates.REDEEMED.state,
                                 VoucherStates.EXPIRED.state -> {
-                                    getString(R.string.plr_explain_redeeming)
-                                }
-                                VoucherStates.REDEEMED.state -> {
-                                    getString(R.string.plr_explain_redeeming)
+                                    getString(
+                                        R.string.plr_explain_redeeming,
+                                        viewModel.membershipPlan.value?.account?.company_name
+                                    )
                                 }
                                 else -> {
                                     EMPTY_STRING
