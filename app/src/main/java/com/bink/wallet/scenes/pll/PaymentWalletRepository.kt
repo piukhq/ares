@@ -12,7 +12,7 @@ class PaymentWalletRepository(
     private val apiService: ApiService,
     private val paymentCardDao: PaymentCardDao
 ) {
-    suspend fun getPaymentCards(
+     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Throwable>
     ) {

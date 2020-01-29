@@ -30,19 +30,19 @@ class WalletsViewModel(
         repository.retrieveStoredMembershipPlans(membershipPlanData)
     }
 
-    suspend fun fetchMembershipCards() {
+     fun fetchMembershipCards() {
         viewModelScope.launch {
             repository.retrieveMembershipCards(membershipCardData, _loadCardsError)
         }
     }
 
-    suspend fun fetchMembershipPlans() {
+    fun fetchMembershipPlans() {
         viewModelScope.launch {
             repository.retrieveMembershipPlans(membershipPlanData, _loadCardsError)
         }
     }
 
-    suspend fun fetchPaymentCards() {
+     fun fetchPaymentCards() {
         paymentWalletRepository.getPaymentCards(
             paymentCards,
             _fetchError
