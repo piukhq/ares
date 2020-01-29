@@ -16,7 +16,7 @@ def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
 
     lintOptions {
-        warning 'InvalidPackage'
+        lintConfig file("lint.xml")
     }
 
     compileSdkVersion 29
