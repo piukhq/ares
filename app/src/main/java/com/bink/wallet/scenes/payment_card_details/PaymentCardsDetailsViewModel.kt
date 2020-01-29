@@ -32,7 +32,7 @@ class PaymentCardsDetailsViewModel(
 
     var deleteError = MutableLiveData<Throwable>()
 
-    suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
+    fun linkPaymentCard(cardId: String, paymentCardId: String) {
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
@@ -41,7 +41,7 @@ class PaymentCardsDetailsViewModel(
         )
     }
 
-    suspend fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
+    fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
         paymentWalletRepository.unlinkPaymentCard(
             paymentCardId,
             cardId,
@@ -51,15 +51,15 @@ class PaymentCardsDetailsViewModel(
         )
     }
 
-    suspend fun deletePaymentCard(paymentCardId: String) {
+    fun deletePaymentCard(paymentCardId: String) {
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
     }
 
-    suspend fun getMembershipCards() {
+    fun getMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData)
     }
 
-    suspend fun getPaymentCard(paymentCardId: String) {
+    fun getPaymentCard(paymentCardId: String) {
         paymentWalletRepository.getPaymentCard(paymentCardId, paymentCard)
     }
 }

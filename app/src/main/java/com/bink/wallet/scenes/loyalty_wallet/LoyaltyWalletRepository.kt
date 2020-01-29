@@ -21,12 +21,14 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    suspend fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
+    fun retrieveMembershipCards(mutableMembershipCards: MutableLiveData<List<MembershipCard>>) {
         val request = apiService.getMembershipCardsAsync()
-        withContext(Dispatchers.Main) {
-            val response = request.await()
-            storeMembershipCards(response)
-            mutableMembershipCards.postValue(response.toMutableList())
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                val response = request.await()
+                storeMembershipCards(response)
+                mutableMembershipCards.postValue(response.toMutableList())
+            }
         }
     }
 
@@ -55,12 +57,14 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
+    fun retrieveMembershipPlans(mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
         val request = apiService.getMembershipPlansAsync()
-        withContext(Dispatchers.Main) {
-            val response = request.await()
-            storeMembershipPlans(response)
-            mutableMembershipPlans.value = response.toMutableList()
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                val response = request.await()
+                storeMembershipPlans(response)
+                mutableMembershipPlans.value = response.toMutableList()
+            }
         }
     }
 
@@ -77,7 +81,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
+    fun deleteMembershipCard(id: String?, mutableDeleteCard: MutableLiveData<String>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
@@ -180,7 +184,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun getPaymentCards(
+    fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Throwable>
     ) {

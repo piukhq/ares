@@ -13,7 +13,7 @@ class PaymentWalletRepository(
     private val paymentCardDao: PaymentCardDao
 ) {
 
-    suspend fun getPaymentCards(
+    fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Throwable>
     ) {
@@ -67,7 +67,7 @@ class PaymentWalletRepository(
         }
     }
 
-    suspend fun getPaymentCard(
+    fun getPaymentCard(
         paymentCardId: String,
         mutablePaymentCard: MutableLiveData<PaymentCard>
     ) {
@@ -84,7 +84,7 @@ class PaymentWalletRepository(
         }
     }
 
-    suspend fun linkPaymentCard(
+    fun linkPaymentCard(
         membershipCardId: String,
         paymentCardId: String,
         linkError: MutableLiveData<Throwable>,
@@ -104,7 +104,7 @@ class PaymentWalletRepository(
         }
     }
 
-    suspend fun unlinkPaymentCard(
+    fun unlinkPaymentCard(
         paymentCardId: String,
         membershipCardId: String,
         unlinkError: MutableLiveData<Throwable>,
@@ -134,7 +134,7 @@ class PaymentWalletRepository(
         }
     }
 
-    suspend fun deletePaymentCard(
+    fun deletePaymentCard(
         id: String?,
         mutableDeleteCard: MutableLiveData<ResponseBody>,
         deleteError: MutableLiveData<Throwable>
