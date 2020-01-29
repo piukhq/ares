@@ -415,4 +415,7 @@
     <string name="see_your_past_rewards">See your past rewards</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
 
+    <!-- Certificate Pinning -->
+    <string name="ssl_pinning_failure_title">Error</string>
+    <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
 </resources>

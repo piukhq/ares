@@ -45,7 +45,7 @@ class CardTermsAndConditionsRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.e(CardTermsAndConditionsRepository::class.simpleName, e.toString())
+                    Log.d(CardTermsAndConditionsRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -58,7 +58,7 @@ class CardTermsAndConditionsRepository(
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
-                    Log.e(CardTermsAndConditionsRepository::class.simpleName, e.toString())
+                    Log.d(CardTermsAndConditionsRepository::class.simpleName, e.toString())
                 }
             }
         }
