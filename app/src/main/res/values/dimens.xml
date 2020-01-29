@@ -124,6 +124,8 @@
 
     <!-- Login Screen -->
     <dimen name="gradient_button_margin">52dp</dimen>
+    <dimen name="loyalty_card_margin_horizontal">8dp</dimen>
+    <dimen name="add_card_margin_horizontal">8dp</dimen>
     <dimen name="continue_button_margin">52dp</dimen>
 
     <!-- PLR -->

@@ -21,12 +21,13 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
-    suspend fun retrieveMembershipCards(
+     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
         loadCardsError: MutableLiveData<Throwable>
     ) {
         val request = apiService.getMembershipCardsAsync()
-        withContext(Dispatchers.Main) {
+         CoroutineScope(Dispatchers.IO).launch {
+         withContext(Dispatchers.Main) {
             try {
                 val response = request.await()
                 storeMembershipCards(response)
@@ -34,7 +35,7 @@ class LoyaltyWalletRepository(
             } catch (e: Exception) {
                 loadCardsError.value = e
             }
-        }
+        }}
     }
 
     fun retrieveStoredMembershipCards(localMembershipCards: MutableLiveData<List<MembershipCard>>) {
@@ -62,12 +63,13 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun retrieveMembershipPlans(
+     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         loadPlansError: MutableLiveData<Throwable>
     ) {
         val request = apiService.getMembershipPlansAsync()
-        withContext(Dispatchers.Main) {
+         CoroutineScope(Dispatchers.IO).launch {
+         withContext(Dispatchers.Main) {
             try {
                 val response = request.await()
                 storeMembershipPlans(response)
@@ -75,7 +77,7 @@ class LoyaltyWalletRepository(
             } catch (e: java.lang.Exception) {
                 loadPlansError.value = e
             }
-        }
+        }}
     }
 
     fun retrieveStoredMembershipPlans(localMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
@@ -92,7 +94,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun deleteMembershipCard(
+     fun deleteMembershipCard(
             id: String?,
             mutableDeleteCard: MutableLiveData<String>,
             deleteCardError: MutableLiveData<Throwable>
@@ -197,7 +199,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    suspend fun getPaymentCards(
+    fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Throwable>
     ) {
