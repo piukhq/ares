@@ -38,7 +38,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     private val EMAIL_KEY = "email"
     private val FIELDS_KEY = "fields"
-    private val MARGIN_RATION = 4.5
     private lateinit var callbackManager: CallbackManager
     private lateinit var facebookEmail: String
     private var accessToken: AccessToken? = null
