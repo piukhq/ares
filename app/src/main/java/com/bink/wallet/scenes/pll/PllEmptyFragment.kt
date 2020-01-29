@@ -62,7 +62,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             binding.membershipPlan = it
         }
 
-        binding.buttonDone.setOnClickListener {
+        binding.back.setOnClickListener {
             val directions =
                 currentMembershipPlan?.let { membershipPlan ->
                     currentMembershipCard?.let { membershipCard ->
