@@ -135,18 +135,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
             scrollPagesAutomatically(this)
         }
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            val constraintSet = ConstraintSet()
-            constraintSet.clone(binding.root)
-            constraintSet.connect(
-                binding.pagerIndicator.id,
-                ConstraintSet.BOTTOM,
-                binding.continueWithFacebook.id,
-                ConstraintSet.TOP,
-                (binding.pager.height / MARGIN_RATION).toInt()
-            )
-            constraintSet.applyTo(binding.root)
-        }
     }
 
     override fun onDestroy() {
