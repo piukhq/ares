@@ -207,7 +207,7 @@ dependencies {
     implementation 'com.scottyab:rootbeer-lib:0.0.7'
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
-    implementation "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
+    api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
