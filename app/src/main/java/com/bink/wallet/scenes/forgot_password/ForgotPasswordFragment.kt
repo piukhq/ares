@@ -77,10 +77,12 @@ class ForgotPasswordFragment :
 
         viewModel.forgotPasswordError.observeNonNull(this) {
             viewModel.isLoading.value = false
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.error_description)
-            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.error_description)
+                )
+            }
         }
     }
 
