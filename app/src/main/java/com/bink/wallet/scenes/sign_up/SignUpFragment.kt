@@ -129,10 +129,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             signUpErrorResponse.observeNonNull(this@SignUpFragment) {
                 isLoading.value = false
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.registration_failed_text)
-                )
+                if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.registration_failed_text)
+                    )
+                }
             }
 
             signUpResponse.observeNonNull(this@SignUpFragment) {

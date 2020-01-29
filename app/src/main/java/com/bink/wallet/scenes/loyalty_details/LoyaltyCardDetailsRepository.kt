@@ -35,18 +35,18 @@ class LoyaltyCardDetailsRepository(
                     mutableDeleteCard.value = id
                 } catch (e: HttpException) {
                     error.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 } catch (e: Throwable) {
                     error.value = e
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
     }
 
-    suspend fun refreshMembershipCard(
+    fun refreshMembershipCard(
         cardId: String,
-        membershipCard: MutableLiveData<MembershipCard>
+        membershipCard: MutableLiveData<MembershipCard>,
+        refreshError: MutableLiveData<Throwable>,
+        addError: Boolean
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getMembershipCardsAsync()
@@ -55,13 +55,14 @@ class LoyaltyCardDetailsRepository(
                     val response = request.await()
                     membershipCard.value = response.first { card -> card.id == cardId }
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    if (addError)
+                        refreshError.value = e
                 }
             }
         }
     }
 
-    suspend fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>) {
+    fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
@@ -69,7 +70,8 @@ class LoyaltyCardDetailsRepository(
                     val response = request.await()
                     paymentCards.value = response
                 } catch (e: Throwable) {
-                    Log.e(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    // TODO: Have error catching here in a mutable
+                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -85,7 +87,6 @@ class LoyaltyCardDetailsRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     localFetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

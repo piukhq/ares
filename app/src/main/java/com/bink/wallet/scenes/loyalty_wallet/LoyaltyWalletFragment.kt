@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,6 +19,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -88,20 +88,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.cardsDataMerger.observe(viewLifecycleOwner, Observer { userDataResult ->
+        viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
-        })
+        }
 
-        viewModel.localCardsDataMerger.observe(viewLifecycleOwner, Observer { localUserDataResult ->
+        viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
             setCardsData(localUserDataResult)
-        })
+        }
 
-        viewModel.dismissedBannerDisplay.observe(viewLifecycleOwner, Observer {
+        viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = true
-        })
+        }
 
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
@@ -140,13 +140,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             binding.progressSpinner.visibility = View.VISIBLE
             viewModel.fetchMembershipPlans()
-            viewModel.fetchDismissedCards()
             viewModel.fetchMembershipCards()
+            viewModel.fetchDismissedCards()
         } else {
             binding.progressSpinner.visibility = View.VISIBLE
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchDismissedCardsDataForLocal()
             viewModel.fetchLocalMembershipCards()
+            viewModel.fetchDismissedCards()
             disableIndicators()
         }
 
@@ -160,11 +160,26 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 disableIndicators()
             }
         }
+
+        viewModel.loadCardsError.observeNonNull(this) {
+            viewModel.fetchLocalMembershipCards()
+        }
+        viewModel.loadPlansError.observeNonNull(this) {
+            viewModel.fetchLocalMembershipPlans()
+        }
+
+        viewModel.deleteCardError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
+        }
     }
 
     override fun onPause() {
-        binding.progressSpinner.visibility = View.INVISIBLE
-        binding.swipeLayout.isRefreshing = false
+        disableIndicators()
         super.onPause()
     }
 
@@ -177,9 +192,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun setCardsData(userDataResult: UserDataResult) {
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
+                disableIndicators()
                 walletItems = ArrayList()
-                binding.progressSpinner.visibility = View.GONE
-                binding.swipeLayout.isRefreshing = false
                 walletItems.addAll(userDataResult.result.third)
                 walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)

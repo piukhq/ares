@@ -12,6 +12,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.hasCertificatePinningFailed
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -164,6 +165,13 @@ class PaymentCardsDetailsFragment :
             binding.paymentCardDetail = it
 
             viewModel.getMembershipCards()
+        }
+
+        viewModel.linkError.observeNonNull(this) {
+            hasCertificatePinningFailed(it, requireContext())
+        }
+        viewModel.unlinkError.observeNonNull(this) {
+            hasCertificatePinningFailed(it, requireContext())
         }
     }
 

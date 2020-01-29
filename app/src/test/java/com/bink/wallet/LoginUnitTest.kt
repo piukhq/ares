@@ -27,7 +27,8 @@ class LoginUnitTest : KoinTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    var loginData: MutableLiveData<LoginBody> = MutableLiveData()
+    var loginData = MutableLiveData<LoginBody>()
+    val authError = MutableLiveData<Throwable>()
     private val loginRepository: LoginRepository = mock()
     var viewModel: LoginViewModel = mock()
 
@@ -70,7 +71,7 @@ class LoginUnitTest : KoinTest {
                 Assert.assertEquals(loginBody, it)
             }
 
-        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData)
+        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData, authError)
 
     }
 }

@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.loyalty_details
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -13,37 +14,46 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
     BaseViewModel() {
-    var tiles = MutableLiveData<List<String>>()
-    var membershipPlan = MutableLiveData<MembershipPlan>()
-    var membershipCard = MutableLiveData<MembershipCard>()
-    var paymentCards = MutableLiveData<List<PaymentCard>>()
-    var localPaymentCards = MutableLiveData<List<PaymentCard>>()
-    var localPaymentFetchError = MutableLiveData<Throwable>()
-    var updatedMembershipCard = MutableLiveData<MembershipCard>()
-    var deletedCard = MutableLiveData<String>()
-    var deleteError = MutableLiveData<Throwable>()
-    var accountStatus = MutableLiveData<LoginStatus>()
-    var linkStatus = MutableLiveData<LinkStatus>()
+    val tiles = MutableLiveData<List<String>>()
+    val membershipPlan = MutableLiveData<MembershipPlan>()
+    val membershipCard = MutableLiveData<MembershipCard>()
+    val paymentCards = MutableLiveData<List<PaymentCard>>()
+    val localPaymentCards = MutableLiveData<List<PaymentCard>>()
+    private val _localPaymentFetchError = MutableLiveData<Throwable>()
+    val localPaymentFetchError : LiveData<Throwable>
+        get() = _localPaymentFetchError
+    val updatedMembershipCard = MutableLiveData<MembershipCard>()
+    private val _refreshError = MutableLiveData<Throwable>()
+    val refreshError : LiveData<Throwable>
+        get() = _refreshError
+    val deletedCard = MutableLiveData<String>()
+    private val _deleteError = MutableLiveData<Throwable>()
+    val deleteError : LiveData<Throwable>
+        get() = _deleteError
+    val accountStatus = MutableLiveData<LoginStatus>()
+    val linkStatus = MutableLiveData<LinkStatus>()
 
     suspend fun deleteCard(id: String?) {
-        repository.deleteMembershipCard(id, deletedCard, deleteError)
+        repository.deleteMembershipCard(id, deletedCard, _deleteError)
     }
 
-    suspend fun updateMembershipCard() {
+    fun updateMembershipCard(bool: Boolean = false) {
         membershipCard.value?.id?.let {
             repository.refreshMembershipCard(
                 it,
-                updatedMembershipCard
+                updatedMembershipCard,
+                _refreshError,
+                bool
             )
         }
     }
 
-    suspend fun fetchPaymentCards() {
+    fun fetchPaymentCards() {
         repository.getPaymentCards(paymentCards)
     }
 
     fun fetchLocalPaymentCards() {
-        repository.getLocalPaymentCards(localPaymentCards, localPaymentFetchError)
+        repository.getLocalPaymentCards(localPaymentCards, _localPaymentFetchError)
     }
 
     fun setAccountStatus() {

@@ -12,7 +12,6 @@ class PaymentWalletRepository(
     private val apiService: ApiService,
     private val paymentCardDao: PaymentCardDao
 ) {
-
     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Throwable>
@@ -26,7 +25,6 @@ class PaymentWalletRepository(
                     paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -39,13 +37,12 @@ class PaymentWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    runBlocking {
+                    withContext(Dispatchers.IO) {
                         paymentCardDao.deleteAll()
                         paymentCardDao.storeAll(cards)
                     }
                 } catch (e: Throwable) {
                     fetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -61,7 +58,6 @@ class PaymentWalletRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     localFetchError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -98,7 +94,6 @@ class PaymentWalletRepository(
                     paymentCardMutableValue.value = response
                 } catch (e: Throwable) {
                     linkError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -128,7 +123,6 @@ class PaymentWalletRepository(
                     paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -148,7 +142,6 @@ class PaymentWalletRepository(
                     mutableDeleteCard.value = response
                 } catch (e: Throwable) {
                     deleteError.value = e
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -160,7 +153,8 @@ class PaymentWalletRepository(
                 try {
                     paymentCardDao.deleteAll()
                 } catch (e: Throwable) {
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
+                    // TODO: Have error catching here in a mutable
+                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

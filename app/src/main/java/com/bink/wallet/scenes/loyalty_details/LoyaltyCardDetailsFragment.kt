@@ -53,12 +53,10 @@ class LoyaltyCardDetailsFragment :
 
         setLoadingState(true)
 
-        runBlocking {
-            if (isNetworkAvailable(requireActivity())) {
-                viewModel.fetchPaymentCards()
-            } else {
-                viewModel.fetchLocalPaymentCards()
-            }
+        if (isNetworkAvailable(requireActivity())) {
+            viewModel.fetchPaymentCards()
+        } else {
+            viewModel.fetchLocalPaymentCards()
         }
 
         val colorDrawable =
@@ -84,7 +82,7 @@ class LoyaltyCardDetailsFragment :
             viewModel.membershipCard.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             if (isNetworkAvailable(requireActivity())) {
-                runBlocking { viewModel.updateMembershipCard() }
+                viewModel.updateMembershipCard()
             }
             binding.viewModel = viewModel
             viewModel.setAccountStatus()
@@ -189,10 +187,8 @@ class LoyaltyCardDetailsFragment :
             ) {
                 setLoadingState(false)
             } else {
-                runBlocking {
-                    if (isNetworkAvailable(requireActivity())) {
-                        viewModel.fetchPaymentCards()
-                    }
+                if (isNetworkAvailable(requireActivity())) {
+                    viewModel.fetchPaymentCards()
                 }
             }
             configureLinkStatus(status)
@@ -207,9 +203,7 @@ class LoyaltyCardDetailsFragment :
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                runBlocking {
-                    viewModel.updateMembershipCard()
-                }
+                viewModel.updateMembershipCard(true)
             } else {
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                 setLoadingState(false)
@@ -239,42 +233,44 @@ class LoyaltyCardDetailsFragment :
 
         binding.footerDelete.setOnClickListener {
             val builder = AlertDialog.Builder(context)
-            var dialog: AlertDialog? = null
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-            builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
+            builder.setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
                 if (isNetworkAvailable(requireActivity(), true)) {
                     runBlocking {
                         viewModel.deleteCard(viewModel.membershipCard.value?.id)
                     }
-                    viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                        with(viewModel.deleteError) {
-                            if (value is HttpException) {
-                                val error = value as HttpException
-                                requireContext().displayModalPopup(
-                                    getString(R.string.title_2_4),
-                                    getString(
-                                        R.string.description_2_4,
-                                        error.code().toString(),
-                                        error.localizedMessage
-                                    )
-                                )
-                            } else {
-                                requireContext().displayModalPopup(
-                                    getString(R.string.title_2_4),
-                                    getString(R.string.loyalty_card_delete_error_message)
-                                )
-                            }
-                        }
-                    }
-                    viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-                        dialog?.dismiss()
-                        findNavController().navigateIfAdded(this, R.id.global_to_home)
+                }
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
+        }
+
+        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                with(viewModel.deleteError) {
+                    if (value is HttpException) {
+                        val error = value as HttpException
+                        requireContext().displayModalPopup(
+                            getString(R.string.title_2_4),
+                            getString(
+                                R.string.description_2_4,
+                                error.code().toString(),
+                                error.localizedMessage
+                            )
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.title_2_4),
+                            getString(R.string.loyalty_card_delete_error_message)
+                        )
                     }
                 }
             }
-            dialog = builder.create()
-            dialog.show()
+        }
+        viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
     }
 

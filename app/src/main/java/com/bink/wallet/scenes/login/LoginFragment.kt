@@ -93,10 +93,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
             logInErrorResponse.observeNonNull(this@LoginFragment) {
                 isLoading.value = false
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.incorrect_credentials)
-                )
+                if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.incorrect_credentials)
+                    )
+                }
             }
 
             isLoading.observeNonNull(this@LoginFragment) {
@@ -108,6 +110,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
                     logInButton.isEnabled = !it
                 }
+            }
+
+            authErrorResponse.observeNonNull(this@LoginFragment) {
+                // this is here for monitoring, but we don't need to report to the user at the moment
             }
         }
 
