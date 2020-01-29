@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -11,12 +12,14 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
-    var newMembershipCard = MutableLiveData<MembershipCard>()
-    val createCardError = MutableLiveData<String>()
-    var paymentCards = MutableLiveData<List<PaymentCard>>()
-    var fetchCardsError = MutableLiveData<Throwable>()
-    var currentMembershipPlan = MutableLiveData<MembershipPlan>()
-    var currentMembershipCard = MutableLiveData<MembershipCard>()
+    val newMembershipCard = MutableLiveData<MembershipCard>()
+    val createCardError = MutableLiveData<Throwable>()
+    val paymentCards = MutableLiveData<List<PaymentCard>>()
+    private val _fetchCardsError = MutableLiveData<Throwable>()
+    val fetchCardsError : LiveData<Throwable>
+        get() = _fetchCardsError
+    val currentMembershipPlan = MutableLiveData<MembershipPlan>()
+    val currentMembershipCard = MutableLiveData<MembershipCard>()
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
         loyaltyWalletRepository.createMembershipCard(
@@ -51,6 +54,6 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     suspend fun getPaymentCards(){
-        loyaltyWalletRepository.getPaymentCards(paymentCards, fetchCardsError)
+        loyaltyWalletRepository.getPaymentCards(paymentCards, _fetchCardsError)
     }
 }

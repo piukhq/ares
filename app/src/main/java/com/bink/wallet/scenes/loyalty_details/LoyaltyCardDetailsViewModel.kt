@@ -1,91 +1,83 @@
 package com.bink.wallet.scenes.loyalty_details
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.MembershipPlanUtils
-import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.MembershipCardStatus
 
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
     BaseViewModel() {
-    var tiles = MutableLiveData<List<String>>()
-    var membershipPlan = MutableLiveData<MembershipPlan>()
-    var membershipCard = MutableLiveData<MembershipCard>()
-    var paymentCards = MutableLiveData<List<PaymentCard>>()
-    var updatedMembershipCard = MutableLiveData<MembershipCard>()
-    var deletedCard = MutableLiveData<String>()
-    var deleteError = MutableLiveData<Throwable>()
-    var accountStatus = MutableLiveData<LoginStatus>()
-    var linkStatus = MutableLiveData<LinkStatus>()
+    val tiles = MutableLiveData<List<String>>()
+    val membershipPlan = MutableLiveData<MembershipPlan>()
+    val membershipCard = MutableLiveData<MembershipCard>()
+    val paymentCards = MutableLiveData<List<PaymentCard>>()
+    val localPaymentCards = MutableLiveData<List<PaymentCard>>()
+    private val _localPaymentFetchError = MutableLiveData<Throwable>()
+    val localPaymentFetchError : LiveData<Throwable>
+        get() = _localPaymentFetchError
+    val updatedMembershipCard = MutableLiveData<MembershipCard>()
+    private val _refreshError = MutableLiveData<Throwable>()
+    val refreshError : LiveData<Throwable>
+        get() = _refreshError
+    val deletedCard = MutableLiveData<String>()
+    private val _deleteError = MutableLiveData<Throwable>()
+    val deleteError : LiveData<Throwable>
+        get() = _deleteError
+    val accountStatus = MutableLiveData<LoginStatus>()
+    val linkStatus = MutableLiveData<LinkStatus>()
 
     suspend fun deleteCard(id: String?) {
-        repository.deleteMembershipCard(id, deletedCard, deleteError)
+        repository.deleteMembershipCard(id, deletedCard, _deleteError)
     }
 
-    suspend fun updateMembershipCard() {
+    fun updateMembershipCard(bool: Boolean = false) {
         membershipCard.value?.id?.let {
             repository.refreshMembershipCard(
                 it,
-                updatedMembershipCard
+                updatedMembershipCard,
+                _refreshError,
+                bool
             )
         }
     }
 
-    suspend fun fetchPaymentCards() {
+    fun fetchPaymentCards() {
         repository.getPaymentCards(paymentCards)
     }
 
+    fun fetchLocalPaymentCards() {
+        repository.getLocalPaymentCards(localPaymentCards, _localPaymentFetchError)
+    }
+
     fun setAccountStatus() {
-        accountStatus.value =
-            MembershipPlanUtils.getAccountStatus(membershipPlan.value!!, membershipCard.value!!)
+        membershipPlan.value?.let { plan ->
+            membershipCard.value?.let { card ->
+                accountStatus.value =
+                    MembershipPlanUtils.getAccountStatus(plan, card)
+            }
+        }
     }
 
     fun setLinkStatus() {
-        when (membershipPlan.value?.feature_set?.card_type) {
-            CardType.PLL.type -> {
-                when (membershipCard.value?.status?.state) {
-                    MembershipCardStatus.AUTHORISED.status -> {
-                        when {
-                            paymentCards.value.isNullOrEmpty() ->
-                                linkStatus.value = LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
-                            membershipCard.value?.payment_cards.isNullOrEmpty() ||
-                                    !existLinkedPaymentCards() ->
-                                linkStatus.value =
-                                    LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
-                            else ->
-                                linkStatus.value = LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL
-                        }
-                    }
-                    MembershipCardStatus.UNAUTHORISED.status -> {
-                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH
-                    }
-                    MembershipCardStatus.PENDING.status -> {
-                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
-                    }
-                    MembershipCardStatus.FAILED.status -> {
-                        linkStatus.value = LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
-                    }
+        membershipPlan.value?.let { membershipPlan ->
+            membershipCard.value?.let { membershipCard ->
+                localPaymentCards.value?.let { paymentCards ->
+                    linkStatus.value = MembershipPlanUtils.getLinkStatus(
+                        membershipPlan,
+                        membershipCard,
+                        paymentCards.toMutableList()
+                    )
+
                 }
             }
-            CardType.VIEW.type, CardType.STORE.type -> {
-                linkStatus.value = LinkStatus.STATUS_UNLINKABLE
-            }
         }
-    }
-
-    private fun existLinkedPaymentCards(): Boolean {
-        membershipCard.value?.payment_cards?.forEach { card ->
-            if (card.active_link == true) {
-                return true
-            }
-        }
-        return false
     }
 }
 

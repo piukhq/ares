@@ -12,6 +12,7 @@ import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
 import com.facebook.login.LoginBehavior
@@ -22,6 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.onboarding_fragment
@@ -84,35 +86,36 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
         }
 
-        binding.continueWithFacebook.apply {
-            fragment = this@OnboardingFragment
-            setReadPermissions(listOf(EMAIL_KEY))
-            loginBehavior = LoginBehavior.WEB_VIEW_ONLY
-            registerCallback(
-                callbackManager,
-                object : FacebookCallback<LoginResult> {
-                    override fun onSuccess(result: LoginResult?) {
-                        result?.accessToken?.let {
-                            retrieveFacebookLoginInformation(it)
+        binding.continueWithFacebook.setOnClickListener {
+            binding.continueWithFacebook.apply {
+                fragment = this@OnboardingFragment
+                setReadPermissions(listOf(EMAIL_KEY))
+                loginBehavior = LoginBehavior.WEB_VIEW_ONLY
+                registerCallback(
+                    callbackManager,
+                    object : FacebookCallback<LoginResult> {
+                        override fun onSuccess(result: LoginResult?) {
+                            result?.accessToken?.let {
+                                retrieveFacebookLoginInformation(it)
+                            }
                         }
-                    }
 
-                    override fun onCancel() {
-                        requireContext().displayModalPopup(
-                            null,
-                            getString(R.string.facebook_cancelled)
-                        )
-                    }
+                        override fun onCancel() {
+                            requireContext().displayModalPopup(
+                                null,
+                                getString(R.string.facebook_cancelled)
+                            )
+                        }
 
-                    override fun onError(error: FacebookException?) {
-                        requireContext().displayModalPopup(
-                            null,
-                            getString(R.string.facebook_unavailable)
-                        )
-                    }
-                })
+                        override fun onError(error: FacebookException?) {
+                            requireContext().displayModalPopup(
+                                null,
+                                getString(R.string.facebook_unavailable)
+                            )
+                        }
+                    })
+            }
         }
-
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
         }
@@ -141,7 +144,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        callbackManager.onActivityResult(requestCode, resultCode, data)
+        if (isNetworkAvailable(requireActivity(), true)) {
+            callbackManager.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     private fun scrollPagesAutomatically(pager: ViewPager?) {

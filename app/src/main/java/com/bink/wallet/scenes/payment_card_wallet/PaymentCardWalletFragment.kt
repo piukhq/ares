@@ -18,11 +18,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -68,12 +66,10 @@ class PaymentCardWalletFragment :
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    if (verifyAvailableNetwork(requireActivity())) {
+                    if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
                             viewModel.deletePaymentCard(paymentCard.id.toString())
                         }
-                    } else {
-                        showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                     }
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
@@ -93,15 +89,32 @@ class PaymentCardWalletFragment :
 
         populateWallet()
 
-        fetchPaymentCards()
+        fetchPaymentCards(false)
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            fetchPaymentCards()
+            fetchPaymentCards(true)
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchLocalPaymentCards()
+        }
+
+        viewModel.deleteCardError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
+        }
+        viewModel.deleteError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
         }
 
         binding.paymentCardRecycler.apply {
@@ -132,7 +145,9 @@ class PaymentCardWalletFragment :
 
                         if (dismissedCards.firstOrNull { it.id == JOIN_CARD } == null &&
                             SharedPreferenceManager.isPaymentEmpty) {
-                            walletItems.add(JoinCardItem())
+                            if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
+                                walletItems.add(JoinCardItem())
+                            }
                         }
 
                         walletItems.addAll(paymentCards)
@@ -162,6 +177,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun onBannerRemove(item: Any) {
+        SharedPreferenceManager.isPaymentJoinBannerDismissed = true
         viewModel.addPlanIdAsDismissed(JOIN_CARD)
         walletAdapter.paymentCards.remove(item)
         walletAdapter.notifyDataSetChanged()
@@ -190,16 +206,13 @@ class PaymentCardWalletFragment :
         }
     }
 
-    private fun fetchPaymentCards() {
-
-        if (verifyAvailableNetwork(requireActivity())) {
+    private fun fetchPaymentCards(isRefreshing: Boolean) {
+        if (isNetworkAvailable(requireActivity(), isRefreshing)) {
             runBlocking {
                 binding.progressSpinner.visibility = View.VISIBLE
                 binding.paymentCardRecycler.visibility = View.GONE
                 viewModel.getPaymentCards()
             }
-        } else {
-            showNoInternetConnectionDialog()
         }
     }
 

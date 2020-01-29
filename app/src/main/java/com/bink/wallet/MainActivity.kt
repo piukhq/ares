@@ -15,8 +15,9 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import io.fabric.sdk.android.Fabric
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KProperty
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,8 +31,15 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear()
+    }
+
     override fun onBackPressed() {
-        when (findNavController(R.id.main_fragment).currentDestination?.id) {
+        val navId = findNavController(R.id.main_fragment).currentDestination?.id
+        when (navId) {
             R.id.maximised_barcode_fragment -> {
                 findNavController(R.id.main_fragment).popBackStack()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -59,6 +67,9 @@ class MainActivity : AppCompatActivity() {
             R.id.accept_tcs_fragment -> {
                 LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
+            }
+            R.id.card_terms_and_conditions -> {
+                // do nothing (back button is prohibited here)
             }
             else -> super.onBackPressed()
         }

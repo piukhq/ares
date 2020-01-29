@@ -39,50 +39,45 @@ class MembershipCardDaoTest {
 
     @Test
     fun insertCards() {
-
-        val cardsList: List<MembershipCard> = getCardsFromJon()
-
-        runBlocking {
-            cardsDB.storeAll(cardsList)
-
-            assertEquals(cardsDB.getAllAsync().size, 4)
+        getCardsFromJon()?.let {
+            runBlocking {
+                cardsDB.storeAll(it)
+                assertEquals(cardsDB.getAllAsync().size, 4)
+            }
         }
     }
 
     @Test
     fun removeCard() {
+        getCardsFromJon()?.let {
+            runBlocking {
+                cardsDB.storeAll(it)
 
-        val cardsList: List<MembershipCard> = getCardsFromJon()
+                assertEquals(cardsDB.getAllAsync().size, 4)
 
-        runBlocking {
-            cardsDB.storeAll(cardsList)
+                cardsDB.deleteCard("14338")
 
-            assertEquals(cardsDB.getAllAsync().size, 4)
-
-            cardsDB.deleteCard("14338")
-
-            assertEquals(cardsDB.getAllAsync().size, 3)
+                assertEquals(cardsDB.getAllAsync().size, 3)
+            }
         }
-
     }
 
     @Test
     fun removeCards() {
-        val cardsList: List<MembershipCard> = getCardsFromJon()
+        getCardsFromJon()?.let {
+            runBlocking {
+                cardsDB.storeAll(it)
 
-        runBlocking {
-            cardsDB.storeAll(cardsList)
+                assertEquals(cardsDB.getAllAsync().size, 4)
 
-            assertEquals(cardsDB.getAllAsync().size, 4)
+                cardsDB.deleteAllCards()
 
-            cardsDB.deleteAllCards()
-
-            assertEquals(cardsDB.getAllAsync().size, 0)
+                assertEquals(cardsDB.getAllAsync().size, 0)
+            }
         }
-
     }
 
-    private fun getCardsFromJon(): List<MembershipCard> {
+    private fun getCardsFromJon(): List<MembershipCard>? {
         val moshi = Moshi.Builder().build()
         val listType = Types.newParameterizedType(List::class.java, MembershipCard::class.java)
         val adapter: JsonAdapter<List<MembershipCard>> = moshi.adapter(listType)
@@ -91,6 +86,9 @@ class MembershipCardDaoTest {
                 .bufferedReader().use {
                     it.readText()
                 }
-        return adapter.fromJson(json)!!
+        adapter.fromJson(json)?.let {
+            return it
+        }
+        return null
     }
 }

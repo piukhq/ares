@@ -12,9 +12,14 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.hasCertificatePinningFailed
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardsDetailsFragment :
@@ -41,8 +46,6 @@ class PaymentCardsDetailsFragment :
                 goHome()
             }
         }
-
-        val securityDialog = SecurityDialogs(requireContext())
 
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
@@ -76,12 +79,10 @@ class PaymentCardsDetailsFragment :
             builder.setMessage(getString(R.string.delete_card_modal_body))
             builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
             builder.setPositiveButton(getString(R.string.yes_text)) { _, _ ->
-                if (verifyAvailableNetwork(requireActivity())) {
+                if (isNetworkAvailable(requireActivity(), true)) {
                     runBlocking {
                         viewModel.deletePaymentCard(viewModel.paymentCard.value?.id.toString())
                     }
-                } else {
-                    showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
                 }
             }
             dialog = builder.create()
@@ -156,7 +157,7 @@ class PaymentCardsDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             requireContext().displayModalPopup(
-                "",
+                EMPTY_STRING,
                 getString(R.string.card_error_dialog)
             )
         }
@@ -165,12 +166,11 @@ class PaymentCardsDetailsFragment :
             binding.paymentCardDetail = it
         }
 
-        viewModel.linkError.observeNonNull(viewLifecycleOwner) {
-            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        viewModel.linkError.observeNonNull(this) {
+            hasCertificatePinningFailed(it, requireContext())
         }
-
-        viewModel.unlinkError.observeNonNull(viewLifecycleOwner) {
-            showNoInternetConnectionDialog(R.string.delete_and_update_card_internet_connection_error_message)
+        viewModel.unlinkError.observeNonNull(this) {
+            hasCertificatePinningFailed(it, requireContext())
         }
     }
 
@@ -184,8 +184,10 @@ class PaymentCardsDetailsFragment :
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
-        CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getMembershipCards()
+        if (isNetworkAvailable(requireActivity())) {
+            CoroutineScope(Dispatchers.Main).launch {
+                viewModel.getMembershipCards()
+            }
         }
     }
 
@@ -208,16 +210,16 @@ class PaymentCardsDetailsFragment :
     }
 
     private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
-        if (currentItem.first != null) {
+        currentItem.first?.let {
             runBlocking {
                 if (currentItem.second) {
                     viewModel.linkPaymentCard(
-                        currentItem.first!!,
+                        it,
                         viewModel.paymentCard.value?.id.toString()
                     )
                 } else {
                     viewModel.unlinkPaymentCard(
-                        currentItem.first!!,
+                        it,
                         viewModel.paymentCard.value?.id.toString()
                     )
                 }

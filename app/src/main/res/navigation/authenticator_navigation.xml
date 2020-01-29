@@ -51,6 +51,7 @@
     <fragment
             android:id="@+id/home_wallet"
             android:name="com.bink.wallet.scenes.wallets.WalletsFragment">
+
         <action
                 android:id="@+id/home_to_add"
                 app:destination="@id/add_fragment"
@@ -132,6 +133,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/payment_detail_to_security"
                 app:destination="@+id/security_and_privacy"
@@ -163,6 +165,7 @@
     <fragment
             android:id="@+id/add_fragment"
             android:name="com.bink.wallet.scenes.add.AddFragment">
+
         <action
                 android:id="@+id/add_to_browse"
                 app:destination="@id/browse_brands"
@@ -170,6 +173,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/add_to_pcd"
                 app:destination="@id/add_payment_card"
@@ -186,6 +190,7 @@
     <fragment
             android:id="@+id/browse_brands"
             android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment">
+
         <action
                 android:id="@+id/browse_to_add_join"
                 app:destination="@id/add_join"
@@ -193,6 +198,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -201,6 +207,7 @@
     <fragment
             android:id="@+id/add_join"
             android:name="com.bink.wallet.scenes.add_join.AddJoinFragment">
+
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
@@ -212,6 +219,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/add_join_to_join_unavailable"
                 app:destination="@+id/join_unavailable"
@@ -280,13 +288,7 @@
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
-        <action
-                android:id="@+id/sign_up_to_pll"
-                app:destination="@+id/pll_fragment"
-                app:enterAnim="@anim/slide_in_right"
-                app:exitAnim="@anim/slide_out_left"
-                app:popEnterAnim="@anim/slide_in_left"
-                app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/sign_up_to_ghost_registration_unavailable"
                 app:destination="@+id/ghost_registration_unavailable"
@@ -295,14 +297,24 @@
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
 
+        <action
+                android:id="@+id/sign_up_to_pll"
+                app:destination="@+id/pll_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
             android:id="@+id/barcode_fragment"
             android:name="com.bink.wallet.scenes.loyalty_wallet.BarcodeFragment">
+
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
@@ -336,12 +348,15 @@
     <fragment
             android:id="@+id/loyalty_card_detail_fragment"
             android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment">
+
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
         <action
                 android:id="@+id/detail_to_barcode"
                 app:argType="com.bink.wallet.scenes.loyalty_wallet.model.MembershipCard"
@@ -350,6 +365,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/detail_to_transactions"
                 app:destination="@+id/transactions_fragment"
@@ -365,6 +381,7 @@
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
+
         <action
                 android:id="@+id/detail_to_pll_empty"
                 app:destination="@+id/pll_empty_fragment"
@@ -380,6 +397,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/detail_to_about"
                 app:destination="@+id/about_fragment"
@@ -387,6 +405,7 @@
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
+
         <action
                 android:id="@+id/detail_to_security"
                 app:destination="@+id/security_and_privacy"
@@ -394,6 +413,7 @@
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
+
         <action
                 android:id="@+id/detail_to_pll"
                 app:destination="@id/pll_fragment"
@@ -411,6 +431,7 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
@@ -431,9 +452,18 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/pll_empty_to_brand_header"
                 app:destination="@id/brand_header"
+                app:enterAnim="@anim/slide_in_up"
+                app:exitAnim="@anim/slide_out_down"
+                app:popEnterAnim="@anim/slide_in_up"
+                app:popExitAnim="@anim/slide_out_down" />
+
+        <action
+                android:id="@+id/pll_empty_to_new_payment_card"
+                app:destination="@id/add_payment_card"
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
@@ -448,9 +478,11 @@
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <action
                 android:id="@+id/transactions_to_brand_header"
                 app:destination="@+id/brand_header"
@@ -464,9 +496,11 @@
     <fragment
             android:id="@+id/maximised_barcode_fragment"
             android:name="com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeFragment">
+
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <argument
                 android:name="barcode"
                 app:argType="com.bink.wallet.utils.BarcodeWrapper" />
@@ -475,6 +509,7 @@
     <fragment
             android:id="@+id/lcd_error_modal_fragment"
             android:name="com.bink.wallet.modal.points_module.LCDErrorFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -484,15 +519,19 @@
     <fragment
             android:id="@+id/pll_fragment"
             android:name="com.bink.wallet.scenes.pll.PllFragment">
+
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
         <argument
                 android:name="isAddJourney"
                 app:argType="boolean" />
+
         <action
                 android:id="@+id/pll_to_lcd"
                 app:destination="@+id/loyalty_card_detail_fragment"
@@ -500,6 +539,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/pll_to_brand_header"
                 app:destination="@+id/brand_header"
@@ -512,6 +552,7 @@
     <fragment
             android:id="@+id/terms_and_conditions"
             android:name="com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -519,9 +560,11 @@
     <fragment
             android:id="@+id/card_terms_and_conditions"
             android:name="com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+
         <argument
                 android:name="bankCard"
                 app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
@@ -548,6 +591,7 @@
     <fragment
             android:id="@+id/join_unavailable"
             android:name="com.bink.wallet.modal.JoinUnavailableFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -565,9 +609,10 @@
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
                 app:popExitAnim="@anim/slide_out_down" />
+
         <action
                 android:id="@+id/action_add_payment_card_to_privacy_fragment"
-                app:destination="@id/addPaymentCardPrivacyFragment"
+                app:destination="@id/add_payment_card_privacy_fragment"
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
@@ -576,6 +621,7 @@
     <fragment
             android:id="@+id/settings_screen"
             android:name="com.bink.wallet.scenes.settings.SettingsFragment">
+
         <action
                 android:id="@+id/settings_to_security_and_privacy"
                 app:destination="@+id/security_and_privacy_settings"
@@ -583,6 +629,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/settings_to_how_it_works"
                 app:destination="@+id/how_it_works"
@@ -590,6 +637,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/settings_to_onboarding"
                 app:destination="@+id/onboarding_fragment"
@@ -597,6 +645,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/settings_to_preferences"
                 app:destination="@+id/preference_fragment"
@@ -614,6 +663,7 @@
     <fragment
             android:id="@+id/about_fragment"
             android:name="com.bink.wallet.modal.loyalty_card_details.AboutMembershipFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -622,6 +672,7 @@
     <fragment
             android:id="@+id/security_and_privacy"
             android:name="com.bink.wallet.modal.loyalty_card_details.SecurityAndPrivacyFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -630,6 +681,7 @@
     <fragment
             android:id="@+id/security_and_privacy_settings"
             android:name="com.bink.wallet.modal.settings.SecurityAndPrivacySettingsFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -637,6 +689,7 @@
     <fragment
             android:id="@+id/how_it_works"
             android:name="com.bink.wallet.modal.settings.HowItWorksFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -645,6 +698,7 @@
     <fragment
             android:id="@+id/brand_header"
             android:name="com.bink.wallet.modal.BrandHeaderFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -662,6 +716,7 @@
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
                 app:popUpToInclusive="true" />
+
         <action
                 android:id="@+id/onboarding_to_accept_tc"
                 app:destination="@id/accept_tcs_fragment"
@@ -669,6 +724,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/onboarding_to_add_email"
                 app:destination="@+id/add_email_fragment"
@@ -689,6 +745,7 @@
     <fragment
             android:id="@+id/forgot_password"
             android:name="com.bink.wallet.scenes.forgot_password.ForgotPasswordFragment">
+
         <action
                 android:id="@+id/forgot_password_to_onboarding"
                 app:destination="@+id/onboarding_fragment"
@@ -705,6 +762,7 @@
     <fragment
             android:id="@+id/ghost_registration_unavailable"
             android:name="com.bink.wallet.modal.GhostRegistrationUnavailableFragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
@@ -713,13 +771,16 @@
     <fragment
             android:id="@+id/accept_tcs_fragment"
             android:name="com.bink.wallet.scenes.registration.AcceptTCFragment">
+
         <argument
                 android:name="accessToken"
                 app:argType="com.facebook.AccessToken"
                 app:nullable="true" />
+
         <argument
                 android:name="email"
                 app:argType="string" />
+
         <action
                 android:id="@+id/accept_to_onboarding"
                 app:destination="@+id/onboarding_fragment"
@@ -727,6 +788,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
         <action
                 android:id="@+id/accept_to_lcd"
                 app:destination="@+id/home_wallet"
@@ -740,6 +802,7 @@
     <fragment
             android:id="@+id/add_email_fragment"
             android:name="com.bink.wallet.scenes.registration.AddEmailFragment">
+
         <action
                 android:id="@+id/add_email_to_accept_terms"
                 app:destination="@+id/accept_tcs_fragment"
@@ -762,10 +825,11 @@
                 app:nullable="true" />
     </fragment>
     <fragment
-            android:id="@+id/addPaymentCardPrivacyFragment"
+            android:id="@+id/add_payment_card_privacy_fragment"
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardPrivacyFragment"
             android:label="AddPaymentCardPrivacyFragment"
             tools:layout="@layout/generic_modal_fragment">
+
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />

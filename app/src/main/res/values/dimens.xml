@@ -19,9 +19,10 @@
     <dimen name="card_login_height">28dp</dimen>
     <dimen name="card_login_margin_end">12dp</dimen>
     <dimen name="link_status_wrapper_margin_end">18dp</dimen>
-    <dimen name="delete_icon_size">30dp</dimen>
+    <dimen name="delete_icon_size">36dp</dimen>
     <dimen name="delete_icon_padding">7dp</dimen>
-    <dimen name="card_item_linear_layout_margin">10dp</dimen>
+    <dimen name="card_item_linear_layout_margin">36dp</dimen>
+    <dimen name="loyalty_card_corner_radius">10dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -39,10 +40,17 @@
     <dimen name="list_margin">64dp</dimen>
     <dimen name="search_bar_height">42dp</dimen>
 
+    <!-- Add Screen -->
+    <dimen name="add_card_margin">20dp</dimen>
+    <dimen name="add_card_margin_end">12dp</dimen>
+    <dimen name="shadowed_card_elevation">6dp</dimen>
+
     <!-- Add Join Screen -->
     <dimen name="logo_height">98dp</dimen>
     <dimen name="title_image_size">32dp</dimen>
     <dimen name="button_margin">48dp</dimen>
+    <dimen name="add_card_corner_radius">12dp</dimen>
+    <dimen name="add_card_elevation">2dp</dimen>
 
     <!-- Brand Header -->
     <dimen name="brand_image_height">98dp</dimen>
@@ -106,5 +114,5 @@
 
 
     <!-- Login Screen -->
-    <dimen name="continue_button_margin">52dp</dimen>
+    <dimen name="gradient_button_margin">52dp</dimen>
 </resources>

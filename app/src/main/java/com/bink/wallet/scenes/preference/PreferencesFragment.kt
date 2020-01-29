@@ -9,10 +9,11 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,57 +25,59 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        binding.progressSpinner.visibility = View.VISIBLE
+
         binding.preferenceDescription.text = HtmlCompat.fromHtml(
             getString(R.string.preference_description),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
         viewModel.savePreferenceError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.preference_update_error)
-            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                if (isNetworkAvailable(requireContext())) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.preference_update_error)
+                    )
+                }
+            }
         }
 
         viewModel.preferences.observeNonNull(this) { preferences ->
-
             binding.progressSpinner.visibility = View.GONE
-
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
-                    onClickListener = { preference: Preference, state: Int, checkBox ->
-                        if (verifyAvailableNetwork(requireActivity())) {
-                            viewModel.savePreference(
-                                json = JSONObject().put(
-                                    preference.slug!!,
-                                    state
-                                ).toString()
-                            )
-                        } else {
-                            checkBox.isChecked = !checkBox.isChecked
-                            requireContext().displayModalPopup(
-                                EMPTY_STRING,
-                                getString(R.string.no_internet_connection_dialog_message)
-                            )
-                        }
+                    onClickListener = { preference: Preference, state: Int, _ ->
+                        viewModel.savePreference(
+                            json = JSONObject().put(
+                                preference.slug!!,
+                                state
+                            ).toString()
+                        )
                     })
                 layoutManager = GridLayoutManager(requireContext(), 1)
             }
         }
 
         viewModel.preferenceErrorResponse.observeNonNull(this) {
-            binding.progressSpinner.visibility = View.GONE
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(
-                    R.string.preferences_error
+            if (isNetworkAvailable(requireContext(), true)) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(
+                        R.string.preferences_error
+                    )
                 )
-            )
+            }
+            binding.progressSpinner.visibility = View.GONE
         }
 
-        viewModel.getPreferences()
-        binding.progressSpinner.visibility = View.VISIBLE
+        if (isNetworkAvailable(requireContext(), true)) {
+            viewModel.getPreferences()
+        } else {
+            binding.progressSpinner.visibility = View.GONE
+        }
     }
 
     override fun builder(): FragmentToolbar {

@@ -5,10 +5,11 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".scenes.add.AddFragment">
-
+        <!-- Add Loyalty Card Not available for MVP -->
         <androidx.cardview.widget.CardView
                 android:id="@+id/loyalty_card_container"
                 android:layout_width="0dp"
@@ -16,9 +17,16 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:foreground="?selectableItemBackground"
+                android:textAppearance="@style/CustomTextView"
+                android:visibility="gone"
+                style="@style/ShadowedCardView"
                 app:layout_constraintBottom_toTopOf="@+id/browse_brands_container"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -38,27 +46,31 @@
 
                 <TextView
                         android:id="@+id/loyalty_card_title"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/custom_margin_add_fragment"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                         android:layout_marginBottom="@dimen/margin_padding_size_small"
                         android:text="@string/add_loyalty_card"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/loyalty_card_description"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
                         android:id="@+id/loyalty_card_description"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/custom_margin_add_fragment"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/scan_a_card_you_already_have"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,14 +79,21 @@
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/browse_brands_container"
+                style="@style/ShadowedCardView"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/add_card_size"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                app:layout_constraintBottom_toTopOf="@+id/payment_card_container"
+                android:layout_marginBottom="@dimen/add_card_margin_end"
+                android:foreground="?selectableItemBackground"
+                app:layout_constraintBottom_toTopOf="@id/payment_card_container"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:elevation="2dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -84,37 +103,46 @@
                         android:id="@+id/browse_brands_image"
                         android:layout_width="@dimen/add_custom_image_size"
                         android:layout_height="@dimen/add_custom_image_size"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginStart="@dimen/add_card_margin"
+                        android:layout_marginTop="@dimen/add_card_margin"
+                        android:layout_marginBottom="@dimen/margin_padding_size_small"
                         android:src="@drawable/ic_card_add_icon_browse"
                         app:layout_constraintBottom_toTopOf="@+id/browse_brands_title"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <TextView
                         android:id="@+id/browse_brands_title"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
-                        android:layout_marginBottom="@dimen/margin_padding_size_small"
+                        android:layout_marginStart="@dimen/add_card_margin"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                         android:text="@string/browse_brands_text"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/browse_brands_description"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/browse_brands_image"
+                        app:layout_constraintVertical_chainStyle="packed" />
 
                 <TextView
                         android:id="@+id/browse_brands_description"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
-                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:layout_marginStart="@dimen/add_card_margin"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
+                        android:layout_marginBottom="@dimen/add_card_margin"
                         android:text="@string/find_and_join_loyalty_schemes"
+                        android:textAppearance="@style/CustomTextView"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/browse_brands_title" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -122,11 +150,12 @@
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/payment_card_container"
+                style="@style/ShadowedCardView"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/add_card_size"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="@dimen/margin_padding_size_large"
+                android:foreground="?selectableItemBackground"
                 app:layout_constraintBottom_toTopOf="@+id/cancel_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -139,70 +168,84 @@
                         android:id="@+id/payment_card_image"
                         android:layout_width="@dimen/add_custom_image_size"
                         android:layout_height="@dimen/add_custom_image_size"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginStart="@dimen/add_card_margin"
+                        android:layout_marginTop="@dimen/add_card_margin"
                         android:src="@drawable/ic_card_add_icon_payment"
-                        app:layout_constraintBottom_toTopOf="@+id/payment_card_title"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <ImageView
                         android:id="@+id/card_payment_mastercard"
                         android:layout_width="@dimen/custom_add_fragment_image_size"
                         android:layout_height="@dimen/custom_add_fragment_image_size"
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/add_card_margin"
                         android:src="@drawable/ic_card_add_payment_providers_mastercard"
-                        app:layout_constraintBottom_toTopOf="@+id/payment_card_title"
+                        app:layout_constraintBottom_toBottomOf="@+id/payment_card_image"
                         app:layout_constraintStart_toEndOf="@+id/payment_card_image"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <ImageView
                         android:id="@+id/card_payment_amex"
                         android:layout_width="@dimen/custom_add_fragment_image_size"
                         android:layout_height="@dimen/custom_add_fragment_image_size"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/add_card_margin"
                         android:src="@drawable/ic_card_add_payment_providers_amex"
-                        app:layout_constraintBottom_toTopOf="@+id/payment_card_title"
+                        app:layout_constraintBottom_toBottomOf="@+id/payment_card_image"
                         app:layout_constraintStart_toEndOf="@+id/card_payment_mastercard"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <ImageView
                         android:id="@+id/card_payment_visa"
                         android:layout_width="@dimen/custom_add_fragment_image_size"
                         android:layout_height="@dimen/custom_add_fragment_image_size"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/add_card_margin"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                         android:src="@drawable/ic_card_add_payment_providers_visa"
-                        app:layout_constraintBottom_toTopOf="@+id/payment_card_title"
+                        app:layout_constraintBottom_toBottomOf="@+id/payment_card_image"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintStart_toEndOf="@+id/card_payment_amex"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
 
                 <TextView
                         android:id="@+id/payment_card_title"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
-                        android:layout_marginBottom="@dimen/margin_padding_size_small"
+                        android:layout_marginStart="@dimen/add_card_margin"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                         android:text="@string/add_payment_card"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/size_headline"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/payment_card_description"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/payment_card_image" />
 
                 <TextView
                         android:id="@+id/payment_card_description"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/custom_margin_add_fragment"
-                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                        android:text="@string/scan_and_link_your_payment_card"
+                        android:layout_marginStart="@dimen/add_card_margin"
+                        android:layout_marginEnd="@dimen/custom_margin_add_fragment"
+                        android:layout_marginBottom="@dimen/add_card_margin"
+                        android:text="@string/add_payment_card_button_description"
+                        android:textAppearance="@style/CustomTextView"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/size_sub_headline"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/payment_card_title" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -217,7 +260,8 @@
                 android:src="@drawable/ic_cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

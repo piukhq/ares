@@ -15,6 +15,7 @@ import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,17 +35,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     private fun setSignupButtonEnableStatus() {
         with(viewModel) {
-            binding.signUpButton.isEnabled =
-                (binding.passwordField.error == null &&
-                        binding.emailField.error == null &&
-                        binding.confirmPasswordField.error == null &&
-                        (email.value ?: EMPTY_STRING).isNotBlank() &&
-                        (password.value ?: EMPTY_STRING).isNotBlank() &&
-                        (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
-                        confirmPassword.value == password.value &&
-                        termsCondition.value!! &&
-                        privacyPolicy.value!!
-                        )
+            termsCondition.value?.let { termsConditions ->
+                privacyPolicy.value?.let { privacyPolicy ->
+                    binding.signUpButton.isEnabled =
+                        (binding.passwordField.error == null &&
+                                binding.emailField.error == null &&
+                                binding.confirmPasswordField.error == null &&
+                                (email.value ?: EMPTY_STRING).isNotBlank() &&
+                                (password.value ?: EMPTY_STRING).isNotBlank() &&
+                                (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
+                                confirmPassword.value == password.value &&
+                                termsConditions &&
+                                privacyPolicy
+                                )
+                }
+            }
         }
     }
 
@@ -93,6 +98,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
 
             password.observeNonNull(this@SignUpFragment) {
+                checkPasswordsMatch()
                 requireContext().validatePassword(it, binding.passwordField)
                 setSignupButtonEnableStatus()
             }
@@ -123,10 +129,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             signUpErrorResponse.observeNonNull(this@SignUpFragment) {
                 isLoading.value = false
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.registration_failed_text)
-                )
+                if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.registration_failed_text)
+                    )
+                }
             }
 
             signUpResponse.observeNonNull(this@SignUpFragment) {
@@ -159,57 +167,58 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         binding.progressSpinner.setOnTouchListener { _, _ -> true }
 
         binding.signUpButton.setOnClickListener {
+            if (isNetworkAvailable(requireActivity(), true)) {
+                requireContext().validateEmail(viewModel.email.value, binding.emailField)
+                requireContext().validatePassword(viewModel.password.value, binding.passwordField)
+                checkPasswordsMatch()
 
-            requireContext().validateEmail(viewModel.email.value, binding.emailField)
-            requireContext().validatePassword(viewModel.password.value, binding.passwordField)
-            checkPasswordsMatch()
-
-            with(viewModel) {
-                if (termsCondition.value == true &&
-                    privacyPolicy.value == true
-                ) {
-                    if (binding.confirmPasswordField.error == null &&
-                        binding.passwordField.error == null &&
-                        binding.emailField.error == null
+                with(viewModel) {
+                    if (termsCondition.value == true &&
+                        privacyPolicy.value == true
                     ) {
-                        isLoading.value = true
-                        signUp(
-                            SignUpRequest(
-                                email = email.value,
-                                password = password.value
-                            )
-                        )
-                    } else {
-                        requireContext().displayModalPopup(
-                            null,
-                            getString(R.string.all_fields_must_be_valid)
-                        )
-                    }
-                } else {
-                    val dialogDescription = if (termsCondition.value != true &&
-                        privacyPolicy.value != true
-                    ) {
-                        getString(
-                            R.string.accept_tc_pp,
-                            "${getString(R.string.terms_conditions_text)} & ${getString(R.string.privacy_policy_text)}"
-                        )
-                    } else {
-                        if (termsCondition.value != true) {
-                            getString(
-                                R.string.accept_tc_pp,
-                                getString(R.string.terms_conditions_text)
+                        if (binding.confirmPasswordField.error == null &&
+                            binding.passwordField.error == null &&
+                            binding.emailField.error == null
+                        ) {
+                            isLoading.value = true
+                            signUp(
+                                SignUpRequest(
+                                    email = email.value,
+                                    password = password.value
+                                )
                             )
                         } else {
-                            getString(
-                                R.string.accept_tc_pp,
-                                getString(R.string.privacy_policy_text)
+                            requireContext().displayModalPopup(
+                                null,
+                                getString(R.string.all_fields_must_be_valid)
                             )
                         }
+                    } else {
+                        val dialogDescription = if (termsCondition.value != true &&
+                            privacyPolicy.value != true
+                        ) {
+                            getString(
+                                R.string.accept_tc_pp,
+                                "${getString(R.string.terms_conditions_text)} & ${getString(R.string.privacy_policy_text)}"
+                            )
+                        } else {
+                            if (termsCondition.value != true) {
+                                getString(
+                                    R.string.accept_tc_pp,
+                                    getString(R.string.terms_conditions_text)
+                                )
+                            } else {
+                                getString(
+                                    R.string.accept_tc_pp,
+                                    getString(R.string.privacy_policy_text)
+                                )
+                            }
+                        }
+                        requireContext().displayModalPopup(
+                            EMPTY_STRING,
+                            dialogDescription
+                        )
                     }
-                    requireContext().displayModalPopup(
-                        EMPTY_STRING,
-                        dialogDescription
-                    )
                 }
             }
         }

@@ -37,31 +37,26 @@ class MembershipPlanDaoTest {
 
     @Test
     fun insertCards() {
-
-        val plansList = getPlansFromJon()
-
-        runBlocking {
-            plansDB.storeAll(plansList)
-
-            assertEquals(plansDB.getAllAsync().size, 6)
+        getPlansFromJon()?.let {
+            runBlocking {
+                plansDB.storeAll(it)
+                assertEquals(plansDB.getAllAsync().size, 6)
+            }
         }
     }
 
     @Test
     fun getPlan() {
-        val plansList = getPlansFromJon()
-
-        runBlocking {
-            plansDB.storeAll(plansList)
-
-            assertEquals(plansDB.getAllAsync().size, 6)
-
-            assertEquals(plansDB.getPlanById("194").id, "194")
+        getPlansFromJon()?.let {
+            runBlocking {
+                plansDB.storeAll(it)
+                assertEquals(plansDB.getAllAsync().size, 6)
+                assertEquals(plansDB.getPlanById("194").id, "194")
+            }
         }
-
     }
 
-    private fun getPlansFromJon(): List<MembershipPlan> {
+    private fun getPlansFromJon(): List<MembershipPlan>? {
         val moshi = Moshi.Builder().build()
         val listType = Types.newParameterizedType(List::class.java, MembershipPlan::class.java)
         val adapter: JsonAdapter<List<MembershipPlan>> = moshi.adapter(listType)
@@ -70,6 +65,9 @@ class MembershipPlanDaoTest {
                 .bufferedReader().use {
                     it.readText()
                 }
-        return adapter.fromJson(json)!!
+        adapter.fromJson(json)?.let {
+            return it
+        }
+        return null
     }
 }

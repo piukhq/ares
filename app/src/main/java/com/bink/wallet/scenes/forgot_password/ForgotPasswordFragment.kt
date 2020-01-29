@@ -7,6 +7,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ForgotPasswordFragmentBinding
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,16 +36,17 @@ class ForgotPasswordFragment :
         }
 
         binding.buttonContinueEmail.setOnClickListener {
-            requireContext().validateEmail(viewModel.email.value, binding.emailText)
-
-            if (binding.emailText.error != null) {
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.invalid_email_text)
-                )
-            } else {
-                viewModel.isLoading.value = true
-                viewModel.forgotPassword()
+            if (isNetworkAvailable(requireActivity(), true)) {
+                requireContext().validateEmail(viewModel.email.value, binding.emailText)
+                if (binding.emailText.error != null) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.invalid_email_text)
+                    )
+                } else {
+                    viewModel.isLoading.value = true
+                    viewModel.forgotPassword()
+                }
             }
         }
 
@@ -75,10 +77,12 @@ class ForgotPasswordFragment :
 
         viewModel.forgotPasswordError.observeNonNull(this) {
             viewModel.isLoading.value = false
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.error_description)
-            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    EMPTY_STRING,
+                    getString(R.string.error_description)
+                )
+            }
         }
     }
 
