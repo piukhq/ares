@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -37,6 +38,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     private val EMAIL_KEY = "email"
     private val FIELDS_KEY = "fields"
+    private val MARGIN_RATION = 4.5
     private lateinit var callbackManager: CallbackManager
     private lateinit var facebookEmail: String
     private var accessToken: AccessToken? = null
@@ -133,6 +135,18 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
             scrollPagesAutomatically(this)
         }
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.root)
+            constraintSet.connect(
+                binding.pagerIndicator.id,
+                ConstraintSet.BOTTOM,
+                binding.continueWithFacebook.id,
+                ConstraintSet.TOP,
+                (binding.pager.height / MARGIN_RATION).toInt()
+            )
+            constraintSet.applyTo(binding.root)
+        }
     }
 
     override fun onDestroy() {
@@ -189,6 +203,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         request.parameters = parameters
         request.executeAsync()
     }
+
 
     private fun handleFacebookNavigation(email: String?) {
         if (email.isNullOrEmpty()) {
