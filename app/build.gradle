@@ -14,6 +14,11 @@ repositories {
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
     compileSdkVersion 29
     signingConfigs {
         binkSigningConfig {
