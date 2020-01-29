@@ -11,9 +11,9 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
-        private var paymentWalletRepository: PaymentWalletRepository,
-        private var loyaltyWalletRepository: LoyaltyWalletRepository
-    ) :
+    private var paymentWalletRepository: PaymentWalletRepository,
+    private var loyaltyWalletRepository: LoyaltyWalletRepository
+) :
     BaseViewModel() {
 
     val paymentCard = MutableLiveData<PaymentCard>()
@@ -24,7 +24,7 @@ class PaymentCardsDetailsViewModel(
     val deleteRequest = MutableLiveData<ResponseBody>()
 
     private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError : LiveData<Throwable>
+    val loadCardsError: LiveData<Throwable>
         get() = _loadCardsError
 
     private val _linkError = MutableLiveData<Throwable>()
@@ -36,20 +36,19 @@ class PaymentCardsDetailsViewModel(
         get() = _unlinkError
 
     private var _deleteError = MutableLiveData<Throwable>()
-    val deleteError : LiveData<Throwable>
+    val deleteError: LiveData<Throwable>
         get() = _deleteError
 
-    suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
+    fun linkPaymentCard(cardId: String, paymentCardId: String) {
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
-            linkedPaymentCard,
             _linkError,
             paymentCard
         )
     }
 
-    suspend fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
+    fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
         paymentWalletRepository.unlinkPaymentCard(
             paymentCardId,
             cardId,
@@ -59,11 +58,15 @@ class PaymentCardsDetailsViewModel(
         )
     }
 
-    suspend fun deletePaymentCard(paymentCardId: String) {
+    fun deletePaymentCard(paymentCardId: String) {
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, _deleteError)
     }
 
-    suspend fun getMembershipCards() {
+    fun getMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    }
+
+    fun getPaymentCard(paymentCardId: String) {
+        paymentWalletRepository.getPaymentCard(paymentCardId, paymentCard)
     }
 }

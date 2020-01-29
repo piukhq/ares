@@ -90,7 +90,7 @@ class RecyclerItemTouchHelper(
                 c,
                 recyclerView,
                 foregroundView,
-                dX / 2,
+                dX / 3.6f,
                 dY / 2,
                 actionState,
                 isCurrentlyActive
