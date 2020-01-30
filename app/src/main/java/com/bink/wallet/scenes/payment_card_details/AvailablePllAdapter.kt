@@ -8,6 +8,7 @@ import com.bink.wallet.databinding.LinkedCardsListItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.matchSeparator
 
@@ -44,6 +45,7 @@ class AvailablePllAdapter(
 
             binding.toggle.isChecked =
                 if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
+
             if (isLinkedToPaymentCard(item) != null) {
                 binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item)!!)
             } else {
@@ -51,8 +53,12 @@ class AvailablePllAdapter(
             }
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
-                onLinkStatusChange(Pair(item.id, isChecked))
-                binding.toggle.displayCustomSwitch(isChecked)
+                if (isNetworkAvailable(binding.root.context, true)) {
+                    onLinkStatusChange(Pair(item.id, isChecked))
+                    binding.toggle.displayCustomSwitch(isChecked)
+                } else {
+                    binding.toggle.isChecked = !isChecked
+                }
             }
 
             binding.itemLayout.setOnClickListener {

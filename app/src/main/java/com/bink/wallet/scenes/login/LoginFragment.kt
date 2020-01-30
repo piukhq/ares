@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.login
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -11,6 +10,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,32 +26,16 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         get() = R.layout.login_fragment
     override val viewModel: LoginViewModel by viewModel()
 
-    private fun validateEmail() =
-        if (!Patterns.EMAIL_ADDRESS.matcher(viewModel.email.value ?: EMPTY_STRING).matches()) {
-            binding.emailField.error = getString(R.string.incorrect_email_text)
-        } else {
-            binding.emailField.error = null
-        }
-
-    private fun validatePassword() = if (!UtilFunctions.isValidField(
-            PASSWORD_REGEX,
-            viewModel.password.value ?: EMPTY_STRING
-        )
-    ) {
-        binding.passwordField.error =
-            getString(R.string.password_description)
-    } else {
-        binding.passwordField.error = null
-    }
-
     private fun setLoginButtonEnableStatus() {
         with(binding) {
-            logInButton.isEnabled =
-                (passwordField.error == null &&
-                        emailField.error == null &&
-                        (viewModel!!.email.value ?: EMPTY_STRING).isNotBlank() &&
-                        (viewModel!!.password.value ?: EMPTY_STRING).isNotBlank()
-                        )
+            viewModel?.let {
+                logInButton.isEnabled =
+                    (passwordField.error == null &&
+                            emailField.error == null &&
+                            (it.email.value ?: EMPTY_STRING).isNotBlank() &&
+                            (it.password.value ?: EMPTY_STRING).isNotBlank()
+                            )
+            }
         }
     }
 
@@ -73,24 +57,20 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         binding.logInButton.isEnabled = false
 
-        viewModel.retrieveStoredLoginData(requireContext())
+        viewModel.retrieveStoredLoginData()
         binding.viewModel = viewModel
         viewModel.loginData.observeNonNull(this) {
-            if (verifyAvailableNetwork(requireActivity())) {
-                viewModel.authenticate()
-            } else {
-                showNoInternetConnectionDialog()
-            }
+            viewModel.authenticate()
         }
 
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
-                validateEmail()
+                requireContext().validateEmail(it, binding.emailField)
                 setLoginButtonEnableStatus()
             }
 
             password.observeNonNull(this@LoginFragment) {
-                validatePassword()
+                requireContext().validatePassword(it, binding.passwordField)
                 setLoginButtonEnableStatus()
             }
 
@@ -113,10 +93,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
             logInErrorResponse.observeNonNull(this@LoginFragment) {
                 isLoading.value = false
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.incorrect_credentials)
-                )
+                if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                    requireContext().displayModalPopup(
+                        EMPTY_STRING,
+                        getString(R.string.incorrect_credentials)
+                    )
+                }
             }
 
             isLoading.observeNonNull(this@LoginFragment) {
@@ -129,28 +111,34 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     logInButton.isEnabled = !it
                 }
             }
+
+            authErrorResponse.observeNonNull(this@LoginFragment) {
+                // this is here for monitoring, but we don't need to report to the user at the moment
+            }
         }
 
         binding.logInButton.setOnClickListener {
-
-            validateEmail()
-            validatePassword()
-
-            if (binding.passwordField.error == null &&
-                binding.emailField.error == null
-            ) {
-                binding.progressSpinner.visibility = View.VISIBLE
-                viewModel.logIn(
-                    SignUpRequest(
-                        email = viewModel.email.value,
-                        password = viewModel.password.value
+            if (isNetworkAvailable(requireActivity(), true)) {
+                requireContext().apply {
+                    validateEmail(viewModel.email.value, binding.emailField)
+                    validatePassword(viewModel.password.value, binding.passwordField)
+                }
+                if (binding.passwordField.error == null &&
+                    binding.emailField.error == null
+                ) {
+                    binding.progressSpinner.visibility = View.VISIBLE
+                    viewModel.logIn(
+                        SignUpRequest(
+                            email = viewModel.email.value,
+                            password = viewModel.password.value
+                        )
                     )
-                )
-            } else {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.all_fields_must_be_valid)
-                )
+                } else {
+                    requireContext().displayModalPopup(
+                        null,
+                        getString(R.string.all_fields_must_be_valid)
+                    )
+                }
             }
         }
     }

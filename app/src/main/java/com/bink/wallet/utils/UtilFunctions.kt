@@ -1,10 +1,13 @@
 package com.bink.wallet.utils
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
-import android.widget.CheckBox
+import android.widget.TextView
+import com.bink.wallet.R
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 
@@ -23,7 +26,7 @@ object UtilFunctions {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        checkBox: CheckBox
+        textView: TextView
     ) {
         val spannableString = SpannableString(stringToSpan)
         if (spannableString.contains(stringToHyperlink)) {
@@ -34,9 +37,48 @@ object UtilFunctions {
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             )
         }
-        checkBox.apply {
+        textView.apply {
             text = spannableString
             movementMethod = LinkMovementMethod.getInstance()
         }
+    }
+
+    @Suppress("DEPRECATION")
+    fun isNetworkAvailable(
+        context: Context,
+        isUserAction: Boolean = false,
+        okButtonAction: () -> Unit = {}
+    ): Boolean {
+        // TODO: At some point we need to update to using NetworkCallbacks, but that's long term
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        val isNetworkAvailable = networkInfo != null && networkInfo.isConnected
+        if (isUserAction && !isNetworkAvailable) {
+            showNoInternetConnectionDialog(context, okButtonAction)
+        }
+        return isNetworkAvailable
+    }
+
+    private fun showNoInternetConnectionDialog(context: Context, okButtonAction: () -> Unit = {}) {
+        context.displayModalPopup(
+            null,
+            context.getString(R.string.no_internet_connection_dialog_message),
+            okButtonAction
+        )
+    }
+
+    fun hasCertificatePinningFailed(error: Throwable, context: Context): Boolean {
+        if (error.toString().contains(CERT_PINNING_ERROR)) {
+            showCertificatePinningDialog(context)
+            return true
+        }
+        return false
+    }
+    private fun showCertificatePinningDialog(context: Context) {
+        context.displayModalPopup(
+            context.getString(R.string.ssl_pinning_failure_title),
+            context.getString(R.string.ssl_pinning_failure_text)
+        )
     }
 }

@@ -28,7 +28,11 @@ class LoginRepository(
         const val DEFAULT_LOGIN_ID = "0"
     }
 
-    fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
+    fun doAuthenticationWork(
+        loginResponse: LoginResponse,
+        loginData: MutableLiveData<LoginBody>,
+        authErrorResponse: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.loginOrRegisterAsync(loginResponse)
             withContext(Dispatchers.Main) {
@@ -36,7 +40,7 @@ class LoginRepository(
                     val response = request.await()
                     loginData.value = response.consent
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                    authErrorResponse.value = e
                 }
             }
         }

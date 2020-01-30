@@ -14,6 +14,11 @@ repositories {
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
+
+    lintOptions {
+        lintConfig file("lint.xml")
+    }
+
     compileSdkVersion 29
     signingConfigs {
         binkSigningConfig {
@@ -30,7 +35,8 @@ android {
         }
     }
     defaultConfig {
-        applicationId "com.bink.wallet.neo"
+//        applicationId "com.bink.wallet.neo"
+        applicationId "com.bink.wallet"
         minSdkVersion 23
         targetSdkVersion 29
         versionCode buildNumber
@@ -48,6 +54,7 @@ android {
             }
         }
         debug {
+//            signingConfig signingConfigs.binkSigningConfig
             applicationIdSuffix ".debug"
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -204,6 +211,8 @@ dependencies {
 
     implementation 'com.scottyab:rootbeer-lib:0.0.7'
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+
+    api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest-library:1.3'

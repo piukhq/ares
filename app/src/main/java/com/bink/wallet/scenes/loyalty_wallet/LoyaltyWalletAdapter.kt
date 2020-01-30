@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
+import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.LoyaltyWalletItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
-import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -76,6 +77,28 @@ class LoyaltyWalletAdapter(
 
     override fun getItemId(position: Int): Long = position.toLong()
 
+    fun deleteBannerDisplayById(id: String) {
+        val tempMembershipCards = membershipCards.toMutableList()
+        var indexToDelete = -1
+        var currentId = ""
+        tempMembershipCards.forEachIndexed { index, card ->
+            when (card) {
+                is MembershipCard -> currentId = card.id
+                is MembershipPlan -> currentId = card.id
+                is JoinCardItem -> currentId = card.id
+                is BannerDisplay -> currentId = card.id
+            }
+            if (currentId == id) {
+                indexToDelete = index
+            }
+        }
+        if (indexToDelete != -1) {
+            tempMembershipCards.removeAt(indexToDelete)
+            membershipCards = ArrayList(tempMembershipCards)
+            notifyDataSetChanged()
+        }
+    }
+
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
 
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
@@ -119,7 +142,6 @@ class LoyaltyWalletAdapter(
                 dismissBanner.setOnClickListener {
                     onRemoveListener(item)
                 }
-
                 joinCardDescription.text =
                     joinCardDescription.context.getString(R.string.payment_join_description)
             }
@@ -133,59 +155,58 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
+                val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan)
+
+                bindCardToLoyaltyItem(loyaltyItem, binding)
+
                 with(cardBinding) {
                     plan = currentMembershipPlan
                     item.plan = plan
                     mainLayout.setOnClickListener { onClickListener(item) }
+                }
+            }
+            with(cardBinding.cardView) {
+                setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                setSecondColor(Color.parseColor(item.card?.colour))
+            }
+        }
 
-                    when (item.status?.state) {
-                        MembershipCardStatus.AUTHORISED.status -> {
-                            cardLogin.visibility = View.GONE
-                            valueWrapper.visibility = View.VISIBLE
-                            if (!item.balances.isNullOrEmpty()) {
-                                val balance = item.balances?.first()
-                                when (balance?.prefix != null) {
-                                    true ->
-                                        loyaltyValue.text =
-                                            balance?.prefix?.plus(balance.value)
-                                    else -> {
-                                        loyaltyValue.text = balance?.value
-                                        loyaltyValueExtra.text = balance?.suffix
-                                    }
-                                }
+        private fun bindCardToLoyaltyItem(
+            loyaltyItem: LoyaltyWalletItem,
+            binding: LoyaltyWalletItemBinding
+        ) {
+            with(binding.cardItem) {
+                loyaltyItem.apply {
+                    loyaltyValue.text =
+                        if (shouldShowPoints()) {
+                            retrievePointsText()
+                        } else {
+                            retrieveAuthStatusText()?.let {
+                                root.context.getString(it)
                             }
                         }
-                        MembershipCardStatus.PENDING.status -> {
-                            valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
-                            loyaltyValue.text =
-                                mainLayout.context.getString(R.string.card_status_pending)
-                        }
-                        MembershipCardStatus.FAILED.status -> {
-                            valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.card_status_retry)
-                        }
-                        MembershipCardStatus.UNAUTHORISED.status -> {
-                            valueWrapper.visibility = View.VISIBLE
-                            cardLogin.visibility = View.GONE
-                            loyaltyValue.text = mainLayout.context.getString(R.string.empty_string)
+                    loyaltyValueExtra.text = retrieveAuthSuffix()
+
+
+                    if (!shouldShowLinkStatus()) {
+                        linkStatusText.visibility = View.GONE
+                    } else {
+                        retrieveLinkStatusText()?.let {
+                            linkStatusText.visibility = View.VISIBLE
+                            linkStatusText.text = root.context.getString(it)
                         }
                     }
-                    linkStatusWrapper.visibility = View.VISIBLE
-                    with(item.getLinkStatus()) {
-                        if (linkImage == 0) {
-                            linkStatusWrapper.visibility = View.GONE
-                        } else {
-                            linkStatusImg.setImageResource(linkImage)
-                            linkStatusText.text =
-                                mainLayout.context.getString(display)
+                    if (shouldShowLinkImages()) {
+                        linkStatusImg.visibility = View.VISIBLE
+                        retrieveLinkImage()?.let {
+                            linkStatusImg.setImageDrawable(
+                                root.context.getDrawable(it)
+                            )
                         }
+                    } else {
+                        linkStatusImg.visibility = View.GONE
                     }
-                }
-                with(cardBinding.cardView) {
-                    setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
-                    setSecondColor(Color.parseColor(item.card?.colour))
+
                 }
             }
         }
