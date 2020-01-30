@@ -277,8 +277,15 @@ class LoyaltyCardDetailsFragment :
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
             if (balance.suffix.isNullOrEmpty()) {
-                binding.pointsText.text =
-                    getString(R.string.points_prefix_or_suffix, prefix, balance.value)
+                val balanceValue = balance.value?.toFloat() ?: 0f
+                val balanceDecimalValue = balanceValue - balanceValue.toInt()
+                binding.pointsText.text = if (balanceDecimalValue != 0f) {
+                    balance.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balance.value?.toFloat()))
+                        .toString()
+                } else {
+                    balance.prefix?.plus(balance.value)?.toInt()
+                        .toString()
+                }
             } else {
                 binding.pointsText.text = getString(
                     R.string.points_prefix_and_suffix,
@@ -372,7 +379,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.paymentCards.value?.count { card ->
                             card.membership_cards.count { membershipCard ->
                                 membershipCard.active_link == true &&
-                                membershipCardId == membershipCard.id
+                                        membershipCardId == membershipCard.id
                             } > 0
                         },
                         viewModel.paymentCards.value?.size

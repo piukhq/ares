@@ -103,7 +103,15 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
         val balance = membershipCard.balances?.first()
         return when (balance?.prefix != null) {
             true -> {
-                balance?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balance.value?.toFloat())).toString()
+                val balanceValue = balance?.value?.toFloat() ?: 0f
+                val balanceDecimalValue = balanceValue - balanceValue.toInt()
+                if (balanceDecimalValue != 0f) {
+                    balance?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balance.value?.toFloat()))
+                        .toString()
+                } else {
+                    balance?.prefix?.plus(balance.value)?.toInt()
+                        .toString()
+                }
             }
             else -> {
                 balance?.value.toString()
