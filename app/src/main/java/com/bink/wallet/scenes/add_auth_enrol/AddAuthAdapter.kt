@@ -132,10 +132,11 @@ class AddAuthAdapter(
                     }
                 }
                 addTextChangedListener(textWatcher)
-                if (brands[adapterPosition].second.value.isNullOrBlank())
+                if (brands[adapterPosition].second.value.isNullOrBlank()) {
                     error = null
-                else
+                } else {
                     checkIfError(adapterPosition, this)
+                }
 
                 imeOptions =
                     if (item.second.column == finalTextField) {

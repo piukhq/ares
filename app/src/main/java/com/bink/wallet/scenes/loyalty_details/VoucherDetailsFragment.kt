@@ -8,6 +8,7 @@ import android.text.style.UnderlineSpan
 import android.text.SpannableString
 import android.text.Spanned
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
@@ -50,7 +51,7 @@ class VoucherDetailsFragment :
 
         viewModel.voucher.value?.let { voucher ->
             with(binding.recycler) {
-                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+                layoutManager = LinearLayoutManager(requireContext())
                 val vouchers = listOf(voucher)
                 adapter = LoyaltyCardDetailsVouchersAdapter(vouchers)
             }

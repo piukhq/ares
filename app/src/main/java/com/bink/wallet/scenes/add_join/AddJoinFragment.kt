@@ -20,6 +20,8 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>() {
+    private val ADD_BUTTON_ENTRY = "ADD"
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -78,7 +80,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.visibility =
-            if (!(currentMembershipPlan.feature_set?.linking_support ?: emptyList()).contains("ADD")) {
+            if (!(currentMembershipPlan.feature_set?.linking_support
+                    ?: emptyList()).contains(ADD_BUTTON_ENTRY)) {
                 View.GONE
             } else {
                 View.VISIBLE
