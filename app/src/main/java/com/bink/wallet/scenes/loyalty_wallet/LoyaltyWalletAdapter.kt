@@ -16,7 +16,6 @@ import com.bink.wallet.model.LoyaltyWalletItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
