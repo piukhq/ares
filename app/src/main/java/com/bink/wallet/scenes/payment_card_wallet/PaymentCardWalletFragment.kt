@@ -21,7 +21,6 @@ import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardWalletFragment :
@@ -67,9 +66,7 @@ class PaymentCardWalletFragment :
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     if (isNetworkAvailable(requireActivity(), true)) {
-                        runBlocking {
-                            viewModel.deletePaymentCard(paymentCard.id.toString())
-                        }
+                        viewModel.deletePaymentCard(paymentCard.id.toString())
                     }
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
@@ -210,11 +207,9 @@ class PaymentCardWalletFragment :
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
-            runBlocking {
-                binding.progressSpinner.visibility = View.VISIBLE
-                binding.paymentCardRecycler.visibility = View.GONE
-                viewModel.getPaymentCards()
-            }
+            binding.progressSpinner.visibility = View.VISIBLE
+            binding.paymentCardRecycler.visibility = View.GONE
+            viewModel.getPaymentCards()
         }
     }
 
