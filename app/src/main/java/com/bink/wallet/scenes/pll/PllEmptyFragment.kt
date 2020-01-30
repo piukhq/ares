@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.pll
 
 import android.os.Bundle
+import androidx.databinding.ObservableBoolean
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -8,8 +9,6 @@ import com.bink.wallet.databinding.FragmentPllEmptyBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,11 +31,14 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        binding.viewModel = viewModel
+
         arguments.let { bundle ->
             if (bundle != null) {
                 PllEmptyFragmentArgs.fromBundle(bundle).apply {
                     currentMembershipCard = membershipCard
                     currentMembershipPlan = membershipPlan
+                    viewModel.isLCDJourney.set(isLCDJourney)
                 }
             }
         }
@@ -62,21 +64,37 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             binding.membershipPlan = it
         }
 
-        binding.buttonDone.setOnClickListener {
-            val directions =
-                currentMembershipPlan?.let { membershipPlan ->
-                    currentMembershipCard?.let { membershipCard ->
-                        PllEmptyFragmentDirections.pllEmptyToDetail(
-                            membershipPlan, membershipCard
-                        )
-                    }
-                }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+        binding.back.setOnClickListener {
+            navigateToLCDScreen()
         }
 
-        binding.buttonAddPaymentCard.setOnClickListener {
-            val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard()
-            findNavController().navigateIfAdded(this, directions)
+        binding.buttonDone.setOnClickListener {
+            navigateToLCDScreen()
         }
+
+        binding.buttonAddPaymentCardNonModal.setOnClickListener {
+            navigateToAddPaymentCards()
+        }
+
+        binding.addPaymentCardModal.setOnClickListener {
+            navigateToAddPaymentCards()
+        }
+    }
+
+    private fun navigateToAddPaymentCards() {
+        val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard()
+        findNavController().navigateIfAdded(this, directions)
+    }
+
+    private fun navigateToLCDScreen() {
+        val directions =
+            currentMembershipPlan?.let { membershipPlan ->
+                currentMembershipCard?.let { membershipCard ->
+                    PllEmptyFragmentDirections.pllEmptyToDetail(
+                        membershipPlan, membershipCard
+                    )
+                }
+            }
+        directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
     }
 }
