@@ -17,4 +17,13 @@ data class PaymentCard(
     @ColumnInfo(name = "card") val card: BankCard?,
     @ColumnInfo(name = "image") val images: List<Image>?,
     @ColumnInfo(name = "account") val account: Account?
-) : Parcelable
+) : Parcelable {
+    fun addPaymentCard(cardId: String) {
+        (membership_cards as ArrayList<PaymentMembershipCard>).add(
+            PaymentMembershipCard(
+                cardId,
+                false
+            )
+        )
+    }
+}
