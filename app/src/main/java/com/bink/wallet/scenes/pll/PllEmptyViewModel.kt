@@ -1,7 +1,9 @@
 package com.bink.wallet.scenes.pll
 
+import androidx.databinding.ObservableBoolean
 import com.bink.wallet.BaseViewModel
 
 class PllEmptyViewModel : BaseViewModel() {
-    //TODO: Implement this ViewModel
+
+    var isLCDJourney = ObservableBoolean()
 }

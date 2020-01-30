@@ -372,7 +372,7 @@ class LoyaltyCardDetailsFragment :
                         viewModel.paymentCards.value?.count { card ->
                             card.membership_cards.count { membershipCard ->
                                 membershipCard.active_link == true &&
-                                membershipCardId == membershipCard.id
+                                        membershipCardId == membershipCard.id
                             } > 0
                         },
                         viewModel.paymentCards.value?.size
@@ -428,7 +428,7 @@ class LoyaltyCardDetailsFragment :
                     val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
                         viewModel.membershipCard.value?.let { membershipCard ->
                             LoyaltyCardDetailsFragmentDirections.detailToPllEmpty(
-                                membershipPlan, membershipCard
+                                membershipPlan, membershipCard, true
                             )
                         }
                     }

@@ -485,7 +485,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     this,
                     AddAuthFragmentDirections.signUpToPllEmpty(
                         membershipPlan,
-                        membershipCard
+                        membershipCard,
+                        false
                     )
                 )
             }
@@ -499,7 +500,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     this,
                     AddAuthFragmentDirections.signUpToPllEmpty(
                         membershipPlan,
-                        membershipCard
+                        membershipCard,
+                        false
                     )
                 )
             } else {

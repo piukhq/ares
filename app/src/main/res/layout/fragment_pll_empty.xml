@@ -8,6 +8,10 @@
         <variable
                 name="membershipPlan"
                 type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.pll.PllEmptyViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:src="@drawable/ic_back"
+                app:isVisible="@{viewModel.isLCDJourney()}"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
@@ -89,23 +94,58 @@
                 app:layout_constraintTop_toBottomOf="@+id/pll_empty_description_part_1"
                 tools:text="@string/link_payment_card_description_part_2" />
 
-        <TextView
-                android:id="@+id/button_add_payment_card"
+        <Button
+                android:id="@+id/button_done"
                 style="@style/RoundedGradientButton"
+                isVisible="@{!viewModel.isLCDJourney()}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/gradient_button_margin"
                 android:layout_marginEnd="@dimen/gradient_button_margin"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:fontFamily="@font/nunito_sans_bold"
+                android:text="@string/done_button"
+                android:textAllCaps="false"
+                android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintBottom_toTopOf="@+id/button_add_payment_card_non_modal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/add_payment_card_modal"
+                style="@style/RoundedGradientButton"
+                isVisible="@{viewModel.isLCDJourney()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gradient_button_margin"
+                android:layout_marginEnd="@dimen/gradient_button_margin"
+                android:layout_marginBottom="@dimen/gradient_button_margin"
+                android:fontFamily="@font/nunito_sans_bold"
+                android:text="@string/add_payment_cards"
+                android:textAllCaps="false"
+                android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone" />
+
+        <TextView
+                android:id="@+id/button_add_payment_card_non_modal"
+                isVisible="@{!viewModel.isLCDJourney()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_large"
                 android:fontFamily="@font/nunito_sans_bold"
                 android:gravity="center_horizontal"
-                android:padding="@dimen/margin_padding_size_small_medium"
                 android:text="@string/add_payment_cards"
-                android:textAllCaps="false"
-                android:textSize="@dimen/size_medium"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
