@@ -494,6 +494,9 @@
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+        <argument
+                android:name="isLCDJourney"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/pll_empty_to_detail"

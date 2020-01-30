@@ -107,9 +107,10 @@ class AvailablePllAdapter(
             binding.retry.visibility = View.GONE
         }
 
-        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean? {
-            return membershipCard.payment_cards?.findLast { paymentCard -> paymentCard.id == currentPaymentCard.id.toString() }
-                ?.active_link
+        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean {
+            return membershipCard.payment_cards?.findLast { paymentCard ->
+                paymentCard.id == currentPaymentCard.id.toString()
+            }?.active_link ?: false
         }
     }
 }
