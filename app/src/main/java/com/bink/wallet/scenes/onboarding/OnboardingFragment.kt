@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -189,6 +190,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         request.parameters = parameters
         request.executeAsync()
     }
+
 
     private fun handleFacebookNavigation(email: String?) {
         if (email.isNullOrEmpty()) {
