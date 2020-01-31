@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != "mr") {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+//            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)

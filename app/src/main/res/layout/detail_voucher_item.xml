@@ -24,8 +24,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
                 android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
-                android:layout_marginBottom="@dimen/add_card_margin_end"
-                android:layout_marginTop="@dimen/shadowed_card_elevation"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -36,8 +34,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/loyalty_value_margin_end"
-                    android:paddingBottom="@dimen/loyalty_value_margin_end"
+                    android:paddingTop="@dimen/voucher_padding_top"
+                    android:paddingBottom="@dimen/voucher_padding_bottom"
                     >
 
                 <TextView
@@ -55,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/loyalty_voucher_margin"
-                        android:layout_marginTop="@dimen/move_up_slightly"
+                        android:layout_marginTop="@dimen/voucher_subtitle_top"
                         android:fontFamily="@font/nunito_sans_light"
                         android:text="@{voucher.subtext}"
                         android:textColor="@color/black"
@@ -70,13 +68,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/loyalty_voucher_margin"
                         android:layout_marginEnd="@dimen/loyalty_voucher_margin"
-                        android:layout_marginTop="@dimen/loyalty_voucher_margin"
+                        android:layout_marginTop="@dimen/voucher_subtitle_bottom"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@{voucher.headline}"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_title_big"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/title" />
+                        app:layout_constraintTop_toBottomOf="@id/subtitle" />
 
                 <ProgressBar
                         android:id="@+id/progress_bar"
