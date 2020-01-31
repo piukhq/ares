@@ -81,24 +81,24 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
 
 fun Boolean?.toInt() = if (this != null && this) 1 else 0
 
-fun Long.getElapsedTime(context: Context): String {
+fun Long.getElapsedTime(context: Context, short: Boolean = false): String {
     var elapsed = this / 60
-    var suffix = MINUTES
+    var suffix = if (short) MINUTES_SHORT else MINUTES
     if (elapsed >= 60) {
         elapsed /= 60
-        suffix = HOURS
+        suffix = if (short) HOURS_SHORT else HOURS
         if (elapsed >= 24) {
             elapsed /= 24
-            suffix = DAYS
+            suffix = if (short) DAYS_SHORT else DAYS
             if (elapsed >= 7) {
                 elapsed /= 7
-                suffix = WEEKS
+                suffix = if (short) WEEKS_SHORT else WEEKS
                 if (elapsed >= 5) {
                     elapsed /= 5
-                    suffix = MONTHS
+                    suffix = if (short) MONTHS_SHORT else MONTHS
                     if (elapsed >= 12) {
                         elapsed /= 12
-                        suffix = YEARS
+                        suffix = if (short) YEARS_SHORT else YEARS
                     }
                 }
             }

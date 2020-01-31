@@ -7,6 +7,13 @@ const val WEEKS = "weeks"
 const val MONTHS = "months"
 const val YEARS = "years"
 
+const val MINUTES_SHORT = "min"
+const val HOURS_SHORT = "hrs"
+const val DAYS_SHORT = "dys"
+const val WEEKS_SHORT = "wks"
+const val MONTHS_SHORT = "mon"
+const val YEARS_SHORT = "yrs"
+
 const val NUMBER_MINUTES_IN_HOUR = 60
 const val NUMBER_SECONDS_IN_MINUTE = 60
 const val NUMBER_HOURS_IN_DAY = 24
