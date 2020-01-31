@@ -99,7 +99,7 @@
                         android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/voucher_spent"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/progress_bar" />
 
@@ -112,7 +112,7 @@
                         android:fontFamily="@font/nunito_sans_light"
                         android:text="@string/voucher_goal"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/progress_bar" />
 
@@ -121,9 +121,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/loyalty_voucher_margin"
-                        android:fontFamily="@font/nunito_sans_bold"
+                        android:fontFamily="@font/nunito_sans_black"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/spent_title" />
 
@@ -132,9 +132,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/loyalty_voucher_margin"
-                        android:fontFamily="@font/nunito_sans_bold"
+                        android:fontFamily="@font/nunito_sans_black"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
+                        android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/goal_title" />
 

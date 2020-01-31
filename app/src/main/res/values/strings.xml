@@ -420,8 +420,8 @@
     <string name="your_past_rewards">Your past rewards</string>
     <string name="collecting">Collecting</string>
     <string name="towards_rewards">Towards rewards</string>
-    <string name="voucher_spent">Spent</string>
-    <string name="voucher_goal">Goal</string>
+    <string name="voucher_spent">Spent:</string>
+    <string name="voucher_goal">Goal:</string>
     <string name="voucher_entry_date">on %s</string>
     <string name="voucher_detail_text_in_progress">Spend %s with us and you\'ll get a %s</string>
     <string name="voucher_detail_title_issued">Your %s is ready!</string>
