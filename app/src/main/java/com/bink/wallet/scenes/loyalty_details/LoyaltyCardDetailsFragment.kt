@@ -369,13 +369,13 @@ class LoyaltyCardDetailsFragment :
                 val membershipCardId = viewModel.membershipCard.value?.id.toString()
                 val activeLinkedParams =
                     listOf(
-                        viewModel.paymentCards.value?.count { card ->
+                        viewModel.localPaymentCards.value?.count { card ->
                             card.membership_cards.count { membershipCard ->
                                 membershipCard.active_link == true &&
                                         membershipCardId == membershipCard.id
                             } > 0
                         },
-                        viewModel.paymentCards.value?.size
+                        viewModel.localPaymentCards.value?.size
                     )
                 linkStatus.descriptionParams = activeLinkedParams
             }
