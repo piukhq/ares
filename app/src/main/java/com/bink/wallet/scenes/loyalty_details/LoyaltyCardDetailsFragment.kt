@@ -143,38 +143,19 @@ class LoyaltyCardDetailsFragment :
         }
 
         val aboutTitle =
-            if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+            if (viewModel.membershipPlan.value?.account?.plan_name.isNullOrEmpty()) {
                 getString(R.string.about_membership)
-            } else
+            } else {
                 getString(
                     R.string.about_membership_plan_name,
                     viewModel.membershipPlan.value?.account!!.plan_name!!
                 )
+            }
 
         binding.footerAbout.binding.title.text = aboutTitle
 
         binding.footerAbout.setOnClickListener {
-            var aboutText = getString(R.string.about_membership)
-            var description = getString(R.string.no_plan_description_available)
-
-            viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
-                aboutText = getString(R.string.about_membership_title_template, plan_name)
-            }
-            viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
-                description = plan_description
-            }
-
-            findNavController().navigateIfAdded(
-                this,
-                LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        aboutText,
-                        description
-                    )
-                )
-            )
+            viewAboutInformation()
         }
 
         if (viewModel.membershipCard.value?.card != null &&
@@ -213,9 +194,32 @@ class LoyaltyCardDetailsFragment :
 
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            colorDrawable.alpha = v?.scrollY?.let {
+            val scrollValue = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
+            colorDrawable.alpha = scrollValue
+            viewModel.membershipCard.value?.let { it ->
+                if (!it.vouchers.isNullOrEmpty() &&
+                    it.status?.state == MembershipCardStatus.AUTHORISED.status
+                ) {
+                    if (!it.vouchers.isNullOrEmpty()) {
+                        it.vouchers?.first()?.let { voucher ->
+                            with(binding) {
+                                if (scrollValue == MAX_ALPHA.toInt()) {
+                                    viewModel?.membershipPlan?.value?.account?.company_name?.let { name ->
+                                        toolbarTitle.text = name
+                                    }
+                                    toolbarSubtitle.text =
+                                        root.context.displayVoucherEarnAndTarget(voucher)
+                                } else {
+                                    toolbarTitle.text = EMPTY_STRING
+                                    toolbarSubtitle.text = EMPTY_STRING
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
@@ -289,6 +293,30 @@ class LoyaltyCardDetailsFragment :
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
+    }
+
+    private fun viewAboutInformation() {
+        var aboutText = getString(R.string.about_membership)
+        var description = getString(R.string.no_plan_description_available)
+
+        viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
+            aboutText = getString(R.string.about_membership_title_template, plan_name)
+        }
+        viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
+            description = plan_description
+        }
+
+        findNavController().navigateIfAdded(
+            this,
+            LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    true,
+                    aboutText,
+                    description
+                )
+            )
+        )
     }
 
     private fun viewVoucherDetails(voucher: Voucher) {
@@ -582,7 +610,7 @@ class LoyaltyCardDetailsFragment :
                         if (!membershipCard.vouchers.isNullOrEmpty() &&
                             membershipCard.status?.state == MembershipCardStatus.AUTHORISED.status
                         ) {
-                            showPlrMembership()
+                            viewAboutInformation()
                         } else {
                             val action =
                                 LoyaltyCardDetailsFragmentDirections.detailToTransactions(
