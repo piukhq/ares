@@ -109,7 +109,7 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
                     balance?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balance.value?.toFloat()))
                         .toString()
                 } else {
-                    balance?.prefix?.plus(balance.value)?.toInt()
+                    balance?.prefix?.plus(balanceValue.toInt())
                         .toString()
                 }
             }

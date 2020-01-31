@@ -280,10 +280,10 @@ class LoyaltyCardDetailsFragment :
                 val balanceValue = balance.value?.toFloat() ?: 0f
                 val balanceDecimalValue = balanceValue - balanceValue.toInt()
                 binding.pointsText.text = if (balanceDecimalValue != 0f) {
-                    balance.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balance.value?.toFloat()))
+                    balance.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balanceValue))
                         .toString()
                 } else {
-                    balance.prefix?.plus(balance.value)?.toInt()
+                    balance.prefix?.plus(balanceValue.toInt().toString())
                         .toString()
                 }
             } else {
