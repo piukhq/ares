@@ -56,8 +56,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
         viewModel.membershipCard.observeForever {
             it.membership_transactions?.let { transactions ->
                 if (transactions.isEmpty() ||
-                    viewModel.membershipPlan.value?.feature_set?.transactions_available != true ||
-                            true
+                    viewModel.membershipPlan.value?.feature_set?.transactions_available != true
                 ) {
                     with (binding) {
                         pointsHistory.text =
