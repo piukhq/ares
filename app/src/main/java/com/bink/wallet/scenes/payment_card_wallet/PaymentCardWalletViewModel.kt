@@ -48,13 +48,6 @@ class PaymentCardWalletViewModel(
         )
     }
 
-    fun fetchLocalPaymentCards() {
-        paymentWalletRepository.getLocalPaymentCards(
-            paymentCards,
-            _fetchError
-        )
-    }
-
     fun deletePaymentCard(paymentCardId: String) {
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, _deleteError)
     }
