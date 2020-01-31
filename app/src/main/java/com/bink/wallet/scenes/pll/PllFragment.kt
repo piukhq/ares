@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +11,8 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
@@ -89,34 +92,24 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
-        viewModel.paymentCards.observeNonNull(this) {
-            runBlocking {
-                viewModel.getLocalPaymentCards()
-            }
-        }
-
         val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null)
+
+        viewModel.paymentCards.observe(viewLifecycleOwner, Observer {
+            viewModel.membershipCard.value?.let { membershipCard ->
+                adapter.paymentCards = it.toPllPaymentCardWrapperList(isAddJourney, membershipCard)
+                adapter.notifyDataSetChanged()
+            }
+        })
+
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        viewModel.localPaymentCards.observeNonNull(this) {
-            val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
-            it.forEach { card ->
-                val isSelected = if (isAddJourney) {
-                    true
-                } else {
-                    card.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                }
-                listPaymentCards.add(
-                    PllPaymentCardWrapper(
-                        card,
-                        isSelected
-                    )
-                )
+        viewModel.localPaymentCards.observe(viewLifecycleOwner, Observer {
+            viewModel.membershipCard.value?.let { membershipCard ->
+                adapter.paymentCards = it.toPllPaymentCardWrapperList(isAddJourney, membershipCard)
+                adapter.notifyDataSetChanged()
             }
-            adapter.paymentCards = listPaymentCards
-            adapter.notifyDataSetChanged()
-        }
+        })
 
         viewModel.membershipCard.observeNonNull(this) {
             directions =
@@ -132,7 +125,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         binding.buttonDone.setOnClickListener {
             when {
                 viewModel.paymentCards.value.isNullOrEmpty() &&
-                viewModel.localPaymentCards.value.isNullOrEmpty() -> {
+                        viewModel.localPaymentCards.value.isNullOrEmpty() -> {
                     findNavController().popBackStack()
                 }
                 isNetworkAvailable(requireActivity(), true) -> {
@@ -247,12 +240,37 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     }
 
     private fun displayTitle(hasLinkedCards: Boolean) {
-        viewModel.title.set(getString(
-            if (hasLinkedCards) {
-                R.string.pll_linked_title
-            } else {
-                R.string.pll_unlinked_title
+        viewModel.title.set(
+            getString(
+                if (hasLinkedCards) {
+                    R.string.pll_linked_title
+                } else {
+                    R.string.pll_unlinked_title
+                }
+            )
+        )
+    }
+
+    companion object {
+        private fun List<PaymentCard>.toPllPaymentCardWrapperList(
+            isAddJourney: Boolean,
+            membershipCard: MembershipCard
+        ): List<PllPaymentCardWrapper> {
+            val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
+            this.forEach { card ->
+                val isSelected = if (isAddJourney) {
+                    true
+                } else {
+                    card.isLinkedToMembershipCard(membershipCard)
+                }
+                listPaymentCards.add(
+                    PllPaymentCardWrapper(
+                        card,
+                        isSelected
+                    )
+                )
             }
-        ))
+            return listPaymentCards
+        }
     }
 }
