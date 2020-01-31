@@ -77,7 +77,8 @@ class LoyaltyCardDetailsFragment :
             viewModel.membershipPlan.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
             val tiles = arrayListOf<String>()
-            viewModel.membershipPlan.value?.images?.filter { image -> image.type == 2 }
+            viewModel.membershipPlan.value?.images
+                ?.filter { image -> image.type == 2 }
                 ?.forEach { image -> tiles.add(image.url.toString()) }
             viewModel.tiles.value = tiles
             viewModel.membershipCard.value =
@@ -198,25 +199,33 @@ class LoyaltyCardDetailsFragment :
                 getAlphaForActionBar(it)
             }!!
             colorDrawable.alpha = scrollValue
-            viewModel.membershipCard.value?.let { it ->
-                if (!it.vouchers.isNullOrEmpty() &&
-                    it.status?.state == MembershipCardStatus.AUTHORISED.status
-                ) {
-                    if (!it.vouchers.isNullOrEmpty()) {
-                        it.vouchers?.first()?.let { voucher ->
-                            with(binding) {
-                                if (scrollValue == MAX_ALPHA.toInt()) {
-                                    viewModel?.membershipPlan?.value?.account?.company_name?.let { name ->
-                                        toolbarTitle.text = name
-                                    }
-                                    toolbarSubtitle.text =
-                                        root.context.displayVoucherEarnAndTarget(voucher)
-                                } else {
-                                    toolbarTitle.text = EMPTY_STRING
-                                    toolbarSubtitle.text = EMPTY_STRING
-                                }
+            if (scrollValue == MAX_ALPHA.toInt()) {
+                viewModel.membershipPlan.value?.account?.company_name?.let { name ->
+                    binding.toolbarTitle.text = name
+                }
+                var voucherTitle = false
+                viewModel.membershipCard.value?.let { it ->
+                    if (!it.vouchers.isNullOrEmpty() &&
+                        it.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        if (!it.vouchers.isNullOrEmpty()) {
+                            it.vouchers?.first()?.let { voucher ->
+                                voucherTitle = true
+                                binding.toolbarSubtitle.text =
+                                    requireContext().displayVoucherEarnAndTarget(voucher)
                             }
                         }
+                    }
+                }
+                if (!voucherTitle) {
+                    viewModel.membershipCard.value?.balances?.first().let { balance ->
+                        binding.toolbarSubtitle.text =
+                            ValueDisplayUtils.displayValue(
+                                balance?.value?.toFloat(),
+                                balance?.prefix,
+                                balance?.suffix,
+                                null
+                            )
                     }
                 }
             }

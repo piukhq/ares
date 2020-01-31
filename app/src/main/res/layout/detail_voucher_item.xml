@@ -25,6 +25,7 @@
                 android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
                 android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
                 android:orientation="vertical"
+                app:cardCornerRadius="@dimen/voucher_corner_radius"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
