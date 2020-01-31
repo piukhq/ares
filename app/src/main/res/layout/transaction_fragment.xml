@@ -72,5 +72,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/points_description" />
 
+        <TextView
+                android:id="@+id/no_transactions_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@string/no_transaction_history_yet"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_sub_headline"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/points_description" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

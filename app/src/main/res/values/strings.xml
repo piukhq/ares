@@ -114,6 +114,9 @@
     <string name="points_history">Points history</string>
     <string name="history_text">History</string>
     <string name="description_not_available">Not available</string>
+    <string name="points_history_not_available_title">Transaction history unavailable</string>
+    <string name="points_history_not_available_description">Your %s history is not available yet</string>
+    <string name="points_history_not_available_period">Last Checked %s ago</string>
     <!-- 1.6 -->
     <string name="points_retry_login">Retry login</string>
     <!-- 1.7 -->
@@ -418,4 +421,5 @@
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
+    <string name="no_transaction_history_yet">We are unable to currently show the transaction history for this loyalty scheme yet.</string>
 </resources>
