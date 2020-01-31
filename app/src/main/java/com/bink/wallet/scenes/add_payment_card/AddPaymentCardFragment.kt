@@ -170,7 +170,7 @@ class AddPaymentCardFragment :
 
     private fun cardInfoDisplay() {
         binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
-        binding.displayCardName.text = binding.cardName.text
+        binding.displayCardName.text = binding.cardName.text.toString()
     }
 
     /***

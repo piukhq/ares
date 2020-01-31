@@ -8,6 +8,10 @@
         <variable
                 name="membershipPlan"
                 type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.pll.PllEmptyViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +25,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:src="@drawable/ic_back"
+                app:isVisible="@{viewModel.isLCDJourney()}"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                tools:ignore="ContentDescription" />
 
         <com.bink.wallet.ModalBrandHeader
                 android:id="@+id/header"
@@ -81,7 +97,8 @@
         <Button
                 android:id="@+id/button_done"
                 style="@style/RoundedGradientButton"
-                android:layout_width="0dp"
+                isVisible="@{!viewModel.isLCDJourney()}"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/gradient_button_margin"
                 android:layout_marginEnd="@dimen/gradient_button_margin"
@@ -90,12 +107,31 @@
                 android:text="@string/done_button"
                 android:textAllCaps="false"
                 android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintBottom_toTopOf="@+id/button_add_payment_card"
+                app:layout_constraintBottom_toTopOf="@+id/button_add_payment_card_non_modal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+        <Button
+                android:id="@+id/add_payment_card_modal"
+                style="@style/RoundedGradientButton"
+                isVisible="@{viewModel.isLCDJourney()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gradient_button_margin"
+                android:layout_marginEnd="@dimen/gradient_button_margin"
+                android:layout_marginBottom="@dimen/gradient_button_margin"
+                android:fontFamily="@font/nunito_sans_bold"
+                android:text="@string/add_payment_cards"
+                android:textAllCaps="false"
+                android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone" />
+
         <TextView
-                android:id="@+id/button_add_payment_card"
+                android:id="@+id/button_add_payment_card_non_modal"
+                isVisible="@{!viewModel.isLCDJourney()}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -109,6 +145,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

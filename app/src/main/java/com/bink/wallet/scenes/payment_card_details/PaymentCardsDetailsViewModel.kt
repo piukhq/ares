@@ -39,7 +39,9 @@ class PaymentCardsDetailsViewModel(
     val deleteError: LiveData<Throwable>
         get() = _deleteError
 
-    fun linkPaymentCard(cardId: String, paymentCardId: String) {
+     fun linkPaymentCard(cardId: String, paymentCardId: String) {
+        updatePaymentCard(cardId)
+
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
@@ -68,5 +70,13 @@ class PaymentCardsDetailsViewModel(
 
     fun getPaymentCard(paymentCardId: String) {
         paymentWalletRepository.getPaymentCard(paymentCardId, paymentCard)
+    }
+
+    private fun updatePaymentCard(cardId: String) {
+        paymentCard.value?.let {
+            if (it.membership_cards.count { card -> card.id == cardId } < 1) {
+                it.addPaymentCard(cardId)
+            }
+        }
     }
 }

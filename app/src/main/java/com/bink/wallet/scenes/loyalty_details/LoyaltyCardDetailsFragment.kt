@@ -435,7 +435,7 @@ class LoyaltyCardDetailsFragment :
                     val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
                         viewModel.membershipCard.value?.let { membershipCard ->
                             LoyaltyCardDetailsFragmentDirections.detailToPllEmpty(
-                                membershipPlan, membershipCard
+                                membershipPlan, membershipCard, true
                             )
                         }
                     }
