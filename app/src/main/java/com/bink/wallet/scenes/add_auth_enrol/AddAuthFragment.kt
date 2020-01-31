@@ -177,14 +177,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 viewModel.currentMembershipPlan.value!!.account?.plan_name_card
                             )
                         }
-                    } else {
-                        account?.add_fields?.map {
-                            it.typeOfField = TypeOfField.ADD
-                            addFieldToList(it)
-                        }
                     }
 
                     account?.let {
+                        account.add_fields?.map {
+                            it.typeOfField = TypeOfField.ADD
+                            addFieldToList(it)
+                        }
                         account.authorise_fields?.map {
                             it.typeOfField = TypeOfField.AUTH
                             addFieldToList(it)
