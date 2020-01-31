@@ -71,7 +71,7 @@
                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:text="@string/your_past_rewards"
-                        android:textSize="@dimen/text_size_title_large"
+                        android:textSize="@dimen/text_size_description_big"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/top_text" />
 
