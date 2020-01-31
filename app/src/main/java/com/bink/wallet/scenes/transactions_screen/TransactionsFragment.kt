@@ -56,7 +56,8 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
         viewModel.membershipCard.observeForever {
             it.membership_transactions?.let { transactions ->
                 if (transactions.isEmpty() ||
-                    viewModel.membershipPlan.value?.feature_set?.transactions_available != true
+                    viewModel.membershipPlan.value?.feature_set?.transactions_available != true ||
+                            true
                 ) {
                     with (binding) {
                         pointsHistory.text =
@@ -64,11 +65,11 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                         pointsDescription.text =
                             getString(
                                 R.string.points_history_not_available_description,
-                                viewModel.membershipPlan.value?.account?.plan_name
+                                viewModel!!.membershipPlan.value?.account?.plan_name
                             )
                         with (noTransactionsText) {
                             val balance =
-                                viewModel.membershipCard.value?.balances?.first()
+                                viewModel!!.membershipCard.value?.balances?.first()
                             val updateTime = balance?.updated_at
                             val currentTime = Calendar.getInstance().timeInMillis / 1000
                             updateTime?.let { time ->
