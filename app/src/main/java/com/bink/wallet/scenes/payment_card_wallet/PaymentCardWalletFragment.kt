@@ -92,7 +92,7 @@ class PaymentCardWalletFragment :
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            fetchPaymentCards(true)
+            viewModel.fetchData()
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
