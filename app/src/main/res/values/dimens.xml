@@ -135,4 +135,5 @@
     <dimen name="voucher_subtitle_top">-2dp</dimen>
     <dimen name="voucher_subtitle_bottom">10dp</dimen>
     <dimen name="voucher_date_top">18dp</dimen>
+    <dimen name="voucher_code_bottom">24dp</dimen>
 </resources>
