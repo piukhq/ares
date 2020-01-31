@@ -130,9 +130,9 @@
     <dimen name="continue_button_margin">52dp</dimen>
 
     <!-- PLR -->
-    <dimen name="move_up_slightly">-2dp</dimen>
     <dimen name="voucher_padding_top">12dp</dimen>
     <dimen name="voucher_padding_bottom">12dp</dimen>
     <dimen name="voucher_subtitle_top">-2dp</dimen>
     <dimen name="voucher_subtitle_bottom">10dp</dimen>
+    <dimen name="voucher_date_top">18dp</dimen>
 </resources>

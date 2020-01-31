@@ -423,9 +423,9 @@
     <string name="voucher_spent">Spent:</string>
     <string name="voucher_goal">Goal:</string>
     <string name="voucher_entry_date">on %s</string>
-    <string name="voucher_detail_text_in_progress">Spend %s with us and you\'ll get a %s</string>
+    <string name="voucher_detail_text_in_progress">Spend %s with us and you\'ll get a %s.</string>
     <string name="voucher_detail_title_issued">Your %s is ready!</string>
-    <string name="voucher_detail_text_issued">Use the code above to redeem your reward. You will get %s off your purchase</string>
+    <string name="voucher_detail_text_issued">Use the code above to redeem your reward. You will get %s off your purchase.</string>
     <string name="voucher_detail_date_issued">Added %s</string>
     <string name="voucher_detail_title_redeemed">Your %s was redeemed</string>
     <string name="voucher_detail_text_redeemed">""</string>
@@ -436,6 +436,7 @@
     <string name="voucher_detail_date_expires">Expires %s</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
     <string name="plr_redeem_instructions">Use the code above to redeem your reward. You will get %s off your purchase.</string>
+    <string name="terms_amp_conditions">Terms &amp; conditions</string>
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>

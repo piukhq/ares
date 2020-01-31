@@ -31,7 +31,7 @@
 
     <color name="separator_color">#e5e5e5</color>
 
-    <!--    Payment card colors-->
+    <!-- Payment card colors -->
     <color name="visa_right">#13288d</color>
     <color name="visa_left">#181c51</color>
     <color name="mastercard_right">#f79e1b</color>

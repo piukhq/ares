@@ -80,7 +80,7 @@ class VoucherDetailsFragment :
                                             burn.type
                                         )
                                     )
-                                binding.spacingView.visibility = View.GONE
+                                binding.spacingView2.visibility = View.GONE
                             }
                             VoucherStates.ISSUED.state -> {
                                 with (binding) {
@@ -112,6 +112,7 @@ class VoucherDetailsFragment :
                                         voucher.date_issued!!,
                                         getString(R.string.voucher_detail_date_issued)
                                     )
+                                    code.setTextColor(resources.getColor(R.color.green_ok, null))
                                 }
                             }
                             VoucherStates.EXPIRED.state -> {

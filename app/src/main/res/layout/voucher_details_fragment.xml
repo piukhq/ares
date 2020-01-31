@@ -41,7 +41,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginBottom="@dimen/voucher_card_margin_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -52,6 +51,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recycler" />
+        <View
+                android:id="@+id/spacing_view2"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/voucher_card_margin_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spacing_view" />
         <TextView
                 android:id="@+id/code"
                 android:layout_width="match_parent"
@@ -59,12 +65,12 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_extrabold"
-                android:textColor="@color/green_ok"
+                android:textColor="@color/grey_50"
                 android:textSize="@dimen/text_size_title_big"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spacing_view" />
+                app:layout_constraintTop_toBottomOf="@id/spacing_view2" />
         <TextView
                 android:id="@+id/main_title"
                 android:layout_width="match_parent"
@@ -97,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/voucher_date_top"
                 android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_smaller"
@@ -125,7 +132,7 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_semibold"
-                android:text="@string/terms_conditions_text"
+                android:text="@string/terms_amp_conditions"
                 android:textColor="@color/blue_accent"
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
