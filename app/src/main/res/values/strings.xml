@@ -381,7 +381,7 @@
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="registration_failed_text">Registration failed</string>
-    <string name="invalid_email_format">Invalid mail format</string>
+    <string name="invalid_email_format">Incorrect email format</string>
     <string name="log_in_email_text">Log in with email</string>
     <string name="log_in_screen_description">Welcome back!</string>
     <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
