@@ -22,15 +22,15 @@ android {
     compileSdkVersion 29
     signingConfigs {
         binkSigningConfig {
-            storeFile file('keystore')
+            storeFile file('bink-keystore.jks')
             if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
                 keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
                 keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
                 storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
-            } else if (System.getenv("BINK_KEYSTORE_PASSWORD")) {
-                storePassword = System.getenv("BINK_KEYSTORE_PASSWORD")
-                keyPassword = System.getenv("BINK_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("BINK_KEYSTORE_ALIAS")
+            } else if (BINK_KEYSTORE_PASSWORD) {
+                storePassword = BINK_KEYSTORE_PASSWORD
+                keyPassword = BINK_KEYSTORE_PASSWORD
+                keyAlias = BINK_KEYSTORE_ALIAS
             }
         }
     }
