@@ -153,29 +153,16 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             feature_set.has_points == true &&
                             feature_set.transactions_available != null
                         ) {
-                            if (feature_set.transactions_available == true) {
-                                binding.descriptionAddAuth.text = getString(
-                                    R.string.log_in_transaction_available,
-                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
+                            binding.descriptionAddAuth.text =
+                                getString(
+                                    if (feature_set.transactions_available == true) {
+                                        R.string.log_in_transaction_available
+                                    } else {
+                                        R.string.log_in_transaction_unavailable
+                                    }
+                                    ,
+                                    viewModel.currentMembershipPlan.value?.account?.plan_name_card
                                 )
-                            } else {
-                                binding.descriptionAddAuth.text =
-                                    getString(
-                                        R.string.log_in_transaction_unavailable,
-                                        viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                    )
-                            }
-                        }
-
-                        if (MembershipPlanUtils.getAccountStatus(
-                                this,
-                                viewModel.currentMembershipCard.value!!
-                            ) == LoginStatus.STATUS_LOGIN_FAILED
-                        ) {
-                            binding.descriptionAddAuth.text = getString(
-                                R.string.log_in_transaction_available,
-                                viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                            )
                         }
                     }
 
