@@ -99,7 +99,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     viewModel.currentMembershipPlan.value!!.account?.company_name,
                     viewModel.currentMembershipPlan.value?.account?.plan_name
                 )
-            binding.noAccountText.visibility = View.VISIBLE
+            binding.noAccountText.visibility = if (viewModel.currentMembershipCard.value == null) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
 
         binding.close.setOnClickListener {
