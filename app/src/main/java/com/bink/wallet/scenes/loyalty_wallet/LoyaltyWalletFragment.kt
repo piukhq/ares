@@ -43,39 +43,38 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private val listener = object :
         RecyclerItemTouchHelperListener {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-            if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
-                if (direction == ItemTouchHelper.RIGHT &&
-                    walletItems[position] is MembershipCard
-                ) {
-                    val card = walletItems[position] as MembershipCard
-                    val membershipPlanData = viewModel.membershipPlanData.value
-                        ?: viewModel.localMembershipPlanData.value
-                    val plan =
-                        membershipPlanData?.firstOrNull {
-                            it.id == card.membership_plan
-                        }
+            if (walletItems[position] is MembershipCard) {
+                if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
+                    if (direction == ItemTouchHelper.RIGHT) {
+                        val card = walletItems[position] as MembershipCard
+                        val membershipPlanData = viewModel.membershipPlanData.value
+                            ?: viewModel.localMembershipPlanData.value
+                        val plan =
+                            membershipPlanData?.firstOrNull {
+                                it.id == card.membership_plan
+                            }
 
-                    val directions =
-                        plan?.let {
-                            WalletsFragmentDirections.homeToBarcode(
-                                plan, card
-                            )
-                        }
+                        val directions =
+                            plan?.let {
+                                WalletsFragmentDirections.homeToBarcode(
+                                    plan, card
+                                )
+                            }
 
-                    if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                        directions?.let {
-                            findNavController().navigateIfAdded(
-                                this@LoyaltyWalletFragment, it
-                            )
+                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
+                            directions?.let {
+                                findNavController().navigateIfAdded(
+                                    this@LoyaltyWalletFragment, it
+                                )
+                            }
+                            this@LoyaltyWalletFragment.onDestroy()
                         }
-                        this@LoyaltyWalletFragment.onDestroy()
-                    }
-                } else {
-                    walletItems[position].let {
-                        if (it is MembershipCard)
-                            deleteDialog(it, position)
+                    } else {
+                        deleteDialog(walletItems[position] as MembershipCard, position)
                     }
                 }
+            } else {
+                onCardClicked(walletItems[position])
             }
         }
     }
