@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
