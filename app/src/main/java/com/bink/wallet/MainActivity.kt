@@ -38,14 +38,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val navId = findNavController(R.id.main_fragment).currentDestination?.id
-        when (navId) {
+        when (findNavController(R.id.main_fragment).currentDestination?.id) {
             R.id.maximised_barcode_fragment -> {
                 findNavController(R.id.main_fragment).popBackStack()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
-            R.id.pll_empty_fragment -> {
-                //do nothing (back button action is prohibited here)
             }
             R.id.pll_fragment -> {
                 if (!SharedPreferenceManager.isAddJourney) {
@@ -68,8 +64,9 @@ class MainActivity : AppCompatActivity() {
                 LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
             }
+            R.id.pll_empty_fragment,
             R.id.card_terms_and_conditions -> {
-                // do nothing (back button is prohibited here)
+                //do nothing (back button action is prohibited here)
             }
             else -> super.onBackPressed()
         }
