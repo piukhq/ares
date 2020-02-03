@@ -219,7 +219,11 @@ class AddPaymentCardFragment :
                     ).presentedCardType()
                 val max = type.len
                 if (sanNumber.length > max) {
-                    val trimmedNumber = sanNumber.substring(0, max).cardFormatter()
+                    val trimmedNumber = if (type == PaymentCardType.NONE) {
+                        sanNumber.substring(0, max)
+                    } else {
+                        sanNumber.substring(0, max).cardFormatter()
+                    }
                     setText(trimmedNumber)
                     setSelection(trimmedNumber.length)
                 }
