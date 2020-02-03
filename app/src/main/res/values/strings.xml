@@ -381,7 +381,7 @@
     <string name="enter_password">Enter password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="registration_failed_text">Registration failed</string>
-    <string name="invalid_email_format">Invalid mail format</string>
+    <string name="invalid_email_format">Incorrect email format</string>
     <string name="log_in_email_text">Log in with email</string>
     <string name="log_in_screen_description">Welcome back!</string>
     <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
@@ -397,10 +397,10 @@
 
     <!--  Forgot password screen  -->
     <string name="forgot_password_title">Forgot password</string>
-    <string name="forgot_password_description">Please enter your email address and it is associated with a Bink account, then a password reset email will be sent.</string>
+    <string name="forgot_password_description">Please enter your email address and if it is associated with a Bink account, then a password reset email will be sent.</string>
     <string name="continue_text">Continue</string>
     <string name="email_text">Email</string>
-    <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent</string>
+    <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent.</string>
     <string name="invalid_email_text">Invalid email</string>
     <string name="error_description">Something went wrong</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
