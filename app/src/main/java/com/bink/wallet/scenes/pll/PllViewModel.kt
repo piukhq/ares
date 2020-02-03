@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.pll
 
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -11,8 +12,6 @@ import okhttp3.ResponseBody
 class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {
     val membershipCard = MutableLiveData<MembershipCard>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
-    val paymentCards = MutableLiveData<List<PaymentCard>>()
-    val localPaymentCards = MutableLiveData<List<PaymentCard>>()
     val title = ObservableField<String>()
     val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val linkError = MutableLiveData<Throwable>()
@@ -20,14 +19,22 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
     val fetchError = MutableLiveData<Throwable>()
     val localFetchError = MutableLiveData<Throwable>()
 
-    suspend fun getPaymentCards() {
+    private val _paymentCards = MutableLiveData<List<PaymentCard>>()
+    val paymentCards: LiveData<List<PaymentCard>>
+        get() = _paymentCards
+
+    private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
+    val localPaymentCards: LiveData<List<PaymentCard>>
+        get() = _localPaymentCards
+
+    fun getPaymentCards() {
         paymentWalletRepository.getPaymentCards(
-            paymentCards,
+            _paymentCards,
             fetchError
         )
     }
 
-    suspend fun linkPaymentCard(cardId: String, paymentCardId: String) {
+    fun linkPaymentCard(cardId: String, paymentCardId: String) {
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
@@ -35,7 +42,7 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         )
     }
 
-    suspend fun unlinkPaymentCard(paymentCardId: String, cardId: String) {
+    fun unlinkPaymentCard(paymentCardId: String, cardId: String) {
         paymentWalletRepository.unlinkPaymentCard(
             paymentCardId,
             cardId,
@@ -46,7 +53,7 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
 
     fun getLocalPaymentCards() {
         paymentWalletRepository.getLocalPaymentCards(
-            localPaymentCards,
+            _localPaymentCards,
             localFetchError
         )
     }
