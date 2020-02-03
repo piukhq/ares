@@ -96,6 +96,11 @@ class PaymentCardUtilsTests {
     }
 
     @Test
+    fun checkPresentedMasterCardBIN() {
+        assertEquals(PaymentCardType.MASTERCARD_BIN, "27".presentedCardType())
+    }
+
+    @Test
     fun checkPresentedAmExSingle() {
         assertEquals(PaymentCardType.AMEX, "3".presentedCardType())
     }
