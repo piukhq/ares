@@ -49,7 +49,9 @@ class PaymentCardWalletFragment :
                 viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
                 direction == ItemTouchHelper.LEFT
             ) {
-                viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
+                if (!viewModel.paymentCards.value.isNullOrEmpty()) {
+                    viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
+                }
             }
             if (direction == ItemTouchHelper.RIGHT) {
                 binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
@@ -67,8 +69,8 @@ class PaymentCardWalletFragment :
                 DialogInterface.BUTTON_POSITIVE -> {
                     if (isNetworkAvailable(requireActivity(), true)) {
                         viewModel.deletePaymentCard(paymentCard.id.toString())
+                        binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                     }
-                    binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
                     binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
@@ -90,11 +92,11 @@ class PaymentCardWalletFragment :
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            fetchPaymentCards(true)
+            viewModel.fetchData()
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
-            viewModel.fetchLocalPaymentCards()
+            viewModel.fetchData()
         }
 
         viewModel.deleteCardError.observeNonNull(this) {
