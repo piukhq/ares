@@ -614,6 +614,15 @@
                 app:popExitAnim="@anim/slide_out_down" />
 
         <action
+                android:id="@+id/add_payment_to_pcd"
+                app:destination="@+id/payment_card_detail"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@id/add_fragment" />
+
+        <action
                 android:id="@+id/action_add_payment_card_to_privacy_fragment"
                 app:destination="@id/add_payment_card_privacy_fragment"
                 app:enterAnim="@anim/slide_in_up"
