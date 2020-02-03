@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
@@ -13,7 +14,7 @@ import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
-    var paymentCards: List<PllPaymentCardWrapper>? = null
+    var paymentCards: List<PllPaymentCardWrapper> = listOf()
 ) :
     RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
 
@@ -28,14 +29,32 @@ class PllPaymentCardAdapter(
         return PllPaymentCardViewHolder(binding)
     }
 
-    override fun getItemCount() = paymentCards?.size ?: 0
+    override fun getItemCount() = paymentCards.size
 
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
-        paymentCards?.get(position).let { cardWrapper ->
-            cardWrapper?.let {
+        paymentCards[position].let { cardWrapper ->
+            cardWrapper.let {
                 holder.bindCard(cardWrapper)
             }
         }
+    }
+
+    fun notifyChanges(newList: List<PllPaymentCardWrapper>) {
+        val oldList = paymentCards
+        paymentCards = newList
+        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                oldList[oldItemPosition].paymentCard.id == newList[newItemPosition].paymentCard.id
+
+            override fun getOldListSize(): Int = oldList.size
+
+            override fun getNewListSize(): Int = newList.size
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                oldList[oldItemPosition] == newList[newItemPosition]
+
+
+        }).dispatchUpdatesTo(this)
     }
 
     inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
@@ -61,7 +80,7 @@ class PllPaymentCardAdapter(
                 }
             }
 
-            if (paymentCards?.last() == paymentCard) {
+            if (paymentCards.last() == paymentCard) {
                 binding.separator.visibility = View.GONE
             } else {
                 binding.separator.visibility = View.VISIBLE

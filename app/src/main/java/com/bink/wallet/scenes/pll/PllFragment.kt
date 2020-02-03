@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,8 +16,6 @@ import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_loyalty_card_details.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -92,24 +89,23 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
-        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null)
+        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
 
-        viewModel.paymentCards.observe(viewLifecycleOwner, Observer {
+        viewModel.paymentCards.observeNonNull(this) {
             viewModel.membershipCard.value?.let { membershipCard ->
-                adapter.paymentCards = it.toPllPaymentCardWrapperList(isAddJourney, membershipCard)
-                adapter.notifyDataSetChanged()
+                adapter.notifyChanges(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
             }
-        })
+        }
 
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        viewModel.localPaymentCards.observe(viewLifecycleOwner, Observer {
+        viewModel.localPaymentCards.observeNonNull(this) {
             viewModel.membershipCard.value?.let { membershipCard ->
                 adapter.paymentCards = it.toPllPaymentCardWrapperList(isAddJourney, membershipCard)
                 adapter.notifyDataSetChanged()
             }
-        })
+        }
 
         viewModel.membershipCard.observeNonNull(this) {
             directions =
@@ -132,7 +128,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     // display loading indicator?
                     val jobs = ArrayList<Deferred<Unit>>()
 
-                    adapter.paymentCards?.forEach { card ->
+                    adapter.paymentCards.forEach { card ->
                         if (card.isSelected &&
                             !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
                         ) {
