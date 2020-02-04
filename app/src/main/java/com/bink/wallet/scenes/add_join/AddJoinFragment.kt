@@ -29,12 +29,16 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     private val args: AddJoinFragmentArgs by navArgs()
 
+    private var isFromJoinCard: Boolean = false
+
     override val viewModel: AddJoinViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val currentMembershipPlan = args.currentMembershipPlan
+        isFromJoinCard = args.isFromJoinCard
+
         binding.item = currentMembershipPlan
 
         when (currentMembershipPlan.feature_set?.card_type) {
@@ -69,7 +73,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.closeButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            if (isFromJoinCard) {
+                findNavController().popBackStack()
+            } else {
+                findNavController().navigateIfAdded(this, R.id.global_to_home)
+            }
         }
 
         binding.addJoinReward.setOnClickListener {
