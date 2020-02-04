@@ -75,7 +75,12 @@ class LoyaltyWalletAdapter(
 
     override fun getItemCount(): Int = membershipCards.size
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long =
+        when (val walletItem = membershipCards[position]) {
+            is MembershipCard -> walletItem.id.toLong()
+            is MembershipPlan -> walletItem.id.toLong()
+            else -> position.toLong()
+        }
 
     fun deleteBannerDisplayById(id: String) {
         val tempMembershipCards = membershipCards.toMutableList()

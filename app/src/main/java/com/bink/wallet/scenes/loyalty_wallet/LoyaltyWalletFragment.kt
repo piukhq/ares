@@ -37,7 +37,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             onCardClicked(it)
         },
         onRemoveListener = { onBannerRemove(it) }
-    )
+    ).apply {
+        setHasStableIds(true)
+    }
+
     private var walletItems = ArrayList<Any>()
 
     private val listener = object :
