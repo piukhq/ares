@@ -147,6 +147,13 @@ fun Context.validatePassword(passwordValue: String?, editText: EditText) {
     }
 }
 
+fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
+    val safeClickListener = SafeClickListener {
+        onSafeClick(it)
+    }
+    setOnClickListener(safeClickListener)
+}
+
 fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
     val constraintSet = ConstraintSet()
     constraintSet.clone(parentLayout)

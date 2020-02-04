@@ -1,4 +1,4 @@
-package com.bink.wallet
+package com.bink.wallet.utils
 
 import com.bink.wallet.utils.enums.HandledException
 import retrofit2.HttpException
@@ -10,7 +10,7 @@ class ExceptionHandlingUtils {
      *   the error code, the error title and the error message for the dialog. This should be designed as a base
      *   method in the Base Fragment and then overriden where needed
      */
-    
+
     companion object {
         fun onHttpException(exception: Exception): HandledException {
             return if (exception is HttpException) {
