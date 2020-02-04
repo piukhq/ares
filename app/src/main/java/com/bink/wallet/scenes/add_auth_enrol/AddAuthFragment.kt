@@ -7,7 +7,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.ResolutionByCase
+import com.bink.wallet.ExceptionHandlingUtils
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -329,7 +329,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.addCardButton.isEnabled = false
 
         viewModel.createCardError.observeNonNull(this) { exception ->
-            when (ResolutionByCase.onHttpException(exception)) {
+            when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
                     requireContext().displayModalPopup(
                         getString(R.string.error),

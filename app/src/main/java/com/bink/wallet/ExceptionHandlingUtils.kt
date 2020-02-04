@@ -3,8 +3,14 @@ package com.bink.wallet
 import com.bink.wallet.utils.enums.HandledException
 import retrofit2.HttpException
 
-class ResolutionByCase {
+class ExceptionHandlingUtils {
 
+    /**
+     *   This method should be changed in the future to return a wrapper object that contains
+     *   the error code, the error title and the error message for the dialog. This should be designed as a base
+     *   method in the Base Fragment and then overriden where needed
+     */
+    
     companion object {
         fun onHttpException(exception: Exception): HandledException {
             return if (exception is HttpException) {
