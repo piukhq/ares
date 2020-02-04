@@ -15,6 +15,8 @@ import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
+import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
@@ -81,7 +83,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }, delay)
                 }
-            if(UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
                 requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
             }
         }
@@ -118,7 +120,13 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
             if (binding.acceptMarketing.isChecked) {
                 viewModel.handleMarketingPreferences(
-                    MarketingOption(1)
+                    MarketingOption(MARKETING_OPTION_YES.selected)
+                )
+            } else {
+                viewModel.handleMarketingPreferences(
+                    MarketingOption(
+                        (MARKETING_OPTION_NO.selected)
+                    )
                 )
             }
             findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
