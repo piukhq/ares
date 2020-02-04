@@ -5,10 +5,10 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.MembershipPlanUtils
-import com.bink.wallet.utils.TWO_DECIMAL_FLOAT_FORMAT
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.formatBalance
 
 class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: MembershipPlan) {
 
@@ -103,15 +103,7 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
         val balance = membershipCard.balances?.first()
         return when (balance?.prefix != null) {
             true -> {
-                val balanceValue = balance?.value?.toFloat() ?: 0f
-                val balanceDecimalValue = balanceValue - balanceValue.toInt()
-                if (balanceDecimalValue != 0f) {
-                    balance?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(balance.value?.toFloat()))
-                        .toString()
-                } else {
-                    balance?.prefix?.plus(balanceValue.toInt())
-                        .toString()
-                }
+                balance.formatBalance()
             }
             else -> {
                 balance?.value.toString()
