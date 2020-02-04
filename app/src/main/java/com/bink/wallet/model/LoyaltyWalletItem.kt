@@ -101,13 +101,10 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
 
     fun retrievePointsText(): String {
         val balance = membershipCard.balances?.first()
-        return when (balance?.prefix != null) {
-            true -> {
-                balance.formatBalance()
-            }
-            else -> {
-                balance?.value.toString()
-            }
+        return if (balance?.prefix != null) {
+            balance.formatBalance()
+        } else {
+            balance?.value.toString()
         }
     }
 
