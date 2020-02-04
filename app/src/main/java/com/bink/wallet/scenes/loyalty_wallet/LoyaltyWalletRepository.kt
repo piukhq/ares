@@ -146,7 +146,7 @@ class LoyaltyWalletRepository(
     fun createMembershipCard(
         membershipCardRequest: MembershipCardRequest,
         mutableMembershipCard: MutableLiveData<MembershipCard>,
-        createError: MutableLiveData<Throwable>
+        createError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
@@ -154,7 +154,7 @@ class LoyaltyWalletRepository(
                 try {
                     val response = request.await()
                     mutableMembershipCard.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     createError.value = e
                 }
             }
@@ -165,7 +165,7 @@ class LoyaltyWalletRepository(
         cardId: String,
         membershipCardRequest: MembershipCardRequest,
         membershipCardData: MutableLiveData<MembershipCard>,
-        createCardError: MutableLiveData<Throwable>
+        createCardError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
@@ -173,7 +173,7 @@ class LoyaltyWalletRepository(
                 try {
                     val response = request.await()
                     membershipCardData.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     createCardError.value = e
                 }
             }
@@ -184,7 +184,7 @@ class LoyaltyWalletRepository(
         cardId: String,
         membershipCardRequest: MembershipCardRequest,
         membershipCardData: MutableLiveData<MembershipCard>,
-        createCardError: MutableLiveData<Throwable>
+        createCardError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.ghostMembershipCardAsync(cardId, membershipCardRequest)
@@ -192,7 +192,7 @@ class LoyaltyWalletRepository(
                 try {
                     val response = request.await()
                     membershipCardData.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     createCardError.value = e
                 }
             }
