@@ -132,7 +132,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 else
                     false
             }.let { walletItems.remove(it) }
-            binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+            walletAdapter.membershipCards = walletItems
+            walletAdapter.notifyDataSetChanged()
         }
 
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
@@ -263,9 +264,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                            runBlocking {
-                                viewModel.deleteCard(membershipCard.id)
-                            }
+                            viewModel.deleteCard(membershipCard.id)
                         } else {
                             disableIndicators()
                         }
