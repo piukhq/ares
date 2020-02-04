@@ -137,7 +137,8 @@ class PaymentCardsDetailsFragment :
                             itemClickListener = {
                                 val directions =
                                     PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
-                                        it
+                                        it,
+                                        true
                                     )
                                 findNavController().navigateIfAdded(
                                     this@PaymentCardsDetailsFragment,
@@ -188,17 +189,6 @@ class PaymentCardsDetailsFragment :
         if (isNetworkAvailable(requireActivity())) {
             viewModel.getMembershipCards()
         }
-    }
-
-    private fun addLoyaltyCard(plan: MembershipPlan) {
-        val directions =
-            PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
-                plan
-            )
-        findNavController().navigateIfAdded(
-            this@PaymentCardsDetailsFragment,
-            directions
-        )
     }
 
     private fun goHome() {
