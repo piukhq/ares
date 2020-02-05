@@ -251,6 +251,27 @@ class PaymentCardUtilsTests {
     }
 
     @Test
+    fun testMasterCardTwoLow() {
+        assertEquals("2221".presentedCardType(), PaymentCardType.MASTERCARD_BIN)
+    }
+    @Test
+    fun testMasterCardTwoLowFail() {
+        assertEquals("2220".presentedCardType(), PaymentCardType.NONE)
+    }
+    @Test
+    fun testMasterCardTwoHigh() {
+        assertEquals("272099".presentedCardType(), PaymentCardType.MASTERCARD_BIN)
+    }
+    @Test
+    fun testMasterCardTwoHighFail() {
+        assertEquals("2721".presentedCardType(), PaymentCardType.NONE)
+    }
+    @Test
+    fun testMasterCardTwoMid() {
+        assertEquals("23".presentedCardType(), PaymentCardType.MASTERCARD_BIN)
+    }
+
+    @Test
     fun testExpiryMissingYear() {
         assertFalse("12/".dateValidation())
     }

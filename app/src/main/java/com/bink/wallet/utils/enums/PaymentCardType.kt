@@ -23,13 +23,13 @@ enum class PaymentCardType(
         R.drawable.ic_add_payment_visa
     ),
     MASTERCARD(
-        "Mastercard", 16, "5", "0000 0000 0000 0000",
+        "Mastercard", 16, "5|51-59", "0000 0000 0000 0000",
         R.drawable.ic_card_payment_bkgr_master_card,
         R.drawable.ic_master_card, R.drawable.ic_master_card_sub_logo,
         R.drawable.ic_add_payment_mastercard
     ),
     MASTERCARD_BIN(
-        "Mastercard", 16, "2", "0000 0000 0000 0000",
+        "Mastercard", 16, "2|2221-272099", "0000 0000 0000 0000",
         R.drawable.ic_card_payment_bkgr_master_card,
         R.drawable.ic_master_card, R.drawable.ic_master_card_sub_logo,
         R.drawable.ic_add_payment_mastercard
