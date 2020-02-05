@@ -8,12 +8,13 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import kotlin.Exception
 
 class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
     val newMembershipCard = MutableLiveData<MembershipCard>()
-    val createCardError = MutableLiveData<Throwable>()
+    val createCardError = MutableLiveData<Exception>()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
     private val _fetchCardsError = MutableLiveData<Throwable>()
     val fetchCardsError : LiveData<Throwable>
@@ -53,7 +54,7 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         )
     }
 
-    suspend fun getPaymentCards(){
+     fun getPaymentCards(){
         loyaltyWalletRepository.getPaymentCards(paymentCards, _fetchCardsError)
     }
 }
