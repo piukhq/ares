@@ -7,7 +7,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -19,10 +18,7 @@ import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.enums.FieldType
-import com.bink.wallet.utils.enums.SignUpFormType
-import com.bink.wallet.utils.enums.TypeOfField
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -94,11 +90,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.currentMembershipPlan.value = args.currentMembershipPlan
-
-        membershipCardId = args.membershipCardId
-        isFailedJourney = args.isFailedJourney
-        isRetryJourney = args.isRetryJourney
+        with(args) {
+            viewModel.currentMembershipPlan.value = currentMembershipPlan
+            this@AddAuthFragment.membershipCardId = membershipCardId
+            this@AddAuthFragment.isFailedJourney = isFailedJourney
+            this@AddAuthFragment.isRetryJourney = isRetryJourney
+        }
 
         planFieldsList.clear()
         planBooleanFieldsList.clear()
@@ -155,8 +152,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             SignUpFormType.ADD_AUTH -> {
                 with(viewModel.currentMembershipPlan.value!!) {
                     if (isFailedJourney) {
-                        binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                        binding.addCardButton.text = getString(R.string.log_in_text)
+                        with(binding) {
+                            titleAddAuthText.text = getString(R.string.log_in_text)
+                            addCardButton.text = getString(R.string.log_in_text)
+                        }
                         if (feature_set?.has_points != null &&
                             feature_set.has_points == true &&
                             feature_set.transactions_available != null
@@ -174,11 +173,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     )
                             }
                         }
+                        binding.noAccountText.visibility = View.GONE
                     } else {
-                        binding.titleAddAuthText.text = getString(R.string.enter_credentials)
-                        binding.addCardButton.text = getString(R.string.add_card)
-                        binding.descriptionAddAuth.text =
-                            getString(R.string.please_enter_credentials, account?.company_name)
+                        with(binding) {
+                            titleAddAuthText.text = getString(R.string.enter_credentials)
+                            addCardButton.text = getString(R.string.add_card)
+                            descriptionAddAuth.text =
+                                getString(R.string.please_enter_credentials, account?.company_name)
+                        }
                     }
 
                     account?.let {
