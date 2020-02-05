@@ -7,6 +7,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -330,6 +331,24 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.addCardButton.isEnabled = false
 
+        viewModel.createCardError.observeNonNull(this) { exception ->
+            when (ExceptionHandlingUtils.onHttpException(exception)) {
+                HandledException.BAD_REQUEST -> {
+                    requireContext().displayModalPopup(
+                        getString(R.string.error),
+                        getString(R.string.error_scheme_already_exists)
+                    )
+                }
+                else -> {
+                    requireContext().displayModalPopup(
+                        getString(R.string.add_card_error_title),
+                        getString(R.string.add_card_error_message)
+                    )
+                }
+            }
+            hideLoadingViews()
+        }
+
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (isNetworkAvailable(requireActivity(), true)) {
@@ -474,16 +493,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         handlePll(membershipCard)
                     }
                 }
-            }
-            hideLoadingViews()
-        }
-
-        viewModel.createCardError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    getString(R.string.add_card_error_title),
-                    getString(R.string.add_card_error_message)
-                )
             }
             hideLoadingViews()
         }
