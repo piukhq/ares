@@ -53,6 +53,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isRetryJourney = false
 
+    private var isFailedJourney = false
+
     private var membershipCardId: String? = null
 
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
@@ -94,26 +96,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
 
         membershipCardId = args.membershipCardId
+        isFailedJourney = args.isFailedJourney
+        isRetryJourney = args.isRetryJourney
 
         planFieldsList.clear()
         planBooleanFieldsList.clear()
 
         val signUpFormType = args.signUpFormType
-        isRetryJourney = args.isRetryJourney
 
         SharedPreferenceManager.isLoyaltySelected = true
 
         binding.item = viewModel.currentMembershipPlan.value
 
-        if (viewModel.currentMembershipPlan.value != null) {
-            binding.descriptionAddAuth.text =
-                getString(
-                    R.string.login_description,
-                    viewModel.currentMembershipPlan.value!!.account?.company_name,
-                    viewModel.currentMembershipPlan.value?.account?.plan_name
-                )
-            binding.noAccountText.visibility = View.VISIBLE
-        }
 
         binding.close.setOnClickListener {
             windowFullscreenHandler.toNormalScreen()
@@ -158,32 +152,32 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
-                binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                binding.addCardButton.text = getString(R.string.log_in_text)
                 with(viewModel.currentMembershipPlan.value!!) {
-                    if (feature_set?.has_points != null &&
-                        feature_set.has_points == true &&
-                        feature_set.transactions_available != null
-                    ) {
-                        if (feature_set.transactions_available == true) {
-                            binding.descriptionAddAuth.text = getString(
-                                R.string.log_in_transaction_available,
-                                account?.plan_name_card
-                            )
-                        } else {
-                            binding.descriptionAddAuth.text =
-                                getString(
-                                    R.string.log_in_transaction_unavailable,
+                    if (isFailedJourney) {
+                        binding.titleAddAuthText.text = getString(R.string.log_in_text)
+                        binding.addCardButton.text = getString(R.string.log_in_text)
+                        if (feature_set?.has_points != null &&
+                            feature_set.has_points == true &&
+                            feature_set.transactions_available != null
+                        ) {
+                            if (feature_set.transactions_available == true) {
+                                binding.descriptionAddAuth.text = getString(
+                                    R.string.log_in_transaction_available,
                                     account?.plan_name_card
                                 )
+                            } else {
+                                binding.descriptionAddAuth.text =
+                                    getString(
+                                        R.string.log_in_transaction_unavailable,
+                                        account?.plan_name_card
+                                    )
+                            }
                         }
-
-                        if (isRetryJourney && membershipCardId != null) {
-                            binding.descriptionAddAuth.text = getString(
-                                R.string.log_in_transaction_available,
-                                account?.plan_name_card
-                            )
-                        }
+                    } else {
+                        binding.titleAddAuthText.text = getString(R.string.enter_credentials)
+                        binding.addCardButton.text = getString(R.string.add_card)
+                        binding.descriptionAddAuth.text =
+                            getString(R.string.please_enter_credentials, account?.company_name)
                     }
 
                     account?.let {
@@ -259,7 +253,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         SignUpFormType.GHOST,
                         it,
                         null,
-                        isRetryJourney
+                        isRetryJourney,
+                        false
                     )
                     findNavController().navigateIfAdded(this, action)
                 }

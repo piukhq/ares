@@ -90,7 +90,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             membershipPlan,
             null,
             isFromJoinCard = false,
-            isRetryJourney = false
+            isRetryJourney = false,
+            isFailedJourney = false
         )
         findNavController().navigateIfAdded(this, action)
     }

@@ -360,6 +360,9 @@
     <string name="token_api_v1">Token %1$s</string>
     <string name="facebook_unavailable">Facebook is currently unavailable.</string>
     <string name="facebook_cancelled">Facebook login was cancelled.</string>
+    <string name="enter_credentials">Enter credentials</string>
+    <string name="add_card">Add card</string>
+    <string name="please_enter_credentials">Please enter your %1$s credentials below to add this card to your wallet.</string>
 
     <!-- Accept T&Cs -->
     <string name="one_last_step">One last step...</string>
@@ -420,4 +423,5 @@
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
+
 </resources>

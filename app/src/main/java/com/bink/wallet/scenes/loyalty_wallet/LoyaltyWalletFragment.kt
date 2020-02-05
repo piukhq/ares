@@ -232,7 +232,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         item,
                         null,
                         true,
-                        isRetryJourney = false
+                        isRetryJourney = false,
+                        isFailedJourney = false
                     )
                 findNavController().navigateIfAdded(
                     this@LoyaltyWalletFragment,

@@ -140,7 +140,8 @@ class PaymentCardsDetailsFragment :
                                         it,
                                         null,
                                         true,
-                                        isRetryJourney = false
+                                        isRetryJourney = false,
+                                        isFailedJourney = false
                                     )
                                 findNavController().navigateIfAdded(
                                     this@PaymentCardsDetailsFragment,
