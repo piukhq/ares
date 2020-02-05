@@ -12,7 +12,6 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -33,16 +32,13 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
-        runBlocking {
-            viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchMembershipPlans()
-            viewModel.fetchMembershipCards()
-            viewModel.fetchPaymentCards()
-        }
+        viewModel.fetchMembershipPlans()
+        viewModel.fetchMembershipCards()
+        viewModel.fetchPaymentCards()
 
-        activity?.let {
-            it.setActionBar(binding.toolbar)
-            it.actionBar?.setDisplayShowTitleEnabled(false)
+        requireActivity().apply {
+            setActionBar(binding.toolbar)
+            actionBar?.setDisplayShowTitleEnabled(false)
         }
 
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
@@ -71,13 +67,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                     }
                 }
                 R.id.add_menu_item -> {
-                    val directions =
-                        viewModel.membershipPlanData.value!!.toTypedArray().let { plans ->
-                            WalletsFragmentDirections.homeToAdd(
-                                plans
-                            )
-                        }
-                    directions.let { findNavController().navigateIfAdded(this, it) }
+                    viewModel.membershipPlanData.value?.let {
+                        val directions =
+                            it.toTypedArray().let { plans ->
+                                WalletsFragmentDirections.homeToAdd(
+                                    plans
+                                )
+                            }
+                        directions.let { findNavController().navigateIfAdded(this, it) }
+                    }
                 }
                 R.id.payment_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = false
@@ -96,15 +94,16 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             true
         }
 
+        viewModel.paymentCards.observeNonNull(this) {
+            SharedPreferenceManager.isPaymentEmpty = it.isNullOrEmpty()
+        }
+
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
-                viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
-                    if (SharedPreferenceManager.isLoyaltySelected) {
-                        loyaltyWalletsFragment.setData(cards, plans)
-                    } else {
-                        paymentCardWalletFragment.setData(cards, plans)
-                    }
+                if (SharedPreferenceManager.isLoyaltySelected) {
+                    loyaltyWalletsFragment.setData(cards, plans)
+                } else {
+                    paymentCardWalletFragment.setData(cards, plans)
                 }
             }
         }

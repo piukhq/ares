@@ -14,12 +14,13 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
+import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
+import com.facebook.login.LoginManager
+import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -82,8 +83,11 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }, delay)
                 }
-            requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
+            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
+            }
         }
+        viewModel.shouldAcceptBeEnabledTC.value = false
 
         binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
             viewModel.shouldAcceptBeEnabledTC.value = isChecked
@@ -94,9 +98,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
-            viewModel.shouldAcceptBeEnabledPrivacy.value?.let {
+            viewModel.shouldAcceptBeEnabledPrivacy.value?.let { enabledPrivacy ->
                 binding.accept.isEnabled = enabledTc == true &&
-                        it == true
+                        enabledPrivacy == true
             }
         }
 
@@ -116,30 +120,41 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
             if (binding.acceptMarketing.isChecked) {
                 viewModel.handleMarketingPreferences(
-                    MarketingOption(1)
+                    MarketingOption(MARKETING_OPTION_YES.selected)
+                )
+            } else {
+                viewModel.handleMarketingPreferences(
+                    MarketingOption(
+                        (MARKETING_OPTION_NO.selected)
+                    )
                 )
             }
             findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
         }
 
         binding.accept.setOnClickListener {
-            if (accessToken?.token != null &&
-                userEmail != null &&
-                accessToken?.userId != null
-            )
-                viewModel.authWithFacebook(
-                    FacebookAuthRequest(
-                        accessToken?.token!!,
-                        userEmail!!,
-                        accessToken?.userId!!
-                    )
-                )
+            accessToken?.token?.let { token ->
+                accessToken?.userId?.let { userId ->
+                    userEmail?.let { email ->
+                        viewModel.authWithFacebook(
+                            FacebookAuthRequest(
+                                token,
+                                email,
+                                userId
+                            )
+                        )
+                    }
+                }
+            }
         }
         binding.decline.setOnClickListener {
+            LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
 
         binding.back.setOnClickListener {
+            LoginManager.getInstance().logOut()
+            hideKeyboard(requireContext(), binding.root)
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
     }

@@ -28,3 +28,19 @@ const val PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$"
 const val JOIN_CARD = "JOIN_CARD"
 
 const val SCROLL_DELAY = 200L
+
+const val CONTENT_TYPE = "application/json;v=1.1"
+
+const val FLOAT_ZERO = 0f
+const val FLOAT_ONE_HUNDRED = 100f
+const val INT_ZERO = 0
+const val INT_ONE_HUNDRED = 100
+
+const val PREFERENCE_MARKETING_SLUG = "marketing-bink"
+
+const val SESSION_HANDLER_NAVIGATION_KEY = "SESSION_HANDLER_NAVIGATION_KEY"
+const val SESSION_HANDLER_DESTINATION_ONBOARDING = "SESSION_HANDLER_DESTINATION_ONBOARDING"
+
+const val CERT_PINNING_ERROR = "SSLPeerUnverifiedException"
+
+const val TWO_DECIMAL_FLOAT_FORMAT = "%.2f"

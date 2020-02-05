@@ -8,7 +8,10 @@ import com.bink.wallet.databinding.LinkedCardsListItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.matchSeparator
+
 
 class AvailablePllAdapter(
     private val currentPaymentCard: PaymentCard,
@@ -21,24 +24,28 @@ class AvailablePllAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailablePllViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = LinkedCardsListItemBinding.inflate(inflater)
-
         return AvailablePllViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AvailablePllViewHolder, position: Int) =
-        membershipCards[position].let { holder.bind(it) }
+        membershipCards[position].let { holder.bind(it, membershipCards.lastIndex == position) }
 
     override fun getItemCount(): Int = membershipCards.size
 
     inner class AvailablePllViewHolder(val binding: LinkedCardsListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MembershipCard) {
+        fun bind(item: MembershipCard, isLastItem: Boolean) {
             val currentMembershipPlan = getPlanByCardId(item)
             binding.companyName.text = currentMembershipPlan?.account?.company_name
+            if (isLastItem) {
+                binding.root.context.matchSeparator(binding.separator.id, binding.itemLayout)
+            }
             binding.membershipCard = item
+
             binding.toggle.isChecked =
                 if (isLinkedToPaymentCard(item) != null) isLinkedToPaymentCard(item)!! else false
+
             if (isLinkedToPaymentCard(item) != null) {
                 binding.toggle.displayCustomSwitch(isLinkedToPaymentCard(item)!!)
             } else {
@@ -46,8 +53,12 @@ class AvailablePllAdapter(
             }
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
-                onLinkStatusChange(Pair(item.id, isChecked))
-                binding.toggle.displayCustomSwitch(isChecked)
+                if (isNetworkAvailable(binding.root.context, true)) {
+                    onLinkStatusChange(Pair(item.id, isChecked))
+                    binding.toggle.displayCustomSwitch(isChecked)
+                } else {
+                    binding.toggle.isChecked = !isChecked
+                }
             }
 
             binding.itemLayout.setOnClickListener {
@@ -96,9 +107,10 @@ class AvailablePllAdapter(
             binding.retry.visibility = View.GONE
         }
 
-        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean? {
-            return membershipCard.payment_cards?.findLast { paymentCard -> paymentCard.id == currentPaymentCard.id.toString() }
-                ?.active_link
+        private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean {
+            return membershipCard.payment_cards?.findLast { paymentCard ->
+                paymentCard.id == currentPaymentCard.id.toString()
+            }?.active_link ?: false
         }
     }
 }

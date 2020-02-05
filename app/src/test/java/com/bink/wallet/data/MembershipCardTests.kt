@@ -6,7 +6,7 @@ import com.bink.wallet.model.response.membership_plan.FeatureSet
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.PLLCardStatus
+import com.bink.wallet.utils.enums.LoyaltyCardLinkStatus
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 
@@ -16,7 +16,7 @@ class MembershipCardTests {
         val card = makeMembershipCard(
                 MembershipCardStatus.AUTHORISED
             )
-        assertEquals(PLLCardStatus.LINK_NOW, card.getLinkStatus())
+        assertEquals(LoyaltyCardLinkStatus.LINK_NOW, card.getLinkStatus())
     }
     @Test
     fun checkLinkStatus() {
@@ -24,28 +24,28 @@ class MembershipCardTests {
                 MembershipCardStatus.AUTHORISED,
                 listOf(PaymentMembershipCard("1", true))
             )
-        assertEquals(PLLCardStatus.LINKED, card.getLinkStatus())
+        assertEquals(LoyaltyCardLinkStatus.LINKED, card.getLinkStatus())
     }
     @Test
     fun checkLinkPending() {
         val card = makeMembershipCard(
                 MembershipCardStatus.UNAUTHORISED
             )
-        assertEquals(PLLCardStatus.RETRY, card.getLinkStatus())
+        assertEquals(LoyaltyCardLinkStatus.RETRY, card.getLinkStatus())
     }
     @Test
     fun checkLinkFailed() {
         val card = makeMembershipCard(
                 MembershipCardStatus.FAILED
             )
-        assertEquals(PLLCardStatus.RETRY, card.getLinkStatus())
+        assertEquals(LoyaltyCardLinkStatus.RETRY, card.getLinkStatus())
     }
     @Test
     fun checkLinkRetry() {
         val card = makeMembershipCard(
                 MembershipCardStatus.PENDING
             )
-        assertEquals(PLLCardStatus.PENDING, card.getLinkStatus())
+        assertEquals(LoyaltyCardLinkStatus.PENDING, card.getLinkStatus())
     }
     @Test
     fun checkLinkEmpty() {
@@ -69,7 +69,7 @@ class MembershipCardTests {
                 MembershipCardStatus.PENDING
             )
         card.plan = plan
-        assertEquals(PLLCardStatus.NONE, card.getLinkStatus())
+        assertEquals(LoyaltyCardLinkStatus.NONE, card.getLinkStatus())
     }
 
     private fun makeMembershipCard(
@@ -83,6 +83,8 @@ class MembershipCardTests {
                 null,
                 statusMembership.status
             ),
+            null,
+            null,
             null,
             null,
             null,

@@ -8,9 +8,12 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddEmailFragmentBinding
 import com.bink.wallet.utils.SimplifiedTextWatcher
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
+import com.facebook.login.LoginManager
+import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding>() {
@@ -47,18 +50,22 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
         })
 
         binding.back.setOnClickListener {
+            LoginManager.getInstance().logOut()
+            hideKeyboard(requireContext(), binding.root)
             findNavController().navigateIfAdded(this, R.id.add_email_to_onboarding)
         }
 
 
         binding.continueButton.setOnClickListener {
-            findNavController().navigateIfAdded(
-                this,
-                AddEmailFragmentDirections.addEmailToAcceptTerms(
-                    accessToken,
-                    binding.email.text.toString()
+            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                findNavController().navigateIfAdded(
+                    this,
+                    AddEmailFragmentDirections.addEmailToAcceptTerms(
+                        accessToken,
+                        binding.email.text.toString()
+                    )
                 )
-            )
+            }
         }
 
     }

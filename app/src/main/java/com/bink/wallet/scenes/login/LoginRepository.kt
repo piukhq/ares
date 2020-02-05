@@ -3,18 +3,21 @@ package com.bink.wallet.scenes.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
-import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.CONTENT_TYPE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 
 class LoginRepository(
@@ -25,7 +28,11 @@ class LoginRepository(
         const val DEFAULT_LOGIN_ID = "0"
     }
 
-    fun doAuthenticationWork(loginResponse: LoginResponse, loginData: MutableLiveData<LoginBody>) {
+    fun doAuthenticationWork(
+        loginResponse: LoginResponse,
+        loginData: MutableLiveData<LoginBody>,
+        authErrorResponse: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.loginOrRegisterAsync(loginResponse)
             withContext(Dispatchers.Main) {
@@ -33,7 +40,7 @@ class LoginRepository(
                     val response = request.await()
                     loginData.value = response.consent
                 } catch (e: Throwable) {
-                    Log.e(LoginRepository::class.simpleName, e.toString(), e)
+                    authErrorResponse.value = e
                 }
             }
         }
@@ -142,6 +149,43 @@ class LoginRepository(
                 } catch (e: Throwable) {
                     logOutErrorResponse.value = e
                 }
+            }
+        }
+    }
+
+    fun getPreferences(
+        preferenceResponse: MutableLiveData<List<Preference>>,
+        preferenceErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.getPreferencesAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    preferenceResponse.value = request.await()
+                } catch (e: Throwable) {
+                    preferenceErrorResponse.value = e
+                }
+            }
+        }
+    }
+
+    fun setPreference(
+        json: String,
+        preferenceResponse: MutableLiveData<ResponseBody>,
+        preferenceErrorResponse: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.putPreferencesAsync(
+                RequestBody.create(
+                    MediaType.parse(CONTENT_TYPE),
+                    json
+                )
+            )
+            try {
+                val response = request.await()
+                preferenceResponse.value = response
+            } catch (e: Throwable) {
+                preferenceErrorResponse.value = e
             }
         }
     }

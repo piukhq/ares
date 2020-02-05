@@ -30,6 +30,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     private val args: AddJoinFragmentArgs by navArgs()
 
+    private var isFromJoinCard: Boolean = false
+
     override val viewModel: AddJoinViewModel by viewModel()
 
     private var membershipCard : MembershipCard? = null
@@ -38,6 +40,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         super.onActivityCreated(savedInstanceState)
 
         val currentMembershipPlan = args.currentMembershipPlan
+        isFromJoinCard = args.isFromJoinCard
+
         binding.item = currentMembershipPlan
 
         arguments?.let {
@@ -76,22 +80,27 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.closeButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            if (isFromJoinCard) {
+                findNavController().popBackStack()
+            } else {
+                findNavController().navigateIfAdded(this, R.id.global_to_home)
+            }
         }
 
         binding.addJoinReward.setOnClickListener {
-            val directions = currentMembershipPlan.account?.plan_description?.let { message ->
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    getString(R.string.plan_description),
-                    message, getString(R.string.ok)
+            currentMembershipPlan.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    AddJoinFragmentDirections.addJoinToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            currentMembershipPlan.account.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
+                    )
                 )
-            }?.let { params ->
-                AddJoinFragmentDirections.addJoinToBrandHeader(params)
-            }
-            directions?.let { _ ->
-                findNavController().navigateIfAdded(this, directions)
             }
         }
 
@@ -107,18 +116,24 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         binding.getCardButton.setOnClickListener {
             val action: NavDirections
             if (currentMembershipPlan.feature_set?.linking_support != null &&
-                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)) {
+                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+            ) {
                 val genericModalParameters = GenericModalParameters(
                     R.drawable.ic_back,
                     true,
                     getString(R.string.native_join_unavailable_title),
-                    getString(R.string.native_join_unavailable_text)
+                    getString(
+                        R.string.native_join_unavailable_text,
+                        currentMembershipPlan.account?.company_name
+                    )
                 )
-                if (currentMembershipPlan.account?.plan_url?.isNotEmpty()!!) {
-                    genericModalParameters.firstButtonText =
-                        getString(R.string.native_join_unavailable_button_text)
-                    genericModalParameters.link =
-                        currentMembershipPlan.account.plan_url
+                currentMembershipPlan.account?.plan_url?.let {
+                    if (it.isNotEmpty()) {
+                        genericModalParameters.firstButtonText =
+                            getString(R.string.native_join_unavailable_button_text)
+                        genericModalParameters.link =
+                            currentMembershipPlan.account.plan_url
+                    }
                 }
                 action = AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
             } else {

@@ -42,7 +42,7 @@ class LoyaltyCardTest {
     @Test
     fun membershipResponse_success() {
         val membershipCardResponse =
-            "[ { \"id\":\"12345\", \"membership_plan\":\"112233445566\", \"payment_cards\":[], \"status\":{ \"reason_codes\":[\"X000\"], \"state\":\"authorised\" }, \"bankCard\":{ \"barcode\":\"100000000001111\", \"barcode_type\":0, \"membership_id\":\"100000000001111\", \"colour\":\"#fffffff\" }, \"images\":[ { \"id\":\"367448697676345687f654\", \"url\":\"https://images.bink.com/234jh2kk23.png\", \"type\":0, \"description\":\"BankCard image\", \"encoding\":\"png\" }, { \"id\":\"36717\", \"url\":\"https://images.bink.com/2854333.png\", \"type\":3, \"description\":\"Icon image for bankCard\", \"encoding\":\"png\" }, { \"id\":\"3324153\", \"url\":\"https://images.bink.com/hn_bronze.png\", \"type\":8, \"description\":\"Bronze Tier BankCard\", \"encoding\":\"png\" } ], \"account\":{ \"tier\":\"Bronze\" }, \"balances\":[ { \"value\":0, \"currency\":\"Points\", \"prefix\":\"Reward\", \"suffix\":\"Pts\", \"updated_at\":1516734463 } ] } ]"
+            "[ { \"id\":\"12345\", \"membership_plan\":\"112233445566\", \"payment_cards\":[], \"status\":{ \"reason_codes\":[\"X000\"], \"state\":\"authorised\" }, \"bankCard\":{ \"barcode\":\"100000000001111\", \"barcode_type\":0, \"membership_id\":\"100000000001111\", \"colour\":\"#fffffff\" }, \"images\":[ { \"id\":\"367448697676345687f654\", \"url\":\"https://images.bink.com/234jh2kk23.png\", \"type\":0, \"description\":\"BankCard image\", \"encoding\":\"png\" }, { \"id\":\"36717\", \"url\":\"https://images.bink.com/2854333.png\", \"type\":3, \"description\":\"Icon image for bankCard\", \"encoding\":\"png\" }, { \"id\":\"3324153\", \"url\":\"https://images.bink.com/hn_bronze.png\", \"type\":8, \"description\":\"Bronze Tier BankCard\", \"encoding\":\"png\" } ], \"account\":{ \"tier\":1 }, \"balances\":[ { \"value\":0, \"currency\":\"Points\", \"prefix\":\"Reward\", \"suffix\":\"Pts\", \"updated_at\":1516734463 } ], \"vouchers\":[] } ]"
         jsonToMembershipCard(membershipCardResponse)?.isNotEmpty()?.let { assertTrue(it) }
     }
 
@@ -60,38 +60,42 @@ class LoyaltyCardTest {
 
     @Test
     fun fetchMembershipCards_success() {
-        Mockito.`when`(loyaltyWalletRepository.retrieveMembershipCards(viewModel.membershipCardData))
-            .then {
-                (
-                        MutableLiveData<List<MembershipCard>>().apply {
-                            postValue(
-                                listOf(
-                                    MembershipCard(
-                                        "1234",
-                                        "plan",
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null
+        runBlocking {
+            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipCards(viewModel.membershipCardData, MutableLiveData()))
+                .then {
+                    (
+                            MutableLiveData<List<MembershipCard>>().apply {
+                                postValue(
+                                    listOf(
+                                        MembershipCard(
+                                            "1234",
+                                            "plan",
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null
+                                        )
                                     )
                                 )
+                            }
                             )
-                        }
-                        )
 
-                val observer = mock(Observer::class.java) as Observer<List<MembershipCard>>
-                viewModel.membershipCardData.observeForever(observer)
-                viewModel.fetchMembershipCards()
-                assertNotNull(viewModel.membershipCardData.value)
-            }
+                    val observer = mock(Observer::class.java) as Observer<List<MembershipCard>>
+                    viewModel.membershipCardData.observeForever(observer)
+                    viewModel.fetchMembershipCards()
+                    assertNotNull(viewModel.membershipCardData.value)
+                }
+        }
     }
 
     @Test
     fun fetchMembershipPlans_success() {
         runBlocking {
-            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipPlans(viewModel.membershipPlanData))
+            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipPlans(viewModel.membershipPlanData, MutableLiveData()))
                 .then {
                     (viewModel.membershipPlanData.apply {
                                 postValue(

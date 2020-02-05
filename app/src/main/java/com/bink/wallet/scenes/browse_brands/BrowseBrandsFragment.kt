@@ -32,17 +32,22 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         membershipPlan1: MembershipPlan,
         membershipPlan2: MembershipPlan
     ): Int {
-        return when {
-            (isPlanPLL(membershipPlan1) ||
-                    isPlanPLL(membershipPlan2)) &&
-                    (membershipPlan1.getCardType()?.type!! >
-                            membershipPlan2.getCardType()?.type!!) -> -1
-            (isPlanPLL(membershipPlan1) ||
-                    isPlanPLL(membershipPlan2)) &&
-                    (membershipPlan1.getCardType()?.type!! <
-                            membershipPlan2.getCardType()?.type!!) -> 1
-            else -> 0
+        membershipPlan1.getCardType()?.type?.let { type1 ->
+            membershipPlan2.getCardType()?.type?.let { type2 ->
+                return when {
+                    (isPlanPLL(membershipPlan1) ||
+                            isPlanPLL(membershipPlan2)) &&
+                            (type1 >
+                                    type2) -> -1
+                    (isPlanPLL(membershipPlan1) ||
+                            isPlanPLL(membershipPlan2)) &&
+                            (type1 <
+                                    type2) -> 1
+                    else -> 0
+                }
+            }
         }
+        return 0
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -81,7 +86,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     }
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {
-        val action = BrowseBrandsFragmentDirections.browseToAddJoin(membershipPlan, null)
+        val action = BrowseBrandsFragmentDirections.browseToAddJoin(membershipPlan, false)
         findNavController().navigateIfAdded(this, action)
     }
 }

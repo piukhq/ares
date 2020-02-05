@@ -9,6 +9,7 @@ import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -63,6 +64,10 @@ class AddPaymentCardFragment :
             updateEnteredCardNumber()
         }
 
+        viewModel.cardHolder.observeNonNull(this) {
+            cardInfoDisplay()
+        }
+
         binding.cardNumber.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 validateCardNumber()
@@ -83,50 +88,60 @@ class AddPaymentCardFragment :
         }
 
         binding.privacyLink.setOnClickListener {
-            val securityDialog = SecurityDialogs(requireContext())
-            securityDialog.openDialog(layoutInflater)
+            findNavController().navigateIfAdded(
+                this,
+                AddPaymentCardFragmentDirections.actionAddPaymentCardToPrivacyFragment(
+                    GenericModalParameters(
+                        isCloseModal = true,
+                        title = getString(R.string.privacy_and_security),
+                        description = getString(R.string.privacy_and_security_description)
+                    )
+                )
+            )
         }
 
         binding.addButton.setOnClickListener {
+            if (isNetworkAvailable(requireActivity(), true)) {
+                validateCardName()
+                validateCardNumber()
+                binding.cardExpiry.error =
+                    cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
 
-            validateCardName()
-            validateCardNumber()
-            binding.cardExpiry.error =
-                cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
+                if (binding.cardNumber.error.isNullOrEmpty() &&
+                    binding.cardExpiry.error.isNullOrBlank() &&
+                    !binding.cardName.text.isNullOrEmpty()
+                ) {
 
-            if (binding.cardNumber.error.isNullOrEmpty() &&
-                binding.cardExpiry.error.isNullOrBlank() &&
-                !binding.cardName.text.isNullOrEmpty()
-            ) {
+                    val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                    val cardExp = binding.cardExpiry.text.toString().split("/")
 
-                val cardNo = binding.cardNumber.text.toString().numberSanitize()
-                val cardExp = binding.cardExpiry.text.toString().split("/")
+                    val bankCard = BankCard(
+                        cardNo.substring(0, 6),
+                        cardNo.substring(cardNo.length - 4),
+                        cardExp[0].toInt(),
+                        cardExp[1].toInt() + YEAR_BASE_ADDITION,
+                        getString(R.string.country_code_gb),
+                        getString(R.string.currency_code_gbp),
+                        binding.cardName.text.toString(),
+                        cardNo.cardValidation().type,
+                        cardNo.cardValidation().type,
+                        BankCard.tokenGenerator(),
+                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                    )
 
-                val bankCard = BankCard(
-                    cardNo.substring(0, 6),
-                    cardNo.substring(cardNo.length - 4),
-                    cardExp[0].toInt(),
-                    cardExp[1].toInt() + YEAR_BASE_ADDITION,
-                    getString(R.string.country_code_gb),
-                    getString(R.string.currency_code_gbp),
-                    binding.cardName.text.toString(),
-                    cardNo.cardValidation().type,
-                    cardNo.cardValidation().type,
-                    BankCard.tokenGenerator(),
-                    BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
-                )
-
-                val params = GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    getString(R.string.terms_and_conditions_title),
-                    getString(R.string.terms_and_conditions_text),
-                    getString(R.string.accept_button_text),
-                    getString(R.string.decline_button_text)
-                )
-
-                val action = AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                findNavController().navigateIfAdded(this, action)
+                    val params = GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        getString(R.string.terms_and_conditions_title),
+                        getString(R.string.terms_and_conditions_text),
+                        getString(R.string.accept_button_text),
+                        getString(R.string.decline_button_text)
+                    )
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                    )
+                }
             }
         }
     }
@@ -155,7 +170,7 @@ class AddPaymentCardFragment :
 
     private fun cardInfoDisplay() {
         binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
-        binding.displayCardName.text = binding.cardName.text
+        binding.displayCardName.text = binding.cardName.text.toString()
     }
 
     /***

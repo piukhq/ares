@@ -5,6 +5,7 @@
     <dimen name="margin_padding_size_really_small">2dp</dimen>
     <dimen name="margin_padding_size_extra_small">4dp</dimen>
     <dimen name="margin_padding_size_small">8dp</dimen>
+    <dimen name="margin_padding_size_small_medium">12dp</dimen>
     <dimen name="margin_padding_size_medium">16dp</dimen>
     <dimen name="margin_padding_size_medium_large">24dp</dimen>
     <dimen name="margin_padding_size_triple_small">24dp</dimen>
@@ -19,9 +20,10 @@
     <dimen name="card_login_height">28dp</dimen>
     <dimen name="card_login_margin_end">12dp</dimen>
     <dimen name="link_status_wrapper_margin_end">18dp</dimen>
-    <dimen name="delete_icon_size">30dp</dimen>
+    <dimen name="delete_icon_size">36dp</dimen>
     <dimen name="delete_icon_padding">7dp</dimen>
-    <dimen name="card_item_linear_layout_margin">10dp</dimen>
+    <dimen name="card_item_linear_layout_margin">36dp</dimen>
+    <dimen name="loyalty_card_corner_radius">10dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -39,10 +41,17 @@
     <dimen name="list_margin">64dp</dimen>
     <dimen name="search_bar_height">42dp</dimen>
 
+    <!-- Add Screen -->
+    <dimen name="add_card_margin">20dp</dimen>
+    <dimen name="add_card_margin_end">12dp</dimen>
+    <dimen name="shadowed_card_elevation">6dp</dimen>
+
     <!-- Add Join Screen -->
     <dimen name="logo_height">98dp</dimen>
     <dimen name="title_image_size">32dp</dimen>
     <dimen name="button_margin">48dp</dimen>
+    <dimen name="add_card_corner_radius">12dp</dimen>
+    <dimen name="add_card_elevation">2dp</dimen>
 
     <!-- Brand Header -->
     <dimen name="brand_image_height">98dp</dimen>
@@ -63,19 +72,16 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
-    <dimen name="text_size_title_big">25sp</dimen>
     <dimen name="text_size_description_big">18sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
-    <dimen name="text_size_description_medium">15sp</dimen>
-    <dimen name="text_size_description_medium_bigger">16.2sp</dimen>
+    <dimen name="text_size_description_biggest">25sp</dimen>
     <dimen name="custom_add_fragment_image_size">31dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
     <dimen name="cancel_button_size">54dp</dimen>
     <dimen name="brand_logo_size">50dp</dimen>
     <dimen name="custom_text_card_margin">30dp</dimen>
     <dimen name="custom_login_image_size">89dp</dimen>
-    <dimen name="transaction_arrow_size">30sp</dimen>
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
@@ -93,9 +99,12 @@
     <dimen name="payment_card_height">120dp</dimen>
     <dimen name="payment_card_logo_image_margin">20dp</dimen>
     <dimen name="payment_card_number_top_margin">54dp</dimen>
-    <dimen name="payment_card_spacing_margin">17dp</dimen>
+    <dimen name="payment_card_spacing_margin">16dp</dimen>
     <dimen name="add_card_button_width">82dp</dimen>
-    <dimen name="add_card_button_height">32dp</dimen>
+    <dimen name="add_card_button_height">28dp</dimen>
+    <dimen name="link_icon_size">14.4dp</dimen>
+    <dimen name="loyalty_margins_vertical">30dp</dimen>
+    <dimen name="page_height">320dp</dimen>
 
     <!-- Onboarding -->
     <dimen name="buttons_margin">48dp</dimen>
@@ -103,4 +112,10 @@
     <dimen name="page_image_height">200dp</dimen>
     <dimen name="separator_height">1dp</dimen>
     <dimen name="facebook_button_elevation">4dp</dimen>
+
+
+    <!-- Login Screen -->
+    <dimen name="gradient_button_margin">52dp</dimen>
+    <dimen name="loyalty_card_margin_horizontal">8dp</dimen>
+    <dimen name="add_card_margin_horizontal">8dp</dimen>
 </resources>

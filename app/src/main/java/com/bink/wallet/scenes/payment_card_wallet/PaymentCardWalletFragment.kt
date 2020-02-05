@@ -18,12 +18,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.verifyAvailableNetwork
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardWalletFragment :
@@ -52,7 +49,9 @@ class PaymentCardWalletFragment :
                 viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
                 direction == ItemTouchHelper.LEFT
             ) {
-                viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
+                if (!viewModel.paymentCards.value.isNullOrEmpty()) {
+                    viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
+                }
             }
             if (direction == ItemTouchHelper.RIGHT) {
                 binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
@@ -68,12 +67,9 @@ class PaymentCardWalletFragment :
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    if (verifyAvailableNetwork(requireActivity())) {
-                        runBlocking {
-                            viewModel.deletePaymentCard(paymentCard.id.toString())
-                        }
-                    } else {
-                        showNoInternetConnectionDialog()
+                    if (isNetworkAvailable(requireActivity(), true)) {
+                        viewModel.deletePaymentCard(paymentCard.id.toString())
+                        binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                     }
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
@@ -92,15 +88,32 @@ class PaymentCardWalletFragment :
 
         populateWallet()
 
-        fetchPaymentCards()
+        fetchPaymentCards(false)
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            fetchPaymentCards()
+            viewModel.fetchData()
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
-            viewModel.fetchLocalPaymentCards()
+            viewModel.fetchData()
+        }
+
+        viewModel.deleteCardError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
+        }
+        viewModel.deleteError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
         }
 
         binding.paymentCardRecycler.apply {
@@ -118,48 +131,54 @@ class PaymentCardWalletFragment :
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
         }
 
-        viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
-            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
-                viewModel.paymentCards.observeNonNull(this) { paymentCards ->
-                    viewModel.dismissedCardData.observeNonNull(this) { dismissedCards ->
-                        binding.progressSpinner.visibility = View.GONE
+        viewModel.loyaltyUpdateDone.observeNonNull(this) { loyaltyUpdateDone ->
+            viewModel.paymentUpdateDone.observeNonNull(this) { paymentUpdateDone ->
+                if (loyaltyUpdateDone && paymentUpdateDone) {
+                    binding.paymentCardRecycler.visibility = View.VISIBLE
+                    binding.progressSpinner.visibility = View.GONE
 
-                        SharedPreferenceManager.isPaymentEmpty = paymentCards.isNullOrEmpty()
+                    SharedPreferenceManager.isPaymentEmpty =
+                        viewModel.paymentCards.value.isNullOrEmpty()
 
-                        walletItems.clear()
+                    walletItems.clear()
 
-                        if (dismissedCards.firstOrNull { it.id == JOIN_CARD } == null &&
-                            SharedPreferenceManager.isPaymentEmpty) {
+                    if (viewModel.dismissedCardData.value?.firstOrNull { it.id == JOIN_CARD } == null &&
+                        SharedPreferenceManager.isPaymentEmpty) {
+                        if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
                             walletItems.add(JoinCardItem())
                         }
-
-                        walletItems.addAll(paymentCards)
-
-                        walletAdapter.paymentCards = walletItems
-
-                        walletAdapter.onClickListener = {
-                            clickHandler(it, plans, cards)
-                        }
-
-                        walletAdapter.onRemoveListener = {
-                            onBannerRemove(it)
-                        }
-
-                        walletAdapter.notifyDataSetChanged()
                     }
+
+                    viewModel.paymentCards.value?.let { paymentCards ->
+                        walletItems.addAll(paymentCards)
+                    }
+
+                    walletAdapter.paymentCards = walletItems
+
+                    viewModel.localMembershipPlanData.value?.let { plans ->
+                        viewModel.localMembershipCardData.value?.let { cards ->
+                            walletAdapter.onClickListener = {
+                                clickHandler(it, plans, cards)
+                            }
+                        }
+                    }
+
+                    walletAdapter.onRemoveListener = {
+                        onBannerRemove(it)
+                    }
+
+                    walletAdapter.notifyDataSetChanged()
                 }
             }
         }
     }
 
     private fun populateWallet() {
-        viewModel.fetchLocalMembershipPlans()
-        viewModel.fetchLocalMembershipCards()
-        viewModel.fetchLocalPaymentCards()
-        viewModel.fetchDismissedCards()
+        viewModel.fetchData()
     }
 
     private fun onBannerRemove(item: Any) {
+        SharedPreferenceManager.isPaymentJoinBannerDismissed = true
         viewModel.addPlanIdAsDismissed(JOIN_CARD)
         walletAdapter.paymentCards.remove(item)
         walletAdapter.notifyDataSetChanged()
@@ -188,9 +207,10 @@ class PaymentCardWalletFragment :
         }
     }
 
-    private fun fetchPaymentCards() {
-        runBlocking {
+    private fun fetchPaymentCards(isRefreshing: Boolean) {
+        if (isNetworkAvailable(requireActivity(), isRefreshing)) {
             binding.progressSpinner.visibility = View.VISIBLE
+            binding.paymentCardRecycler.visibility = View.GONE
             viewModel.getPaymentCards()
         }
     }

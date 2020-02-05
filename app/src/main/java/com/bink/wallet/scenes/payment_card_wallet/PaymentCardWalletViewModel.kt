@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.BannerDisplay
@@ -15,58 +16,54 @@ class PaymentCardWalletViewModel(
     private var loyaltyWalletRepository: LoyaltyWalletRepository
 ) : BaseViewModel() {
     val paymentCards = MutableLiveData<List<PaymentCard>>()
-    val fetchError = MutableLiveData<Throwable>()
     val deleteCard = MutableLiveData<String>()
     val deleteRequest = MutableLiveData<ResponseBody>()
-    val deleteError = MutableLiveData<Throwable>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
-    val addError = MutableLiveData<Throwable>()
 
-    suspend fun deleteCard(id: String?) {
+    private val _fetchError = MutableLiveData<Throwable>()
+    val fetchError: LiveData<Throwable> get() = _fetchError
+    private val _deleteError = MutableLiveData<Throwable>()
+    val deleteError: LiveData<Throwable> get() = _deleteError
+    private val _deleteCardError = MutableLiveData<Throwable>()
+    val deleteCardError: LiveData<Throwable> get() = _deleteCardError
+    private val _addError = MutableLiveData<Throwable>()
+    val addError: LiveData<Throwable> get() = _addError
+    val loyaltyUpdateDone = MutableLiveData<Boolean>()
+    val paymentUpdateDone = MutableLiveData<Boolean>()
+
+    fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(
             id,
-            deleteCard
+            deleteCard,
+            _deleteCardError
         )
     }
 
-    suspend fun getPaymentCards() {
+    fun getPaymentCards() {
         paymentWalletRepository.getPaymentCards(
             paymentCards,
-            fetchError
+            _fetchError
         )
     }
 
-    fun fetchLocalPaymentCards() {
-        paymentWalletRepository.getLocalPaymentCards(
-            paymentCards,
-            fetchError
-        )
-    }
-
-    fun fetchLocalMembershipCards() {
-        loyaltyWalletRepository.retrieveStoredMembershipCards(
-            localMembershipCardData
-        )
-    }
-
-    fun fetchLocalMembershipPlans() {
-        loyaltyWalletRepository.retrieveStoredMembershipPlans(
-            localMembershipPlanData
-        )
-    }
-
-    suspend fun deletePaymentCard(paymentCardId: String) {
-        paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, deleteError)
-    }
-
-
-    fun fetchDismissedCards() {
-        loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, fetchError)
+    fun deletePaymentCard(paymentCardId: String) {
+        paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, _deleteError)
     }
 
     fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id, addError)
+        loyaltyWalletRepository.addBannerAsDismissed(id, _addError)
+    }
+
+    fun fetchData() {
+        loyaltyWalletRepository.getLocalData(
+            localMembershipPlanData,
+            localMembershipCardData,
+            dismissedCardData,
+            _fetchError,
+            loyaltyUpdateDone
+        )
+        paymentWalletRepository.getLocalData(paymentCards, _fetchError, paymentUpdateDone)
     }
 }

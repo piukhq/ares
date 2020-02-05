@@ -1,6 +1,6 @@
 package com.bink.wallet.scenes.login
 
-import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
@@ -17,7 +17,12 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     var loginBody = MutableLiveData<LoginBody>()
     var loginData = MutableLiveData<LoginData>()
     val logInResponse = MutableLiveData<SignUpResponse>()
-    val logInErrorResponse = MutableLiveData<Throwable>()
+    private val _logInErrorResponse = MutableLiveData<Throwable>()
+    val logInErrorResponse: LiveData<Throwable>
+        get() = _logInErrorResponse
+    private val _authErrorResponse = MutableLiveData<Throwable>()
+    val authErrorResponse : LiveData<Throwable>
+        get() = _authErrorResponse
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
@@ -31,15 +36,15 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
                     0.0,
                     0.0
                 )
-            ), loginBody
+            ), loginBody, _authErrorResponse
         )
     }
 
     fun logIn(loginRequest: SignUpRequest) {
-        loginRepository.logIn(loginRequest, logInResponse, logInErrorResponse)
+        loginRepository.logIn(loginRequest, logInResponse, _logInErrorResponse)
     }
 
-    fun retrieveStoredLoginData(context: Context) = viewModelScope.launch {
+    fun retrieveStoredLoginData() = viewModelScope.launch {
         loginData.value = LoginData(
             DEFAULT_LOGIN_ID,
             LocalStoreUtils.getAppSharedPref(

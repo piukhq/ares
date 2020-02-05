@@ -13,6 +13,8 @@ class ForgotPasswordViewModel(val loginRepository: LoginRepository) : BaseViewMo
     val isLoading = MutableLiveData<Boolean>()
 
     fun forgotPassword() {
-        loginRepository.forgotPassword(email.value!!, forgotPasswordResponse, forgotPasswordError)
+        email.value?.let {
+            loginRepository.forgotPassword(it, forgotPasswordResponse, forgotPasswordError)
+        }
     }
 }

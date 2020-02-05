@@ -2,7 +2,7 @@ package com.bink.wallet.utils.enums
 
 import com.bink.wallet.R
 
-enum class PLLCardStatus(val status: String, val display: Int, val linkImage: Int) {
+enum class LoyaltyCardLinkStatus(val status: String, val displayText: Int, val linkImage: Int) {
     NONE("", R.string.empty_string, 0),
     LINKED("linked", R.string.loyalty_card_pll_linked, R.drawable.ic_linked),
     LINK_NOW("link_now", R.string.loyalty_card_pll_link_now, R.drawable.ic_unlinked),

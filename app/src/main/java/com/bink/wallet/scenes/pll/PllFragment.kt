@@ -10,13 +10,14 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.isLinkedToMembershipCard
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,20 +53,28 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.brandHeader.setOnClickListener {
-            val directions =
-                viewModel.membershipPlan.value?.account?.plan_description?.let { message ->
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.plan_description),
-                        message, getString(R.string.ok)
+            viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    PllFragmentDirections.pllToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            viewModel.membershipPlan.value?.account?.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
                     )
-                }?.let { params -> PllFragmentDirections.pllToBrandHeader(params) }
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+                )
+            }
         }
 
         runBlocking {
-            viewModel.getPaymentCards()
+            if (isNetworkAvailable(requireActivity())) {
+                viewModel.getPaymentCards()
+            } else {
+                viewModel.getLocalPaymentCards()
+            }
         }
 
         binding.toolbar.setNavigationOnClickListener {
@@ -80,33 +89,22 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
+        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
+
         viewModel.paymentCards.observeNonNull(this) {
-            runBlocking {
-                viewModel.getLocalPaymentCards()
+            viewModel.membershipCard.value?.let { membershipCard ->
+                adapter.notifyChanges(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
             }
         }
 
-        val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value, null)
         binding.paymentCards.adapter = adapter
         binding.paymentCards.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         viewModel.localPaymentCards.observeNonNull(this) {
-            val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
-            it.forEach { card ->
-                val isSelected = if (isAddJourney) {
-                    true
-                } else {
-                    card.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                }
-                listPaymentCards.add(
-                    PllPaymentCardWrapper(
-                        card,
-                        isSelected
-                    )
-                )
+            viewModel.membershipCard.value?.let { membershipCard ->
+                adapter.paymentCards = it.toPllPaymentCardWrapperList(isAddJourney, membershipCard)
+                adapter.notifyDataSetChanged()
             }
-            adapter.paymentCards = listPaymentCards
-            adapter.notifyDataSetChanged()
         }
 
         viewModel.membershipCard.observeNonNull(this) {
@@ -121,83 +119,154 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         binding.buttonDone.setOnClickListener {
-            if (viewModel.paymentCards.value.isNullOrEmpty()) {
-                findNavController().popBackStack()
-            } else {
-                adapter.paymentCards?.forEach { card ->
-                    if (card.isSelected &&
-                        !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                    ) {
-                        runBlocking {
-                            viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
-                                card.paymentCard.id?.let { paymentCard ->
-                                    viewModel.linkPaymentCard(
-                                        membershipCard.toString(),
-                                        paymentCard.toString()
-                                    )
+            when {
+                viewModel.paymentCards.value.isNullOrEmpty() &&
+                        viewModel.localPaymentCards.value.isNullOrEmpty() -> {
+                    findNavController().popBackStack()
+                }
+                isNetworkAvailable(requireActivity(), true) -> {
+                    // display loading indicator?
+                    val jobs = ArrayList<Deferred<Unit>>()
+
+                    adapter.paymentCards.forEach { card ->
+                        if (card.isSelected &&
+                            !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                        ) {
+                            runBlocking {
+                                viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
+                                    card.paymentCard.id?.let { paymentCard ->
+                                        jobs.add(
+                                            async {
+                                                viewModel.linkPaymentCard(
+                                                    membershipCard.toString(),
+                                                    paymentCard.toString()
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             }
-                        }
-                    } else if (viewModel.membershipCard.value != null &&
-                        !card.isSelected &&
-                        card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                    ) {
-                        runBlocking {
-                            viewModel.unlinkPaymentCard(
-                                card.paymentCard.id.toString(),
-                                viewModel.membershipCard.value!!.id
-                            )
+                        } else if (viewModel.membershipCard.value != null &&
+                            !card.isSelected &&
+                            card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
+                        ) {
+                            runBlocking {
+                                jobs.add(
+                                    async {
+                                        viewModel.unlinkPaymentCard(
+                                            card.paymentCard.id.toString(),
+                                            viewModel.membershipCard.value!!.id
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
 
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                        directions?.let { directions ->
-                            findNavController().navigateIfAdded(
-                                this@PllFragment,
-                                directions
-                            )
+                    runBlocking {
+                        jobs.forEach {
+                            it.await()
+                        }
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
                         }
                     }
                 }
             }
         }
 
-        viewModel.fetchError.observeNonNull(this) { throwable ->
-            Snackbar.make(binding.root, throwable.toString(), Snackbar.LENGTH_SHORT).show()
-        }
-
-        viewModel.localFetchError.observeNonNull(this) { throwable ->
-            Snackbar.make(binding.root, throwable.toString(), Snackbar.LENGTH_SHORT).show()
+        viewModel.fetchError.observeNonNull(this) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                requireContext().displayModalPopup(
+                    null,
+                    getString(R.string.error_description)
+                )
+            }
         }
 
         viewModel.linkError.observeNonNull(this) {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.description_error))
-                .setMessage(it.toString())
-                .setPositiveButton(
-                    getString(R.string.ok)
-                ) { _, _ ->
-                    if (findNavController().currentDestination?.id == R.id.pll_fragment)
-                        directions?.let { directions ->
-                            findNavController().navigateIfAdded(
-                                this@PllFragment,
-                                directions
-                            )
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.description_error))
+                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                    .setPositiveButton(
+                        getString(R.string.ok)
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
                         }
-                }
-                .show()
+                    }
+                    .show()
+            }
         }
 
         viewModel.unlinkError.observeNonNull(this) {
-            requireContext().displayModalPopup(getString(R.string.description_error), it.toString())
+            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.description_error))
+                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                    .setPositiveButton(
+                        getString(R.string.ok)
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
+                        }
+
+                    }
+                    .show()
+            }
         }
     }
 
     private fun displayTitle(hasLinkedCards: Boolean) {
-        if (hasLinkedCards) {
-            viewModel.title.set(getString(R.string.pll_linked_title))
-        } else {
-            viewModel.title.set(getString(R.string.pll_unlinked_title))
+        viewModel.title.set(
+            getString(
+                if (hasLinkedCards) {
+                    R.string.pll_linked_title
+                } else {
+                    R.string.pll_unlinked_title
+                }
+            )
+        )
+    }
+
+    companion object {
+        private fun List<PaymentCard>.toPllPaymentCardWrapperList(
+            isAddJourney: Boolean,
+            membershipCard: MembershipCard
+        ): List<PllPaymentCardWrapper> {
+            val listPaymentCards = mutableListOf<PllPaymentCardWrapper>()
+            this.forEach { card ->
+                val isSelected = if (isAddJourney) {
+                    true
+                } else {
+                    card.isLinkedToMembershipCard(membershipCard)
+                }
+                listPaymentCards.add(
+                    PllPaymentCardWrapper(
+                        card,
+                        isSelected
+                    )
+                )
+            }
+            return listPaymentCards
         }
     }
 }
