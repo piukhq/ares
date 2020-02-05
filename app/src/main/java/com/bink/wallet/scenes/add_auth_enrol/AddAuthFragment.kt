@@ -18,7 +18,10 @@ import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.*
+import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,6 +50,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private var isPaymentWalletEmpty: Boolean? = null
+
+    private var isRetryJourney = false
+
+    private var membershipCardId: String? = null
 
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
@@ -83,11 +90,17 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel.currentMembershipPlan.value = args.currentMembershipPlan
-        viewModel.currentMembershipCard.value = args.membershipCard
+
+        membershipCardId = args.membershipCardId
+
         planFieldsList.clear()
         planBooleanFieldsList.clear()
+
         val signUpFormType = args.signUpFormType
+        isRetryJourney = args.isRetryJourney
+
         SharedPreferenceManager.isLoyaltySelected = true
 
         binding.item = viewModel.currentMembershipPlan.value
@@ -148,33 +161,27 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 binding.titleAddAuthText.text = getString(R.string.log_in_text)
                 binding.addCardButton.text = getString(R.string.log_in_text)
                 with(viewModel.currentMembershipPlan.value!!) {
-                    if (viewModel.currentMembershipCard.value != null) {
-                        if (feature_set?.has_points != null &&
-                            feature_set.has_points == true &&
-                            feature_set.transactions_available != null
-                        ) {
-                            if (feature_set.transactions_available == true) {
-                                binding.descriptionAddAuth.text = getString(
-                                    R.string.log_in_transaction_available,
-                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                )
-                            } else {
-                                binding.descriptionAddAuth.text =
-                                    getString(
-                                        R.string.log_in_transaction_unavailable,
-                                        viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                    )
-                            }
-                        }
-
-                        if (MembershipPlanUtils.getAccountStatus(
-                                this,
-                                viewModel.currentMembershipCard.value!!
-                            ) == LoginStatus.STATUS_LOGIN_FAILED
-                        ) {
+                    if (feature_set?.has_points != null &&
+                        feature_set.has_points == true &&
+                        feature_set.transactions_available != null
+                    ) {
+                        if (feature_set.transactions_available == true) {
                             binding.descriptionAddAuth.text = getString(
                                 R.string.log_in_transaction_available,
-                                viewModel.currentMembershipPlan.value!!.account?.plan_name_card
+                                account?.plan_name_card
+                            )
+                        } else {
+                            binding.descriptionAddAuth.text =
+                                getString(
+                                    R.string.log_in_transaction_unavailable,
+                                    account?.plan_name_card
+                                )
+                        }
+
+                        if (isRetryJourney && membershipCardId != null) {
+                            binding.descriptionAddAuth.text = getString(
+                                R.string.log_in_transaction_available,
+                                account?.plan_name_card
                             )
                         }
                     }
@@ -247,11 +254,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     TypeOfField.REGISTRATION.name
                 )!!
             ) {
-                if (viewModel.currentMembershipPlan.value != null) {
+                viewModel.currentMembershipPlan.value?.let {
                     val action = AddAuthFragmentDirections.toGhost(
                         SignUpFormType.GHOST,
-                        viewModel.currentMembershipPlan.value!!,
-                        null
+                        it,
+                        null,
+                        isRetryJourney
                     )
                     findNavController().navigateIfAdded(this, action)
                 }
@@ -362,17 +370,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 addRegisterFieldsRequest,
                                 viewModel.currentMembershipPlan.value!!.id
                             )
-
-                            if (viewModel.currentMembershipCard.value != null &&
-                                MembershipPlanUtils.getAccountStatus(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    viewModel.currentMembershipCard.value!!
-                                ) == LoginStatus.STATUS_LOGIN_FAILED
-                            ) {
-                                viewModel.updateMembershipCard(
-                                    viewModel.currentMembershipCard.value!!,
-                                    currentRequest
-                                )
+                            if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                membershipCardId?.let {
+                                    viewModel.updateMembershipCard(it, currentRequest)
+                                }
                             } else {
                                 viewModel.createMembershipCard(
                                     currentRequest
@@ -398,18 +399,35 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 ),
                                 viewModel.currentMembershipPlan.value!!.id
                             )
-                            viewModel.createMembershipCard(
-                                currentRequest
-                            )
+
+                            if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                membershipCardId?.let {
+                                    viewModel.updateMembershipCard(it, currentRequest)
+                                }
+                            } else {
+                                viewModel.createMembershipCard(
+                                    currentRequest
+                                )
+                            }
                         }
 
                         SignUpFormType.ENROL -> {
-                            viewModel.createMembershipCard(
-                                MembershipCardRequest(
-                                    addRegisterFieldsRequest,
-                                    viewModel.currentMembershipPlan.value!!.id
-                                )
+                            val currentRequest = MembershipCardRequest(
+                                addRegisterFieldsRequest,
+                                viewModel.currentMembershipPlan.value!!.id
                             )
+                            if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                membershipCardId?.let {
+                                    viewModel.updateMembershipCard(it, currentRequest)
+                                }
+                            } else {
+                                viewModel.createMembershipCard(
+                                    MembershipCardRequest(
+                                        addRegisterFieldsRequest,
+                                        viewModel.currentMembershipPlan.value!!.id
+                                    )
+                                )
+                            }
                         }
                     }
                     binding.addCardButton.isEnabled = false
@@ -462,7 +480,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
             }
-
             hideLoadingViews()
         }
 

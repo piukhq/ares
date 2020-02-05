@@ -16,10 +16,10 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val createCardError = MutableLiveData<Throwable>()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
     private val _fetchCardsError = MutableLiveData<Throwable>()
-    val fetchCardsError : LiveData<Throwable>
+    val fetchCardsError: LiveData<Throwable>
         get() = _fetchCardsError
     val currentMembershipPlan = MutableLiveData<MembershipPlan>()
-    val currentMembershipCard = MutableLiveData<MembershipCard>()
+
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
         loyaltyWalletRepository.createMembershipCard(
@@ -30,11 +30,11 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun updateMembershipCard(
-        membershipCard: MembershipCard,
+        membershipCardId: String,
         membershipCardRequest: MembershipCardRequest
     ) {
         loyaltyWalletRepository.updateMembershipCard(
-            membershipCard.id,
+            membershipCardId,
             membershipCardRequest,
             newMembershipCard,
             createCardError
@@ -53,7 +53,7 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         )
     }
 
-    suspend fun getPaymentCards(){
+    fun getPaymentCards() {
         loyaltyWalletRepository.getPaymentCards(paymentCards, _fetchCardsError)
     }
 }

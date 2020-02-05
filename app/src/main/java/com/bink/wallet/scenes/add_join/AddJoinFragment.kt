@@ -29,7 +29,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     private val args: AddJoinFragmentArgs by navArgs()
 
-    private var isFromJoinCard: Boolean = false
+    private var isFromJoinCard = false
+
+    private var isRetryJourney = false
+
+    private var membershipCardId: String? = null
 
     override val viewModel: AddJoinViewModel by viewModel()
 
@@ -38,6 +42,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         val currentMembershipPlan = args.currentMembershipPlan
         isFromJoinCard = args.isFromJoinCard
+        isRetryJourney = args.isRetryJourney
+
+        args.membershipCardId?.let {
+            membershipCardId = it
+        }
 
         binding.item = currentMembershipPlan
 
@@ -101,7 +110,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             val action = AddJoinFragmentDirections.addJoinToGhost(
                 SignUpFormType.ADD_AUTH,
                 currentMembershipPlan,
-                null
+                membershipCardId,
+                isRetryJourney
             )
             findNavController().navigateIfAdded(this, action)
         }
@@ -133,7 +143,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 action = AddJoinFragmentDirections.addJoinToGhost(
                     SignUpFormType.ENROL,
                     currentMembershipPlan,
-                    null
+                    membershipCardId,
+                    isRetryJourney
                 )
             }
             findNavController().navigateIfAdded(this, action)

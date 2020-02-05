@@ -489,7 +489,12 @@ class LoyaltyCardDetailsFragment :
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
                     viewModel.membershipPlan.value?.let {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(it, false)
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id,
+                                false,
+                                isRetryJourney = true
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }
@@ -564,7 +569,12 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGIN_FAILED -> {
                     viewModel.membershipPlan.value?.let {
                         val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(it, false)
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id,
+                                false,
+                                isRetryJourney = true
+                            )
                         findNavController().navigateIfAdded(this, directions)
                     }
                 }
