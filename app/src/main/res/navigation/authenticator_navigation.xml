@@ -211,6 +211,10 @@
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="isFromJoinCard"
+                app:argType="boolean"
+                app:nullable="false" />
 
         <action
                 android:id="@+id/add_join_to_ghost"

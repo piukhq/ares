@@ -10,6 +10,7 @@ import com.bink.wallet.databinding.SettingsItemBinding
 import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
+import com.bink.wallet.utils.setSafeOnClickListener
 
 class SettingsAdapter(
     private val itemsList: ListLiveData<SettingsItem>,
@@ -87,7 +88,7 @@ class SettingsAdapter(
                     } else {
                         View.INVISIBLE
                     }
-                root.setOnClickListener { itemClickListener(item) }
+                root.setSafeOnClickListener { itemClickListener(item) }
                 executePendingBindings()
             }
         }
