@@ -92,7 +92,6 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     paymentCardMutableValue.value = response
-                    updatePaymentCard(paymentCardId.toInt(), paymentCardMutableValue)
                 } catch (e: Throwable) {
                     linkError.value = e
                 }
@@ -113,16 +112,12 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     unlinkedBody.value = response
-
-                    updatePaymentCard(paymentCardId.toInt(), paymentCard)
-
                     val paymentCardValue = paymentCard.value
                     paymentCardValue?.membership_cards?.forEach {
                         if (it.id == membershipCardId) {
                             it.active_link = false
                         }
                     }
-
                     paymentCard.value = paymentCardValue
                 } catch (e: Throwable) {
                     unlinkError.value = e
@@ -178,25 +173,6 @@ class PaymentWalletRepository(
                     updateDone.value = true
                 } catch (exception: Exception) {
                     localFetchError.value = exception
-                }
-            }
-        }
-    }
-
-    private fun updatePaymentCard(paymentCardId: Int, paymentCard: MutableLiveData<PaymentCard>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    paymentCard.value = paymentCardDao.findPaymentCardById(paymentCardId)
-                    try {
-                        paymentCard.value?.let {
-                            paymentCardDao.updatePaymentCard(it)
-                        }
-                    } catch (exception: Exception) {
-
-                    }
-                } catch (exception: Exception) {
-
                 }
             }
         }

@@ -8,7 +8,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,13 +61,14 @@ class LoyaltyCardDetailsRepository(
         }
     }
 
-    fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>) {
+    fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>, storeError: MutableLiveData<Throwable>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
                     paymentCards.value = response
+                    storePaymentsCards(response, storeError)
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
@@ -87,6 +87,24 @@ class LoyaltyCardDetailsRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     localFetchError.value = e
+                }
+            }
+        }
+    }
+
+    private fun storePaymentsCards(
+        cards: List<PaymentCard>,
+        storeError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    withContext(Dispatchers.IO) {
+                        paymentCardDao.deleteAll()
+                        paymentCardDao.storeAll(cards)
+                    }
+                } catch (e: Throwable) {
+                    storeError.value = e
                 }
             }
         }

@@ -40,7 +40,8 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
-            linkError
+            linkError,
+            paymentCard
         )
     }
 

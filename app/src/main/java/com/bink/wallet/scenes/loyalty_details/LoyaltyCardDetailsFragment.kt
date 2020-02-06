@@ -59,6 +59,8 @@ class LoyaltyCardDetailsFragment :
             viewModel.fetchLocalPaymentCards()
         }
 
+        viewModel.fetchLocalPaymentCards()
+
         val colorDrawable =
             ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
         colorDrawable.alpha = MIN_ALPHA.toInt()
@@ -72,6 +74,8 @@ class LoyaltyCardDetailsFragment :
             viewModel.setLinkStatus()
         }
 
+        binding.viewModel = viewModel
+
         arguments?.let {
             viewModel.membershipPlan.value =
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
@@ -84,7 +88,6 @@ class LoyaltyCardDetailsFragment :
             if (isNetworkAvailable(requireActivity())) {
                 viewModel.updateMembershipCard()
             }
-            binding.viewModel = viewModel
             viewModel.setAccountStatus()
             viewModel.setLinkStatus()
         }
