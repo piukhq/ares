@@ -150,55 +150,63 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
-                with(viewModel.currentMembershipPlan.value!!) {
-                    if (isFailedJourney) {
-                        with(binding) {
-                            titleAddAuthText.text = getString(R.string.log_in_text)
-                            addCardButton.text = getString(R.string.log_in_text)
-                        }
-                        if (feature_set?.has_points != null &&
-                            feature_set.has_points == true &&
-                            feature_set.transactions_available != null
-                        ) {
-                            if (feature_set.transactions_available == true) {
-                                binding.descriptionAddAuth.text = getString(
-                                    R.string.log_in_transaction_available,
-                                    account?.plan_name_card
-                                )
-                            } else {
-                                binding.descriptionAddAuth.text =
-                                    getString(
-                                        R.string.log_in_transaction_unavailable,
-                                        account?.plan_name_card
+                viewModel.currentMembershipPlan.value?.let {
+                    with(it) {
+                        if (isFailedJourney) {
+                            with(binding) {
+                                titleAddAuthText.text = getString(R.string.log_in_text)
+                                addCardButton.text = getString(R.string.log_in_text)
+                            }
+                            if (feature_set?.has_points != null &&
+                                feature_set.has_points == true &&
+                                feature_set.transactions_available != null &&
+                                account?.plan_name_card != null
+                            ) {
+                                if (feature_set.transactions_available == true) {
+                                    binding.descriptionAddAuth.text = getString(
+                                        R.string.log_in_transaction_available,
+                                        account.plan_name_card
                                     )
+                                } else {
+                                    binding.descriptionAddAuth.text =
+                                        getString(
+                                            R.string.log_in_transaction_unavailable,
+                                            account.plan_name_card
+                                        )
+                                }
+                            }
+                            binding.noAccountText.visibility = View.GONE
+                        } else {
+                            with(binding) {
+                                titleAddAuthText.text = getString(R.string.enter_credentials)
+                                addCardButton.text = getString(R.string.add_card)
+                                account?.company_name?.let { companyName ->
+                                    descriptionAddAuth.text =
+                                        getString(
+                                            R.string.please_enter_credentials,
+                                            companyName
+                                        )
+                                }
                             }
                         }
-                        binding.noAccountText.visibility = View.GONE
-                    } else {
-                        with(binding) {
-                            titleAddAuthText.text = getString(R.string.enter_credentials)
-                            addCardButton.text = getString(R.string.add_card)
-                            descriptionAddAuth.text =
-                                getString(R.string.please_enter_credentials, account?.company_name)
-                        }
-                    }
 
-                    account?.let {
-                        account.add_fields?.map {
-                            it.typeOfField = TypeOfField.ADD
-                            addFieldToList(it)
-                        }
-                        account.authorise_fields?.map {
-                            it.typeOfField = TypeOfField.AUTH
-                            addFieldToList(it)
-                        }
-                        account.plan_documents?.map {
-                            if (it.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
-                                addFieldToList(it)
+                        account?.let {
+                            account.add_fields?.map { planFields ->
+                                planFields.typeOfField = TypeOfField.ADD
+                                addFieldToList(planFields)
+                            }
+                            account.authorise_fields?.map { planFields ->
+                                planFields.typeOfField = TypeOfField.AUTH
+                                addFieldToList(planFields)
+                            }
+                            account.plan_documents?.map { planDocuments ->
+                                if (planDocuments.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
+                                    addFieldToList(planDocuments)
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
             }
             SignUpFormType.ENROL -> {
