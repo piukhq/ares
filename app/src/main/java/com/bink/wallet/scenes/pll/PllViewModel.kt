@@ -19,6 +19,8 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
     val fetchError = MutableLiveData<Throwable>()
     val localFetchError = MutableLiveData<Throwable>()
 
+    val paymentCard = MutableLiveData<PaymentCard>()
+
     private val _paymentCards = MutableLiveData<List<PaymentCard>>()
     val paymentCards: LiveData<List<PaymentCard>>
         get() = _paymentCards
@@ -47,7 +49,8 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
             paymentCardId,
             cardId,
             unlinkError,
-            unlinkedRequestBody
+            unlinkedRequestBody,
+            paymentCard
         )
     }
 

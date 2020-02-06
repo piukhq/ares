@@ -92,6 +92,7 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     paymentCardMutableValue.value = response
+                    updatePaymentCard(paymentCardId.toInt(), paymentCardMutableValue)
                 } catch (e: Throwable) {
                     linkError.value = e
                 }
@@ -104,7 +105,7 @@ class PaymentWalletRepository(
         membershipCardId: String,
         unlinkError: MutableLiveData<Throwable>,
         unlinkedBody: MutableLiveData<ResponseBody>,
-        paymentCard: MutableLiveData<PaymentCard> = MutableLiveData()
+        paymentCard: MutableLiveData<PaymentCard>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
@@ -112,6 +113,8 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     unlinkedBody.value = response
+
+                    updatePaymentCard(paymentCardId.toInt(), paymentCard)
 
                     val paymentCardValue = paymentCard.value
                     paymentCardValue?.membership_cards?.forEach {
@@ -175,7 +178,25 @@ class PaymentWalletRepository(
                     updateDone.value = true
                 } catch (exception: Exception) {
                     localFetchError.value = exception
-                    Log.e(PaymentWalletRepository::class.simpleName, exception.toString())
+                }
+            }
+        }
+    }
+
+    private fun updatePaymentCard(paymentCardId: Int, paymentCard: MutableLiveData<PaymentCard>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    paymentCard.value = paymentCardDao.findPaymentCardById(paymentCardId)
+                    try {
+                        paymentCard.value?.let {
+                            paymentCardDao.updatePaymentCard(it)
+                        }
+                    } catch (exception: Exception) {
+
+                    }
+                } catch (exception: Exception) {
+
                 }
             }
         }
