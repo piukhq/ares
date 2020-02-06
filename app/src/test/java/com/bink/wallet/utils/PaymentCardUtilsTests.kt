@@ -96,6 +96,11 @@ class PaymentCardUtilsTests {
     }
 
     @Test
+    fun checkPresentedMasterCardBIN() {
+        assertEquals(PaymentCardType.MASTERCARD_BIN, "27".presentedCardType())
+    }
+
+    @Test
     fun checkPresentedAmExSingle() {
         assertEquals(PaymentCardType.AMEX, "3".presentedCardType())
     }
@@ -243,6 +248,27 @@ class PaymentCardUtilsTests {
     @Test
     fun testCardIsUnknown() {
         assertEquals("Test".getCardType(), PaymentCardType.NONE)
+    }
+
+    @Test
+    fun testMasterCardTwoLow() {
+        assertEquals("2221".presentedCardType(), PaymentCardType.MASTERCARD_BIN)
+    }
+    @Test
+    fun testMasterCardTwoLowFail() {
+        assertEquals("2220".presentedCardType(), PaymentCardType.NONE)
+    }
+    @Test
+    fun testMasterCardTwoHigh() {
+        assertEquals("272099".presentedCardType(), PaymentCardType.MASTERCARD_BIN)
+    }
+    @Test
+    fun testMasterCardTwoHighFail() {
+        assertEquals("2721".presentedCardType(), PaymentCardType.NONE)
+    }
+    @Test
+    fun testMasterCardTwoMid() {
+        assertEquals("23".presentedCardType(), PaymentCardType.MASTERCARD_BIN)
     }
 
     @Test
