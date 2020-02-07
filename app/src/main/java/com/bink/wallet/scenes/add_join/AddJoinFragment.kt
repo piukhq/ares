@@ -118,9 +118,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 val action = AddJoinFragmentDirections.addJoinToGhost(
                     SignUpFormType.ADD_AUTH,
                     it,
-                    membershipCardId,
                     isRetryJourney,
-                    isFailedJourney
+                    isFailedJourney,
+                    membershipCardId
                 )
                 findNavController().navigateIfAdded(this, action)
             }
@@ -155,9 +155,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                     action = AddJoinFragmentDirections.addJoinToGhost(
                         SignUpFormType.ENROL,
                         membershipPlan,
-                        membershipCardId,
                         isRetryJourney,
-                        isFailedJourney
+                        isFailedJourney,
+                        membershipCardId
                     )
                 }
                 findNavController().navigateIfAdded(this, action)

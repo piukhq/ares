@@ -148,6 +148,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         }
 
+        viewModel.fetchCardsError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                getString(R.string.error_title),
+                getString(R.string.error_description)
+            )
+        }
+
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
                 viewModel.currentMembershipPlan.value?.let {
@@ -260,25 +267,27 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 )!!
             ) {
                 viewModel.currentMembershipPlan.value?.let {
-                    val action = AddAuthFragmentDirections.toGhost(
-                        SignUpFormType.GHOST,
-                        it,
-                        null,
-                        isRetryJourney,
-                        false
+                    findNavController().navigateIfAdded(
+                        this, AddAuthFragmentDirections.toGhost(
+                            SignUpFormType.GHOST,
+                            it,
+                            isRetryJourney,
+                            false
+                        )
                     )
-                    findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                val action = AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.title_ghost_card_not_available),
-                        getString(R.string.description_ghost_card_not_available)
+                findNavController().navigateIfAdded(
+                    this, AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            getString(R.string.title_ghost_card_not_available),
+                            getString(R.string.description_ghost_card_not_available)
+                        )
                     )
                 )
-                findNavController().navigateIfAdded(this, action)
+
             }
         }
 
@@ -387,73 +396,75 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             }
                         }
                     }
-
-                    when (signUpFormType) {
-                        SignUpFormType.ADD_AUTH -> {
-                            val currentRequest = MembershipCardRequest(
-                                addRegisterFieldsRequest,
-                                viewModel.currentMembershipPlan.value!!.id
-                            )
-                            if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
-                                membershipCardId?.let {
-                                    viewModel.updateMembershipCard(it, currentRequest)
-                                }
-                            } else {
-                                viewModel.createMembershipCard(
-                                    currentRequest
+                    viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+                        when (signUpFormType) {
+                            SignUpFormType.ADD_AUTH -> {
+                                val currentRequest = MembershipCardRequest(
+                                    addRegisterFieldsRequest,
+                                    membershipPlan.id
                                 )
-                            }
-                        }
-                        SignUpFormType.GHOST -> {
-                            if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
-                                context?.displayModalPopup(
-                                    null,
-                                    getString(R.string.cannot_complete_registration)
-                                )
-                                return@setOnClickListener
-                            }
-
-                            val currentRequest = MembershipCardRequest(
-                                Account(
-                                    addRegisterFieldsRequest.add_fields,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                ),
-                                viewModel.currentMembershipPlan.value!!.id
-                            )
-
-                            if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
-                                membershipCardId?.let {
-                                    viewModel.updateMembershipCard(it, currentRequest)
-                                }
-                            } else {
-                                viewModel.createMembershipCard(
-                                    currentRequest
-                                )
-                            }
-                        }
-
-                        SignUpFormType.ENROL -> {
-                            val currentRequest = MembershipCardRequest(
-                                addRegisterFieldsRequest,
-                                viewModel.currentMembershipPlan.value!!.id
-                            )
-                            if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
-                                membershipCardId?.let {
-                                    viewModel.updateMembershipCard(it, currentRequest)
-                                }
-                            } else {
-                                viewModel.createMembershipCard(
-                                    MembershipCardRequest(
-                                        addRegisterFieldsRequest,
-                                        viewModel.currentMembershipPlan.value!!.id
+                                if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    membershipCardId?.let {
+                                        viewModel.updateMembershipCard(it, currentRequest)
+                                    }
+                                } else {
+                                    viewModel.createMembershipCard(
+                                        currentRequest
                                     )
+                                }
+                            }
+                            SignUpFormType.GHOST -> {
+                                if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
+                                    context?.displayModalPopup(
+                                        null,
+                                        getString(R.string.cannot_complete_registration)
+                                    )
+                                    return@setOnClickListener
+                                }
+
+                                val currentRequest = MembershipCardRequest(
+                                    Account(
+                                        addRegisterFieldsRequest.add_fields,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                    ),
+                                    membershipPlan.id
                                 )
+
+                                if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    membershipCardId?.let {
+                                        viewModel.updateMembershipCard(it, currentRequest)
+                                    }
+                                } else {
+                                    viewModel.createMembershipCard(
+                                        currentRequest
+                                    )
+                                }
+                            }
+
+                            SignUpFormType.ENROL -> {
+                                val currentRequest = MembershipCardRequest(
+                                    addRegisterFieldsRequest,
+                                    membershipPlan.id
+                                )
+                                if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    membershipCardId?.let {
+                                        viewModel.updateMembershipCard(it, currentRequest)
+                                    }
+                                } else {
+                                    viewModel.createMembershipCard(
+                                        MembershipCardRequest(
+                                            addRegisterFieldsRequest,
+                                            membershipPlan.id
+                                        )
+                                    )
+                                }
                             }
                         }
                     }
+
                     binding.addCardButton.isEnabled = false
                     binding.progressSpinner.visibility = View.VISIBLE
                 } else {

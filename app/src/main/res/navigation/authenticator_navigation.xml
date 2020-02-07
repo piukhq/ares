@@ -265,16 +265,17 @@
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
 
         <argument
-                android:name="membershipCardId"
-                app:argType="string"
-                app:nullable="true" />
-
-        <argument
                 android:name="isRetryJourney"
                 app:argType="boolean" />
         <argument
                 android:name="isFailedJourney"
                 app:argType="boolean" />
+
+        <argument
+                android:name="membershipCardId"
+                android:defaultValue="@null"
+                app:argType="string"
+                app:nullable="true" />
 
         <action
                 android:id="@+id/sign_up_to_details"

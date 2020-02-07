@@ -20,6 +20,9 @@
     <string name="delete">Delete</string>
     <string name="error">Error</string>
 
+    <!-- Error -->
+    <string name="error_title">@string/error</string>
+    <string name="error_data_retrieval">Could not retrieve server error. Please try again.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
