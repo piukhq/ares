@@ -312,6 +312,7 @@
     <!-- Payment Card entry -->
     <string name="empty_string" />
     <string name="card_number">Card number</string>
+    <string name="card_number_hint">@string/card_number</string>
     <string name="name_on_card">Name on card</string>
     <string name="expiry">Expiry</string>
     <string name="expiry_format">MM/YY</string>
