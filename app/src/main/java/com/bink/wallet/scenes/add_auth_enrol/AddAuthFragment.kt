@@ -268,7 +268,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             ) {
                 viewModel.currentMembershipPlan.value?.let {
                     findNavController().navigateIfAdded(
-                        this, AddAuthFragmentDirections.toGhost(
+                        this,
+                        AddAuthFragmentDirections.toGhost(
                             SignUpFormType.GHOST,
                             it,
                             isRetryJourney,
@@ -278,7 +279,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
             } else {
                 findNavController().navigateIfAdded(
-                    this, AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                    this,
+                    AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
                         GenericModalParameters(
                             R.drawable.ic_close,
                             true,
