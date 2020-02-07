@@ -11,7 +11,7 @@ enum class PaymentCardType(
         R.drawable.ic_card_payment_bkgr_none, R.drawable.blank, R.drawable.blank, R.drawable.blank
     ),
     AMEX(
-        "American Express", 15, "3|34|37", "0000 000000 00000",
+        "American Express", 15, "34|37", "0000 000000 00000",
         R.drawable.ic_card_payment_bkgr_am_ex,
         R.drawable.ic_am_ex, R.drawable.ic_am_ex_sub_logo,
         R.drawable.ic_add_payment_amex
