@@ -134,7 +134,7 @@
                         android:imeOptions="actionNext"
                         android:importantForAutofill="no"
                         android:inputType="number"
-                        android:maxLength="16"
+                        android:maxLength="19"
                         android:nextFocusDown="@id/card_expiry"
                         android:text="@={viewModel.cardNumber}"
                         tools:ignore="Autofill" />
