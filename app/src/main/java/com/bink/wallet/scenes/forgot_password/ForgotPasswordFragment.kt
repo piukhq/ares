@@ -23,6 +23,8 @@ class ForgotPasswordFragment :
 
     override val layoutRes: Int = R.layout.forgot_password_fragment
 
+    private val CONTINUE_ANALYTICS_IDENTIFIER = "ForgotPasswordView.Continue"
+
     override val viewModel: ForgotPasswordViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,6 +50,8 @@ class ForgotPasswordFragment :
                     viewModel.forgotPassword()
                 }
             }
+
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
         }
 
         viewModel.isLoading.observeNonNull(this@ForgotPasswordFragment) {

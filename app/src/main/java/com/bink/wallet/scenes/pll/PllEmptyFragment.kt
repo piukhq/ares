@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.pll
 
 import android.os.Bundle
-import androidx.databinding.ObservableBoolean
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -22,6 +21,9 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
     override val layoutRes: Int
         get() = R.layout.fragment_pll_empty
+
+    private val DONE_ANALYTICS_IDENTIFIER = "PllEmptyView.Done"
+    private val ADD_PAYMENT_CARDS_ANALYTICS_IDENTIFIER = "PllEmptyView.AddPaymentCards"
 
     private var currentMembershipCard: MembershipCard? = null
     private var currentMembershipPlan: MembershipPlan? = null
@@ -70,10 +72,14 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
         binding.buttonDone.setOnClickListener {
             navigateToLCDScreen()
+
+            logEvent(DONE_ANALYTICS_IDENTIFIER)
         }
 
         binding.buttonAddPaymentCardNonModal.setOnClickListener {
             navigateToAddPaymentCards()
+
+            logEvent(ADD_PAYMENT_CARDS_ANALYTICS_IDENTIFIER)
         }
 
         binding.addPaymentCardModal.setOnClickListener {

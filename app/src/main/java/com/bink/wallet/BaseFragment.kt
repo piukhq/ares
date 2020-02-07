@@ -19,6 +19,9 @@ import org.koin.core.parameter.parametersOf
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
+    private val ANALYTICS_IDENTIFIER = "identifier"
+    private val ANALYTICS_ACTION_TYPE = "call_to_action_pressed"
+
     @get:LayoutRes
     abstract val layoutRes: Int
 
@@ -74,4 +77,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected abstract fun builder(): FragmentToolbar
+
+    protected fun logEvent(identifierValue: String) {
+        val bundle = Bundle()
+        bundle.putString(ANALYTICS_IDENTIFIER, identifierValue)
+        (requireActivity() as MainActivity).firebaseAnalytics.logEvent(
+            ANALYTICS_ACTION_TYPE,
+            bundle
+        )
+    }
 }

@@ -34,6 +34,7 @@ class AddPaymentCardFragment :
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
 
+    private val ADD_ANALYTICS_IDENTIFIER = "AddPaymentCardView.Add"
 
     private fun validateCardName() {
         binding.cardName.error =
@@ -154,6 +155,8 @@ class AddPaymentCardFragment :
                     )
                 }
             }
+
+            logEvent(ADD_ANALYTICS_IDENTIFIER)
         }
     }
 

@@ -19,6 +19,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.add_email_fragment
+
+    private val CONTINUE_ANALYTICS_IDENTIFIER = "LoginView.Continue"
+
     override val viewModel: AddEmailViewModel by viewModel()
 
     override fun builder(): FragmentToolbar {
@@ -66,6 +69,8 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
                     )
                 )
             }
+
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
         }
 
     }

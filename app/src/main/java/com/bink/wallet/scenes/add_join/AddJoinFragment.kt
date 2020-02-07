@@ -27,6 +27,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
     override val layoutRes: Int
         get() = R.layout.add_join_fragment
 
+    private val ADD_CARD_ANALYTICS_IDENTIFIER = "AddJoinView.AddMyCard"
+    private val GET_NEW_CARD_ANALYTICS_IDENTIFIER = "AddJoinView.GetANewCard"
+
     private val args: AddJoinFragmentArgs by navArgs()
 
     private var isFromJoinCard: Boolean = false
@@ -104,6 +107,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 null
             )
             findNavController().navigateIfAdded(this, action)
+
+            logEvent(ADD_CARD_ANALYTICS_IDENTIFIER)
         }
 
         binding.getCardButton.setOnClickListener {
@@ -137,6 +142,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 )
             }
             findNavController().navigateIfAdded(this, action)
+
+            logEvent(GET_NEW_CARD_ANALYTICS_IDENTIFIER)
         }
     }
 }

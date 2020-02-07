@@ -22,6 +22,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     override val layoutRes: Int
         get() = R.layout.barcode_fragment
 
+    private val MAXIMISE_BARCODE_ANALYTICS_IDENTIFIER = "BarcodeView.MaximiseBarcode"
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -53,6 +55,8 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 }
 
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+
+            logEvent(MAXIMISE_BARCODE_ANALYTICS_IDENTIFIER)
         }
     }
 }

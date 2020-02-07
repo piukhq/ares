@@ -24,6 +24,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     override val layoutRes: Int
         get() = R.layout.fragment_pll
+
+    private val DONE_ANALYTICS_IDENTIFIER = "PllView.Done"
+
     override val viewModel: PllViewModel by viewModel()
 
     override fun builder(): FragmentToolbar {
@@ -178,6 +181,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     }
                 }
             }
+
+            logEvent(DONE_ANALYTICS_IDENTIFIER)
         }
 
         viewModel.fetchError.observeNonNull(this) {

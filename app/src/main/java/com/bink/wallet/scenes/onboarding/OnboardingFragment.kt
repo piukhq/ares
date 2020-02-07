@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -36,6 +35,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             .build()
     }
 
+    private val FACEBOOK_LOGIN_ANALYTICS_IDENTIFIER = "OnBoardingView.ContinueWithFacebook"
+    private val SIGN_UP_ANALYTICS_IDENTIFIER = "OnBoardingView.SignUpWithEmail"
+    private val LOGIN_ANALYTICS_IDENTIFIER = "OnBoardingView.LogInWithEmail"
     private val EMAIL_KEY = "email"
     private val FIELDS_KEY = "fields"
     private lateinit var callbackManager: CallbackManager
@@ -85,6 +87,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
+
+            logEvent(LOGIN_ANALYTICS_IDENTIFIER)
         }
 
         binding.continueWithFacebook.setOnClickListener {
@@ -115,10 +119,14 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                             )
                         }
                     })
+
+                logEvent(FACEBOOK_LOGIN_ANALYTICS_IDENTIFIER)
             }
         }
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
+
+            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER)
         }
         with(binding.pager) {
             addOnPageChangeListener(object :

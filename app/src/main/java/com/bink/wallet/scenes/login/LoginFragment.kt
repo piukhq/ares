@@ -24,6 +24,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override val layoutRes: Int
         get() = R.layout.login_fragment
+
+    private val FORGOT_PASSWORD_ANALYTICS_IDENTIFIER = "LoginView.ForgotPassword"
+    private val CONTINUE_ANALYTICS_IDENTIFIER = "LoginView.Continue"
+
     override val viewModel: LoginViewModel by viewModel()
 
     private fun setLoginButtonEnableStatus() {
@@ -52,6 +56,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     this@LoginFragment,
                     R.id.login_to_forgot_password
                 )
+
+                logEvent(FORGOT_PASSWORD_ANALYTICS_IDENTIFIER)
             }
         }
 
@@ -140,6 +146,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     )
                 }
             }
+
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
         }
     }
 }

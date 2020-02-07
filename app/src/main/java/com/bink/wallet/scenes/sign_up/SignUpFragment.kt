@@ -24,6 +24,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val layoutRes = R.layout.sign_up_fragment
 
+    private val CONTINUE_ANALYTICS_IDENTIFIER = "SignUpView.Continue"
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -221,6 +223,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     }
                 }
             }
+
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
         }
     }
 

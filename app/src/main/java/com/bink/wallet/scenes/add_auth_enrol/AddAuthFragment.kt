@@ -7,7 +7,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -34,6 +33,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     companion object {
         const val BARCODE_TEXT = "Barcode"
     }
+
+    private val NO_ACCOUNT_ANALYTICS_IDENTIFIER = "AddAuthView.IDontHaveAnAccount"
+    private val SIGN_UP_ANALYTICS_IDENTIFIER = "AddAuthView.SignUp"
 
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
@@ -103,10 +105,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             binding.noAccountText.visibility = View.VISIBLE
         }
 
-        binding.close.setOnClickListener {
-            windowFullscreenHandler.toNormalScreen()
-            requireActivity().onBackPressed()
-        }
         binding.cancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
@@ -267,6 +265,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 )
                 findNavController().navigateIfAdded(this, action)
             }
+
+            logEvent(NO_ACCOUNT_ANALYTICS_IDENTIFIER)
         }
 
         planBooleanFieldsList.map { planFieldsList.add(it) }
@@ -437,6 +437,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     binding.progressSpinner.visibility = View.GONE
                 }
             }
+
+            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER)
         }
 
         viewModel.newMembershipCard.observeNonNull(this) { membershipCard ->

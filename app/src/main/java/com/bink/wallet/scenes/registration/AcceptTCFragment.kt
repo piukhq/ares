@@ -28,6 +28,10 @@ import java.util.*
 class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.accept_tc_fragment
+
+    private val ACCEPT_ANALYTICS_IDENTIFIER = "AcceptTCView.IAccept"
+    private val DECLINE_ANALYTICS_IDENTIFIER = "AcceptTCView.IDecline"
+
     override val viewModel: AcceptTCViewModel by viewModel()
 
     override fun builder(): FragmentToolbar {
@@ -146,10 +150,14 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     }
                 }
             }
+
+            logEvent(ACCEPT_ANALYTICS_IDENTIFIER)
         }
         binding.decline.setOnClickListener {
             LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
+
+            logEvent(DECLINE_ANALYTICS_IDENTIFIER)
         }
 
         binding.back.setOnClickListener {
