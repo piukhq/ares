@@ -20,6 +20,9 @@
     <string name="delete">Delete</string>
     <string name="error">Error</string>
 
+    <!-- Error -->
+    <string name="error_title">@string/error</string>
+    <string name="error_data_retrieval">Could not retrieve server error. Please try again.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
@@ -117,7 +120,8 @@
     <string name="history_text">History</string>
     <string name="description_not_available">Not available</string>
     <!-- 1.6 -->
-    <string name="points_retry_login">Retry login</string>
+    <string name="points_retry_login">@string/error</string>
+    <string name="description_retry_login">@string/description_auth_failed</string>
     <!-- 1.7 -->
     <string name="points_pending">Pending</string>
     <string name="description_please_wait">Please wait</string>
@@ -147,7 +151,7 @@
     <string name="link_status_requires_auth_pending">Pending</string>
     <string name="description_requires_auth_pending">Please wait</string>
     <!-- 2.7 -->
-    <string name="link_status_auth_failed">Log in failed</string>
+    <string name="link_status_auth_failed">@string/error</string>
     <string name="description_auth_failed">Please try again</string>
     <!-- 2.8 -->
     <string name="link_status_unlinkable">Linking</string>
@@ -360,6 +364,9 @@
     <string name="token_api_v1">Token %1$s</string>
     <string name="facebook_unavailable">Facebook is currently unavailable.</string>
     <string name="facebook_cancelled">Facebook login was cancelled.</string>
+    <string name="enter_credentials">Enter credentials</string>
+    <string name="add_card">Add card</string>
+    <string name="please_enter_credentials">Please enter your %1$s credentials below to add this card to your wallet.</string>
 
     <!-- Accept T&Cs -->
     <string name="one_last_step">One last step...</string>
@@ -420,4 +427,5 @@
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
+
 </resources>
