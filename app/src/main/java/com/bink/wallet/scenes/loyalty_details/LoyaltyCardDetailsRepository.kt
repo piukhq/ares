@@ -61,17 +61,16 @@ class LoyaltyCardDetailsRepository(
         }
     }
 
-    fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>, storeError: MutableLiveData<Throwable>) {
+    fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>, localStoreError: MutableLiveData<Throwable>, fetchError: MutableLiveData<Throwable>) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
                     paymentCards.value = response
-                    storePaymentsCards(response, storeError)
+                    storePaymentsCards(response, localStoreError)
                 } catch (e: Throwable) {
-                    // TODO: Have error catching here in a mutable
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    fetchError.value = e
                 }
             }
         }
