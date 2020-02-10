@@ -30,10 +30,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             .build()
     }
 
-    companion object {
-        const val BARCODE_TEXT = "Barcode"
-    }
-
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
 
@@ -373,8 +369,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (isNetworkAvailable(requireActivity(), true)) {
-                    addRegisterFieldsRequest.plan_documents?.map {
-                        if (it.value != "true") {
+                    addRegisterFieldsRequest.plan_documents?.map { plan ->
+                        var required = true
+                        planBooleanFieldsList.map { field ->
+                            if (field.second.column == plan.column) {
+                                (field.first as PlanDocuments).checkbox?.let { hasCheckbox ->
+                                    if (!hasCheckbox) {
+                                        required = false
+                                    }
+                                }
+                            }
+                        }
+                        if (required && plan.value != true.toString()) {
                             requireContext().displayModalPopup(
                                 EMPTY_STRING,
                                 getString(R.string.required_fields)
@@ -564,5 +570,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.progressSpinner.visibility = View.GONE
         viewModel.createCardError.value = null
         binding.addCardButton.isEnabled = true
+    }
+
+    companion object {
+        private const val BARCODE_TEXT = "Barcode"
     }
 }
