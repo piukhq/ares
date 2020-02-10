@@ -64,11 +64,11 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                         pointsDescription.text =
                             getString(
                                 R.string.points_history_not_available_description,
-                                viewModel!!.membershipPlan.value?.account?.plan_name
+                                this@TransactionsFragment.viewModel.membershipPlan.value?.account?.plan_name
                             )
                         with (noTransactionsText) {
                             val balance =
-                                viewModel!!.membershipCard.value?.balances?.first()
+                                this@TransactionsFragment.viewModel.membershipCard.value?.balances?.first()
                             val updateTime = balance?.updated_at
                             val currentTime = Calendar.getInstance().timeInMillis / 1000
                             updateTime?.let { time ->
