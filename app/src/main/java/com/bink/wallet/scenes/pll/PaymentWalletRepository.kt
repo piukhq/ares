@@ -115,7 +115,7 @@ class PaymentWalletRepository(
         unlinkSuccesses: MutableLiveData<ArrayList<Any>>,
         unlinkErrors: MutableLiveData<ArrayList<Throwable>>
     ) {
-        val jobs = ArrayList<Deferred<*>>()
+        val jobs = mutableListOf<Deferred<*>>()
         paymentCardIds.forEach { id ->
             CoroutineScope(Dispatchers.IO).launch {
                 val unlinkJob = apiService.unlinkFromPaymentCardAsync(id, membershipCardId)
@@ -148,7 +148,7 @@ class PaymentWalletRepository(
         linkSuccesses: MutableLiveData<ArrayList<Any>>,
         linkErrors: MutableLiveData<MutableList<Throwable>>
     ) {
-        val jobs = ArrayList<Deferred<*>>()
+        val jobs = mutableListOf<Deferred<*>>()
         paymentCardIds.forEach { id ->
             CoroutineScope(Dispatchers.IO).launch {
                 jobs.add(async { apiService.linkToPaymentCardAsync(membershipCardId, id) })
