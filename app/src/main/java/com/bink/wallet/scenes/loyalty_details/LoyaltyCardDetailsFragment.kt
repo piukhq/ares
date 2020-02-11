@@ -53,12 +53,26 @@ class LoyaltyCardDetailsFragment :
 
         setLoadingState(true)
 
+        fetchData()
+
         binding.viewModel = viewModel
 
-        if (isNetworkAvailable(requireActivity())) {
-            viewModel.fetchPaymentCards()
-        } else {
-            viewModel.fetchLocalPaymentCards()
+        arguments?.let {
+            val tiles = arrayListOf<String>()
+            viewModel.apply {
+                membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+                membershipPlan.value?.images?.filter { image -> image.type == 2 }
+                    ?.forEach { image -> tiles.add(image.url.toString()) }
+                this.tiles.value = tiles
+                membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+                if (isNetworkAvailable(requireContext(), true)) {
+                    setLoadingState(true)
+                    updateMembershipCard()
+                } else {
+                    viewModel.setLinkStatus()
+                    viewModel.setAccountStatus()
+                }
+            }
         }
 
         handleBrandHeader()
@@ -72,23 +86,7 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.background = colorDrawable
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            viewModel.setLinkStatus()
-            viewModel.setAccountStatus()
-        }
-
-        arguments?.let {
-            val tiles = arrayListOf<String>()
-            viewModel.apply {
-                membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-                membershipPlan.value?.images?.filter { image -> image.type == 2 }
-                    ?.forEach { image -> tiles.add(image.url.toString()) }
-                this.tiles.value = tiles
-                membershipCard.value =
-                    LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-                if (isNetworkAvailable(requireActivity())) {
-                    updateMembershipCard()
-                }
-            }
+            viewModel.updateMembershipCard()
         }
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
@@ -99,7 +97,7 @@ class LoyaltyCardDetailsFragment :
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                viewModel.updateMembershipCard(true)
+                viewModel.updateMembershipCard()
             } else {
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                 setLoadingState(false)
@@ -191,6 +189,15 @@ class LoyaltyCardDetailsFragment :
         }
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+    }
+
+    private fun fetchData() {
+        setLoadingState(true)
+        if (isNetworkAvailable(requireActivity(), false)) {
+            viewModel.fetchPaymentCards()
+        } else {
+            viewModel.fetchLocalPaymentCards()
         }
     }
 
@@ -341,14 +348,10 @@ class LoyaltyCardDetailsFragment :
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
             LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
-                val membershipCardId = viewModel.membershipCard.value?.id.toString()
                 val activeLinkedParams =
                     listOf(
-                        viewModel.paymentCardsMerger.value?.count { card ->
-                            card.membership_cards.count { membershipCard ->
-                                membershipCard.active_link == true &&
-                                        membershipCardId == membershipCard.id
-                            } > 0
+                        viewModel.membershipCard.value?.payment_cards?.count {
+                            it.active_link == true
                         },
                         viewModel.paymentCardsMerger.value?.size
                     )

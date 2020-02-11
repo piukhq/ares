@@ -46,10 +46,14 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
 
     init {
         _paymentCardsMerger.addSource(paymentCards) {
-            _paymentCardsMerger.value = paymentCards.value
+            paymentCards.value?.let {
+                _paymentCardsMerger.value = paymentCards.value
+            }
         }
-        _paymentCardsMerger.addSource(localPaymentCards) {
-            _paymentCardsMerger.value = localPaymentCards.value
+        localPaymentCards.value?.let {
+            _paymentCardsMerger.addSource(localPaymentCards) {
+                _paymentCardsMerger.value = localPaymentCards.value
+            }
         }
     }
 

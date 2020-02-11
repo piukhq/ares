@@ -1,13 +1,11 @@
 package com.bink.wallet.scenes.loyalty_details
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,7 +59,11 @@ class LoyaltyCardDetailsRepository(
         }
     }
 
-    fun getPaymentCards(paymentCards: MutableLiveData<List<PaymentCard>>, localStoreError: MutableLiveData<Throwable>, fetchError: MutableLiveData<Throwable>) {
+    fun getPaymentCards(
+        paymentCards: MutableLiveData<List<PaymentCard>>,
+        localStoreError: MutableLiveData<Throwable>,
+        fetchError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
