@@ -14,6 +14,8 @@ const val NUMBER_DAYS_IN_WEEK = 7
 const val NUMBER_WEEKS_IN_MONTH = 5
 const val NUMBER_MONTHS_IN_YEAR = 12
 
+const val ONE_THOUSAND = 1000
+
 val ENVIRONMENTS_TO_DEBUG = listOf("debug", "beta", "mr", "nightly")
 
 const val EMPTY_STRING = ""

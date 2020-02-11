@@ -48,6 +48,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isPaymentWalletEmpty: Boolean? = null
 
+    private var isRetryJourney = false
+
+    private var isFailedJourney = false
+
+    private var membershipCardId: String? = null
+
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
@@ -83,24 +89,23 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.currentMembershipPlan.value = args.currentMembershipPlan
-        viewModel.currentMembershipCard.value = args.membershipCard
+
+        with(args) {
+            viewModel.currentMembershipPlan.value = currentMembershipPlan
+            this@AddAuthFragment.membershipCardId = membershipCardId
+            this@AddAuthFragment.isFailedJourney = isFailedJourney
+            this@AddAuthFragment.isRetryJourney = isRetryJourney
+        }
+
         planFieldsList.clear()
         planBooleanFieldsList.clear()
+
         val signUpFormType = args.signUpFormType
+
         SharedPreferenceManager.isLoyaltySelected = true
 
         binding.item = viewModel.currentMembershipPlan.value
 
-        if (viewModel.currentMembershipPlan.value != null) {
-            binding.descriptionAddAuth.text =
-                getString(
-                    R.string.login_description,
-                    viewModel.currentMembershipPlan.value!!.account?.company_name,
-                    viewModel.currentMembershipPlan.value?.account?.plan_name
-                )
-            binding.noAccountText.visibility = View.VISIBLE
-        }
 
         binding.close.setOnClickListener {
             windowFullscreenHandler.toNormalScreen()
@@ -143,58 +148,72 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         }
 
+        viewModel.fetchCardsError.observeNonNull(this) {
+            requireContext().displayModalPopup(
+                getString(R.string.error_title),
+                getString(R.string.error_description)
+            )
+        }
+
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
-                binding.titleAddAuthText.text = getString(R.string.log_in_text)
-                binding.addCardButton.text = getString(R.string.log_in_text)
-                with(viewModel.currentMembershipPlan.value!!) {
-                    if (viewModel.currentMembershipCard.value != null) {
-                        if (feature_set?.has_points != null &&
-                            feature_set.has_points == true &&
-                            feature_set.transactions_available != null
-                        ) {
-                            if (feature_set.transactions_available == true) {
-                                binding.descriptionAddAuth.text = getString(
-                                    R.string.log_in_transaction_available,
-                                    viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                                )
-                            } else {
-                                binding.descriptionAddAuth.text =
-                                    getString(
-                                        R.string.log_in_transaction_unavailable,
-                                        viewModel.currentMembershipPlan.value!!.account?.plan_name_card
+                viewModel.currentMembershipPlan.value?.let {
+                    with(it) {
+                        if (isFailedJourney) {
+                            with(binding) {
+                                titleAddAuthText.text = getString(R.string.log_in_text)
+                                addCardButton.text = getString(R.string.log_in_text)
+                            }
+                            if (feature_set?.has_points != null &&
+                                feature_set.has_points == true &&
+                                feature_set.transactions_available != null &&
+                                account?.plan_name_card != null
+                            ) {
+                                if (feature_set.transactions_available == true) {
+                                    binding.descriptionAddAuth.text = getString(
+                                        R.string.log_in_transaction_available,
+                                        account.plan_name_card
                                     )
+                                } else {
+                                    binding.descriptionAddAuth.text =
+                                        getString(
+                                            R.string.log_in_transaction_unavailable,
+                                            account.plan_name_card
+                                        )
+                                }
+                            }
+                            binding.noAccountText.visibility = View.GONE
+                        } else {
+                            with(binding) {
+                                titleAddAuthText.text = getString(R.string.enter_credentials)
+                                addCardButton.text = getString(R.string.add_card)
+                                account?.company_name?.let { companyName ->
+                                    descriptionAddAuth.text =
+                                        getString(
+                                            R.string.please_enter_credentials,
+                                            companyName
+                                        )
+                                }
                             }
                         }
 
-                        if (MembershipPlanUtils.getAccountStatus(
-                                this,
-                                viewModel.currentMembershipCard.value!!
-                            ) == LoginStatus.STATUS_LOGIN_FAILED
-                        ) {
-                            binding.descriptionAddAuth.text = getString(
-                                R.string.log_in_transaction_available,
-                                viewModel.currentMembershipPlan.value!!.account?.plan_name_card
-                            )
-                        }
-                    }
-
-                    account?.let {
-                        account.add_fields?.map {
-                            it.typeOfField = TypeOfField.ADD
-                            addFieldToList(it)
-                        }
-                        account.authorise_fields?.map {
-                            it.typeOfField = TypeOfField.AUTH
-                            addFieldToList(it)
-                        }
-                        account.plan_documents?.map {
-                            if (it.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
-                                addFieldToList(it)
+                        account?.let {
+                            account.add_fields?.map { planFields ->
+                                planFields.typeOfField = TypeOfField.ADD
+                                addFieldToList(planFields)
+                            }
+                            account.authorise_fields?.map { planFields ->
+                                planFields.typeOfField = TypeOfField.AUTH
+                                addFieldToList(planFields)
+                            }
+                            account.plan_documents?.map { planDocuments ->
+                                if (planDocuments.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
+                                    addFieldToList(planDocuments)
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
             }
             SignUpFormType.ENROL -> {
@@ -247,24 +266,30 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     TypeOfField.REGISTRATION.name
                 )!!
             ) {
-                if (viewModel.currentMembershipPlan.value != null) {
-                    val action = AddAuthFragmentDirections.toGhost(
-                        SignUpFormType.GHOST,
-                        viewModel.currentMembershipPlan.value!!,
-                        null
+                viewModel.currentMembershipPlan.value?.let {
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddAuthFragmentDirections.toGhost(
+                            SignUpFormType.GHOST,
+                            it,
+                            isRetryJourney,
+                            false
+                        )
                     )
-                    findNavController().navigateIfAdded(this, action)
                 }
             } else {
-                val action = AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.title_ghost_card_not_available),
-                        getString(R.string.description_ghost_card_not_available)
+                findNavController().navigateIfAdded(
+                    this,
+                    AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            getString(R.string.title_ghost_card_not_available),
+                            getString(R.string.description_ghost_card_not_available)
+                        )
                     )
                 )
-                findNavController().navigateIfAdded(this, action)
+
             }
         }
 
@@ -327,6 +352,24 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.addCardButton.isEnabled = false
 
+        viewModel.createCardError.observeNonNull(this) { exception ->
+            when (ExceptionHandlingUtils.onHttpException(exception)) {
+                HandledException.BAD_REQUEST -> {
+                    requireContext().displayModalPopup(
+                        getString(R.string.error),
+                        getString(R.string.error_scheme_already_exists)
+                    )
+                }
+                else -> {
+                    requireContext().displayModalPopup(
+                        getString(R.string.add_card_error_title),
+                        getString(R.string.add_card_error_message)
+                    )
+                }
+            }
+            hideLoadingViews()
+        }
+
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (isNetworkAvailable(requireActivity(), true)) {
@@ -355,63 +398,75 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             }
                         }
                     }
-
-                    when (signUpFormType) {
-                        SignUpFormType.ADD_AUTH -> {
-                            val currentRequest = MembershipCardRequest(
-                                addRegisterFieldsRequest,
-                                viewModel.currentMembershipPlan.value!!.id
-                            )
-
-                            if (viewModel.currentMembershipCard.value != null &&
-                                MembershipPlanUtils.getAccountStatus(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    viewModel.currentMembershipCard.value!!
-                                ) == LoginStatus.STATUS_LOGIN_FAILED
-                            ) {
-                                viewModel.updateMembershipCard(
-                                    viewModel.currentMembershipCard.value!!,
-                                    currentRequest
-                                )
-                            } else {
-                                viewModel.createMembershipCard(
-                                    currentRequest
-                                )
-                            }
-                        }
-                        SignUpFormType.GHOST -> {
-                            if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
-                                context?.displayModalPopup(
-                                    null,
-                                    getString(R.string.cannot_complete_registration)
-                                )
-                                return@setOnClickListener
-                            }
-
-                            val currentRequest = MembershipCardRequest(
-                                Account(
-                                    addRegisterFieldsRequest.add_fields,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                                ),
-                                viewModel.currentMembershipPlan.value!!.id
-                            )
-                            viewModel.createMembershipCard(
-                                currentRequest
-                            )
-                        }
-
-                        SignUpFormType.ENROL -> {
-                            viewModel.createMembershipCard(
-                                MembershipCardRequest(
+                    viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+                        when (signUpFormType) {
+                            SignUpFormType.ADD_AUTH -> {
+                                val currentRequest = MembershipCardRequest(
                                     addRegisterFieldsRequest,
-                                    viewModel.currentMembershipPlan.value!!.id
+                                    membershipPlan.id
                                 )
-                            )
+                                if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    membershipCardId?.let {
+                                        viewModel.updateMembershipCard(it, currentRequest)
+                                    }
+                                } else {
+                                    viewModel.createMembershipCard(
+                                        currentRequest
+                                    )
+                                }
+                            }
+                            SignUpFormType.GHOST -> {
+                                if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
+                                    context?.displayModalPopup(
+                                        null,
+                                        getString(R.string.cannot_complete_registration)
+                                    )
+                                    return@setOnClickListener
+                                }
+
+                                val currentRequest = MembershipCardRequest(
+                                    Account(
+                                        addRegisterFieldsRequest.add_fields,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                    ),
+                                    membershipPlan.id
+                                )
+
+                                if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    membershipCardId?.let {
+                                        viewModel.updateMembershipCard(it, currentRequest)
+                                    }
+                                } else {
+                                    viewModel.createMembershipCard(
+                                        currentRequest
+                                    )
+                                }
+                            }
+
+                            SignUpFormType.ENROL -> {
+                                val currentRequest = MembershipCardRequest(
+                                    addRegisterFieldsRequest,
+                                    membershipPlan.id
+                                )
+                                if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    membershipCardId?.let {
+                                        viewModel.updateMembershipCard(it, currentRequest)
+                                    }
+                                } else {
+                                    viewModel.createMembershipCard(
+                                        MembershipCardRequest(
+                                            addRegisterFieldsRequest,
+                                            membershipPlan.id
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
+
                     binding.addCardButton.isEnabled = false
                     binding.progressSpinner.visibility = View.VISIBLE
                 } else {
@@ -461,17 +516,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         handlePll(membershipCard)
                     }
                 }
-            }
-
-            hideLoadingViews()
-        }
-
-        viewModel.createCardError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    getString(R.string.add_card_error_title),
-                    getString(R.string.add_card_error_message)
-                )
             }
             hideLoadingViews()
         }

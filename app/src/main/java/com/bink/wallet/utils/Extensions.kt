@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.bink.wallet.R
+import com.bink.wallet.model.response.membership_card.CardBalance
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -147,6 +148,13 @@ fun Context.validatePassword(passwordValue: String?, editText: EditText) {
     }
 }
 
+fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
+    val safeClickListener = SafeClickListener {
+        onSafeClick(it)
+    }
+    setOnClickListener(safeClickListener)
+}
+
 fun Context.matchSeparator(separatorId: Int, parentLayout: ConstraintLayout) {
     val constraintSet = ConstraintSet()
     constraintSet.clone(parentLayout)
@@ -173,3 +181,15 @@ fun Intent.putSessionHandlerNavigationDestination(destination: String) {
 
 fun Intent.getSessionHandlerNavigationDestination(): String =
     getStringExtra(SESSION_HANDLER_NAVIGATION_KEY) ?: EMPTY_STRING
+
+fun CardBalance?.formatBalance(): String {
+    val balanceValue = this?.value?.toFloat() ?: 0f
+    val balanceDecimalValue = balanceValue - balanceValue.toInt()
+    return if (balanceDecimalValue != 0f) {
+        this?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(this.value?.toFloat()))
+            .toString()
+    } else {
+        this?.prefix?.plus(balanceValue.toInt())
+            .toString()
+    }
+}

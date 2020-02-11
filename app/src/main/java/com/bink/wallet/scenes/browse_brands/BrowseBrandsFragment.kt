@@ -86,7 +86,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     }
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {
-        val action = BrowseBrandsFragmentDirections.browseToAddJoin(membershipPlan, false)
+        val action = BrowseBrandsFragmentDirections.browseToAddJoin(
+            membershipPlan,
+            null,
+            isFromJoinCard = false,
+            isRetryJourney = false,
+            isFailedJourney = false
+        )
         findNavController().navigateIfAdded(this, action)
     }
 }

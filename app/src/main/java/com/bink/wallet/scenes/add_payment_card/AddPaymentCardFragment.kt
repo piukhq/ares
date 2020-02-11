@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_payment_card
 
 import android.os.Bundle
+import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -13,6 +14,7 @@ import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.min
 
 class AddPaymentCardFragment :
     BaseFragment<AddPaymentCardViewModel, AddPaymentCardFragmentBinding>() {
@@ -68,9 +70,18 @@ class AddPaymentCardFragment :
             cardInfoDisplay()
         }
 
-        binding.cardNumber.setOnFocusChangeListener { _, focus ->
-            if (!focus) {
-                validateCardNumber()
+        with (binding.cardNumber) {
+            filters = arrayOf(
+                *this.filters,
+                InputFilter.LengthFilter(
+                    enumValues<PaymentCardType>().maxBy { it.format.length }?.format?.length
+                        ?: 0
+                )
+            )
+            setOnFocusChangeListener { _, focus ->
+                if (!focus) {
+                    validateCardNumber()
+                }
             }
         }
 
@@ -186,20 +197,35 @@ class AddPaymentCardFragment :
         with(binding.cardNumber) {
             val origNumber = text.toString()
             val newNumber = origNumber.cardFormatter()
-            if (origNumber.isNotEmpty() &&
-                newNumber.isNotEmpty() &&
-                origNumber != newNumber
-            ) {
-                val pos = selectionStart
-                setText(newNumber)
-                if (newNumber.length > origNumber.length &&
-                    pos == origNumber.length
-                ) {
-                    setSelection(newNumber.length)
-                } else if (newNumber.length < origNumber.length &&
-                    pos > newNumber.length
-                ) {
-                    setSelection(newNumber.length)
+            if (origNumber.isNotEmpty()) {
+                if (newNumber.isNotEmpty() &&
+                    origNumber != newNumber) {
+                    val pos = selectionStart
+                    setText(newNumber)
+                    if (newNumber.length > origNumber.length &&
+                        pos == origNumber.length
+                    ) {
+                        setSelection(newNumber.length)
+                    } else if (newNumber.length < origNumber.length &&
+                        pos > newNumber.length
+                    ) {
+                        setSelection(newNumber.length)
+                    }
+                }
+                val sanNumber = origNumber.ccSanitize()
+                val type = sanNumber.substring(
+                        0,
+                        min(4, sanNumber.length)
+                    ).presentedCardType()
+                val max = type.len
+                if (sanNumber.length > max) {
+                    val trimmedNumber = if (type == PaymentCardType.NONE) {
+                        sanNumber.substring(0, max)
+                    } else {
+                        sanNumber.substring(0, max).cardFormatter()
+                    }
+                    setText(trimmedNumber)
+                    setSelection(trimmedNumber.length)
                 }
             }
         }
