@@ -12,6 +12,9 @@ import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.FACEBOOK_LOGIN_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.LOGIN_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.SIGN_UP_ANALYTICS_IDENTIFIER_ON_BOARDING
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
@@ -35,9 +38,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             .build()
     }
 
-    private val FACEBOOK_LOGIN_ANALYTICS_IDENTIFIER = "OnBoardingView.ContinueWithFacebook"
-    private val SIGN_UP_ANALYTICS_IDENTIFIER = "OnBoardingView.SignUpWithEmail"
-    private val LOGIN_ANALYTICS_IDENTIFIER = "OnBoardingView.LogInWithEmail"
     private val EMAIL_KEY = "email"
     private val FIELDS_KEY = "fields"
     private lateinit var callbackManager: CallbackManager
@@ -126,7 +126,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
 
-            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER)
+            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER_ON_BOARDING)
         }
         with(binding.pager) {
             addOnPageChangeListener(object :

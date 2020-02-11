@@ -14,6 +14,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.DONE_ANALYTICS_IDENTIFIER_PLL
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.Deferred
@@ -24,8 +25,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     override val layoutRes: Int
         get() = R.layout.fragment_pll
-
-    private val DONE_ANALYTICS_IDENTIFIER = "PllView.Done"
 
     override val viewModel: PllViewModel by viewModel()
 
@@ -182,7 +181,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
             }
 
-            logEvent(DONE_ANALYTICS_IDENTIFIER)
+            logEvent(DONE_ANALYTICS_IDENTIFIER_PLL)
         }
 
         viewModel.fetchError.observeNonNull(this) {

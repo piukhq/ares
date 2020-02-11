@@ -15,6 +15,8 @@ import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.ACCEPT_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.DECLINE_ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -28,9 +30,6 @@ import java.util.*
 class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.accept_tc_fragment
-
-    private val ACCEPT_ANALYTICS_IDENTIFIER = "AcceptTCView.IAccept"
-    private val DECLINE_ANALYTICS_IDENTIFIER = "AcceptTCView.IDecline"
 
     override val viewModel: AcceptTCViewModel by viewModel()
 

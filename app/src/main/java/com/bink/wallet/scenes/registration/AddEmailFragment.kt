@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddEmailFragmentBinding
+import com.bink.wallet.utils.FirebaseUtils.CONTINUE_ANALYTICS_IDENTIFIER_ADD_EMAIL
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
@@ -19,8 +20,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding>() {
     override val layoutRes: Int
         get() = R.layout.add_email_fragment
-
-    private val CONTINUE_ANALYTICS_IDENTIFIER = "LoginView.Continue"
 
     override val viewModel: AddEmailViewModel by viewModel()
 
@@ -70,7 +69,7 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
                 )
             }
 
-            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER_ADD_EMAIL)
         }
 
     }

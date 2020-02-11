@@ -15,6 +15,7 @@ import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.CONTINUE_ANALYTICS_IDENTIFIER_SIGN_UP
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -23,8 +24,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val layoutRes = R.layout.sign_up_fragment
-
-    private val CONTINUE_ANALYTICS_IDENTIFIER = "SignUpView.Continue"
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -224,7 +223,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 }
             }
 
-            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER_SIGN_UP)
         }
     }
 

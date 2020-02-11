@@ -17,6 +17,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.NO_ACCOUNT_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.SIGN_UP_ANALYTICS_IDENTIFIER_ADD_AUTH
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -33,9 +35,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     companion object {
         const val BARCODE_TEXT = "Barcode"
     }
-
-    private val NO_ACCOUNT_ANALYTICS_IDENTIFIER = "AddAuthView.IDontHaveAnAccount"
-    private val SIGN_UP_ANALYTICS_IDENTIFIER = "AddAuthView.SignUp"
 
     override val layoutRes: Int
         get() = R.layout.add_auth_fragment
@@ -438,7 +437,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
             }
 
-            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER)
+            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER_ADD_AUTH)
         }
 
         viewModel.newMembershipCard.observeNonNull(this) { membershipCard ->

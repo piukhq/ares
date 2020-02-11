@@ -10,6 +10,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.CONTINUE_ANALYTICS_IDENTIFIER_LOGIN
+import com.bink.wallet.utils.FirebaseUtils.FORGOT_PASSWORD_ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,9 +26,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override val layoutRes: Int
         get() = R.layout.login_fragment
-
-    private val FORGOT_PASSWORD_ANALYTICS_IDENTIFIER = "LoginView.ForgotPassword"
-    private val CONTINUE_ANALYTICS_IDENTIFIER = "LoginView.Continue"
 
     override val viewModel: LoginViewModel by viewModel()
 
@@ -147,7 +146,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 }
             }
 
-            logEvent(CONTINUE_ANALYTICS_IDENTIFIER)
+            logEvent(CONTINUE_ANALYTICS_IDENTIFIER_LOGIN)
         }
     }
 }

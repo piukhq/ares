@@ -10,6 +10,7 @@ import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.ADD_ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -33,8 +34,6 @@ class AddPaymentCardFragment :
 
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
-
-    private val ADD_ANALYTICS_IDENTIFIER = "AddPaymentCardView.Add"
 
     private fun validateCardName() {
         binding.cardName.error =

@@ -9,6 +9,8 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.utils.FirebaseUtils.ADD_CARD_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.GET_NEW_CARD_ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -26,9 +28,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     override val layoutRes: Int
         get() = R.layout.add_join_fragment
-
-    private val ADD_CARD_ANALYTICS_IDENTIFIER = "AddJoinView.AddMyCard"
-    private val GET_NEW_CARD_ANALYTICS_IDENTIFIER = "AddJoinView.GetANewCard"
 
     private val args: AddJoinFragmentArgs by navArgs()
 

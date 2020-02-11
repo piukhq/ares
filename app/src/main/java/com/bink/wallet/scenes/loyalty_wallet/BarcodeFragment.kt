@@ -7,6 +7,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.utils.BarcodeWrapper
+import com.bink.wallet.utils.FirebaseUtils.MAXIMISE_BARCODE_ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,8 +22,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
     override val viewModel: BarcodeViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.barcode_fragment
-
-    private val MAXIMISE_BARCODE_ANALYTICS_IDENTIFIER = "BarcodeView.MaximiseBarcode"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

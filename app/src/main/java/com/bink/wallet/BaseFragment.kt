@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_ACTION_TYPE
+import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -18,9 +20,6 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
-
-    private val ANALYTICS_IDENTIFIER = "identifier"
-    private val ANALYTICS_ACTION_TYPE = "call_to_action_pressed"
 
     @get:LayoutRes
     abstract val layoutRes: Int
