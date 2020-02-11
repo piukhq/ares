@@ -16,7 +16,9 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.enums.*
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.enums.LinkStatus
+import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import kotlinx.coroutines.runBlocking
@@ -341,11 +343,10 @@ class LoyaltyCardDetailsFragment :
 
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
-            if (balance.suffix.isNullOrEmpty()) {
-                binding.pointsText.text =
-                    getString(R.string.points_prefix_or_suffix, prefix, balance.value)
+            binding.pointsText.text = if (balance.suffix.isNullOrEmpty()) {
+                balance.formatBalance()
             } else {
-                binding.pointsText.text = getString(
+                getString(
                     R.string.points_prefix_and_suffix,
                     prefix,
                     balance.value,
@@ -591,6 +592,20 @@ class LoyaltyCardDetailsFragment :
                         )
                     findNavController().navigateIfAdded(this, directions)
                 }
+
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
+                    viewModel.membershipPlan.value?.let {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id,
+                                false,
+                                isRetryJourney = true,
+                                isFailedJourney = true
+                            )
+                        findNavController().navigateIfAdded(this, directions)
+                    }
+                }
                 else -> {
                 }
             }
@@ -668,13 +683,17 @@ class LoyaltyCardDetailsFragment :
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
-                    val action =
-                        LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                            SignUpFormType.ADD_AUTH,
-                            viewModel.membershipPlan.value!!,
-                            viewModel.membershipCard.value!!
-                        )
-                    findNavController().navigateIfAdded(this, action)
+                    viewModel.membershipPlan.value?.let {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id,
+                                false,
+                                isRetryJourney = true,
+                                isFailedJourney = true
+                            )
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
                 else -> {
                 }

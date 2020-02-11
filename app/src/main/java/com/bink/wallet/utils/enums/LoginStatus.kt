@@ -2,7 +2,7 @@ package com.bink.wallet.utils.enums
 
 import com.bink.wallet.R
 
-enum class  LoginStatus(
+enum class LoginStatus(
     val status: Double,
     val pointsImage: Int,
     val pointsDescription: Int? = null,
@@ -35,7 +35,7 @@ enum class  LoginStatus(
     STATUS_LOGIN_FAILED(
         1.6,
         R.drawable.ic_lcd_module_icons_points_login,
-        R.string.description_see_history,
+        R.string.description_retry_login,
         R.string.points_retry_login
     ),
     STATUS_PENDING(

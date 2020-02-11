@@ -6,6 +6,7 @@ import com.bink.wallet.utils.enums.PaymentCardType
 import java.util.*
 
 const val SEPARATOR_PIPE = "|"
+const val SEPARATOR_HYPHEN = "-"
 const val SEPARATOR_SLASH = "/"
 const val REGEX_DECIMAL_ONLY = "[^\\d]"
 const val REGEX_DECIMAL_OR_SLASH = "[^\\d/]"
@@ -44,7 +45,12 @@ fun String.presentedCardType(): PaymentCardType {
                     prefix.length != 1 ||
                     sanitizedInput.length <= prefix.length
                 ) {
-                    if (sanitizedInput.length >= prefix.length &&
+                    val range = prefix.split(SEPARATOR_HYPHEN)
+                    if (range.size > 1 &&
+                        sanitizedInput >= range[0] &&
+                        sanitizedInput <= range[1]) {
+                        return it
+                    } else if (sanitizedInput.length >= prefix.length &&
                         sanitizedInput.substring(0, prefix.length) == prefix
                     ) {
                         return it

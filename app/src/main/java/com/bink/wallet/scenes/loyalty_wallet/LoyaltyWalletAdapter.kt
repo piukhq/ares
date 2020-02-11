@@ -28,7 +28,7 @@ class LoyaltyWalletAdapter(
     companion object {
         private const val MEMBERSHIP_CARD = 0
         // used for join loyalty card
-        private const val MEMBERSHIP_PLAN = 1
+        private const val JOIN_PLAN = 1
         private const val JOIN_PAYMENT = 2
     }
 
@@ -43,7 +43,7 @@ class LoyaltyWalletAdapter(
 
         return when (viewType) {
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
-            MEMBERSHIP_PLAN -> PlanSuggestionHolder(EmptyLoyaltyItemBinding.inflate(inflater))
+            JOIN_PLAN -> PlanSuggestionHolder(EmptyLoyaltyItemBinding.inflate(inflater))
             else -> {
                 val binding = EmptyLoyaltyItemBinding.inflate(inflater)
                 binding.apply {
@@ -71,14 +71,19 @@ class LoyaltyWalletAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
-            is MembershipPlan -> MEMBERSHIP_PLAN
+            is MembershipPlan -> JOIN_PLAN
             else -> JOIN_PAYMENT
         }
     }
 
     override fun getItemCount(): Int = membershipCards.size
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long =
+        when (val walletItem = membershipCards[position]) {
+            is MembershipCard -> walletItem.id.toLong()
+            is MembershipPlan -> walletItem.id.toLong()
+            else -> position.toLong()
+        }
 
     fun deleteBannerDisplayById(id: String) {
         val tempMembershipCards = membershipCards.toMutableList()

@@ -211,10 +211,24 @@
         <argument
                 android:name="currentMembershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string"
+                app:nullable="true" />
+        <argument
+                android:name="isFromJoinCard"
+                app:argType="boolean"
+                app:nullable="false" />
+        <argument
+                android:name="isRetryJourney"
+                app:argType="boolean" />
+        <argument
+                android:name="isFailedJourney"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/add_join_to_ghost"
-                app:destination="@id/ghost_fragment"
+                app:destination="@id/add_auth_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -247,7 +261,7 @@
     </fragment>
 
     <fragment
-            android:id="@+id/ghost_fragment"
+            android:id="@+id/add_auth_fragment"
             android:name="com.bink.wallet.scenes.add_auth_enrol.AddAuthFragment">
 
         <argument
@@ -259,8 +273,16 @@
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
 
         <argument
-                android:name="membershipCard"
-                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard"
+                android:name="isRetryJourney"
+                app:argType="boolean" />
+        <argument
+                android:name="isFailedJourney"
+                app:argType="boolean" />
+
+        <argument
+                android:name="membershipCardId"
+                android:defaultValue="@null"
+                app:argType="string"
                 app:nullable="true" />
 
         <action
@@ -274,7 +296,7 @@
 
         <action
                 android:id="@+id/to_ghost"
-                app:destination="@id/ghost_fragment"
+                app:destination="@id/add_auth_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -400,7 +422,7 @@
 
         <action
                 android:id="@+id/detail_to_auth"
-                app:destination="@+id/ghost_fragment"
+                app:destination="@+id/add_auth_fragment"
                 app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
@@ -429,6 +451,16 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+                android:id="@+id/detail_to_add_join"
+                app:destination="@+id/add_join"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
+
+
         <action
                 android:id="@+id/detail_to_rewards_history"
                 app:destination="@id/loyalty_card_rewards_history"
