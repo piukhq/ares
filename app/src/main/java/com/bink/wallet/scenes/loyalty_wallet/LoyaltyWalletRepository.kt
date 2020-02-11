@@ -201,7 +201,7 @@ class LoyaltyWalletRepository(
 
     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
-        fetchError: MutableLiveData<Throwable>
+        fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
@@ -209,7 +209,7 @@ class LoyaltyWalletRepository(
                 try {
                     val response = request.await()
                     paymentCards.postValue(response)
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     fetchError.value = e
                 }
             }

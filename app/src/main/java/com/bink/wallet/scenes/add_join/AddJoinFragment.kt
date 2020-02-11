@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -29,19 +30,32 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     private val args: AddJoinFragmentArgs by navArgs()
 
-    private var isFromJoinCard: Boolean = false
+    private var isFromJoinCard = false
+
+    private var isRetryJourney = false
+
+    private var isFailedJourney = false
+
+    private var membershipCardId: String? = null
+
+    private var currentMembershipPlan: MembershipPlan? = null
 
     override val viewModel: AddJoinViewModel by viewModel()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val currentMembershipPlan = args.currentMembershipPlan
-        isFromJoinCard = args.isFromJoinCard
+        with(args) {
+            this@AddJoinFragment.currentMembershipPlan = currentMembershipPlan
+            this@AddJoinFragment.isFromJoinCard = isFromJoinCard
+            this@AddJoinFragment.isRetryJourney = isRetryJourney
+            this@AddJoinFragment.isFailedJourney = isFailedJourney
+            this@AddJoinFragment.membershipCardId = membershipCardId
+        }
 
         binding.item = currentMembershipPlan
 
-        when (currentMembershipPlan.feature_set?.card_type) {
+        when (currentMembershipPlan?.feature_set?.card_type) {
             CardType.STORE.type -> {
                 binding.addJoinViewImage.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -81,62 +95,73 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
-            currentMembershipPlan.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    AddJoinFragmentDirections.addJoinToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            currentMembershipPlan.account.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
+            currentMembershipPlan?.let {
+                it.account?.plan_description?.let { planDescription ->
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddJoinFragmentDirections.addJoinToBrandHeader(
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                true,
+                                it.account.plan_name
+                                    ?: getString(R.string.plan_description),
+                                planDescription
+                            )
                         )
                     )
-                )
+                }
             }
         }
 
         binding.addCardButton.setOnClickListener {
-            val action = AddJoinFragmentDirections.addJoinToGhost(
-                SignUpFormType.ADD_AUTH,
-                currentMembershipPlan,
-                null
-            )
-            findNavController().navigateIfAdded(this, action)
+            currentMembershipPlan?.let {
+                val action = AddJoinFragmentDirections.addJoinToGhost(
+                    SignUpFormType.ADD_AUTH,
+                    it,
+                    isRetryJourney,
+                    isFailedJourney,
+                    membershipCardId
+                )
+                findNavController().navigateIfAdded(this, action)
+            }
         }
 
         binding.getCardButton.setOnClickListener {
-            val action: NavDirections
-            if (currentMembershipPlan.feature_set?.linking_support != null &&
-                !currentMembershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
-            ) {
-                val genericModalParameters = GenericModalParameters(
-                    R.drawable.ic_back,
-                    true,
-                    getString(R.string.native_join_unavailable_title),
-                    getString(
-                        R.string.native_join_unavailable_text,
-                        currentMembershipPlan.account?.company_name
+            currentMembershipPlan?.let { membershipPlan ->
+                val action: NavDirections
+                if (membershipPlan.feature_set?.linking_support != null &&
+                    !membershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+                ) {
+                    val genericModalParameters = GenericModalParameters(
+                        R.drawable.ic_back,
+                        true,
+                        getString(R.string.native_join_unavailable_title),
+                        getString(
+                            R.string.native_join_unavailable_text,
+                            membershipPlan.account?.company_name
+                        )
                     )
-                )
-                currentMembershipPlan.account?.plan_url?.let {
-                    if (it.isNotEmpty()) {
-                        genericModalParameters.firstButtonText =
-                            getString(R.string.native_join_unavailable_button_text)
-                        genericModalParameters.link =
-                            currentMembershipPlan.account.plan_url
+                    membershipPlan.account?.plan_url?.let {
+                        if (it.isNotEmpty()) {
+                            genericModalParameters.firstButtonText =
+                                getString(R.string.native_join_unavailable_button_text)
+                            genericModalParameters.link =
+                                membershipPlan.account.plan_url
+                        }
                     }
+                    action =
+                        AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
+                } else {
+                    action = AddJoinFragmentDirections.addJoinToGhost(
+                        SignUpFormType.ENROL,
+                        membershipPlan,
+                        isRetryJourney,
+                        isFailedJourney,
+                        membershipCardId
+                    )
                 }
-                action = AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
-            } else {
-                action = AddJoinFragmentDirections.addJoinToGhost(
-                    SignUpFormType.ENROL,
-                    currentMembershipPlan,
-                    null
-                )
+                findNavController().navigateIfAdded(this, action)
             }
-            findNavController().navigateIfAdded(this, action)
         }
     }
 }

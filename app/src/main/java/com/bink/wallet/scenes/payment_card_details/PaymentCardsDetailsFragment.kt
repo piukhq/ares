@@ -135,7 +135,10 @@ class PaymentCardsDetailsFragment :
                                 val directions =
                                     PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
                                         it,
-                                        true
+                                        null,
+                                        true,
+                                        isRetryJourney = false,
+                                        isFailedJourney = false
                                     )
                                 findNavController().navigateIfAdded(
                                     this@PaymentCardsDetailsFragment,

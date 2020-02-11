@@ -37,7 +37,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             onCardClicked(it)
         },
         onRemoveListener = { onBannerRemove(it) }
-    )
+    ).apply {
+        setHasStableIds(true)
+    }
+
     private var walletItems = ArrayList<Any>()
 
     private val listener = object :
@@ -230,7 +233,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 val directions =
                     WalletsFragmentDirections.homeToAddJoin(
                         item,
-                        true
+                        null,
+                        true,
+                        isRetryJourney = false,
+                        isFailedJourney = false
                     )
                 findNavController().navigateIfAdded(
                     this@LoyaltyWalletFragment,
