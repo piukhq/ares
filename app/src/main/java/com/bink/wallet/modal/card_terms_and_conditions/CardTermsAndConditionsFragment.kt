@@ -37,10 +37,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
         }
 
-        if (UtilFunctions.isNetworkAvailable(requireContext())) {
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchLocalMembershipPlans()
-        }
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalMembershipPlans()
 
         viewModel.paymentCard.observeNonNull(this) { paymentCard ->
             viewModel.localMembershipPlanData.value?.let { plans ->
@@ -60,7 +58,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             if (viewModel.error.value != null) {
                 binding.progressSpinner.visibility = View.GONE
                 if (hasCertificatePinningFailed(it, requireContext()) ||
-                    UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                    UtilFunctions.isNetworkAvailable(requireContext(), true)
+                ) {
                     binding.firstButton.isEnabled = true
                 }
 

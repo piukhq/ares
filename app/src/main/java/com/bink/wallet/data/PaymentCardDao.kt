@@ -18,7 +18,7 @@ interface PaymentCardDao {
     suspend fun updatePaymentCard(paymentCard: PaymentCard)
 
     @Query("SELECT * FROM payment_card WHERE id =:paymentCardId")
-    suspend fun findPaymentCardById(paymentCardId: String): PaymentCard
+    suspend fun findPaymentCardById(paymentCardId: Int): PaymentCard
 
     @Query("DELETE FROM payment_card")
     suspend fun deleteAll()

@@ -6,9 +6,15 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
+import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsFragment
+import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsFragmentDirections
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
+import com.bink.wallet.model.response.payment_card.Consent
+import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.PaymentCardType
@@ -59,6 +65,9 @@ class AddPaymentCardFragment :
         cardInfoDisplay()
 
         binding.viewModel = viewModel
+
+        viewModel.fetchLocalMembershipPlans()
+        viewModel.fetchLocalMembershipCards()
 
         viewModel.cardNumber.observeNonNull(this) {
             cardSwitcher(it)
@@ -111,6 +120,21 @@ class AddPaymentCardFragment :
             )
         }
 
+        viewModel.paymentCard.observeNonNull(this) {
+            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
+                viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddPaymentCardFragmentDirections.addPaymentToPcd(
+                            it,
+                            plans.toTypedArray(),
+                            cards.toTypedArray()
+                        )
+                    )
+                }
+            }
+        }
+
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
                 validateCardName()
@@ -148,10 +172,30 @@ class AddPaymentCardFragment :
                         getString(R.string.accept_button_text),
                         getString(R.string.decline_button_text)
                     )
-                    findNavController().navigateIfAdded(
-                        this,
-                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
-                    )
+                    if (SharedPreferenceManager.isPaymentEmpty) {
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                        )
+                    } else {
+                        viewModel.sendAddCard(
+                            PaymentCardAdd(
+                                bankCard,
+                                Account(
+                                    false,
+                                    CardTermsAndConditionsFragment.DEFAULT_ACCOUNT_STATUS,
+                                    listOf(
+                                        Consent(
+                                            CardTermsAndConditionsFragment.DEFAULT_CONSENT_TYPE,
+                                            CardTermsAndConditionsFragment.DEFAULT_LATITUDE,
+                                            CardTermsAndConditionsFragment.DEFAULT_LONGITUDE,
+                                            System.currentTimeMillis() / CardTermsAndConditionsFragment.DIVISOR_MILLISECONDS
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }
