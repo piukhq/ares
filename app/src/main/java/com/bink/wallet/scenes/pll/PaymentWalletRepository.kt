@@ -63,23 +63,6 @@ class PaymentWalletRepository(
         }
     }
 
-    fun getPaymentCard(
-        paymentCardId: String,
-        mutablePaymentCard: MutableLiveData<PaymentCard>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getPaymentCardAsync(paymentCardId)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    mutablePaymentCard.value = response
-                } catch (e: Throwable) {
-                    Log.e(PaymentWalletRepository::class.simpleName, e.toString())
-                }
-            }
-        }
-    }
-
     fun linkPaymentCard(
         membershipCardId: String,
         paymentCardId: String,

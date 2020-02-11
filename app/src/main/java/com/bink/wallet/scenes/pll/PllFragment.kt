@@ -115,29 +115,15 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
         }
 
-        viewModel.unlinkSuccesses.observeNonNull(this) { successes ->
-            if (successes.size == unselectedCards.size) {
-                if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                    directions?.let { directions ->
-                        findNavController().navigateIfAdded(
-                            this@PllFragment,
-                            directions
-                        )
-                    }
-                }
+        viewModel.unlinkSuccesses.observeNonNull(this) {
+            if (it.size == unselectedCards.size) {
+                navigateToLCD()
             }
         }
 
         viewModel.linkSuccesses.observeNonNull(this) {
             if (it.size == selectedCards.size) {
-                if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                    directions?.let { directions ->
-                        findNavController().navigateIfAdded(
-                            this@PllFragment,
-                            directions
-                        )
-                    }
-                }
+                navigateToLCD()
             }
         }
 
@@ -159,18 +145,22 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                             unselectedCards.add(card.paymentCard.id.toString())
                         }
                     }
-                    if (unselectedCards.size > 0) {
+                    if (unselectedCards.isNotEmpty()) {
                         viewModel.unlinkPaymentCards(
                             unselectedCards,
                             viewModel.membershipCard.value?.id!!
                         )
                     }
 
-                    if (selectedCards.size > 0) {
+                    if (selectedCards.isNotEmpty()) {
                         viewModel.linkPaymentCards(
                             selectedCards,
                             viewModel.membershipCard.value?.id!!
                         )
+                    }
+
+                    if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
+                        findNavController().popBackStack()
                     }
                 }
             }
@@ -241,6 +231,17 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
             )
         )
+    }
+
+    private fun navigateToLCD() {
+        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+            directions?.let { directions ->
+                findNavController().navigateIfAdded(
+                    this@PllFragment,
+                    directions
+                )
+            }
+        }
     }
 
     companion object {

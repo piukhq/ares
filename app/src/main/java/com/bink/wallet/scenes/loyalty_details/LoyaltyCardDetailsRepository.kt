@@ -69,8 +69,8 @@ class LoyaltyCardDetailsRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    paymentCards.value = response
                     storePaymentsCards(response, localStoreError)
+                    paymentCards.value = response
                 } catch (e: Throwable) {
                     fetchError.value = e
                 }
@@ -86,6 +86,7 @@ class LoyaltyCardDetailsRepository(
             withContext(Dispatchers.Main) {
                 try {
                     localPaymentCards.value = paymentCardDao.getAllAsync()
+                    println("akakakak")
                 } catch (e: Throwable) {
                     localFetchError.value = e
                 }

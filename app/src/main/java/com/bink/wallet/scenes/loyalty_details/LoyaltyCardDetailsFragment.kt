@@ -85,7 +85,12 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.background = colorDrawable
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            viewModel.updateMembershipCard()
+            if (isNetworkAvailable(requireContext(), false)) {
+                viewModel.updateMembershipCard()
+            } else {
+                viewModel.setAccountStatus()
+                viewModel.setLinkStatus()
+            }
         }
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->

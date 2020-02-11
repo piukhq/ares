@@ -50,8 +50,9 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                 _paymentCardsMerger.value = paymentCards.value
             }
         }
-        localPaymentCards.value?.let {
-            _paymentCardsMerger.addSource(localPaymentCards) {
+
+        _paymentCardsMerger.addSource(localPaymentCards) {
+            localPaymentCards.value?.let {
                 _paymentCardsMerger.value = localPaymentCards.value
             }
         }
