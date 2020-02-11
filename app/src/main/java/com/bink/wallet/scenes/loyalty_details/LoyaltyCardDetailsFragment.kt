@@ -64,7 +64,7 @@ class LoyaltyCardDetailsFragment :
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-                if (isNetworkAvailable(requireContext(), true)) {
+                if (isNetworkAvailable(requireContext(), false)) {
                     setLoadingState(true)
                     updateMembershipCard()
                 } else {
@@ -153,7 +153,7 @@ class LoyaltyCardDetailsFragment :
             ) {
                 setLoadingState(false)
             } else {
-                if (isNetworkAvailable(requireActivity())) {
+                if (isNetworkAvailable(requireActivity(), false)) {
                     viewModel.fetchPaymentCards()
                 }
             }
