@@ -114,21 +114,6 @@ class AddPaymentCardFragment :
             )
         }
 
-        viewModel.paymentCard.observeNonNull(this) {
-            viewModel.localMembershipCardData.observeNonNull(this) { cards ->
-                viewModel.localMembershipPlanData.observeNonNull(this) { plans ->
-                    findNavController().navigateIfAdded(
-                        this,
-                        AddPaymentCardFragmentDirections.addPaymentToPcd(
-                            it,
-                            plans.toTypedArray(),
-                            cards.toTypedArray()
-                        )
-                    )
-                }
-            }
-        }
-
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
                 validateCardName()
