@@ -121,7 +121,7 @@ class LoyaltyCardDetailsVouchersAdapter(
 
         private fun displayForEarning(thisVoucher: Voucher) {
             thisVoucher.earn?.let { earn ->
-                with(binding) {
+                binding.apply {
                     subtitle.text = thisVoucher.subtext.plus(SPACE).plus(
                         ValueDisplayUtils.displayValue(
                             earn.target_value,
@@ -135,7 +135,8 @@ class LoyaltyCardDetailsVouchersAdapter(
                             earn.target_value,
                             earn.prefix,
                             earn.suffix,
-                            earn.currency
+                            earn.currency,
+                            forceTwoDecimals = true
                         )
                 }
             }
