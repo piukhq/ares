@@ -7,6 +7,8 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
+import java.util.concurrent.LinkedBlockingDeque
+import java.util.concurrent.LinkedBlockingQueue
 
 class PaymentWalletRepository(
     private val apiService: ApiService,
@@ -115,16 +117,15 @@ class PaymentWalletRepository(
         unlinkSuccesses: MutableLiveData<ArrayList<Any>>,
         unlinkErrors: MutableLiveData<ArrayList<Throwable>>
     ) {
-        val jobs = mutableListOf<Deferred<*>>()
+        val jobs = LinkedBlockingQueue<Deferred<*>>()
         paymentCardIds.forEach { id ->
             CoroutineScope(Dispatchers.IO).launch {
-                val unlinkJob = apiService.unlinkFromPaymentCardAsync(id, membershipCardId)
-                jobs.add(async { unlinkJob })
+                jobs.add(async { apiService.unlinkFromPaymentCardAsync(id, membershipCardId)})
                 withContext(Dispatchers.Main) {
                     val localSuccesses = ArrayList<Any>()
                     val localErrors = ArrayList<Throwable>()
                     runBlocking {
-                        for(it in jobs) {
+                        for (it in jobs) {
                             try {
                                 val response = it.await()
                                 response?.let {
@@ -148,7 +149,7 @@ class PaymentWalletRepository(
         linkSuccesses: MutableLiveData<ArrayList<Any>>,
         linkErrors: MutableLiveData<MutableList<Throwable>>
     ) {
-        val jobs = mutableListOf<Deferred<*>>()
+        val jobs = LinkedBlockingQueue<Deferred<*>>()
         paymentCardIds.forEach { id ->
             CoroutineScope(Dispatchers.IO).launch {
                 jobs.add(async { apiService.linkToPaymentCardAsync(membershipCardId, id) })
@@ -161,6 +162,7 @@ class PaymentWalletRepository(
                                 val response = it.await()
                                 response?.let {
                                     localSuccesses.add(response)
+
                                 }
                             } catch (e: Throwable) {
                                 localErrors.add(e)
