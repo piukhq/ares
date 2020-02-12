@@ -23,55 +23,55 @@ import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 class LoginUnitTest : KoinTest {
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
-    var loginData = MutableLiveData<LoginBody>()
-    val authError = MutableLiveData<Throwable>()
-    private val loginRepository: LoginRepository = mock()
-    var viewModel: LoginViewModel = mock()
-
-    @ObsoleteCoroutinesApi
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
-
-    @Before
-    fun setup() {
-        MockitoAnnotations.initMocks(this)
-        viewModel = LoginViewModel(loginRepository)
-    }
-
-    @ExperimentalCoroutinesApi
-    @ObsoleteCoroutinesApi
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        mainThreadSurrogate.close()
-    }
-
-    @Test
-    fun `make a test with Koin`() {
-        startKoin {
-            androidContext(mock(Context::class.java))
-            modules(listOf(viewModelModules, networkModule))
-        }
-    }
-
-    @Test
-    fun testLiveDataUpdate() {
-        val loginBody = LoginBody(
-            System.currentTimeMillis() / 1000,
-            "bink20iteration1@testbink.com",
-            0.0,
-            12.345
-        )
-
-        loginData
-            .observeForever {
-                Assert.assertEquals(loginBody, it)
-            }
-
-        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData, authError)
-
-    }
+//    @Rule
+//    @JvmField
+//    val rule = InstantTaskExecutorRule()
+//
+//    var loginData = MutableLiveData<LoginBody>()
+//    val authError = MutableLiveData<Throwable>()
+//    private val loginRepository: LoginRepository = mock()
+//    var viewModel: LoginViewModel = mock()
+//
+//    @ObsoleteCoroutinesApi
+//    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+//
+//    @Before
+//    fun setup() {
+//        MockitoAnnotations.initMocks(this)
+//        viewModel = LoginViewModel(loginRepository)
+//    }
+//
+//    @ExperimentalCoroutinesApi
+//    @ObsoleteCoroutinesApi
+//    @After
+//    fun tearDown() {
+//        Dispatchers.resetMain()
+//        mainThreadSurrogate.close()
+//    }
+//
+//    @Test
+//    fun `make a test with Koin`() {
+//        startKoin {
+//            androidContext(mock(Context::class.java))
+//            modules(listOf(viewModelModules, networkModule))
+//        }
+//    }
+//
+//    @Test
+//    fun testLiveDataUpdate() {
+//        val loginBody = LoginBody(
+//            System.currentTimeMillis() / 1000,
+//            "bink20iteration1@testbink.com",
+//            0.0,
+//            12.345
+//        )
+//
+//        loginData
+//            .observeForever {
+//                Assert.assertEquals(loginBody, it)
+//            }
+//
+//        loginRepository.doAuthenticationWork(LoginResponse(loginBody), loginData, authError)
+//
+//    }
 }

@@ -13,10 +13,10 @@ import org.junit.runners.JUnit4
  */
 @RunWith(JUnit4::class)
 class LoyaltyWalletViewTest {
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.bink.wallet", appContext.packageName)
-    }
+//    @Test
+//    fun useAppContext() {
+//        // Context of the app under test.
+//        val appContext = InstrumentationRegistry.getTargetContext()
+//        assertEquals("com.bink.wallet", appContext.packageName)
+//    }
 }
