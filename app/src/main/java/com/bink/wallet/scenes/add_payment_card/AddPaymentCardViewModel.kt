@@ -16,15 +16,9 @@ class AddPaymentCardViewModel(private val repository: AddPaymentCardRepository) 
     val cardHolder = MutableLiveData<String>()
 
     var paymentCard = MutableLiveData<PaymentCard>()
-    var addedError = MutableLiveData<Throwable>()
 
     var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
-
-    fun sendAddCard(card: PaymentCardAdd) {
-        addedError.value = null
-        repository.sendAddCard(card, paymentCard, addedError)
-    }
 
     fun fetchLocalMembershipCards() {
         repository.retrieveStoredMembershipCards(localMembershipCardData)

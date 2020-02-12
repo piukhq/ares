@@ -33,11 +33,22 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
     private val _paymentCardsMerger = MediatorLiveData<List<PaymentCard>>()
     val paymentCardsMerger: LiveData<List<PaymentCard>>
         get() = _paymentCardsMerger
-    val unlinkErrors = MutableLiveData<ArrayList<Throwable>>()
-    val unlinkSuccesses = MutableLiveData<ArrayList<Any>>()
 
-    val linkErrors = MutableLiveData<MutableList<Throwable>>()
-    val linkSuccesses = MutableLiveData<ArrayList<Any>>()
+    val unlinkErrors: LiveData<ArrayList<Throwable>>
+        get() = _unlinkErrors
+    private val _unlinkErrors = MutableLiveData<ArrayList<Throwable>>()
+
+    val unlinkSuccesses: LiveData<ArrayList<Any>>
+        get() = _unlinkSuccesses
+    private val _unlinkSuccesses = MutableLiveData<ArrayList<Any>>()
+
+    val linkErrors: LiveData<MutableList<Throwable>>
+        get() = _linkErrors
+    private val _linkErrors = MutableLiveData<MutableList<Throwable>>()
+
+    val linkSuccesses: LiveData<ArrayList<Any>>
+        get() = _linkSuccesses
+    private val _linkSuccesses = MutableLiveData<ArrayList<Any>>()
 
     init {
         _paymentCardsMerger.addSource(paymentCards) {
@@ -66,8 +77,8 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         paymentWalletRepository.unlinkPaymentCards(
             paymentCardIds,
             membershipCardId,
-            unlinkSuccesses,
-            unlinkErrors
+            _unlinkSuccesses,
+            _unlinkErrors
         )
     }
 
@@ -75,8 +86,8 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         paymentWalletRepository.linkPaymentCards(
             paymentCardIds,
             membershipCardId,
-            linkSuccesses,
-            linkErrors
+            _linkSuccesses,
+            _linkErrors
         )
     }
 }

@@ -86,7 +86,6 @@ class LoyaltyCardDetailsRepository(
             withContext(Dispatchers.Main) {
                 try {
                     localPaymentCards.value = paymentCardDao.getAllAsync()
-                    println("akakakak")
                 } catch (e: Throwable) {
                     localFetchError.value = e
                 }
