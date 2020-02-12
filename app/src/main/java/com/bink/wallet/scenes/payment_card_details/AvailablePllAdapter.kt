@@ -99,12 +99,14 @@ class AvailablePllAdapter(
         private fun showRetry() {
             resetVisibility()
             binding.retry.visibility = View.VISIBLE
+            binding.cardValue.visibility = View.INVISIBLE
         }
 
         private fun resetVisibility() {
             binding.toggle.visibility = View.INVISIBLE
             binding.pending.visibility = View.GONE
             binding.retry.visibility = View.GONE
+            binding.cardValue.visibility = View.VISIBLE
         }
 
         private fun isLinkedToPaymentCard(membershipCard: MembershipCard): Boolean {
