@@ -51,7 +51,7 @@ platform :android do
       flags: "#{flags}",
       clean: true,
       check: true,
-      test: true,
+#      test: false,
       deviceTest: true
     }
 
@@ -84,7 +84,7 @@ platform :android do
       buildType: "beta",
       flags: "#{flags}",
       clean: true,
-      test: true,
+#      test: false,
       deviceTest: true
     }
 
@@ -118,7 +118,7 @@ platform :android do
       buildType: "gamma",
       flags: "#{flags}",
       clean: true,
-      test: true,
+#      test: false,
       deviceTest: true
     }
 
@@ -152,7 +152,7 @@ platform :android do
       buildType: "External",
       flags: "#{flags}",
       clean: true,
-      test: true,
+#      test: false,
       deviceTest: true
     }
 
@@ -205,7 +205,7 @@ platform :android do
       buildType: "nightly",
       flags: "#{flags}",
       check: true,
-      test: true,
+#      test: false,
       deviceTest: true
     }
 
