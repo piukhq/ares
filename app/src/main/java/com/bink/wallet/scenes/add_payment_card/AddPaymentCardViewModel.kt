@@ -15,7 +15,7 @@ class AddPaymentCardViewModel(private val repository: AddPaymentCardRepository) 
     val cardHolder = MutableLiveData<String>()
 
     var paymentCard = MutableLiveData<PaymentCard>()
-  
+
     var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
 

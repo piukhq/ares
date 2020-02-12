@@ -43,7 +43,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             PllFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
-                displayTitle(membershipCard.payment_cards?.isNullOrEmpty()!!)
                 if (isAddJourney) {
                     this@PllFragment.isAddJourney = isAddJourney
                     binding.toolbar.navigationIcon = null
@@ -219,18 +218,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     .show()
             }
         }
-    }
-
-    private fun displayTitle(hasLinkedCards: Boolean) {
-        viewModel.title.set(
-            getString(
-                if (hasLinkedCards) {
-                    R.string.pll_linked_title
-                } else {
-                    R.string.pll_unlinked_title
-                }
-            )
-        )
     }
 
     private fun navigateToLCD() {

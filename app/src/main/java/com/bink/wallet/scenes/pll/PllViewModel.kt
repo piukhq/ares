@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.pll
 
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +12,6 @@ import okhttp3.ResponseBody
 class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {
     val membershipCard = MutableLiveData<MembershipCard>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
-    val title = ObservableField<String>()
     val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val linkError = MutableLiveData<Throwable>()
     val unlinkError = MutableLiveData<Throwable>()
