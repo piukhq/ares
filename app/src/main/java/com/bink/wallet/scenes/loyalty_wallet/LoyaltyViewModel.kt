@@ -128,7 +128,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         } == null
     }
 
-    suspend fun deleteCard(id: String?) {
+    fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
