@@ -21,7 +21,6 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>() {
-    private val ADD_BUTTON_ENTRY = "ADD"
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -98,11 +97,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.visibility =
-            if (!(currentMembershipPlan?.feature_set?.linking_support
-                    ?: emptyList()).contains(ADD_BUTTON_ENTRY)) {
-                View.GONE
-            } else {
+            if (currentMembershipPlan?.feature_set?.linking_support?.contains(ADD_BUTTON_ENTRY) == true) {
                 View.VISIBLE
+            } else {
+                View.GONE
             }
 
         binding.closeButton.setOnClickListener {
@@ -182,5 +180,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 findNavController().navigateIfAdded(this, action)
             }
         }
+    }
+
+    companion object {
+        private const val ADD_BUTTON_ENTRY = "ADD"
+
     }
 }

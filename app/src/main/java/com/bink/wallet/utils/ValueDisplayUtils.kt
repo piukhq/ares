@@ -6,7 +6,8 @@ object ValueDisplayUtils {
         prefix: String?,
         suffix: String?,
         currency: String?,
-        type: String? = null
+        type: String? = null,
+        forceTwoDecimals: Boolean = false
     ): String {
         val display = StringBuilder()
         with (display) {
@@ -15,7 +16,13 @@ object ValueDisplayUtils {
             }
             value?.let {
                 append(
-                    TWO_DECIMAL_FLOAT_FORMAT.format(it)
+                    if (value != it.toInt().toFloat() ||
+                        forceTwoDecimals
+                    ) {
+                        "%.2f".format(it)
+                    } else {
+                        "%.0f".format(it)
+                    }
                 )
             }
             if (!suffix.isNullOrEmpty()) {

@@ -46,7 +46,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar">
-            >
+
             <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -58,14 +58,14 @@
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/button_margin"
                         android:orientation="vertical"
-                        >
+                        android:paddingBottom="@dimen/button_margin">
 
                     <com.bink.wallet.ModalBrandHeader
                             android:id="@+id/add_join_reward"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:layout_marginStart="@dimen/margin_padding_size_small"
                             android:layout_marginTop="@dimen/loyalty_details_margin_top"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
@@ -76,8 +76,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_padding_size_medium"
-                            android:layout_marginEnd="@dimen/margin_padding_size_small"
-                            >
+                            android:layout_marginEnd="@dimen/margin_padding_size_small">
 
                         <ImageView
                                 android:id="@+id/add_join_store_image"
@@ -125,8 +124,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
-                            android:layout_marginEnd="@dimen/margin_padding_size_small"
-                            >
+                            android:layout_marginEnd="@dimen/margin_padding_size_small">
 
                         <ImageView
                                 android:id="@+id/add_join_view_image"
@@ -175,8 +173,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
-                            android:layout_marginBottom="@dimen/title_image_size"
-                            >
+                            android:layout_marginBottom="@dimen/title_image_size">
 
                         <ImageView
                                 android:id="@+id/add_join_link_image"
@@ -236,8 +233,7 @@
                             android:layout_marginStart="@dimen/button_margin"
                             android:layout_marginEnd="@dimen/button_margin"
                             android:text="@string/add_join_get_new_card"
-                            android:textAllCaps="false"
-                            />
+                            android:textAllCaps="false" />
                 </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>

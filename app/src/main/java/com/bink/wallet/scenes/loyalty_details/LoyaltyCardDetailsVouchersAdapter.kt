@@ -74,7 +74,8 @@ class LoyaltyCardDetailsVouchersAdapter(
                                     earn.value,
                                     earn.prefix,
                                     earn.suffix,
-                                    earn.currency
+                                    earn.currency,
+                                    forceTwoDecimals = true
                                 )
                             }
                             displayForEarning(thisVoucher)
