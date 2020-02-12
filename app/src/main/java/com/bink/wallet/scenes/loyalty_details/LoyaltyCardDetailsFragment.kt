@@ -711,7 +711,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setupVouchers() {
-        with(binding.voucherTiles) {
+        binding.voucherTiles.apply {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             viewModel.membershipCard.value?.vouchers?.filter {

@@ -1,17 +1,12 @@
 package com.bink.wallet.utils
 
-import android.content.Context
-import com.bink.wallet.R
-import com.bink.wallet.model.response.membership_card.Voucher
-
 object ValueDisplayUtils {
     fun displayValue(
         value: Float?,
         prefix: String?,
         suffix: String?,
         currency: String?,
-        type: String? = null,
-        forceTwoDecimals: Boolean = false
+        type: String? = null
     ): String {
         val display = StringBuilder()
         with (display) {
@@ -20,12 +15,7 @@ object ValueDisplayUtils {
             }
             value?.let {
                 append(
-                    if (value != it.toInt().toFloat() ||
-                        forceTwoDecimals) {
-                        "%.2f".format(it)
-                    } else {
-                        "%.0f".format(it)
-                    }
+                    TWO_DECIMAL_FLOAT_FORMAT.format(it)
                 )
             }
             if (!suffix.isNullOrEmpty()) {

@@ -134,9 +134,7 @@ class LoyaltyCardDetailsVouchersAdapter(
                             earn.target_value,
                             earn.prefix,
                             earn.suffix,
-                            earn.currency,
-                            null,
-                            true
+                            earn.currency
                         )
                 }
             }
