@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
                 name="membershipPlan"
                 type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
@@ -15,7 +16,7 @@
 
         <Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -30,20 +31,24 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintBottom_toBottomOf="@id/toolbar"
-                app:layout_constraintTop_toTopOf="@id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/toolbar" />
 
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollIndicators="none"
+                android:overScrollMode="never"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                tools:itemCount="1"
+                tools:listitem="@layout/detail_voucher_item" />
+
         <View
                 android:id="@+id/spacing_view"
                 android:layout_width="wrap_content"
@@ -51,6 +56,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recycler" />
+
         <View
                 android:id="@+id/spacing_view2"
                 android:layout_width="wrap_content"
@@ -58,9 +64,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/spacing_view" />
+
         <TextView
                 android:id="@+id/code"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
@@ -70,25 +77,29 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spacing_view2" />
+                app:layout_constraintTop_toBottomOf="@id/spacing_view2"
+                tools:text="RCC0001999"
+                tools:visibility="visible" />
+
         <TextView
                 android:id="@+id/main_title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/voucher_code_bottom"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_extrabold"
+                android:lineSpacingExtra="@dimen/title_line_spacing_extra"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_title_big"
-                android:lineSpacingExtra="@dimen/title_line_spacing_extra"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/code" />
+
         <TextView
                 android:id="@+id/main_text"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
@@ -97,24 +108,30 @@
                 android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_title" />
+                app:layout_constraintTop_toBottomOf="@id/main_title"
+                tools:text="Spend £100 with us and you’ll get a £5 voucher."
+                tools:visibility="visible" />
+
         <TextView
                 android:id="@+id/date_one"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/voucher_date_top"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_description_smaller"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_text" />
+                app:layout_constraintTop_toBottomOf="@id/main_text"
+                tools:text="Added 15 Jun 2019 16:39:17"
+                tools:visibility="visible" />
+
         <TextView
                 android:id="@+id/date_two"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
@@ -124,13 +141,16 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_one" />
+                app:layout_constraintTop_toBottomOf="@id/date_one"
+                tools:text="Expires 15 Jul 2019 16:39:17"
+                tools:visibility="visible" />
+
         <TextView
                 android:id="@+id/link_text"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_large"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_semibold"
                 android:text="@string/terms_amp_conditions"

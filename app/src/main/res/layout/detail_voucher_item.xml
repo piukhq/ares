@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -14,30 +15,27 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
             android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
-            android:background="@drawable/bg_card_shadow"
-            >
+            android:background="@drawable/bg_card_shadow">
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/card_view"
                 style="@style/ShadowedCardView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
                 android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
                 android:orientation="vertical"
                 app:cardCornerRadius="@dimen/voucher_corner_radius"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                >
+                app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/voucher_padding_top"
-                    android:paddingBottom="@dimen/voucher_padding_bottom"
-                    >
+                    android:paddingBottom="@dimen/voucher_padding_bottom">
 
                 <TextView
                         android:id="@+id/title"
@@ -48,7 +46,9 @@
                         android:textColor="@color/blue_accent"
                         android:textSize="@dimen/text_size_description_big"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="£5 voucer" />
+
                 <TextView
                         android:id="@+id/subtitle"
                         android:layout_width="wrap_content"
@@ -61,36 +61,39 @@
                         android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/title"
-                        />
+                        tools:text="for spending 100£" />
 
                 <TextView
                         android:id="@+id/remaining"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/loyalty_voucher_margin"
-                        android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                         android:layout_marginTop="@dimen/voucher_subtitle_bottom"
+                        android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:text="@{voucher.headline}"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_title_big"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/subtitle" />
+                        app:layout_constraintTop_toBottomOf="@id/subtitle"
+                        tools:text="£20.15 left to go!" />
 
                 <ProgressBar
                         android:id="@+id/progress_bar"
                         style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/loyalty_voucher_progress_height"
                         android:layout_marginStart="@dimen/loyalty_voucher_margin"
-                        android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                         android:layout_marginTop="@dimen/title_margin"
+                        android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                         android:indeterminate="false"
                         android:max="100"
                         android:progress="25"
                         android:progressDrawable="@drawable/loyalty_voucher_progress_bar"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/remaining" />
+
                 <TextView
                         android:id="@+id/spent_title"
                         android:layout_width="wrap_content"
@@ -126,7 +129,8 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/spent_title" />
+                        app:layout_constraintTop_toBottomOf="@id/spent_title"
+                        tools:text="£79.85" />
 
                 <TextView
                         android:id="@+id/goal_amount"
@@ -137,7 +141,8 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/goal_title" />
+                        app:layout_constraintTop_toBottomOf="@id/goal_title"
+                        tools:text="£100.00" />
 
                 <TextView
                         android:id="@+id/voucher_date"

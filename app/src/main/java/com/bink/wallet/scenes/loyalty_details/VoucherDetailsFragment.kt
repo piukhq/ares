@@ -58,7 +58,8 @@ class VoucherDetailsFragment :
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
                     if (earn.target_value != null &&
-                        burn.value != null) {
+                        burn.value != null
+                    ) {
                         binding.code.textAndShow(voucher.code)
                         when (voucher.state) {
                             VoucherStates.IN_PROGRESS.state -> {
@@ -83,7 +84,7 @@ class VoucherDetailsFragment :
                                 binding.spacingView2.visibility = View.GONE
                             }
                             VoucherStates.ISSUED.state -> {
-                                with (binding) {
+                                with(binding) {
                                     mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_issued,
@@ -108,43 +109,63 @@ class VoucherDetailsFragment :
                                             )
                                         )
                                     )
-                                    dateOne.setFullTimestamp(
-                                        voucher.date_issued!!,
-                                        getString(R.string.voucher_detail_date_issued)
-                                    )
+                                    voucher.date_issued?.let {
+                                        dateOne.setFullTimestamp(
+                                            it,
+                                            getString(R.string.voucher_detail_date_issued)
+                                        )
+                                    }
+                                    voucher.expiry_date?.let {
+                                        dateTwo.setFullTimestamp(
+                                            it,
+                                            getString(R.string.voucher_detail_date_expires)
+                                        )
+                                    }
                                     code.setTextColor(resources.getColor(R.color.green_ok, null))
                                 }
                             }
                             VoucherStates.EXPIRED.state -> {
-                                with (binding) {
+                                with(binding) {
                                     mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_expired,
-                                            displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
+                                            displayValue(
+                                                burn.value,
+                                                burn.prefix,
+                                                burn.suffix,
+                                                burn.currency,
+                                                burn.type
+                                            )
                                         )
                                     )
-                                    dateOne.setFullTimestamp(
-                                        voucher.expiry_date!!,
-                                        getString(R.string.voucher_detail_date_issued)
-                                    )
-                                    dateTwo.setFullTimestamp(
-                                        voucher.expiry_date!!,
-                                        getString(R.string.voucher_detail_date_expired)
-                                    )
+                                    voucher.expiry_date?.let {
+                                        dateTwo.setFullTimestamp(
+                                            it,
+                                            getString(R.string.voucher_detail_date_expired)
+                                        )
+                                    }
                                 }
                             }
                             VoucherStates.REDEEMED.state -> {
-                                with (binding) {
+                                with(binding) {
                                     mainTitle.textAndShow(
                                         getString(
                                             R.string.voucher_detail_title_redeemed,
-                                            displayValue(burn.value, burn.prefix, burn.suffix, burn.currency, burn.type)
+                                            displayValue(
+                                                burn.value,
+                                                burn.prefix,
+                                                burn.suffix,
+                                                burn.currency,
+                                                burn.type
+                                            )
                                         )
                                     )
-                                    dateOne.setFullTimestamp(
-                                        voucher.date_redeemed!!,
-                                        getString(R.string.voucher_detail_date_redeemed)
-                                    )
+                                    voucher.date_redeemed?.let {
+                                        dateOne.setFullTimestamp(
+                                            it,
+                                            getString(R.string.voucher_detail_date_redeemed)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -169,9 +190,14 @@ class VoucherDetailsFragment :
             if (!linkSet) {
                 binding.linkText.visibility = View.GONE
             } else {
-                with (binding.linkText) {
+                with(binding.linkText) {
                     val builder = SpannableString(text.toString())
-                    builder.setSpan(UnderlineSpan(), 0, text.toString().length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    builder.setSpan(
+                        UnderlineSpan(),
+                        0,
+                        text.toString().length,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     text = builder
                 }
             }
