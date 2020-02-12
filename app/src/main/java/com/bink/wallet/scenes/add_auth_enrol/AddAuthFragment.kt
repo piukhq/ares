@@ -538,7 +538,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private fun handlePll(membershipCard: MembershipCard) {
         viewModel.currentMembershipPlan.value?.let { membershipPlan ->
-            if (membershipCard.payment_cards.isNullOrEmpty()) {
+            if (viewModel.paymentCards.value.isNullOrEmpty()) {
                 findNavController().navigateIfAdded(
                     this,
                     AddAuthFragmentDirections.signUpToPllEmpty(
