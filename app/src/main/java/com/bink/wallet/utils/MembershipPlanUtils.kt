@@ -107,11 +107,13 @@ object MembershipPlanUtils {
     }
 
     private fun existLinkedPaymentCards(membershipCard: MembershipCard): Boolean {
-        membershipCard.payment_cards?.forEach { card ->
-            if (card.active_link == true) {
-                return true
-            }
+        countLinkedPaymentCards(membershipCard)?.let {
+            return it > 0
         }
         return false
+    }
+
+    private fun countLinkedPaymentCards(membershipCard: MembershipCard): Int? {
+        return membershipCard.payment_cards?.count { card -> card.active_link == true }
     }
 }
