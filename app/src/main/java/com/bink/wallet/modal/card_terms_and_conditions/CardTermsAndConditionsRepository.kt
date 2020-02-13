@@ -9,7 +9,11 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
+import com.bink.wallet.model.spreedly.SpreedlyCreditCard
+import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
+import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.network.ApiSpreedly
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,6 +21,7 @@ import kotlinx.coroutines.withContext
 
 class CardTermsAndConditionsRepository(
     private val apiService: ApiService,
+    private val spreedlyApiService: ApiSpreedly,
     private val paymentCardDao: PaymentCardDao,
     private val membershipCardDao: MembershipCardDao,
     private val membershipPlanDao: MembershipPlanDao
@@ -25,17 +30,34 @@ class CardTermsAndConditionsRepository(
                     mutableAddCard: MutableLiveData<PaymentCard>,
                     error: MutableLiveData<Throwable>
     ) {
+
+        val spreedlyCreditCard = SpreedlyCreditCard("5356701010417006", 7, 2022, "Connor McFadden")
+        val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
+        val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.addPaymentCardAsync(card)
+            Log.e("ConnorDebug", "req send add card")
+            val spreedlyRequest = spreedlyApiService.postPaymentCardToSpreedly(spreedlyPaymentCard)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    paymentCardDao.store(response)
-                    mutableAddCard.value = response
+                    val response = spreedlyRequest.await()
+                    Log.e("ConnorDebug", "response:: token: " + response.transaction.payment_method.token)
+                    // make a req to bink
                 } catch (e: Throwable) {
-                    error.value = e
+                    Log.e("ConnorDebug", "error: " + e.localizedMessage)
+//                    error.value = e
                 }
             }
+
+//            val request = apiService.addPaymentCardAsync(card)
+//            withContext(Dispatchers.Main) {
+//                try {
+//                    val response = request.await()
+//                    paymentCardDao.store(response)
+//                    mutableAddCard.value = response
+//                } catch (e: Throwable) {
+//                    error.value = e
+//                }
+//            }
         }
     }
 
