@@ -356,13 +356,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
                     planFieldsList.map {
                         if (it.first is PlanFields) {
-                            if (!UtilFunctions.isValidField(
-                                    (it.first as PlanFields).validation,
-                                    it.second.value
-                                )
-                            ) {
+                            if (it.second.value.isNullOrEmpty()) {
                                 binding.addCardButton.isEnabled = false
                                 return@AddAuthAdapter
+                            } else {
+                                if (!UtilFunctions.isValidField(
+                                        (it.first as PlanFields).validation,
+                                        it.second.value
+                                    )
+                                ) {
+                                    binding.addCardButton.isEnabled = false
+                                    return@AddAuthAdapter
+                                }
                             }
                         }
                     }

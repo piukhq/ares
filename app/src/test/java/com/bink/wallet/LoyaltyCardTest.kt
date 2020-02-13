@@ -61,7 +61,12 @@ class LoyaltyCardTest {
     @Test
     fun fetchMembershipCards_success() {
         runBlocking {
-            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipCards(viewModel.membershipCardData, MutableLiveData()))
+            Mockito.`when`(
+                loyaltyWalletRepository.retrieveMembershipCards(
+                    viewModel.membershipCardData,
+                    MutableLiveData()
+                )
+            )
                 .then {
                     (
                             MutableLiveData<List<MembershipCard>>().apply {
@@ -95,7 +100,12 @@ class LoyaltyCardTest {
     @Test
     fun fetchMembershipPlans_success() {
         runBlocking {
-            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipPlans(viewModel.membershipPlanData, MutableLiveData()))
+            Mockito.`when`(
+                loyaltyWalletRepository.retrieveMembershipPlans(
+                    viewModel.membershipPlanData,
+                    MutableLiveData()
+                )
+            )
                 .then {
                     (viewModel.membershipPlanData.apply {
                                 postValue(

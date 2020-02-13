@@ -14,39 +14,44 @@ class MembershipCardTests {
     @Test
     fun checkLinkStatusAuthButEmpty() {
         val card = makeMembershipCard(
-                MembershipCardStatus.AUTHORISED
-            )
+            MembershipCardStatus.AUTHORISED
+        )
         assertEquals(LoyaltyCardLinkStatus.LINK_NOW, card.getLinkStatus())
     }
+
     @Test
     fun checkLinkStatus() {
         val card = makeMembershipCard(
-                MembershipCardStatus.AUTHORISED,
-                listOf(PaymentMembershipCard("1", true))
-            )
+            MembershipCardStatus.AUTHORISED,
+            listOf(PaymentMembershipCard("1", true))
+        )
         assertEquals(LoyaltyCardLinkStatus.LINKED, card.getLinkStatus())
     }
+
     @Test
     fun checkLinkPending() {
         val card = makeMembershipCard(
-                MembershipCardStatus.UNAUTHORISED
-            )
+            MembershipCardStatus.UNAUTHORISED
+        )
         assertEquals(LoyaltyCardLinkStatus.RETRY, card.getLinkStatus())
     }
+
     @Test
     fun checkLinkFailed() {
         val card = makeMembershipCard(
-                MembershipCardStatus.FAILED
-            )
+            MembershipCardStatus.FAILED
+        )
         assertEquals(LoyaltyCardLinkStatus.RETRY, card.getLinkStatus())
     }
+
     @Test
     fun checkLinkRetry() {
         val card = makeMembershipCard(
-                MembershipCardStatus.PENDING
-            )
+            MembershipCardStatus.PENDING
+        )
         assertEquals(LoyaltyCardLinkStatus.PENDING, card.getLinkStatus())
     }
+
     @Test
     fun checkLinkEmpty() {
         val plan = MembershipPlan(
@@ -67,8 +72,8 @@ class MembershipCardTests {
             null
         )
         val card = makeMembershipCard(
-                MembershipCardStatus.PENDING
-            )
+            MembershipCardStatus.PENDING
+        )
         card.plan = plan
         assertEquals(LoyaltyCardLinkStatus.NONE, card.getLinkStatus())
     }
@@ -76,8 +81,9 @@ class MembershipCardTests {
     private fun makeMembershipCard(
         statusMembership: MembershipCardStatus,
         payment: List<PaymentMembershipCard>? = null
-        ): MembershipCard {
-        return MembershipCard("1",
+    ): MembershipCard {
+        return MembershipCard(
+            "1",
             null,
             payment,
             CardStatus(
