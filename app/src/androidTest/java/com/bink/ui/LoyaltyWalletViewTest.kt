@@ -11,12 +11,12 @@ import org.junit.runners.JUnit4
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-//@RunWith(JUnit4::class)
+@RunWith(JUnit4::class)
 class LoyaltyWalletViewTest {
-//    @Test
-//    fun useAppContext() {
-//        // Context of the app under test.
-//        val appContext = InstrumentationRegistry.getTargetContext()
-//        assertEquals("com.bink.wallet", appContext.packageName)
-//    }
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getTargetContext()
+        assertEquals("com.bink.wallet", appContext.packageName)
+    }
 }

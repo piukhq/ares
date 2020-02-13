@@ -15,45 +15,45 @@ import org.junit.Before
 import org.junit.Test
 
 class PaymentCardDaoTest {
-//    lateinit var database: BinkDatabase
-//    lateinit var plansDB: PaymentCardDao
-//
-//    @Before
-//    fun setup() {
-//        database = Room.inMemoryDatabaseBuilder(
-//            InstrumentationRegistry.getContext(),
-//            BinkDatabase::class.java
-//        ).build()
-//        plansDB = database.paymentCardDao()
-//    }
-//
-//    @After
-//    fun close() {
-//        database.close()
-//    }
-//
-//    @Test
-//    fun insertCards() {
-//        val cardsList = getCardsFromJon()
-//        runBlocking {
-//            plansDB.storeAll(cardsList)
-//            Assert.assertEquals(plansDB.getAllAsync().size, 6)
-//        }
-//    }
-//
-//
-//    private fun getCardsFromJon(): List<PaymentCard>? {
-//        val moshi = Moshi.Builder().build()
-//        val listType = Types.newParameterizedType(List::class.java, PaymentCard::class.java)
-//        val adapter: JsonAdapter<List<PaymentCard>> = moshi.adapter(listType)
-//        val json =
-//            InstrumentationRegistry.getContext().resources.assets.open("paymentCard.json")
-//                .bufferedReader().use {
-//                    it.readText()
-//                }
-//        adapter.fromJson(json)?.let {
-//            return it
-//        }
-//        return null
-//    }
+    lateinit var database: BinkDatabase
+    lateinit var plansDB: PaymentCardDao
+
+    @Before
+    fun setup() {
+        database = Room.inMemoryDatabaseBuilder(
+            InstrumentationRegistry.getContext(),
+            BinkDatabase::class.java
+        ).build()
+        plansDB = database.paymentCardDao()
+    }
+
+    @After
+    fun close() {
+        database.close()
+    }
+
+    @Test
+    fun insertCards() {
+        val cardsList = getCardsFromJon()
+        runBlocking {
+            plansDB.storeAll(cardsList)
+            Assert.assertEquals(plansDB.getAllAsync().size, 6)
+        }
+    }
+
+
+    private fun getCardsFromJon(): List<PaymentCard>? {
+        val moshi = Moshi.Builder().build()
+        val listType = Types.newParameterizedType(List::class.java, PaymentCard::class.java)
+        val adapter: JsonAdapter<List<PaymentCard>> = moshi.adapter(listType)
+        val json =
+            InstrumentationRegistry.getContext().resources.assets.open("paymentCard.json")
+                .bufferedReader().use {
+                    it.readText()
+                }
+        adapter.fromJson(json)?.let {
+            return it
+        }
+        return null
+    }
 }
