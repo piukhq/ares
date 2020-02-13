@@ -18,6 +18,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -487,16 +488,18 @@ class LoyaltyCardDetailsFragment :
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
-                    viewModel.membershipPlan.value?.let {
-                        val directions =
-                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
-                                it,
-                                viewModel.membershipCard.value?.id,
-                                false,
-                                isRetryJourney = true,
-                                isFailedJourney = true
-                            )
-                        findNavController().navigateIfAdded(this, directions)
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.ADD_AUTH,
+                                    plan,
+                                    isRetryJourney = false,
+                                    isFailedJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 else -> {
@@ -568,6 +571,21 @@ class LoyaltyCardDetailsFragment :
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.ADD_AUTH,
+                                    plan,
+                                    isRetryJourney = false,
+                                    isFailedJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
+                }
+                LoginStatus.STATUS_NO_REASON_CODES -> {
                     viewModel.membershipPlan.value?.let {
                         val directions =
                             LoyaltyCardDetailsFragmentDirections.detailToAddJoin(

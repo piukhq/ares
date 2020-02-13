@@ -55,6 +55,12 @@ enum class LoginStatus(
         R.drawable.ic_lcd_module_icons_points_login,
         R.string.description_see_history,
         R.string.points_login
+    ),
+    STATUS_NO_REASON_CODES(
+        1.13,
+        R.drawable.ic_lcd_module_icons_points_login,
+        R.string.description_please_try_again,
+        R.string.error_title
     )
 }
 
