@@ -89,22 +89,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        enableIndicators()
         setHasOptionsMenu(true)
 
         fetchData()
 
         viewModel.deleteCard.observeNonNull(this) { id ->
             fetchData()
-            enableIndicators()
-            walletItems.firstOrNull {
-                if (it is MembershipCard)
-                    it.id == id
-                else
-                    false
-            }.let { walletItems.remove(it) }
-            walletAdapter.membershipCards = walletItems
-            walletAdapter.notifyDataSetChanged()
         }
 
         binding.swipeLayout.setOnRefreshListener {
@@ -177,7 +167,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun setCardsData(userDataResult: UserDataResult) {
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
-                enableIndicators()
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
                 walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
@@ -189,12 +178,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun disableIndicators() {
+        binding.loyaltyWalletList.visibility = View.VISIBLE
         binding.swipeLayout.isRefreshing = false
         binding.progressSpinner.visibility = View.GONE
-    }
-
-    private fun enableIndicators() {
-        binding.progressSpinner.visibility = View.VISIBLE
     }
 
     private fun onCardClicked(item: Any) {
@@ -240,14 +226,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    private fun fetchData(){
+    private fun fetchData() {
+        binding.progressSpinner.visibility = View.VISIBLE
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
-            enableIndicators()
             viewModel.fetchMembershipPlans()
             viewModel.fetchMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
-            enableIndicators()
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
             viewModel.fetchDismissedCards()
@@ -272,6 +257,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                            binding.progressSpinner.visibility = View.VISIBLE
                             viewModel.deleteCard(membershipCard.id)
                         } else {
                             disableIndicators()
@@ -292,13 +278,5 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             dialog = builder.create()
             dialog.show()
         }
-    }
-
-    fun setData(
-        membershipCards: List<MembershipCard>,
-        membershipPlans: List<MembershipPlan>
-    ) {
-        viewModel.membershipCardData.value = membershipCards
-        viewModel.membershipPlanData.value = membershipPlans
     }
 }
