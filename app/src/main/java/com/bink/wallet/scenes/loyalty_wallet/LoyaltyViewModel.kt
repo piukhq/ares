@@ -25,19 +25,19 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
     private val _addError = MutableLiveData<Throwable>()
-    val addError : LiveData<Throwable>
+    val addError: LiveData<Throwable>
         get() = _addError
     private val _fetchError = MutableLiveData<Throwable>()
-    val fetchError : LiveData<Throwable>
+    val fetchError: LiveData<Throwable>
         get() = _fetchError
     private val _loadPlansError = MutableLiveData<Throwable>()
-    val loadPlansError : MutableLiveData<Throwable>
+    val loadPlansError: MutableLiveData<Throwable>
         get() = _loadPlansError
     private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError : LiveData<Throwable>
+    val loadCardsError: LiveData<Throwable>
         get() = _loadCardsError
     private val _deleteCardError = MutableLiveData<Throwable>()
-    val deleteCardError : MutableLiveData<Throwable>
+    val deleteCardError: MutableLiveData<Throwable>
         get() = _deleteCardError
 
     private val _cardsDataMerger = MediatorLiveData<UserDataResult>()
@@ -133,9 +133,7 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun fetchMembershipCards() {
-        viewModelScope.launch {
-            loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
-        }
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
     }
 
     fun fetchMembershipPlans() {
