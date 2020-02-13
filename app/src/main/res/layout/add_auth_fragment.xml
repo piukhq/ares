@@ -103,6 +103,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
+                tools:listitem="@layout/add_auth_text_item"
+                tools:itemCount="3"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toTopOf="@+id/add_card_button"
                 app:layout_constraintTop_toBottomOf="@+id/description_add_auth" />
