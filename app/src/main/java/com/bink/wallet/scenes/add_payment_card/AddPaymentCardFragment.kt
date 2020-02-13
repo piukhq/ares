@@ -150,7 +150,7 @@ class AddPaymentCardFragment :
                     )
                     findNavController().navigateIfAdded(
                         this,
-                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard)
+                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard, cardNo)
                     )
                 }
             }

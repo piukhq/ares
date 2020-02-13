@@ -26,6 +26,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     var userBankCard: BankCard? = null
+    var cardNumber: String = ""
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -34,6 +35,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             CardTermsAndConditionsFragmentArgs.fromBundle(bundle).apply {
                 setupUi(this.genericModalParameters)
                 userBankCard = this.bankCard
+                cardNumber = this.cardNo
             }
         }
 
@@ -60,7 +62,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             if (viewModel.error.value != null) {
                 binding.progressSpinner.visibility = View.GONE
                 if (hasCertificatePinningFailed(it, requireContext()) ||
-                    UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                    UtilFunctions.isNetworkAvailable(requireContext(), true)
+                ) {
                     binding.firstButton.isEnabled = true
                 }
 
@@ -88,7 +91,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
                                 )
                             )
                         )
-                    )
+                    ), cardNumber
                 )
             }
         }
