@@ -43,9 +43,9 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
-            .header("Content-Type", "application/json;v=1.1").url(request).build()
-//            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
-
+            .header("Content-Type", "application/json;v=1.1")
+            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
+            .build()
         val response = chain.proceed(newRequest)
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             LocalStoreUtils.clearPreferences()
