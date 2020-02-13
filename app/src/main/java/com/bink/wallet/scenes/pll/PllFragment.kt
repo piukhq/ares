@@ -132,30 +132,35 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     findNavController().popBackStack()
                 }
                 isNetworkAvailable(requireActivity(), true) -> {
-                    adapter.paymentCards.forEach { card ->
-                        if (card.isSelected &&
-                            !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                        ) {
-                            selectedCards.add(card.paymentCard.id.toString())
-                        } else if (viewModel.membershipCard.value != null &&
-                            !card.isSelected &&
-                            card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                        ) {
-                            unselectedCards.add(card.paymentCard.id.toString())
+                    viewModel.membershipCard.value?.let {
+                        adapter.paymentCards.forEach { card ->
+                            if (card.isSelected &&
+                                !card.paymentCard.isLinkedToMembershipCard(it)
+                            ) {
+                                selectedCards.add(card.paymentCard.id.toString())
+                            } else if (viewModel.membershipCard.value != null &&
+                                !card.isSelected &&
+                                card.paymentCard.isLinkedToMembershipCard(it)
+                            ) {
+                                unselectedCards.add(card.paymentCard.id.toString())
+                            }
                         }
                     }
-                    if (unselectedCards.isNotEmpty()) {
-                        viewModel.unlinkPaymentCards(
-                            unselectedCards,
-                            viewModel.membershipCard.value?.id!!
-                        )
-                    }
 
-                    if (selectedCards.isNotEmpty()) {
-                        viewModel.linkPaymentCards(
-                            selectedCards,
-                            viewModel.membershipCard.value?.id!!
-                        )
+                    viewModel.membershipCard.value?.id?.let {
+                        if (unselectedCards.isNotEmpty()) {
+                            viewModel.unlinkPaymentCards(
+                                unselectedCards,
+                                it
+                            )
+                        }
+
+                        if (selectedCards.isNotEmpty()) {
+                            viewModel.linkPaymentCards(
+                                selectedCards,
+                                it
+                            )
+                        }
                     }
 
                     if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {

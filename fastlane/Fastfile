@@ -262,12 +262,9 @@ platform :android do
 
     gradle(task: 'assemble', build_type: options[:buildType], flags: options[:flags])
 
+### Disable tests check
     if options[:check]
-      gradle(task: "check")
-    end
-
-    if options[:test]
-      gradle(task: "test")
+      gradle(task: "check -x test")
     end
 
 ### Disabled as there are no Espresso tests in the project, so this will ALWAYS fail at the moment

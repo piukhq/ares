@@ -488,25 +488,27 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun handleBrandHeader() {
-        if (viewModel.membershipCard.value?.card != null &&
-            (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
-                    !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())
-        ) {
-            binding.cardHeader.setOnClickListener {
-                val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
-                    viewModel.membershipPlan.value?.let { plan ->
-                        type?.let {
-                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                plan, viewModel.membershipCard.value!!
-                            )
+        viewModel.membershipCard.value?.let { membershipCard ->
+            if (membershipCard.card != null &&
+                (!membershipCard.card?.barcode.isNullOrEmpty() ||
+                        !membershipCard.card?.membership_id.isNullOrEmpty())
+            ) {
+                binding.cardHeader.setOnClickListener {
+                    val directions = membershipCard.card?.barcode_type.let { type ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            type?.let {
+                                LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                    plan, membershipCard
+                                )
+                            }
                         }
                     }
-                }
 
-                directions?.let { findNavController().navigateIfAdded(this, directions) }
+                    directions?.let { findNavController().navigateIfAdded(this, directions) }
+                }
+            } else if (membershipCard.card?.membership_id.isNullOrEmpty()) {
+                binding.cardHeader.binding.tapCard.visibility = View.GONE
             }
-        } else if (viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty()) {
-            binding.cardHeader.binding.tapCard.visibility = View.GONE
         }
     }
 
