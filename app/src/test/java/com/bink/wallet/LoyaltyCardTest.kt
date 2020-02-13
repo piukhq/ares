@@ -61,7 +61,12 @@ class LoyaltyCardTest {
     @Test
     fun fetchMembershipCards_success() {
         runBlocking {
-            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipCards(viewModel.membershipCardData, MutableLiveData()))
+            Mockito.`when`(
+                loyaltyWalletRepository.retrieveMembershipCards(
+                    viewModel.membershipCardData,
+                    MutableLiveData()
+                )
+            )
                 .then {
                     (
                             MutableLiveData<List<MembershipCard>>().apply {
@@ -95,22 +100,27 @@ class LoyaltyCardTest {
     @Test
     fun fetchMembershipPlans_success() {
         runBlocking {
-            Mockito.`when`(loyaltyWalletRepository.retrieveMembershipPlans(viewModel.membershipPlanData, MutableLiveData()))
+            Mockito.`when`(
+                loyaltyWalletRepository.retrieveMembershipPlans(
+                    viewModel.membershipPlanData,
+                    MutableLiveData()
+                )
+            )
                 .then {
                     (viewModel.membershipPlanData.apply {
-                                postValue(
-                                    asList(
-                                        MembershipPlan(
-                                            "1234",
-                                            "plan",
-                                            null,
-                                            null,
-                                            null,
-                                            null
-                                        )
-                                    )
+                        postValue(
+                            asList(
+                                MembershipPlan(
+                                    "1234",
+                                    "plan",
+                                    null,
+                                    null,
+                                    null,
+                                    null
                                 )
-                            })
+                            )
+                        )
+                    })
                     val observer = mock(Observer::class.java) as Observer<List<MembershipPlan>>
                     viewModel.membershipPlanData.observeForever(observer)
                     runBlocking {

@@ -275,11 +275,10 @@ class LoyaltyCardDetailsFragment :
 
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
-            if (balance.suffix.isNullOrEmpty()) {
-                binding.pointsText.text =
-                    getString(R.string.points_prefix_or_suffix, prefix, balance.value)
+            binding.pointsText.text = if (balance.suffix.isNullOrEmpty()) {
+                balance.formatBalance()
             } else {
-                binding.pointsText.text = getString(
+                getString(
                     R.string.points_prefix_and_suffix,
                     prefix,
                     balance.value,
