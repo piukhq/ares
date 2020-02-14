@@ -509,16 +509,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST) {
-                        viewModel.currentMembershipPlan.value?.let {
-                            findNavController().navigateIfAdded(
-                                this,
-                                AddAuthFragmentDirections.signUpToDetails(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    membershipCard
-                                )
+                    viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.signUpToDetails(
+                                membershipPlan,
+                                membershipCard
                             )
-                        }
+                        )
                     }
                 }
                 CardType.PLL.type -> {
