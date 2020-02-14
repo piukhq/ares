@@ -46,8 +46,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isRetryJourney = false
 
-    private var isFailedJourney = false
-
     private var membershipCardId: String? = null
 
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
@@ -89,8 +87,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         with(args) {
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
-            this@AddAuthFragment.isFailedJourney = isFailedJourney
             this@AddAuthFragment.isRetryJourney = isRetryJourney
+        }
+
+        if (isRetryJourney) {
+            binding.noAccountText.visibility = View.GONE
         }
 
         planFieldsList.clear()
@@ -155,7 +156,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             SignUpFormType.ADD_AUTH -> {
                 viewModel.currentMembershipPlan.value?.let {
                     with(it) {
-                        if (isFailedJourney) {
+                        if (isRetryJourney) {
                             with(binding) {
                                 titleAddAuthText.text = getString(R.string.log_in_text)
                                 addCardButton.text = getString(R.string.log_in_text)
@@ -178,7 +179,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                         )
                                 }
                             }
-                            binding.noAccountText.visibility = View.GONE
                         } else {
                             with(binding) {
                                 titleAddAuthText.text = getString(R.string.enter_credentials)
@@ -214,6 +214,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
             SignUpFormType.ENROL -> {
                 with(binding) {
+                    noAccountText.visibility = View.GONE
                     titleAddAuthText.text = getString(R.string.sign_up_enrol)
                     addCardButton.text = getString(R.string.sign_up_text)
                     descriptionAddAuth.text = getString(
@@ -224,7 +225,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         it.typeOfField = TypeOfField.ENROL
                         addFieldToList(it)
                     }
-                    noAccountText.visibility = View.GONE
                 }
 
                 viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
@@ -235,6 +235,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             }
             SignUpFormType.GHOST -> {
+                binding.noAccountText.visibility = View.GONE
                 binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
                 binding.addCardButton.text = getString(R.string.register_ghost_card_button)
                 viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
@@ -253,7 +254,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
 
-                binding.noAccountText.visibility = View.GONE
             }
         }
 
@@ -268,8 +268,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         AddAuthFragmentDirections.toGhost(
                             SignUpFormType.GHOST,
                             it,
-                            isRetryJourney,
-                            false
+                            isRetryJourney
                         )
                     )
                 }
@@ -344,9 +343,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             }
                         }
                     }
-
                     binding.addCardButton.isEnabled = true
-
                 }
             )
         }
@@ -401,7 +398,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     it.second.value
                                 )
                             ) {
-                                context?.displayModalPopup(
+                                requireContext().displayModalPopup(
                                     null,
                                     getString(R.string.all_fields_must_be_valid)
                                 )
