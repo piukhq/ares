@@ -222,9 +222,6 @@
         <argument
                 android:name="isRetryJourney"
                 app:argType="boolean" />
-        <argument
-                android:name="isFailedJourney"
-                app:argType="boolean" />
 
         <action
                 android:id="@+id/add_join_to_ghost"
@@ -266,9 +263,6 @@
 
         <argument
                 android:name="isRetryJourney"
-                app:argType="boolean" />
-        <argument
-                android:name="isFailedJourney"
                 app:argType="boolean" />
 
         <argument

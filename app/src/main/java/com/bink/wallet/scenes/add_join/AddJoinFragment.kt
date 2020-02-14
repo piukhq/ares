@@ -34,8 +34,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     private var isRetryJourney = false
 
-    private var isFailedJourney = false
-
     private var membershipCardId: String? = null
 
     private var currentMembershipPlan: MembershipPlan? = null
@@ -49,7 +47,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             this@AddJoinFragment.currentMembershipPlan = currentMembershipPlan
             this@AddJoinFragment.isFromJoinCard = isFromJoinCard
             this@AddJoinFragment.isRetryJourney = isRetryJourney
-            this@AddJoinFragment.isFailedJourney = isFailedJourney
             this@AddJoinFragment.membershipCardId = membershipCardId
         }
 
@@ -119,7 +116,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                     SignUpFormType.ADD_AUTH,
                     it,
                     isRetryJourney,
-                    isFailedJourney,
                     membershipCardId
                 )
                 findNavController().navigateIfAdded(this, action)
@@ -156,7 +152,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                         SignUpFormType.ENROL,
                         membershipPlan,
                         isRetryJourney,
-                        isFailedJourney,
                         membershipCardId
                     )
                 }

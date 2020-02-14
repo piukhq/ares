@@ -494,8 +494,7 @@ class LoyaltyCardDetailsFragment :
                                 LoyaltyCardDetailsFragmentDirections.detailToAuth(
                                     SignUpFormType.ADD_AUTH,
                                     plan,
-                                    isRetryJourney = false,
-                                    isFailedJourney = true,
+                                    isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
                             findNavController().navigateIfAdded(this, directions)
@@ -509,8 +508,7 @@ class LoyaltyCardDetailsFragment :
                                 it,
                                 viewModel.membershipCard.value?.id,
                                 false,
-                                isRetryJourney = true,
-                                isFailedJourney = true
+                                isRetryJourney = true
                             )
                         findNavController().navigateIfAdded(this, directions)
                     }
@@ -590,8 +588,7 @@ class LoyaltyCardDetailsFragment :
                                 LoyaltyCardDetailsFragmentDirections.detailToAuth(
                                     SignUpFormType.ADD_AUTH,
                                     plan,
-                                    isRetryJourney = false,
-                                    isFailedJourney = true,
+                                    isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
                             findNavController().navigateIfAdded(this, directions)
@@ -605,8 +602,7 @@ class LoyaltyCardDetailsFragment :
                                 it,
                                 viewModel.membershipCard.value?.id,
                                 false,
-                                isRetryJourney = true,
-                                isFailedJourney = true
+                                isRetryJourney = true
                             )
                         findNavController().navigateIfAdded(this, directions)
                     }
