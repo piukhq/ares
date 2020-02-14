@@ -48,8 +48,8 @@ enum class LinkStatus(
     STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED(
         2.7f,
         R.drawable.ic_lcd_module_icons_points_login,
-        R.string.points_retry_login,
-        R.string.description_retry_login
+        R.string.title_2_7,
+        R.string.description_please_try_again
     ),
     STATUS_UNLINKABLE(
         2.8f,

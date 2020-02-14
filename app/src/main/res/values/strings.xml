@@ -207,6 +207,8 @@
     <!-- 2.4 -->
     <string name="title_2_4">Error</string>
     <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
+    <!-- 2.7 -->
+    <string name="title_2_7">Log in failed</string>
     <!-- 2.8 -->
     <string name="title_2_8">Payment Linked Loyalty unavailable</string>
     <string name="description_2_8_1">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
