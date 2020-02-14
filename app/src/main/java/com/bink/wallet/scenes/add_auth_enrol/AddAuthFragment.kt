@@ -97,6 +97,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             this@AddAuthFragment.isRetryJourney = isRetryJourney
         }
 
+        if(isFailedJourney) {
+            binding.noAccountText.visibility = View.GONE
+        }
+
         planFieldsList.clear()
         planBooleanFieldsList.clear()
 
@@ -182,7 +186,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                         )
                                 }
                             }
-                            binding.noAccountText.visibility = View.GONE
                         } else {
                             with(binding) {
                                 titleAddAuthText.text = getString(R.string.enter_credentials)
@@ -228,7 +231,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         it.typeOfField = TypeOfField.ENROL
                         addFieldToList(it)
                     }
-                    noAccountText.visibility = View.GONE
                 }
 
                 viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
@@ -257,7 +259,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
 
-                binding.noAccountText.visibility = View.GONE
             }
         }
 

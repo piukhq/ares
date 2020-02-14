@@ -108,7 +108,11 @@ object MembershipPlanUtils {
                 return LinkStatus.STATUS_UNLINKABLE
             }
         }
-        return LinkStatus.STATUS_UNLINKABLE
+        return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
+            LinkStatus.STATUS_NO_REASON_CODES
+        } else {
+            LinkStatus.STATUS_UNLINKABLE
+        }
     }
 
     private fun existLinkedPaymentCards(membershipCard: MembershipCard): Boolean {

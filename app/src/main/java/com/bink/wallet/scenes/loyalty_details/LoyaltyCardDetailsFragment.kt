@@ -502,6 +502,19 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+                LinkStatus.STATUS_NO_REASON_CODES -> {
+                    viewModel.membershipPlan.value?.let {
+                        val directions =
+                            LoyaltyCardDetailsFragmentDirections.detailToAddJoin(
+                                it,
+                                viewModel.membershipCard.value?.id,
+                                false,
+                                isRetryJourney = true,
+                                isFailedJourney = true
+                            )
+                        findNavController().navigateIfAdded(this, directions)
+                    }
+                }
                 else -> {
                 }
             }
