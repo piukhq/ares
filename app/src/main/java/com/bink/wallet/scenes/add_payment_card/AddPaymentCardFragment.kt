@@ -60,6 +60,9 @@ class AddPaymentCardFragment :
 
         binding.viewModel = viewModel
 
+        viewModel.fetchLocalMembershipPlans()
+        viewModel.fetchLocalMembershipCards()
+
         viewModel.cardNumber.observeNonNull(this) {
             cardSwitcher(it)
             cardInfoDisplay()
@@ -70,7 +73,7 @@ class AddPaymentCardFragment :
             cardInfoDisplay()
         }
 
-        with (binding.cardNumber) {
+        with(binding.cardNumber) {
             filters = arrayOf(
                 *this.filters,
                 InputFilter.LengthFilter(
@@ -199,7 +202,8 @@ class AddPaymentCardFragment :
             val newNumber = origNumber.cardFormatter()
             if (origNumber.isNotEmpty()) {
                 if (newNumber.isNotEmpty() &&
-                    origNumber != newNumber) {
+                    origNumber != newNumber
+                ) {
                     val pos = selectionStart
                     setText(newNumber)
                     if (newNumber.length > origNumber.length &&
@@ -214,9 +218,9 @@ class AddPaymentCardFragment :
                 }
                 val sanNumber = origNumber.ccSanitize()
                 val type = sanNumber.substring(
-                        0,
-                        min(4, sanNumber.length)
-                    ).presentedCardType()
+                    0,
+                    min(4, sanNumber.length)
+                ).presentedCardType()
                 val max = type.len
                 if (sanNumber.length > max) {
                     val trimmedNumber = if (type == PaymentCardType.NONE) {
