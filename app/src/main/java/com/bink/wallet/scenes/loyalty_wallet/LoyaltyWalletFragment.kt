@@ -97,6 +97,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             fetchData()
         }
 
+        manageRecyclerView()
+
         binding.swipeLayout.setOnRefreshListener {
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 binding.progressSpinner.visibility = View.VISIBLE
@@ -137,20 +139,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = true
         }
-
-        binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
-            adapter = walletAdapter
-
-            val helperListenerLeft =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-            val helperListenerRight =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
-
-            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
-        }
     }
 
     override fun onPause() {
@@ -174,6 +162,22 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.notifyDataSetChanged()
                 disableIndicators()
             }
+        }
+    }
+
+    private fun manageRecyclerView(){
+        binding.loyaltyWalletList.apply {
+            layoutManager = GridLayoutManager(requireContext(), 1)
+            adapter = walletAdapter
+
+            val helperListenerLeft =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+            val helperListenerRight =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
+
+            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
         }
     }
 
