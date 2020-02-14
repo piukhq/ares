@@ -7,7 +7,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.utils.BarcodeWrapper
-import com.bink.wallet.utils.FirebaseUtils.MAXIMISE_BARCODE_ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -54,8 +53,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 }
 
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
-
-            logEvent(MAXIMISE_BARCODE_ANALYTICS_IDENTIFIER)
         }
     }
 }

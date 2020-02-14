@@ -15,8 +15,8 @@ import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.ACCEPT_ANALYTICS_IDENTIFIER
-import com.bink.wallet.utils.FirebaseUtils.DECLINE_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.TERMS_AND_CONDITIONS_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -44,6 +44,12 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private lateinit var boldedTexts: Array<String>
     private var userEmail: String? = null
     private var accessToken: AccessToken? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(TERMS_AND_CONDITIONS_VIEW)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -150,13 +156,23 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 }
             }
 
-            logEvent(ACCEPT_ANALYTICS_IDENTIFIER)
+            logEvent(
+                getFirebaseIdentifier(
+                    TERMS_AND_CONDITIONS_VIEW,
+                    binding.accept.text.toString()
+                )
+            )
         }
         binding.decline.setOnClickListener {
             LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
 
-            logEvent(DECLINE_ANALYTICS_IDENTIFIER)
+            logEvent(
+                getFirebaseIdentifier(
+                    TERMS_AND_CONDITIONS_VIEW,
+                    binding.decline.text.toString()
+                )
+            )
         }
 
         binding.back.setOnClickListener {

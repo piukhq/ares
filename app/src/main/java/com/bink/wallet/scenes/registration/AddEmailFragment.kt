@@ -7,7 +7,6 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddEmailFragmentBinding
-import com.bink.wallet.utils.FirebaseUtils.CONTINUE_ANALYTICS_IDENTIFIER_ADD_EMAIL
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
@@ -68,8 +67,6 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
                     )
                 )
             }
-
-            logEvent(CONTINUE_ANALYTICS_IDENTIFIER_ADD_EMAIL)
         }
 
     }

@@ -8,8 +8,6 @@ import com.bink.wallet.databinding.FragmentPllEmptyBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.FirebaseUtils.ADD_PAYMENT_CARDS_ANALYTICS_IDENTIFIER
-import com.bink.wallet.utils.FirebaseUtils.DONE_ANALYTICS_IDENTIFIER_PLL_EMPTY
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -71,14 +69,10 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
         binding.buttonDone.setOnClickListener {
             navigateToLCDScreen()
-
-            logEvent(DONE_ANALYTICS_IDENTIFIER_PLL_EMPTY)
         }
 
         binding.buttonAddPaymentCardNonModal.setOnClickListener {
             navigateToAddPaymentCards()
-
-            logEvent(ADD_PAYMENT_CARDS_ANALYTICS_IDENTIFIER)
         }
 
         binding.addPaymentCardModal.setOnClickListener {

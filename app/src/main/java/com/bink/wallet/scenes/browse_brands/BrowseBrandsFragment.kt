@@ -7,6 +7,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.FirebaseUtils.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -23,6 +24,12 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         get() = R.layout.browse_brands_fragment
 
     override val viewModel: BrowseBrandsViewModel by viewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(BROWSE_BRANDS_VIEW)
+    }
 
     private fun isPlanPLL(membershipPlan: MembershipPlan): Boolean {
         return membershipPlan.getCardType() == CardType.PLL

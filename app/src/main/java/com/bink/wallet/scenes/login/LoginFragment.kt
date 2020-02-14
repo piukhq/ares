@@ -10,8 +10,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.CONTINUE_ANALYTICS_IDENTIFIER_LOGIN
-import com.bink.wallet.utils.FirebaseUtils.FORGOT_PASSWORD_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.LOGIN_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +28,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         get() = R.layout.login_fragment
 
     override val viewModel: LoginViewModel by viewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(LOGIN_VIEW)
+    }
 
     private fun setLoginButtonEnableStatus() {
         with(binding) {
@@ -56,7 +62,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     R.id.login_to_forgot_password
                 )
 
-                logEvent(FORGOT_PASSWORD_ANALYTICS_IDENTIFIER)
+                logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.forgotPassword.text.toString()))
             }
         }
 
@@ -146,7 +152,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 }
             }
 
-            logEvent(CONTINUE_ANALYTICS_IDENTIFIER_LOGIN)
+            logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.logInButton.text.toString()))
         }
     }
 }

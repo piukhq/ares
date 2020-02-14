@@ -12,6 +12,8 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.GenericModalFragmentBinding
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.FirebaseUtils.INFORMATION_MODAL_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -27,9 +29,15 @@ open class GenericModalFragment :
             .build()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(INFORMATION_MODAL_VIEW)
+    }
+
     private val scrollChangeListener = ViewTreeObserver.OnScrollChangedListener {
         val scrollBounds = Rect()
-        with (binding) {
+        with(binding) {
             screenScrollView.getHitRect(scrollBounds)
             if (title.getLocalVisibleRect(scrollBounds)) {
                 titleToolbar.text = EMPTY_STRING
@@ -44,7 +52,7 @@ open class GenericModalFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        with (binding) {
+        with(binding) {
             toolbar.setNavigationOnClickListener {
                 onNavigationButtonClicked()
             }
@@ -53,12 +61,26 @@ open class GenericModalFragment :
             }
             firstButton.setOnClickListener {
                 onFirstButtonClicked()
+
+                logEvent(
+                    getFirebaseIdentifier(
+                        INFORMATION_MODAL_VIEW,
+                        firstButton.text.toString()
+                    )
+                )
             }
             secondButton.setOnClickListener {
                 onSecondButtonClicked()
+
+                logEvent(
+                    getFirebaseIdentifier(
+                        INFORMATION_MODAL_VIEW,
+                        secondButton.text.toString()
+                    )
+                )
             }
         }
-        with (viewModel) {
+        with(viewModel) {
             destinationLiveData.observeNonNull(this@GenericModalFragment) {
                 goTo(it)
             }
@@ -88,7 +110,7 @@ open class GenericModalFragment :
 
     @Suppress("DEPRECATION")
     protected fun setupUi(parameters: GenericModalParameters) {
-        with (binding) {
+        with(binding) {
             if (!parameters.isCloseModal) {
                 close.visibility = View.GONE
                 if (parameters.topBarIconId != 0) {

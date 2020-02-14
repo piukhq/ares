@@ -10,8 +10,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.FirebaseUtils.ADD_CARD_ANALYTICS_IDENTIFIER
-import com.bink.wallet.utils.FirebaseUtils.GET_NEW_CARD_ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.STORE_LINK_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -43,6 +43,12 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
     private var currentMembershipPlan: MembershipPlan? = null
 
     override val viewModel: AddJoinViewModel by viewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(STORE_LINK_VIEW)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -127,7 +133,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 findNavController().navigateIfAdded(this, action)
             }
 
-            logEvent(ADD_CARD_ANALYTICS_IDENTIFIER)
+            logEvent(getFirebaseIdentifier(STORE_LINK_VIEW, binding.addCardButton.text.toString()))
         }
 
         binding.getCardButton.setOnClickListener {
@@ -166,7 +172,12 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 }
                 findNavController().navigateIfAdded(this, action)
 
-                logEvent(GET_NEW_CARD_ANALYTICS_IDENTIFIER)
+                logEvent(
+                    getFirebaseIdentifier(
+                        STORE_LINK_VIEW,
+                        binding.getCardButton.text.toString()
+                    )
+                )
             }
         }
     }

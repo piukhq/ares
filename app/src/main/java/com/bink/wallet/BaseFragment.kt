@@ -10,8 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_ACTION_TYPE
+import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_SCREEN_VIEW_TYPE
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -78,10 +79,18 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected abstract fun builder(): FragmentToolbar
 
     protected fun logEvent(identifierValue: String) {
+        logFirebaseEvent(ANALYTICS_CALL_TO_ACTION_TYPE, identifierValue)
+    }
+
+    protected fun logScreenView(screenName: String) {
+        logFirebaseEvent(ANALYTICS_SCREEN_VIEW_TYPE, screenName)
+    }
+
+    private fun logFirebaseEvent(actionKey: String, identifierValue: String) {
         val bundle = Bundle()
         bundle.putString(ANALYTICS_IDENTIFIER, identifierValue)
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(
-            ANALYTICS_ACTION_TYPE,
+            actionKey,
             bundle
         )
     }

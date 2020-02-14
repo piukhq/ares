@@ -7,7 +7,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ForgotPasswordFragmentBinding
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.CONTINUE_ANALYTICS_IDENTIFIER_FORGOT_PASSWORD
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,8 +48,6 @@ class ForgotPasswordFragment :
                     viewModel.forgotPassword()
                 }
             }
-
-            logEvent(CONTINUE_ANALYTICS_IDENTIFIER_FORGOT_PASSWORD)
         }
 
         viewModel.isLoading.observeNonNull(this@ForgotPasswordFragment) {

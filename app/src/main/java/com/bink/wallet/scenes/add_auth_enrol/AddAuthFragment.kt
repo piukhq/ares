@@ -17,8 +17,10 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.NO_ACCOUNT_ANALYTICS_IDENTIFIER
-import com.bink.wallet.utils.FirebaseUtils.SIGN_UP_ANALYTICS_IDENTIFIER_ADD_AUTH
+import com.bink.wallet.utils.FirebaseUtils.ADD_AUTH_FORM_VIEW
+import com.bink.wallet.utils.FirebaseUtils.ENROL_FORM_VIEW
+import com.bink.wallet.utils.FirebaseUtils.REGISTRATION_FORM_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -61,6 +63,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(getScreenName(args.signUpFormType))
+    }
 
     private fun addFieldToList(planField: Any) {
         if (planField is PlanFields) {
@@ -290,7 +298,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             }
 
-            logEvent(NO_ACCOUNT_ANALYTICS_IDENTIFIER)
+            logEvent(
+                getFirebaseIdentifier(
+                    getScreenName(args.signUpFormType),
+                    binding.noAccountText.text.toString()
+                )
+            )
         }
 
         planBooleanFieldsList.map { planFieldsList.add(it) }
@@ -479,7 +492,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 }
             }
 
-            logEvent(SIGN_UP_ANALYTICS_IDENTIFIER_ADD_AUTH)
+            logEvent(
+                getFirebaseIdentifier(
+                    getScreenName(args.signUpFormType),
+                    binding.addCardButton.text.toString()
+                )
+            )
         }
 
         viewModel.newMembershipCard.observeNonNull(this) { membershipCard ->
@@ -571,5 +589,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.progressSpinner.visibility = View.GONE
         viewModel.createCardError.value = null
         binding.addCardButton.isEnabled = true
+    }
+
+    private fun getScreenName(signUpFormType: SignUpFormType): String {
+        return when (signUpFormType) {
+            SignUpFormType.ADD_AUTH -> {
+                ADD_AUTH_FORM_VIEW
+            }
+            SignUpFormType.ENROL -> {
+                ENROL_FORM_VIEW
+            }
+            SignUpFormType.GHOST -> {
+                REGISTRATION_FORM_VIEW
+            }
+        }
     }
 }

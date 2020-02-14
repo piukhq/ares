@@ -14,7 +14,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.DONE_ANALYTICS_IDENTIFIER_PLL
+import com.bink.wallet.utils.FirebaseUtils.PLL_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.Deferred
@@ -37,6 +38,12 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     private var directions: NavDirections? = null
     private var isAddJourney = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(PLL_VIEW)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -181,7 +188,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
             }
 
-            logEvent(DONE_ANALYTICS_IDENTIFIER_PLL)
+            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
         }
 
         viewModel.fetchError.observeNonNull(this) {
