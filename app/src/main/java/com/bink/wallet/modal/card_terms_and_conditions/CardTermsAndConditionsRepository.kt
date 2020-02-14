@@ -34,7 +34,12 @@ class CardTermsAndConditionsRepository(
     ) {
 
         //todo safety checks
-        val spreedlyCreditCard = SpreedlyCreditCard(cardNumber, card.card.month!!, card.card.year!!, card.card.name_on_card!!)
+        val spreedlyCreditCard = SpreedlyCreditCard(
+            cardNumber,
+            card.card.month!!,
+            card.card.year!!,
+            card.card.name_on_card!!
+        )
         val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
         val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)
         CoroutineScope(Dispatchers.IO).launch {
@@ -44,8 +49,10 @@ class CardTermsAndConditionsRepository(
                     val response = spreedlyRequest.await()
                     card.card.token = response.transaction.payment_method.token
                     card.card.fingerprint = response.transaction.payment_method.fingerprint
-                    card.card.first_six_digits = response.transaction.payment_method.first_six_digits
-                    card.card.last_four_digits = response.transaction.payment_method.last_four_digits
+                    card.card.first_six_digits =
+                        response.transaction.payment_method.first_six_digits
+                    card.card.last_four_digits =
+                        response.transaction.payment_method.last_four_digits
 
                     val request = apiService.addPaymentCardAsync(card)
                     withContext(Dispatchers.Main) {
@@ -58,7 +65,7 @@ class CardTermsAndConditionsRepository(
                         }
                     }
                 } catch (e: Throwable) {
-//                    error.value = e
+                    error.value = e
                 }
             }
         }
