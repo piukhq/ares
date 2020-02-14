@@ -57,145 +57,47 @@ class LoyaltyCardDetailsFragment :
 
         setLoadingState(true)
 
-        if (isNetworkAvailable(requireActivity())) {
-            viewModel.fetchPaymentCards()
-        } else {
-            viewModel.fetchLocalPaymentCards()
+        fetchData()
+
+        binding.viewModel = viewModel
+
+        arguments?.let {
+            val tiles = arrayListOf<String>()
+            viewModel.apply {
+                membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+                membershipPlan.value?.images
+                    ?.filter { image -> image.type == 2 }
+                    ?.forEach { image -> tiles.add(image.url.toString()) }
+                this.tiles.value = tiles
+                membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+                if (isNetworkAvailable(requireContext(), false)) {
+                    setLoadingState(true)
+                    updateMembershipCard()
+                } else {
+                    viewModel.setLinkStatus()
+                    viewModel.setAccountStatus()
+                }
+            }
         }
+
+        handleBrandHeader()
+        setPointsModuleClickListener()
+        setLinkModuleClickListener()
+        handleFootersListeners()
 
         val colorDrawable =
             ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
         colorDrawable.alpha = MIN_ALPHA.toInt()
         binding.toolbar.background = colorDrawable
 
-        viewModel.paymentCards.observeNonNull(this) {
-            viewModel.fetchLocalPaymentCards()
-        }
-
-        viewModel.localPaymentCards.observeNonNull(this) {
-            viewModel.setLinkStatus()
-        }
-
-        arguments?.let {
-            viewModel.membershipPlan.value =
-                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-            val tiles = arrayListOf<String>()
-            viewModel.membershipPlan.value?.images
-                ?.filter { image -> image.type == 2 }
-                ?.forEach { image -> tiles.add(image.url.toString()) }
-            viewModel.tiles.value = tiles
-            viewModel.membershipCard.value =
-                LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-            if (isNetworkAvailable(requireActivity())) {
+        viewModel.paymentCardsMerger.observeNonNull(this) {
+            if (isNetworkAvailable(requireContext(), false)) {
                 viewModel.updateMembershipCard()
-            }
-            binding.viewModel = viewModel
-            viewModel.setAccountStatus()
-            viewModel.setLinkStatus()
-        }
-
-        viewModel.updatedMembershipCard.observeNonNull(this) {
-            viewModel.membershipCard.value = it
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-            viewModel.setAccountStatus()
-            viewModel.setLinkStatus()
-        }
-
-        viewModel.membershipCard.observeNonNull(this) {
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-
-            if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
-                setupVouchers()
-            }
-        }
-
-        binding.offerTiles.layoutManager = LinearLayoutManager(context)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
-
-
-        val titleMessage =
-            viewModel.membershipPlan.value?.account?.plan_name_card
-                ?: getString(R.string.delete_card_ending)
-
-        binding.footerDelete.binding.title.text =
-            getString(
-                R.string.delete_card_plan,
-                titleMessage
-            )
-        binding.footerDelete.binding.description.text =
-            getString(R.string.remove_card)
-
-        if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
-            binding.footerPlrRewards.visibility = View.GONE
-            binding.footerPlrSeparator.visibility = View.GONE
-        } else {
-            binding.footerPlrRewards.setOnClickListener {
-                val directions =
-                    viewModel.membershipCard.value?.let { card ->
-                        viewModel.membershipPlan.value?.let { plan ->
-                            LoyaltyCardDetailsFragmentDirections.detailToRewardsHistory(
-                                plan, card
-                            )
-                        }
-                    }
-                directions?.let {
-                    findNavController().navigateIfAdded(
-                        this@LoyaltyCardDetailsFragment, it
-                    )
-                }
-            }
-        }
-
-        val aboutTitle =
-            if (viewModel.membershipPlan.value?.account?.plan_name.isNullOrEmpty()) {
-                getString(R.string.about_membership)
             } else {
-                getString(
-                    R.string.about_membership_plan_name,
-                    viewModel.membershipPlan.value?.account!!.plan_name!!
-                )
+                viewModel.setAccountStatus()
+                viewModel.setLinkStatus()
             }
-
-        binding.footerAbout.binding.title.text = aboutTitle
-
-        binding.footerAbout.setOnClickListener {
-            viewAboutInformation()
         }
-
-        if (viewModel.membershipCard.value?.card != null &&
-            (!viewModel.membershipCard.value?.card?.barcode.isNullOrEmpty() ||
-                    !viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty())
-        ) {
-            binding.cardHeader.setOnClickListener {
-                val directions = viewModel.membershipCard.value?.card?.barcode_type.let { type ->
-                    viewModel.membershipPlan.value?.let { plan ->
-                        type?.let {
-                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                plan, viewModel.membershipCard.value!!
-                            )
-                        }
-                    }
-                }
-
-                directions?.let { findNavController().navigateIfAdded(this, directions) }
-            }
-        } else if (viewModel.membershipCard.value?.card?.membership_id.isNullOrEmpty()) {
-            binding.cardHeader.binding.tapCard.visibility = View.GONE
-        }
-
-        viewModel.linkStatus.observeNonNull(this) { status ->
-            if (viewModel.accountStatus.value != null &&
-                viewModel.localPaymentCards.value != null
-            ) {
-                setLoadingState(false)
-            } else {
-                if (isNetworkAvailable(requireActivity())) {
-                    viewModel.fetchPaymentCards()
-                }
-            }
-            configureLinkStatus(status)
-        }
-
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
             val scrollValue = v?.scrollY?.let {
@@ -243,41 +145,85 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        viewModel.accountStatus.observeNonNull(this) { status ->
-            configureLoginStatus(status)
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
+        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
+
+        viewModel.updatedMembershipCard.observeNonNull(this) {
+            viewModel.membershipCard.value = it
+            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+            viewModel.setAccountStatus()
+            viewModel.setLinkStatus()
         }
 
-        setPointsModuleClickListener()
-        setLinkModuleClickListener()
+        viewModel.membershipCard.observeNonNull(this) {
+            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
 
-        binding.footerSecurity.setOnClickListener {
-            val action =
-                LoyaltyCardDetailsFragmentDirections.detailToSecurity(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.security_and_privacy_title),
-                        getString(R.string.security_and_privacy_copy),
-                        description2 = getString(R.string.security_and_privacy_copy_2)
-                    )
+            if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+                setupVouchers()
+            }
+        }
+
+        val titleMessage =
+            viewModel.membershipPlan.value?.account?.plan_name_card
+                ?: getString(R.string.delete_card_ending)
+
+        binding.footerDelete.binding.title.text =
+            getString(
+                R.string.delete_card_plan,
+                titleMessage
+            )
+        binding.footerDelete.binding.description.text =
+            getString(R.string.remove_card)
+
+        val aboutTitle =
+            if (viewModel.membershipPlan.value?.account?.plan_name.isNullOrEmpty()) {
+                getString(R.string.about_membership)
+            } else {
+                getString(
+                    R.string.about_membership_plan_name,
+                    viewModel.membershipPlan.value?.account!!.plan_name!!
                 )
-            findNavController().navigateIfAdded(this, action)
-        }
+            }
 
-        binding.footerDelete.setOnClickListener {
-            with(AlertDialog.Builder(requireContext())) {
-                setMessage(getString(R.string.delete_card_modal_body))
-                setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-                setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
-                    if (isNetworkAvailable(requireActivity(), true)) {
-                        runBlocking {
-                            viewModel.deleteCard(viewModel.membershipCard.value?.id)
+        binding.footerAbout.binding.title.text = aboutTitle
+
+        binding.footerAbout.setOnClickListener {
+            viewAboutInformation()
+        }
+        if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+            binding.footerPlrRewards.visibility = View.GONE
+            binding.footerPlrSeparator.visibility = View.GONE
+        } else {
+            binding.footerPlrRewards.setOnClickListener {
+                val directions =
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            LoyaltyCardDetailsFragmentDirections.detailToRewardsHistory(
+                                plan, card
+                            )
                         }
                     }
-                    dialog.dismiss()
+                directions?.let {
+                    findNavController().navigateIfAdded(
+                        this@LoyaltyCardDetailsFragment, it
+                    )
                 }
-                create().show()
             }
+        }
+        viewModel.linkStatus.observeNonNull(this) { status ->
+            if (viewModel.accountStatus.value != null
+            ) {
+                setLoadingState(false)
+            } else {
+                if (isNetworkAvailable(requireActivity(), false)) {
+                    viewModel.fetchPaymentCards()
+                }
+            }
+            configureLinkStatus(status)
+        }
+
+        viewModel.accountStatus.observeNonNull(this) { status ->
+            configureLoginStatus(status)
         }
 
         viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
@@ -304,6 +250,15 @@ class LoyaltyCardDetailsFragment :
         }
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+    }
+
+    private fun fetchData() {
+        setLoadingState(true)
+        if (isNetworkAvailable(requireActivity(), false)) {
+            viewModel.fetchPaymentCards()
+        } else {
+            viewModel.fetchLocalPaymentCards()
         }
     }
 
@@ -389,6 +344,61 @@ class LoyaltyCardDetailsFragment :
         }, SCROLL_DELAY)
     }
 
+    private fun handleFootersListeners() {
+        binding.footerAbout.setOnClickListener {
+            var aboutText = getString(R.string.about_membership)
+            var description = getString(R.string.no_plan_description_available)
+
+            viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
+                aboutText = getString(R.string.about_membership_title_template, plan_name)
+            }
+            viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
+                description = plan_description
+            }
+
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        aboutText,
+                        description
+                    )
+                )
+            )
+        }
+
+        binding.footerSecurity.setOnClickListener {
+            val action =
+                LoyaltyCardDetailsFragmentDirections.detailToSecurity(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        getString(R.string.security_and_privacy_title),
+                        getString(R.string.security_and_privacy_copy),
+                        description2 = getString(R.string.security_and_privacy_copy_2)
+                    )
+                )
+            findNavController().navigateIfAdded(this, action)
+        }
+
+        binding.footerDelete.setOnClickListener {
+            with(AlertDialog.Builder(requireContext())) {
+                setMessage(getString(R.string.delete_card_modal_body))
+                setNeutralButton(getString(R.string.no_text)) { _, _ -> }
+                setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
+                    if (isNetworkAvailable(requireActivity(), true)) {
+                        runBlocking {
+                            viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                        }
+                    }
+                    dialog.dismiss()
+                }
+                create().show()
+            }
+        }
+    }
 
     private fun configureLoginStatus(loginStatus: LoginStatus) {
         with(binding) {
@@ -464,16 +474,12 @@ class LoyaltyCardDetailsFragment :
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
             LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
-                val membershipCardId = viewModel.membershipCard.value?.id.toString()
                 val activeLinkedParams =
                     listOf(
-                        viewModel.paymentCards.value?.count { card ->
-                            card.membership_cards.count { membershipCard ->
-                                membershipCard.active_link == true &&
-                                        membershipCardId == membershipCard.id
-                            } > 0
+                        viewModel.membershipCard.value?.payment_cards?.count {
+                            it.active_link == true
                         },
-                        viewModel.paymentCards.value?.size
+                        viewModel.paymentCardsMerger.value?.size
                     )
                 linkStatus.descriptionParams = activeLinkedParams
             }
@@ -609,6 +615,31 @@ class LoyaltyCardDetailsFragment :
                 }
                 else -> {
                 }
+            }
+        }
+    }
+
+    private fun handleBrandHeader() {
+        viewModel.membershipCard.value?.let { membershipCard ->
+            if (membershipCard.card != null &&
+                (!membershipCard.card?.barcode.isNullOrEmpty() ||
+                        !membershipCard.card?.membership_id.isNullOrEmpty())
+            ) {
+                binding.cardHeader.setOnClickListener {
+                    val directions = membershipCard.card?.barcode_type.let { type ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            type?.let {
+                                LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                    plan, membershipCard
+                                )
+                            }
+                        }
+                    }
+
+                    directions?.let { findNavController().navigateIfAdded(this, directions) }
+                }
+            } else if (membershipCard.card?.membership_id.isNullOrEmpty()) {
+                binding.cardHeader.binding.tapCard.visibility = View.GONE
             }
         }
     }

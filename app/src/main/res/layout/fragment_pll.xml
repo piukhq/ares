@@ -43,7 +43,7 @@
                 android:layout_marginTop="@dimen/title_margin_top"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:text="@{viewModel.title}"
+                android:text="@string/pll_linked_title"
                 app:layout_constraintBottom_toTopOf="@+id/description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
