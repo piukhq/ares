@@ -16,6 +16,7 @@ import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
@@ -505,23 +506,23 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST) {
-                        viewModel.currentMembershipPlan.value?.let {
-                            findNavController().navigateIfAdded(
-                                this,
-                                AddAuthFragmentDirections.signUpToDetails(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    membershipCard
-                                )
+                    viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.signUpToDetails(
+                                membershipPlan,
+                                membershipCard
                             )
-                        }
+                        )
                     }
                 }
                 CardType.PLL.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
                         handlePllGhost(membershipCard)
                     } else {
-                        handlePll(membershipCard)
+                        viewModel.paymentCards.value?.let { paymentCards ->
+                            handlePll(membershipCard, paymentCards)
+                        }
                     }
                 }
             }
@@ -544,9 +545,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
     }
 
-    private fun handlePll(membershipCard: MembershipCard) {
+    private fun handlePll(membershipCard: MembershipCard, paymentCards: List<PaymentCard>) {
         viewModel.currentMembershipPlan.value?.let { membershipPlan ->
-            if (viewModel.paymentCards.value.isNullOrEmpty()) {
+            if (paymentCards.isNullOrEmpty()) {
                 findNavController().navigateIfAdded(
                     this,
                     AddAuthFragmentDirections.signUpToPllEmpty(
