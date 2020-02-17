@@ -14,6 +14,7 @@ import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
+import com.bink.wallet.utils.LocalStoreUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +34,12 @@ class CardTermsAndConditionsRepository(
         error: MutableLiveData<Throwable>
     ) {
 
+        val spreedlyEnvironmentKey = LocalStoreUtils.getAppSharedPref(
+            LocalStoreUtils.KEY_SPREEDLY
+        )?.let {
+            it
+        }
+
         //todo safety checks
         val spreedlyCreditCard = SpreedlyCreditCard(
             cardNumber,
@@ -43,7 +50,7 @@ class CardTermsAndConditionsRepository(
         val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
         val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)
         CoroutineScope(Dispatchers.IO).launch {
-            val spreedlyRequest = spreedlyApiService.postPaymentCardToSpreedly(spreedlyPaymentCard)
+            val spreedlyRequest = spreedlyApiService.postPaymentCardToSpreedly(spreedlyPaymentCard, spreedlyEnvironmentKey!!)
             withContext(Dispatchers.Main) {
                 try {
                     val response = spreedlyRequest.await()

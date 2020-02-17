@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/connormcfadden/Documents/Bink/Android/binkapp/app/.cxx/cmake/debug/arm64-v8a'
+ninja: no work to do.

@@ -1,0 +1,5 @@
+# ninja log v5
+0	522	1581944550	CMakeFiles/spreedly-lib.dir/spreedly-lib.cpp.o	dc74a43d011484b9
+523	649	1581944550	/Users/connormcfadden/Documents/Bink/Android/binkapp/app/build/intermediates/cmake/debug/obj/arm64-v8a/libspreedly-lib.so	90cb3c7d5d600b49
+1	643	1581944731	CMakeFiles/spreedly-lib.dir/spreedly-lib.cpp.o	dc74a43d011484b9
+643	761	1581944731	/Users/connormcfadden/Documents/Bink/Android/binkapp/app/build/intermediates/cmake/debug/obj/arm64-v8a/libspreedly-lib.so	90cb3c7d5d600b49

@@ -9,8 +9,9 @@ interface ApiSpreedly {
 
     //todo encrypt env key
     @Headers("Content-Type: application/json")
-    @POST("/v1/payment_methods.json?environment_key=1Lf7DiKgkcx5Anw7QxWdDxaKtTa")
+    @POST("/v1/payment_methods.json")
     fun postPaymentCardToSpreedly(
-        @Body spreedlyCard: SpreedlyPaymentCard
+        @Body spreedlyCard: SpreedlyPaymentCard,
+        @Query("environment_key") environmentKey: String
     ): Deferred<SpreedlyResponse>
 }
