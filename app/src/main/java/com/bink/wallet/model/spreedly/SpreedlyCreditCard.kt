@@ -7,8 +7,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class SpreedlyCreditCard(
-    val number: String,
-    val month: Int,
-    val year: Int,
-    val full_name: String
+    val number: String?,
+    val month: Int?,
+    val year: Int?,
+    val full_name: String?
 ) : Parcelable

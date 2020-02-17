@@ -35,7 +35,7 @@ class CardTermsAndConditionsRepository(
         error: MutableLiveData<Throwable>
     ) {
 
-        // Here we send the users payment card to Spreedly before making a request to Binks API.
+        // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
         // This can only happen on release, so we have to guard it with the following condition.
         // Another option would be to add an implementation of this class on the /release buildType.
         // However, for this to work we'd have to add the same class across all buildTypes
@@ -48,12 +48,11 @@ class CardTermsAndConditionsRepository(
                 it
             }
 
-            //todo safety checks
             val spreedlyCreditCard = SpreedlyCreditCard(
                 cardNumber,
-                card.card.month!!,
-                card.card.year!!,
-                card.card.name_on_card!!
+                card.card.month,
+                card.card.year,
+                card.card.name_on_card
             )
             val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
             val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)

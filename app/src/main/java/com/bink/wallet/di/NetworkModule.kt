@@ -3,8 +3,7 @@ package com.bink.wallet.di
 import android.content.Context
 import android.content.Intent
 import com.bink.wallet.MainActivity
-import com.bink.wallet.di.qualifier.Bink
-import com.bink.wallet.di.qualifier.Spreedly
+import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
@@ -14,7 +13,6 @@ import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -22,12 +20,12 @@ import java.net.HttpURLConnection
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
-    single(named("BinkOKHTTP")) { provideDefaultOkHttpClient(get()) }
-    single(named("SpreedlyOKHTTP")) { provideSpreedlyOkHttpClient(get()) }
-    single(Spreedly) { provideRetrofit(get(named("SpreedlyOKHTTP")), "https://core.spreedly.com") }
-    single(Bink) { provideRetrofit(get(named("BinkOKHTTP")), BASE_URL) }
-    single(named("BinkApiService")) { provideApiService(get(Bink)) }
-    single(named("SpreedlyApiService")) { provideSpreedlyApiService(get(Spreedly)) }
+    single(NetworkQualifiers.BinkOkHttp) { provideDefaultOkHttpClient(get()) }
+    single(NetworkQualifiers.SpreedlyOkHttp) { provideSpreedlyOkHttpClient() }
+    single(NetworkQualifiers.SpreedlyRetrofit) { provideRetrofit(get(NetworkQualifiers.SpreedlyOkHttp), BASE_URL) }
+    single(NetworkQualifiers.BinkRetrofit) { provideRetrofit(get(NetworkQualifiers.BinkOkHttp), BASE_URL) }
+    single(NetworkQualifiers.BinkApiInterface) { provideApiService(get(NetworkQualifiers.BinkRetrofit)) }
+    single(NetworkQualifiers.SpreedlyApiInterface) { provideSpreedlyApiService(get(NetworkQualifiers.SpreedlyRetrofit)) }
 }
 
 fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
@@ -85,7 +83,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         .build()
 }
 
-fun provideSpreedlyOkHttpClient(appContext: Context): OkHttpClient {
+fun provideSpreedlyOkHttpClient(): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -111,12 +109,15 @@ fun provideSpreedlyOkHttpClient(appContext: Context): OkHttpClient {
 }
 
 fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
-    return Retrofit.Builder()
+    val retrofitBuilder =  Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(client)
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .build()
+
+
+    return retrofitBuilder.build()
+
 }
 
 fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)

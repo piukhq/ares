@@ -1,6 +1,7 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.data.*
+import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
@@ -41,10 +42,10 @@ import org.koin.dsl.module
 
 val viewModelModules = module {
 
-    single { provideLoginRepository(get(named("BinkApiService")), get()) }
+    single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { LoginViewModel(get()) }
 
-    single { provideLoyaltyCardRepository(get(named("BinkApiService")), get(), get(), get()) }
+    single { provideLoyaltyCardRepository(get(NetworkQualifiers.BinkApiInterface), get(), get(), get()) }
     viewModel { LoyaltyViewModel(get()) }
 
     viewModel { AddAuthViewModel(get()) }
@@ -57,7 +58,7 @@ val viewModelModules = module {
 
     viewModel { AddJoinViewModel() }
 
-    single { provideLoyaltyCardDetailsRepository(get(named("BinkApiService")), get(), get()) }
+    single { provideLoyaltyCardDetailsRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
     viewModel { PllEmptyViewModel() }
@@ -66,7 +67,7 @@ val viewModelModules = module {
 
     viewModel { TransactionViewModel() }
 
-    single { provideTermsAndConditionsRepository(get(named("BinkApiService"))) }
+    single { provideTermsAndConditionsRepository(get(NetworkQualifiers.BinkApiInterface)) }
     viewModel { TermsAndConditionsViewModel(get()) }
 
     viewModel { AddPaymentCardViewModel() }
@@ -79,7 +80,7 @@ val viewModelModules = module {
 
     viewModel { WalletsViewModel(get(), get()) }
 
-    single { providePllRepository(get(named("BinkApiService")), get()) }
+    single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { PllViewModel(get()) }
 
     viewModel { SettingsViewModel(get(), get(), get()) }
@@ -88,8 +89,8 @@ val viewModelModules = module {
 
     single {
         provideCardTermsAndConditionsRepository(
-            get(named("BinkApiService")),
-            get(named("SpreedlyApiService")),
+            get(NetworkQualifiers.BinkApiInterface),
+            get(NetworkQualifiers.SpreedlyApiInterface),
             get(),
             get(),
             get()

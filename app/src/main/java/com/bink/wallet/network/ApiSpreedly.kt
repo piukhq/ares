@@ -7,9 +7,8 @@ import retrofit2.http.*
 
 interface ApiSpreedly {
 
-    //todo encrypt env key
     @Headers("Content-Type: application/json")
-    @POST("/v1/payment_methods.json")
+    @POST("https://core.spreedly.com/v1/payment_methods.json")
     fun postPaymentCardToSpreedly(
         @Body spreedlyCard: SpreedlyPaymentCard,
         @Query("environment_key") environmentKey: String
