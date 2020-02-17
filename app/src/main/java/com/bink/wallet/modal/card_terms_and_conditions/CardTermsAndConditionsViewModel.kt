@@ -14,7 +14,6 @@ class CardTermsAndConditionsViewModel(private val repository: CardTermsAndCondit
     var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
-    //todo move to prod/release
     fun sendAddCard(card: PaymentCardAdd, cardNumber: String) {
         error.value = null
         repository.sendAddCard(card, cardNumber, paymentCard, error)

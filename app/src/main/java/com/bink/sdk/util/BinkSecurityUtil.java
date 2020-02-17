@@ -33,7 +33,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * BinkRetrofit
+ * Bink
  * <p>
  * Created by kkulendiran on 24/08/2017.
  */

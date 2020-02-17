@@ -3,7 +3,7 @@ package com.bink.sdk.config;
 import java.util.Set;
 
 /**
- * Provides persistable configuration / information used by various components of the BinkRetrofit SDK.
+ * Provides persistable configuration / information used by various components of the Bink SDK.
  */
 public interface SessionConfig {
 
@@ -20,7 +20,7 @@ public interface SessionConfig {
     void setRegisteredKits(Set<String> registeredKits);
 
     /**
-     * The most recent API key from the BinkRetrofit API. This will be updated when the user authorizes, or registers. It will
+     * The most recent API key from the Bink API. This will be updated when the user authorizes, or registers. It will
      * not be updated otherwise.
      */
     String getAPIKey();
