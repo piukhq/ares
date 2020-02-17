@@ -50,6 +50,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isRetryJourney = false
 
+    private var isFromNoReasonCodes = false
+
     private var membershipCardId: String? = null
 
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
@@ -92,9 +94,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
             this@AddAuthFragment.isRetryJourney = isRetryJourney
+            this@AddAuthFragment.isFromNoReasonCodes = isFromNoReasonCodes
         }
 
-        if (isRetryJourney) {
+        if (isRetryJourney && !isFromNoReasonCodes) {
             binding.noAccountText.visibility = View.GONE
         }
 

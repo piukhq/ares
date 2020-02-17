@@ -508,7 +508,8 @@ class LoyaltyCardDetailsFragment :
                                 it,
                                 viewModel.membershipCard.value?.id,
                                 false,
-                                isRetryJourney = true
+                                isRetryJourney = true,
+                                isFromNoReasonCodes = true
                             )
                         findNavController().navigateIfAdded(this, directions)
                     }
@@ -602,7 +603,8 @@ class LoyaltyCardDetailsFragment :
                                 it,
                                 viewModel.membershipCard.value?.id,
                                 false,
-                                isRetryJourney = true
+                                isRetryJourney = true,
+                                isFromNoReasonCodes = true
                             )
                         findNavController().navigateIfAdded(this, directions)
                     }

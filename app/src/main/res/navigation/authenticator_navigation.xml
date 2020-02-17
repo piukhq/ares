@@ -222,6 +222,10 @@
         <argument
                 android:name="isRetryJourney"
                 app:argType="boolean" />
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/add_join_to_ghost"
@@ -270,6 +274,10 @@
                 android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true" />
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/sign_up_to_details"
