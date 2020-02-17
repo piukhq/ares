@@ -9,6 +9,7 @@ import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
+import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
@@ -17,6 +18,8 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
+import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
+import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
 import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -53,10 +56,16 @@ val viewModelModules = module {
 
     viewModel { AddViewModel() }
 
-    viewModel { AddJoinViewModel() }
+    viewModel { AddJoinViewModel(get()) }
+
+    viewModel { AddJoinRequestPaymentCardViewModel() }
 
     single { provideLoyaltyCardDetailsRepository(get(), get(), get()) }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
+
+    viewModel { VoucherDetailsViewModel() }
+
+    viewModel { LoyaltyCardRewardsHistoryViewModel() }
 
     viewModel { PllEmptyViewModel() }
 

@@ -56,29 +56,50 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         mutableListOf()
 
     private fun addFieldToList(planField: Any) {
-        if (planField is PlanFields) {
-            val pairPlanField = Pair(
-                planField, PlanFieldsRequest(
-                    planField.column, EMPTY_STRING
-                )
-            )
-            if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-                planBooleanFieldsList.add(
-                    pairPlanField
-                )
-            } else if (!planField.column.equals(BARCODE_TEXT))
-                planFieldsList.add(
-                    pairPlanField
-                )
-        }
-        if (planField is PlanDocuments) {
-            planBooleanFieldsList.add(
-                Pair(
+        when (planField) {
+            is PlanFields -> {
+                val pairPlanField = Pair(
                     planField, PlanFieldsRequest(
-                        planField.name, EMPTY_STRING
+                        planField.column, EMPTY_STRING
                     )
                 )
-            )
+
+                viewModel.currentMembershipPlan.value?.has_vouchers?.let {
+                    if (it) {
+                        if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
+                            val email =
+                                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                                    ?.let {
+                                        it
+                                    }
+                            with(pairPlanField) {
+                                second.disabled = true
+                                second.value = email
+                            }
+                        }
+                    }
+                }
+
+                if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+                    planBooleanFieldsList.add(
+                        pairPlanField
+                    )
+                } else if (!planField.column.equals(BARCODE_TEXT)) {
+                    planFieldsList.add(
+                        pairPlanField
+                    )
+                }
+            }
+
+            is PlanDocuments -> {
+                planBooleanFieldsList.add(
+                    Pair(
+                        planField, PlanFieldsRequest(
+                            planField.name, EMPTY_STRING
+                        )
+                    )
+                )
+            }
         }
     }
 
@@ -570,9 +591,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private fun hideLoadingViews() {
-        binding.progressSpinner.visibility = View.GONE
-        viewModel.createCardError.value = null
-        binding.addCardButton.isEnabled = true
+        with (binding) {
+            progressSpinner.visibility = View.GONE
+            viewModel.createCardError.value = null
+            addCardButton.isEnabled = true
+        }
     }
 
     companion object {

@@ -23,7 +23,6 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
@@ -126,32 +125,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         setHasOptionsMenu(true)
 
+        fetchData()
+
         viewModel.deleteCard.observeNonNull(this) { id ->
-            viewModel.localMembershipCardData.value =
-                viewModel.localMembershipCardData.value?.filter { it.id != id }
-            viewModel.membershipCardData.value =
-                viewModel.membershipCardData.value?.filter { it.id != id }
-            walletItems.firstOrNull {
-                if (it is MembershipCard)
-                    it.id == id
-                else
-                    false
-            }.let { walletItems.remove(it) }
-            binding.loyaltyWalletList.adapter?.notifyDataSetChanged()
+            fetchData()
         }
 
-        if (UtilFunctions.isNetworkAvailable(requireActivity())) {
-            binding.progressSpinner.visibility = View.VISIBLE
-            viewModel.fetchMembershipPlans()
-            viewModel.fetchMembershipCards()
-            viewModel.fetchDismissedCards()
-        } else {
-            binding.progressSpinner.visibility = View.VISIBLE
-            viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchDismissedCards()
-            disableIndicators()
-        }
+        manageRecyclerView()
 
         viewModel.fetchLocalPaymentCards()
 
@@ -181,6 +161,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 )
             }
         }
+        viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
+            setCardsData(userDataResult)
+        }
+
+        viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
+            setCardsData(localUserDataResult)
+        }
+
+        viewModel.dismissedBannerDisplay.observeNonNull(this) {
+            walletAdapter.deleteBannerDisplayById(it)
+            viewModel.fetchDismissedCards()
+            binding.progressSpinner.visibility = View.VISIBLE
+            binding.swipeLayout.isEnabled = true
+        }
     }
 
     override fun onPause() {
@@ -197,17 +191,34 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun setCardsData(userDataResult: UserDataResult) {
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
-                disableIndicators()
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
                 walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
+                disableIndicators()
             }
         }
     }
 
+    private fun manageRecyclerView(){
+        binding.loyaltyWalletList.apply {
+            layoutManager = GridLayoutManager(requireContext(), 1)
+            adapter = walletAdapter
+
+            val helperListenerLeft =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+            val helperListenerRight =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
+
+            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+        }
+    }
+
     private fun disableIndicators() {
+        binding.loyaltyWalletList.visibility = View.VISIBLE
         binding.swipeLayout.isRefreshing = false
         binding.progressSpinner.visibility = View.GONE
     }
@@ -254,6 +265,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
+    private fun fetchData() {
+        binding.progressSpinner.visibility = View.VISIBLE
+        if (UtilFunctions.isNetworkAvailable(requireActivity())) {
+            viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipCards()
+            viewModel.fetchDismissedCards()
+        } else {
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchDismissedCards()
+        }
+    }
+
     private fun onBannerRemove(item: Any) {
         binding.swipeLayout.isEnabled = false
         binding.progressSpinner.visibility = View.GONE
@@ -272,9 +296,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                            runBlocking {
-                                viewModel.deleteCard(membershipCard.id)
-                            }
+                            binding.progressSpinner.visibility = View.VISIBLE
+                            viewModel.deleteCard(membershipCard.id)
                         } else {
                             disableIndicators()
                         }
@@ -294,13 +317,5 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             dialog = builder.create()
             dialog.show()
         }
-    }
-
-    fun setData(
-        membershipCards: List<MembershipCard>,
-        membershipPlans: List<MembershipPlan>
-    ) {
-        viewModel.membershipCardData.value = membershipCards
-        viewModel.membershipPlanData.value = membershipPlans
     }
 }
