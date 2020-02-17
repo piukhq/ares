@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -14,10 +15,13 @@ import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>() {
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -50,6 +54,12 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             this@AddJoinFragment.membershipCardId = membershipCardId
         }
 
+        viewModel.fetchLocalPaymentCards()
+        runBlocking {
+            viewModel.getPaymentCards()
+        }
+
+        viewModel.membershipPlan.value = currentMembershipPlan
         binding.item = currentMembershipPlan
 
         when (currentMembershipPlan?.feature_set?.card_type) {
@@ -82,6 +92,13 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                     getString(R.string.add_join_inactive_link_description)
             }
         }
+
+        binding.addCardButton.visibility =
+            if (currentMembershipPlan?.feature_set?.linking_support?.contains(ADD_BUTTON_ENTRY) == true) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
 
         binding.closeButton.setOnClickListener {
             if (isFromJoinCard) {
@@ -158,5 +175,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 findNavController().navigateIfAdded(this, action)
             }
         }
+    }
+
+    companion object {
+        private const val ADD_BUTTON_ENTRY = "ADD"
+
     }
 }

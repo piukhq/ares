@@ -181,14 +181,21 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
 
 @BindingAdapter("textBalance")
 fun TextView.textBalance(card: MembershipCard?) {
-    val balance = card?.balances?.first()
-    if (!card?.balances.isNullOrEmpty())
-        text = when (balance?.prefix != null) {
-            true -> balance?.prefix?.plus(balance.value)
-            else -> {
-                balance?.value.plus(balance?.suffix)
+    val vouchers = card?.vouchers
+    if (!vouchers.isNullOrEmpty()) {
+        val voucher = vouchers.first()
+        text = context.displayVoucherEarnAndTarget(voucher)
+    } else {
+        val balance = card?.balances?.first()
+        if (!card?.balances.isNullOrEmpty()) {
+            text = when (balance?.prefix != null) {
+                true -> balance?.prefix?.plus(balance.value)
+                else -> {
+                    balance?.value.plus(balance?.suffix)
+                }
             }
         }
+    }
 }
 
 @BindingAdapter("planField")
@@ -255,12 +262,44 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
     if (transaction.timestamp != null &&
         transaction.description != null
     ) {
-        this.text = "${DateFormat.format(
-            "dd MMMM yyyy",
-            transaction.timestamp * 1000
-        )}, ${transaction.description}"
+        with (this) {
+            visibility = View.VISIBLE
+            text =
+                "${dateFormatTransactionTime(transaction.timestamp)}, ${transaction.description}"
+        }
     }
 }
+
+fun TextView.setTimestamp(timeStamp: Long) {
+    this.text = dateFormatTransactionTime(timeStamp)
+}
+@BindingAdapter("transactionTime", "format", "shortMonth")
+fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Boolean = false) {
+    with (this) {
+        visibility = View.VISIBLE
+        text = String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
+    }
+}
+private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
+    DateFormat.format(getDateFormat(shortMonth), timeStamp * 1000).toString()
+
+private fun getDateFormat(shortMonth: Boolean): String {
+    val builder = StringBuilder("dd MMM")
+    if (shortMonth)
+        builder.append("M")
+    builder.append(" yyyy")
+    return builder.toString()
+}
+
+@BindingAdapter("transactionTime", "format")
+fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
+    with (this) {
+        visibility = View.VISIBLE
+        text = String.format(format, dateTimeFormatTransactionTime(timeStamp))
+    }
+}
+private fun dateTimeFormatTransactionTime(timeStamp: Long) =
+    DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
 
 @BindingAdapter("transactionArrow")
 fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
@@ -328,6 +367,14 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         LoginStatus.STATUS_PENDING ->
             text = this.context.getString(R.string.description_text)
         else -> text = this.context.getString(R.string.empty_string)
+    }
+}
+fun TextView.textAndShow(string: String?) {
+    string?.let {
+        with(this) {
+            visibility = View.VISIBLE
+            text = it
+        }
     }
 }
 

@@ -5,7 +5,7 @@
     <dimen name="margin_padding_size_really_small">2dp</dimen>
     <dimen name="margin_padding_size_extra_small">4dp</dimen>
     <dimen name="margin_padding_size_small">8dp</dimen>
-    <dimen name="margin_padding_size_small_medium">12dp</dimen>
+    <dimen name="margin_padding_size_small_medium">14dp</dimen>
     <dimen name="margin_padding_size_medium">16dp</dimen>
     <dimen name="margin_padding_size_medium_large">24dp</dimen>
     <dimen name="margin_padding_size_triple_small">24dp</dimen>
@@ -16,6 +16,8 @@
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
     <dimen name="loyalty_value_margin_end">18dp</dimen>
+    <dimen name="loyalty_voucher_margin">20dp</dimen>
+    <dimen name="loyalty_voucher_progress_height">14dp</dimen>
     <dimen name="card_login_width">80dp</dimen>
     <dimen name="card_login_height">28dp</dimen>
     <dimen name="card_login_margin_end">12dp</dimen>
@@ -24,6 +26,9 @@
     <dimen name="delete_icon_padding">7dp</dimen>
     <dimen name="card_item_linear_layout_margin">36dp</dimen>
     <dimen name="loyalty_card_corner_radius">10dp</dimen>
+    <dimen name="voucher_card_bar_bottom_margin">10dp</dimen>
+    <dimen name="voucher_card_margin_bottom">24dp</dimen>
+    <dimen name="voucher_code_margin_top">12dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -72,9 +77,14 @@
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
+    <dimen name="text_size_title_large">21.7sp</dimen>
+    <dimen name="text_size_title_big">25sp</dimen>
     <dimen name="text_size_description_big">18sp</dimen>
     <dimen name="custom_margin_add_fragment">24dp</dimen>
     <dimen name="add_custom_image_size">44dp</dimen>
+    <dimen name="text_size_description_smaller">14sp</dimen>
+    <dimen name="text_size_description_medium">15sp</dimen>
+    <dimen name="text_size_description_medium_bigger">16.2sp</dimen>
     <dimen name="text_size_description_biggest">25sp</dimen>
     <dimen name="custom_add_fragment_image_size">31dp</dimen>
     <dimen name="add_card_size">150dp</dimen>
@@ -113,9 +123,18 @@
     <dimen name="separator_height">1dp</dimen>
     <dimen name="facebook_button_elevation">4dp</dimen>
 
-
     <!-- Login Screen -->
     <dimen name="gradient_button_margin">52dp</dimen>
     <dimen name="loyalty_card_margin_horizontal">8dp</dimen>
     <dimen name="add_card_margin_horizontal">8dp</dimen>
+    <dimen name="continue_button_margin">52dp</dimen>
+
+    <!-- PLR -->
+    <dimen name="voucher_padding_top">12dp</dimen>
+    <dimen name="voucher_padding_bottom">12dp</dimen>
+    <dimen name="voucher_subtitle_top">-2dp</dimen>
+    <dimen name="voucher_subtitle_bottom">10dp</dimen>
+    <dimen name="voucher_date_top">18dp</dimen>
+    <dimen name="voucher_code_bottom">24dp</dimen>
+    <dimen name="voucher_corner_radius">8dp</dimen>
 </resources>

@@ -14,12 +14,15 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.VoucherStates
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -36,6 +39,8 @@ class LoyaltyCardDetailsFragment :
     companion object {
         const val MAX_ALPHA = 127f
         const val MIN_ALPHA = 0f
+        const val MIN_DIST = 0
+        const val MAX_DIST = 650
     }
 
     private var scrollY = 0
@@ -61,7 +66,8 @@ class LoyaltyCardDetailsFragment :
             val tiles = arrayListOf<String>()
             viewModel.apply {
                 membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
-                membershipPlan.value?.images?.filter { image -> image.type == 2 }
+                membershipPlan.value?.images
+                    ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
@@ -95,14 +101,45 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            colorDrawable.alpha = v?.scrollY?.let {
+            val scrollValue = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
+            colorDrawable.alpha = scrollValue
+            if (scrollValue == MAX_ALPHA.toInt()) {
+                viewModel.membershipPlan.value?.account?.company_name?.let { name ->
+                    binding.toolbarTitle.text = name
+                }
+                var voucherTitle = false
+                viewModel.membershipCard.value?.let { it ->
+                    if (!it.vouchers.isNullOrEmpty() &&
+                        it.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        if (!it.vouchers.isNullOrEmpty()) {
+                            it.vouchers?.first()?.let { voucher ->
+                                voucherTitle = true
+                                binding.toolbarSubtitle.text =
+                                    requireContext().displayVoucherEarnAndTarget(voucher)
+                            }
+                        }
+                    }
+                }
+                if (!voucherTitle) {
+                    viewModel.membershipCard.value?.balances?.first().let { balance ->
+                        binding.toolbarSubtitle.text =
+                            ValueDisplayUtils.displayValue(
+                                balance?.value?.toFloat(),
+                                balance?.prefix,
+                                balance?.suffix,
+                                null
+                            )
+                    }
+                }
+            }
         }
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                viewModel.updateMembershipCard()
+                viewModel.updateMembershipCard(true)
             } else {
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
                 setLoadingState(false)
@@ -121,6 +158,10 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.membershipCard.observeNonNull(this) {
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+
+            if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
+                setupVouchers()
+            }
         }
 
         val titleMessage =
@@ -136,22 +177,38 @@ class LoyaltyCardDetailsFragment :
             getString(R.string.remove_card)
 
         val aboutTitle =
-            if (viewModel.membershipPlan.value?.account!!.plan_name.isNullOrEmpty()) {
+            if (viewModel.membershipPlan.value?.account?.plan_name.isNullOrEmpty()) {
                 getString(R.string.about_membership)
-            } else
+            } else {
                 getString(
                     R.string.about_membership_plan_name,
                     viewModel.membershipPlan.value?.account!!.plan_name!!
                 )
+            }
 
         binding.footerAbout.binding.title.text = aboutTitle
 
+        binding.footerAbout.setOnClickListener {
+            viewAboutInformation()
+        }
         if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
             binding.footerPlrRewards.visibility = View.GONE
             binding.footerPlrSeparator.visibility = View.GONE
         } else {
             binding.footerPlrRewards.setOnClickListener {
-
+                val directions =
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            LoyaltyCardDetailsFragmentDirections.detailToRewardsHistory(
+                                plan, card
+                            )
+                        }
+                    }
+                directions?.let {
+                    findNavController().navigateIfAdded(
+                        this@LoyaltyCardDetailsFragment, it
+                    )
+                }
             }
         }
         viewModel.linkStatus.observeNonNull(this) { status ->
@@ -203,6 +260,41 @@ class LoyaltyCardDetailsFragment :
             viewModel.fetchPaymentCards()
         } else {
             viewModel.fetchLocalPaymentCards()
+        }
+    }
+
+    private fun viewAboutInformation() {
+        var aboutText = getString(R.string.about_membership)
+        var description = getString(R.string.no_plan_description_available)
+
+        viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
+            aboutText = getString(R.string.about_membership_title_template, plan_name)
+        }
+        viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
+            description = plan_description
+        }
+
+        findNavController().navigateIfAdded(
+            this,
+            LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    true,
+                    aboutText,
+                    description
+                )
+            )
+        )
+    }
+
+    private fun viewVoucherDetails(voucher: Voucher) {
+        val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
+            LoyaltyCardDetailsFragmentDirections.detailToVoucher(
+                membershipPlan, voucher
+            )
+        }
+        if (directions != null) {
+            findNavController().navigateIfAdded(this, directions)
         }
     }
 
@@ -293,61 +385,92 @@ class LoyaltyCardDetailsFragment :
         }
 
         binding.footerDelete.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage(getString(R.string.delete_card_modal_body))
-            builder.setNeutralButton(getString(R.string.no_text)) { _, _ -> }
-            builder.setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
-                if (isNetworkAvailable(requireActivity(), true)) {
-                    runBlocking {
-                        viewModel.deleteCard(viewModel.membershipCard.value?.id)
+            with(AlertDialog.Builder(requireContext())) {
+                setMessage(getString(R.string.delete_card_modal_body))
+                setNeutralButton(getString(R.string.no_text)) { _, _ -> }
+                setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
+                    if (isNetworkAvailable(requireActivity(), true)) {
+                        runBlocking {
+                            viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                        }
                     }
+                    dialog.dismiss()
                 }
-                dialog.dismiss()
+                create().show()
             }
-            val dialog = builder.create()
-            dialog.show()
         }
     }
 
     private fun configureLoginStatus(loginStatus: LoginStatus) {
-        binding.pointsImage.setImageDrawable(
-            getDrawable(
-                requireContext(),
-                loginStatus.pointsImage
+        with(binding) {
+            pointsImage.setImageDrawable(
+                getDrawable(
+                    requireContext(),
+                    loginStatus.pointsImage
+                )
             )
-        )
-        if (loginStatus.pointsText != null) {
-            binding.pointsText.text = getString(R.string.points_login)
+            loginStatus.pointsText?.let {
+                pointsText.text = getString(R.string.points_login)
+            }
+            loginStatus.pointsDescription?.let {
+                pointsDescription.text = getString(R.string.description_see_history)
+            }
+            pointsText.text = loginStatus.pointsText?.let { getString(it) }
+            pointsDescription.text = loginStatus.pointsDescription?.let { getString(it) }
         }
-        if (loginStatus.pointsDescription != null) {
-            binding.pointsDescription.text = getString(R.string.description_see_history)
-        }
-
-        binding.pointsText.text = loginStatus.pointsText?.let { getString(it) }
-        binding.pointsDescription.text = loginStatus.pointsDescription?.let { getString(it) }
 
         when (loginStatus) {
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-                if (!viewModel.membershipCard.value?.balances.isNullOrEmpty()) {
-                    val balance = viewModel.membershipCard.value?.balances?.first()
-                    setBalanceText(balance)
-                    val updateTime = balance?.updated_at
-                    val currentTime = Calendar.getInstance().timeInMillis / 1000
-                    updateTime?.let {
-                        val timeSinceUpdate = currentTime - it
-                        binding.pointsDescription.text =
-                            timeSinceUpdate.getElapsedTime(requireContext())
+                viewModel.membershipCard.value?.let { card ->
+                    if (!card.vouchers.isNullOrEmpty() &&
+                        card.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        setPlrPointsModuleText()
+                    } else if (!card.balances.isNullOrEmpty()) {
+                        val updateTime: Long?
+                        card.balances?.first().let { balance ->
+                            setBalanceText(balance)
+                            updateTime = balance?.updated_at
+                        }
+                        val currentTime = Calendar.getInstance().timeInMillis / 1000
+                        updateTime?.let {
+                            val timeSinceUpdate = currentTime - it
+                            binding.pointsDescription.text =
+                                timeSinceUpdate.getElapsedTime(requireContext())
+                        }
                     }
                 }
             }
             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                setBalanceText(viewModel.membershipCard.value?.balances?.first())
+                viewModel.membershipCard.value?.let {
+                    if (!it.vouchers.isNullOrEmpty() &&
+                        it.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        setPlrPointsModuleText()
+                    } else if (!it.balances.isNullOrEmpty()) {
+                        it.balances?.first().let { balance ->
+                            if (balance != null) {
+                                setBalanceText(balance)
+                            } else {
+                                binding.pointsText.text = getString(R.string.points_signing_up)
+                            }
+                        }
+                    }
+                } ?: run {
+                    binding.pointsText.text = getString(R.string.points_signing_up)
+                }
             }
             else -> {
             }
         }
     }
 
+    private fun setPlrPointsModuleText() {
+        with(binding) {
+            pointsText.text = getString(R.string.collecting)
+            pointsDescription.text = getString(R.string.towards_rewards)
+        }
+    }
 
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
@@ -363,26 +486,37 @@ class LoyaltyCardDetailsFragment :
             }
             else -> linkStatus.descriptionParams = null
         }
-
-        binding.activeLinked.setImageDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                linkStatus.drawable
-            )
-        )
-        binding.linkStatusText.text =
-            getString(linkStatus.statusText)
-
-        if (linkStatus.descriptionParams.isNullOrEmpty()) {
-            binding.linkDescription.text =
-                getString(linkStatus.descriptionText)
-        } else {
-            binding.linkDescription.text =
-                getString(
-                    linkStatus.descriptionText,
-                    linkStatus.descriptionParams!![0],
-                    linkStatus.descriptionParams!![1]
+        with(binding) {
+            activeLinked.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    linkStatus.drawable
                 )
+            )
+            linkStatusText.text =
+                getString(linkStatus.statusText)
+
+            if (linkStatus.descriptionParams.isNullOrEmpty()) {
+                linkDescription.text =
+                    getString(linkStatus.descriptionText)
+            } else {
+                linkStatus.descriptionParams?.let { descParams ->
+                    linkDescription.text =
+                        getString(
+                            linkStatus.descriptionText,
+                            descParams[0],
+                            descParams[1]
+                        )
+                }
+                linkStatus.descriptionParams?.let { descParams ->
+                    linkDescription.text =
+                        getString(
+                            linkStatus.descriptionText,
+                            descParams[0],
+                            descParams[1]
+                        )
+                }
+            }
         }
     }
 
@@ -390,20 +524,19 @@ class LoyaltyCardDetailsFragment :
         binding.linkedWrapper.setOnClickListener {
             when (viewModel.linkStatus.value) {
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
-                    val directions =
-                        viewModel.membershipCard.value?.let { membershipCard ->
+                    viewModel.membershipCard.value?.let { membershipCard ->
+                        val directions =
                             viewModel.membershipPlan.value?.let { membershipPlan ->
                                 LoyaltyCardDetailsFragmentDirections.detailToPll(
                                     membershipCard, membershipPlan, false
                                 )
-                            }
-
                         }
-                    directions?.let { _ ->
-                        findNavController().navigateIfAdded(
-                            this,
-                            directions
-                        )
+                        directions?.let { _ ->
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions
+                            )
+                        }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS -> {
@@ -434,7 +567,6 @@ class LoyaltyCardDetailsFragment :
                             directions
                         )
                     }
-
                 }
                 LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
                     val directions =
@@ -544,12 +676,20 @@ class LoyaltyCardDetailsFragment :
             val genericModalParameters: GenericModalParameters?
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
-                    val action =
-                        LoyaltyCardDetailsFragmentDirections.detailToTransactions(
-                            viewModel.membershipCard.value!!,
-                            viewModel.membershipPlan.value!!
-                        )
-                    findNavController().navigateIfAdded(this, action)
+                    viewModel.membershipCard.value?.let { membershipCard ->
+                        if (!membershipCard.vouchers.isNullOrEmpty() &&
+                            membershipCard.status?.state == MembershipCardStatus.AUTHORISED.status
+                        ) {
+                            viewAboutInformation()
+                        } else {
+                            val action =
+                                LoyaltyCardDetailsFragmentDirections.detailToTransactions(
+                                    viewModel.membershipCard.value!!,
+                                    viewModel.membershipPlan.value!!
+                                )
+                            findNavController().navigateIfAdded(this, action)
+                        }
+                    }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                     genericModalParameters = GenericModalParameters(
@@ -621,12 +761,49 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun getAlphaForActionBar(scrollY: Int): Int {
-        val minDist = 0
-        val maxDist = 650
         return when {
-            scrollY > maxDist -> MAX_ALPHA.toInt()
-            scrollY < minDist -> MIN_ALPHA.toInt()
-            else -> (MAX_ALPHA / maxDist * scrollY).toInt()
+            scrollY > MAX_DIST -> MAX_ALPHA.toInt()
+            scrollY < MIN_DIST -> MIN_ALPHA.toInt()
+            else -> (MAX_ALPHA / MAX_DIST * scrollY).toInt()
+        }
+    }
+
+    private fun setupVouchers() {
+        binding.voucherTiles.apply {
+            visibility = View.VISIBLE
+            layoutManager = LinearLayoutManager(requireContext())
+            viewModel.membershipCard.value?.vouchers?.filter {
+                listOf(
+                    VoucherStates.IN_PROGRESS.state,
+                    VoucherStates.ISSUED.state
+                ).contains(it.state)
+            }?.let { vouchers ->
+                adapter = LoyaltyCardDetailsVouchersAdapter(
+                    vouchers,
+                    onClickListener = { thisVoucher ->
+                        viewVoucherDetails(thisVoucher as Voucher)
+                    }
+                )
+            }
+        }
+    }
+
+    private fun showPlrMembership() {
+        viewModel.membershipPlan.value?.let { membershipPlan ->
+            membershipPlan.account?.plan_description?.let { planDescription ->
+                findNavController().navigateIfAdded(
+                    this,
+                    LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            membershipPlan.account.plan_name
+                                ?: getString(R.string.plan_description),
+                            planDescription
+                        )
+                    )
+                )
+            }
         }
     }
 }

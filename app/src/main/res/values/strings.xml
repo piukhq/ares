@@ -425,7 +425,30 @@
     <!-- PLR -->
     <string name="rewards_history">Rewards history</string>
     <string name="see_your_past_rewards">See your past rewards</string>
+    <string name="payment_card_needed">Payment card needed</string>
+    <string name="you_currently_don_t_have_any_linked_payment_cards">You currently don\'t have any linked payment cards.\n\nYou can only earn rewards by shopping with a linked payment card.\n\nPlease add a card so you can start earning rewards.</string>
+    <string name="loyalty_wallet_plr_value">%s/%s</string>
+    <string name="until_next_reward">Until next reward</string>
+    <string name="your_past_rewards">Your past rewards</string>
+    <string name="collecting">Collecting</string>
+    <string name="towards_rewards">Towards rewards</string>
+    <string name="voucher_spent">Spent:</string>
+    <string name="voucher_goal">Goal:</string>
+    <string name="voucher_entry_date">on %s</string>
+    <string name="voucher_detail_text_in_progress">Spend %s with us and you\'ll get a %s.</string>
+    <string name="voucher_detail_title_issued">Your %s is ready!</string>
+    <string name="voucher_detail_text_issued">Use the code above to redeem your reward. You will get %s off your purchase.</string>
+    <string name="voucher_detail_date_issued">Added %s</string>
+    <string name="voucher_detail_title_redeemed">Your %s was redeemed</string>
+    <string name="voucher_detail_text_redeemed">""</string>
+    <string name="voucher_detail_date_redeemed">Redeemed %s</string>
+    <string name="voucher_detail_title_expired">Your %s has expired</string>
+    <string name="voucher_detail_text_expired">""</string>
+    <string name="voucher_detail_date_expired">Expired %s</string>
+    <string name="voucher_detail_date_expires">Expires %s</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
+    <string name="plr_redeem_instructions">Use the code above to redeem your reward. You will get %s off your purchase.</string>
+    <string name="terms_amp_conditions">Terms &amp; conditions</string>
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
