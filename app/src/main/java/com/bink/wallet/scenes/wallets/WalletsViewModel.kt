@@ -20,17 +20,13 @@ class WalletsViewModel(
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
     private val _fetchError = MutableLiveData<Throwable>()
-    val fetchError : LiveData<Throwable>
+    val fetchError: LiveData<Throwable>
         get() = _fetchError
     private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError : LiveData<Throwable>
+    val loadCardsError: LiveData<Throwable>
         get() = _loadCardsError
 
-    fun fetchLocalMembershipPlans() {
-        repository.retrieveStoredMembershipPlans(membershipPlanData)
-    }
-
-     fun fetchMembershipCards() {
+    fun fetchMembershipCards() {
         viewModelScope.launch {
             repository.retrieveMembershipCards(membershipCardData, _loadCardsError)
         }
@@ -42,7 +38,7 @@ class WalletsViewModel(
         }
     }
 
-     fun fetchPaymentCards() {
+    fun fetchPaymentCards() {
         paymentWalletRepository.getPaymentCards(
             paymentCards,
             _fetchError

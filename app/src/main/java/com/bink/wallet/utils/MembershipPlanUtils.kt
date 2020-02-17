@@ -84,7 +84,7 @@ object MembershipPlanUtils {
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
                             }
                             membershipCard.payment_cards.isNullOrEmpty() ||
-                                    !existLinkedPaymentCards(membershipCard) -> {
+                                    !existLinkedPaymentCards(membershipCard, paymentCards) -> {
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
                             }
                             else -> {
@@ -115,14 +115,26 @@ object MembershipPlanUtils {
         }
     }
 
-    private fun existLinkedPaymentCards(membershipCard: MembershipCard): Boolean {
-        countLinkedPaymentCards(membershipCard)?.let {
+    fun existLinkedPaymentCards(
+        membershipCard: MembershipCard,
+        paymentCards: MutableList<PaymentCard>
+    ): Boolean {
+        countLinkedPaymentCards(membershipCard, paymentCards)?.let {
             return it > 0
         }
         return false
     }
 
-    private fun countLinkedPaymentCards(membershipCard: MembershipCard): Int? {
-        return membershipCard.payment_cards?.count { card -> card.active_link == true }
+    fun countLinkedPaymentCards(
+        membershipCard: MembershipCard,
+        paymentCards: MutableList<PaymentCard>
+    ): Int? {
+        val paymentCardIds = mutableListOf<String>()
+        paymentCards.forEach { paymentCard ->
+            paymentCardIds.add(paymentCard.id.toString())
+        }
+        return membershipCard.payment_cards?.count { card ->
+            paymentCardIds.contains(card.id) && card.active_link == true
+        }
     }
 }

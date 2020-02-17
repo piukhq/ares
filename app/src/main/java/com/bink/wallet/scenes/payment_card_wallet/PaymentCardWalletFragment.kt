@@ -95,6 +95,10 @@ class PaymentCardWalletFragment :
             viewModel.fetchData()
         }
 
+        viewModel.localMembershipCardData.observeNonNull(this) {
+            walletAdapter.membershipCards = it.toMutableList()
+        }
+
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchData()
         }

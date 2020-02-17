@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
@@ -54,6 +55,7 @@ class PaymentCardsDetailsFragment :
         }
 
         binding.paymentCardDetail = viewModel.paymentCard.value
+        binding.paymentHeader.membershipCardsWrapper = MembershipCardListWrapper(viewModel.membershipCardData.value?.toMutableList()!!)
 
         binding.footerSecurity.setOnClickListener {
             val action =

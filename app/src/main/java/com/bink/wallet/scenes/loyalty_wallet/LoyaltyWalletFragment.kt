@@ -92,16 +92,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
         }
-
         viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
             setCardsData(localUserDataResult)
         }
-
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = true
+        }
+
+        viewModel.localPaymentCards.observeNonNull(this) {
+            walletAdapter.paymentCards = it.toMutableList()
         }
 
         binding.loyaltyWalletList.apply {
@@ -150,6 +152,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
             disableIndicators()
         }
+
+        viewModel.fetchLocalPaymentCards()
 
         binding.swipeLayout.setOnRefreshListener {
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {

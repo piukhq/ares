@@ -3,6 +3,7 @@ package com.bink.wallet.model
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.enums.CardType
@@ -10,7 +11,11 @@ import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.formatBalance
 
-class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: MembershipPlan) {
+class LoyaltyWalletItem(
+    var membershipCard: MembershipCard,
+    var membershipPlan: MembershipPlan,
+    var paymentCards: MutableList<PaymentCard>
+) {
 
     // Region common use
     private fun shouldShowRetryStatus() =
@@ -41,8 +46,8 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
 
     fun retrieveLinkImage(): Int? {
         if (shouldShowLinkStatus()) {
-            membershipCard.hasLinkedPaymentCards()?.let {
-                return if (it) {
+            MembershipPlanUtils.existLinkedPaymentCards(membershipCard, paymentCards).apply {
+                return if (this) {
                     R.drawable.ic_linked
                 } else {
                     R.drawable.ic_icons_unlinked
@@ -64,8 +69,8 @@ class LoyaltyWalletItem(var membershipCard: MembershipCard, var membershipPlan: 
                     return R.string.card_status_pending
                 }
                 shouldShowLinkStatus() -> {
-                    membershipCard.hasLinkedPaymentCards()?.let {
-                        return if (it) {
+                    MembershipPlanUtils.existLinkedPaymentCards(membershipCard, paymentCards).apply {
+                        return if (this) {
                             R.string.loyalty_card_pll_linked
                         } else {
                             R.string.loyalty_card_pll_link_now

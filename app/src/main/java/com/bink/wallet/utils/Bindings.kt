@@ -15,6 +15,7 @@ import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
+import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -338,25 +339,33 @@ fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
     }
 }
 
-@BindingAdapter("linkedStatus")
-fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
+@BindingAdapter("linkedStatusPaymentCard", "linkStatusMembershipCards", requireAll = true)
+fun ImageView.setLinkedStatus(
+    paymentCard: PaymentCard,
+    membershipCards: MembershipCardListWrapper
+) {
     setImageResource(
-        when (!paymentCard.membership_cards.isNullOrEmpty() &&
-                paymentCard.membership_cards.any { it.active_link == true }) {
+        when (PaymentCardUtils.existLinkedMembershipCards(
+            paymentCard,
+            membershipCards.membershipCards
+        )) {
             true -> R.drawable.ic_linked
             false -> R.drawable.ic_unlinked
         }
     )
 }
 
-@BindingAdapter("linkedStatus")
-fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
-    text = when (!paymentCard.membership_cards.isNullOrEmpty() &&
-            paymentCard.membership_cards.any { it.active_link == true }) {
+@BindingAdapter("linkedStatusPaymentCard", "linkStatusMembershipCards", requireAll = true)
+fun TextView.setLinkedStatus(paymentCard: PaymentCard, membershipCards: MembershipCardListWrapper) {
+    text = when (PaymentCardUtils.existLinkedMembershipCards(
+        paymentCard,
+        membershipCards.membershipCards
+    )) {
         true -> {
-            val linkedCardsNumber =
-                paymentCard.membership_cards.filter { it.active_link == true }.size
-
+            val linkedCardsNumber = PaymentCardUtils.countLinkedPaymentCards(
+                paymentCard,
+                membershipCards.membershipCards
+            )
             context.getString(
                 when (linkedCardsNumber) {
                     1 -> R.string.payment_card_linked_status
@@ -365,7 +374,6 @@ fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
                 linkedCardsNumber
             )
         }
-
         false -> context.getString(R.string.payment_card_not_linked)
     }
 }

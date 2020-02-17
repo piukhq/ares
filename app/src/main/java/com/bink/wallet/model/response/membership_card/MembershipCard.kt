@@ -51,10 +51,6 @@ data class MembershipCard(
         } else null
     }
 
-    fun hasLinkedPaymentCards() =
-        payment_cards?.any { paymentCard -> paymentCard.active_link == true }
-
-
     fun getLinkStatus(): LoyaltyCardLinkStatus {
         if (plan?.feature_set?.card_type in 0..1) {
             return LoyaltyCardLinkStatus.NONE
