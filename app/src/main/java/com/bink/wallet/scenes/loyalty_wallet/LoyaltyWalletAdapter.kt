@@ -166,9 +166,10 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
-                val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan)
-
-                bindCardToLoyaltyItem(loyaltyItem, binding)
+                paymentCards?.let {
+                    val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan, it)
+                    bindCardToLoyaltyItem(loyaltyItem, binding)
+                }
                 bindVouchersToDisplay(cardBinding, currentMembershipPlan, item)
             }
             with(cardBinding.cardView) {

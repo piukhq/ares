@@ -26,6 +26,7 @@ class WalletsViewModel(
 
     fun fetchMembershipCards() {
         repository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    }
 
     fun fetchMembershipPlans() {
         repository.retrieveMembershipPlans(membershipPlanData, _loadCardsError)
