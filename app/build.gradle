@@ -74,19 +74,18 @@ android {
 //            }
 //        }
         beta {
-            initWith debug
             debuggable true
-//            applicationIdSuffix ".beta"
-//            signingConfig signingConfigs.binkSigningConfig
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            android.applicationVariants.all { variant ->
-//                variant.outputs.all {
-//                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
-//                }
-//            }
-//            ext.betaDistributionReleaseNotesFilePath = "app/beta_release_notes.txt"
-//            ext.betaDistributionGroupAliases = "internal-testing"
-//            ext.betaDistributionNotifications = true
+            applicationIdSuffix ".beta"
+            signingConfig signingConfigs.binkSigningConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "Bink_${android.defaultConfig.versionName}_${variant.buildType.name}.apk"
+                }
+            }
+            ext.betaDistributionReleaseNotesFilePath = "app/beta_release_notes.txt"
+            ext.betaDistributionGroupAliases = "internal-testing"
+            ext.betaDistributionNotifications = true
         }
         gamma {
             applicationIdSuffix ".gamma"
