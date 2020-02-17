@@ -99,7 +99,11 @@ object MembershipPlanUtils {
                         return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
                     }
                     FAILED.status -> {
-                        return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
+                        return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
+                            LinkStatus.STATUS_NO_REASON_CODES
+                        } else {
+                            return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
+                        }
                     }
                 }
             }
@@ -108,11 +112,7 @@ object MembershipPlanUtils {
                 return LinkStatus.STATUS_UNLINKABLE
             }
         }
-        return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
-            LinkStatus.STATUS_NO_REASON_CODES
-        } else {
-            LinkStatus.STATUS_UNLINKABLE
-        }
+        return LinkStatus.STATUS_UNLINKABLE
     }
 
     private fun existLinkedPaymentCards(membershipCard: MembershipCard): Boolean {
