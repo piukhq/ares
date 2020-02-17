@@ -1,3 +1,0 @@
-/Users/connormcfadden/Documents/Bink/Android/binkapp/app/.cxx/cmake/beta/x86/CMakeFiles/rebuild_cache.dir
-/Users/connormcfadden/Documents/Bink/Android/binkapp/app/.cxx/cmake/beta/x86/CMakeFiles/edit_cache.dir
-/Users/connormcfadden/Documents/Bink/Android/binkapp/app/.cxx/cmake/beta/x86/CMakeFiles/spreedly-lib.dir
