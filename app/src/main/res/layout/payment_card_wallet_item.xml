@@ -8,6 +8,10 @@
         <variable
                 name="paymentCard"
                 type="com.bink.wallet.model.response.payment_card.PaymentCard" />
+
+        <variable
+                name="membershipCardsWrapper"
+                type="com.bink.wallet.model.MembershipCardListWrapper" />
     </data>
 
     <LinearLayout
@@ -174,7 +178,8 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@+id/image_status"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:linkedStatus="@{paymentCard}" />
+                                app:linkStatusMembershipCards="@{membershipCardsWrapper}"
+                                app:linkedStatusPaymentCard="@{paymentCard}" />
 
                         <ImageView
                                 android:id="@+id/image_status"
@@ -182,7 +187,8 @@
                                 android:layout_height="@dimen/link_icon_size"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:linkedStatus="@{paymentCard}"
+                                app:linkStatusMembershipCards="@{membershipCardsWrapper}"
+                                app:linkedStatusPaymentCard="@{paymentCard}"
                                 tools:ignore="ContentDescription" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -15,6 +15,7 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.LoyaltyWalletItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
@@ -37,6 +38,8 @@ class LoyaltyWalletAdapter(
     }
 
     var membershipPlans = ArrayList<MembershipPlan>()
+
+    var paymentCards: MutableList<PaymentCard>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
@@ -163,9 +166,10 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
                 val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
-                val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan)
-
-                bindCardToLoyaltyItem(loyaltyItem, binding)
+                paymentCards?.let {
+                    val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan, it)
+                    bindCardToLoyaltyItem(loyaltyItem, binding)
+                }
                 bindVouchersToDisplay(cardBinding, currentMembershipPlan, item)
             }
             with(cardBinding.cardView) {
