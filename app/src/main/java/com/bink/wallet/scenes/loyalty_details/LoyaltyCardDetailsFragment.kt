@@ -17,12 +17,8 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.LinkStatus
-import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.VoucherStates
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -55,8 +51,6 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
-
-        setLoadingState(true)
 
         fetchData()
 
@@ -530,7 +524,7 @@ class LoyaltyCardDetailsFragment :
                                 LoyaltyCardDetailsFragmentDirections.detailToPll(
                                     membershipCard, membershipPlan, false
                                 )
-                        }
+                            }
                         directions?.let { _ ->
                             findNavController().navigateIfAdded(
                                 this,
