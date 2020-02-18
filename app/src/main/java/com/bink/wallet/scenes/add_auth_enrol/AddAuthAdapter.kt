@@ -210,13 +210,15 @@ class AddAuthAdapter(
         override fun bind(item: Pair<Any, PlanFieldsRequest>) {
 
             with(binding.contentAddAuthSwitch) {
-                isChecked = if (brands[adapterPosition].second.value == true.toString()) {
-                    true
-                } else {
-                    if (brands[adapterPosition].second.value.isNullOrBlank()) {
-                        brands[adapterPosition].second.value = false.toString()
+                brands[adapterPosition].second.apply {
+                    isChecked = if (this.value == true.toString()) {
+                        true
+                    } else {
+                        if (this.value.isNullOrBlank()) {
+                            this.value = false.toString()
+                        }
+                        false
                     }
-                    false
                 }
 
                 when (item.first) {
