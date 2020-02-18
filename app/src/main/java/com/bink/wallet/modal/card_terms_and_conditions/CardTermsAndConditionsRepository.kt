@@ -16,6 +16,7 @@ import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.RELEASE_BUILD_TYPE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,11 +42,16 @@ class CardTermsAndConditionsRepository(
         // However, for this to work we'd have to add the same class across all buildTypes
         // and remove the class from /main. Which seems massively overkill - if anything ever
         // changes, we'll have to remember to update across the project.
-        if (BuildConfig.BUILD_TYPE == "release") {
+        if (BuildConfig.BUILD_TYPE == RELEASE_BUILD_TYPE) {
             val spreedlyEnvironmentKey = LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_SPREEDLY
             )?.let {
                 it
+            }
+
+            if (spreedlyEnvironmentKey == null) {
+                error.value = Throwable("Spreedly Environment Key Missing")
+                return
             }
 
             val spreedlyCreditCard = SpreedlyCreditCard(
@@ -59,18 +65,17 @@ class CardTermsAndConditionsRepository(
             CoroutineScope(Dispatchers.IO).launch {
                 val spreedlyRequest = spreedlyApiService.postPaymentCardToSpreedly(
                     spreedlyPaymentCard,
-                    spreedlyEnvironmentKey!!
+                    spreedlyEnvironmentKey
                 )
                 withContext(Dispatchers.Main) {
                     try {
                         val response = spreedlyRequest.await()
-                        card.card.token = response.transaction.payment_method.token
-                        card.card.fingerprint = response.transaction.payment_method.fingerprint
-                        card.card.first_six_digits =
-                            response.transaction.payment_method.first_six_digits
-                        card.card.last_four_digits =
-                            response.transaction.payment_method.last_four_digits
-
+                        card.card.apply {
+                            this.token = response.transaction.payment_method.token
+                            this.fingerprint = response.transaction.payment_method.fingerprint
+                            this.first_six_digits = response.transaction.payment_method.first_six_digits
+                            this.last_four_digits = response.transaction.payment_method.last_four_digits
+                        }
                         doAddPaymentCard(card, mutableAddCard, error)
                     } catch (e: Throwable) {
                         error.value = e
