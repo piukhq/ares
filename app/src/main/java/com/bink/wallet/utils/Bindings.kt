@@ -396,12 +396,14 @@ fun ImageView.setLinkedStatus(
     membershipCards: MembershipCardListWrapper
 ) {
     setImageResource(
-        when (PaymentCardUtils.existLinkedMembershipCards(
-            paymentCard,
-            membershipCards.membershipCards
-        )) {
-            true -> R.drawable.ic_linked
-            false -> R.drawable.ic_unlinked
+        if (PaymentCardUtils.existLinkedMembershipCards(
+                paymentCard,
+                membershipCards.membershipCards
+            )
+        ) {
+            R.drawable.ic_linked
+        } else {
+            R.drawable.ic_unlinked
         }
     )
 }
