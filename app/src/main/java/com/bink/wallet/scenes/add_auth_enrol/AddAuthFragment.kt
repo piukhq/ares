@@ -26,25 +26,36 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
-    override val layoutRes: Int
-        get() = R.layout.add_auth_fragment
-    override val viewModel: AddAuthViewModel by viewModel()
-    private val args: AddAuthFragmentArgs by navArgs()
-    private var isPaymentWalletEmpty: Boolean? = null
-    private var isRetryJourney = false
-    private var membershipCardId: String? = null
-    private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> = mutableListOf()
-    private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> = mutableListOf()
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .build()
     }
 
+    override val layoutRes: Int
+        get() = R.layout.add_auth_fragment
+
+    private val args: AddAuthFragmentArgs by navArgs()
+
+    override val viewModel: AddAuthViewModel by viewModel()
+
     override fun onResume() {
         super.onResume()
         windowFullscreenHandler.toFullscreen()
     }
+
+    private var isPaymentWalletEmpty: Boolean? = null
+
+    private var isRetryJourney = false
+
+    private var isFromNoReasonCodes = false
+
+    private var membershipCardId: String? = null
+
+    private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
+        mutableListOf()
+
+    private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
+        mutableListOf()
 
     private fun addFieldToList(planField: Any) {
         when (planField) {
@@ -101,9 +112,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
             this@AddAuthFragment.isRetryJourney = isRetryJourney
+            this@AddAuthFragment.isFromNoReasonCodes = isFromNoReasonCodes
         }
 
-        if (isRetryJourney) {
+        if (isRetryJourney && !isFromNoReasonCodes) {
             binding.noAccountText.visibility = View.GONE
         }
 
