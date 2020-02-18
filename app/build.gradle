@@ -15,10 +15,8 @@ def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
 
-    ndkVersion "21.0.6113669"
     externalNativeBuild {
         cmake {
-            version "3.10.2"
             path file('src/main/cpp/CMakeLists.txt')
         }
     }
