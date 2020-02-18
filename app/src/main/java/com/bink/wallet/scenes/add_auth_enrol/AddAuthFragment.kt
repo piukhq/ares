@@ -16,6 +16,7 @@ import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
@@ -28,10 +29,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .build()
-    }
-
-    companion object {
-        const val BARCODE_TEXT = "Barcode"
     }
 
     override val layoutRes: Int
@@ -50,8 +47,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isRetryJourney = false
 
-    private var isFailedJourney = false
-
     private var membershipCardId: String? = null
 
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
@@ -61,29 +56,50 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         mutableListOf()
 
     private fun addFieldToList(planField: Any) {
-        if (planField is PlanFields) {
-            val pairPlanField = Pair(
-                planField, PlanFieldsRequest(
-                    planField.column, EMPTY_STRING
-                )
-            )
-            if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-                planBooleanFieldsList.add(
-                    pairPlanField
-                )
-            } else if (!planField.column.equals(BARCODE_TEXT))
-                planFieldsList.add(
-                    pairPlanField
-                )
-        }
-        if (planField is PlanDocuments) {
-            planBooleanFieldsList.add(
-                Pair(
+        when (planField) {
+            is PlanFields -> {
+                val pairPlanField = Pair(
                     planField, PlanFieldsRequest(
-                        planField.name, EMPTY_STRING
+                        planField.column, EMPTY_STRING
                     )
                 )
-            )
+
+                viewModel.currentMembershipPlan.value?.has_vouchers?.let {
+                    if (it) {
+                        if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
+                            val email =
+                                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                                    ?.let {
+                                        it
+                                    }
+                            with(pairPlanField) {
+                                second.disabled = true
+                                second.value = email
+                            }
+                        }
+                    }
+                }
+
+                if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+                    planBooleanFieldsList.add(
+                        pairPlanField
+                    )
+                } else if (!planField.column.equals(BARCODE_TEXT)) {
+                    planFieldsList.add(
+                        pairPlanField
+                    )
+                }
+            }
+
+            is PlanDocuments -> {
+                planBooleanFieldsList.add(
+                    Pair(
+                        planField, PlanFieldsRequest(
+                            planField.name, EMPTY_STRING
+                        )
+                    )
+                )
+            }
         }
     }
 
@@ -93,8 +109,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         with(args) {
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
-            this@AddAuthFragment.isFailedJourney = isFailedJourney
             this@AddAuthFragment.isRetryJourney = isRetryJourney
+        }
+
+        if (isRetryJourney) {
+            binding.noAccountText.visibility = View.GONE
         }
 
         planFieldsList.clear()
@@ -159,7 +178,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             SignUpFormType.ADD_AUTH -> {
                 viewModel.currentMembershipPlan.value?.let {
                     with(it) {
-                        if (isFailedJourney) {
+                        if (isRetryJourney) {
                             with(binding) {
                                 titleAddAuthText.text = getString(R.string.log_in_text)
                                 addCardButton.text = getString(R.string.log_in_text)
@@ -182,7 +201,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                         )
                                 }
                             }
-                            binding.noAccountText.visibility = View.GONE
                         } else {
                             with(binding) {
                                 titleAddAuthText.text = getString(R.string.enter_credentials)
@@ -218,6 +236,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
             SignUpFormType.ENROL -> {
                 with(binding) {
+                    noAccountText.visibility = View.GONE
                     titleAddAuthText.text = getString(R.string.sign_up_enrol)
                     addCardButton.text = getString(R.string.sign_up_text)
                     descriptionAddAuth.text = getString(
@@ -228,7 +247,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         it.typeOfField = TypeOfField.ENROL
                         addFieldToList(it)
                     }
-                    noAccountText.visibility = View.GONE
                 }
 
                 viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
@@ -239,6 +257,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             }
             SignUpFormType.GHOST -> {
+                binding.noAccountText.visibility = View.GONE
                 binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
                 binding.addCardButton.text = getString(R.string.register_ghost_card_button)
                 viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
@@ -257,7 +276,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
 
-                binding.noAccountText.visibility = View.GONE
             }
         }
 
@@ -272,8 +290,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         AddAuthFragmentDirections.toGhost(
                             SignUpFormType.GHOST,
                             it,
-                            isRetryJourney,
-                            false
+                            isRetryJourney
                         )
                     )
                 }
@@ -348,9 +365,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             }
                         }
                     }
-
                     binding.addCardButton.isEnabled = true
-
                 }
             )
         }
@@ -378,8 +393,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.addCardButton.setOnClickListener {
             if (viewModel.createCardError.value == null) {
                 if (isNetworkAvailable(requireActivity(), true)) {
-                    addRegisterFieldsRequest.plan_documents?.map {
-                        if (it.value != "true") {
+                    addRegisterFieldsRequest.plan_documents?.map { plan ->
+                        var required = true
+                        planBooleanFieldsList.map { field ->
+                            if (field.second.column == plan.column) {
+                                (field.first as PlanDocuments).checkbox?.let { hasCheckbox ->
+                                    if (!hasCheckbox) {
+                                        required = false
+                                    }
+                                }
+                            }
+                        }
+                        if (required && plan.value != true.toString()) {
                             requireContext().displayModalPopup(
                                 EMPTY_STRING,
                                 getString(R.string.required_fields)
@@ -395,7 +420,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     it.second.value
                                 )
                             ) {
-                                context?.displayModalPopup(
+                                requireContext().displayModalPopup(
                                     null,
                                     getString(R.string.all_fields_must_be_valid)
                                 )
@@ -502,23 +527,23 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
                 CardType.VIEW.type, CardType.STORE.type -> {
-                    if (signUpFormType == SignUpFormType.GHOST) {
-                        viewModel.currentMembershipPlan.value?.let {
-                            findNavController().navigateIfAdded(
-                                this,
-                                AddAuthFragmentDirections.signUpToDetails(
-                                    viewModel.currentMembershipPlan.value!!,
-                                    membershipCard
-                                )
+                    viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.signUpToDetails(
+                                membershipPlan,
+                                membershipCard
                             )
-                        }
+                        )
                     }
                 }
                 CardType.PLL.type -> {
                     if (signUpFormType == SignUpFormType.GHOST) {
                         handlePllGhost(membershipCard)
                     } else {
-                        handlePll(membershipCard)
+                        viewModel.paymentCards.value?.let { paymentCards ->
+                            handlePll(membershipCard, paymentCards)
+                        }
                     }
                 }
             }
@@ -541,9 +566,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
     }
 
-    private fun handlePll(membershipCard: MembershipCard) {
+    private fun handlePll(membershipCard: MembershipCard, paymentCards: List<PaymentCard>) {
         viewModel.currentMembershipPlan.value?.let { membershipPlan ->
-            if (membershipCard.payment_cards.isNullOrEmpty()) {
+            if (paymentCards.isNullOrEmpty()) {
                 findNavController().navigateIfAdded(
                     this,
                     AddAuthFragmentDirections.signUpToPllEmpty(
@@ -566,8 +591,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private fun hideLoadingViews() {
-        binding.progressSpinner.visibility = View.GONE
-        viewModel.createCardError.value = null
-        binding.addCardButton.isEnabled = true
+        with (binding) {
+            progressSpinner.visibility = View.GONE
+            viewModel.createCardError.value = null
+            addCardButton.isEnabled = true
+        }
+    }
+
+    companion object {
+        private const val BARCODE_TEXT = "Barcode"
     }
 }

@@ -46,14 +46,11 @@ class PaymentCardsDetailsFragment :
 
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
-
             with(viewModel) {
                 paymentCard.value = currentBundle.paymentCard
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
             }
-
-            viewModel.getPaymentCard(currentBundle.paymentCard.id.toString())
         }
 
         binding.paymentCardDetail = viewModel.paymentCard.value
@@ -140,8 +137,7 @@ class PaymentCardsDetailsFragment :
                                         it,
                                         null,
                                         true,
-                                        isRetryJourney = false,
-                                        isFailedJourney = false
+                                        isRetryJourney = false
                                     )
                                 findNavController().navigateIfAdded(
                                     this@PaymentCardsDetailsFragment,

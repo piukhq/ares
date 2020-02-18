@@ -37,6 +37,7 @@ const val FLOAT_ZERO = 0f
 const val FLOAT_ONE_HUNDRED = 100f
 const val INT_ZERO = 0
 const val INT_ONE_HUNDRED = 100
+const val LONG_ZERO = 0L
 
 const val PREFERENCE_MARKETING_SLUG = "marketing-bink"
 

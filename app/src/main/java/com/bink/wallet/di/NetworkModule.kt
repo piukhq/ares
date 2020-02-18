@@ -2,6 +2,7 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.bink.wallet.MainActivity
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
@@ -38,11 +39,14 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         )?.let {
             it
         }
-
+        jwtToken?.let {
+            Log.d("NetworkModule", jwtToken)
+        }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json;v=1.1")
-            .header("Authorization", jwtToken ?: EMPTY_STRING).url(request)
+            .header("Authorization", jwtToken ?: EMPTY_STRING)
+            .url(request)
             .build()
         val response = chain.proceed(newRequest)
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {

@@ -58,14 +58,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
                     replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-                    if (viewModel.membershipCardData.value != null &&
-                        viewModel.membershipPlanData.value != null
-                    ) {
-                        loyaltyWalletsFragment.setData(
-                            viewModel.membershipCardData.value!!,
-                            viewModel.membershipPlanData.value!!
-                        )
-                    }
                 }
                 R.id.add_menu_item -> {
                     viewModel.membershipPlanData.value?.let {
@@ -101,9 +93,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
-                if (SharedPreferenceManager.isLoyaltySelected) {
-                    loyaltyWalletsFragment.setData(cards, plans)
-                } else {
+                if (!SharedPreferenceManager.isLoyaltySelected) {
                     paymentCardWalletFragment.setData(cards, plans)
                 }
             }

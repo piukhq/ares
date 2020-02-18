@@ -22,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CardTermsAndConditionsRepository(
+class AddPaymentCardRepository(
     private val apiService: ApiService,
     private val spreedlyApiService: ApiSpreedly,
     private val paymentCardDao: PaymentCardDao,
@@ -93,7 +93,7 @@ class CardTermsAndConditionsRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.d(CardTermsAndConditionsRepository::class.simpleName, e.toString())
+                    Log.d(AddPaymentCardRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -106,7 +106,7 @@ class CardTermsAndConditionsRepository(
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
-                    Log.d(CardTermsAndConditionsRepository::class.simpleName, e.toString())
+                    Log.d(AddPaymentCardRepository::class.simpleName, e.toString())
                 }
             }
         }

@@ -40,10 +40,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             }
         }
 
-        if (UtilFunctions.isNetworkAvailable(requireContext())) {
-            viewModel.fetchLocalMembershipCards()
-            viewModel.fetchLocalMembershipPlans()
-        }
+        viewModel.fetchLocalMembershipCards()
+        viewModel.fetchLocalMembershipPlans()
 
         viewModel.paymentCard.observeNonNull(this) { paymentCard ->
             viewModel.localMembershipPlanData.value?.let { plans ->

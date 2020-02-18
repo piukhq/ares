@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.databinding.CardItemBinding
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.BannerDisplay
@@ -15,6 +16,8 @@ import com.bink.wallet.model.LoyaltyWalletItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.utils.displayVoucherEarnAndTarget
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -163,16 +166,47 @@ class LoyaltyWalletAdapter(
                 val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan)
 
                 bindCardToLoyaltyItem(loyaltyItem, binding)
-
-                with(cardBinding) {
-                    plan = currentMembershipPlan
-                    item.plan = plan
-                    mainLayout.setOnClickListener { onClickListener(item) }
-                }
+                bindVouchersToDisplay(cardBinding, currentMembershipPlan, item)
             }
             with(cardBinding.cardView) {
                 setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
                 setSecondColor(Color.parseColor(item.card?.colour))
+            }
+        }
+
+        private fun LoyaltyWalletAdapter.bindVouchersToDisplay(
+            cardBinding: CardItemBinding,
+            currentMembershipPlan: MembershipPlan,
+            item: MembershipCard
+        ) {
+            with(cardBinding) {
+                plan = currentMembershipPlan
+                item.plan = plan
+                mainLayout.setOnClickListener { onClickListener(item) }
+
+                if (item.status?.state == MembershipCardStatus.AUTHORISED.status) {
+                    cardLogin.visibility = View.GONE
+                    valueWrapper.visibility = View.VISIBLE
+                    if (!item.vouchers.isNullOrEmpty()) {
+                        item.vouchers?.first()?.let { voucher ->
+                            loyaltyValue.text =
+                                root.context.displayVoucherEarnAndTarget(voucher)
+                            loyaltyValueExtra.text =
+                                root.context.getString(R.string.until_next_reward)
+                        }
+                    } else if (!item.balances.isNullOrEmpty()) {
+                        val balance = item.balances?.first()
+                        when (balance?.prefix != null) {
+                            true ->
+                                loyaltyValue.text =
+                                    balance?.prefix?.plus(balance.value)
+                            else -> {
+                                loyaltyValue.text = balance?.value
+                                loyaltyValueExtra.text = balance?.suffix
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -211,7 +245,6 @@ class LoyaltyWalletAdapter(
                     } else {
                         linkStatusImg.visibility = View.GONE
                     }
-
                 }
             }
         }
