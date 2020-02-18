@@ -29,10 +29,12 @@ class AddAuthAdapter(
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private var finalTextField: String = ""
+
     init {
         brands.map { pair ->
             if (pair.first is PlanFields &&
-                (pair.first as PlanFields).type == FieldType.TEXT.type) {
+                (pair.first as PlanFields).type == FieldType.TEXT.type
+            ) {
                 (pair.first as PlanFields).column?.let { column ->
                     finalTextField = column
                 }
@@ -73,8 +75,7 @@ class AddAuthAdapter(
             if (this is PlanFields && type != null) {
                 return type
             } else if (this is PlanDocuments) {
-                return if (this.checkbox == null ||
-                           this.checkbox) {
+                return if (this.checkbox == null || this.checkbox) {
                     FieldType.BOOLEAN_REQUIRED.type
                 } else {
                     FieldType.DISPLAY.type
@@ -209,9 +210,13 @@ class AddAuthAdapter(
         override fun bind(item: Pair<Any, PlanFieldsRequest>) {
 
             with(binding.contentAddAuthSwitch) {
-                isChecked = when (brands[adapterPosition].second.value) {
-                    true.toString() -> true
-                    else -> false
+                isChecked = if (brands[adapterPosition].second.value == true.toString()) {
+                    true
+                } else {
+                    if (brands[adapterPosition].second.value.isNullOrBlank()) {
+                        brands[adapterPosition].second.value = false.toString()
+                    }
+                    false
                 }
 
                 when (item.first) {
