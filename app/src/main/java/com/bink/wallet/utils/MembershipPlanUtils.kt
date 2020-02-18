@@ -102,7 +102,7 @@ object MembershipPlanUtils {
                         return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
                             LinkStatus.STATUS_NO_REASON_CODES
                         } else {
-                            return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
+                            LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
                         }
                     }
                 }
