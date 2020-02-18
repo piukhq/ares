@@ -29,10 +29,9 @@ class LoyaltyViewModel constructor(
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
+    private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
     val localPaymentCards: LiveData<List<PaymentCard>>
         get() = _localPaymentCards
-    private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
-
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
     private val _addError = MutableLiveData<Throwable>()
     val addError: LiveData<Throwable>

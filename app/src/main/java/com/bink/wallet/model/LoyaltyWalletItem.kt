@@ -46,12 +46,10 @@ class LoyaltyWalletItem(
 
     fun retrieveLinkImage(): Int? {
         if (shouldShowLinkStatus()) {
-            MembershipPlanUtils.existLinkedPaymentCards(membershipCard, paymentCards).apply {
-                return if (this) {
-                    R.drawable.ic_linked
-                } else {
-                    R.drawable.ic_icons_unlinked
-                }
+            return if (MembershipPlanUtils.existLinkedPaymentCards(membershipCard, paymentCards)) {
+                R.drawable.ic_linked
+            } else {
+                R.drawable.ic_icons_unlinked
             }
         }
         return null
@@ -69,13 +67,16 @@ class LoyaltyWalletItem(
                     return R.string.card_status_pending
                 }
                 shouldShowLinkStatus() -> {
-                    MembershipPlanUtils.existLinkedPaymentCards(membershipCard, paymentCards).apply {
-                        return if (this) {
-                            R.string.loyalty_card_pll_linked
-                        } else {
-                            R.string.loyalty_card_pll_link_now
-                        }
+                    return if (MembershipPlanUtils.existLinkedPaymentCards(
+                            membershipCard,
+                            paymentCards
+                        )
+                    ) {
+                        R.string.loyalty_card_pll_linked
+                    } else {
+                        R.string.loyalty_card_pll_link_now
                     }
+
                 }
             }
         }
