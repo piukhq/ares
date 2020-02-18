@@ -110,7 +110,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.addJoinReward.setOnClickListener {
             currentMembershipPlan?.let {
-                it.account?.plan_description?.let { planDescription ->
+                if (it.account?.plan_description != null) {
                     findNavController().navigateIfAdded(
                         this,
                         AddJoinFragmentDirections.addJoinToBrandHeader(
@@ -119,10 +119,23 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                 true,
                                 it.account.plan_name
                                     ?: getString(R.string.plan_description),
-                                planDescription
+                                it.account.plan_description
                             )
                         )
                     )
+                } else if (it.account?.plan_name_card != null) {
+                    it.account.plan_name?.let { planName ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddJoinFragmentDirections.addJoinToBrandHeader(
+                                GenericModalParameters(
+                                    R.drawable.ic_close,
+                                    true,
+                                    planName
+                                )
+                            )
+                        )
+                    }
                 }
             }
         }
