@@ -47,8 +47,15 @@ val viewModelModules = module {
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { LoginViewModel(get()) }
 
-    single { provideLoyaltyCardRepository(get(NetworkQualifiers.BinkApiInterface), get(), get(), get()) }
-    viewModel { LoyaltyViewModel(get()) }
+    single {
+        provideLoyaltyCardRepository(
+            get(NetworkQualifiers.BinkApiInterface),
+            get(),
+            get(),
+            get()
+        )
+    }
+    viewModel { LoyaltyViewModel(get(), get()) }
 
     viewModel { AddAuthViewModel(get()) }
 
@@ -62,7 +69,13 @@ val viewModelModules = module {
 
     viewModel { AddJoinRequestPaymentCardViewModel() }
 
-    single { provideLoyaltyCardDetailsRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
+    single {
+        provideLoyaltyCardDetailsRepository(
+            get(NetworkQualifiers.BinkApiInterface),
+            get(),
+            get()
+        )
+    }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
     viewModel { VoucherDetailsViewModel() }

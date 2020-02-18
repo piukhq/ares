@@ -164,7 +164,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     }
 
                     if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
-                        findNavController().popBackStack()
+                        navigateToLCD()
                     }
                 }
             }

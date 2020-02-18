@@ -47,6 +47,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private var isRetryJourney = false
 
+    private var isFromNoReasonCodes = false
+
     private var membershipCardId: String? = null
 
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
@@ -110,9 +112,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
             this@AddAuthFragment.isRetryJourney = isRetryJourney
+            this@AddAuthFragment.isFromNoReasonCodes = isFromNoReasonCodes
         }
 
-        if (isRetryJourney) {
+        if (isRetryJourney && !isFromNoReasonCodes) {
             binding.noAccountText.visibility = View.GONE
         }
 
@@ -225,8 +228,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 addFieldToList(planFields)
                             }
                             account.plan_documents?.map { planDocuments ->
-                                if (planDocuments.display?.contains(SignUpFormType.ADD_AUTH.type)!!) {
-                                    addFieldToList(planDocuments)
+                                planDocuments.display?.let { display ->
+                                    if (display.contains(SignUpFormType.ADD_AUTH.type)) {
+                                        addFieldToList(planDocuments)
+                                    }
                                 }
                             }
                         }
@@ -243,15 +248,17 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         R.string.enrol_description,
                         viewModel.currentMembershipPlan.value?.account?.plan_name_card
                     )
-                    viewModel.currentMembershipPlan.value!!.account?.enrol_fields?.map {
+                    viewModel.currentMembershipPlan.value?.account?.enrol_fields?.map {
                         it.typeOfField = TypeOfField.ENROL
                         addFieldToList(it)
                     }
                 }
 
-                viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
-                    if (it.display?.contains(SignUpFormType.ENROL.type)!!) {
-                        addFieldToList(it)
+                viewModel.currentMembershipPlan.value?.account?.plan_documents?.map {
+                    it.display?.let { display ->
+                        if (display.contains(SignUpFormType.ENROL.type)) {
+                            addFieldToList(it)
+                        }
                     }
                 }
 
@@ -260,53 +267,56 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 binding.noAccountText.visibility = View.GONE
                 binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
                 binding.addCardButton.text = getString(R.string.register_ghost_card_button)
-                viewModel.currentMembershipPlan.value!!.account?.add_fields?.map {
+                viewModel.currentMembershipPlan.value?.account?.add_fields?.map {
                     it.typeOfField = TypeOfField.ADD
                     addFieldToList(it)
                 }
 
-                viewModel.currentMembershipPlan.value!!.account?.registration_fields?.map {
+                viewModel.currentMembershipPlan.value?.account?.registration_fields?.map {
                     it.typeOfField = TypeOfField.REGISTRATION
                     addFieldToList(it)
                 }
 
-                viewModel.currentMembershipPlan.value!!.account?.plan_documents?.map {
-                    if (it.display?.contains(SignUpFormType.GHOST.type)!!) {
-                        addFieldToList(it)
+                viewModel.currentMembershipPlan.value?.account?.plan_documents?.map {
+                    it.display?.let { display ->
+                        if (display.contains(SignUpFormType.GHOST.type)) {
+                            addFieldToList(it)
+                        }
                     }
+
                 }
 
             }
         }
 
         binding.noAccountText.setOnClickListener {
-            if (viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.contains(
-                    TypeOfField.REGISTRATION.name
-                )!!
-            ) {
-                viewModel.currentMembershipPlan.value?.let {
+            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
+                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
+                ) {
+                    viewModel.currentMembershipPlan.value?.let {
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.toGhost(
+                                SignUpFormType.GHOST,
+                                it,
+                                isRetryJourney
+                            )
+                        )
+                    }
+                } else {
                     findNavController().navigateIfAdded(
                         this,
-                        AddAuthFragmentDirections.toGhost(
-                            SignUpFormType.GHOST,
-                            it,
-                            isRetryJourney
+                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                true,
+                                getString(R.string.title_ghost_card_not_available),
+                                getString(R.string.description_ghost_card_not_available)
+                            )
                         )
                     )
-                }
-            } else {
-                findNavController().navigateIfAdded(
-                    this,
-                    AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            getString(R.string.title_ghost_card_not_available),
-                            getString(R.string.description_ghost_card_not_available)
-                        )
-                    )
-                )
 
+                }
             }
         }
 
@@ -349,7 +359,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
 
                     planFieldsList.map {
-                        if (it.first is PlanFields) {
+                        val item = it.first
+                        if (item is PlanFields && item.type != FieldType.BOOLEAN_OPTIONAL.type) {
                             if (it.second.value.isNullOrEmpty()) {
                                 binding.addCardButton.isEnabled = false
                                 return@AddAuthAdapter
@@ -517,7 +528,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         addRegisterFieldsRequest.registration_fields,
                         null
                     ),
-                    viewModel.currentMembershipPlan.value!!.id
+                    viewModel.currentMembershipPlan.value?.id
                 )
                 viewModel.ghostMembershipCard(
                     membershipCard,
@@ -591,7 +602,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private fun hideLoadingViews() {
-        with (binding) {
+        with(binding) {
             progressSpinner.visibility = View.GONE
             viewModel.createCardError.value = null
             addCardButton.isEnabled = true

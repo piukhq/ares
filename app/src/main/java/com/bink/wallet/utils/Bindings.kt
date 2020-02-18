@@ -15,6 +15,7 @@ import androidx.databinding.BindingAdapter
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
+import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -262,7 +263,7 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
     if (transaction.timestamp != null &&
         transaction.description != null
     ) {
-        with (this) {
+        with(this) {
             visibility = View.VISIBLE
             text =
                 "${dateFormatTransactionTime(transaction.timestamp)}, ${transaction.description}"
@@ -273,13 +274,15 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
 fun TextView.setTimestamp(timeStamp: Long) {
     this.text = dateFormatTransactionTime(timeStamp)
 }
+
 @BindingAdapter("transactionTime", "format", "shortMonth")
 fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Boolean = false) {
-    with (this) {
+    with(this) {
         visibility = View.VISIBLE
         text = String.format(format, dateFormatTransactionTime(timeStamp, shortMonth))
     }
 }
+
 private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
     DateFormat.format(getDateFormat(shortMonth), timeStamp * 1000).toString()
 
@@ -293,11 +296,12 @@ private fun getDateFormat(shortMonth: Boolean): String {
 
 @BindingAdapter("transactionTime", "format")
 fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
-    with (this) {
+    with(this) {
         visibility = View.VISIBLE
         text = String.format(format, dateTimeFormatTransactionTime(timeStamp))
     }
 }
+
 private fun dateTimeFormatTransactionTime(timeStamp: Long) =
     DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
 
@@ -369,6 +373,7 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
         else -> text = this.context.getString(R.string.empty_string)
     }
 }
+
 fun TextView.textAndShow(string: String?) {
     string?.let {
         with(this) {
@@ -385,35 +390,45 @@ fun ConstraintLayout.setBackgroundGradient(paymentCard: PaymentCard) {
     }
 }
 
-@BindingAdapter("linkedStatus")
-fun ImageView.setLinkedStatus(paymentCard: PaymentCard) {
+@BindingAdapter("linkedStatusPaymentCard", "linkStatusMembershipCards", requireAll = true)
+fun ImageView.setLinkedStatus(
+    paymentCard: PaymentCard,
+    membershipCards: MembershipCardListWrapper
+) {
     setImageResource(
-        when (!paymentCard.membership_cards.isNullOrEmpty() &&
-                paymentCard.membership_cards.any { it.active_link == true }) {
-            true -> R.drawable.ic_linked
-            false -> R.drawable.ic_unlinked
+        if (PaymentCardUtils.existLinkedMembershipCards(
+                paymentCard,
+                membershipCards.membershipCards
+            )
+        ) {
+            R.drawable.ic_linked
+        } else {
+            R.drawable.ic_unlinked
         }
     )
 }
 
-@BindingAdapter("linkedStatus")
-fun TextView.setLinkedStatus(paymentCard: PaymentCard) {
-    text = when (!paymentCard.membership_cards.isNullOrEmpty() &&
-            paymentCard.membership_cards.any { it.active_link == true }) {
-        true -> {
-            val linkedCardsNumber =
-                paymentCard.membership_cards.filter { it.active_link == true }.size
+@BindingAdapter("linkedStatusPaymentCard", "linkStatusMembershipCards", requireAll = true)
+fun TextView.setLinkedStatus(paymentCard: PaymentCard, membershipCards: MembershipCardListWrapper) {
+    val linkedCardsNumber = PaymentCardUtils.countLinkedPaymentCards(
+        paymentCard,
+        membershipCards.membershipCards
+    )
 
-            context.getString(
-                when (linkedCardsNumber) {
-                    1 -> R.string.payment_card_linked_status
-                    else -> R.string.payment_cards_linked_status
-                },
-                linkedCardsNumber
-            )
-        }
-
-        false -> context.getString(R.string.payment_card_not_linked)
+    text = if (PaymentCardUtils.existLinkedMembershipCards(
+            paymentCard,
+            membershipCards.membershipCards
+        )
+    ) {
+        context.getString(
+            when (linkedCardsNumber) {
+                1 -> R.string.payment_card_linked_status
+                else -> R.string.payment_cards_linked_status
+            },
+            linkedCardsNumber
+        )
+    } else {
+        context.getString(R.string.payment_card_not_linked)
     }
 }
 
