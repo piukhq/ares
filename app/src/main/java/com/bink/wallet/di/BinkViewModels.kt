@@ -44,7 +44,7 @@ import org.koin.dsl.module
 val viewModelModules = module {
 
     single { provideLoginRepository(get(), get()) }
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
 
     single { provideLoyaltyCardRepository(get(), get(), get(), get()) }
     viewModel { LoyaltyViewModel(get(), get()) }
