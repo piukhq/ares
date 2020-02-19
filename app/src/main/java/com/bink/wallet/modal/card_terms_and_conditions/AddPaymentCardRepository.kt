@@ -31,7 +31,7 @@ class AddPaymentCardRepository(
 ) {
 
     private val spreedlyKeyMissingError = "Spreedly Environment Key Missing"
-    
+
     fun sendAddCard(
         card: PaymentCardAdd,
         cardNumber: String,
