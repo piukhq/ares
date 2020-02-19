@@ -137,4 +137,7 @@
     <dimen name="voucher_date_top">18dp</dimen>
     <dimen name="voucher_code_bottom">24dp</dimen>
     <dimen name="voucher_corner_radius">8dp</dimen>
+
+    <!-- LCD -->
+    <dimen name="root_elevation">5pd</dimen>
 </resources>
