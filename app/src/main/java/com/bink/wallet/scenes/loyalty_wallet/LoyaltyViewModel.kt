@@ -142,9 +142,9 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
     }
 
-    fun fetchMembershipPlans() {
+    fun fetchMembershipPlans(fromPersistence: Boolean) {
         viewModelScope.launch {
-            loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData, loadPlansError)
+            loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData, loadPlansError, fromPersistence)
         }
     }
 

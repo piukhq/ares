@@ -69,19 +69,24 @@ class LoyaltyWalletRepository(
 
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
-        loadPlansError: MutableLiveData<Throwable>
+        loadPlansError: MutableLiveData<Throwable>,
+        fromPersistence: Boolean
     ) {
-        val request = apiService.getMembershipPlansAsync()
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipPlans(response)
-                    mutableMembershipPlans.value = response.toMutableList()
-                } catch (e: java.lang.Exception) {
-                    loadPlansError.value = e
+        if (!fromPersistence) {
+            val request = apiService.getMembershipPlansAsync()
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        val response = request.await()
+                        storeMembershipPlans(response)
+                        mutableMembershipPlans.value = response.toMutableList()
+                    } catch (e: java.lang.Exception) {
+                        loadPlansError.value = e
+                    }
                 }
             }
+        } else {
+            getPersistedMembershipPlans(mutableMembershipPlans, loadPlansError)
         }
     }
 
@@ -276,6 +281,24 @@ class LoyaltyWalletRepository(
                     updateDone.value = true
                 } catch (exception: Exception) {
                     fetchError.value = exception
+                }
+            }
+        }
+    }
+
+    private fun getPersistedMembershipPlans(
+        mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
+        loadPlansError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val storedMembershipPlans =
+                        async(Dispatchers.IO) { membershipPlanDao.getAllAsync() }
+
+                    mutableMembershipPlans.value = storedMembershipPlans.await()
+                } catch (exception: Exception) {
+                    loadPlansError.value = exception
                 }
             }
         }

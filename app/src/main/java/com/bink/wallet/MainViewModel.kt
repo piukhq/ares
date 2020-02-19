@@ -11,10 +11,12 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         MutableLiveData()
     private val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
 
+    //todo test with no auth
+    //todo bind loyaltywallerfragment with this viewmodel, to keep the UI up to date
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData
+            membershipPlanErrorLiveData, false
         )
     }
 
