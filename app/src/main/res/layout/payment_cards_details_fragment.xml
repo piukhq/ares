@@ -177,6 +177,7 @@
                         android:layout_marginEnd="@dimen/margin_padding_size_medium"
                         android:text="@string/other_cards_you_can_add_description"
                         app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/other_cards_title" />
 
