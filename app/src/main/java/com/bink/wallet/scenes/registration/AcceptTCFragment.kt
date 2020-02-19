@@ -132,6 +132,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
         }
 
+        //todo get membership plans
         binding.accept.setOnClickListener {
             accessToken?.token?.let { token ->
                 accessToken?.userId?.let { userId ->

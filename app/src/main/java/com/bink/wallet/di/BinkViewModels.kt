@@ -92,7 +92,7 @@ val viewModelModules = module {
 
     viewModel { SettingsViewModel(get(), get(), get()) }
 
-    viewModel { SignUpViewModel(get()) }
+    viewModel { SignUpViewModel(get(), get()) }
 
     single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
     viewModel { CardTermsAndConditionsViewModel(get()) }

@@ -138,7 +138,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
 
             signUpResponse.observeNonNull(this@SignUpFragment) {
-                isLoading.value = false
                 runBlocking {
                     LocalStoreUtils.setAppSharedPref(
                         LocalStoreUtils.KEY_TOKEN,
@@ -156,10 +155,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     )
 
-                    findNavController().navigateIfAdded(
-                        this@SignUpFragment,
-                        R.id.global_to_home
-                    )
+                    viewModel.getMembershipPlans()
                 }
             }
         }
@@ -222,6 +218,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 }
             }
         }
+
+        initMembershipPlansObserver()
     }
 
     private fun buildHyperlinkSpanString(
@@ -239,6 +237,24 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         )
         textView.text = spannableString
         textView.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun initMembershipPlansObserver() {
+        viewModel.membershipPlanMutableLiveData.observeNonNull(this@SignUpFragment) {
+            viewModel.isLoading.value = false
+            finaliseAuthenticationFlow()
+        }
+
+        viewModel.membershipPlanErrorLiveData.observeNonNull(this@SignUpFragment) {
+            //todo what happens if theres an error
+        }
+    }
+
+    private fun finaliseAuthenticationFlow() {
+        findNavController().navigateIfAdded(
+            this@SignUpFragment,
+            R.id.global_to_home
+        )
     }
 
 }
