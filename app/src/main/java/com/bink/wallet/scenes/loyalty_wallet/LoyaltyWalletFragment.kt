@@ -124,7 +124,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
-
+        Log.e("ConnorDebug", "LoyaltyWalletFragment")
         fetchData()
 
         viewModel.deleteCard.observeNonNull(this) { id ->

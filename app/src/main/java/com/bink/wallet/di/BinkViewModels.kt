@@ -1,5 +1,6 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.MainViewModel
 import com.bink.wallet.data.*
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
@@ -105,6 +106,8 @@ val viewModelModules = module {
     viewModel { PreferencesViewModel(get()) }
 
     viewModel { OnboardingViewModel(get(), get()) }
+
+    viewModel { MainViewModel(get()) }
 }
 
 fun provideLoginRepository(

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -15,11 +16,14 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import io.fabric.sdk.android.Fabric
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
 
 
 class MainActivity : AppCompatActivity() {
+
+    val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +33,11 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+    }
+
+    override fun onResume() {
+        getMembershipPlans()
+        super.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -84,6 +93,10 @@ class MainActivity : AppCompatActivity() {
         val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         finish()
+    }
+
+    private fun getMembershipPlans() {
+        mainViewModel.getMembershipPlans()
     }
 }
 
