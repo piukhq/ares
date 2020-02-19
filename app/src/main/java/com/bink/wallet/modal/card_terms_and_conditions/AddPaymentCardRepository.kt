@@ -29,6 +29,9 @@ class AddPaymentCardRepository(
     private val membershipCardDao: MembershipCardDao,
     private val membershipPlanDao: MembershipPlanDao
 ) {
+
+    private val spreedlyKeyMissingError = "Spreedly Environment Key Missing"
+    
     fun sendAddCard(
         card: PaymentCardAdd,
         cardNumber: String,
@@ -50,7 +53,7 @@ class AddPaymentCardRepository(
             }
 
             if (spreedlyEnvironmentKey == null) {
-                error.value = Throwable("Spreedly Environment Key Missing")
+                error.value = Throwable(spreedlyKeyMissingError)
                 return
             }
 
@@ -71,10 +74,10 @@ class AddPaymentCardRepository(
                     try {
                         val response = spreedlyRequest.await()
                         card.card.apply {
-                            this.token = response.transaction.payment_method.token
-                            this.fingerprint = response.transaction.payment_method.fingerprint
-                            this.first_six_digits = response.transaction.payment_method.first_six_digits
-                            this.last_four_digits = response.transaction.payment_method.last_four_digits
+                            token = response.transaction.payment_method.token
+                            fingerprint = response.transaction.payment_method.fingerprint
+                            first_six_digits = response.transaction.payment_method.first_six_digits
+                            last_four_digits = response.transaction.payment_method.last_four_digits
                         }
                         doAddPaymentCard(card, mutableAddCard, error)
                     } catch (e: Throwable) {
