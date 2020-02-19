@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.browse_brands
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.BrandListItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -43,18 +44,40 @@ class BrowseBrandsAdapter(
             } else {
                 binding.sectionTitle.visibility = View.GONE
             }
-            binding.browseBrandsDescription.visibility =
-                if (item.second.getCardType() == CardType.PLL) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+
+            if (item.second.getCardType() == CardType.PLL) {
+                binding.browseBrandsDescription.visibility = View.VISIBLE
+            } else {
+                centerPlanTitlePosition()
+            }
+
             if (isLast) {
                 binding.separator.visibility = View.GONE
             }
 
             binding.item = item.second
             binding.executePendingBindings()
+        }
+
+        private fun centerPlanTitlePosition() {
+            binding.browseBrandsDescription.visibility = View.GONE
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayout)
+            constraintSet.connect(
+                binding.browseBrandsTitle.id,
+                ConstraintSet.BOTTOM,
+                binding.constraintLayout.id,
+                ConstraintSet.BOTTOM,
+                0
+            )
+            constraintSet.connect(
+                binding.browseBrandsTitle.id,
+                ConstraintSet.TOP,
+                binding.constraintLayout.id,
+                ConstraintSet.TOP,
+                0
+            )
+            constraintSet.applyTo(binding.constraintLayout)
         }
     }
 }

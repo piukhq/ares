@@ -12,6 +12,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -59,14 +60,14 @@
                     android:layout_marginStart="@dimen/margin_padding_size_small"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="@dimen/margin_padding_size_small"
+                    android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@{item.account.company_name}"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/size_sub_headline"
-                    android:fontFamily="@font/nunito_sans_extrabold"
-                    tools:text="Harvey Nichols"
                     app:layout_constraintEnd_toStartOf="@+id/brands_arrow"
                     app:layout_constraintStart_toEndOf="@+id/brand_logo"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Harvey Nichols" />
 
             <TextView
                     android:id="@+id/browse_brands_description"
