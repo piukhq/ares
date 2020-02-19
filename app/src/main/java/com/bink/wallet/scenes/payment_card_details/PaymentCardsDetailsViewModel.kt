@@ -41,7 +41,6 @@ class PaymentCardsDetailsViewModel(
 
      fun linkPaymentCard(cardId: String, paymentCardId: String) {
         updatePaymentCard(cardId)
-
         paymentWalletRepository.linkPaymentCard(
             cardId,
             paymentCardId,
@@ -66,10 +65,6 @@ class PaymentCardsDetailsViewModel(
 
     fun getMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
-    }
-
-    fun getPaymentCard(paymentCardId: String) {
-        paymentWalletRepository.getPaymentCard(paymentCardId, paymentCard)
     }
 
     private fun updatePaymentCard(cardId: String) {

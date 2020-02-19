@@ -7,16 +7,16 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 
-class CardTermsAndConditionsViewModel(private val repository: CardTermsAndConditionsRepository) :
+class CardTermsAndConditionsViewModel(private val repository: AddPaymentCardRepository) :
     BaseModalViewModel() {
     val paymentCard = MutableLiveData<PaymentCard>()
     val error = MutableLiveData<Throwable>()
     var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
-    fun sendAddCard(card: PaymentCardAdd) {
+    fun sendAddCard(card: PaymentCardAdd, cardNumber: String) {
         error.value = null
-        repository.sendAddCard(card, paymentCard, error)
+        repository.sendAddCard(card, cardNumber, paymentCard, error)
     }
 
     fun fetchLocalMembershipCards() {

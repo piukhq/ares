@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
@@ -53,18 +54,17 @@ class PaymentCardsDetailsFragment :
 
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
-
             with(viewModel) {
                 paymentCard.value = currentBundle.paymentCard
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
             }
-
-            viewModel.getPaymentCard(currentBundle.paymentCard.id.toString())
         }
 
         binding.paymentCardDetail = viewModel.paymentCard.value
-
+        viewModel.membershipCardData.value?.let {
+            binding.paymentHeader.membershipCardsWrapper = MembershipCardListWrapper(it.toMutableList())
+        }
         binding.footerSecurity.setOnClickListener {
             val action =
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(
@@ -147,8 +147,7 @@ class PaymentCardsDetailsFragment :
                                         it,
                                         null,
                                         true,
-                                        isRetryJourney = false,
-                                        isFailedJourney = false
+                                        isRetryJourney = false
                                     )
                                 findNavController().navigateIfAdded(
                                     this@PaymentCardsDetailsFragment,

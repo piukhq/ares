@@ -16,6 +16,13 @@ def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
 
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+        }
+    }
+
+
     lintOptions {
         lintConfig file("lint.xml")
     }

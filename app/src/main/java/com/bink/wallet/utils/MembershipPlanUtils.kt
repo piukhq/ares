@@ -37,25 +37,30 @@ object MembershipPlanUtils {
 
                 FAILED.status,
                 UNAUTHORISED.status -> {
-                    if (!membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X201.code)).isNullOrEmpty()) {
-                        return LoginStatus.STATUS_SIGN_UP_FAILED
-                    }
-                    if (!membershipCard.status?.reason_codes?.intersect(listOf(CardCodes.X202.code)).isNullOrEmpty()) {
-                        return LoginStatus.STATUS_CARD_ALREADY_EXISTS
-                    }
-                    if (!membershipCard.status?.reason_codes?.intersect(
-                            listOf(
-                                CardCodes.X101.code,
-                                CardCodes.X102.code,
-                                CardCodes.X103.code,
-                                CardCodes.X104.code,
-                                CardCodes.X302.code,
-                                CardCodes.X303.code,
-                                CardCodes.X304.code
-                            )
-                        ).isNullOrEmpty()
-                    ) {
-                        return LoginStatus.STATUS_LOGIN_FAILED
+                    membershipCard.status?.reason_codes?.let { reasonCodes ->
+                        if (!reasonCodes.intersect(listOf(CardCodes.X201.code)).isNullOrEmpty()) {
+                            return LoginStatus.STATUS_SIGN_UP_FAILED
+                        }
+                        if (!reasonCodes.intersect(listOf(CardCodes.X202.code)).isNullOrEmpty()) {
+                            return LoginStatus.STATUS_CARD_ALREADY_EXISTS
+                        }
+                        if (!reasonCodes.intersect(
+                                listOf(
+                                    CardCodes.X101.code,
+                                    CardCodes.X102.code,
+                                    CardCodes.X103.code,
+                                    CardCodes.X104.code,
+                                    CardCodes.X302.code,
+                                    CardCodes.X303.code,
+                                    CardCodes.X304.code
+                                )
+                            ).isNullOrEmpty()
+                        ) {
+                            return LoginStatus.STATUS_LOGIN_FAILED
+                        }
+                        if (reasonCodes.isNullOrEmpty()) {
+                            return LoginStatus.STATUS_NO_REASON_CODES
+                        }
                     }
                 }
             }
@@ -79,7 +84,7 @@ object MembershipPlanUtils {
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
                             }
                             membershipCard.payment_cards.isNullOrEmpty() ||
-                                    !existLinkedPaymentCards(membershipCard) -> {
+                                    !existLinkedPaymentCards(membershipCard, paymentCards) -> {
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED
                             }
                             else -> {
@@ -94,7 +99,11 @@ object MembershipPlanUtils {
                         return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
                     }
                     FAILED.status -> {
-                        return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
+                        return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
+                            LinkStatus.STATUS_NO_REASON_CODES
+                        } else {
+                            LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
+                        }
                     }
                 }
             }
@@ -106,12 +115,26 @@ object MembershipPlanUtils {
         return LinkStatus.STATUS_UNLINKABLE
     }
 
-    private fun existLinkedPaymentCards(membershipCard: MembershipCard): Boolean {
-        membershipCard.payment_cards?.forEach { card ->
-            if (card.active_link == true) {
-                return true
-            }
+    fun existLinkedPaymentCards(
+        membershipCard: MembershipCard,
+        paymentCards: MutableList<PaymentCard>
+    ): Boolean {
+        countLinkedPaymentCards(membershipCard, paymentCards)?.let {
+            return it > 0
         }
         return false
+    }
+
+    fun countLinkedPaymentCards(
+        membershipCard: MembershipCard,
+        paymentCards: MutableList<PaymentCard>
+    ): Int? {
+        val paymentCardIds = mutableListOf<String>()
+        paymentCards.forEach { paymentCard ->
+            paymentCardIds.add(paymentCard.id.toString())
+        }
+        return membershipCard.payment_cards?.count { card ->
+            paymentCardIds.contains(card.id) && card.active_link == true
+        }
     }
 }

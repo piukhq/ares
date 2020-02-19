@@ -18,8 +18,6 @@ import com.bink.wallet.utils.FirebaseUtils.PLL_VIEW
 import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -38,6 +36,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     private var directions: NavDirections? = null
     private var isAddJourney = false
+    val unselectedCards = mutableListOf<String>()
+    val selectedCards = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             PllFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
-                displayTitle(membershipCard.payment_cards?.isNullOrEmpty()!!)
                 if (isAddJourney) {
                     this@PllFragment.isAddJourney = isAddJourney
                     binding.toolbar.navigationIcon = null
@@ -100,90 +99,81 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         val adapter = PllPaymentCardAdapter(viewModel.membershipCard.value)
 
-        viewModel.paymentCards.observeNonNull(this) {
-            viewModel.membershipCard.value?.let { membershipCard ->
-                adapter.notifyChanges(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
-            }
-        }
-
-        binding.paymentCards.adapter = adapter
-        binding.paymentCards.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        viewModel.localPaymentCards.observeNonNull(this) {
+        viewModel.paymentCardsMerger.observeNonNull(this) {
             viewModel.membershipCard.value?.let { membershipCard ->
                 adapter.paymentCards = it.toPllPaymentCardWrapperList(isAddJourney, membershipCard)
                 adapter.notifyDataSetChanged()
             }
         }
 
+        binding.paymentCards.adapter = adapter
+        binding.paymentCards.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+
         viewModel.membershipCard.observeNonNull(this) {
             directions =
                 viewModel.membershipCard.value?.let { membershipCard ->
                     viewModel.membershipPlan.value?.let { membershipPlan ->
                         PllFragmentDirections.pllToLcd(
-                            membershipPlan, membershipCard
+                            membershipPlan,
+                            membershipCard
                         )
                     }
                 }
         }
 
+        viewModel.unlinkSuccesses.observeNonNull(this) {
+            if (it.size == unselectedCards.size) {
+                navigateToLCD()
+            }
+        }
+
+        viewModel.linkSuccesses.observeNonNull(this) {
+            if (it.size == selectedCards.size) {
+                navigateToLCD()
+            }
+        }
+
         binding.buttonDone.setOnClickListener {
             when {
-                viewModel.paymentCards.value.isNullOrEmpty() &&
-                        viewModel.localPaymentCards.value.isNullOrEmpty() -> {
+                viewModel.paymentCardsMerger.value.isNullOrEmpty() -> {
                     findNavController().popBackStack()
                 }
                 isNetworkAvailable(requireActivity(), true) -> {
-                    // display loading indicator?
-                    val jobs = ArrayList<Deferred<Unit>>()
-
-                    adapter.paymentCards.forEach { card ->
-                        if (card.isSelected &&
-                            !card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                        ) {
-                            runBlocking {
-                                viewModel.membershipCard.value?.id?.toInt()?.let { membershipCard ->
-                                    card.paymentCard.id?.let { paymentCard ->
-                                        jobs.add(
-                                            async {
-                                                viewModel.linkPaymentCard(
-                                                    membershipCard.toString(),
-                                                    paymentCard.toString()
-                                                )
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                        } else if (viewModel.membershipCard.value != null &&
-                            !card.isSelected &&
-                            card.paymentCard.isLinkedToMembershipCard(viewModel.membershipCard.value!!)
-                        ) {
-                            runBlocking {
-                                jobs.add(
-                                    async {
-                                        viewModel.unlinkPaymentCard(
-                                            card.paymentCard.id.toString(),
-                                            viewModel.membershipCard.value!!.id
-                                        )
-                                    }
-                                )
+                    viewModel.membershipCard.value?.let {
+                        adapter.paymentCards.forEach { card ->
+                            if (card.isSelected &&
+                                !card.paymentCard.isLinkedToMembershipCard(it)
+                            ) {
+                                selectedCards.add(card.paymentCard.id.toString())
+                            } else if (viewModel.membershipCard.value != null &&
+                                !card.isSelected &&
+                                card.paymentCard.isLinkedToMembershipCard(it)
+                            ) {
+                                unselectedCards.add(card.paymentCard.id.toString())
                             }
                         }
                     }
 
-                    runBlocking {
-                        jobs.forEach {
-                            it.await()
+                    viewModel.membershipCard.value?.id?.let {
+                        if (unselectedCards.isNotEmpty()) {
+                            viewModel.unlinkPaymentCards(
+                                unselectedCards,
+                                it
+                            )
                         }
-                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                            directions?.let { directions ->
-                                findNavController().navigateIfAdded(
-                                    this@PllFragment,
-                                    directions
-                                )
-                            }
+
+                        if (selectedCards.isNotEmpty()) {
+                            viewModel.linkPaymentCards(
+                                selectedCards,
+                                it
+                            )
                         }
+                    }
+
+                    if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
+                        navigateToLCD()
                     }
                 }
             }
@@ -246,16 +236,15 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
     }
 
-    private fun displayTitle(hasLinkedCards: Boolean) {
-        viewModel.title.set(
-            getString(
-                if (hasLinkedCards) {
-                    R.string.pll_linked_title
-                } else {
-                    R.string.pll_unlinked_title
-                }
-            )
-        )
+    private fun navigateToLCD() {
+        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+            directions?.let { directions ->
+                findNavController().navigateIfAdded(
+                    this@PllFragment,
+                    directions
+                )
+            }
+        }
     }
 
     companion object {

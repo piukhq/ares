@@ -2,6 +2,7 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 
 object SharedPreferenceManager {
 
@@ -55,4 +56,9 @@ object SharedPreferenceManager {
             it.putBoolean(IS_PAYMENT_JOIN_HIDDEN.first, value)
         }
 
+    fun clear() {
+        val editor = preferences.edit()
+        editor.clear()
+        editor.apply()
+    }
 }

@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.bink.wallet.data.SharedPreferenceManager
 
 object LocalStoreUtils {
 
     private const val PREF_FILE_NAME = "com.bink.wallet"
     const val KEY_EMAIL = "encrypted_email"
     const val KEY_TOKEN = "encrypted_token"
+    const val KEY_SPREEDLY = "encrypted_spreedly_token"
 
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
@@ -51,6 +53,7 @@ object LocalStoreUtils {
     }
 
     fun clearPreferences() {
+        SharedPreferenceManager.clear()
         encryptedSharedPreferences.edit().let {
             it.clear()
             it.apply()

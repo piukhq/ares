@@ -2,31 +2,38 @@ package com.bink.wallet.utils
 
 object ValueDisplayUtils {
     fun displayValue(
-        value: Float,
+        value: Float?,
         prefix: String?,
         suffix: String?,
         currency: String?,
-        type: String? = null
+        type: String? = null,
+        forceTwoDecimals: Boolean = false
     ): String {
         val display = StringBuilder()
-        if (!prefix.isNullOrEmpty()) {
-            display.append(prefix)
-        }
-        display.append(
-            if (value != value.toInt().toFloat()) {
-                "%.2f".format(value)
-            } else {
-                "%.0f".format(value)
+        with (display) {
+            if (!prefix.isNullOrEmpty()) {
+                append(prefix)
             }
-        )
-        if (!suffix.isNullOrEmpty()) {
-            display.append(SPACE)
-            display.append(suffix)
+            value?.let {
+                append(
+                    if (value != it.toInt().toFloat() ||
+                        forceTwoDecimals
+                    ) {
+                        "%.2f".format(it)
+                    } else {
+                        "%.0f".format(it)
+                    }
+                )
+            }
+            if (!suffix.isNullOrEmpty()) {
+                append(SPACE)
+                append(suffix)
+            }
+            if (!type.isNullOrEmpty()) {
+                append(SPACE)
+                append(type)
+            }
+            return toString()
         }
-        if (!type.isNullOrEmpty()) {
-            display.append(SPACE)
-            display.append(type)
-        }
-        return display.toString()
     }
 }

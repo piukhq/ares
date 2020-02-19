@@ -1,14 +1,12 @@
 package com.bink.wallet
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.sdk.BinkCore
-import com.bink.sdk.util.BinkSecurityUtil
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
@@ -16,8 +14,15 @@ import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.scottyab.rootbeer.RootBeer
 
-
 class SplashFragment : Fragment() {
+
+    companion object {
+        init {
+            System.loadLibrary("spreedly-lib")
+        }
+    }
+
+    external fun spreedlyKey(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +33,9 @@ class SplashFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        LocalStoreUtils.setAppSharedPref(
+            LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
+        )
         findNavController().navigateIfAdded(this, getDirections())
     }
 
