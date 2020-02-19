@@ -37,25 +37,24 @@ class BrowseBrandsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Pair<String?, MembershipPlan>, isLast: Boolean) {
-
             if (item.first != null) {
                 binding.sectionTitle.text = item.first
                 binding.sectionTitle.visibility = View.VISIBLE
             } else {
                 binding.sectionTitle.visibility = View.GONE
             }
-
-            binding.item = item.second
-            binding.executePendingBindings()
-
             binding.browseBrandsDescription.visibility =
-                when (item.second.getCardType() == CardType.PLL) {
-                    true -> View.VISIBLE
-                    else -> View.INVISIBLE
+                if (item.second.getCardType() == CardType.PLL) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
                 }
             if (isLast) {
                 binding.separator.visibility = View.GONE
             }
+
+            binding.item = item.second
+            binding.executePendingBindings()
         }
     }
 }
