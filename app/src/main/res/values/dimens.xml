@@ -139,5 +139,5 @@
     <dimen name="voucher_corner_radius">8dp</dimen>
 
     <!-- LCD -->
-    <dimen name="root_elevation">5pd</dimen>
+    <dimen name="layout_elevation">5dp</dimen>
 </resources>
