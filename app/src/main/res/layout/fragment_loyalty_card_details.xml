@@ -20,7 +20,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@android:color/background_light"
-                android:elevation="5dp"
+                android:elevation="@dimen/layout_elevation"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -287,8 +287,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_medium"
-                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:paddingBottom="@dimen/margin_padding_size_medium"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/security_separator"
                             app:type="delete" />
