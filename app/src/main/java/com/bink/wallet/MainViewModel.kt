@@ -20,7 +20,7 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         if (wasAnHourAgo) {
             loyaltyWalletRepository.retrieveMembershipPlans(
                 membershipPlanMutableLiveData,
-                membershipPlanErrorLiveData, false
+                membershipPlanErrorLiveData
             )
         }
     }

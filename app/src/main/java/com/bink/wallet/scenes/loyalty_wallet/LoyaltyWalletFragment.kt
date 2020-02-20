@@ -124,7 +124,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         mainViewModel.membershipPlanMutableLiveData.observe(this, Observer {
-            viewModel.fetchMembershipPlans(true)
+            viewModel.fetchLocalMembershipPlans()
         })
     }
 
@@ -145,7 +145,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 binding.progressSpinner.visibility = View.VISIBLE
-                viewModel.fetchMembershipPlans(false)
+                viewModel.fetchMembershipPlans()
                 viewModel.fetchMembershipCards()
                 viewModel.fetchDismissedCards()
             } else {
@@ -275,7 +275,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun fetchData() {
         binding.progressSpinner.visibility = View.VISIBLE
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
-            viewModel.fetchMembershipPlans(true)
+            viewModel.fetchLocalMembershipPlans()
             viewModel.fetchMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
