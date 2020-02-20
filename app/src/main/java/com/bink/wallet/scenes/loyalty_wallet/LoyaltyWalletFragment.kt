@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.JoinCardItem
@@ -23,11 +25,13 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
     override val viewModel: LoyaltyViewModel by viewModel()
+    val mainViewModel: MainViewModel by sharedViewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
 
@@ -118,13 +122,16 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
             ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
         }
+
+        mainViewModel.membershipPlanMutableLiveData.observe(this, Observer {
+            viewModel.fetchMembershipPlans(true)
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
-        Log.e("ConnorDebug", "LoyaltyWalletFragment")
         fetchData()
 
         viewModel.deleteCard.observeNonNull(this) { id ->

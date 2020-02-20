@@ -142,6 +142,7 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
     }
 
+    //todo we can just call fetchLocalMembershipPlans rather than fromPersistence
     fun fetchMembershipPlans(fromPersistence: Boolean) {
         viewModelScope.launch {
             loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData, loadPlansError, fromPersistence)

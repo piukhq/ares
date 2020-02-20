@@ -9,12 +9,11 @@ import com.bink.wallet.utils.DateTimeUtils
 class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
-    private val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     private val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
 
     //todo test with no auth
-    //todo bind loyaltywallerfragment with this viewmodel, to keep the UI up to date
     fun getMembershipPlans() {
         val wasAnHourAgo =
             DateTimeUtils.hasAnHourElapsed(SharedPreferenceManager.membershipPlansLastRequestTime)

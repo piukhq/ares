@@ -11,7 +11,7 @@ class DateTimeUtils {
         fun hasAnHourElapsed(time: Long): Boolean {
             val currentTime = System.currentTimeMillis()
             //yesterday 1582097420000
-            val difference = currentTime - time
+            val difference = currentTime - 1582097420000
             val hour = TimeUnit.MILLISECONDS.toHours(difference)
             return hour > ONE_HOUR
         }
