@@ -1,0 +1,270 @@
+{
+  "project_info": {
+    "project_number": "532636841265",
+    "firebase_url": "https://bink-ac226.firebaseio.com",
+    "project_id": "bink-ac226",
+    "storage_bucket": "bink-ac226.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:c1fbba461f84f4d872ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:68ea4a089bb740e472ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:2ca9bac5945d9c7572ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:dc01c6529f045dfa72ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.external"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:ec6cf6edb832107272ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.gamma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:b2c38d2d71a17e8472ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.mr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532636841265:android:d31639ace830f10672ec10",
+        "android_client_info": {
+          "package_name": "com.bink.wallet.nightly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3jjjODn0S5YXgW3muOGgvHAV2baDZKww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "532636841265-qbacj2p86sngee5g7b22npfam4phcfpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "532636841265-sbqg4rmi0parhludps183lgfcdkm8d9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bink.wallet",
+                "app_store_id": "1142153931"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

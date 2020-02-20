@@ -14,6 +14,7 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.LocalStoreUtils
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import io.fabric.sdk.android.Fabric
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
@@ -23,10 +24,15 @@ import kotlin.reflect.KProperty
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
+    lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
         Fabric.with(this, Crashlytics())
+
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != "mr") {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }

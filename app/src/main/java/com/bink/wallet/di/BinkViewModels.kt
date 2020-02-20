@@ -2,12 +2,14 @@ package com.bink.wallet.di
 
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.data.*
+import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
 import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsRepository
 import com.bink.wallet.modal.terms_and_conditions.TermsAndConditionsViewModel
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.scenes.add.AddViewModel
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
@@ -43,10 +45,17 @@ import org.koin.dsl.module
 
 val viewModelModules = module {
 
-    single { provideLoginRepository(get(), get()) }
+    single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { LoginViewModel(get(), get()) }
 
-    single { provideLoyaltyCardRepository(get(), get(), get(), get()) }
+    single {
+        provideLoyaltyCardRepository(
+            get(NetworkQualifiers.BinkApiInterface),
+            get(),
+            get(),
+            get()
+        )
+    }
     viewModel { LoyaltyViewModel(get(), get()) }
 
     viewModel { AddAuthViewModel(get()) }
@@ -61,7 +70,13 @@ val viewModelModules = module {
 
     viewModel { AddJoinRequestPaymentCardViewModel() }
 
-    single { provideLoyaltyCardDetailsRepository(get(), get(), get()) }
+    single {
+        provideLoyaltyCardDetailsRepository(
+            get(NetworkQualifiers.BinkApiInterface),
+            get(),
+            get()
+        )
+    }
     viewModel { LoyaltyCardDetailsViewModel(get()) }
 
     viewModel { VoucherDetailsViewModel() }
@@ -74,7 +89,7 @@ val viewModelModules = module {
 
     viewModel { TransactionViewModel() }
 
-    single { provideTermsAndConditionsRepository(get()) }
+    single { provideTermsAndConditionsRepository(get(NetworkQualifiers.BinkApiInterface)) }
     viewModel { TermsAndConditionsViewModel(get()) }
 
     viewModel { AddPaymentCardViewModel(get()) }
@@ -87,14 +102,22 @@ val viewModelModules = module {
 
     viewModel { WalletsViewModel(get(), get()) }
 
-    single { providePllRepository(get(), get()) }
+    single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { PllViewModel(get()) }
 
     viewModel { SettingsViewModel(get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
 
-    single { provideCardTermsAndConditionsRepository(get(), get(), get(), get()) }
+    single {
+        provideAddPaymentCardRepository(
+            get(NetworkQualifiers.BinkApiInterface),
+            get(NetworkQualifiers.SpreedlyApiInterface),
+            get(),
+            get(),
+            get()
+        )
+    }
     viewModel { CardTermsAndConditionsViewModel(get()) }
 
     viewModel { AcceptTCViewModel(get(), get()) }
@@ -139,14 +162,16 @@ fun providePllRepository(
     paymentCardDao: PaymentCardDao
 ): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
 
-fun provideCardTermsAndConditionsRepository(
+fun provideAddPaymentCardRepository(
     restApiService: ApiService,
+    spreedlyApiService: ApiSpreedly,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao,
     membershipPlanDao: MembershipPlanDao
 ): AddPaymentCardRepository =
     AddPaymentCardRepository(
         restApiService,
+        spreedlyApiService,
         paymentCardDao,
         membershipCardDao,
         membershipPlanDao

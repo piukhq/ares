@@ -11,6 +11,7 @@ object LocalStoreUtils {
     private const val PREF_FILE_NAME = "com.bink.wallet"
     const val KEY_EMAIL = "encrypted_email"
     const val KEY_TOKEN = "encrypted_token"
+    const val KEY_SPREEDLY = "encrypted_spreedly_token"
 
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
