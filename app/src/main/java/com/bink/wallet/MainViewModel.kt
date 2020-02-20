@@ -9,9 +9,11 @@ import com.bink.wallet.utils.DateTimeUtils
 class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
-     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+    private val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     private val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
+    val membershipPlanDatabaseLiveData =
+        loyaltyWalletRepository.getMembershipPlansDatabaseNotifier()
 
     fun getMembershipPlans() {
         val wasAnHourAgo =

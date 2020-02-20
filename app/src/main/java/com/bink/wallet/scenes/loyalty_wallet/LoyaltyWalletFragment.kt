@@ -125,10 +125,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
             ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
         }
-
-        mainViewModel.membershipPlanMutableLiveData.observe(this, Observer {
-            viewModel.fetchLocalMembershipPlans()
-        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -185,6 +181,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = true
         }
+
+        mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchDismissedCards()
+        })
     }
 
     override fun onPause() {

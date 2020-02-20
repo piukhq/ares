@@ -108,7 +108,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     }
 
     private fun initSharedMembershipPlanObserver() {
-        mainViewModel.membershipPlanMutableLiveData.observeNonNull(this) {
+        mainViewModel.membershipPlanDatabaseLiveData.observeNonNull(this) {
             viewModel.fetchMembershipPlans()
         }
     }

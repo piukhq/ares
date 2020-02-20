@@ -22,6 +22,8 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao
 ) {
 
+    private val mutableLiveDataDatabaseUpdated: MutableLiveData<Boolean> = MutableLiveData()
+
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
         loadCardsError: MutableLiveData<Throwable>
@@ -126,13 +128,14 @@ class LoyaltyWalletRepository(
         }
     }
 
+    fun getMembershipPlansDatabaseNotifier() = mutableLiveDataDatabaseUpdated
+
     private fun storeMembershipPlans(plans: List<MembershipPlan>) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    withContext(Dispatchers.IO) {
-                        membershipPlanDao.storeAll(plans)
-                    }
+                    withContext(Dispatchers.IO) { membershipPlanDao.storeAll(plans) }
+                    mutableLiveDataDatabaseUpdated.value = true
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
