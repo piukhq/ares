@@ -60,8 +60,10 @@ class BrowseBrandsAdapter(
                 centerPlanTitlePosition()
             }
 
-            if (isLast) {
-                binding.separator.visibility = View.GONE
+            binding.separator.visibility = if (isLast) {
+                View.GONE
+            } else {
+                View.VISIBLE
             }
 
             binding.item = item.second
