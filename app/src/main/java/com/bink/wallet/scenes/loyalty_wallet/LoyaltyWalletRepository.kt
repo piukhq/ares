@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BannersDisplayDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -79,6 +80,7 @@ class LoyaltyWalletRepository(
                     try {
                         val response = request.await()
                         storeMembershipPlans(response)
+                        SharedPreferenceManager.membershipPlansLastRequestTime = System.currentTimeMillis()
                         mutableMembershipPlans.value = response.toMutableList()
                     } catch (e: java.lang.Exception) {
                         loadPlansError.value = e
