@@ -35,7 +35,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
-        //todo sharedviewmodel to update
         viewModel.fetchMembershipPlans()
         viewModel.fetchMembershipCards()
         viewModel.fetchPaymentCards()

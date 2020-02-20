@@ -132,7 +132,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             viewModel.getMembershipPlans()
         }
 
-        //todo get membership plans
         binding.accept.setOnClickListener {
             accessToken?.token?.let { token ->
                 accessToken?.userId?.let { userId ->
