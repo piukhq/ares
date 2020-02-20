@@ -147,7 +147,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
 
         viewModel.membershipPlanErrorLiveData.observeNonNull(this@LoginFragment) {
-            //todo what happens if theres an error
+            finishLogInProcess()
         }
     }
 

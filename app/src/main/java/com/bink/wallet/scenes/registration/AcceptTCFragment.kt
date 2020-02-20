@@ -129,7 +129,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     )
                 )
             }
-            findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+            viewModel.getMembershipPlans()
         }
 
         //todo get membership plans
@@ -158,6 +158,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             hideKeyboard(requireContext(), binding.root)
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
+
+        initMembershipPlansObserver()
     }
 
     private fun buildHyperlinkSpanString(
@@ -188,5 +190,19 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             )
         }
         binding.overallDisclaimer.text = spannableString
+    }
+
+    private fun initMembershipPlansObserver() {
+        viewModel.membershipPlanMutableLiveData.observeNonNull(this@AcceptTCFragment) {
+            finishLogInProcess()
+        }
+
+        viewModel.membershipPlanErrorLiveData.observeNonNull(this@AcceptTCFragment) {
+            finishLogInProcess()
+        }
+    }
+
+    private fun finishLogInProcess() {
+        findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
     }
 }

@@ -246,7 +246,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         }
 
         viewModel.membershipPlanErrorLiveData.observeNonNull(this@SignUpFragment) {
-            //todo what happens if theres an error
+            finaliseAuthenticationFlow()
         }
     }
 
