@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.BrandListItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.toPixelFromDip
 
 
 class BrowseBrandsAdapter(
     private val brands: List<Pair<String?, MembershipPlan>>,
+    private val splitPosition: Int,
     val itemClickListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {
 
@@ -29,7 +31,12 @@ class BrowseBrandsAdapter(
     }
 
     override fun onBindViewHolder(holder: BrandsViewHolder, position: Int) {
-        brands[position].let { holder.bind(it, position == brands.lastIndex) }
+        brands[position].let {
+            holder.bind(
+                it,
+                position == brands.size - 1 || position == splitPosition
+            )
+        }
     }
 
     override fun getItemCount() = brands.size
@@ -46,7 +53,7 @@ class BrowseBrandsAdapter(
             }
 
             if (item.second.getCardType() == CardType.PLL) {
-                binding.browseBrandsDescription.visibility = View.VISIBLE
+                resetTitlePosition()
             } else {
                 centerPlanTitlePosition()
             }
@@ -62,22 +69,47 @@ class BrowseBrandsAdapter(
         private fun centerPlanTitlePosition() {
             binding.browseBrandsDescription.visibility = View.GONE
             val constraintSet = ConstraintSet()
-            constraintSet.clone(binding.constraintLayout)
-            constraintSet.connect(
-                binding.browseBrandsTitle.id,
-                ConstraintSet.BOTTOM,
-                binding.constraintLayout.id,
-                ConstraintSet.BOTTOM,
-                0
-            )
-            constraintSet.connect(
-                binding.browseBrandsTitle.id,
-                ConstraintSet.TOP,
-                binding.constraintLayout.id,
-                ConstraintSet.TOP,
-                0
-            )
-            constraintSet.applyTo(binding.constraintLayout)
+            constraintSet.apply {
+                clone(binding.constraintLayout)
+                connect(
+                    binding.browseBrandsTitle.id,
+                    ConstraintSet.BOTTOM,
+                    binding.constraintLayout.id,
+                    ConstraintSet.BOTTOM,
+                    0
+                )
+                connect(
+                    binding.browseBrandsTitle.id,
+                    ConstraintSet.TOP,
+                    binding.constraintLayout.id,
+                    ConstraintSet.TOP,
+                    0
+                )
+                applyTo(binding.constraintLayout)
+            }
+        }
+
+        private fun resetTitlePosition() {
+            binding.browseBrandsDescription.visibility = View.VISIBLE
+            val constraintSet = ConstraintSet()
+            constraintSet.apply {
+                clone(binding.constraintLayout)
+                connect(
+                    binding.browseBrandsTitle.id,
+                    ConstraintSet.BOTTOM,
+                    -1,
+                    ConstraintSet.BOTTOM,
+                    0
+                )
+                connect(
+                    binding.browseBrandsTitle.id,
+                    ConstraintSet.TOP,
+                    binding.constraintLayout.id,
+                    ConstraintSet.TOP,
+                    binding.root.context.toPixelFromDip(24f).toInt()
+                )
+                applyTo(binding.constraintLayout)
+            }
         }
     }
 }
