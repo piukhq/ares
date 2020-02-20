@@ -70,21 +70,26 @@ class LoyaltyWalletRepository(
 
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
-        loadPlansError: MutableLiveData<Throwable>
+        loadPlansError: MutableLiveData<Throwable>,
+        fromPersistence: Boolean
     ) {
-        val request = apiService.getMembershipPlansAsync()
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipPlans(response)
-                    SharedPreferenceManager.membershipPlansLastRequestTime =
-                        System.currentTimeMillis()
-                    mutableMembershipPlans.value = response.toMutableList()
-                } catch (e: java.lang.Exception) {
-                    loadPlansError.value = e
+        if (!fromPersistence) {
+            val request = apiService.getMembershipPlansAsync()
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        val response = request.await()
+                        storeMembershipPlans(response)
+                        SharedPreferenceManager.membershipPlansLastRequestTime =
+                            System.currentTimeMillis()
+                        mutableMembershipPlans.value = response.toMutableList()
+                    } catch (e: java.lang.Exception) {
+                        loadPlansError.value = e
+                    }
                 }
             }
+        } else {
+            retrieveStoredMembershipPlans(mutableMembershipPlans)
         }
     }
 

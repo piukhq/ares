@@ -29,7 +29,7 @@ class WalletsViewModel(
     }
 
     fun fetchMembershipPlans() {
-        repository.retrieveMembershipPlans(membershipPlanData, _loadCardsError, true)
+        repository.retrieveStoredMembershipPlans(membershipPlanData)
     }
 
     fun fetchPaymentCards() {

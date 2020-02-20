@@ -13,14 +13,14 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         MutableLiveData()
     private val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
 
-    //todo test with no auth
     fun getMembershipPlans() {
         val wasAnHourAgo =
             DateTimeUtils.hasAnHourElapsed(SharedPreferenceManager.membershipPlansLastRequestTime)
         if (wasAnHourAgo) {
             loyaltyWalletRepository.retrieveMembershipPlans(
                 membershipPlanMutableLiveData,
-                membershipPlanErrorLiveData
+                membershipPlanErrorLiveData,
+                false
             )
         }
     }

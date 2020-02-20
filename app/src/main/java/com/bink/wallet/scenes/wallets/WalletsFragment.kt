@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.WalletsFragmentBinding
@@ -12,8 +13,8 @@ import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>() {
 
@@ -24,6 +25,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     }
 
     override val viewModel: WalletsViewModel by viewModel()
+    val mainViewModel: MainViewModel by sharedViewModel()
 
     override val layoutRes: Int
         get() = R.layout.wallets_fragment
@@ -33,6 +35,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
+        //todo sharedviewmodel to update
         viewModel.fetchMembershipPlans()
         viewModel.fetchMembershipCards()
         viewModel.fetchPaymentCards()
@@ -101,6 +104,13 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
+        }
+        initSharedMembershipPlanObserver()
+    }
+
+    private fun initSharedMembershipPlanObserver() {
+        mainViewModel.membershipPlanMutableLiveData.observeNonNull(this) {
+            viewModel.fetchMembershipPlans()
         }
     }
 

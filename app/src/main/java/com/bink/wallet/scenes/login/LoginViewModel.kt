@@ -64,7 +64,8 @@ class LoginViewModel constructor(
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData, false
+            membershipPlanErrorLiveData,
+            false
         )
     }
 }

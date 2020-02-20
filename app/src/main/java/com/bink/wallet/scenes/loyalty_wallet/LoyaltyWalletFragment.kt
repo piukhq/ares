@@ -145,7 +145,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 binding.progressSpinner.visibility = View.VISIBLE
-                viewModel.fetchMembershipPlans()
+                viewModel.fetchMembershipPlans(false)
                 viewModel.fetchMembershipCards()
                 viewModel.fetchDismissedCards()
             } else {
@@ -275,7 +275,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun fetchData() {
         binding.progressSpinner.visibility = View.VISIBLE
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
-            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchMembershipPlans(true)
             viewModel.fetchMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
