@@ -30,19 +30,21 @@ class BrowseBrandsAdapter(
         return BrandsViewHolder(binding)
     }
 
+    override fun getItemCount() = brands.size
+
     override fun onBindViewHolder(holder: BrandsViewHolder, position: Int) {
         brands[position].let {
             holder.bind(
                 it,
-                position == brands.size - 1 || position == splitPosition
+                position == itemCount - 1 || position == splitPosition
             )
         }
     }
 
-    override fun getItemCount() = brands.size
-
     class BrandsViewHolder(val binding: BrandListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private val titleMarginTop = 24f
 
         fun bind(item: Pair<String?, MembershipPlan>, isLast: Boolean) {
             if (item.first != null) {
@@ -106,7 +108,7 @@ class BrowseBrandsAdapter(
                     ConstraintSet.TOP,
                     binding.constraintLayout.id,
                     ConstraintSet.TOP,
-                    binding.root.context.toPixelFromDip(24f).toInt()
+                    binding.root.context.toPixelFromDip(titleMarginTop).toInt()
                 )
                 applyTo(binding.constraintLayout)
             }
