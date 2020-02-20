@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.bink.wallet.BaseFragment
@@ -13,6 +12,8 @@ import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.ONBOARDING_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.*
@@ -47,6 +48,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         FacebookSdk.sdkInitialize(context)
         LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
+
+        logScreenView(ONBOARDING_VIEW)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -85,6 +88,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
+
+            logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
         }
 
         binding.continueWithFacebook.setOnClickListener {
@@ -115,10 +120,24 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                             )
                         }
                     })
+
+                logEvent(
+                    getFirebaseIdentifier(
+                        ONBOARDING_VIEW,
+                        binding.continueWithFacebook.text.toString()
+                    )
+                )
             }
         }
         binding.signUpWithEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
+
+            logEvent(
+                getFirebaseIdentifier(
+                    ONBOARDING_VIEW,
+                    binding.signUpWithEmail.text.toString()
+                )
+            )
         }
         with(binding.pager) {
             addOnPageChangeListener(object :
