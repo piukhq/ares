@@ -1,8 +1,7 @@
 package com.bink.wallet.scenes.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import android.util.Patterns
+import androidx.lifecycle.*
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.request.SignUpRequest
@@ -10,22 +9,54 @@ import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import kotlinx.coroutines.launch
 
 class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseViewModel() {
 
-    var loginBody = MutableLiveData<LoginBody>()
-    var loginData = MutableLiveData<LoginData>()
+    val loginBody = MutableLiveData<LoginBody>()
+    val loginData = MutableLiveData<LoginData>()
     val logInResponse = MutableLiveData<SignUpResponse>()
     private val _logInErrorResponse = MutableLiveData<Throwable>()
     val logInErrorResponse: LiveData<Throwable>
         get() = _logInErrorResponse
     private val _authErrorResponse = MutableLiveData<Throwable>()
-    val authErrorResponse : LiveData<Throwable>
+    val authErrorResponse: LiveData<Throwable>
         get() = _authErrorResponse
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
+
+    private val passwordValidator = Transformations.map(password) {
+        UtilFunctions.isValidField(PASSWORD_REGEX, it)
+    }
+    private val emailValidator = Transformations.map(email) {
+        Patterns.EMAIL_ADDRESS.matcher(it).matches()
+    }
+    val isLoginEnabled = MediatorLiveData<Boolean>()
+
+    init {
+        isLoginEnabled.addSource(emailValidator) {
+            isLoginEnabled.value = validateFields(emailValidator, passwordValidator)
+        }
+        isLoginEnabled.addSource(passwordValidator) {
+            isLoginEnabled.value = validateFields(emailValidator, passwordValidator)
+        }
+    }
+
+    private fun validateFields(
+        emailValidator: LiveData<Boolean>,
+        passwordValidator: LiveData<Boolean>
+    ): Boolean {
+        val emailValidatorValue = emailValidator.value
+        val passwordValidatorValue = passwordValidator.value
+        return if (emailValidatorValue == null || passwordValidatorValue == null) {
+            false
+        } else {
+            emailValidatorValue == true && passwordValidatorValue == true
+        }
+    }
 
     fun authenticate() {
         loginRepository.doAuthenticationWork(
