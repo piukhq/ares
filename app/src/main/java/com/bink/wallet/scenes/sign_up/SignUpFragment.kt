@@ -1,11 +1,14 @@
 package com.bink.wallet.scenes.sign_up
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.URLSpan
+import android.util.Patterns
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
@@ -33,12 +36,28 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val viewModel: SignUpViewModel by viewModel()
 
+    private val listener: ViewTreeObserver.OnGlobalLayoutListener =
+        ViewTreeObserver.OnGlobalLayoutListener {
+            val rec = Rect()
+            binding.container.getWindowVisibleDisplayFrame(rec)
+            val screenHeight = binding.container.rootView.height
+            val keypadHeight = screenHeight - rec.bottom
+            if (keypadHeight <= screenHeight * 0.15) {
+                validateCredentials()
+            }
+        }
+
     private fun checkPasswordsMatch() =
         if (viewModel.password.value != viewModel.confirmPassword.value) {
             binding.confirmPasswordField.error = getString(R.string.password_not_match)
         } else {
             binding.confirmPasswordField.error = null
         }
+
+    override fun onResume() {
+        super.onResume()
+        binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -200,6 +219,46 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.container.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+    }
+
+    private fun validateCredentials() {
+        viewModel.email.value?.let {
+            if (it.isNotEmpty()) {
+                binding.emailField.error =
+                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                        getString(R.string.invalid_email_format)
+                    } else {
+                        null
+                    }
+            }
+        }
+
+        viewModel.password.value?.let {
+            if (it.isNotEmpty()) {
+                binding.passwordField.error =
+                    if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
+                        getString(R.string.password_description)
+                    } else {
+                        null
+                    }
+            }
+        }
+
+        viewModel.confirmPassword.value?.let {
+            if (it.isNotEmpty()) {
+                binding.confirmPasswordField.error =
+                    if (it != viewModel.password.value) {
+                        getString(R.string.password_not_match)
+                    } else {
+                        null
+                    }
             }
         }
     }
