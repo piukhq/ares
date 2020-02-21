@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.sign_up
 
 import android.util.Patterns
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -12,7 +11,7 @@ import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.combine
+import com.bink.wallet.utils.combineNonNull
 import okhttp3.ResponseBody
 
 class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
@@ -40,13 +39,13 @@ class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
     val isSignUpEnabled = MediatorLiveData<Boolean>()
 
     init {
-        passwordMatcher.combine(
+        passwordMatcher.combineNonNull(
             password,
             confirmPassword,
             ::arePasswordsMatching
         )
 
-        isSignUpEnabled.combine(
+        isSignUpEnabled.combineNonNull(
             emailValidator,
             passwordValidator,
             passwordMatcher,

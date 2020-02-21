@@ -34,7 +34,7 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     val isLoginEnabled = MediatorLiveData<Boolean>()
 
     init {
-        isLoginEnabled.combine(
+        isLoginEnabled.combineNonNull(
             emailValidator,
             passwordValidator,
             ::validateFields

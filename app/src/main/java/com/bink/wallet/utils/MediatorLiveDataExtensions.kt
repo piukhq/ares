@@ -3,7 +3,7 @@ package com.bink.wallet.utils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 
-fun <T, R, X> MediatorLiveData<X>.combine(
+fun <T, R, X> MediatorLiveData<X>.combineNonNull(
     source1: LiveData<T>,
     source2: LiveData<R>,
     merger: (T, R) -> X
@@ -22,7 +22,7 @@ fun <T, R, X> MediatorLiveData<X>.combine(
     }
 }
 
-fun <T, R, L, X> MediatorLiveData<X>.combine(
+fun <T, R, L, X> MediatorLiveData<X>.combineNonNull(
     source1: LiveData<T>,
     source2: LiveData<R>,
     source3: LiveData<L>,
@@ -51,7 +51,7 @@ fun <T, R, L, X> MediatorLiveData<X>.combine(
     }
 }
 
-fun <T, R, L, M, X> MediatorLiveData<X>.combine(
+fun <T, R, L, M, X> MediatorLiveData<X>.combineNonNull(
     source1: LiveData<T>,
     source2: LiveData<R>,
     source3: LiveData<L>,
@@ -92,7 +92,7 @@ fun <T, R, L, M, X> MediatorLiveData<X>.combine(
     }
 }
 
-fun <T, R, L, M, N, X> MediatorLiveData<X>.combine(
+fun <T, R, L, M, N, X> MediatorLiveData<X>.combineNonNull(
     source1: LiveData<T>,
     source2: LiveData<R>,
     source3: LiveData<L>,
