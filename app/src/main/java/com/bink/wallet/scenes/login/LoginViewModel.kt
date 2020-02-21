@@ -7,10 +7,7 @@ import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.*
 import kotlinx.coroutines.launch
 
 class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseViewModel() {
@@ -37,26 +34,18 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     val isLoginEnabled = MediatorLiveData<Boolean>()
 
     init {
-        isLoginEnabled.addSource(emailValidator) {
-            isLoginEnabled.value = validateFields(emailValidator, passwordValidator)
-        }
-        isLoginEnabled.addSource(passwordValidator) {
-            isLoginEnabled.value = validateFields(emailValidator, passwordValidator)
-        }
+        isLoginEnabled.combine(
+            emailValidator,
+            passwordValidator,
+            ::validateFields
+        )
     }
 
     private fun validateFields(
-        emailValidator: LiveData<Boolean>,
-        passwordValidator: LiveData<Boolean>
-    ): Boolean {
-        val emailValidatorValue = emailValidator.value
-        val passwordValidatorValue = passwordValidator.value
-        return if (emailValidatorValue == null || passwordValidatorValue == null) {
-            false
-        } else {
-            emailValidatorValue == true && passwordValidatorValue == true
-        }
-    }
+        emailValidator: Boolean,
+        passwordValidator: Boolean
+    ): Boolean = emailValidator && passwordValidator
+
 
     fun authenticate() {
         loginRepository.doAuthenticationWork(

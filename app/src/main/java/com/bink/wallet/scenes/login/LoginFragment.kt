@@ -127,6 +127,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         binding.logInButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
+                it.isEnabled = false
                 requireContext().apply {
                     validateEmail(viewModel.email.value, binding.emailField)
                     validatePassword(viewModel.password.value, binding.passwordField)
