@@ -33,32 +33,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val viewModel: SignUpViewModel by viewModel()
 
-    private fun setSignupButtonEnableStatus() {
-        with(viewModel) {
-            termsCondition.value?.let { termsConditions ->
-                privacyPolicy.value?.let { privacyPolicy ->
-                    binding.signUpButton.isEnabled =
-                        (binding.passwordField.error == null &&
-                                binding.emailField.error == null &&
-                                binding.confirmPasswordField.error == null &&
-                                (email.value ?: EMPTY_STRING).isNotBlank() &&
-                                (password.value ?: EMPTY_STRING).isNotBlank() &&
-                                (confirmPassword.value ?: EMPTY_STRING).isNotBlank() &&
-                                confirmPassword.value == password.value &&
-                                termsConditions &&
-                                privacyPolicy
-                                )
-                }
-            }
-        }
-    }
-
     private fun checkPasswordsMatch() =
         if (viewModel.password.value != viewModel.confirmPassword.value) {
             binding.confirmPasswordField.error = getString(R.string.password_not_match)
         } else {
             binding.confirmPasswordField.error = null
         }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -94,26 +79,21 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             email.observeNonNull(this@SignUpFragment) {
                 requireContext().validateEmail(it, binding.emailField)
-                setSignupButtonEnableStatus()
             }
 
             password.observeNonNull(this@SignUpFragment) {
                 checkPasswordsMatch()
                 requireContext().validatePassword(it, binding.passwordField)
-                setSignupButtonEnableStatus()
             }
 
             confirmPassword.observeNonNull(this@SignUpFragment) {
                 checkPasswordsMatch()
-                setSignupButtonEnableStatus()
             }
 
             privacyPolicy.observeNonNull(this@SignUpFragment) {
-                setSignupButtonEnableStatus()
             }
 
             termsCondition.observeNonNull(this@SignUpFragment) {
-                setSignupButtonEnableStatus()
             }
 
             isLoading.observeNonNull(this@SignUpFragment) {
