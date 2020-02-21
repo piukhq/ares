@@ -23,6 +23,7 @@ class LoyaltyWalletRepository(
 ) {
 
     private val mutableLiveDataDatabaseUpdated: MutableLiveData<Boolean> = MutableLiveData()
+    val liveDataDatabaseUpdated: MutableLiveData<Boolean> get() = mutableLiveDataDatabaseUpdated
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
@@ -127,8 +128,6 @@ class LoyaltyWalletRepository(
             }
         }
     }
-
-    fun getMembershipPlansDatabaseNotifier() = mutableLiveDataDatabaseUpdated
 
     private fun storeMembershipPlans(plans: List<MembershipPlan>) {
         CoroutineScope(Dispatchers.IO).launch {
