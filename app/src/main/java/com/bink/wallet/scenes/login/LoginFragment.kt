@@ -1,9 +1,12 @@
 package com.bink.wallet.scenes.login
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.util.Patterns
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -35,22 +38,30 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         logScreenView(LOGIN_VIEW)
     }
 
-    private fun setLoginButtonEnableStatus() {
-        with(binding) {
-            viewModel?.let {
-                logInButton.isEnabled =
-                    (passwordField.error == null &&
-                            emailField.error == null &&
-                            (it.email.value ?: EMPTY_STRING).isNotBlank() &&
-                            (it.password.value ?: EMPTY_STRING).isNotBlank()
-                            )
+    private val listener: ViewTreeObserver.OnGlobalLayoutListener =
+        ViewTreeObserver.OnGlobalLayoutListener {
+            val rec = Rect()
+            binding.container.getWindowVisibleDisplayFrame(rec)
+            val screenHeight = binding.container.rootView.height
+            val keypadHeight = screenHeight - rec.bottom
+            if (keypadHeight <= screenHeight * 0.15) {
+                validateCredentials()
             }
         }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         val content = SpannableString(getString(R.string.forgot_password_text))
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
 
@@ -77,12 +88,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
                 requireContext().validateEmail(it, binding.emailField)
-                setLoginButtonEnableStatus()
             }
 
             password.observeNonNull(this@LoginFragment) {
                 requireContext().validatePassword(it, binding.passwordField)
-                setLoginButtonEnableStatus()
             }
 
             logInResponse.observeNonNull(this@LoginFragment) {
@@ -130,6 +139,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         binding.logInButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
+                it.isEnabled = false
                 requireContext().apply {
                     validateEmail(viewModel.email.value, binding.emailField)
                     validatePassword(viewModel.password.value, binding.passwordField)
@@ -153,6 +163,35 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.logInButton.text.toString()))
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.container.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+    }
+
+    private fun validateCredentials() {
+        viewModel.email.value?.let {
+            if (it.isNotEmpty()) {
+                binding.emailField.error =
+                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                        getString(R.string.invalid_email_format)
+                    } else {
+                        null
+                    }
+            }
+        }
+
+        viewModel.password.value?.let {
+            if (it.isNotEmpty()) {
+                binding.passwordField.error =
+                    if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
+                        getString(R.string.password_description)
+                    } else {
+                        null
+                    }
+            }
         }
     }
 }

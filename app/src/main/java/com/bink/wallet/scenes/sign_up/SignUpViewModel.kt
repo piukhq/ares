@@ -1,11 +1,17 @@
 package com.bink.wallet.scenes.sign_up
 
+import android.util.Patterns
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.combineNonNull
 import okhttp3.ResponseBody
 
 class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
@@ -21,6 +27,52 @@ class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
     val signUpErrorResponse = MutableLiveData<Throwable>()
     val marketingPrefResponse = MutableLiveData<ResponseBody>()
     val marketingPrefErrorResponse = MutableLiveData<Throwable>()
+
+    private val passwordValidator = Transformations.map(password) {
+        UtilFunctions.isValidField(PASSWORD_REGEX, it)
+    }
+    private val emailValidator = Transformations.map(email) {
+        Patterns.EMAIL_ADDRESS.matcher(it).matches()
+    }
+
+    private val passwordMatcher = MediatorLiveData<Boolean>()
+    val isSignUpEnabled = MediatorLiveData<Boolean>()
+
+    init {
+        passwordMatcher.combineNonNull(
+            password,
+            confirmPassword,
+            ::arePasswordsMatching
+        )
+
+        isSignUpEnabled.combineNonNull(
+            emailValidator,
+            passwordValidator,
+            passwordMatcher,
+            termsCondition,
+            privacyPolicy,
+            ::isSignUpButtonEnabled
+        )
+    }
+
+    private fun isSignUpButtonEnabled(
+        emailValidator: Boolean,
+        passwordValidator: Boolean,
+        passwordMatcher: Boolean,
+        termsAndConditions: Boolean,
+        privacyPolicy: Boolean
+    ): Boolean = passwordValidator &&
+            emailValidator &&
+            passwordMatcher &&
+            termsAndConditions &&
+            privacyPolicy
+
+    private fun arePasswordsMatching(
+        password: String,
+        confirmedPassword: String
+    ): Boolean =
+        password == confirmedPassword
+
 
     fun signUp(signUpRequest: SignUpRequest) {
         loginRepository.signUp(
