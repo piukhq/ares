@@ -665,6 +665,10 @@
                 android:name="bankCard"
                 app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
 
+        <argument
+            android:name="cardNo"
+            app:argType="string" />
+
         <action
                 android:id="@+id/card_terms_to_add"
                 app:destination="@+id/add_payment_card"

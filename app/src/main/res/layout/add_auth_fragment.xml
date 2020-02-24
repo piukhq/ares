@@ -22,12 +22,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <ImageButton
                 android:id="@+id/close"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -35,10 +35,10 @@
 
         <TextView
                 android:id="@+id/cancel"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="@string/cancel_text"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_medium"
@@ -103,11 +103,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/margin_padding_size_small"
-                tools:listitem="@layout/add_auth_text_item"
-                tools:itemCount="3"
                 android:layout_marginBottom="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toTopOf="@+id/add_card_button"
-                app:layout_constraintTop_toBottomOf="@+id/description_add_auth" />
+                app:layout_constraintTop_toBottomOf="@+id/description_add_auth"
+                tools:itemCount="3"
+                tools:listitem="@layout/add_auth_text_item" />
 
         <Button
                 android:id="@+id/add_card_button"

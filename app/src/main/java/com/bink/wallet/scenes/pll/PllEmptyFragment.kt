@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.pll
 
 import android.os.Bundle
-import androidx.databinding.ObservableBoolean
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
