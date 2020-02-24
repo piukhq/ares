@@ -65,12 +65,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             }
 
                         if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                            directions?.let {
-                                findNavController().navigateIfAdded(
-                                    this@LoyaltyWalletFragment, it
-                                )
+                            if (card.card?.barcode.isNullOrEmpty() ||
+                                card.card?.membership_id.isNullOrEmpty()
+                            ) {
+                                displayNoBarcodeDialog(position)
+                            } else {
+                                directions?.let {
+                                    findNavController().navigateIfAdded(
+                                        this@LoyaltyWalletFragment, it
+                                    )
+                                }
+                                this@LoyaltyWalletFragment.onDestroy()
                             }
-                            this@LoyaltyWalletFragment.onDestroy()
                         }
                     } else {
                         deleteDialog(walletItems[position] as MembershipCard, position)
@@ -204,7 +210,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    private fun manageRecyclerView(){
+    private fun manageRecyclerView() {
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
@@ -320,5 +326,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             dialog = builder.create()
             dialog.show()
         }
+    }
+
+    private fun displayNoBarcodeDialog(position: Int) {
+        requireContext().displayModalPopup(
+            getString(R.string.loayalty_wallet_no_barcode_title),
+            getString(R.string.loayalty_wallet_no_barcode_message),
+            okAction = {
+                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+            }
+        )
     }
 }

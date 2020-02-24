@@ -11,6 +11,8 @@
     <string name="barcode_text">Barcode</string>
     <string name="loayalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
     <string name="loayalty_wallet_dialog_description">Delete card was canceled</string>
+    <string name="loayalty_wallet_no_barcode_title">No Barcode</string>
+    <string name="loayalty_wallet_no_barcode_message">No barcode or card number to display. Please check the status of this card</string>
     <string name="yes_text">YES</string>
     <string name="no_text">NO</string>
     <string name="cancel_text_upper">CANCEL</string>
