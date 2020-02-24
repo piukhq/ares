@@ -52,6 +52,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             val keypadHeight = screenHeight - rec.bottom
             if (keypadHeight <= screenHeight * 0.15) {
                 validateCredentials()
+            }
+        }
 
 
     private fun checkPasswordsMatch() =

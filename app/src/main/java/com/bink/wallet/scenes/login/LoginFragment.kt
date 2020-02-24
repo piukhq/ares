@@ -46,6 +46,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             val keypadHeight = screenHeight - rec.bottom
             if (keypadHeight <= screenHeight * 0.15) {
                 validateCredentials()
+            }
+        }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
