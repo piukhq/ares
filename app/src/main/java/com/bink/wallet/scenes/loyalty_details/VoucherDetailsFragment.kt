@@ -3,16 +3,14 @@ package com.bink.wallet.scenes.loyalty_details
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.text.style.UnderlineSpan
 import android.text.SpannableString
 import android.text.Spanned
-import android.widget.TextView
+import android.text.style.UnderlineSpan
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
@@ -81,7 +79,6 @@ class VoucherDetailsFragment :
                                             burn.type
                                         )
                                     )
-                                binding.spacingView2.visibility = View.GONE
                             }
                             VoucherStates.ISSUED.state -> {
                                 with(binding) {
@@ -138,6 +135,12 @@ class VoucherDetailsFragment :
                                             )
                                         )
                                     )
+                                    voucher.date_issued?.let {
+                                        dateOne.setFullTimestamp(
+                                            it,
+                                            getString(R.string.voucher_detail_date_issued)
+                                        )
+                                    }
                                     voucher.expiry_date?.let {
                                         dateTwo.setFullTimestamp(
                                             it,
@@ -160,8 +163,14 @@ class VoucherDetailsFragment :
                                             )
                                         )
                                     )
-                                    voucher.date_redeemed?.let {
+                                    voucher.date_issued?.let {
                                         dateOne.setFullTimestamp(
+                                            it,
+                                            getString(R.string.voucher_detail_date_issued)
+                                        )
+                                    }
+                                    voucher.date_redeemed?.let {
+                                        dateTwo.setFullTimestamp(
                                             it,
                                             getString(R.string.voucher_detail_date_redeemed)
                                         )
