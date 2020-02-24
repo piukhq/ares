@@ -22,11 +22,13 @@ import com.bink.wallet.utils.FirebaseUtils.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.FirebaseUtils.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseUtils.REGISTRATION_FORM_VIEW
 import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
@@ -399,10 +401,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         viewModel.createCardError.observeNonNull(this) { exception ->
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
-                    requireContext().displayModalPopup(
-                        getString(R.string.error),
-                        getString(R.string.error_scheme_already_exists)
-                    )
+                    if (exception is HttpException) {
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            getApiErrorMessage(
+                                exception,
+                                getString(R.string.error_scheme_already_exists)
+                            )
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            getString(R.string.error_scheme_already_exists)
+                        )
+                    }
                 }
                 else -> {
                     requireContext().displayModalPopup(
