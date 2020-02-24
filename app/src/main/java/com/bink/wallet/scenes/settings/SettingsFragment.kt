@@ -15,6 +15,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
+import com.bink.wallet.utils.FirebaseUtils.SETTINGS_VIEW
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
@@ -39,6 +40,12 @@ class SettingsFragment :
         get() = R.layout.settings_fragment
 
     override val viewModel: SettingsViewModel by viewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(SETTINGS_VIEW)
+    }
 
     override fun onChanged(value: ListHolder<SettingsItem>?) {
         binding.settingsContainer.adapter?.let {
@@ -170,7 +177,8 @@ class SettingsFragment :
             SettingsItemType.CONTACT_US -> {
                 val intent = Intent(Intent.ACTION_SENDTO)
                 intent.data = Uri.parse(
-                    getString(R.string.contact_us_mailto,
+                    getString(
+                        R.string.contact_us_mailto,
                         getString(R.string.contact_us_email_address)
                     )
                 )

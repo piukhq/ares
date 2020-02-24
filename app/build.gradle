@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("io.fabric")
+    id("com.google.gms.google-services")
 }
 
 repositories {
@@ -29,7 +30,7 @@ android {
     compileSdkVersion 29
     signingConfigs {
         binkSigningConfig {
-            storeFile file('keystore')
+            storeFile file('bink-keystore.jks')
             if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
                 keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
                 keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
@@ -42,7 +43,6 @@ android {
         }
     }
     defaultConfig {
-//        applicationId "com.bink.wallet.neo"
         applicationId "com.bink.wallet"
         minSdkVersion 23
         targetSdkVersion 29
@@ -245,7 +245,7 @@ dependencies {
     }
 
     // add the Firebase SDK for Google Analytics
-    implementation 'com.google.firebase:firebase-analytics:17.2.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
     // Facebook
     implementation 'com.facebook.android:facebook-login:5.9.0'
 

@@ -22,9 +22,9 @@
 
         <ImageButton
                 android:id="@+id/settings_button"
+                style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_settings"
                 app:layout_constraintBottom_toBottomOf="@+id/toolbar"

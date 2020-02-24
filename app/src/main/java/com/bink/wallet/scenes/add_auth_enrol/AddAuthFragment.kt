@@ -18,6 +18,10 @@ import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.ADD_AUTH_FORM_VIEW
+import com.bink.wallet.utils.FirebaseUtils.ENROL_FORM_VIEW
+import com.bink.wallet.utils.FirebaseUtils.REGISTRATION_FORM_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
@@ -58,6 +62,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(getScreenName(args.signUpFormType))
+    }
 
     private fun addFieldToList(planField: Any) {
         when (planField) {
@@ -131,10 +141,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         binding.item = viewModel.currentMembershipPlan.value
 
 
-        binding.close.setOnClickListener {
-            windowFullscreenHandler.toNormalScreen()
-            requireActivity().onBackPressed()
-        }
         binding.cancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
@@ -320,6 +326,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
                 }
             }
+
+            logEvent(
+                getFirebaseIdentifier(
+                    getScreenName(args.signUpFormType),
+                    binding.noAccountText.text.toString()
+                )
+            )
         }
 
         planBooleanFieldsList.map { planFieldsList.add(it) }
@@ -526,6 +539,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     binding.progressSpinner.visibility = View.GONE
                 }
             }
+
+            logEvent(
+                getFirebaseIdentifier(
+                    getScreenName(args.signUpFormType),
+                    binding.addCardButton.text.toString()
+                )
+            )
         }
 
         viewModel.newMembershipCard.observeNonNull(this) { membershipCard ->
@@ -623,5 +643,19 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     companion object {
         private const val BARCODE_TEXT = "Barcode"
+    }
+
+    private fun getScreenName(signUpFormType: SignUpFormType): String {
+        return when (signUpFormType) {
+            SignUpFormType.ADD_AUTH -> {
+                ADD_AUTH_FORM_VIEW
+            }
+            SignUpFormType.ENROL -> {
+                ENROL_FORM_VIEW
+            }
+            SignUpFormType.GHOST -> {
+                REGISTRATION_FORM_VIEW
+            }
+        }
     }
 }
