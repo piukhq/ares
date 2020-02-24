@@ -165,12 +165,16 @@ fun ImageView.image(plan: MembershipPlan?) {
 
 @BindingAdapter("membershipCard")
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
-    if (card?.getHeroImage() != null && card.getHeroImage()?.url != null) {
+    if (card?.getHeroImage() != null &&
+        card.getHeroImage()?.url != null
+    ) {
         binding.image.setImage(card.getHeroImage()?.url.toString())
     } else {
         binding.image.setBackgroundColor(Color.GREEN)
     }
-    if (card?.card?.barcode.isNullOrEmpty() || card?.card?.membership_id.isNullOrEmpty()) {
+    if (card?.card?.barcode.isNullOrEmpty() ||
+        card?.card?.membership_id.isNullOrEmpty()
+    ) {
         binding.tapCard.visibility = View.GONE
     } else {
         binding.tapCard.text =
