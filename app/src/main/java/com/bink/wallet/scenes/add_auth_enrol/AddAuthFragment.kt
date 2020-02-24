@@ -389,18 +389,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
                     if (exception is HttpException) {
-                        val errorMessage = getApiErrorMessage(exception)
-                        if (errorMessage.isNotEmpty()) {
-                            requireContext().displayModalPopup(
-                                getString(R.string.error),
-                                errorMessage
-                            )
-                        } else {
-                            requireContext().displayModalPopup(
-                                getString(R.string.error),
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            getApiErrorMessage(
+                                exception,
                                 getString(R.string.error_scheme_already_exists)
                             )
-                        }
+                        )
                     } else {
                         requireContext().displayModalPopup(
                             getString(R.string.error),

@@ -6,7 +6,7 @@ import retrofit2.HttpException
 
 class ApiErrorUtils {
     companion object {
-        fun getApiErrorMessage(httpException: HttpException): String {
+        fun getApiErrorMessage(httpException: HttpException, defaultMessage: String): String {
             return try {
                 val apiError = Gson().fromJson(
                     httpException.response()?.errorBody()?.string()?.let { it },
@@ -14,7 +14,7 @@ class ApiErrorUtils {
                 )
                 apiError.non_field_errors[0]
             } catch (e: Exception) {
-                ""
+                defaultMessage
             }
         }
     }
