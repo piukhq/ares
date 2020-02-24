@@ -30,7 +30,7 @@ android {
     compileSdkVersion 29
     signingConfigs {
         binkSigningConfig {
-            storeFile file('keystore')
+            storeFile file('bink-keystore.jks')
             if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
                 keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
                 keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
@@ -43,7 +43,6 @@ android {
         }
     }
     defaultConfig {
-//        applicationId "com.bink.wallet.neo"
         applicationId "com.bink.wallet"
         minSdkVersion 23
         targetSdkVersion 29
