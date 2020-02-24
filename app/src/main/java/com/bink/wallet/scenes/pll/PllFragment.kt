@@ -14,6 +14,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.PLL_VIEW
+import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -22,6 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     override val layoutRes: Int
         get() = R.layout.fragment_pll
+
     override val viewModel: PllViewModel by viewModel()
 
     override fun builder(): FragmentToolbar {
@@ -35,6 +38,12 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     private var isAddJourney = false
     val unselectedCards = mutableListOf<String>()
     val selectedCards = mutableListOf<String>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(PLL_VIEW)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -164,10 +173,12 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     }
 
                     if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
-                        findNavController().popBackStack()
+                        navigateToLCD()
                     }
                 }
             }
+
+            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
         }
 
         viewModel.fetchError.observeNonNull(this) {

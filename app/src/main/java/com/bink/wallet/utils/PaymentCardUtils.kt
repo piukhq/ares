@@ -48,7 +48,8 @@ fun String.presentedCardType(): PaymentCardType {
                     val range = prefix.split(SEPARATOR_HYPHEN)
                     if (range.size > 1 &&
                         sanitizedInput >= range[0] &&
-                        sanitizedInput <= range[1]) {
+                        sanitizedInput <= range[1]
+                    ) {
                         return it
                     } else if (sanitizedInput.length >= prefix.length &&
                         sanitizedInput.substring(0, prefix.length) == prefix
@@ -234,4 +235,30 @@ fun String.formatDate(): String {
         builder.append(year)
     }
     return builder.toString()
+}
+
+object PaymentCardUtils {
+
+   fun existLinkedMembershipCards(
+        paymentCard: PaymentCard,
+        membershipCards: MutableList<MembershipCard>
+    ): Boolean {
+        countLinkedPaymentCards(paymentCard, membershipCards)?.let {
+            return it > 0
+        }
+        return false
+    }
+
+    fun countLinkedPaymentCards(
+        paymentCard: PaymentCard,
+        membershipCards: MutableList<MembershipCard>
+    ): Int? {
+        val membershipCardIds = mutableListOf<String>()
+        membershipCards.forEach { membershipCard ->
+            membershipCardIds.add(membershipCard.id)
+        }
+        return paymentCard.membership_cards.count { card ->
+            membershipCardIds.contains(card.id) && card.active_link == true
+        }
+    }
 }

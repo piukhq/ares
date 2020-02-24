@@ -18,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.FirebaseUtils.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
@@ -84,10 +85,46 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        logScreenView(LOYALTY_WALLET_VIEW)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
+            setCardsData(userDataResult)
+        }
+        viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
+            setCardsData(localUserDataResult)
+        }
+        viewModel.dismissedBannerDisplay.observeNonNull(this) {
+            walletAdapter.deleteBannerDisplayById(it)
+            viewModel.fetchDismissedCards()
+            binding.progressSpinner.visibility = View.VISIBLE
+            binding.swipeLayout.isEnabled = true
+        }
+
+        viewModel.localPaymentCards.observeNonNull(this) {
+            walletAdapter.paymentCards = it.toMutableList()
+        }
+
+        binding.loyaltyWalletList.apply {
+            layoutManager = GridLayoutManager(requireContext(), 1)
+            adapter = walletAdapter
+
+            val helperListenerLeft =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
+
+            val helperListenerRight =
+                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
+
+            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
 
@@ -98,6 +135,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         manageRecyclerView()
+
+        viewModel.fetchLocalPaymentCards()
 
         binding.swipeLayout.setOnRefreshListener {
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {

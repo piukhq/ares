@@ -222,6 +222,10 @@
         <argument
                 android:name="isRetryJourney"
                 app:argType="boolean" />
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/add_join_to_ghost"
@@ -278,6 +282,10 @@
                 android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true" />
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/sign_up_to_details"
@@ -656,6 +664,10 @@
         <argument
                 android:name="bankCard"
                 app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
+
+        <argument
+            android:name="cardNo"
+            app:argType="string" />
 
         <action
                 android:id="@+id/card_terms_to_add"

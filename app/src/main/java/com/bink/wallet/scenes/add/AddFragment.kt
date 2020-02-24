@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
+import com.bink.wallet.utils.FirebaseUtils.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.INT_ONE_HUNDRED
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -27,6 +28,12 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     override val viewModel: AddViewModel by viewModel()
 
     private val marginPercent = 75
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(ADD_OPTIONS_VIEW)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

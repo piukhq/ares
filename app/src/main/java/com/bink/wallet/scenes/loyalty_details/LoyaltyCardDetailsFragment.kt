@@ -16,13 +16,10 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseUtils.LOYALTY_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.LinkStatus
-import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.VoucherStates
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -49,14 +46,18 @@ class LoyaltyCardDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        logScreenView(LOYALTY_DETAIL_VIEW)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
-
-        setLoadingState(true)
 
         fetchData()
 
@@ -475,14 +476,19 @@ class LoyaltyCardDetailsFragment :
     private fun configureLinkStatus(linkStatus: LinkStatus) {
         when (linkStatus) {
             LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
-                val activeLinkedParams =
-                    listOf(
-                        viewModel.membershipCard.value?.payment_cards?.count {
-                            it.active_link == true
-                        },
-                        viewModel.paymentCardsMerger.value?.size
-                    )
-                linkStatus.descriptionParams = activeLinkedParams
+                viewModel.paymentCardsMerger.value?.let { paymentCards ->
+                    viewModel.membershipCard.value?.let { membershipCard ->
+                        val activeLinkedParams =
+                            listOf(
+                                MembershipPlanUtils.countLinkedPaymentCards(
+                                    membershipCard,
+                                    paymentCards.toMutableList()
+                                ),
+                                paymentCards.size
+                            )
+                        linkStatus.descriptionParams = activeLinkedParams
+                    }
+                }
             }
             else -> linkStatus.descriptionParams = null
         }
@@ -530,7 +536,7 @@ class LoyaltyCardDetailsFragment :
                                 LoyaltyCardDetailsFragmentDirections.detailToPll(
                                     membershipCard, membershipPlan, false
                                 )
-                        }
+                            }
                         directions?.let { _ ->
                             findNavController().navigateIfAdded(
                                 this,
@@ -622,7 +628,8 @@ class LoyaltyCardDetailsFragment :
                                 it,
                                 viewModel.membershipCard.value?.id,
                                 false,
-                                isRetryJourney = true
+                                isRetryJourney = true,
+                                isFromNoReasonCodes = true
                             )
                         findNavController().navigateIfAdded(this, directions)
                     }
@@ -749,7 +756,8 @@ class LoyaltyCardDetailsFragment :
                                 it,
                                 viewModel.membershipCard.value?.id,
                                 false,
-                                isRetryJourney = true
+                                isRetryJourney = true,
+                                isFromNoReasonCodes = true
                             )
                         findNavController().navigateIfAdded(this, directions)
                     }

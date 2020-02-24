@@ -11,11 +11,16 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
 import kotlinx.coroutines.launch
 
-class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
+class LoyaltyViewModel constructor(
+    private val loyaltyWalletRepository: LoyaltyWalletRepository,
+    private val paymentWalletRepository: PaymentWalletRepository
+) :
     BaseViewModel() {
 
     val membershipCardData = MutableLiveData<List<MembershipCard>>()
@@ -23,6 +28,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val membershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
+
+    private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
+    val localPaymentCards: LiveData<List<PaymentCard>>
+        get() = _localPaymentCards
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
     private val _addError = MutableLiveData<Throwable>()
     val addError: LiveData<Throwable>
@@ -149,6 +158,10 @@ class LoyaltyViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
 
     fun fetchDismissedCards() {
         loyaltyWalletRepository.retrieveDismissedCards(dismissedCardData, _fetchError)
+    }
+
+    fun fetchLocalPaymentCards() {
+        paymentWalletRepository.getLocalPaymentCards(_localPaymentCards, _fetchError)
     }
 
     fun addPlanIdAsDismissed(id: String) {

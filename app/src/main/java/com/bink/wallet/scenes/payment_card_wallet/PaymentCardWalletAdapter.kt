@@ -9,6 +9,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.PaymentCardWalletItemBinding
 import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.MembershipCardListWrapper
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
 import com.bink.wallet.utils.getCardTypeFromProvider
@@ -23,6 +25,8 @@ class PaymentCardWalletAdapter(
         private const val PAYMENT_CARD = 0
         private const val JOIN_PAYMENT = 2
     }
+
+    var membershipCards: MutableList<MembershipCard>? = null
 
     var paymentCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
         notifyChanges(oldList, newList)
@@ -95,6 +99,9 @@ class PaymentCardWalletAdapter(
         override fun bind(item: PaymentCard) {
             with(binding) {
                 paymentCard = item
+                membershipCards?.let{
+                    membershipCardsWrapper = MembershipCardListWrapper(it)
+                }
                 executePendingBindings()
 
                 item.card?.let { card ->
