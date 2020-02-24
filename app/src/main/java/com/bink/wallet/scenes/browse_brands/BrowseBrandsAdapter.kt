@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.R
 import com.bink.wallet.databinding.BrandListItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardType
@@ -43,8 +44,6 @@ class BrowseBrandsAdapter(
 
     class BrandsViewHolder(val binding: BrandListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        private val titleMarginTop = 24f
 
         fun bind(item: Pair<String?, MembershipPlan>, isLast: Boolean) {
             if (item.first != null) {
@@ -110,7 +109,11 @@ class BrowseBrandsAdapter(
                     ConstraintSet.TOP,
                     binding.constraintLayout.id,
                     ConstraintSet.TOP,
-                    binding.root.context.toPixelFromDip(titleMarginTop).toInt()
+                    binding.root.context.toPixelFromDip(
+                        binding.root.context.resources.getDimension(
+                            R.dimen.centered_title_margin_top
+                        )
+                    ).toInt()
                 )
                 applyTo(binding.constraintLayout)
             }

@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/list_item_height">
 
         <TextView
                 android:id="@+id/section_title"
@@ -40,12 +40,12 @@
 
             <ImageView
                     android:id="@+id/brand_logo"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/margin_padding_size_extra_large"
+                    android:layout_height="@dimen/margin_padding_size_extra_large"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/custom_margin_add_fragment"
                     android:layout_marginEnd="@dimen/custom_margin_add_fragment"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="@dimen/custom_margin_add_fragment"
                     app:imageUrl="@{item}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/browse_brands_title"
@@ -58,7 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_small"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="@dimen/margin_padding_size_triple_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_small"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:text="@{item.account.company_name}"
@@ -73,7 +73,7 @@
                     android:id="@+id/browse_brands_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
                     android:fontFamily="@font/nunito_sans_light"
                     android:maxLines="2"
                     android:text="@string/brand_list_item_description"
@@ -87,7 +87,7 @@
                     android:id="@+id/brands_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/custom_margin_add_fragment"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:src="@drawable/ic_right"
@@ -102,7 +102,7 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/item_separator_line_height"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="@dimen/margin_padding_size_triple_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:background="@color/grey_20"
                     app:layout_constraintEnd_toEndOf="parent"
