@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.R
 import com.bink.wallet.databinding.BrandListItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardType
@@ -94,6 +93,7 @@ class BrowseBrandsAdapter(
 
         private fun resetTitlePosition() {
             binding.browseBrandsDescription.visibility = View.VISIBLE
+            val marginValue = 24f
             val constraintSet = ConstraintSet()
             constraintSet.apply {
                 clone(binding.constraintLayout)
@@ -109,11 +109,7 @@ class BrowseBrandsAdapter(
                     ConstraintSet.TOP,
                     binding.constraintLayout.id,
                     ConstraintSet.TOP,
-                    binding.root.context.toPixelFromDip(
-                        binding.root.context.resources.getDimension(
-                            R.dimen.centered_title_margin_top
-                        )
-                    ).toInt()
+                    binding.root.context.toPixelFromDip(marginValue).toInt()
                 )
                 applyTo(binding.constraintLayout)
             }
