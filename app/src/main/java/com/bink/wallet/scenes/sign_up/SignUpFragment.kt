@@ -290,7 +290,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     }
 
     private fun initMembershipPlansObserver() {
-        viewModel.membershipPlanMutableLiveData.observeNonNull(this@SignUpFragment) {
+        viewModel.membershipPlanDatabaseLiveData.observeNonNull(this@SignUpFragment) {
             viewModel.isLoading.value = false
             finaliseAuthenticationFlow()
         }
