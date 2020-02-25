@@ -69,7 +69,7 @@ class PaymentCardWalletFragment :
         val dialog: AlertDialog
         val builder = requireContext().let { AlertDialog.Builder(it) }
         builder.setCancelable(false)
-        builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
+        builder.setTitle(getString(R.string.loyalty_wallet_dialog_title))
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
