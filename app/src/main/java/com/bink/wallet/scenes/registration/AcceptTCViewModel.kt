@@ -5,10 +5,15 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import okhttp3.ResponseBody
 
-class AcceptTCViewModel(val loginRepository: LoginRepository) : BaseViewModel() {
+class AcceptTCViewModel(
+    val loginRepository: LoginRepository,
+    val loyaltyWalletRepository: LoyaltyWalletRepository
+) : BaseViewModel() {
 
     var facebookAuthResult = MutableLiveData<FacebookAuthResponse>()
     var facebookAuthError = MutableLiveData<Throwable>()
@@ -16,6 +21,10 @@ class AcceptTCViewModel(val loginRepository: LoginRepository) : BaseViewModel() 
     var marketingError = MutableLiveData<Throwable>()
     var shouldAcceptBeEnabledTC = MutableLiveData<Boolean>()
     var shouldAcceptBeEnabledPrivacy = MutableLiveData<Boolean>()
+
+    val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+        MutableLiveData()
+    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
 
     init {
         shouldAcceptBeEnabledTC.value = false
@@ -26,7 +35,15 @@ class AcceptTCViewModel(val loginRepository: LoginRepository) : BaseViewModel() 
         loginRepository.authWithFacebook(facebookAuthRequest, facebookAuthResult, facebookAuthError)
     }
 
-    fun handleMarketingPreferences(marketingOption: MarketingOption){
+    fun handleMarketingPreferences(marketingOption: MarketingOption) {
         loginRepository.checkMarketingPref(marketingOption, marketingPreferences, marketingError)
+    }
+
+    fun getMembershipPlans() {
+        loyaltyWalletRepository.retrieveMembershipPlans(
+            membershipPlanMutableLiveData,
+            membershipPlanErrorLiveData,
+            false
+        )
     }
 }

@@ -104,11 +104,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     LocalStoreUtils.KEY_EMAIL,
                     it.email ?: EMPTY_STRING
                 )
-
-                findNavController().navigateIfAdded(
-                    this@LoginFragment,
-                    R.id.global_to_home
-                )
+                viewModel.getMembershipPlans()
             }
 
             logInErrorResponse.observeNonNull(this@LoginFragment) {
@@ -164,6 +160,25 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
             logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.logInButton.text.toString()))
         }
+
+        initMembershipPlansObserver()
+    }
+
+    private fun initMembershipPlansObserver() {
+        viewModel.membershipPlanMutableLiveData.observeNonNull(this@LoginFragment) {
+            finishLogInProcess()
+        }
+
+        viewModel.membershipPlanErrorLiveData.observeNonNull(this@LoginFragment) {
+            finishLogInProcess()
+        }
+    }
+
+    private fun finishLogInProcess() {
+        findNavController().navigateIfAdded(
+            this@LoginFragment,
+            R.id.global_to_home
+        )
     }
 
     override fun onPause() {

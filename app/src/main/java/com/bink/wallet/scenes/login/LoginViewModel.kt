@@ -6,11 +6,18 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.*
 import kotlinx.coroutines.launch
 
-class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseViewModel() {
+class LoginViewModel constructor(
+    var loginRepository: LoginRepository,
+    val loyaltyWalletRepository: LoyaltyWalletRepository
+) : BaseViewModel() {
 
     val loginBody = MutableLiveData<LoginBody>()
     val loginData = MutableLiveData<LoginData>()
@@ -24,6 +31,9 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
+    val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+        MutableLiveData()
+    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
 
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
@@ -70,6 +80,14 @@ class LoginViewModel constructor(var loginRepository: LoginRepository) : BaseVie
             LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_EMAIL
             ) ?: EMPTY_STRING
+        )
+    }
+
+    fun getMembershipPlans() {
+        loyaltyWalletRepository.retrieveMembershipPlans(
+            membershipPlanMutableLiveData,
+            membershipPlanErrorLiveData,
+            false
         )
     }
 }
