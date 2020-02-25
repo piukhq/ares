@@ -40,30 +40,16 @@
                 android:id="@+id/recycler"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:scrollIndicators="none"
-                android:overScrollMode="never"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:overScrollMode="never"
+                android:paddingBottom="@dimen/voucher_details_card_padding_bottom"
+                android:scrollIndicators="none"
+                app:layout_constraintBottom_toTopOf="@id/code"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 tools:itemCount="1"
                 tools:listitem="@layout/detail_voucher_item" />
-
-        <View
-                android:id="@+id/spacing_view"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/voucher_card_margin_bottom"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler" />
-
-        <View
-                android:id="@+id/spacing_view2"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/voucher_card_margin_bottom"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spacing_view" />
 
         <TextView
                 android:id="@+id/code"
@@ -72,12 +58,14 @@
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_extrabold"
+                android:paddingBottom="@dimen/voucher_details_code_padding_bottom"
                 android:textColor="@color/grey_50"
                 android:textSize="@dimen/text_size_title_big"
                 android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/main_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spacing_view2"
+                app:layout_constraintTop_toBottomOf="@id/recycler"
                 tools:text="RCC0001999"
                 tools:visibility="visible" />
 
@@ -86,16 +74,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/voucher_code_bottom"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_extrabold"
-                android:lineSpacingExtra="@dimen/title_line_spacing_extra"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_title_big"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/code" />
+                app:layout_constraintTop_toBottomOf="@id/code"
+                tools:text="Your voucher is ready!"
+                tools:visibility="visible" />
 
         <TextView
                 android:id="@+id/main_text"
@@ -117,7 +105,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/voucher_date_top"
+                android:layout_marginTop="@dimen/voucher_details_first_date_margin_top"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:fontFamily="@font/nunito_sans_light"
                 android:textColor="@color/black"

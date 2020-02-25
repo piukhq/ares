@@ -296,17 +296,6 @@ private fun getDateFormat(shortMonth: Boolean): String {
     return builder.toString()
 }
 
-@BindingAdapter("transactionTime", "format")
-fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
-    with(this) {
-        visibility = View.VISIBLE
-        text = String.format(format, dateTimeFormatTransactionTime(timeStamp))
-    }
-}
-
-private fun dateTimeFormatTransactionTime(timeStamp: Long) =
-    DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
-
 @BindingAdapter("transactionArrow")
 fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
     membershipTransactions.amounts?.get(0)?.value?.let {
@@ -378,10 +367,8 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
 fun TextView.textAndShow(string: String?) {
     string?.let {
-        with(this) {
-            visibility = View.VISIBLE
-            text = it
-        }
+        visibility = View.VISIBLE
+        text = it
     }
 }
 
