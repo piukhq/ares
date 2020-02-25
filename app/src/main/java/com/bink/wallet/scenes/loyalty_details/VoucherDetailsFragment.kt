@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.format.DateFormat
 import android.text.style.UnderlineSpan
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,6 @@ import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
-import com.bink.wallet.utils.setFullTimestamp
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,6 +34,11 @@ class VoucherDetailsFragment :
 
     override val viewModel: VoucherDetailsViewModel by viewModel()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -45,7 +50,6 @@ class VoucherDetailsFragment :
 
         }
         binding.membershipPlan = viewModel.membershipPlan.value
-        binding.executePendingBindings()
 
         viewModel.voucher.value?.let { voucher ->
             with(binding.recycler) {
@@ -81,101 +85,98 @@ class VoucherDetailsFragment :
                                     )
                             }
                             VoucherStates.ISSUED.state -> {
-                                with(binding) {
-                                    mainTitle.textAndShow(
-                                        getString(
-                                            R.string.voucher_detail_title_issued,
-                                            displayValue(
-                                                burn.value,
-                                                burn.prefix,
-                                                burn.suffix,
-                                                burn.currency,
-                                                burn.type
-                                            )
+                                setVoucherDetails(
+                                    title = getString(
+                                        R.string.voucher_detail_title_issued,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            burn.type
                                         )
-                                    )
-                                    mainText.textAndShow(
-                                        getString(
-                                            R.string.plr_redeem_instructions,
-                                            displayValue(
-                                                burn.value,
-                                                burn.prefix,
-                                                burn.suffix,
-                                                burn.currency,
-                                                null
-                                            )
+                                    ),
+                                    body = getString(
+                                        R.string.plr_redeem_instructions,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            null
                                         )
-                                    )
-                                    voucher.date_issued?.let {
-                                        dateOne.setFullTimestamp(
-                                            it,
-                                            getString(R.string.voucher_detail_date_issued)
+                                    ),
+                                    firstDate = voucher.date_issued?.let {
+                                        getString(
+                                            R.string.voucher_detail_date_issued,
+                                            dateTimeFormatTransactionTime(it)
+                                        )
+                                    },
+                                    secondDate = voucher.expiry_date?.let {
+                                        getString(
+                                            R.string.voucher_detail_date_expires,
+                                            dateTimeFormatTransactionTime(it)
                                         )
                                     }
-                                    voucher.expiry_date?.let {
-                                        dateTwo.setFullTimestamp(
-                                            it,
-                                            getString(R.string.voucher_detail_date_expires)
-                                        )
-                                    }
-                                    code.setTextColor(resources.getColor(R.color.green_ok, null))
-                                }
+                                )
+                                binding.code.setTextColor(
+                                    resources.getColor(
+                                        R.color.green_ok,
+                                        null
+                                    )
+                                )
                             }
                             VoucherStates.EXPIRED.state -> {
-                                with(binding) {
-                                    mainTitle.textAndShow(
+                                setVoucherDetails(
+                                    title = getString(
+                                        R.string.voucher_detail_title_expired,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            burn.type
+                                        )
+                                    ),
+                                    firstDate = voucher.date_issued?.let {
                                         getString(
-                                            R.string.voucher_detail_title_expired,
-                                            displayValue(
-                                                burn.value,
-                                                burn.prefix,
-                                                burn.suffix,
-                                                burn.currency,
-                                                burn.type
-                                            )
+                                            R.string.voucher_detail_date_issued,
+                                            dateTimeFormatTransactionTime(it)
                                         )
-                                    )
-                                    voucher.date_issued?.let {
-                                        dateOne.setFullTimestamp(
-                                            it,
-                                            getString(R.string.voucher_detail_date_issued)
+                                    },
+                                    secondDate = voucher.expiry_date?.let {
+                                        getString(
+                                            R.string.voucher_detail_date_expired,
+                                            dateTimeFormatTransactionTime(it)
                                         )
                                     }
-                                    voucher.expiry_date?.let {
-                                        dateTwo.setFullTimestamp(
-                                            it,
-                                            getString(R.string.voucher_detail_date_expired)
-                                        )
-                                    }
-                                }
+                                )
                             }
                             VoucherStates.REDEEMED.state -> {
-                                with(binding) {
-                                    mainTitle.textAndShow(
+                                setVoucherDetails(
+                                    title = getString(
+                                        R.string.voucher_detail_title_redeemed,
+                                        displayValue(
+                                            burn.value,
+                                            burn.prefix,
+                                            burn.suffix,
+                                            burn.currency,
+                                            burn.type
+                                        )
+                                    ),
+                                    firstDate = voucher.date_issued?.let {
                                         getString(
-                                            R.string.voucher_detail_title_redeemed,
-                                            displayValue(
-                                                burn.value,
-                                                burn.prefix,
-                                                burn.suffix,
-                                                burn.currency,
-                                                burn.type
-                                            )
+                                            R.string.voucher_detail_date_issued,
+                                            dateTimeFormatTransactionTime(it)
                                         )
-                                    )
-                                    voucher.date_issued?.let {
-                                        dateOne.setFullTimestamp(
-                                            it,
-                                            getString(R.string.voucher_detail_date_issued)
+                                    },
+                                    secondDate = voucher.date_redeemed?.let {
+                                        getString(
+                                            R.string.voucher_detail_date_redeemed,
+                                            dateTimeFormatTransactionTime(it)
                                         )
                                     }
-                                    voucher.date_redeemed?.let {
-                                        dateTwo.setFullTimestamp(
-                                            it,
-                                            getString(R.string.voucher_detail_date_redeemed)
-                                        )
-                                    }
-                                }
+                                )
                             }
                         }
                     }
@@ -212,4 +213,24 @@ class VoucherDetailsFragment :
             }
         }
     }
+
+    private fun setVoucherDetails(
+        title: String? = null,
+        body: String? = null,
+        firstDate: String? = null,
+        secondDate: String? = null
+    ) {
+        binding.apply {
+            mainTitle.textAndShow(title)
+            mainText.textAndShow(body)
+            dateOne.textAndShow(firstDate)
+            dateTwo.textAndShow(secondDate)
+        }
+    }
+
+    companion object {
+        private fun dateTimeFormatTransactionTime(timeStamp: Long) =
+            DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
+    }
+
 }
