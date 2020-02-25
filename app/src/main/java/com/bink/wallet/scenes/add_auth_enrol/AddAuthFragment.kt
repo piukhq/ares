@@ -298,34 +298,46 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.noAccountText.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
-                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
-                ) {
-                    viewModel.currentMembershipPlan.value?.let {
-                        findNavController().navigateIfAdded(
-                            this,
-                            AddAuthFragmentDirections.toGhost(
-                                SignUpFormType.GHOST,
-                                it,
-                                isRetryJourney
-                            )
-                        )
-                    }
-                } else {
-                    findNavController().navigateIfAdded(
-                        this,
-                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                true,
-                                getString(R.string.title_ghost_card_not_available),
-                                getString(R.string.description_ghost_card_not_available)
-                            )
-                        )
+            //TODO: Replace this with appropriate navigation logic after MVP
+            findNavController().navigateIfAdded(
+                this,
+                AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        getString(R.string.title_ghost_card_not_available),
+                        getString(R.string.description_ghost_card_not_available)
                     )
-
-                }
-            }
+                )
+            )
+//            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
+//                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
+//                ) {
+//                    viewModel.currentMembershipPlan.value?.let {
+//                        findNavController().navigateIfAdded(
+//                            this,
+//                            AddAuthFragmentDirections.toGhost(
+//                                SignUpFormType.GHOST,
+//                                it,
+//                                isRetryJourney
+//                            )
+//                        )
+//                    }
+//                } else {
+//                    findNavController().navigateIfAdded(
+//                        this,
+//                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+//                            GenericModalParameters(
+//                                R.drawable.ic_close,
+//                                true,
+//                                getString(R.string.title_ghost_card_not_available),
+//                                getString(R.string.description_ghost_card_not_available)
+//                            )
+//                        )
+//                    )
+//
+//                }
+//            }
 
             logEvent(
                 getFirebaseIdentifier(
