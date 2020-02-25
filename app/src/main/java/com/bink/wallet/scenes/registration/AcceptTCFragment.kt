@@ -215,7 +215,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     }
 
     private fun initMembershipPlansObserver() {
-        viewModel.membershipPlanMutableLiveData.observeNonNull(this@AcceptTCFragment) {
+        viewModel.membershipPlanDatabaseLiveData.observeNonNull(this@AcceptTCFragment) {
             finishLogInProcess()
         }
 
