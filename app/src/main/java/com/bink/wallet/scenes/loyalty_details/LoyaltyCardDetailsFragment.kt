@@ -54,6 +54,7 @@ class LoyaltyCardDetailsFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
@@ -157,9 +158,11 @@ class LoyaltyCardDetailsFragment :
             viewModel.setLinkStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this) {
+        viewModel.membershipCard.observeNonNull(this) { card ->
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-
+            viewModel.membershipPlan.value?.let { plan ->
+                binding.cardHeader.linkCard(card, plan)
+            }
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
             }

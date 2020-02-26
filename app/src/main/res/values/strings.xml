@@ -105,6 +105,7 @@
     <string name="loyalty_card_pll_retry">Retry</string>
     <string name="loyalty_card_pll_pending">Pending</string>
     <string name="loyalty_card_delete_error_message">We encountered an error. Please try again later.</string>
+    <string name="loyalty_card_details_header_placeholder_text">%s Membership Card</string>
 
 
     <!-- 1.1 -->

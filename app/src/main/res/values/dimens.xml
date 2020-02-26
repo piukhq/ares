@@ -140,4 +140,8 @@
 
     <!-- LCD -->
     <dimen name="layout_elevation">5dp</dimen>
+    <dimen name="loyalty_card_details_header_min_height">236dp</dimen>
+    <dimen name="loyalty_card_header_placeholder_text_margin_horizontal">16dp</dimen>
+    <dimen name="loyalty_card_header_placeholder_text_margin_vertical">16dp</dimen>
+    <dimen name="loyalty_card_header_corner_radius">12dp</dimen>
 </resources>
