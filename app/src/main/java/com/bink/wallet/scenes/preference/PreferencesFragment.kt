@@ -24,10 +24,9 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
     override val layoutRes = R.layout.preferences_fragment
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(PREFERENCES_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(PREFERENCES_VIEW)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -42,10 +42,9 @@ class PaymentCardWalletFragment :
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(PAYMENT_WALLET_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(PAYMENT_WALLET_VIEW)
     }
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :

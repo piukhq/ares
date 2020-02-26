@@ -46,6 +46,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onResume() {
         super.onResume()
+        logScreenView(getScreenName(args.signUpFormType))
         windowFullscreenHandler.toFullscreen()
     }
 
@@ -62,12 +63,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(getScreenName(args.signUpFormType), this)
-    }
 
     private fun addFieldToList(planField: Any) {
         when (planField) {

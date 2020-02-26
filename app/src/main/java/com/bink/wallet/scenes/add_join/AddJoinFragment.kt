@@ -17,7 +17,6 @@ import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,10 +47,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     override val viewModel: AddJoinViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(STORE_LINK_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(STORE_LINK_VIEW)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

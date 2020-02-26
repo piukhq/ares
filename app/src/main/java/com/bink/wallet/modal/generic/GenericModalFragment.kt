@@ -29,10 +29,9 @@ open class GenericModalFragment :
             .build()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(INFORMATION_MODAL_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(INFORMATION_MODAL_VIEW)
     }
 
     private val scrollChangeListener = ViewTreeObserver.OnScrollChangedListener {

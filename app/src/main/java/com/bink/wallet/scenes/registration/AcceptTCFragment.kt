@@ -45,10 +45,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private var userEmail: String? = null
     private var accessToken: AccessToken? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(TERMS_AND_CONDITIONS_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(TERMS_AND_CONDITIONS_VIEW)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

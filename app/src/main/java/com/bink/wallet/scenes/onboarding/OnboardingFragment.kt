@@ -48,8 +48,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         FacebookSdk.sdkInitialize(context)
         LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
+    }
 
-        logScreenView(ONBOARDING_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(ONBOARDING_VIEW)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

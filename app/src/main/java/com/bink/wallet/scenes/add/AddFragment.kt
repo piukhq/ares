@@ -29,10 +29,9 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private val marginPercent = 75
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(ADD_OPTIONS_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(ADD_OPTIONS_VIEW)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

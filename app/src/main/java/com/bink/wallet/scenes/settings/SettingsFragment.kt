@@ -41,10 +41,9 @@ class SettingsFragment :
 
     override val viewModel: SettingsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(SETTINGS_VIEW, this)
+    override fun onResume() {
+        super.onResume()
+        logScreenView(SETTINGS_VIEW)
     }
 
     override fun onChanged(value: ListHolder<SettingsItem>?) {

@@ -32,12 +32,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override val viewModel: LoginViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(LOGIN_VIEW, this)
-    }
-
     private val listener: ViewTreeObserver.OnGlobalLayoutListener =
         ViewTreeObserver.OnGlobalLayoutListener {
             val rec = Rect()
@@ -57,6 +51,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onResume() {
         super.onResume()
+        logScreenView(LOGIN_VIEW)
         binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
     }
 

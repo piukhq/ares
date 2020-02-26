@@ -46,12 +46,6 @@ class LoyaltyCardDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(LOYALTY_DETAIL_VIEW, this)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
@@ -323,13 +317,13 @@ class LoyaltyCardDetailsFragment :
     private fun setLoadingState(isLoading: Boolean) {
         with(binding) {
             if (isLoading) {
-//                loadingIndicator.visibility = View.VISIBLE
-//                linkedWrapper.visibility = View.INVISIBLE
-//                pointsWrapper.visibility = View.INVISIBLE
-//            } else {
-//                loadingIndicator.visibility = View.GONE
-//                linkedWrapper.visibility = View.VISIBLE
-//                pointsWrapper.visibility = View.VISIBLE
+                loadingIndicator.visibility = View.VISIBLE
+                linkedWrapper.visibility = View.INVISIBLE
+                pointsWrapper.visibility = View.INVISIBLE
+            } else {
+                loadingIndicator.visibility = View.GONE
+                linkedWrapper.visibility = View.VISIBLE
+                pointsWrapper.visibility = View.VISIBLE
             }
         }
     }
@@ -341,6 +335,7 @@ class LoyaltyCardDetailsFragment :
 
     override fun onResume() {
         super.onResume()
+        logScreenView(LOYALTY_DETAIL_VIEW)
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
