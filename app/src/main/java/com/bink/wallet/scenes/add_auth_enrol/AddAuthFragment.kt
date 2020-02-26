@@ -497,6 +497,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 }
                             }
                             SignUpFormType.GHOST -> {
+                                Log.e("ConnorDebug", "signup type membership_card ghost!!")
                                 if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
                                     context?.displayModalPopup(
                                         null,
@@ -518,7 +519,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
                                 if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
                                     membershipCardId?.let {
-                                        viewModel.updateMembershipCard(it, currentRequest)
+                                        viewModel.ghostMembershipCard(it, currentRequest)
                                     }
                                 } else {
                                     viewModel.createMembershipCard(
@@ -577,8 +578,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     ),
                     viewModel.currentMembershipPlan.value?.id
                 )
+                Log.e("ConnorDebug", "post membership_card ghost")
                 viewModel.ghostMembershipCard(
-                    membershipCard,
+                    membershipCard.id,
                     currentRequest
                 )
             }
