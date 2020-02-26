@@ -1,5 +1,6 @@
 package com.bink.wallet.di
 
+import com.bink.wallet.MainViewModel
 import com.bink.wallet.data.*
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
@@ -45,7 +46,7 @@ import org.koin.dsl.module
 val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
 
     single {
         provideLoyaltyCardRepository(
@@ -106,7 +107,7 @@ val viewModelModules = module {
 
     viewModel { SettingsViewModel(get(), get(), get()) }
 
-    viewModel { SignUpViewModel(get()) }
+    viewModel { SignUpViewModel(get(), get()) }
 
     single {
         provideAddPaymentCardRepository(
@@ -119,7 +120,7 @@ val viewModelModules = module {
     }
     viewModel { CardTermsAndConditionsViewModel(get()) }
 
-    viewModel { AcceptTCViewModel(get()) }
+    viewModel { AcceptTCViewModel(get(), get()) }
 
     viewModel { AddEmailViewModel() }
 
@@ -128,6 +129,8 @@ val viewModelModules = module {
     viewModel { PreferencesViewModel(get()) }
 
     viewModel { OnboardingViewModel(get(), get()) }
+
+    viewModel { MainViewModel(get()) }
 }
 
 fun provideLoginRepository(

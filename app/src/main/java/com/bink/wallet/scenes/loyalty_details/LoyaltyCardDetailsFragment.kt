@@ -646,7 +646,7 @@ class LoyaltyCardDetailsFragment :
     private fun handleBrandHeader() {
         viewModel.membershipCard.value?.let { membershipCard ->
             if (membershipCard.card != null &&
-                (!membershipCard.card?.barcode.isNullOrEmpty() ||
+                (!membershipCard.card?.barcode.isNullOrEmpty() &&
                         !membershipCard.card?.membership_id.isNullOrEmpty())
             ) {
                 binding.cardHeader.setOnClickListener {
@@ -662,7 +662,9 @@ class LoyaltyCardDetailsFragment :
 
                     directions?.let { findNavController().navigateIfAdded(this, directions) }
                 }
-            } else if (membershipCard.card?.membership_id.isNullOrEmpty()) {
+            } else if (membershipCard.card?.membership_id.isNullOrEmpty() ||
+                membershipCard.card?.barcode.isNullOrEmpty()
+            ) {
                 binding.cardHeader.binding.tapCard.visibility = View.GONE
             }
         }

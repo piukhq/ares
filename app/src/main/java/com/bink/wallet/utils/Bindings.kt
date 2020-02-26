@@ -202,14 +202,15 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         })
         .into(binding.image)
 
-    if (card?.card?.barcode.isNullOrEmpty()) {
-        if (card?.card?.membership_id.isNullOrEmpty()) {
-            binding.tapCard.visibility = View.GONE
-        } else {
-            binding.tapCard.text =
-                binding.root.context.getString(R.string.tap_card_to_show_card_number)
-        }
+    if (card?.card?.barcode.isNullOrEmpty() ||
+        card?.card?.membership_id.isNullOrEmpty()
+    ) {
+        binding.tapCard.visibility = View.GONE
+    } else {
+        binding.tapCard.text =
+            binding.root.context.getString(R.string.tap_card_to_show_card_number)
     }
+}
 }
 
 @BindingAdapter("textBalance")
@@ -322,17 +323,6 @@ private fun getDateFormat(shortMonth: Boolean): String {
     return builder.toString()
 }
 
-@BindingAdapter("transactionTime", "format")
-fun TextView.setFullTimestamp(timeStamp: Long, format: String = "%s") {
-    with(this) {
-        visibility = View.VISIBLE
-        text = String.format(format, dateTimeFormatTransactionTime(timeStamp))
-    }
-}
-
-private fun dateTimeFormatTransactionTime(timeStamp: Long) =
-    DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
-
 @BindingAdapter("transactionArrow")
 fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
     membershipTransactions.amounts?.get(0)?.value?.let {
@@ -404,10 +394,8 @@ fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
 
 fun TextView.textAndShow(string: String?) {
     string?.let {
-        with(this) {
-            visibility = View.VISIBLE
-            text = it
-        }
+        visibility = View.VISIBLE
+        text = it
     }
 }
 

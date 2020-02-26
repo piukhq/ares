@@ -8,13 +8,18 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.combineNonNull
 import okhttp3.ResponseBody
 
-class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
+class SignUpViewModel(
+    var loginRepository: LoginRepository,
+    val loyaltyWalletRepository: LoyaltyWalletRepository
+) : BaseViewModel() {
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val confirmPassword = MutableLiveData<String>()
@@ -27,6 +32,10 @@ class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
     val signUpErrorResponse = MutableLiveData<Throwable>()
     val marketingPrefResponse = MutableLiveData<ResponseBody>()
     val marketingPrefErrorResponse = MutableLiveData<Throwable>()
+
+    val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
+        MutableLiveData()
+    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
 
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
@@ -73,7 +82,6 @@ class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
     ): Boolean =
         password == confirmedPassword
 
-
     fun signUp(signUpRequest: SignUpRequest) {
         loginRepository.signUp(
             signUpRequest,
@@ -87,6 +95,14 @@ class SignUpViewModel(var loginRepository: LoginRepository) : BaseViewModel() {
             marketingOption,
             marketingPrefResponse,
             marketingPrefErrorResponse
+        )
+    }
+
+    fun getMembershipPlans() {
+        loyaltyWalletRepository.retrieveMembershipPlans(
+            membershipPlanMutableLiveData,
+            membershipPlanErrorLiveData,
+            false
         )
     }
 }

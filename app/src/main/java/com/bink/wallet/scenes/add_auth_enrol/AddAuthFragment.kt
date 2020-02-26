@@ -162,19 +162,34 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    AddAuthFragmentDirections.signUpToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            viewModel.currentMembershipPlan.value?.account?.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
+            viewModel.currentMembershipPlan.value?.let {
+                if (it.account?.plan_description != null) {
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddAuthFragmentDirections.signUpToBrandHeader(
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                true,
+                                viewModel.currentMembershipPlan.value?.account?.plan_name
+                                    ?: getString(R.string.plan_description),
+                                it.account.plan_description
+                            )
                         )
                     )
-                )
+                } else if (it.account?.plan_name_card != null) {
+                    it.account.plan_name?.let { planName ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.signUpToBrandHeader(
+                                GenericModalParameters(
+                                    R.drawable.ic_close,
+                                    true,
+                                    planName
+                                )
+                            )
+                        )
+                    }
+                }
             }
         }
 
@@ -298,34 +313,46 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.noAccountText.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
-                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
-                ) {
-                    viewModel.currentMembershipPlan.value?.let {
-                        findNavController().navigateIfAdded(
-                            this,
-                            AddAuthFragmentDirections.toGhost(
-                                SignUpFormType.GHOST,
-                                it,
-                                isRetryJourney
-                            )
-                        )
-                    }
-                } else {
-                    findNavController().navigateIfAdded(
-                        this,
-                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                true,
-                                getString(R.string.title_ghost_card_not_available),
-                                getString(R.string.description_ghost_card_not_available)
-                            )
-                        )
+            //TODO: Replace this with appropriate navigation logic after MVP
+            findNavController().navigateIfAdded(
+                this,
+                AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        getString(R.string.title_ghost_card_not_available),
+                        getString(R.string.description_ghost_card_not_available)
                     )
-
-                }
-            }
+                )
+            )
+//            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
+//                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
+//                ) {
+//                    viewModel.currentMembershipPlan.value?.let {
+//                        findNavController().navigateIfAdded(
+//                            this,
+//                            AddAuthFragmentDirections.toGhost(
+//                                SignUpFormType.GHOST,
+//                                it,
+//                                isRetryJourney
+//                            )
+//                        )
+//                    }
+//                } else {
+//                    findNavController().navigateIfAdded(
+//                        this,
+//                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+//                            GenericModalParameters(
+//                                R.drawable.ic_close,
+//                                true,
+//                                getString(R.string.title_ghost_card_not_available),
+//                                getString(R.string.description_ghost_card_not_available)
+//                            )
+//                        )
+//                    )
+//
+//                }
+//            }
 
             logEvent(
                 getFirebaseIdentifier(

@@ -16,12 +16,14 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.fabric.sdk.android.Fabric
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
 
 
 class MainActivity : AppCompatActivity() {
 
+    private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,11 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+    }
+
+    override fun onResume() {
+        getMembershipPlans()
+        super.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -91,6 +98,10 @@ class MainActivity : AppCompatActivity() {
         val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         finish()
+    }
+
+    private fun getMembershipPlans() {
+        mainViewModel.getMembershipPlans()
     }
 }
 
