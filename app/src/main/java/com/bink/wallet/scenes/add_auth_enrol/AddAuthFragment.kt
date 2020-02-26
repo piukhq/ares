@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -135,6 +136,8 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         planBooleanFieldsList.clear()
 
         val signUpFormType = args.signUpFormType
+
+        Log.e("ConnorDebug", "signUpFormType: " + signUpFormType)
 
         SharedPreferenceManager.isLoyaltySelected = true
 

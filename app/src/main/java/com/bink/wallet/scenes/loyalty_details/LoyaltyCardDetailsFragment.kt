@@ -621,6 +621,20 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.GHOST,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
+                }
                 LinkStatus.STATUS_NO_REASON_CODES -> {
                     viewModel.membershipPlan.value?.let {
                         val directions =

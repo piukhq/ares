@@ -1,5 +1,6 @@
 package com.bink.wallet.utils
 
+import android.util.Log
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -75,6 +76,10 @@ object MembershipPlanUtils {
         membershipCard: MembershipCard,
         paymentCards: MutableList<PaymentCard>
     ): LinkStatus {
+        Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.state)
+        Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.size)
+        Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.get(0))
+
         when (membershipPlan.feature_set?.card_type) {
             CardType.PLL.type -> {
                 when (membershipCard.status?.state) {
@@ -99,8 +104,16 @@ object MembershipPlanUtils {
                         return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
                     }
                     FAILED.status -> {
+                        var isGhostCard = false
+
+                        membershipCard.status?.reason_codes?.forEach { reasonCode ->
+                            isGhostCard = reasonCode == "X105"
+                        }
+
                         return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
                             LinkStatus.STATUS_NO_REASON_CODES
+                        } else if (isGhostCard) {
+                            LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD
                         } else {
                             LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
                         }
