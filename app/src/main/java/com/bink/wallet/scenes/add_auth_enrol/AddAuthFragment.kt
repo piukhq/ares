@@ -66,7 +66,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(getScreenName(args.signUpFormType))
+        logScreenView(getScreenName(args.signUpFormType), this)
     }
 
     private fun addFieldToList(planField: Any) {

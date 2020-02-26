@@ -42,7 +42,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(PLL_VIEW)
+        logScreenView(PLL_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -28,7 +28,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(BROWSE_BRANDS_VIEW)
+        logScreenView(BROWSE_BRANDS_VIEW, this)
     }
 
     private fun isPlanPLL(membershipPlan: MembershipPlan): Boolean {

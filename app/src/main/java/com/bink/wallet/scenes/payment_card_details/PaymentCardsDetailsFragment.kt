@@ -40,7 +40,7 @@ class PaymentCardsDetailsFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(PAYMENT_DETAIL_VIEW)
+        logScreenView(PAYMENT_DETAIL_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

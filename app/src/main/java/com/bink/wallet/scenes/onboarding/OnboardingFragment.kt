@@ -49,7 +49,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
 
-        logScreenView(ONBOARDING_VIEW)
+        logScreenView(ONBOARDING_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

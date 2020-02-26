@@ -51,7 +51,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(STORE_LINK_VIEW)
+        logScreenView(STORE_LINK_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

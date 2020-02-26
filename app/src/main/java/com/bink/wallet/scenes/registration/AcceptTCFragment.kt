@@ -48,7 +48,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(TERMS_AND_CONDITIONS_VIEW)
+        logScreenView(TERMS_AND_CONDITIONS_VIEW, this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

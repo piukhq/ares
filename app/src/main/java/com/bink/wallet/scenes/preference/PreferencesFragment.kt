@@ -27,7 +27,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(PREFERENCES_VIEW)
+        logScreenView(PREFERENCES_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

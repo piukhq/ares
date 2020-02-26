@@ -82,7 +82,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         logFirebaseEvent(ANALYTICS_CALL_TO_ACTION_TYPE, identifierValue)
     }
 
-    protected fun logScreenView(screenName: String) {
+    protected fun logScreenView(screenName: String, fragment: Fragment) {
+        setCurrentScreen(fragment)
         logFirebaseEvent(ANALYTICS_SCREEN_VIEW_TYPE, screenName)
     }
 
@@ -92,6 +93,14 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(
             actionKey,
             bundle
+        )
+    }
+
+    private fun setCurrentScreen(fragment: Fragment) {
+        (requireActivity() as MainActivity).firebaseAnalytics.setCurrentScreen(
+            requireActivity(),
+            fragment.javaClass.simpleName,
+            fragment.javaClass.simpleName
         )
     }
 }

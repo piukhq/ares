@@ -49,7 +49,7 @@ class LoyaltyCardDetailsFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(LOYALTY_DETAIL_VIEW)
+        logScreenView(LOYALTY_DETAIL_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -323,13 +323,13 @@ class LoyaltyCardDetailsFragment :
     private fun setLoadingState(isLoading: Boolean) {
         with(binding) {
             if (isLoading) {
-                loadingIndicator.visibility = View.VISIBLE
-                linkedWrapper.visibility = View.INVISIBLE
-                pointsWrapper.visibility = View.INVISIBLE
-            } else {
-                loadingIndicator.visibility = View.GONE
-                linkedWrapper.visibility = View.VISIBLE
-                pointsWrapper.visibility = View.VISIBLE
+//                loadingIndicator.visibility = View.VISIBLE
+//                linkedWrapper.visibility = View.INVISIBLE
+//                pointsWrapper.visibility = View.INVISIBLE
+//            } else {
+//                loadingIndicator.visibility = View.GONE
+//                linkedWrapper.visibility = View.VISIBLE
+//                pointsWrapper.visibility = View.VISIBLE
             }
         }
     }
@@ -791,25 +791,6 @@ class LoyaltyCardDetailsFragment :
                     onClickListener = { thisVoucher ->
                         viewVoucherDetails(thisVoucher as Voucher)
                     }
-                )
-            }
-        }
-    }
-
-    private fun showPlrMembership() {
-        viewModel.membershipPlan.value?.let { membershipPlan ->
-            membershipPlan.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            membershipPlan.account.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
-                        )
-                    )
                 )
             }
         }

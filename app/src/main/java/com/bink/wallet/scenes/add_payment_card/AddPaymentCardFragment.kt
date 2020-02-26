@@ -39,7 +39,7 @@ class AddPaymentCardFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(ADD_PAYMENT_CARD_VIEW)
+        logScreenView(ADD_PAYMENT_CARD_VIEW, this)
     }
 
     private fun validateCardName() {

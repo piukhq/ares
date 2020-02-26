@@ -32,7 +32,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(ADD_OPTIONS_VIEW)
+        logScreenView(ADD_OPTIONS_VIEW, this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

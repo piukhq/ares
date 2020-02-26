@@ -44,7 +44,7 @@ class SettingsFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logScreenView(SETTINGS_VIEW)
+        logScreenView(SETTINGS_VIEW, this)
     }
 
     override fun onChanged(value: ListHolder<SettingsItem>?) {

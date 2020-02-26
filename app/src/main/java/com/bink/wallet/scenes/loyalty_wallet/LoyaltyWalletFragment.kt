@@ -86,7 +86,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        logScreenView(LOYALTY_WALLET_VIEW)
+        logScreenView(LOYALTY_WALLET_VIEW, this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
