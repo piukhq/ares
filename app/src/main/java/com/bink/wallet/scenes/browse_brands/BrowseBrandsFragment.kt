@@ -65,6 +65,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
             val plansList = ArrayList<Pair<String?, MembershipPlan>>()
 
+            var splitPosition = 0
+
             if (plans.isNotEmpty()) {
                 plans = plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1,
                                                                       membershipPlan2 ->
@@ -79,6 +81,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                     plans[position].getCardType() != CardType.PLL
                 ) {
                     plansList.add(Pair(getString(R.string.all_text), plans[position]))
+                    splitPosition = position - 1
                 } else {
                     plansList.add(Pair(null, plans[position]))
                 }
@@ -87,7 +90,10 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             binding.browseBrandsContainer.apply {
                 layoutManager = GridLayoutManager(activity, 1)
                 adapter =
-                    BrowseBrandsAdapter(plansList, itemClickListener = { toAddJoinScreen(it) })
+                    BrowseBrandsAdapter(
+                        plansList,
+                        splitPosition,
+                        itemClickListener = { toAddJoinScreen(it) })
             }
         }
     }
