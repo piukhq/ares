@@ -72,13 +72,6 @@ class LoyaltyCardDetailsFragment :
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-                if (isNetworkAvailable(requireContext(), false)) {
-                    setLoadingState(true)
-                    updateMembershipCard()
-                } else {
-                    viewModel.setLinkStatus()
-                    viewModel.setAccountStatus()
-                }
             }
         }
 
@@ -93,7 +86,9 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.background = colorDrawable
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            if (isNetworkAvailable(requireContext(), false)) {
+            if (isNetworkAvailable(requireContext(), false) &&
+                findNavController().currentDestination?.parent?.id == R.id.pll_fragment
+            ) {
                 viewModel.updateMembershipCard()
             } else {
                 viewModel.setAccountStatus()
@@ -553,8 +548,8 @@ class LoyaltyCardDetailsFragment :
                             )
                         }
                     }
-                    if (directions != null) {
-                        findNavController().navigateIfAdded(this, directions)
+                    directions?.let {
+                        findNavController().navigateIfAdded(this, it)
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
@@ -791,25 +786,6 @@ class LoyaltyCardDetailsFragment :
                     onClickListener = { thisVoucher ->
                         viewVoucherDetails(thisVoucher as Voucher)
                     }
-                )
-            }
-        }
-    }
-
-    private fun showPlrMembership() {
-        viewModel.membershipPlan.value?.let { membershipPlan ->
-            membershipPlan.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            membershipPlan.account.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
-                        )
-                    )
                 )
             }
         }
