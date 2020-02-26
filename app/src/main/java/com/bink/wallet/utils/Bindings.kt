@@ -211,7 +211,6 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
             binding.root.context.getString(R.string.tap_card_to_show_card_number)
     }
 }
-}
 
 @BindingAdapter("textBalance")
 fun TextView.textBalance(card: MembershipCard?) {
