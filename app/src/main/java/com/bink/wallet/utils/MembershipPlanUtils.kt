@@ -107,7 +107,7 @@ object MembershipPlanUtils {
                         var isGhostCard = false
 
                         membershipCard.status?.reason_codes?.forEach { reasonCode ->
-                            isGhostCard = reasonCode == "X105"
+                            isGhostCard = reasonCode == CardCodes.X105.name
                         }
 
                         return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
