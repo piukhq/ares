@@ -46,12 +46,6 @@ class LoyaltyCardDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(LOYALTY_DETAIL_VIEW)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
@@ -341,6 +335,7 @@ class LoyaltyCardDetailsFragment :
 
     override fun onResume() {
         super.onResume()
+        logScreenView(LOYALTY_DETAIL_VIEW)
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
@@ -793,25 +788,6 @@ class LoyaltyCardDetailsFragment :
                     onClickListener = { thisVoucher ->
                         viewVoucherDetails(thisVoucher as Voucher)
                     }
-                )
-            }
-        }
-    }
-
-    private fun showPlrMembership() {
-        viewModel.membershipPlan.value?.let { membershipPlan ->
-            membershipPlan.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            membershipPlan.account.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
-                        )
-                    )
                 )
             }
         }

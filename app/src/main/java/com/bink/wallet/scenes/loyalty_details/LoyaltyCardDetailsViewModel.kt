@@ -19,7 +19,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     val membershipPlan = MutableLiveData<MembershipPlan>()
     val membershipCard = MutableLiveData<MembershipCard>()
     private val paymentCards = MutableLiveData<List<PaymentCard>>()
-    private val localPaymentCards = MutableLiveData<List<PaymentCard>>()
+    val localPaymentCards = MutableLiveData<List<PaymentCard>>()
     val deletedCard = MutableLiveData<String>()
     val updatedMembershipCard = MutableLiveData<MembershipCard>()
     val accountStatus = MutableLiveData<LoginStatus>()
@@ -50,14 +50,12 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                 _paymentCardsMerger.value = paymentCards.value
             }
         }
-
         _paymentCardsMerger.addSource(localPaymentCards) {
             localPaymentCards.value?.let {
                 _paymentCardsMerger.value = localPaymentCards.value
             }
         }
     }
-
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, _deleteError)
     }
@@ -93,7 +91,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     fun setLinkStatus() {
         membershipPlan.value?.let { membershipPlan ->
             membershipCard.value?.let { membershipCard ->
-                paymentCardsMerger.value?.let { paymentCards ->
+                _paymentCardsMerger.value?.let { paymentCards ->
                     linkStatus.value = MembershipPlanUtils.getLinkStatus(
                         membershipPlan,
                         membershipCard,

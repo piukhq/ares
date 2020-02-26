@@ -37,12 +37,6 @@ class PaymentCardsDetailsFragment :
 
     private var scrollY = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(PAYMENT_DETAIL_VIEW)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(binding.toolbar) {
@@ -192,6 +186,7 @@ class PaymentCardsDetailsFragment :
 
     override fun onResume() {
         super.onResume()
+        logScreenView(PAYMENT_DETAIL_VIEW)
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)

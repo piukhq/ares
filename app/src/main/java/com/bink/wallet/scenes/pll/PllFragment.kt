@@ -39,9 +39,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     val unselectedCards = mutableListOf<String>()
     val selectedCards = mutableListOf<String>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(PLL_VIEW)
     }
 
