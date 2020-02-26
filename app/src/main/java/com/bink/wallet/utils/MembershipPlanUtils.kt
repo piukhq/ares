@@ -59,6 +59,9 @@ object MembershipPlanUtils {
                         ) {
                             return LoginStatus.STATUS_LOGIN_FAILED
                         }
+                        if (!reasonCodes.intersect(listOf(CardCodes.X105.code)).isNullOrEmpty()) {
+                            return LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD
+                        }
                         if (reasonCodes.isNullOrEmpty()) {
                             return LoginStatus.STATUS_NO_REASON_CODES
                         }
@@ -77,8 +80,14 @@ object MembershipPlanUtils {
         paymentCards: MutableList<PaymentCard>
     ): LinkStatus {
         Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.state)
-        Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.size)
-        Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.get(0))
+        Log.e(
+            "ConnorDebug",
+            "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.size
+        )
+        Log.e(
+            "ConnorDebug",
+            "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.get(0)
+        )
 
         when (membershipPlan.feature_set?.card_type) {
             CardType.PLL.type -> {
