@@ -165,7 +165,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     }
 
     private fun initMembershipPlansObserver() {
-        viewModel.membershipPlanMutableLiveData.observeNonNull(this@LoginFragment) {
+        viewModel.membershipPlanDatabaseLiveData.observeNonNull(this@LoginFragment) {
             finishLogInProcess()
         }
 
