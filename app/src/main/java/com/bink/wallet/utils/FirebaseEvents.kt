@@ -1,6 +1,8 @@
 package com.bink.wallet.utils
 
-object FirebaseUtils {
+import java.util.*
+
+object FirebaseEvents {
     const val ANALYTICS_IDENTIFIER = "identifier"
     const val ANALYTICS_CALL_TO_ACTION_TYPE = "call_to_action_pressed"
     const val ANALYTICS_SCREEN_VIEW_TYPE = "screen_view"
@@ -37,14 +39,14 @@ object FirebaseUtils {
                 Character.toUpperCase(words[0][0]).toString() + words[0].subSequence(
                     1,
                     words[0].length
-                ).toString().toLowerCase()
+                ).toString().toLowerCase(Locale.ENGLISH)
             )
             for (i in 1 until words.size) {
                 sb.append(
                     Character.toUpperCase(words[i][0]).toString() + words[i].subSequence(
                         1,
                         words[i].length
-                    ).toString().toLowerCase()
+                    ).toString().toLowerCase(Locale.ENGLISH)
                 )
             }
         }

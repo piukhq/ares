@@ -10,8 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_CALL_TO_ACTION_TYPE
-import com.bink.wallet.utils.FirebaseUtils.ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
+import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard

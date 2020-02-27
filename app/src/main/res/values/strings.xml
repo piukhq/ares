@@ -7,6 +7,8 @@
     <string name="missing_destination_dialog_title">Missing destination</string>
     <string name="not_implemented_yet_text">Not implemented yet</string>
 
+    <string name="bink_version">Version: \(%1$s), build: \(%2$s)</string>
+
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
     <string name="loyalty_wallet_dialog_title">Are you sure you want to delete this card?</string>

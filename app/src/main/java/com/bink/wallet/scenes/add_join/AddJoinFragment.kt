@@ -11,8 +11,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.FirebaseUtils.STORE_LINK_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.STORE_LINK_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField

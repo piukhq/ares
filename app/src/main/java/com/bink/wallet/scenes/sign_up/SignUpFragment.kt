@@ -18,8 +18,8 @@ import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.REGISTER_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
