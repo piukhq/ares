@@ -5,11 +5,13 @@ package com.bink.wallet.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
+import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.ConnectionType
 import com.bink.wallet.utils.enums.DeviceZoom
 import com.google.firebase.analytics.FirebaseAnalytics
-
+import java.util.*
 
 object FirebaseUserProperties {
     const val OS_VERSION = "osVersion"
@@ -18,7 +20,9 @@ object FirebaseUserProperties {
     const val BINK_VERSION = "binkVersion"
 
     fun setUserProperty(firebaseAnalytics: FirebaseAnalytics, key: String, value: String) {
-        firebaseAnalytics.setUserProperty(key, value)
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+            firebaseAnalytics.setUserProperty(key, value)
+        }
     }
 
     fun retrieveZoomStatus(context: Context): String {
