@@ -37,6 +37,10 @@ class LoyaltyWalletRepository(
                     runBlocking {
                         membershipCardDao.deleteAllCards()
                         membershipCardDao.storeAll(response)
+
+                        SharedPreferenceManager.membershipCardsLastRequestTime =
+                            System.currentTimeMillis()
+
                         mutableMembershipCards.value = response.toMutableList()
                     }
                 } catch (e: Exception) {
