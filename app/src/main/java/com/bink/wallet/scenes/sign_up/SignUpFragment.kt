@@ -57,7 +57,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
 
     private fun checkPasswordsMatch() =
-        if (viewModel.password.value != viewModel.confirmPassword.value && !viewModel.confirmPassword.value.isNullOrEmpty()) {
+        if (viewModel.password.value != viewModel.confirmPassword.value
+            && !viewModel.confirmPassword.value.isNullOrEmpty()
+            && !viewModel.password.value.isNullOrEmpty()
+        ) {
             binding.confirmPasswordField.error = getString(R.string.password_not_match)
         } else {
             binding.confirmPasswordField.error = null
