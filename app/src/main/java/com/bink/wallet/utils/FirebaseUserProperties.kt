@@ -3,9 +3,8 @@
 package com.bink.wallet.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.util.DisplayMetrics
 import com.bink.wallet.R
 import com.bink.wallet.utils.enums.ConnectionType
 import com.bink.wallet.utils.enums.DeviceZoom
@@ -13,7 +12,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 
 object FirebaseUserProperties {
-
     const val OS_VERSION = "osVersion"
     const val NETWORK_STRENGTH = "networkStrength"
     const val DEVICE_ZOOM = "deviceZoom"
@@ -23,28 +21,37 @@ object FirebaseUserProperties {
         firebaseAnalytics.setUserProperty(key, value)
     }
 
-    fun retrieveZoomStatus(context: Context): String =
-        if (context.resources.displayMetrics.densityDpi != DisplayMetrics.DENSITY_DEFAULT) {
-            DeviceZoom.ZOOMED.type
-        } else {
-            DeviceZoom.STANDARD.type
+    fun retrieveZoomStatus(context: Context): String {
+        val screenSize: Int = context.resources.configuration.screenLayout and
+                Configuration.SCREENLAYOUT_SIZE_MASK
+        return when (screenSize) {
+            Configuration.SCREENLAYOUT_SIZE_LARGE,
+            Configuration.SCREENLAYOUT_SIZE_XLARGE -> {
+                DeviceZoom.ZOOMED.type
+            }
+            else -> DeviceZoom.STANDARD.type
         }
+    }
+
 
     fun retrieveNetworkStatus(context: Context): String {
         val connMgr =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connMgr.activeNetworkInfo as NetworkInfo
-        return when (networkInfo.type) {
-            ConnectivityManager.TYPE_WIFI -> {
-                ConnectionType.WI_FI.type
-            }
-            ConnectivityManager.TYPE_MOBILE -> {
-                ConnectionType.CELLULAR.type
-            }
-            else -> {
-                ConnectionType.UNKNOWN.type
+        val networkInfo = connMgr.activeNetworkInfo
+        networkInfo?.let {
+            return when (networkInfo.type) {
+                ConnectivityManager.TYPE_WIFI -> {
+                    ConnectionType.WI_FI.type
+                }
+                ConnectivityManager.TYPE_MOBILE -> {
+                    ConnectionType.CELLULAR.type
+                }
+                else -> {
+                    ConnectionType.UNKNOWN.type
+                }
             }
         }
+        return ConnectionType.UNKNOWN.type
     }
 
     fun retrieveBinkVersion(context: Context): String {
