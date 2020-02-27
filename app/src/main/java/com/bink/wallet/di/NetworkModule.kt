@@ -114,7 +114,7 @@ fun provideSpreedlyOkHttpClient(): OkHttpClient {
 
 fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
     val retrofitBuilder =  Retrofit.Builder()
-        .baseUrl("https://api.staging.gb.bink.com")
+        .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(client)
         .addCallAdapterFactory(CoroutineCallAdapterFactory())

@@ -1,6 +1,5 @@
 package com.bink.wallet.utils
 
-import android.util.Log
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -79,16 +78,6 @@ object MembershipPlanUtils {
         membershipCard: MembershipCard,
         paymentCards: MutableList<PaymentCard>
     ): LinkStatus {
-        Log.e("ConnorDebug", "membershipCard.status?.state: " + membershipCard.status?.state)
-        Log.e(
-            "ConnorDebug",
-            "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.size
-        )
-        Log.e(
-            "ConnorDebug",
-            "membershipCard.status?.state: " + membershipCard.status?.reason_codes?.get(0)
-        )
-
         when (membershipPlan.feature_set?.card_type) {
             CardType.PLL.type -> {
                 when (membershipCard.status?.state) {

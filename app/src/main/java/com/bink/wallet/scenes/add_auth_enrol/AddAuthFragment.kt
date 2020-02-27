@@ -31,7 +31,6 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
-
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -507,7 +506,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                 }
                             }
                             SignUpFormType.GHOST -> {
-                                Log.e("ConnorDebug", "signup type membership_card ghost!!")
                                 if (addRegisterFieldsRequest.add_fields.isNullOrEmpty()) {
                                     context?.displayModalPopup(
                                         null,
@@ -516,7 +514,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     return@setOnClickListener
                                 }
 
-                                var currentRequest: MembershipCardRequest
+                                val currentRequest: MembershipCardRequest
 
                                 if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
                                     currentRequest = MembershipCardRequest(
@@ -599,11 +597,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     ),
                     viewModel.currentMembershipPlan.value?.id
                 )
-                Log.e("ConnorDebug", "post membership_card ghost")
-//                viewModel.ghostMembershipCard(
-//                    membershipCard.id,
-//                    currentRequest
-//                )
+                if (!isRetryJourney) {
+                    viewModel.ghostMembershipCard(
+                        membershipCard.id,
+                        currentRequest
+                    )
+                }
             }
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
