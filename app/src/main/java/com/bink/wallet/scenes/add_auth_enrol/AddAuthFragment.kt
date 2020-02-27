@@ -47,6 +47,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onResume() {
         super.onResume()
+        logScreenView(getScreenName(args.signUpFormType))
         windowFullscreenHandler.toFullscreen()
     }
 
@@ -63,12 +64,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(getScreenName(args.signUpFormType))
-    }
 
     private fun addFieldToList(planField: Any) {
         when (planField) {
@@ -165,19 +160,34 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    AddAuthFragmentDirections.signUpToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            viewModel.currentMembershipPlan.value?.account?.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
+            viewModel.currentMembershipPlan.value?.let {
+                if (it.account?.plan_description != null) {
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddAuthFragmentDirections.signUpToBrandHeader(
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                true,
+                                viewModel.currentMembershipPlan.value?.account?.plan_name
+                                    ?: getString(R.string.plan_description),
+                                it.account.plan_description
+                            )
                         )
                     )
-                )
+                } else if (it.account?.plan_name_card != null) {
+                    it.account.plan_name?.let { planName ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.signUpToBrandHeader(
+                                GenericModalParameters(
+                                    R.drawable.ic_close,
+                                    true,
+                                    planName
+                                )
+                            )
+                        )
+                    }
+                }
             }
         }
 

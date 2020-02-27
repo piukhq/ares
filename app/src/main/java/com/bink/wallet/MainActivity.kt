@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.enums.BuildTypes
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         Fabric.with(this, Crashlytics())
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != "mr") {
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
         setContentView(R.layout.activity_main)

@@ -25,6 +25,8 @@ class AcceptTCViewModel(
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
+    val membershipPlanDatabaseLiveData =
+        loyaltyWalletRepository.liveDataDatabaseUpdated
 
     init {
         shouldAcceptBeEnabledTC.value = false

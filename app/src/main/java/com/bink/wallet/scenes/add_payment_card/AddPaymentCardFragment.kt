@@ -36,9 +36,8 @@ class AddPaymentCardFragment :
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(ADD_PAYMENT_CARD_VIEW)
     }
 
