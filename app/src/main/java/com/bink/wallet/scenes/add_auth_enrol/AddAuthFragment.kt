@@ -516,22 +516,33 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     return@setOnClickListener
                                 }
 
-                                val currentRequest = MembershipCardRequest(
-                                    Account(
-                                        addRegisterFieldsRequest.add_fields,
-                                        null,
-                                        null,
-                                        null,
-                                        null
-                                    ),
-                                    membershipPlan.id
-                                )
+                                var currentRequest: MembershipCardRequest
 
                                 if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    currentRequest = MembershipCardRequest(
+                                        Account(
+                                            null,
+                                            null,
+                                            null,
+                                            addRegisterFieldsRequest.registration_fields,
+                                            null
+                                        ),
+                                        membershipPlan.id
+                                    )
                                     membershipCardId?.let {
                                         viewModel.ghostMembershipCard(it, currentRequest)
                                     }
                                 } else {
+                                    currentRequest = MembershipCardRequest(
+                                        Account(
+                                            addRegisterFieldsRequest.add_fields,
+                                            null,
+                                            null,
+                                            null,
+                                            null
+                                        ),
+                                        membershipPlan.id
+                                    )
                                     viewModel.createMembershipCard(
                                         currentRequest
                                     )
@@ -589,10 +600,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     viewModel.currentMembershipPlan.value?.id
                 )
                 Log.e("ConnorDebug", "post membership_card ghost")
-                viewModel.ghostMembershipCard(
-                    membershipCard.id,
-                    currentRequest
-                )
+//                viewModel.ghostMembershipCard(
+//                    membershipCard.id,
+//                    currentRequest
+//                )
             }
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
