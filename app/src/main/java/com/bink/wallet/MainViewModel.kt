@@ -18,7 +18,7 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
     fun getMembershipPlans() {
         val wasAnHourAgo =
             DateTimeUtils.hasAnHourElapsed(SharedPreferenceManager.membershipPlansLastRequestTime)
-        if (wasAnHourAgo) {
+        if (wasAnHourAgo && SharedPreferenceManager.isUserLoggedIn) {
             loyaltyWalletRepository.retrieveMembershipPlans(
                 membershipPlanData,
                 membershipPlanError,

@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.login
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
@@ -38,6 +39,7 @@ class LoginRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    SharedPreferenceManager.isUserLoggedIn = true
                     loginData.value = response.consent
                 } catch (e: Throwable) {
                     authErrorResponse.value = e
@@ -56,6 +58,7 @@ class LoginRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    SharedPreferenceManager.isUserLoggedIn = true
                     authResult.value = response
                 } catch (e: Throwable) {
                     authError.value = e
@@ -74,6 +77,7 @@ class LoginRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    SharedPreferenceManager.isUserLoggedIn = true
                     signUpResponse.value = response
                 } catch (e: Throwable) {
                     signUpErrorResponse.value = e
@@ -92,6 +96,7 @@ class LoginRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    SharedPreferenceManager.isUserLoggedIn = true
                     signUpResponse.value = response
                 } catch (e: Throwable) {
                     signUpErrorResponse.value = e
