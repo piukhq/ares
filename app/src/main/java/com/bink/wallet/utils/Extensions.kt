@@ -122,7 +122,9 @@ fun String.headerTidy(): String {
 fun Context.validateEmail(emailValue: String?, editText: EditText) {
     editText.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
-            if (!emailValue.isNullOrEmpty() && !Patterns.EMAIL_ADDRESS.matcher(emailValue).matches()) {
+            if (!emailValue.isNullOrEmpty() &&
+                !Patterns.EMAIL_ADDRESS.matcher(emailValue).matches()
+            ) {
                 editText.error = getString(R.string.incorrect_email_text)
             } else {
                 editText.error = null
