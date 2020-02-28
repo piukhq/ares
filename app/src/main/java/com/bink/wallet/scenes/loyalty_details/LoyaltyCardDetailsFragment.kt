@@ -41,6 +41,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private var scrollY = 0
+    private var isFromPll = false
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -66,14 +67,8 @@ class LoyaltyCardDetailsFragment :
                     ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
+                isFromPll =  LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-                if (isNetworkAvailable(requireContext(), false)) {
-                    setLoadingState(true)
-                    updateMembershipCard()
-                } else {
-                    viewModel.setLinkStatus()
-                    viewModel.setAccountStatus()
-                }
             }
         }
 
@@ -88,7 +83,9 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.background = colorDrawable
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            if (isNetworkAvailable(requireContext(), false)) {
+            if (isNetworkAvailable(requireContext(), false) &&
+                isFromPll
+            ) {
                 viewModel.updateMembershipCard()
             } else {
                 viewModel.setAccountStatus()
@@ -551,8 +548,8 @@ class LoyaltyCardDetailsFragment :
                             )
                         }
                     }
-                    if (directions != null) {
-                        findNavController().navigateIfAdded(this, directions)
+                    directions?.let {
+                        findNavController().navigateIfAdded(this, it)
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {

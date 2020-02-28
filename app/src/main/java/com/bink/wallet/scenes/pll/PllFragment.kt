@@ -116,7 +116,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     viewModel.membershipPlan.value?.let { membershipPlan ->
                         PllFragmentDirections.pllToLcd(
                             membershipPlan,
-                            membershipCard
+                            membershipCard,
+                            isFromPll = true
                         )
                     }
                 }
