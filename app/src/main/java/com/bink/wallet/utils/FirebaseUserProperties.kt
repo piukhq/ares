@@ -11,7 +11,7 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.ConnectionType
 import com.bink.wallet.utils.enums.DeviceZoom
 import com.google.firebase.analytics.FirebaseAnalytics
-import java.util.*
+import java.util.Locale
 
 object FirebaseUserProperties {
     const val OS_VERSION = "osVersion"

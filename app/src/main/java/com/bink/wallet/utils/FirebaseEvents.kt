@@ -1,11 +1,10 @@
 package com.bink.wallet.utils
 
-import java.util.*
+import java.util.Locale
 
 object FirebaseEvents {
     const val ANALYTICS_IDENTIFIER = "identifier"
     const val ANALYTICS_CALL_TO_ACTION_TYPE = "call_to_action_pressed"
-    const val ANALYTICS_SCREEN_VIEW_TYPE = "screen_view"
 
     const val ONBOARDING_VIEW = "Onboarding"
     const val LOGIN_VIEW = "Login"
