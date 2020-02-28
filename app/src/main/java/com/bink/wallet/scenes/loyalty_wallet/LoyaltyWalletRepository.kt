@@ -82,7 +82,7 @@ class LoyaltyWalletRepository(
                 withContext(Dispatchers.Main) {
                     try {
                         val response = request.await()
-                        storeMembershipPlans(response)
+                        storeMembershipPlans(response, loadPlansError)
                         SharedPreferenceManager.membershipPlansLastRequestTime =
                             System.currentTimeMillis()
                         mutableMembershipPlans.value = response.toMutableList()
@@ -129,7 +129,10 @@ class LoyaltyWalletRepository(
         }
     }
 
-    private fun storeMembershipPlans(plans: List<MembershipPlan>) {
+    private fun storeMembershipPlans(
+        plans: List<MembershipPlan>,
+        loadPlansError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
@@ -137,6 +140,7 @@ class LoyaltyWalletRepository(
                     mutableLiveDataDatabaseUpdated.value = true
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
+                    loadPlansError.value = e
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

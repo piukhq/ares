@@ -45,9 +45,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private var userEmail: String? = null
     private var accessToken: AccessToken? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(TERMS_AND_CONDITIONS_VIEW)
     }
 
@@ -215,7 +214,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     }
 
     private fun initMembershipPlansObserver() {
-        viewModel.membershipPlanMutableLiveData.observeNonNull(this@AcceptTCFragment) {
+        viewModel.membershipPlanDatabaseLiveData.observeNonNull(this@AcceptTCFragment) {
             finishLogInProcess()
         }
 

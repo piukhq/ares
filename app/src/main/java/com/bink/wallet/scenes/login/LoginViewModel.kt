@@ -34,6 +34,8 @@ class LoginViewModel constructor(
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
+    val membershipPlanDatabaseLiveData =
+        loyaltyWalletRepository.liveDataDatabaseUpdated
 
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)

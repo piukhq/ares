@@ -46,14 +46,9 @@ class LoyaltyCardDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_card_details
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(LOYALTY_DETAIL_VIEW)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
@@ -157,9 +152,11 @@ class LoyaltyCardDetailsFragment :
             viewModel.setLinkStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this) {
+        viewModel.membershipCard.observeNonNull(this) { card ->
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-
+            viewModel.membershipPlan.value?.let { plan ->
+                binding.cardHeader.linkCard(card, plan)
+            }
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
             }
@@ -341,6 +338,7 @@ class LoyaltyCardDetailsFragment :
 
     override fun onResume() {
         super.onResume()
+        logScreenView(LOYALTY_DETAIL_VIEW)
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
@@ -793,25 +791,6 @@ class LoyaltyCardDetailsFragment :
                     onClickListener = { thisVoucher ->
                         viewVoucherDetails(thisVoucher as Voucher)
                     }
-                )
-            }
-        }
-    }
-
-    private fun showPlrMembership() {
-        viewModel.membershipPlan.value?.let { membershipPlan ->
-            membershipPlan.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            membershipPlan.account.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
-                        )
-                    )
                 )
             }
         }

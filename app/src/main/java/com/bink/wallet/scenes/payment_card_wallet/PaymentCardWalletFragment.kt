@@ -42,9 +42,8 @@ class PaymentCardWalletFragment :
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 

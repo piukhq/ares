@@ -1,14 +1,12 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -24,7 +22,11 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
@@ -163,15 +165,43 @@ fun ImageView.image(plan: MembershipPlan?) {
 }
 
 
-@BindingAdapter("membershipCard")
-fun LoyaltyCardHeader.linkCard(card: MembershipCard?) {
-    if (card?.getHeroImage() != null &&
-        card.getHeroImage()?.url != null
-    ) {
-        binding.image.setImage(card.getHeroImage()?.url.toString())
-    } else {
-        binding.image.setBackgroundColor(Color.GREEN)
-    }
+@BindingAdapter("membershipCard", "membershipPlan", requireAll = true)
+fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
+    binding.container.setBackgroundColor(Color.parseColor(card?.card?.colour))
+    binding.cardPlaceholderText.text = context.getString(
+        R.string.loyalty_card_details_header_placeholder_text,
+        plan?.account?.company_name
+    )
+
+    Glide.with(context)
+        .load(card?.getHeroImage()?.url)
+        .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean = false
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                binding.container.layoutParams = FrameLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                binding.container.setBackgroundColor(Color.TRANSPARENT)
+                binding.cardPlaceholderText.visibility = View.GONE
+                return false
+            }
+
+        })
+        .into(binding.image)
+
     if (card?.card?.barcode.isNullOrEmpty() ||
         card?.card?.membership_id.isNullOrEmpty()
     ) {
@@ -271,10 +301,6 @@ fun TextView.setTimestamp(transaction: MembershipTransactions) {
                 "${dateFormatTransactionTime(transaction.timestamp)}, ${transaction.description}"
         }
     }
-}
-
-fun TextView.setTimestamp(timeStamp: Long) {
-    this.text = dateFormatTransactionTime(timeStamp)
 }
 
 @BindingAdapter("transactionTime", "format", "shortMonth")

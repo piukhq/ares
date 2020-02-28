@@ -25,9 +25,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     override val viewModel: BrowseBrandsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(BROWSE_BRANDS_VIEW)
     }
 
