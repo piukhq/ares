@@ -15,8 +15,8 @@ import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.TERMS_AND_CONDITIONS_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.TERMS_AND_CONDITIONS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
 import com.bink.wallet.utils.toolbar.FragmentToolbar
