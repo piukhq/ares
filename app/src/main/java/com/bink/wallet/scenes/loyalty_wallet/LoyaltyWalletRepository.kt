@@ -78,7 +78,7 @@ class LoyaltyWalletRepository(
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         loadPlansError: MutableLiveData<Throwable>,
-        fromPersistence: Boolean
+        fromPersistence: Boolean = false
     ) {
         if (!fromPersistence) {
             val request = apiService.getMembershipPlansAsync()
