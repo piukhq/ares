@@ -113,7 +113,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
 
             binding.confirmPasswordField.setOnFocusChangeListener { _, hasFocus ->
-                if(!hasFocus) {
+                if (!hasFocus) {
                     checkPasswordsMatch()
                 }
             }
