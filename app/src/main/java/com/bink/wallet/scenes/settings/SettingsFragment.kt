@@ -15,7 +15,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
-import com.bink.wallet.utils.FirebaseUtils.SETTINGS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
@@ -41,9 +41,8 @@ class SettingsFragment :
 
     override val viewModel: SettingsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(SETTINGS_VIEW)
     }
 

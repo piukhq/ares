@@ -18,15 +18,17 @@ import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.ADD_AUTH_FORM_VIEW
-import com.bink.wallet.utils.FirebaseUtils.ENROL_FORM_VIEW
-import com.bink.wallet.utils.FirebaseUtils.REGISTRATION_FORM_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
+import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
+import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
@@ -44,6 +46,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     override fun onResume() {
         super.onResume()
+        logScreenView(getScreenName(args.signUpFormType))
         windowFullscreenHandler.toFullscreen()
     }
 
@@ -60,12 +63,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        logScreenView(getScreenName(args.signUpFormType))
-    }
 
     private fun addFieldToList(planField: Any) {
         when (planField) {
@@ -160,19 +157,34 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.account?.plan_description?.let { planDescription ->
-                findNavController().navigateIfAdded(
-                    this,
-                    AddAuthFragmentDirections.signUpToBrandHeader(
-                        GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            viewModel.currentMembershipPlan.value?.account?.plan_name
-                                ?: getString(R.string.plan_description),
-                            planDescription
+            viewModel.currentMembershipPlan.value?.let {
+                if (it.account?.plan_description != null) {
+                    findNavController().navigateIfAdded(
+                        this,
+                        AddAuthFragmentDirections.signUpToBrandHeader(
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                true,
+                                viewModel.currentMembershipPlan.value?.account?.plan_name
+                                    ?: getString(R.string.plan_description),
+                                it.account.plan_description
+                            )
                         )
                     )
-                )
+                } else if (it.account?.plan_name_card != null) {
+                    it.account.plan_name?.let { planName ->
+                        findNavController().navigateIfAdded(
+                            this,
+                            AddAuthFragmentDirections.signUpToBrandHeader(
+                                GenericModalParameters(
+                                    R.drawable.ic_close,
+                                    true,
+                                    planName
+                                )
+                            )
+                        )
+                    }
+                }
             }
         }
 
@@ -296,34 +308,46 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         binding.noAccountText.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
-                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
-                ) {
-                    viewModel.currentMembershipPlan.value?.let {
-                        findNavController().navigateIfAdded(
-                            this,
-                            AddAuthFragmentDirections.toGhost(
-                                SignUpFormType.GHOST,
-                                it,
-                                isRetryJourney
-                            )
-                        )
-                    }
-                } else {
-                    findNavController().navigateIfAdded(
-                        this,
-                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                true,
-                                getString(R.string.title_ghost_card_not_available),
-                                getString(R.string.description_ghost_card_not_available)
-                            )
-                        )
+            //TODO: Replace this with appropriate navigation logic after MVP
+            findNavController().navigateIfAdded(
+                this,
+                AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        getString(R.string.title_ghost_card_not_available),
+                        getString(R.string.description_ghost_card_not_available)
                     )
-
-                }
-            }
+                )
+            )
+//            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
+//                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
+//                ) {
+//                    viewModel.currentMembershipPlan.value?.let {
+//                        findNavController().navigateIfAdded(
+//                            this,
+//                            AddAuthFragmentDirections.toGhost(
+//                                SignUpFormType.GHOST,
+//                                it,
+//                                isRetryJourney
+//                            )
+//                        )
+//                    }
+//                } else {
+//                    findNavController().navigateIfAdded(
+//                        this,
+//                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
+//                            GenericModalParameters(
+//                                R.drawable.ic_close,
+//                                true,
+//                                getString(R.string.title_ghost_card_not_available),
+//                                getString(R.string.description_ghost_card_not_available)
+//                            )
+//                        )
+//                    )
+//
+//                }
+//            }
 
             logEvent(
                 getFirebaseIdentifier(
@@ -399,10 +423,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         viewModel.createCardError.observeNonNull(this) { exception ->
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
-                    requireContext().displayModalPopup(
-                        getString(R.string.error),
-                        getString(R.string.error_scheme_already_exists)
-                    )
+                    if (exception is HttpException) {
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            getApiErrorMessage(
+                                exception,
+                                getString(R.string.error_scheme_already_exists)
+                            )
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            getString(R.string.error_scheme_already_exists)
+                        )
+                    }
                 }
                 else -> {
                     requireContext().displayModalPopup(

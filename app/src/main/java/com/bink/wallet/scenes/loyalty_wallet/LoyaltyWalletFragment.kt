@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.JoinCardItem
@@ -18,17 +20,19 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.FirebaseUtils.LOYALTY_WALLET_VIEW
+import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
     override val viewModel: LoyaltyViewModel by viewModel()
+    val mainViewModel: MainViewModel by sharedViewModel()
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
 
@@ -65,12 +69,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             }
 
                         if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                            directions?.let {
-                                findNavController().navigateIfAdded(
-                                    this@LoyaltyWalletFragment, it
-                                )
+                            if (card.card?.barcode.isNullOrEmpty() ||
+                                card.card?.membership_id.isNullOrEmpty()
+                            ) {
+                                displayNoBarcodeDialog(position)
+                            } else {
+                                directions?.let {
+                                    findNavController().navigateIfAdded(
+                                        this@LoyaltyWalletFragment, it
+                                    )
+                                }
+                                this@LoyaltyWalletFragment.onDestroy()
                             }
-                            this@LoyaltyWalletFragment.onDestroy()
                         }
                     } else {
                         deleteDialog(walletItems[position] as MembershipCard, position)
@@ -127,7 +137,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
-
         fetchData()
 
         viewModel.deleteCard.observeNonNull(this) { id ->
@@ -141,7 +150,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 binding.progressSpinner.visibility = View.VISIBLE
-                viewModel.fetchMembershipPlans()
+                viewModel.fetchMembershipPlans(false)
                 viewModel.fetchMembershipCards()
                 viewModel.fetchDismissedCards()
             } else {
@@ -178,6 +187,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.progressSpinner.visibility = View.VISIBLE
             binding.swipeLayout.isEnabled = true
         }
+
+        mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
+            viewModel.fetchLocalMembershipPlans()
+            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchDismissedCards()
+        })
     }
 
     override fun onPause() {
@@ -204,7 +219,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
     }
 
-    private fun manageRecyclerView(){
+    private fun manageRecyclerView() {
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
@@ -271,7 +286,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun fetchData() {
         binding.progressSpinner.visibility = View.VISIBLE
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
-            viewModel.fetchMembershipPlans()
+            viewModel.fetchMembershipPlans(true)
             viewModel.fetchMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
@@ -294,7 +309,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         lateinit var dialog: AlertDialog
         val builder = context?.let { AlertDialog.Builder(it) }
         if (builder != null) {
-            builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
+            builder.setTitle(getString(R.string.loyalty_wallet_dialog_title))
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
@@ -309,7 +324,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     DialogInterface.BUTTON_NEUTRAL -> {
                         Log.d(
                             LoyaltyWalletFragment::class.java.simpleName,
-                            getString(R.string.loayalty_wallet_dialog_description)
+                            getString(R.string.loyalty_wallet_dialog_description)
                         )
                         binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
@@ -320,5 +335,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             dialog = builder.create()
             dialog.show()
         }
+    }
+
+    private fun displayNoBarcodeDialog(position: Int) {
+        requireContext().displayModalPopup(
+            getString(R.string.loyalty_wallet_no_barcode_title),
+            getString(R.string.loyalty_wallet_no_barcode_message),
+            okAction = {
+                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+            }
+        )
     }
 }

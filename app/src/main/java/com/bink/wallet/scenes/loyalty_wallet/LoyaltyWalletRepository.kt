@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BannersDisplayDao
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -20,6 +21,9 @@ class LoyaltyWalletRepository(
     private val membershipPlanDao: MembershipPlanDao,
     private val bannersDisplayDao: BannersDisplayDao
 ) {
+
+    private val mutableLiveDataDatabaseUpdated: MutableLiveData<Boolean> = MutableLiveData()
+    val liveDataDatabaseUpdated: MutableLiveData<Boolean> get() = mutableLiveDataDatabaseUpdated
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
@@ -69,19 +73,26 @@ class LoyaltyWalletRepository(
 
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
-        loadPlansError: MutableLiveData<Throwable>
+        loadPlansError: MutableLiveData<Throwable>,
+        fromPersistence: Boolean
     ) {
-        val request = apiService.getMembershipPlansAsync()
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    storeMembershipPlans(response)
-                    mutableMembershipPlans.value = response.toMutableList()
-                } catch (e: java.lang.Exception) {
-                    loadPlansError.value = e
+        if (!fromPersistence) {
+            val request = apiService.getMembershipPlansAsync()
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        val response = request.await()
+                        storeMembershipPlans(response, loadPlansError)
+                        SharedPreferenceManager.membershipPlansLastRequestTime =
+                            System.currentTimeMillis()
+                        mutableMembershipPlans.value = response.toMutableList()
+                    } catch (e: java.lang.Exception) {
+                        loadPlansError.value = e
+                    }
                 }
             }
+        } else {
+            retrieveStoredMembershipPlans(mutableMembershipPlans)
         }
     }
 
@@ -118,15 +129,18 @@ class LoyaltyWalletRepository(
         }
     }
 
-    private fun storeMembershipPlans(plans: List<MembershipPlan>) {
+    private fun storeMembershipPlans(
+        plans: List<MembershipPlan>,
+        loadPlansError: MutableLiveData<Throwable>
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    withContext(Dispatchers.IO) {
-                        membershipPlanDao.storeAll(plans)
-                    }
+                    withContext(Dispatchers.IO) { membershipPlanDao.storeAll(plans) }
+                    mutableLiveDataDatabaseUpdated.value = true
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
+                    loadPlansError.value = e
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }

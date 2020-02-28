@@ -19,7 +19,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.PAYMENT_WALLET_VIEW
+import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,9 +42,8 @@ class PaymentCardWalletFragment :
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
@@ -69,7 +68,7 @@ class PaymentCardWalletFragment :
         val dialog: AlertDialog
         val builder = requireContext().let { AlertDialog.Builder(it) }
         builder.setCancelable(false)
-        builder.setTitle(getString(R.string.loayalty_wallet_dialog_title))
+        builder.setTitle(getString(R.string.loyalty_wallet_dialog_title))
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {

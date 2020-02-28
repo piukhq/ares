@@ -11,17 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.enums.BuildTypes
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.fabric.sdk.android.Fabric
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
 
 
 class MainActivity : AppCompatActivity() {
 
+    private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +33,20 @@ class MainActivity : AppCompatActivity() {
 
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
+        logUserPropertiesAtStartUp()
+
         Fabric.with(this, Crashlytics())
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != "mr") {
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+    }
+
+    override fun onResume() {
+        getMembershipPlans()
+        super.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -91,6 +102,27 @@ class MainActivity : AppCompatActivity() {
         val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         finish()
+    }
+
+    private fun getMembershipPlans() {
+        mainViewModel.getMembershipPlans()
+    }
+
+    private fun logUserPropertiesAtStartUp() {
+        with(FirebaseUserProperties) {
+            setUserProperty(
+                firebaseAnalytics,
+                OS_VERSION,
+                android.os.Build.VERSION.SDK_INT.toString()
+            )
+            setUserProperty(
+                firebaseAnalytics,
+                NETWORK_STRENGTH,
+                retrieveNetworkStatus(this@MainActivity)
+            )
+            setUserProperty(firebaseAnalytics, DEVICE_ZOOM, retrieveZoomStatus(this@MainActivity))
+            setUserProperty(firebaseAnalytics, BINK_VERSION, retrieveBinkVersion(this@MainActivity))
+        }
     }
 }
 

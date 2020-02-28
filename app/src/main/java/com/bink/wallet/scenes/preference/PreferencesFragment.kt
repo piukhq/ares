@@ -9,7 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.FirebaseUtils.PREFERENCES_VIEW
+import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
@@ -24,9 +24,8 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
     override val layoutRes = R.layout.preferences_fragment
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(PREFERENCES_VIEW)
     }
 

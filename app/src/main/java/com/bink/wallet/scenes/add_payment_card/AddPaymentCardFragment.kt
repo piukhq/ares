@@ -10,8 +10,8 @@ import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.ADD_PAYMENT_CARD_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -36,9 +36,8 @@ class AddPaymentCardFragment :
     override val layoutRes: Int
         get() = R.layout.add_payment_card_fragment
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(ADD_PAYMENT_CARD_VIEW)
     }
 

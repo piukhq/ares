@@ -7,7 +7,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.FirebaseUtils.BROWSE_BRANDS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -25,9 +25,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     override val viewModel: BrowseBrandsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(BROWSE_BRANDS_VIEW)
     }
 
@@ -65,6 +64,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
             val plansList = ArrayList<Pair<String?, MembershipPlan>>()
 
+            var splitPosition = 0
+
             if (plans.isNotEmpty()) {
                 plans = plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1,
                                                                       membershipPlan2 ->
@@ -79,6 +80,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                     plans[position].getCardType() != CardType.PLL
                 ) {
                     plansList.add(Pair(getString(R.string.all_text), plans[position]))
+                    splitPosition = position - 1
                 } else {
                     plansList.add(Pair(null, plans[position]))
                 }
@@ -87,7 +89,10 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             binding.browseBrandsContainer.apply {
                 layoutManager = GridLayoutManager(activity, 1)
                 adapter =
-                    BrowseBrandsAdapter(plansList, itemClickListener = { toAddJoinScreen(it) })
+                    BrowseBrandsAdapter(
+                        plansList,
+                        splitPosition,
+                        itemClickListener = { toAddJoinScreen(it) })
             }
         }
     }

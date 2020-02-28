@@ -15,8 +15,8 @@ import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.TERMS_AND_CONDITIONS_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.TERMS_AND_CONDITIONS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -45,9 +45,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private var userEmail: String? = null
     private var accessToken: AccessToken? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(TERMS_AND_CONDITIONS_VIEW)
     }
 
@@ -138,7 +137,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     )
                 )
             }
-            findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+            viewModel.getMembershipPlans()
         }
 
         binding.accept.setOnClickListener {
@@ -180,6 +179,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             hideKeyboard(requireContext(), binding.root)
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
+
+        initMembershipPlansObserver()
     }
 
     private fun buildHyperlinkSpanString(
@@ -210,5 +211,19 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             )
         }
         binding.overallDisclaimer.text = spannableString
+    }
+
+    private fun initMembershipPlansObserver() {
+        viewModel.membershipPlanDatabaseLiveData.observeNonNull(this@AcceptTCFragment) {
+            finishLogInProcess()
+        }
+
+        viewModel.membershipPlanErrorLiveData.observeNonNull(this@AcceptTCFragment) {
+            finishLogInProcess()
+        }
+    }
+
+    private fun finishLogInProcess() {
+        findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
     }
 }

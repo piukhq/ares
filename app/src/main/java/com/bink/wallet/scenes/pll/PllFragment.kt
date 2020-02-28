@@ -14,8 +14,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.PLL_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -39,9 +39,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     val unselectedCards = mutableListOf<String>()
     val selectedCards = mutableListOf<String>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResume() {
+        super.onResume()
         logScreenView(PLL_VIEW)
     }
 
@@ -117,7 +116,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     viewModel.membershipPlan.value?.let { membershipPlan ->
                         PllFragmentDirections.pllToLcd(
                             membershipPlan,
-                            membershipCard
+                            membershipCard,
+                            isFromPll = true
                         )
                     }
                 }
