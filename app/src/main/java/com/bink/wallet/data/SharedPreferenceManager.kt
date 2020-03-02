@@ -2,7 +2,7 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import com.bink.wallet.utils.enums.ApiVersion
 
 object SharedPreferenceManager {
 
@@ -17,6 +17,7 @@ object SharedPreferenceManager {
     private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinBannerDismissed"
     private const val MEMBERSHIP_PLAN_LAST_REQUEST_TIME = "membershipPlanLastRequestTime"
     private const val IS_USER_LOGGED_IN_KEY = "isUserLoggedIn"
+    private const val API_VERSION = "apiVersion"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -34,6 +35,12 @@ object SharedPreferenceManager {
         operation(editor)
         editor.apply()
     }
+
+    var storedApiUrl: String?
+        get() = preferences.getString(API_VERSION, null)
+        set(value) = preferences.edit {
+            it.putString(API_VERSION, value)
+        }
 
     var isAddJourney: Boolean
         get() = preferences.getBoolean(IS_ADD_JOURNEY.first, IS_ADD_JOURNEY.second)

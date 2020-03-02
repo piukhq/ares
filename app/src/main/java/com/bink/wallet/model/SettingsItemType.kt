@@ -17,7 +17,5 @@ enum class SettingsItemType : Parcelable {
     HOW_IT_WORKS,
     PRIVACY_POLICY,
     TERMS_AND_CONDITIONS,
-    VERSION_NUMBER,
-    BASE_URL,
-    EMAIL_ADDRESS
+    DEBUG_MENU
 }

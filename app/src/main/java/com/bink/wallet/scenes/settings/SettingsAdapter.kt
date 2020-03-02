@@ -74,14 +74,6 @@ class SettingsAdapter(
                     } else {
                         View.VISIBLE
                     }
-                rightArrow.visibility =
-                    if (listOf(SettingsItemType.VERSION_NUMBER, SettingsItemType.BASE_URL)
-                            .contains(item.type)
-                    ) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
                 environmentSpacer.visibility =
                     if (separator) {
                         View.VISIBLE

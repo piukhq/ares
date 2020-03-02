@@ -12,7 +12,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingPageFragmentBinding
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.setSafeOnClickListener
 import java.util.*
 
 class OnboardingPageFragment : Fragment() {
@@ -70,11 +69,11 @@ class OnboardingPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var clickCounter = 0
-        binding?.pageImage?.setOnClickListener{
+        binding?.pageImage?.setOnClickListener {
             clickCounter++
             if (clickCounter == 3) {
+                it.setOnClickListener(null)
                 openSettingsPage()
-                clickCounter = 0
             }
         }
     }
@@ -84,7 +83,7 @@ class OnboardingPageFragment : Fragment() {
             parentFragment?.let {
                 findNavController().navigateIfAdded(
                     it,
-                    OnboardingFragmentDirections.onboardingToSettings()
+                    OnboardingFragmentDirections.onboardingToDebug()
                 )
             }
         }

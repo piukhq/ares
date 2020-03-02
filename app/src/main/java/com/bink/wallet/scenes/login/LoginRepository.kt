@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.login
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.SharedPreferenceManager

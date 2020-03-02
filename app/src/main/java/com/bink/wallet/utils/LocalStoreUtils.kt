@@ -53,7 +53,6 @@ object LocalStoreUtils {
     }
 
     fun clearPreferences() {
-        SharedPreferenceManager.clear()
         encryptedSharedPreferences.edit().let {
             it.clear()
             it.apply()
