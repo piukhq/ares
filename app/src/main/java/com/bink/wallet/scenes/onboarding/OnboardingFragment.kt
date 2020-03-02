@@ -91,7 +91,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
         binding.logInEmail.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
-
             logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
         }
 
@@ -153,7 +152,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     scrollPagesAutomatically(this@with)
                 }
             })
-
             scrollPagesAutomatically(this)
         }
     }
