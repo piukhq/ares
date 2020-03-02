@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.enums.BuildTypes
 import com.crashlytics.android.Crashlytics
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+        logUserPropertiesAtStartUp()
 
         Fabric.with(this, Crashlytics())
 
@@ -103,6 +106,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun getMembershipPlans() {
         mainViewModel.getMembershipPlans()
+    }
+
+    private fun logUserPropertiesAtStartUp() {
+        with(FirebaseUserProperties) {
+            setUserProperty(
+                firebaseAnalytics,
+                OS_VERSION,
+                android.os.Build.VERSION.SDK_INT.toString()
+            )
+            setUserProperty(
+                firebaseAnalytics,
+                NETWORK_STRENGTH,
+                retrieveNetworkStatus(this@MainActivity)
+            )
+            setUserProperty(firebaseAnalytics, DEVICE_ZOOM, retrieveZoomStatus(this@MainActivity))
+            setUserProperty(firebaseAnalytics, BINK_VERSION, retrieveBinkVersion(this@MainActivity))
+        }
     }
 }
 

@@ -19,7 +19,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.PAYMENT_WALLET_VIEW
+import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel

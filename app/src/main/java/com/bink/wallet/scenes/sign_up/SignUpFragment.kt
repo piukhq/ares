@@ -18,8 +18,8 @@ import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.REGISTER_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -51,7 +51,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
 
     private fun checkPasswordsMatch() =
-        if (viewModel.password.value != viewModel.confirmPassword.value) {
+        if (viewModel.password.value != viewModel.confirmPassword.value &&
+            !viewModel.confirmPassword.value.isNullOrEmpty() &&
+            !viewModel.password.value.isNullOrEmpty()
+        ) {
             binding.confirmPasswordField.error = getString(R.string.password_not_match)
         } else {
             binding.confirmPasswordField.error = null
@@ -109,14 +112,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 requireContext().validatePassword(it, binding.passwordField)
             }
 
-            confirmPassword.observeNonNull(this@SignUpFragment) {
-                checkPasswordsMatch()
-            }
-
-            privacyPolicy.observeNonNull(this@SignUpFragment) {
-            }
-
-            termsCondition.observeNonNull(this@SignUpFragment) {
+            binding.confirmPasswordField.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) {
+                    checkPasswordsMatch()
+                }
             }
 
             isLoading.observeNonNull(this@SignUpFragment) {

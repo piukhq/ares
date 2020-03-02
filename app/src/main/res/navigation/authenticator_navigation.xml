@@ -388,6 +388,10 @@
         <argument
                 android:name="membershipCard"
                 app:argType="com.bink.wallet.model.response.membership_card.MembershipCard" />
+        <argument
+                android:name="isFromPll"
+                android:defaultValue="false"
+                app:argType="boolean" />
 
         <action
                 android:id="@+id/detail_to_barcode"
@@ -483,13 +487,12 @@
                 app:enterAnim="@anim/slide_in_up"
                 app:exitAnim="@anim/slide_out_down"
                 app:popEnterAnim="@anim/slide_in_up"
-                app:popExitAnim="@anim/slide_out_down"/>
+                app:popExitAnim="@anim/slide_out_down" />
     </fragment>
 
     <fragment
             android:id="@+id/voucher_details_fragment"
-            android:name="com.bink.wallet.scenes.loyalty_details.VoucherDetailsFragment"
-            >
+            android:name="com.bink.wallet.scenes.loyalty_details.VoucherDetailsFragment">
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
@@ -666,8 +669,8 @@
                 app:argType="com.bink.wallet.model.response.payment_card.BankCard" />
 
         <argument
-            android:name="cardNo"
-            app:argType="string" />
+                android:name="cardNo"
+                app:argType="string" />
 
         <action
                 android:id="@+id/card_terms_to_add"

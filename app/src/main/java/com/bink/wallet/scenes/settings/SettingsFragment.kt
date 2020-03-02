@@ -15,7 +15,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
-import com.bink.wallet.utils.FirebaseUtils.SETTINGS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup

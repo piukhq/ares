@@ -12,8 +12,8 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.GenericModalFragmentBinding
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.FirebaseUtils.INFORMATION_MODAL_VIEW
-import com.bink.wallet.utils.FirebaseUtils.getFirebaseIdentifier
+import com.bink.wallet.utils.FirebaseEvents.INFORMATION_MODAL_VIEW
+import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar

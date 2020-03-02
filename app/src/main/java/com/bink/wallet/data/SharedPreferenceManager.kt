@@ -15,6 +15,7 @@ object SharedPreferenceManager {
     private const val IS_PAYMENT_EMPTY_KEY = "isPaymentEmpty"
     private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinBannerDismissed"
     private const val MEMBERSHIP_PLAN_LAST_REQUEST_TIME = "membershipPlanLastRequestTime"
+    private const val IS_USER_LOGGED_IN_KEY = "isUserLoggedIn"
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
 
@@ -23,6 +24,7 @@ object SharedPreferenceManager {
     private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
     private val IS_PAYMENT_EMPTY = Pair(IS_PAYMENT_EMPTY_KEY, false)
     private val IS_PAYMENT_JOIN_HIDDEN = Pair(IS_PAYMENT_JOIN_KEY, false)
+    private val IS_USER_LOGGED_IN = Pair(IS_USER_LOGGED_IN_KEY, false)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
@@ -74,6 +76,12 @@ object SharedPreferenceManager {
         get() = preferences.getLong(MEMBERSHIP_CARDS_LAST_REQUEST_TIME, 0)
         set(value) = preferences.edit {
             it.putLong(MEMBERSHIP_CARDS_LAST_REQUEST_TIME, value)
+        }
+
+    var isUserLoggedIn: Boolean
+        get() = preferences.getBoolean(IS_USER_LOGGED_IN_KEY, false)
+        set(value) = preferences.edit {
+            it.putBoolean(IS_USER_LOGGED_IN_KEY, value)
         }
 
     fun clear() {

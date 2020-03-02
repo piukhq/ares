@@ -7,6 +7,8 @@
     <string name="missing_destination_dialog_title">Missing destination</string>
     <string name="not_implemented_yet_text">Not implemented yet</string>
 
+    <string name="bink_version">Version: \(%1$s), build: \(%2$s)</string>
+
     <string name="delete_text">Delete</string>
     <string name="barcode_text">Barcode</string>
     <string name="loyalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
@@ -107,6 +109,7 @@
     <string name="loyalty_card_pll_retry">Retry</string>
     <string name="loyalty_card_pll_pending">Pending</string>
     <string name="loyalty_card_delete_error_message">We encountered an error. Please try again later.</string>
+    <string name="loyalty_card_details_header_placeholder_text">%s Membership Card</string>
 
 
     <!-- 1.1 -->
@@ -457,5 +460,6 @@
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
+    <string name="card_number_description">Show this card number in-store just like you would a physical loyalty card.</string>
 
 </resources>
