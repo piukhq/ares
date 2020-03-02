@@ -111,7 +111,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
         when (membershipCard?.membershipCard?.card?.barcode_type) {
-            0 -> format = BarcodeFormat.CODE_128
+            0, null -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
             2 -> format = BarcodeFormat.AZTEC
             3 -> format = BarcodeFormat.PDF_417
