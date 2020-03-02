@@ -14,14 +14,23 @@ import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.validateEmail
+import com.bink.wallet.utils.validatePassword
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -295,10 +304,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     }
 
     private fun finaliseAuthenticationFlow() {
-        findNavController().navigateIfAdded(
-            this@SignUpFragment,
-            R.id.global_to_home
-        )
+        if (SharedPreferenceManager.isUserLoggedIn) {
+            findNavController().navigate(SignUpFragmentDirections.globalToHome())
+        }
     }
 
 }
