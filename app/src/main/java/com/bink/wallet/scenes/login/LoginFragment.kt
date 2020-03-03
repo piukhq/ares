@@ -19,6 +19,7 @@ import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -103,14 +104,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 viewModel.getMembershipPlans()
             }
 
-            logInErrorResponse.observeNonNull(this@LoginFragment) {
+            logInErrorResponse.observeErrorNonNull(requireContext(), this@LoginFragment) {
                 isLoading.value = false
-                if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                    requireContext().displayModalPopup(
-                        EMPTY_STRING,
-                        getString(R.string.incorrect_credentials)
-                    )
-                }
             }
 
             isLoading.observeNonNull(this@LoginFragment) {

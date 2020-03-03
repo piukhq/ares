@@ -181,58 +181,53 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
         }
 
-        viewModel.fetchError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
+        viewModel.fetchError.observeErrorNonNull(requireContext(), this) {
+            //
         }
 
         viewModel.linkError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.description_error))
-                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
-                    .setPositiveButton(
-                        getString(R.string.ok)
-                    ) { dialog, _ ->
-                        dialog.dismiss()
-                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                            directions?.let { directions ->
-                                findNavController().navigateIfAdded(
-                                    this@PllFragment,
-                                    directions
-                                )
-                            }
-                        }
-                    }
-                    .show()
-            }
+//            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+//                AlertDialog.Builder(requireContext())
+//                    .setTitle(getString(R.string.description_error))
+//                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+//                    .setPositiveButton(
+//                        getString(R.string.ok)
+//                    ) { dialog, _ ->
+//                        dialog.dismiss()
+//                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+//                            directions?.let { directions ->
+//                                findNavController().navigateIfAdded(
+//                                    this@PllFragment,
+//                                    directions
+//                                )
+//                            }
+//                        }
+//                    }
+//                    .show()
+//            }
         }
 
         viewModel.unlinkError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.description_error))
-                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
-                    .setPositiveButton(
-                        getString(R.string.ok)
-                    ) { dialog, _ ->
-                        dialog.dismiss()
-                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-                            directions?.let { directions ->
-                                findNavController().navigateIfAdded(
-                                    this@PllFragment,
-                                    directions
-                                )
-                            }
-                        }
-
-                    }
-                    .show()
-            }
+//            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+//                AlertDialog.Builder(requireContext())
+//                    .setTitle(getString(R.string.description_error))
+//                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+//                    .setPositiveButton(
+//                        getString(R.string.ok)
+//                    ) { dialog, _ ->
+//                        dialog.dismiss()
+//                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+//                            directions?.let { directions ->
+//                                findNavController().navigateIfAdded(
+//                                    this@PllFragment,
+//                                    directions
+//                                )
+//                            }
+//                        }
+//
+//                    }
+//                    .show()
+//            }
         }
     }
 

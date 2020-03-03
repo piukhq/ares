@@ -171,11 +171,11 @@ class PaymentCardsDetailsFragment :
             viewModel.getMembershipCards()
         }
 
-        viewModel.linkError.observeNonNull(this) {
-            hasCertificatePinningFailed(it, requireContext())
+        viewModel.linkError.observeErrorNonNull(requireContext(), this) {
+            //
         }
-        viewModel.unlinkError.observeNonNull(this) {
-            hasCertificatePinningFailed(it, requireContext())
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), this) {
+            //
         }
     }
 

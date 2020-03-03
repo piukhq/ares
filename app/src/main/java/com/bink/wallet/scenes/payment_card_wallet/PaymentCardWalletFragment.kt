@@ -108,21 +108,11 @@ class PaymentCardWalletFragment :
             viewModel.fetchData()
         }
 
-        viewModel.deleteCardError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this) {
+            //
         }
-        viewModel.deleteError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
+        viewModel.deleteError.observeErrorNonNull(requireContext(), this) {
+            //
         }
 
         binding.paymentCardRecycler.apply {

@@ -6,6 +6,8 @@ import retrofit2.HttpException
 
 class ApiErrorUtils {
     companion object {
+        const val SERVER_ERROR = 500
+
         fun getApiErrorMessage(httpException: HttpException, defaultMessage: String): String {
             return try {
                 val apiError = Gson().fromJson(
