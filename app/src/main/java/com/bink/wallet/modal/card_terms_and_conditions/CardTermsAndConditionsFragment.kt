@@ -103,8 +103,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
                     requireContext().getString(R.string.error_server_down_message)
                 )
             }
-        } else if (UtilFunctions.hasCertificatePinningFailed(throwable)) {
-            UtilFunctions.showCertificatePinningDialog(requireContext())
         } else {
             context?.displayModalPopup(
                 context?.getString(R.string.payment_card_error_title),

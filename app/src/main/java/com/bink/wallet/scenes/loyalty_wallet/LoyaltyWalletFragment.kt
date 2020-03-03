@@ -357,8 +357,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     )
                 }
-            } else if (UtilFunctions.hasCertificatePinningFailed(throwable)) {
-                UtilFunctions.showCertificatePinningDialog(requireContext())
             }
         }
     }
