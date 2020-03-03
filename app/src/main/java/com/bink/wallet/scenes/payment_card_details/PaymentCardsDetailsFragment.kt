@@ -158,11 +158,8 @@ class PaymentCardsDetailsFragment :
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        viewModel.deleteError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.card_error_dialog)
-            )
+        viewModel.deleteError.observeErrorNonNull(requireContext(), this, EMPTY_STRING, getString(R.string.card_error_dialog)) {
+            //
         }
 
         viewModel.paymentCard.observeNonNull(this) {

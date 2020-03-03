@@ -84,6 +84,8 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
 fun LiveData<Throwable>.observeErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
+    defaultErrorTitle: String,
+    defaultErrorMessage: String,
     observer: (t: Throwable) -> Unit
 ) {
     this.observe(owner, Observer {
@@ -94,11 +96,23 @@ fun LiveData<Throwable>.observeErrorNonNull(
             )
         } else if (UtilFunctions.hasCertificatePinningFailed(it)) {
             UtilFunctions.showCertificatePinningDialog(context)
+        } else {
+            if (defaultErrorTitle.isNotEmpty() && defaultErrorMessage.isNotEmpty()) {
+                context.displayModalPopup(
+                    defaultErrorTitle,
+                    defaultErrorMessage
+                )
+            }
         }
         it?.let(observer)
     })
 }
 
+fun LiveData<Throwable>.observeErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner,
+    observer: (t: Throwable) -> Unit
+) = observeErrorNonNull(context, owner, "", "", observer)
 
 fun Boolean?.toInt() = if (this != null && this) 1 else 0
 

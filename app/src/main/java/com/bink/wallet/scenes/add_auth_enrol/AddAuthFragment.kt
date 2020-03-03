@@ -29,6 +29,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
@@ -439,10 +440,17 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
                 else -> {
-                    requireContext().displayModalPopup(
-                        getString(R.string.add_card_error_title),
-                        getString(R.string.add_card_error_message)
-                    )
+                    if (((exception is HttpException) && exception.code() >= ApiErrorUtils.SERVER_ERROR) || exception is SocketTimeoutException) {
+                        requireContext().displayModalPopup(
+                            requireContext().getString(R.string.error_server_down_title),
+                            requireContext().getString(R.string.error_server_down_message)
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.add_card_error_title),
+                            getString(R.string.add_card_error_message)
+                        )
+                    }
                 }
             }
             hideLoadingViews()

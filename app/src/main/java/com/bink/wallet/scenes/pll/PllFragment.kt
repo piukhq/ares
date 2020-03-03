@@ -185,7 +185,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             //
         }
 
-        viewModel.linkError.observeNonNull(this) {
+        viewModel.linkError.observeErrorNonNull(requireContext(), this) {
             if (!NetworkUtils.isConnected(requireContext())) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.description_error))
@@ -207,7 +207,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        viewModel.unlinkError.observeNonNull(this) {
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), this) {
             if (!NetworkUtils.isConnected(requireContext())) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.description_error))
