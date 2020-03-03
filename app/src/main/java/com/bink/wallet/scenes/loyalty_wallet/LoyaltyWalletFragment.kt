@@ -258,16 +258,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
             is MembershipPlan -> {
-                val directions =
+                findNavController().navigate(
                     WalletsFragmentDirections.homeToAddJoin(
                         item,
                         null,
                         true,
                         isRetryJourney = false
                     )
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    directions
                 )
             }
             else ->

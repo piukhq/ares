@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_join
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -8,21 +9,23 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 
 class AddJoinViewModel constructor(
     private var paymentWalletRepository: PaymentWalletRepository
-): BaseViewModel() {
+) : BaseViewModel() {
     val membershipPlan = MutableLiveData<MembershipPlan>()
-    val paymentCards = MutableLiveData<List<PaymentCard>>()
+    private val _paymentCards = MutableLiveData<List<PaymentCard>>()
+    val paymentCards: LiveData<List<PaymentCard>>
+        get() = _paymentCards
     val fetchError = MutableLiveData<Throwable>()
 
     suspend fun getPaymentCards() {
         paymentWalletRepository.getPaymentCards(
-            paymentCards,
+            _paymentCards,
             fetchError
         )
     }
 
     fun fetchLocalPaymentCards() {
         paymentWalletRepository.getLocalPaymentCards(
-            paymentCards,
+            _paymentCards,
             fetchError
         )
     }
