@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
@@ -170,10 +171,9 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     }
 
     private fun finishLogInProcess() {
-        findNavController().navigateIfAdded(
-            this@LoginFragment,
-            R.id.global_to_home
-        )
+        if (SharedPreferenceManager.isUserLoggedIn) {
+            findNavController().navigate(LoginFragmentDirections.globalToHome())
+        }
     }
 
     override fun onPause() {
