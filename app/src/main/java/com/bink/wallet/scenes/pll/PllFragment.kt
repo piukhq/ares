@@ -186,48 +186,48 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         viewModel.linkError.observeNonNull(this) {
-//            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-//                AlertDialog.Builder(requireContext())
-//                    .setTitle(getString(R.string.description_error))
-//                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
-//                    .setPositiveButton(
-//                        getString(R.string.ok)
-//                    ) { dialog, _ ->
-//                        dialog.dismiss()
-//                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-//                            directions?.let { directions ->
-//                                findNavController().navigateIfAdded(
-//                                    this@PllFragment,
-//                                    directions
-//                                )
-//                            }
-//                        }
-//                    }
-//                    .show()
-//            }
+            if (!NetworkUtils.isConnected(requireContext())) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.description_error))
+                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                    .setPositiveButton(
+                        getString(R.string.ok)
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
+                        }
+                    }
+                    .show()
+            }
         }
 
         viewModel.unlinkError.observeNonNull(this) {
-//            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-//                AlertDialog.Builder(requireContext())
-//                    .setTitle(getString(R.string.description_error))
-//                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
-//                    .setPositiveButton(
-//                        getString(R.string.ok)
-//                    ) { dialog, _ ->
-//                        dialog.dismiss()
-//                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
-//                            directions?.let { directions ->
-//                                findNavController().navigateIfAdded(
-//                                    this@PllFragment,
-//                                    directions
-//                                )
-//                            }
-//                        }
-//
-//                    }
-//                    .show()
-//            }
+            if (!NetworkUtils.isConnected(requireContext())) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.description_error))
+                    .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
+                    .setPositiveButton(
+                        getString(R.string.ok)
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        if (findNavController().currentDestination?.id == R.id.pll_fragment) {
+                            directions?.let { directions ->
+                                findNavController().navigateIfAdded(
+                                    this@PllFragment,
+                                    directions
+                                )
+                            }
+                        }
+
+                    }
+                    .show()
+            }
         }
     }
 
