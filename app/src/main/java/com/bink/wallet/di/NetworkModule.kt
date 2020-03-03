@@ -2,6 +2,7 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
+import android.util.Base64
 import android.util.Log
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
@@ -35,11 +36,11 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
-        val jwtToken = LocalStoreUtils.getAppSharedPref(
-            LocalStoreUtils.KEY_TOKEN
-        )?.let {
-            it
-        }
+        val jwtToken =
+            LocalStoreUtils.getAppSharedPref(
+                LocalStoreUtils.KEY_TOKEN
+            )?.trim()
+
         jwtToken?.let {
             Log.d("NetworkModule", jwtToken)
         }
