@@ -9,11 +9,10 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 class CardTermsAndConditionsFragment : GenericModalFragment() {
     override val viewModel: CardTermsAndConditionsViewModel by viewModel()
@@ -60,12 +59,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         viewModel.error.observeNonNull(this) {
             binding.progressSpinner.visibility = View.GONE
             binding.firstButton.isEnabled = true
-            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-                context?.displayModalPopup(
-                    context?.getString(R.string.payment_card_error_title),
-                    context?.getString(R.string.payment_card_error_message)
-                )
-            }
+            handleNetworkError(it)
         }
     }
 
@@ -98,6 +92,24 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     override fun onSecondButtonClicked() {
         if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
             requireActivity().supportFragmentManager.popBackStack()
+        }
+    }
+
+    private fun handleNetworkError(throwable: Throwable) {
+        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            if (((throwable is HttpException) && throwable.code() >= ApiErrorUtils.SERVER_ERROR) || throwable is SocketTimeoutException) {
+                requireContext().displayModalPopup(
+                    requireContext().getString(R.string.error_server_down_title),
+                    requireContext().getString(R.string.error_server_down_message)
+                )
+            }
+        } else if (UtilFunctions.hasCertificatePinningFailed(throwable)) {
+            UtilFunctions.showCertificatePinningDialog(requireContext())
+        } else {
+            context?.displayModalPopup(
+                context?.getString(R.string.payment_card_error_title),
+                context?.getString(R.string.payment_card_error_message)
+            )
         }
     }
 }
