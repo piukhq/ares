@@ -25,6 +25,8 @@ import com.facebook.login.LoginManager
 import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 import java.util.*
 
 class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding>() {
@@ -91,9 +93,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }, delay)
                 }
-            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-                requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
-            }
+            handleServerDownError(it)
         }
         viewModel.shouldAcceptBeEnabledTC.value = false
 
@@ -225,5 +225,18 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
     private fun finishLogInProcess() {
         findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+    }
+
+    private fun handleServerDownError(throwable: Throwable) {
+        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+            if (((throwable is HttpException) && throwable.code() >= ApiErrorUtils.SERVER_ERROR) || throwable is SocketTimeoutException) {
+                requireContext().displayModalPopup(
+                    requireContext().getString(R.string.error_server_down_title),
+                    requireContext().getString(R.string.error_server_down_message)
+                )
+            } else {
+                requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
+            }
+        }
     }
 }
