@@ -22,6 +22,7 @@ import androidx.navigation.NavDirections
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -80,9 +81,13 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
     })
 }
 
-fun LiveData<Throwable>.observeErrorNonNull(context: Context, owner: LifecycleOwner, observer: (t: Throwable) -> Unit) {
+fun LiveData<Throwable>.observeErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner,
+    observer: (t: Throwable) -> Unit
+) {
     this.observe(owner, Observer {
-        if ((it is HttpException) && it.code() >= ApiErrorUtils.SERVER_ERROR) {
+        if (((it is HttpException) && it.code() >= ApiErrorUtils.SERVER_ERROR) || it is SocketTimeoutException) {
             context.displayModalPopup(
                 context.getString(R.string.error_server_down_title),
                 context.getString(R.string.error_server_down_message)
