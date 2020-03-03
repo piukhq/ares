@@ -67,7 +67,7 @@ class LoyaltyCardDetailsFragment :
                     ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
-                isFromPll =  LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
+                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             }
         }
@@ -222,27 +222,32 @@ class LoyaltyCardDetailsFragment :
             configureLoginStatus(status)
         }
 
-        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
-//            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-//                with(viewModel.deleteError) {
-//                    if (value is HttpException) {
-//                        val error = value as HttpException
-//                        requireContext().displayModalPopup(
-//                            getString(R.string.title_2_4),
-//                            getString(
-//                                R.string.description_2_4,
-//                                error.code().toString(),
-//                                error.localizedMessage
-//                            )
-//                        )
-//                    } else {
-//                        requireContext().displayModalPopup(
-//                            getString(R.string.title_2_4),
-//                            getString(R.string.loyalty_card_delete_error_message)
-//                        )
-//                    }
-//                }
-//            }
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment
+        ) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it)) {
+                with(viewModel.deleteError) {
+                    if (value is HttpException) {
+                        val error = value as HttpException
+                        if (error.code() < ApiErrorUtils.SERVER_ERROR) {
+                            requireContext().displayModalPopup(
+                                getString(R.string.title_2_4),
+                                getString(
+                                    R.string.description_2_4,
+                                    error.code().toString(),
+                                    error.localizedMessage
+                                )
+                            )
+                        }
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.title_2_4),
+                            getString(R.string.loyalty_card_delete_error_message)
+                        )
+                    }
+                }
+            }
         }
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
