@@ -8,6 +8,7 @@ import android.text.Spanned
 import android.text.format.DateFormat
 import android.text.style.UnderlineSpan
 import android.view.View
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -22,16 +23,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class VoucherDetailsFragment :
     BaseFragment<VoucherDetailsViewModel, VoucherDetailsFragmentBinding>() {
 
-    override fun builder(): FragmentToolbar {
-        return FragmentToolbar.Builder()
-            .with(binding.toolbar)
-            .shouldDisplayBack(requireActivity())
-            .build()
-    }
-
+    private val args by navArgs<VoucherDetailsFragmentArgs>()
     override val layoutRes: Int
         get() = R.layout.voucher_details_fragment
-
     override val viewModel: VoucherDetailsViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,16 +33,18 @@ class VoucherDetailsFragment :
         binding.lifecycleOwner = this
     }
 
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
+            .build()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        arguments?.let {
-            viewModel.membershipPlan.value =
-                VoucherDetailsFragmentArgs.fromBundle(it).membershipPlan
-            viewModel.voucher.value =
-                VoucherDetailsFragmentArgs.fromBundle(it).voucher
-
-        }
+        viewModel.membershipPlan.value = args.membershipPlan
+        viewModel.voucher.value = args.voucher
         binding.membershipPlan = viewModel.membershipPlan.value
 
         viewModel.voucher.value?.let { voucher ->
@@ -183,32 +179,25 @@ class VoucherDetailsFragment :
                 }
             }
 
-
-            var linkSet = false
             viewModel.membershipPlan.value?.account?.plan_documents?.forEach { document ->
                 document.display?.let {
                     if (it.contains(DocumentTypes.VOUCHER.type)) {
-                        linkSet = true
-                        binding.linkText.setOnClickListener {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(document.url)))
+                        binding.linkText.apply {
+                            setOnClickListener {
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(document.url)))
+                            }
+                            text = SpannableString(document.name).apply {
+                                setSpan(
+                                    UnderlineSpan(),
+                                    0,
+                                    document.name?.length ?: 0,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+                            }
+                            visibility = View.VISIBLE
+                            return@forEach
                         }
                     }
-                }
-                if (linkSet)
-                    return@forEach
-            }
-            if (!linkSet) {
-                binding.linkText.visibility = View.GONE
-            } else {
-                with(binding.linkText) {
-                    val builder = SpannableString(text.toString())
-                    builder.setSpan(
-                        UnderlineSpan(),
-                        0,
-                        text.toString().length,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    text = builder
                 }
             }
         }
