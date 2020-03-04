@@ -89,21 +89,24 @@ fun LiveData<Throwable>.observeErrorNonNull(
     observer: (t: Throwable) -> Unit
 ) {
     this.observe(owner, Observer {
-        if (((it is HttpException) && it.code() >= ApiErrorUtils.SERVER_ERROR) || it is SocketTimeoutException) {
-            context.displayModalPopup(
-                context.getString(R.string.error_server_down_title),
-                context.getString(R.string.error_server_down_message)
-            )
-        } else if (UtilFunctions.hasCertificatePinningFailed(it)) {
-            UtilFunctions.showCertificatePinningDialog(context)
-        } else {
-            if (defaultErrorTitle.isNotEmpty() && defaultErrorMessage.isNotEmpty()) {
+        it?.let {
+            if (((it is HttpException) && it.code() >= ApiErrorUtils.SERVER_ERROR) || it is SocketTimeoutException) {
                 context.displayModalPopup(
-                    defaultErrorTitle,
-                    defaultErrorMessage
+                    context.getString(R.string.error_server_down_title),
+                    context.getString(R.string.error_server_down_message)
                 )
+            } else if (UtilFunctions.hasCertificatePinningFailed(it)) {
+                UtilFunctions.showCertificatePinningDialog(context)
+            } else {
+                if (defaultErrorTitle.isNotEmpty() && defaultErrorMessage.isNotEmpty()) {
+                    context.displayModalPopup(
+                        defaultErrorTitle,
+                        defaultErrorMessage
+                    )
+                }
             }
         }
+
         it?.let(observer)
     })
 }
