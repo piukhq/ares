@@ -56,10 +56,15 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
                 }
             }
         }
-        viewModel.error.observeNonNull(this) {
+
+        viewModel.error.observeNetworkDrivenErrorNonNull(
+            requireContext(),
+            this,
+            getString(R.string.payment_card_error_title),
+            getString(R.string.payment_card_error_message)
+        ) {
             binding.progressSpinner.visibility = View.GONE
             binding.firstButton.isEnabled = true
-            handleNetworkError(it)
         }
     }
 
@@ -92,22 +97,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     override fun onSecondButtonClicked() {
         if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
             requireActivity().supportFragmentManager.popBackStack()
-        }
-    }
-
-    private fun handleNetworkError(throwable: Throwable) {
-        if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-            if (((throwable is HttpException) && throwable.code() >= ApiErrorUtils.SERVER_ERROR) || throwable is SocketTimeoutException) {
-                requireContext().displayModalPopup(
-                    requireContext().getString(R.string.error_server_down_title),
-                    requireContext().getString(R.string.error_server_down_message)
-                )
-            }
-        } else {
-            context?.displayModalPopup(
-                context?.getString(R.string.payment_card_error_title),
-                context?.getString(R.string.payment_card_error_message)
-            )
         }
     }
 }

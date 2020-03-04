@@ -114,6 +114,19 @@ fun LiveData<Throwable>.observeErrorNonNull(
     observer: (t: Throwable) -> Unit
 ) = observeErrorNonNull(context, owner, "", "", observer)
 
+
+fun LiveData<Throwable>.observeNetworkDrivenErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner,
+    defaultErrorTitle: String,
+    defaultErrorMessage: String,
+    observer: (t: Throwable) -> Unit
+) {
+    if (UtilFunctions.isNetworkAvailable(context, true)) {
+        observeErrorNonNull(context, owner, defaultErrorTitle, defaultErrorMessage, observer)
+    }
+}
+
 fun Boolean?.toInt() = if (this != null && this) 1 else 0
 
 fun Long.getElapsedTime(context: Context): String {
