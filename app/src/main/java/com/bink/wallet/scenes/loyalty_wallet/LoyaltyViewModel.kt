@@ -104,18 +104,21 @@ class LoyaltyViewModel constructor(
         if (cardsReceivedValue == null || plansReceivedValue == null || dismissedCardsValue == null) {
             return UserDataResult.UserDataLoading
         }
-        val walletItems = ArrayList<Any>(plansReceivedValue.filter {
-            it.getCardType() == CardType.PLL &&
-                    merchantNoLoyalty(cardsReceivedValue, it) &&
-                    dismissedCardsValue.firstOrNull { currentId ->
-                        it.id == currentId.id
-                    } == null
-        })
+        val walletItems = arrayListOf<Any>()
+        walletItems.addAll(cardsReceivedValue)
+        walletItems.addAll(
+            plansReceivedValue.filter { membershipPlan ->
+                membershipPlan.getCardType() == CardType.PLL &&
+                        merchantNoLoyalty(cardsReceivedValue, membershipPlan) &&
+                        dismissedCardsValue.firstOrNull { currentId ->
+                            membershipPlan.id == currentId.id
+                        } == null
+            }.sortedBy { it.account?.plan_name }
+        )
         if (dismissedCardsValue.firstOrNull { it.id == JOIN_CARD } == null &&
             SharedPreferenceManager.isPaymentEmpty) {
             walletItems.add(JoinCardItem())
         }
-        walletItems.addAll(cardsReceivedValue)
         return UserDataResult.UserDataSuccess(
             Triple(
                 cardsReceivedValue,
@@ -144,7 +147,11 @@ class LoyaltyViewModel constructor(
 
     fun fetchMembershipPlans(fromPersistence: Boolean) {
         viewModelScope.launch {
-            loyaltyWalletRepository.retrieveMembershipPlans(membershipPlanData, loadPlansError, fromPersistence)
+            loyaltyWalletRepository.retrieveMembershipPlans(
+                membershipPlanData,
+                loadPlansError,
+                fromPersistence
+            )
         }
     }
 

@@ -134,7 +134,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         setHasOptionsMenu(true)
         fetchData()
 
-        viewModel.deleteCard.observeNonNull(this) { id ->
+        viewModel.deleteCard.observeNonNull(this) {
             fetchData()
         }
 
