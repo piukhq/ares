@@ -202,13 +202,17 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         })
         .into(binding.image)
 
-    if (card?.card?.barcode.isNullOrEmpty() ||
-        card?.card?.membership_id.isNullOrEmpty()
-    ) {
-        binding.tapCard.visibility = View.GONE
-    } else {
-        binding.tapCard.text =
-            binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    binding.tapCard.text = when {
+        !card?.card?.barcode.isNullOrEmpty() -> {
+            context.getString(R.string.tap_card_to_show_barcode)
+        }
+        !card?.card?.membership_id.isNullOrEmpty() -> {
+            context.getString(R.string.tap_card_to_show_card_number)
+        }
+        else -> {
+            binding.tapCard.visibility = View.GONE
+            EMPTY_STRING
+        }
     }
 }
 
