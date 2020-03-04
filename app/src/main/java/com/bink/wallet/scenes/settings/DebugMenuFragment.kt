@@ -6,6 +6,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentDebugMenuBinding
@@ -14,6 +15,7 @@ import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,6 +50,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 DebugMenuFragmentDirections.debugToOnboarding()
             )
         }
+
+        viewModel.logOutResponse.observeNonNull(this) {
+
+        }
     }
 
     private fun onDebugItemClick(item: DebugItem) {
@@ -65,24 +71,27 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     private fun displayPicker() {
         val adb = AlertDialog.Builder(requireContext())
         val items =
-            arrayOf<CharSequence>("DEV", "STAGING", "DAEDALUS")
+            arrayOf<CharSequence>(
+                ApiVersion.DEV.name,
+                ApiVersion.STAGING.name,
+                ApiVersion.DAEDALUS.name
+            )
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
             selection = n
         }
 
         adb.setPositiveButton(
-            "OK"
+            getString(R.string.ok)
         ) { _, _ ->
             when (selection) {
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
                 2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
             }
-            viewModel.logOut()
+            (requireActivity() as MainActivity).forceRunApp()
         }
-        adb.setNegativeButton("Cancel", null)
-        adb.setTitle("Select Environment")
+        adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()
     }
 }

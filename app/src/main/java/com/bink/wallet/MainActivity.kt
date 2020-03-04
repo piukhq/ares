@@ -10,14 +10,9 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.di.networkModule
-import com.bink.wallet.di.provideRetrofit
-import com.bink.wallet.di.qualifier.network.NetworkQualifiers
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BuildTypes
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
@@ -26,6 +21,7 @@ import io.fabric.sdk.android.Fabric
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,17 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (SharedPreferenceManager.storedApiUrl.isNullOrEmpty()) {
-            SharedPreferenceManager.storedApiUrl = ApiConstants.BASE_URL
-        }
-        networkModule.apply {
-            single(NetworkQualifiers.SpreedlyRetrofit) { provideRetrofit(get(NetworkQualifiers.SpreedlyOkHttp),
-                SharedPreferenceManager.storedApiUrl.toString()
-            ) }
-            single(NetworkQualifiers.BinkRetrofit) { provideRetrofit(get(NetworkQualifiers.BinkOkHttp),
-                SharedPreferenceManager.storedApiUrl.toString()
-            ) }
-        }
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         logUserPropertiesAtStartUp()
@@ -117,6 +102,14 @@ class MainActivity : AppCompatActivity() {
         val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
         finish()
+    }
+
+    fun forceRunApp() {
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        launchIntent?.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        finishAffinity()
+        startActivity(launchIntent)
+        exitProcess(0)
     }
 
     private fun getMembershipPlans() {
