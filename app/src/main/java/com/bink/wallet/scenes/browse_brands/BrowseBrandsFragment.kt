@@ -70,7 +70,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 plans = plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1,
                                                                       membershipPlan2 ->
                     comparePlans(membershipPlan1, membershipPlan2)
-                }.thenBy { it.account?.company_name }).toTypedArray()
+                }.thenBy { it.account?.company_name?.toLowerCase() }).toTypedArray()
 
                 plansList.add(Pair(getString(R.string.pll_text), plans[0]))
             }
