@@ -641,16 +641,12 @@ class LoyaltyCardDetailsFragment :
                 !membershipCard.card?.membership_id.isNullOrEmpty()
             ) {
                 binding.cardHeader.setOnClickListener {
-                    membershipCard.card?.barcode_type.let { type ->
-                        viewModel.membershipPlan.value?.let { plan ->
-                            type?.let {
-                                findNavController().navigate(
-                                    LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                        plan, membershipCard
-                                    )
-                                )
-                            }
-                        }
+                    viewModel.membershipPlan.value?.let { plan ->
+                        findNavController().navigate(
+                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                plan, membershipCard
+                            )
+                        )
                     }
                 }
             }
