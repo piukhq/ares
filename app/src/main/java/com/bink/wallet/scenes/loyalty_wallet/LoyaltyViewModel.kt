@@ -113,7 +113,7 @@ class LoyaltyViewModel constructor(
                         dismissedCardsValue.firstOrNull { currentId ->
                             membershipPlan.id == currentId.id
                         } == null
-            }.sortedBy { it.account?.plan_name }
+            }.sortedBy { it.account?.company_name }
         )
         if (dismissedCardsValue.firstOrNull { it.id == JOIN_CARD } == null &&
             SharedPreferenceManager.isPaymentEmpty) {
