@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StampsProgressIndicator">
+        <attr name="maxProgress" format="integer" />
+        <attr name="currentProgress" format="integer" />
+        <attr name="status" format="enum">
+            <enum name="EXPIRED" value="0" />
+            <enum name="IN_PROGRESS" value="1" />
+            <enum name="EARNED" value="2" />
+            <enum name="REDEEMED" value="3" />
+        </attr>
+    </declare-styleable>
+</resources>

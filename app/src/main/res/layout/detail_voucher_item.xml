@@ -92,6 +92,17 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/remaining" />
 
+                <com.bink.wallet.stampsprogressindicator.StampsProgressIndicator
+                        android:id="@+id/stamps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:currentProgress="7"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/progress_bar"
+                        app:maxProgress="7"
+                        app:status="REDEEMED" />
+
                 <TextView
                         android:id="@+id/spent_title"
                         android:layout_width="wrap_content"
@@ -103,7 +114,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/progress_bar" />
+                        app:layout_constraintTop_toBottomOf="@id/stamps" />
 
                 <TextView
                         android:id="@+id/goal_title"
@@ -116,7 +127,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/progress_bar" />
+                        app:layout_constraintTop_toBottomOf="@id/stamps" />
 
                 <TextView
                         android:id="@+id/spent_amount"

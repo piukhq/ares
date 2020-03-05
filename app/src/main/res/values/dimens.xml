@@ -151,4 +151,5 @@
     <dimen name="loyalty_card_header_corner_radius">12dp</dimen>
     <dimen name="burger_king_stamp_size">24dp</dimen>
     <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
+    <dimen name="stamp_width">7dp</dimen>
 </resources>
