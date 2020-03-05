@@ -187,14 +187,18 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             }
                         }
                         AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
-                    } else if (membershipPlan.has_vouchers == true && viewModel.paymentCards.value.isNullOrEmpty()) {
-                        val genericModalParameters = GenericModalParameters(
-                            R.drawable.ic_back,
-                            true,
-                            getString(R.string.native_join_no_payment_cards_title),
-                            getString(R.string.native_join_no_payment_cards_description)
+                    } else if (membershipPlan.has_vouchers == true &&
+                        viewModel.paymentCards.value.isNullOrEmpty()
+                    ) {
+                        AddJoinFragmentDirections.actionAddJoinToPaymentCardNeededFragment(
+                            GenericModalParameters(
+                                R.drawable.ic_back,
+                                false,
+                                getString(R.string.native_join_no_payment_cards_title),
+                                getString(R.string.native_join_no_payment_cards_description),
+                                firstButtonText = getString(R.string.payment_card_needed_button_text)
+                            )
                         )
-                        AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
                     } else {
                         AddJoinFragmentDirections.addJoinToGhost(
                             SignUpFormType.ENROL,
