@@ -67,7 +67,7 @@ class LoyaltyCardDetailsFragment :
                     ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
-                isFromPll =  LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
+                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             }
         }
@@ -637,27 +637,18 @@ class LoyaltyCardDetailsFragment :
 
     private fun handleBrandHeader() {
         viewModel.membershipCard.value?.let { membershipCard ->
-            if (membershipCard.card != null &&
-                (!membershipCard.card?.barcode.isNullOrEmpty() &&
-                        !membershipCard.card?.membership_id.isNullOrEmpty())
+            if (!membershipCard.card?.barcode.isNullOrEmpty() ||
+                !membershipCard.card?.membership_id.isNullOrEmpty()
             ) {
                 binding.cardHeader.setOnClickListener {
-                    val directions = membershipCard.card?.barcode_type.let { type ->
-                        viewModel.membershipPlan.value?.let { plan ->
-                            type?.let {
-                                LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                    plan, membershipCard
-                                )
-                            }
-                        }
+                    viewModel.membershipPlan.value?.let { plan ->
+                        findNavController().navigate(
+                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                plan, membershipCard
+                            )
+                        )
                     }
-
-                    directions?.let { findNavController().navigateIfAdded(this, directions) }
                 }
-            } else if (membershipCard.card?.membership_id.isNullOrEmpty() ||
-                membershipCard.card?.barcode.isNullOrEmpty()
-            ) {
-                binding.cardHeader.binding.tapCard.visibility = View.GONE
             }
         }
     }
