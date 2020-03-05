@@ -456,6 +456,17 @@
     <string name="preference_marketing_bink">Receive marketing messages</string>
     <string name="plr_redeem_instructions">Use the code above to redeem your reward. You will get %s off your purchase.</string>
     <string name="terms_amp_conditions">Terms &amp; conditions</string>
+    <string name="native_join_no_payment_cards_title">Payment card needed</string>
+    <string name="native_join_no_payment_cards_description">
+        <![CDATA[
+            <p>
+                You currently don’t have any linked payment cards.<br>
+                You can only earn rewards by shopping with a linked payment card.<br>
+                Please add a card so you can start earning rewards.<br>
+            </p>
+        ]]>
+    </string>
+    <string name="payment_card_needed_button_text">Add card</string>
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
