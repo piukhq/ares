@@ -181,9 +181,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
         }
 
-        viewModel.fetchError.observeErrorNonNull(requireContext(), this) {
-            //
-        }
+        viewModel.fetchError.observeErrorNonNull(requireContext(), this)
 
         viewModel.linkError.observeErrorNonNull(requireContext(), this) {
             if (!NetworkUtils.isConnected(requireContext())) {

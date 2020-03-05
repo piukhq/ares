@@ -86,7 +86,7 @@ fun LiveData<Throwable>.observeErrorNonNull(
     owner: LifecycleOwner,
     defaultErrorTitle: String,
     defaultErrorMessage: String,
-    observer: (t: Throwable) -> Unit
+    observer: ((t: Throwable) -> Unit)?
 ) {
     this.observe(owner, Observer {
         it?.let {
@@ -107,23 +107,29 @@ fun LiveData<Throwable>.observeErrorNonNull(
             }
         }
 
-        it?.let(observer)
+        observer?.let { safeObserver ->
+            it?.let(safeObserver)
+        }
     })
 }
 
 fun LiveData<Throwable>.observeErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
-    observer: (t: Throwable) -> Unit
+    observer: ((t: Throwable) -> Unit)?
 ) = observeErrorNonNull(context, owner, "", "", observer)
 
+fun LiveData<Throwable>.observeErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner
+) = observeErrorNonNull(context, owner, "", "", null)
 
 fun LiveData<Throwable>.observeNetworkDrivenErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
     defaultErrorTitle: String,
     defaultErrorMessage: String,
-    observer: (t: Throwable) -> Unit
+    observer: ((t: Throwable) -> Unit)?
 ) {
     if (UtilFunctions.isNetworkAvailable(context, true)) {
         observeErrorNonNull(context, owner, defaultErrorTitle, defaultErrorMessage, observer)

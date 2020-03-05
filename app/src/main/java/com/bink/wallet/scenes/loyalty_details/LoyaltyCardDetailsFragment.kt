@@ -253,9 +253,10 @@ class LoyaltyCardDetailsFragment :
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        viewModel.refreshError.observeErrorNonNull(requireContext(), this@LoyaltyCardDetailsFragment) {
-            //
-        }
+        viewModel.refreshError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment
+        )
     }
 
     private fun fetchData() {

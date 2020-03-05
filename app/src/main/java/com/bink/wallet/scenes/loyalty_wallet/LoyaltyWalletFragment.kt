@@ -166,9 +166,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             handleServerDownError(it)
         }
 
-        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this) {
-            //
-        }
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this)
 
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)

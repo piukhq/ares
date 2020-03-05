@@ -14,7 +14,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
-import com.bink.wallet.utils.UtilFunctions.hasCertificatePinningFailed
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -57,7 +56,8 @@ class PaymentCardsDetailsFragment :
 
         binding.paymentCardDetail = viewModel.paymentCard.value
         viewModel.membershipCardData.value?.let {
-            binding.paymentHeader.membershipCardsWrapper = MembershipCardListWrapper(it.toMutableList())
+            binding.paymentHeader.membershipCardsWrapper =
+                MembershipCardListWrapper(it.toMutableList())
         }
         binding.footerSecurity.setOnClickListener {
             val action =
@@ -158,9 +158,13 @@ class PaymentCardsDetailsFragment :
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        viewModel.deleteError.observeErrorNonNull(requireContext(), this, EMPTY_STRING, getString(R.string.card_error_dialog)) {
-            //
-        }
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this,
+            EMPTY_STRING,
+            getString(R.string.card_error_dialog),
+            null
+        )
 
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
@@ -168,12 +172,9 @@ class PaymentCardsDetailsFragment :
             viewModel.getMembershipCards()
         }
 
-        viewModel.linkError.observeErrorNonNull(requireContext(), this) {
-            //
-        }
-        viewModel.unlinkError.observeErrorNonNull(requireContext(), this) {
-            //
-        }
+        viewModel.linkError.observeErrorNonNull(requireContext(), this)
+
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), this)
     }
 
     override fun onPause() {

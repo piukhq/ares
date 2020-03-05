@@ -19,7 +19,6 @@ import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun builder(): FragmentToolbar {
