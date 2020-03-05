@@ -6,13 +6,13 @@ class DateTimeUtils {
 
     companion object {
 
-        private const val ONE_HOUR = 1
+        private const val ONE_HOUR = 60
 
         fun hasAnHourElapsed(time: Long): Boolean {
             val currentTime = System.currentTimeMillis()
             val difference = currentTime - time
-            val hour = TimeUnit.MILLISECONDS.toHours(difference)
-            return hour > ONE_HOUR
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(difference)
+            return minutes > ONE_HOUR
         }
     }
 }

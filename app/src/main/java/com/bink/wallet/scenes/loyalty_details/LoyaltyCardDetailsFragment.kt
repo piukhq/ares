@@ -16,7 +16,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.LOYALTY_DETAIL_VIEW
+import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -41,6 +41,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private var scrollY = 0
+    private var isFromPll = false
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -48,6 +49,7 @@ class LoyaltyCardDetailsFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
@@ -65,14 +67,8 @@ class LoyaltyCardDetailsFragment :
                     ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
+                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
-                if (isNetworkAvailable(requireContext(), false)) {
-                    setLoadingState(true)
-                    updateMembershipCard()
-                } else {
-                    viewModel.setLinkStatus()
-                    viewModel.setAccountStatus()
-                }
             }
         }
 
@@ -87,7 +83,9 @@ class LoyaltyCardDetailsFragment :
         binding.toolbar.background = colorDrawable
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            if (isNetworkAvailable(requireContext(), false)) {
+            if (isNetworkAvailable(requireContext(), false) &&
+                isFromPll
+            ) {
                 viewModel.updateMembershipCard()
             } else {
                 viewModel.setAccountStatus()
@@ -151,9 +149,11 @@ class LoyaltyCardDetailsFragment :
             viewModel.setLinkStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this) {
+        viewModel.membershipCard.observeNonNull(this) { card ->
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-
+            viewModel.membershipPlan.value?.let { plan ->
+                binding.cardHeader.linkCard(card, plan)
+            }
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
             }
@@ -548,8 +548,8 @@ class LoyaltyCardDetailsFragment :
                             )
                         }
                     }
-                    if (directions != null) {
-                        findNavController().navigateIfAdded(this, directions)
+                    directions?.let {
+                        findNavController().navigateIfAdded(this, it)
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
@@ -651,27 +651,18 @@ class LoyaltyCardDetailsFragment :
 
     private fun handleBrandHeader() {
         viewModel.membershipCard.value?.let { membershipCard ->
-            if (membershipCard.card != null &&
-                (!membershipCard.card?.barcode.isNullOrEmpty() &&
-                        !membershipCard.card?.membership_id.isNullOrEmpty())
+            if (!membershipCard.card?.barcode.isNullOrEmpty() ||
+                !membershipCard.card?.membership_id.isNullOrEmpty()
             ) {
                 binding.cardHeader.setOnClickListener {
-                    val directions = membershipCard.card?.barcode_type.let { type ->
-                        viewModel.membershipPlan.value?.let { plan ->
-                            type?.let {
-                                LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                    plan, membershipCard
-                                )
-                            }
-                        }
+                    viewModel.membershipPlan.value?.let { plan ->
+                        findNavController().navigate(
+                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                plan, membershipCard
+                            )
+                        )
                     }
-
-                    directions?.let { findNavController().navigateIfAdded(this, directions) }
                 }
-            } else if (membershipCard.card?.membership_id.isNullOrEmpty() ||
-                membershipCard.card?.barcode.isNullOrEmpty()
-            ) {
-                binding.cardHeader.binding.tapCard.visibility = View.GONE
             }
         }
     }

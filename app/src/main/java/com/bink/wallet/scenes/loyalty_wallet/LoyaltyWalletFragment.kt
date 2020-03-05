@@ -20,7 +20,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.FirebaseUtils.LOYALTY_WALLET_VIEW
+import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
@@ -61,22 +61,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 it.id == card.membership_plan
                             }
 
-                        val directions =
-                            plan?.let {
-                                WalletsFragmentDirections.homeToBarcode(
-                                    plan, card
-                                )
-                            }
-
                         if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                            if (card.card?.barcode.isNullOrEmpty() ||
-                                card.card?.membership_id.isNullOrEmpty()
+                            if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
                             ) {
                                 displayNoBarcodeDialog(position)
                             } else {
-                                directions?.let {
-                                    findNavController().navigateIfAdded(
-                                        this@LoyaltyWalletFragment, it
+                                plan?.let {
+                                    findNavController().navigate(
+                                        WalletsFragmentDirections.homeToBarcode(
+                                            plan,
+                                            card
+                                        )
                                     )
                                 }
                                 this@LoyaltyWalletFragment.onDestroy()
@@ -263,16 +258,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
             is MembershipPlan -> {
-                val directions =
+                findNavController().navigate(
                     WalletsFragmentDirections.homeToAddJoin(
                         item,
                         null,
                         true,
                         isRetryJourney = false
                     )
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    directions
                 )
             }
             else ->

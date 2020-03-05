@@ -7,7 +7,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.FirebaseUtils.BROWSE_BRANDS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -70,7 +70,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 plans = plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1,
                                                                       membershipPlan2 ->
                     comparePlans(membershipPlan1, membershipPlan2)
-                }.thenBy { it.account?.company_name }).toTypedArray()
+                }.thenBy { it.account?.company_name?.toLowerCase() }).toTypedArray()
 
                 plansList.add(Pair(getString(R.string.pll_text), plans[0]))
             }

@@ -13,7 +13,7 @@ import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.FirebaseUtils.PAYMENT_DETAIL_VIEW
+import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.hasCertificatePinningFailed
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
