@@ -168,30 +168,15 @@
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.termsCondition}"
                         android:fontFamily="@font/nunito_sans_light"
-                        android:text="@string/T_C_accept_description"
+                        android:gravity="top"
+                        android:paddingTop="@dimen/margin_padding_size_extra_small"
+                        android:text="@string/terms_and_conditions_message_text"
                         android:textColor="@color/black"
                         android:textColorLink="@color/blue_accent"
                         android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/confirm_password_field" />
-
-                <CheckBox
-                        android:id="@+id/checkbox_privacy_policy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:buttonTint="@color/black"
-                        android:checked="@={viewModel.privacyPolicy}"
-                        android:fontFamily="@font/nunito_sans_light"
-                        android:text="@string/privacy_policy_description"
-                        android:textColor="@color/black"
-                        android:textColorLink="@color/blue_accent"
-                        android:textSize="@dimen/size_body"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
 
                 <CheckBox
                         android:id="@+id/checkbox_marketing_messages"
@@ -203,25 +188,15 @@
                         android:buttonTint="@color/black"
                         android:checked="@={viewModel.marketingMessages}"
                         android:fontFamily="@font/nunito_sans_light"
-                        android:text="@string/marketing_messages"
+                        android:gravity="top"
+                        android:paddingTop="@dimen/margin_padding_size_extra_small"
+                        android:text="@string/marketing_message_text"
                         android:textColor="@color/black"
+                        android:textColorLink="@color/blue_accent"
                         android:textSize="@dimen/size_body"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/checkbox_privacy_policy" />
-
-                <TextView
-                        android:id="@+id/sign_up_footer_message"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_description_big"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/checkbox_marketing_messages" />
+                        app:layout_constraintTop_toBottomOf="@+id/checkbox_terms_conditions" />
 
                 <Button
                         android:id="@+id/sign_up_button"
@@ -232,15 +207,15 @@
                         android:layout_marginEnd="@dimen/gradient_button_margin"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
                         android:background="@drawable/gradient_button_selector"
+                        android:enabled="@{viewModel.isSignUpEnabled}"
                         android:text="@string/continue_text"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
-                        android:enabled="@{viewModel.isSignUpEnabled}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/sign_up_footer_message" />
+                        app:layout_constraintTop_toBottomOf="@+id/checkbox_marketing_messages" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/progress_spinner"

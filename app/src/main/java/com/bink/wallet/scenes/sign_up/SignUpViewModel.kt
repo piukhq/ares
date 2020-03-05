@@ -24,7 +24,6 @@ class SignUpViewModel(
     val password = MutableLiveData<String>()
     val confirmPassword = MutableLiveData<String>()
     val termsCondition = MutableLiveData<Boolean>()
-    val privacyPolicy = MutableLiveData<Boolean>()
     val marketingMessages = MutableLiveData<Boolean>()
     val isLoading = MutableLiveData<Boolean>()
 
@@ -61,7 +60,6 @@ class SignUpViewModel(
             passwordValidator,
             passwordMatcher,
             termsCondition,
-            privacyPolicy,
             ::isSignUpButtonEnabled
         )
     }
@@ -70,13 +68,11 @@ class SignUpViewModel(
         emailValidator: Boolean,
         passwordValidator: Boolean,
         passwordMatcher: Boolean,
-        termsAndConditions: Boolean,
-        privacyPolicy: Boolean
+        termsAndConditions: Boolean
     ): Boolean = passwordValidator &&
             emailValidator &&
             passwordMatcher &&
-            termsAndConditions &&
-            privacyPolicy
+            termsAndConditions
 
     private fun arePasswordsMatching(
         password: String,
