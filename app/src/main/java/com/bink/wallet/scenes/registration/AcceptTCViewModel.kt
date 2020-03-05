@@ -19,8 +19,7 @@ class AcceptTCViewModel(
     var facebookAuthError = MutableLiveData<Throwable>()
     var marketingPreferences = MutableLiveData<ResponseBody>()
     var marketingError = MutableLiveData<Throwable>()
-    var shouldAcceptBeEnabledTC = MutableLiveData<Boolean>()
-    var shouldAcceptBeEnabledPrivacy = MutableLiveData<Boolean>()
+    val shouldAcceptBeEnabled = MutableLiveData<Boolean>()
 
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
@@ -29,8 +28,7 @@ class AcceptTCViewModel(
         loyaltyWalletRepository.liveDataDatabaseUpdated
 
     init {
-        shouldAcceptBeEnabledTC.value = false
-        shouldAcceptBeEnabledPrivacy.value = false
+        shouldAcceptBeEnabled.value = false
     }
 
     fun authWithFacebook(facebookAuthRequest: FacebookAuthRequest) {

@@ -58,89 +58,42 @@
 
         <CheckBox
                 android:id="@+id/accept_tc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:buttonTint="@color/black"
+                android:checked="@={viewModel.shouldAcceptBeEnabled}"
+                android:fontFamily="@font/nunito_sans_light"
+                android:gravity="top"
+                android:paddingTop="@dimen/margin_padding_size_extra_small"
+                android:text="@string/terms_and_conditions_message_text"
+                android:textColor="@color/black"
+                android:textColorLink="@color/blue_accent"
+                android:textSize="@dimen/size_body"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/one_last_step_disclaimer" />
 
         <CheckBox
-                android:id="@+id/accept_privacy_policy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:buttonTint="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/accept_tc" />
-
-        <CheckBox
                 android:id="@+id/accept_marketing"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:buttonTint="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/accept_privacy_policy" />
-
-        <TextView
-                android:id="@+id/accept_tc_disclaimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="@string/accept_tcs_disclaimer"
-                android:textColor="@color/black"
-                android:textColorLink="@color/blue_accent"
-                android:textSize="@dimen/size_body"
-                app:layout_constraintBottom_toBottomOf="@+id/accept_tc"
-                app:layout_constraintStart_toEndOf="@+id/accept_tc"
-                app:layout_constraintTop_toTopOf="@+id/accept_tc" />
-
-        <TextView
-                android:id="@+id/accept_privacy_policy_disclaimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="@string/accept_pp_disclaimer"
-                android:textColor="@color/black"
-                android:textColorLink="@color/blue_accent"
-                android:textSize="@dimen/size_body"
-                app:layout_constraintBottom_toBottomOf="@+id/accept_privacy_policy"
-                app:layout_constraintStart_toEndOf="@+id/accept_privacy_policy"
-                app:layout_constraintTop_toTopOf="@+id/accept_privacy_policy" />
-
-        <TextView
-                android:id="@+id/accept_marketing_disclaimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="@string/accept_marketing_disclaimer"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_body"
-                app:layout_constraintBottom_toBottomOf="@+id/accept_marketing"
-                app:layout_constraintStart_toEndOf="@+id/accept_marketing"
-                app:layout_constraintTop_toTopOf="@+id/accept_marketing" />
-
-        <TextView
-                android:id="@+id/overall_disclaimer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans"
-                android:text="@string/general_disclaimer"
+                android:buttonTint="@color/black"
+                android:fontFamily="@font/nunito_sans_light"
+                android:gravity="top"
+                android:paddingTop="@dimen/margin_padding_size_extra_small"
+                android:text="@string/marketing_message_text"
                 android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline"
+                android:textColorLink="@color/blue_accent"
+                android:textSize="@dimen/size_body"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/accept_marketing_disclaimer" />
+                app:layout_constraintTop_toBottomOf="@+id/accept_tc" />
 
         <Button
                 android:id="@+id/accept"
@@ -150,6 +103,7 @@
                 android:layout_marginEnd="64dp"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 android:background="@drawable/gradient_button_selector"
+                android:enabled="@{viewModel.shouldAcceptBeEnabled}"
                 android:fontFamily="@font/nunito_sans_bold"
                 android:text="@string/accept_button_text"
                 android:textAllCaps="false"
