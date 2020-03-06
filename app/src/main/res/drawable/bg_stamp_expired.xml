@@ -3,5 +3,5 @@
         android:shape="oval">
     <stroke
             android:width="@dimen/voucher_stamp_width"
-            android:color="@color/voucher_redeemed_background" />
+            android:color="@color/blue_inactive" />
 </shape>

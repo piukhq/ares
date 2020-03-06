@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="oval">
     <stroke
-            android:width="@dimen/stamp_width"
+            android:width="@dimen/voucher_stamp_width"
             android:color="@color/voucher_background" />
 </shape>
