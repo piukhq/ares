@@ -35,11 +35,11 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
-        val jwtToken = LocalStoreUtils.getAppSharedPref(
-            LocalStoreUtils.KEY_TOKEN
-        )?.let {
-            it
-        }
+        val jwtToken =
+            LocalStoreUtils.getAppSharedPref(
+                LocalStoreUtils.KEY_TOKEN
+            )?.replace("\n","")?.trim()
+
         jwtToken?.let {
             Log.d("NetworkModule", jwtToken)
         }

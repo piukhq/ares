@@ -134,7 +134,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         setHasOptionsMenu(true)
         fetchData()
 
-        viewModel.deleteCard.observeNonNull(this) { id ->
+        viewModel.deleteCard.observeNonNull(this) {
             fetchData()
         }
 
@@ -258,16 +258,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
             is MembershipPlan -> {
-                val directions =
+                findNavController().navigate(
                     WalletsFragmentDirections.homeToAddJoin(
                         item,
                         null,
                         true,
                         isRetryJourney = false
                     )
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    directions
                 )
             }
             else ->
