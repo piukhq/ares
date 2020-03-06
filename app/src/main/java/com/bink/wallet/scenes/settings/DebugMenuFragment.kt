@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
@@ -14,7 +13,6 @@ import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.utils.enums.ApiVersion
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +26,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -42,13 +41,6 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             recycler.adapter =
                 DebugItemAdapter(viewModel.debugItems, itemClickListener = { onDebugItemClick(it) })
             recycler.layoutManager = LinearLayoutManager(requireContext())
-        }
-
-        binding.close.setOnClickListener {
-            findNavController().navigateIfAdded(
-                this,
-                DebugMenuFragmentDirections.debugToOnboarding()
-            )
         }
 
         viewModel.logOutResponse.observeNonNull(this) {
