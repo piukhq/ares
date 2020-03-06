@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.onboarding
 
+import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -19,6 +20,10 @@ class OnboardingPagerAdapter(fragmentManager: FragmentManager) :
     override fun getItem(position: Int): Fragment = onboardingFragments[position]
 
     override fun getCount(): Int = ONBOARDING_PAGES_NUMBER
+
+    override fun saveState(): Parcelable? {
+        return null
+    }
 
     fun addFragment(fragment: OnboardingPageFragment) {
         onboardingFragments.add(fragment)
