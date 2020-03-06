@@ -111,7 +111,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
         when (membershipCard?.membershipCard?.card?.barcode_type) {
-            0 -> format = BarcodeFormat.CODE_128
+            0, null -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
             2 -> format = BarcodeFormat.AZTEC
             3 -> format = BarcodeFormat.PDF_417
@@ -202,13 +202,17 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         })
         .into(binding.image)
 
-    if (card?.card?.barcode.isNullOrEmpty() ||
-        card?.card?.membership_id.isNullOrEmpty()
-    ) {
-        binding.tapCard.visibility = View.GONE
-    } else {
-        binding.tapCard.text =
-            binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    binding.tapCard.text = when {
+        !card?.card?.barcode.isNullOrEmpty() -> {
+            context.getString(R.string.tap_card_to_show_barcode)
+        }
+        !card?.card?.membership_id.isNullOrEmpty() -> {
+            context.getString(R.string.tap_card_to_show_card_number)
+        }
+        else -> {
+            binding.tapCard.visibility = View.GONE
+            EMPTY_STRING
+        }
     }
 }
 

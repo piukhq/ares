@@ -61,22 +61,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 it.id == card.membership_plan
                             }
 
-                        val directions =
-                            plan?.let {
-                                WalletsFragmentDirections.homeToBarcode(
-                                    plan, card
-                                )
-                            }
-
                         if (findNavController().currentDestination?.id == R.id.home_wallet) {
-                            if (card.card?.barcode.isNullOrEmpty() ||
-                                card.card?.membership_id.isNullOrEmpty()
+                            if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
                             ) {
                                 displayNoBarcodeDialog(position)
                             } else {
-                                directions?.let {
-                                    findNavController().navigateIfAdded(
-                                        this@LoyaltyWalletFragment, it
+                                plan?.let {
+                                    findNavController().navigate(
+                                        WalletsFragmentDirections.homeToBarcode(
+                                            plan,
+                                            card
+                                        )
                                     )
                                 }
                                 this@LoyaltyWalletFragment.onDestroy()
@@ -139,7 +134,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         setHasOptionsMenu(true)
         fetchData()
 
-        viewModel.deleteCard.observeNonNull(this) { id ->
+        viewModel.deleteCard.observeNonNull(this) {
             fetchData()
         }
 
@@ -263,16 +258,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
             is MembershipPlan -> {
-                val directions =
+                findNavController().navigate(
                     WalletsFragmentDirections.homeToAddJoin(
                         item,
                         null,
                         true,
                         isRetryJourney = false
                     )
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    directions
                 )
             }
             else ->
