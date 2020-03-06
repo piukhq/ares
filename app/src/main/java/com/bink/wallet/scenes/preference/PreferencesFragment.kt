@@ -8,9 +8,12 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.observeErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
