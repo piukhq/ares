@@ -345,7 +345,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun handleServerDownError(throwable: Throwable) {
         if (isRefresh) {
-            if (((throwable is HttpException) && throwable.code() >= ApiErrorUtils.SERVER_ERROR) || throwable is SocketTimeoutException) {
+            if (((throwable is HttpException)
+                        && throwable.code() >= ApiErrorUtils.SERVER_ERROR)
+                || throwable is SocketTimeoutException
+            ) {
                 if (!isErrorShowing) {
                     isErrorShowing = true
                     requireContext().displayModalPopup(

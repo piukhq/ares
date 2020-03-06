@@ -440,7 +440,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
                 else -> {
-                    if (((exception is HttpException) && exception.code() >= ApiErrorUtils.SERVER_ERROR) || exception is SocketTimeoutException) {
+                    if (((exception is HttpException)
+                                && exception.code() >= ApiErrorUtils.SERVER_ERROR)
+                        || exception is SocketTimeoutException
+                    ) {
                         requireContext().displayModalPopup(
                             requireContext().getString(R.string.error_server_down_title),
                             requireContext().getString(R.string.error_server_down_message)

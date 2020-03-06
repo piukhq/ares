@@ -90,7 +90,10 @@ fun LiveData<Throwable>.observeErrorNonNull(
 ) {
     this.observe(owner, Observer {
         it?.let {
-            if (((it is HttpException) && it.code() >= ApiErrorUtils.SERVER_ERROR) || it is SocketTimeoutException) {
+            if (((it is HttpException)
+                        && it.code() >= ApiErrorUtils.SERVER_ERROR)
+                || it is SocketTimeoutException
+            ) {
                 context.displayModalPopup(
                     context.getString(R.string.error_server_down_title),
                     context.getString(R.string.error_server_down_message)
