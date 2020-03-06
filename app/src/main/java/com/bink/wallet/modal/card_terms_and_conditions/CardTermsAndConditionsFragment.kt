@@ -9,10 +9,11 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
-import java.net.SocketTimeoutException
 
 class CardTermsAndConditionsFragment : GenericModalFragment() {
     override val viewModel: CardTermsAndConditionsViewModel by viewModel()
