@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
@@ -19,8 +20,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.utils.enums.BuildTypes
+import java.util.*
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -194,5 +198,23 @@ fun CardBalance?.formatBalance(): String {
     } else {
         this?.prefix?.plus(balanceValue.toInt())
             .toString()
+    }
+}
+
+fun logError(tag: String?, message: String?, exception: Exception? = null) {
+    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        tag?.let {
+            message?.let {
+                Log.e(tag, message, exception)
+            }
+        }
+    }
+}
+
+fun logDebug(tag: String?, message: String?) {
+    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        message?.let {
+            Log.d(tag, it)
+        }
     }
 }

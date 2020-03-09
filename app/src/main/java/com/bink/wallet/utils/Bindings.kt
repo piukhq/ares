@@ -46,7 +46,7 @@ fun ImageView.loadImage(item: MembershipPlan?) {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
-            Log.e("loadImage", e.localizedMessage, e)
+            logError("loadImage", e.localizedMessage, e)
         }
     } else {
         visibility = View.INVISIBLE
@@ -67,7 +67,7 @@ fun ImageView.loadImage(item: MembershipCard?) {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
-            Log.e("loadImage", e.localizedMessage, e)
+            logError("loadImage", e.localizedMessage, e)
         }
     } else {
         visibility = View.INVISIBLE
@@ -159,7 +159,7 @@ fun ImageView.image(plan: MembershipPlan?) {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
-            Log.e("loadImage", e.localizedMessage, e)
+            logError("loadImage", e.localizedMessage, e)
         }
     }
 }
