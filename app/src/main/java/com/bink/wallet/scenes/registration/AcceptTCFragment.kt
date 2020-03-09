@@ -123,17 +123,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
             )
         }
-        binding.decline.setOnClickListener {
-            LoginManager.getInstance().logOut()
-            findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
-
-            logEvent(
-                getFirebaseIdentifier(
-                    TERMS_AND_CONDITIONS_VIEW,
-                    binding.decline.text.toString()
-                )
-            )
-        }
 
         binding.back.setOnClickListener {
             LoginManager.getInstance().logOut()
