@@ -86,6 +86,7 @@
                         android:layout_marginEnd="@dimen/loyalty_voucher_margin"
                         android:indeterminate="false"
                         android:max="100"
+                        android:visibility="gone"
                         android:progress="25"
                         android:progressDrawable="@drawable/loyalty_voucher_progress_bar"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -96,11 +97,13 @@
                         android:id="@+id/stamps"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:currentProgress="@{4}"
+                        android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                        app:currentProgress="@{voucher.earn.value.intValue()}"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/progress_bar"
-                        app:maxProgress="@{5}"
+                        app:maxProgress="@{voucher.earn.target_value.intValue()}"
                         app:status="@{voucher.state}" />
 
                 <TextView

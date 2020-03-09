@@ -17,28 +17,28 @@ class LoyaltyCardDetailsVouchersAdapter(
     private val vouchers: List<Voucher>,
     val onClickListener: (Any) -> Unit = {}
 ) :
-    RecyclerView.Adapter<LoyaltyCardDetailsVouchersAdapter.LoyaltyCardDetailsVouchersViewHolder>() {
+    RecyclerView.Adapter<LoyaltyCardDetailsVouchersAdapter.VouchersViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): LoyaltyCardDetailsVouchersViewHolder {
+    ): VouchersViewHolder {
         val binding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.detail_voucher_item,
             parent,
             false
         ) as DetailVoucherItemBinding
-        return LoyaltyCardDetailsVouchersViewHolder(binding, onClickListener)
+        return VouchersViewHolder(binding, onClickListener)
     }
 
     override fun getItemCount() = vouchers.size
 
-    override fun onBindViewHolder(holder: LoyaltyCardDetailsVouchersViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VouchersViewHolder, position: Int) {
         holder.bind(vouchers[position])
     }
 
-    class LoyaltyCardDetailsVouchersViewHolder(
+    class VouchersViewHolder(
         var binding: DetailVoucherItemBinding,
         val onClickListener: (Any) -> Unit = {}
     ) :

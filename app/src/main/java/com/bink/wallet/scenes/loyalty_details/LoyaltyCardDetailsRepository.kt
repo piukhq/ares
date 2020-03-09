@@ -6,6 +6,7 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.stampsprogressindicator.BKHardcodedResponses
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,8 +50,8 @@ class LoyaltyCardDetailsRepository(
             val request = apiService.getMembershipCardsAsync()
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    membershipCard.value = response.first { card -> card.id == cardId }
+                    val response = BKHardcodedResponses.BKMembershipCardsResponse//request.await()
+                    membershipCard.value = response?.first { card -> card.id == cardId }
                 } catch (e: Throwable) {
                     if (addError)
                         refreshError.value = e

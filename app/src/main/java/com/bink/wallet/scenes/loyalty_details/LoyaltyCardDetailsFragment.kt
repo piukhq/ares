@@ -769,10 +769,8 @@ class LoyaltyCardDetailsFragment :
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             viewModel.membershipCard.value?.vouchers?.filter {
-                listOf(
-                    VoucherStates.IN_PROGRESS.state,
-                    VoucherStates.ISSUED.state
-                ).contains(it.state)
+                it.state == VoucherStates.IN_PROGRESS.state ||
+                        it.state == VoucherStates.ISSUED.state
             }?.let { vouchers ->
                 adapter = LoyaltyCardDetailsVouchersAdapter(
                     vouchers,

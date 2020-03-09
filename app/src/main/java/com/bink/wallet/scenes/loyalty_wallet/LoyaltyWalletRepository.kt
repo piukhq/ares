@@ -12,6 +12,11 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.stampsprogressindicator.BKHardcodedResponses
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import kotlinx.coroutines.*
 
 
@@ -33,11 +38,11 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
+                    val response = BKHardcodedResponses.BKMembershipCardsResponse//request.await()
                     runBlocking {
                         membershipCardDao.deleteAllCards()
                         membershipCardDao.storeAll(response)
-                        mutableMembershipCards.value = response.toMutableList()
+                        mutableMembershipCards.value = response?.toMutableList()
                     }
                 } catch (e: Exception) {
                     loadCardsError.value = e
@@ -50,7 +55,7 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    localMembershipCards.value = membershipCardDao.getAllAsync()
+                    localMembershipCards.value = listOf()// membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -81,11 +86,12 @@ class LoyaltyWalletRepository(
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     try {
-                        val response = request.await()
-                        storeMembershipPlans(response, loadPlansError)
+                        val response =
+                            BKHardcodedResponses.BKMembershipPlanResponse//request.await()
+                        storeMembershipPlans(response ?: listOf(), loadPlansError)
                         SharedPreferenceManager.membershipPlansLastRequestTime =
                             System.currentTimeMillis()
-                        mutableMembershipPlans.value = response.toMutableList()
+                        mutableMembershipPlans.value = response?.toMutableList()
                     } catch (e: java.lang.Exception) {
                         loadPlansError.value = e
                     }
