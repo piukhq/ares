@@ -39,7 +39,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             binding.container.getWindowVisibleDisplayFrame(rec)
             val screenHeight = binding.container.rootView.height
             val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * 0.15) {
+            if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
                 validateCredentials()
             }
         }

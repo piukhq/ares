@@ -21,6 +21,7 @@ import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
@@ -53,7 +54,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             binding.container.getWindowVisibleDisplayFrame(rec)
             val screenHeight = binding.container.rootView.height
             val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * 0.15) {
+            if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
                 validateCredentials()
             }
         }
