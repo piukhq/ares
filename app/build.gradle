@@ -52,7 +52,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            initWith debug
+            minifyEnabled true
+            shrinkResources true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
