@@ -13,11 +13,19 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toInt
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.validateEmail
+import com.bink.wallet.utils.validatePassword
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -169,7 +177,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                             )
                         }
                     } else {
-                        val dialogDescription = if (termsCondition.value != true ) {
+                        val dialogDescription = if (termsCondition.value != true) {
                             getString(
                                 R.string.accept_tc_pp,
                                 "${getString(R.string.terms_conditions_text)} & ${getString(R.string.privacy_policy_text)}"
