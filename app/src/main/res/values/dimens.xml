@@ -12,6 +12,7 @@
     <dimen name="margin_padding_size_large">32dp</dimen>
     <dimen name="margin_padding_size_extra_large">64dp</dimen>
     <dimen name="item_separator_line_height">1dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
@@ -76,6 +77,7 @@
     <dimen name="tile_dimension">328dp</dimen>
 
     <!-- Maximised Barcode -->
+    android:layout_marginBottom="@dimen/margin_padding_size_medium"
     <dimen name="barcode_side_margin">98dp</dimen>
     <dimen name="barcode_top_margin">24dp</dimen>
     <dimen name="maximized_barcode_height">124dp</dimen>
