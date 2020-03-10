@@ -42,11 +42,11 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     }
 
     fun ghostMembershipCard(
-        membershipCard: MembershipCard,
+        membershipCardId: String,
         membershipCardRequest: MembershipCardRequest
     ) {
         loyaltyWalletRepository.ghostMembershipCard(
-            membershipCard.id,
+            membershipCardId,
             membershipCardRequest,
             newMembershipCard,
             createCardError

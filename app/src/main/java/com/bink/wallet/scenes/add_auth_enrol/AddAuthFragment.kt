@@ -30,7 +30,6 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
-
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -512,22 +511,33 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     return@setOnClickListener
                                 }
 
-                                val currentRequest = MembershipCardRequest(
-                                    Account(
-                                        addRegisterFieldsRequest.add_fields,
-                                        null,
-                                        null,
-                                        null,
-                                        null
-                                    ),
-                                    membershipPlan.id
-                                )
+                                val currentRequest: MembershipCardRequest
 
                                 if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    currentRequest = MembershipCardRequest(
+                                        Account(
+                                            null,
+                                            null,
+                                            null,
+                                            addRegisterFieldsRequest.registration_fields,
+                                            null
+                                        ),
+                                        membershipPlan.id
+                                    )
                                     membershipCardId?.let {
-                                        viewModel.updateMembershipCard(it, currentRequest)
+                                        viewModel.ghostMembershipCard(it, currentRequest)
                                     }
                                 } else {
+                                    currentRequest = MembershipCardRequest(
+                                        Account(
+                                            addRegisterFieldsRequest.add_fields,
+                                            null,
+                                            null,
+                                            null,
+                                            null
+                                        ),
+                                        membershipPlan.id
+                                    )
                                     viewModel.createMembershipCard(
                                         currentRequest
                                     )
@@ -584,10 +594,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     ),
                     viewModel.currentMembershipPlan.value?.id
                 )
-                viewModel.ghostMembershipCard(
-                    membershipCard,
-                    currentRequest
-                )
+                if (!isRetryJourney) {
+                    viewModel.ghostMembershipCard(
+                        membershipCard.id,
+                        currentRequest
+                    )
+                }
             }
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
