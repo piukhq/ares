@@ -12,8 +12,7 @@ class NetworkUtils {
             val connectivityManager =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connectivityManager.activeNetworkInfo
-            val isNetworkAvailable = networkInfo != null && networkInfo.isConnected
-            return isNetworkAvailable
+            return networkInfo != null && networkInfo.isConnected
         }
     }
 
