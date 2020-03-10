@@ -2,15 +2,10 @@ package com.bink.wallet.scenes.sign_up
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.text.style.URLSpan
 import android.util.Patterns
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -86,29 +81,12 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         with(binding) {
             signUpButton.isEnabled = false
 
-            signUpFooterMessage.text = HtmlCompat.fromHtml(
-                getString(R.string.sign_up_footer_text),
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
             viewModel = this@SignUpFragment.viewModel
 
-            buildHyperlinkSpanString(
-                binding.checkboxTermsConditions.text.toString(),
-                getString(R.string.terms_conditions_text),
-                getString(R.string.terms_and_conditions_url),
-                binding.checkboxTermsConditions
-            )
-
-            buildHyperlinkSpanString(
-                binding.checkboxPrivacyPolicy.text.toString(),
-                getString(R.string.privacy_policy_text),
-                getString(R.string.privacy_policy_url),
-                binding.checkboxPrivacyPolicy
-            )
+            binding.checkboxTermsConditions.movementMethod = LinkMovementMethod.getInstance()
         }
 
         with(viewModel) {
-            privacyPolicy.value = false
             termsCondition.value = false
             marketingMessages.value = false
 
@@ -180,9 +158,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 checkPasswordsMatch()
 
                 with(viewModel) {
-                    if (termsCondition.value == true &&
-                        privacyPolicy.value == true
-                    ) {
+                    if (termsCondition.value == true) {
                         if (binding.confirmPasswordField.error == null &&
                             binding.passwordField.error == null &&
                             binding.emailField.error == null
@@ -201,9 +177,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                             )
                         }
                     } else {
-                        val dialogDescription = if (termsCondition.value != true &&
-                            privacyPolicy.value != true
-                        ) {
+                        val dialogDescription = if (termsCondition.value != true) {
                             getString(
                                 R.string.accept_tc_pp,
                                 "${getString(R.string.terms_conditions_text)} & ${getString(R.string.privacy_policy_text)}"
@@ -273,23 +247,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     }
             }
         }
-    }
-
-    private fun buildHyperlinkSpanString(
-        stringToSpan: String,
-        stringToHyperlink: String,
-        url: String,
-        textView: TextView
-    ) {
-        val spannableString = SpannableString(stringToSpan)
-        spannableString.setSpan(
-            URLSpan(url),
-            spannableString.indexOf(stringToHyperlink),
-            spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-        )
-        textView.text = spannableString
-        textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun initMembershipPlansObserver() {
