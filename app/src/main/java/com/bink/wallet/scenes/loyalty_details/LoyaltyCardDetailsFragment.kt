@@ -619,14 +619,14 @@ class LoyaltyCardDetailsFragment :
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
-                            val directions =
+                            findNavController().navigate(
                                 LoyaltyCardDetailsFragmentDirections.detailToAuth(
                                     SignUpFormType.GHOST,
                                     plan,
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            )
                         }
                     }
                 }
