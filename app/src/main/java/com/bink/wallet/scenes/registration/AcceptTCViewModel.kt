@@ -42,8 +42,7 @@ class AcceptTCViewModel(
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData,
-            false
+            membershipPlanErrorLiveData
         )
     }
 }

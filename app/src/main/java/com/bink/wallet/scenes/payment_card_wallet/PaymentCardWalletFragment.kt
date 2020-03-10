@@ -44,6 +44,9 @@ class PaymentCardWalletFragment :
 
     override fun onResume() {
         super.onResume()
+
+        viewModel.getPeriodicPaymentCards()
+
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
@@ -97,7 +100,9 @@ class PaymentCardWalletFragment :
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            viewModel.fetchData()
+            viewModel.fetchLocalData()
+
+            viewModel.getPaymentCards()
         }
 
         viewModel.localMembershipCardData.observeNonNull(this) {
@@ -105,7 +110,7 @@ class PaymentCardWalletFragment :
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
-            viewModel.fetchData()
+            viewModel.fetchLocalData()
         }
 
         viewModel.deleteCardError.observeNonNull(this) {
@@ -183,7 +188,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun populateWallet() {
-        viewModel.fetchData()
+        viewModel.fetchLocalData()
     }
 
     private fun onBannerRemove(item: Any) {
@@ -220,7 +225,7 @@ class PaymentCardWalletFragment :
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
             binding.progressSpinner.visibility = View.VISIBLE
             binding.paymentCardRecycler.visibility = View.GONE
-            viewModel.getPaymentCards()
+            viewModel.getPeriodicPaymentCards()
         }
     }
 

@@ -99,8 +99,7 @@ class SignUpViewModel(
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData,
-            false
+            membershipPlanErrorLiveData
         )
     }
 }

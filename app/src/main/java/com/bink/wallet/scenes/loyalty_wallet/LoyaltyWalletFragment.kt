@@ -90,6 +90,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.fetchPeriodicMembershipCards()
 
         logScreenView(LOYALTY_WALLET_VIEW)
     }
@@ -279,7 +285,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.progressSpinner.visibility = View.VISIBLE
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            viewModel.fetchMembershipCards()
+            viewModel.fetchPeriodicMembershipCards()
             viewModel.fetchDismissedCards()
         } else {
             viewModel.fetchLocalMembershipPlans()
