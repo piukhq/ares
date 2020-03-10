@@ -20,14 +20,18 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
@@ -46,6 +50,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private var walletItems = ArrayList<Any>()
+    private var isRefresh = false
+    private var isErrorShowing = false
 
     private val listener = object :
         RecyclerItemTouchHelperListener {
@@ -149,31 +155,30 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchLocalPaymentCards()
 
         binding.swipeLayout.setOnRefreshListener {
+            isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 binding.progressSpinner.visibility = View.VISIBLE
                 viewModel.fetchMembershipPlans(false)
                 viewModel.fetchMembershipCards()
                 viewModel.fetchDismissedCards()
             } else {
+                isRefresh = false
                 disableIndicators()
             }
         }
 
         viewModel.loadCardsError.observeNonNull(this) {
             viewModel.fetchLocalMembershipCards()
-        }
-        viewModel.loadPlansError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipPlans()
+            handleServerDownError(it)
         }
 
-        viewModel.deleteCardError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
+        viewModel.loadPlansError.observeNonNull(this) {
+            viewModel.fetchLocalMembershipPlans()
+            handleServerDownError(it)
         }
+
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this)
+
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
         }
@@ -208,6 +213,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun setCardsData(userDataResult: UserDataResult) {
+        isRefresh = false
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
                 walletItems = ArrayList()
@@ -343,5 +349,24 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
             }
         )
+    }
+
+    private fun handleServerDownError(throwable: Throwable) {
+        if (isRefresh) {
+            if (((throwable is HttpException)
+                        && throwable.code() >= ApiErrorUtils.SERVER_ERROR)
+                || throwable is SocketTimeoutException
+            ) {
+                if (!isErrorShowing) {
+                    isErrorShowing = true
+                    requireContext().displayModalPopup(
+                        requireContext().getString(R.string.error_server_down_title),
+                        requireContext().getString(R.string.error_server_down_message), {
+                            isErrorShowing = false
+                        }
+                    )
+                }
+            }
+        }
     }
 }

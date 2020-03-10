@@ -64,7 +64,12 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
         binding.acceptTc.movementMethod = LinkMovementMethod.getInstance()
 
-        viewModel.facebookAuthError.observeNonNull(this) {
+        viewModel.facebookAuthError.observeNetworkDrivenErrorNonNull(
+            requireContext(),
+            this,
+            getString(R.string.facebook_failed),
+            ""
+        ) {
             binding.accept.isClickable = false
             val timer = Timer()
             context?.resources?.getInteger(R.integer.button_disabled_delay)?.toLong()
@@ -75,9 +80,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }, delay)
                 }
-            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-                requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
-            }
         }
 
         viewModel.facebookAuthResult.observeNonNull(this) {

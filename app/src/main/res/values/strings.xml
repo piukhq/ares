@@ -27,6 +27,8 @@
     <!-- Error -->
     <string name="error_title">@string/error</string>
     <string name="error_data_retrieval">Could not retrieve server error. Please try again.</string>
+    <string name="error_server_down_title">Error</string>
+    <string name="error_server_down_message">There was a problem communicating with the server. Please try again later.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>

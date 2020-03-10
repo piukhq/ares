@@ -181,17 +181,10 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
         }
 
-        viewModel.fetchError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
-        }
+        viewModel.fetchError.observeErrorNonNull(requireContext(), this)
 
-        viewModel.linkError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+        viewModel.linkError.observeErrorNonNull(requireContext(), this) {
+            if (!NetworkUtils.isConnected(requireContext())) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.description_error))
                     .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))
@@ -212,8 +205,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        viewModel.unlinkError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), this) {
+            if (!NetworkUtils.isConnected(requireContext())) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.description_error))
                     .setMessage(getString(R.string.delete_and_update_card_internet_connection_error_message))

@@ -222,19 +222,24 @@ class LoyaltyCardDetailsFragment :
             configureLoginStatus(status)
         }
 
-        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment
+        ) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it)) {
                 with(viewModel.deleteError) {
                     if (value is HttpException) {
                         val error = value as HttpException
-                        requireContext().displayModalPopup(
-                            getString(R.string.title_2_4),
-                            getString(
-                                R.string.description_2_4,
-                                error.code().toString(),
-                                error.localizedMessage
+                        if (error.code() < ApiErrorUtils.SERVER_ERROR) {
+                            requireContext().displayModalPopup(
+                                getString(R.string.title_2_4),
+                                getString(
+                                    R.string.description_2_4,
+                                    error.code().toString(),
+                                    error.localizedMessage
+                                )
                             )
-                        )
+                        }
                     } else {
                         requireContext().displayModalPopup(
                             getString(R.string.title_2_4),
@@ -247,6 +252,11 @@ class LoyaltyCardDetailsFragment :
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
+
+        viewModel.refreshError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment
+        )
     }
 
     private fun fetchData() {
