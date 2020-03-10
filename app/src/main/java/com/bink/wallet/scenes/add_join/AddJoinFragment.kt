@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.add_join
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -166,39 +165,50 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
         binding.getCardButton.setOnClickListener {
             currentMembershipPlan?.let { membershipPlan ->
-                val action: NavDirections
-                if (membershipPlan.feature_set?.linking_support != null &&
-                    !membershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
-                ) {
-                    val genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_back,
-                        true,
-                        getString(R.string.native_join_unavailable_title),
-                        getString(
-                            R.string.native_join_unavailable_text,
-                            membershipPlan.account?.company_name
+                val getNewCardNavigationDirections =
+                    if (membershipPlan.feature_set?.linking_support != null &&
+                        !membershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name)
+                    ) {
+                        val genericModalParameters = GenericModalParameters(
+                            R.drawable.ic_back,
+                            true,
+                            getString(R.string.native_join_unavailable_title),
+                            getString(
+                                R.string.native_join_unavailable_text,
+                                membershipPlan.account?.company_name
+                            )
                         )
-                    )
-                    membershipPlan.account?.plan_url?.let {
-                        if (it.isNotEmpty()) {
-                            genericModalParameters.firstButtonText =
-                                getString(R.string.native_join_unavailable_button_text)
-                            genericModalParameters.link =
-                                membershipPlan.account.plan_url
+                        membershipPlan.account?.plan_url?.let {
+                            if (it.isNotEmpty()) {
+                                genericModalParameters.firstButtonText =
+                                    getString(R.string.native_join_unavailable_button_text)
+                                genericModalParameters.link =
+                                    membershipPlan.account.plan_url
+                            }
                         }
-                    }
-                    action =
                         AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
-                } else {
-                    action = AddJoinFragmentDirections.addJoinToGhost(
-                        SignUpFormType.ENROL,
-                        membershipPlan,
-                        isRetryJourney,
-                        membershipCardId,
-                        isFromNoReasonCodes
-                    )
-                }
-                findNavController().navigateIfAdded(this, action)
+                    } else if (membershipPlan.has_vouchers == true &&
+                        viewModel.paymentCards.value.isNullOrEmpty()
+                    ) {
+                        AddJoinFragmentDirections.actionAddJoinToPaymentCardNeededFragment(
+                            GenericModalParameters(
+                                R.drawable.ic_back,
+                                false,
+                                getString(R.string.native_join_no_payment_cards_title),
+                                getString(R.string.native_join_no_payment_cards_description),
+                                firstButtonText = getString(R.string.payment_card_needed_button_text)
+                            )
+                        )
+                    } else {
+                        AddJoinFragmentDirections.addJoinToGhost(
+                            SignUpFormType.ENROL,
+                            membershipPlan,
+                            isRetryJourney,
+                            membershipCardId,
+                            isFromNoReasonCodes
+                        )
+                    }
+                findNavController().navigate(getNewCardNavigationDirections)
 
                 logEvent(
                     getFirebaseIdentifier(

@@ -135,7 +135,7 @@
 
         <TextView
                 android:id="@+id/link_text"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_large"
@@ -144,8 +144,11 @@
                 android:text="@string/terms_amp_conditions"
                 android:textColor="@color/blue_accent"
                 android:textSize="@dimen/text_size_description_big"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_two" />
+                app:layout_constraintTop_toBottomOf="@id/date_two"
+                tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

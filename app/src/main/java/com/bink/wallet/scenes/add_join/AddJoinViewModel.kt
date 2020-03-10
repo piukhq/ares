@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_join
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
@@ -11,7 +12,9 @@ import com.bink.wallet.utils.DateTimeUtils
 class AddJoinViewModel constructor(private var paymentWalletRepository: PaymentWalletRepository) :
     BaseViewModel() {
     val membershipPlan = MutableLiveData<MembershipPlan>()
-    val paymentCards = MutableLiveData<List<PaymentCard>>()
+    private val _paymentCards = MutableLiveData<List<PaymentCard>>()
+    val paymentCards: LiveData<List<PaymentCard>>
+        get() = _paymentCards
     val fetchError = MutableLiveData<Throwable>()
 
     fun getPaymentCards() {
@@ -20,7 +23,7 @@ class AddJoinViewModel constructor(private var paymentWalletRepository: PaymentW
 
         if (shouldMakePeriodicCall) {
             paymentWalletRepository.getPaymentCards(
-                paymentCards,
+                _paymentCards,
                 fetchError
             )
         } else {
@@ -30,7 +33,7 @@ class AddJoinViewModel constructor(private var paymentWalletRepository: PaymentW
 
     fun fetchLocalPaymentCards() {
         paymentWalletRepository.getLocalPaymentCards(
-            paymentCards,
+            _paymentCards,
             fetchError
         )
     }

@@ -90,8 +90,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
-
+            if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
+                findNavController().navigateIfAdded(
+                    this,
+                    OnboardingFragmentDirections.onboardingToLogIn()
+                )
+            }
             logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
         }
 
@@ -133,8 +137,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             }
         }
         binding.signUpWithEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
-
+            if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
+                findNavController().navigateIfAdded(
+                    this,
+                    OnboardingFragmentDirections.onboardingToSignUp()
+                )
+            }
             logEvent(
                 getFirebaseIdentifier(
                     ONBOARDING_VIEW,
