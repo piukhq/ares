@@ -103,7 +103,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 viewModel.getMembershipPlans()
             }
 
-            logInErrorResponse.observeErrorNonNull(requireContext(), this@LoginFragment) {
+            logInErrorResponse.observeErrorNonNull(
+                requireContext(),
+                this@LoginFragment,
+                EMPTY_STRING,
+                getString(R.string.incorrect_credentials)
+            ) {
                 isLoading.value = false
             }
 

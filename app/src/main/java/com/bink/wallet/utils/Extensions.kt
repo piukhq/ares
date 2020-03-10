@@ -101,7 +101,7 @@ fun LiveData<Throwable>.observeErrorNonNull(
             } else if (UtilFunctions.hasCertificatePinningFailed(it)) {
                 UtilFunctions.showCertificatePinningDialog(context)
             } else {
-                if (defaultErrorTitle.isNotEmpty() && defaultErrorMessage.isNotEmpty()) {
+                if (defaultErrorTitle.isNotEmpty() || defaultErrorMessage.isNotEmpty()) {
                     context.displayModalPopup(
                         defaultErrorTitle,
                         defaultErrorMessage
