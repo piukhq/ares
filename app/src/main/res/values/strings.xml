@@ -467,11 +467,15 @@
         ]]>
     </string>
     <string name="payment_card_needed_button_text">Add card</string>
+    <string name="voucher_stamp_title">%s %s %s</string>
+    <string name="voucher_stamp_subtext">%s %d</string>
+    <string name="voucher_stamp_collected">%d/%d stamps</string>
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
     <string name="card_number_description">Show this card number in-store just like you would a physical loyalty card.</string>
     <string name="tap_card_to_show_barcode">Tap to show barcode</string>
+    <string name="voucher_collected">Collected:</string>
 
 </resources>

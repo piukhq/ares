@@ -80,6 +80,7 @@ class BKHardcodedResponses {
                     "    \"vouchers\": [\n" +
                     "      {\n" +
                     "        \"state\": \"inprogress\",\n" +
+                    "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
                     "          \"type\": \"stamp\",\n" +
@@ -95,6 +96,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"issued\",\n" +
+                    "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
                     "          \"type\": \"stamp\",\n" +
@@ -113,6 +115,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"expired\",\n" +
+                    "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
                     "          \"type\": \"stamp\",\n" +
@@ -131,6 +134,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"redeemed\",\n" +
+                    "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
                     "          \"type\": \"stamp\",\n" +
@@ -150,6 +154,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"inprogress\",\n" +
+                    "        \"subtext\": \"for spending\",\n" +
                     "        \"earn\": {\n" +
                     "          \"prefix\": \"£\",\n" +
                     "          \"currency\": \"GBP\",\n" +
@@ -167,6 +172,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"issued\",\n" +
+                    "        \"subtext\": \"for spending\",\n" +
                     "        \"earn\": {\n" +
                     "          \"prefix\": \"£\",\n" +
                     "          \"currency\": \"GBP\",\n" +
@@ -187,6 +193,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"expired\",\n" +
+                    "        \"subtext\": \"for spending\",\n" +
                     "        \"earn\": {\n" +
                     "          \"prefix\": \"£\",\n" +
                     "          \"currency\": \"GBP\",\n" +
@@ -207,6 +214,7 @@ class BKHardcodedResponses {
                     "      },\n" +
                     "      {\n" +
                     "        \"state\": \"redeemed\",\n" +
+                    "        \"subtext\": \"for spending\",\n" +
                     "        \"earn\": {\n" +
                     "          \"prefix\": \"£\",\n" +
                     "          \"currency\": \"GBP\",\n" +

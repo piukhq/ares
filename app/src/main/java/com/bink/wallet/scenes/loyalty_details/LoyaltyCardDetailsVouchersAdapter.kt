@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.StampVoucherBinding
 import com.bink.wallet.databinding.DetailVoucherItemBinding
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
@@ -17,25 +18,80 @@ class LoyaltyCardDetailsVouchersAdapter(
     private val vouchers: List<Voucher>,
     val onClickListener: (Any) -> Unit = {}
 ) :
-    RecyclerView.Adapter<LoyaltyCardDetailsVouchersAdapter.VouchersViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): VouchersViewHolder {
-        val binding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.detail_voucher_item,
-            parent,
-            false
-        ) as DetailVoucherItemBinding
-        return VouchersViewHolder(binding, onClickListener)
+    ): RecyclerView.ViewHolder {
+        return when (viewType) {
+            STAMP_VOUCHER -> {
+                StampVouchersViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.item_stamp_voucher,
+                        parent,
+                        false
+                    ),
+                    onClickListener
+                )
+            }
+            else -> {
+                val binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.context),
+                    R.layout.detail_voucher_item,
+                    parent,
+                    false
+                ) as DetailVoucherItemBinding
+                VouchersViewHolder(binding, onClickListener)
+            }
+        }
     }
 
     override fun getItemCount() = vouchers.size
 
-    override fun onBindViewHolder(holder: VouchersViewHolder, position: Int) {
-        holder.bind(vouchers[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            STAMP_VOUCHER -> (holder as StampVouchersViewHolder).bind(vouchers[position])
+            else -> (holder as VouchersViewHolder).bind(vouchers[position])
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (vouchers[position].earn?.type) {
+            "stamp" -> STAMP_VOUCHER
+            else -> PROGRESS_VOUCHER
+        }
+    }
+
+    class StampVouchersViewHolder(
+        var binding: StampVoucherBinding,
+        val onClickListener: (Any) -> Unit = {}
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(voucher: Voucher) {
+            binding.root.setOnClickListener {
+                onClickListener(voucher)
+            }
+            binding.voucher = voucher
+
+            if (voucher.state == VoucherStates.REDEEMED.state ||
+                voucher.state == VoucherStates.EXPIRED.state ||
+                voucher.state == VoucherStates.NONE.state
+            ) {
+                voucher.expiry_date?.let {
+                    binding.collectedTitle.visibility = View.GONE
+                    binding.collectedAmount.visibility = View.GONE
+                    displayDate(it)
+                }
+            }
+        }
+
+        private fun displayDate(date: Long) {
+            with(binding.voucherDate) {
+                visibility = View.VISIBLE
+                setTimestamp(date, binding.root.context.getString(R.string.voucher_entry_date))
+            }
+        }
     }
 
     class VouchersViewHolder(
@@ -143,7 +199,7 @@ class LoyaltyCardDetailsVouchersAdapter(
         }
 
         private fun displayDate(date: Long) {
-            with (binding.voucherDate) {
+            with(binding.voucherDate) {
                 visibility = View.VISIBLE
                 setTimestamp(date, binding.root.context.getString(R.string.voucher_entry_date))
             }
@@ -183,5 +239,10 @@ class LoyaltyCardDetailsVouchersAdapter(
                     )
             }
         }
+    }
+
+    companion object {
+        private const val PROGRESS_VOUCHER = R.layout.detail_voucher_item
+        private const val STAMP_VOUCHER = R.layout.item_stamp_voucher
     }
 }
