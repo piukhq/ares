@@ -76,11 +76,6 @@ class LoyaltyViewModel constructor(
                 combineCardsData(membershipCardData, membershipPlanData, dismissedCardData)
         }
 
-        _cardsDataMerger.addSource(localMembershipCardData) {
-            _cardsDataMerger.value =
-                combineCardsData(localMembershipCardData, membershipPlanData, dismissedCardData)
-        }
-
         _localCardsDataMerger.addSource(localMembershipCardData) {
             _localCardsDataMerger.value =
                 combineCardsData(
@@ -155,11 +150,10 @@ class LoyaltyViewModel constructor(
     fun fetchPeriodicMembershipCards() {
         val shouldMakePeriodicCall =
             DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
-
         if (shouldMakePeriodicCall) {
             fetchMembershipCards()
         } else {
-            fetchLocalMembershipCards()
+            fetchLocalMembershipCards(true)
         }
     }
 
@@ -173,8 +167,12 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun fetchLocalMembershipCards() {
-        loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
+    fun fetchLocalMembershipCards(isFromPeriodicCall: Boolean) {
+        if (isFromPeriodicCall) {
+            loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
+        } else {
+            loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
+        }
     }
 
     fun fetchLocalMembershipPlans() {

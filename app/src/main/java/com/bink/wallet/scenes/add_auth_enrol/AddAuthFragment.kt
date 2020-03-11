@@ -301,9 +301,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             addFieldToList(it)
                         }
                     }
-
                 }
-
             }
         }
 

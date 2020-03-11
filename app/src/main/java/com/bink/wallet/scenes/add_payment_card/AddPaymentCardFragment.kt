@@ -64,6 +64,7 @@ class AddPaymentCardFragment :
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
+        binding.addButton.isEnabled = false
         binding.viewModel = viewModel
 
         viewModel.fetchLocalMembershipPlans()
@@ -120,6 +121,10 @@ class AddPaymentCardFragment :
             )
         }
 
+        if (binding.cardNumber.error.isNullOrEmpty() && binding.cardExpiry.error.isNullOrBlank() && binding.cardName.error.isNullOrEmpty() && binding.cardNumber.text.isNotEmpty() && binding.cardExpiry.text.isNotEmpty() && binding.cardName.text.isNotEmpty()) {
+            binding.addButton.isEnabled = true
+        }
+
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
                 validateCardName()
@@ -159,11 +164,14 @@ class AddPaymentCardFragment :
                     )
                     findNavController().navigateIfAdded(
                         this,
-                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard, cardNo)
+                        AddPaymentCardFragmentDirections.addPaymentToTerms(
+                            params,
+                            bankCard,
+                            cardNo
+                        )
                     )
                 }
             }
-
             logEvent(
                 getFirebaseIdentifier(
                     ADD_PAYMENT_CARD_VIEW,
