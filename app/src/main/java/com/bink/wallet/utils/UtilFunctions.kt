@@ -67,14 +67,11 @@ object UtilFunctions {
         )
     }
 
-    fun hasCertificatePinningFailed(error: Throwable, context: Context): Boolean {
-        if (error.toString().contains(CERT_PINNING_ERROR)) {
-            showCertificatePinningDialog(context)
-            return true
-        }
-        return false
+    fun hasCertificatePinningFailed(error: Throwable): Boolean {
+        return error.toString().contains(CERT_PINNING_ERROR)
     }
-    private fun showCertificatePinningDialog(context: Context) {
+
+    fun showCertificatePinningDialog(context: Context) {
         context.displayModalPopup(
             context.getString(R.string.ssl_pinning_failure_title),
             context.getString(R.string.ssl_pinning_failure_text)

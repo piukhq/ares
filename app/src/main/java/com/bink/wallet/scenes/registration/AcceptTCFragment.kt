@@ -1,13 +1,8 @@
 package com.bink.wallet.scenes.registration
 
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.text.style.StyleSpan
-import android.text.style.URLSpan
 import android.view.View
-import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -53,6 +48,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         termsAndConditionsHyperlink = getString(R.string.terms_conditions_text)
         privacyPolicyHyperlink = getString(R.string.privacy_policy_text)
         boldedTexts = resources.getStringArray(R.array.terms_bold_text_array)
@@ -64,23 +62,14 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
         }
 
-        buildHyperlinkSpanString(
-            binding.acceptTcDisclaimer.text.toString(),
-            termsAndConditionsHyperlink,
-            getString(R.string.terms_and_conditions_url),
-            binding.acceptTcDisclaimer
-        )
+        binding.acceptTc.movementMethod = LinkMovementMethod.getInstance()
 
-        buildHyperlinkSpanString(
-            binding.acceptPrivacyPolicyDisclaimer.text.toString(),
-            privacyPolicyHyperlink,
-            getString(R.string.privacy_policy_url),
-            binding.acceptPrivacyPolicyDisclaimer
-        )
-
-        buildDescriptionSpanString()
-
-        viewModel.facebookAuthError.observeNonNull(this) {
+        viewModel.facebookAuthError.observeNetworkDrivenErrorNonNull(
+            requireContext(),
+            this,
+            getString(R.string.facebook_failed),
+            ""
+        ) {
             binding.accept.isClickable = false
             val timer = Timer()
             context?.resources?.getInteger(R.integer.button_disabled_delay)?.toLong()
@@ -91,32 +80,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }, delay)
                 }
-            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-                requireContext().displayModalPopup(getString(R.string.facebook_failed), null)
-            }
-        }
-        viewModel.shouldAcceptBeEnabledTC.value = false
-
-        binding.acceptTc.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.shouldAcceptBeEnabledTC.value = isChecked
-        }
-
-        binding.acceptPrivacyPolicy.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.shouldAcceptBeEnabledPrivacy.value = isChecked
-        }
-
-        viewModel.shouldAcceptBeEnabledTC.observeNonNull(this) { enabledTc ->
-            viewModel.shouldAcceptBeEnabledPrivacy.value?.let { enabledPrivacy ->
-                binding.accept.isEnabled = enabledTc == true &&
-                        enabledPrivacy == true
-            }
-        }
-
-        viewModel.shouldAcceptBeEnabledPrivacy.observeNonNull(this) { enabledPrivacy ->
-            viewModel.shouldAcceptBeEnabledTC.value?.let {
-                binding.accept.isEnabled = enabledPrivacy == true &&
-                        it == true
-            }
         }
 
         viewModel.facebookAuthResult.observeNonNull(this) {
@@ -162,17 +125,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
             )
         }
-        binding.decline.setOnClickListener {
-            LoginManager.getInstance().logOut()
-            findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
-
-            logEvent(
-                getFirebaseIdentifier(
-                    TERMS_AND_CONDITIONS_VIEW,
-                    binding.decline.text.toString()
-                )
-            )
-        }
 
         binding.back.setOnClickListener {
             LoginManager.getInstance().logOut()
@@ -181,36 +133,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         initMembershipPlansObserver()
-    }
-
-    private fun buildHyperlinkSpanString(
-        stringToSpan: String,
-        stringToHyperlink: String,
-        url: String,
-        textView: TextView
-    ) {
-        val spannableString = SpannableString(stringToSpan)
-        spannableString.setSpan(
-            URLSpan(url),
-            spannableString.indexOf(stringToHyperlink) - 1,
-            spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-        )
-        textView.text = spannableString
-        textView.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    private fun buildDescriptionSpanString() {
-        val spannableString = SpannableString(binding.overallDisclaimer.text)
-        boldedTexts.forEach { string ->
-            spannableString.setSpan(
-                StyleSpan(android.graphics.Typeface.BOLD),
-                spannableString.indexOf(string),
-                spannableString.indexOf(string) + string.length,
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-            )
-        }
-        binding.overallDisclaimer.text = spannableString
     }
 
     private fun initMembershipPlansObserver() {

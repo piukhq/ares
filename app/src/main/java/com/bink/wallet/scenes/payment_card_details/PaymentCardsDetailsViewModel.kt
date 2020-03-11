@@ -3,11 +3,13 @@ package com.bink.wallet.scenes.payment_card_details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
+import com.bink.wallet.utils.DateTimeUtils
 import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
@@ -39,7 +41,7 @@ class PaymentCardsDetailsViewModel(
     val deleteError: LiveData<Throwable>
         get() = _deleteError
 
-     fun linkPaymentCard(cardId: String, paymentCardId: String) {
+    fun linkPaymentCard(cardId: String, paymentCardId: String) {
         updatePaymentCard(cardId)
         paymentWalletRepository.linkPaymentCard(
             cardId,
@@ -64,7 +66,12 @@ class PaymentCardsDetailsViewModel(
     }
 
     fun getMembershipCards() {
-        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+        val shouldMakePeriodicCall =
+            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
+
+        if (shouldMakePeriodicCall) {
+            loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+        }
     }
 
     private fun updatePaymentCard(cardId: String) {

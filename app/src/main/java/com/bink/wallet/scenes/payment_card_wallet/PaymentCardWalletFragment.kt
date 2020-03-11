@@ -44,6 +44,9 @@ class PaymentCardWalletFragment :
 
     override fun onResume() {
         super.onResume()
+
+        viewModel.getPeriodicPaymentCards()
+
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
@@ -97,7 +100,9 @@ class PaymentCardWalletFragment :
 
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            viewModel.fetchData()
+            viewModel.fetchLocalData()
+
+            viewModel.getPaymentCards()
         }
 
         viewModel.localMembershipCardData.observeNonNull(this) {
@@ -105,25 +110,12 @@ class PaymentCardWalletFragment :
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
-            viewModel.fetchData()
+            viewModel.fetchLocalData()
         }
 
-        viewModel.deleteCardError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
-        }
-        viewModel.deleteError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    null,
-                    getString(R.string.error_description)
-                )
-            }
-        }
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this)
+
+        viewModel.deleteError.observeErrorNonNull(requireContext(), this)
 
         binding.paymentCardRecycler.apply {
             layoutManager = GridLayoutManager(context, 1)
@@ -183,7 +175,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun populateWallet() {
-        viewModel.fetchData()
+        viewModel.fetchLocalData()
     }
 
     private fun onBannerRemove(item: Any) {
@@ -220,7 +212,7 @@ class PaymentCardWalletFragment :
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
             binding.progressSpinner.visibility = View.VISIBLE
             binding.paymentCardRecycler.visibility = View.GONE
-            viewModel.getPaymentCards()
+            viewModel.getPeriodicPaymentCards()
         }
     }
 
