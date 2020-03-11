@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BannersDisplayDao
 import com.bink.wallet.data.MembershipCardDao
@@ -12,6 +11,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
 
 
@@ -56,7 +56,7 @@ class LoyaltyWalletRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -69,7 +69,7 @@ class LoyaltyWalletRepository(
                     membershipCardDao.deleteAllCards()
                     membershipPlanDao.deleteAllPlans()
                 } catch (e: Throwable) {
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -108,7 +108,7 @@ class LoyaltyWalletRepository(
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -145,7 +145,7 @@ class LoyaltyWalletRepository(
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
                     loadPlansError.value = e
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -160,7 +160,7 @@ class LoyaltyWalletRepository(
                         membershipCardDao.storeAll(cards)
                     }
                 } catch (e: Throwable) {
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

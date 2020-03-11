@@ -21,6 +21,7 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.logError
 import java.util.Locale
 
 
@@ -198,7 +199,7 @@ class AddAuthAdapter(
                 checkIfError(adapterPosition, this)
                 buttonRefresh()
             } catch (ex: Exception) {
-                Log.e(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+                logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
             }
         }
     }
