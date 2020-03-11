@@ -35,6 +35,9 @@ class LoyaltyCardDetailsFragment :
     }
 
     companion object {
+        // The reason the max is 248, is because the alpha of our toolbar background requires
+        // a value up to 255. The opacity we've received from designers is 97%, so 3% of 255
+        // leaves us with 248.
         const val MAX_ALPHA = 248f
         const val MIN_ALPHA = 0f
         const val MIN_DIST = 0
