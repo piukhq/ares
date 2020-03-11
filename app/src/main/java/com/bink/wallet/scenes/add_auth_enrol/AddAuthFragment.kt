@@ -17,6 +17,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.ExceptionHandlingUtils
