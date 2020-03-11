@@ -27,6 +27,8 @@
     <!-- Error -->
     <string name="error_title">@string/error</string>
     <string name="error_data_retrieval">Could not retrieve server error. Please try again.</string>
+    <string name="error_server_down_title">Error</string>
+    <string name="error_server_down_message">There was a problem communicating with the server. Please try again later.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
@@ -109,8 +111,8 @@
     <string name="loyalty_card_pll_retry">Retry</string>
     <string name="loyalty_card_pll_pending">Pending</string>
     <string name="loyalty_card_delete_error_message">We encountered an error. Please try again later.</string>
+    <string name="loyalty_card_details_register">Register</string>
     <string name="loyalty_card_details_header_placeholder_text">%s Membership Card</string>
-
 
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s%2$s</string>
@@ -360,7 +362,6 @@
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
     <string name="_mock_card_ending">**** **** **** 1234</string>
-    <string name="sign_up_footer_text"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b> \n You can opt out at any time.]]></string>
     <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
@@ -368,9 +369,8 @@
     <string name="sign_up_description">All it takes is an email and password</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
-    <string name="T_C_accept_description">I accept Bink\'s Terms and Conditions</string>
-    <string name="privacy_policy_description">I accept Bink\'s Privacy Policy</string>
-    <string name="marketing_messages">I opt in to receive marketing messages</string>
+    <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>
+    <string name="marketing_message_text">I opt in to receive marketing messages\nMake sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates</b>!\nYou can opt out at any time.</string>
     <string name="token_api_v1">Token %1$s</string>
     <string name="facebook_unavailable">Facebook is currently unavailable.</string>
     <string name="facebook_cancelled">Facebook login was cancelled.</string>
@@ -380,10 +380,6 @@
 
     <!-- Accept T&Cs -->
     <string name="one_last_step">One last step...</string>
-    <string name="accept_tcs_disclaimer">I accept Bink\'s Terms and Conditions</string>
-    <string name="accept_pp_disclaimer">I accept Bink\'s Privacy Policy</string>
-    <string name="accept_marketing_disclaimer">I opt in to receive marketing messages</string>
-    <string name="general_disclaimer">Make sure you\'re the first to know about available rewards, offers and updates!\nYou can opt out at any time.</string>
     <string name="facebook_failed">Continue with Facebook failed</string>
 
     <!-- Add email -->

@@ -37,6 +37,10 @@ class LoyaltyWalletRepository(
                     runBlocking {
                         membershipCardDao.deleteAllCards()
                         membershipCardDao.storeAll(response)
+
+                        SharedPreferenceManager.membershipCardsLastRequestTime =
+                            System.currentTimeMillis()
+
                         mutableMembershipCards.value = response.toMutableList()
                     }
                 } catch (e: Exception) {
@@ -74,7 +78,7 @@ class LoyaltyWalletRepository(
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         loadPlansError: MutableLiveData<Throwable>,
-        fromPersistence: Boolean
+        fromPersistence: Boolean = false
     ) {
         if (!fromPersistence) {
             val request = apiService.getMembershipPlansAsync()

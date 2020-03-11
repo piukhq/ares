@@ -21,8 +21,7 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         if (wasAnHourAgo && SharedPreferenceManager.isUserLoggedIn) {
             loyaltyWalletRepository.retrieveMembershipPlans(
                 membershipPlanData,
-                membershipPlanError,
-                false
+                membershipPlanError
             )
         }
     }

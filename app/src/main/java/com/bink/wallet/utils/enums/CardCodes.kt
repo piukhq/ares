@@ -10,6 +10,7 @@ enum class CardCodes(val code: String) {
     X102("X102"),
     X103("X103"),
     X104("X104"),
+    X105("X105"),
     X200("X200"),
     X201("X201"),
     X202("X202"),
