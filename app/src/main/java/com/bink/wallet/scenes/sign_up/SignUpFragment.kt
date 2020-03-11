@@ -1,11 +1,11 @@
 package com.bink.wallet.scenes.sign_up
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.View
-import android.view.ViewTreeObserver
+import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -43,18 +43,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val viewModel: SignUpViewModel by viewModel()
 
-    private val listener: ViewTreeObserver.OnGlobalLayoutListener =
-        ViewTreeObserver.OnGlobalLayoutListener {
-            val rec = Rect()
-            binding.container.getWindowVisibleDisplayFrame(rec)
-            val screenHeight = binding.container.rootView.height
-            val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * 0.15) {
-                validateCredentials()
-            }
-        }
-
-
     private fun checkPasswordsMatch() =
         if (viewModel.password.value != viewModel.confirmPassword.value &&
             !viewModel.confirmPassword.value.isNullOrEmpty() &&
@@ -68,7 +56,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     override fun onResume() {
         super.onResume()
         logScreenView(REGISTER_VIEW)
-        binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        setupLayoutListener(binding.container, ::validateCredentials)
+        registerLayoutListener(binding.container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -206,7 +195,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override fun onPause() {
         super.onPause()
-        binding.container.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        removeLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {
