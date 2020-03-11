@@ -27,7 +27,7 @@ class AddJoinViewModel constructor(private var paymentWalletRepository: PaymentW
                 fetchError
             )
         } else {
-            paymentWalletRepository.getLocalPaymentCards(paymentCards, fetchError)
+            paymentWalletRepository.getLocalPaymentCards(_paymentCards, fetchError)
         }
     }
 
