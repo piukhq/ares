@@ -135,7 +135,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = viewModel.currentMembershipPlan.value
 
-
         binding.cancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()

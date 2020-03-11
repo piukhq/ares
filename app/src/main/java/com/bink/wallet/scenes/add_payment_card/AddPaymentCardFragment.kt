@@ -94,7 +94,6 @@ class AddPaymentCardFragment :
                 }
             }
         }
-
         binding.cardExpiry.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 binding.cardExpiry.error =

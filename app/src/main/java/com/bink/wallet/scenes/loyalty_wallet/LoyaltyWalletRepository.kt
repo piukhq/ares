@@ -149,13 +149,12 @@ class LoyaltyWalletRepository(
         }
     }
 
-    private fun storeMembershipCards(cards: List<MembershipCard>) {
+    private fun storeMembershipCard(card: MembershipCard) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
-                        membershipCardDao.deleteAllCards()
-                        membershipCardDao.storeAll(cards)
+                       membershipCardDao.storeMembershipCard(card)
                     }
                 } catch (e: Throwable) {
                     Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
@@ -174,6 +173,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
                     createError.value = e
