@@ -52,7 +52,6 @@ android {
     }
     buildTypes {
         release {
-            initWith debug
             minifyEnabled true
             shrinkResources true
             debuggable false
