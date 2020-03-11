@@ -33,7 +33,14 @@
 
 -dontwarn android.support.**
 -keep class * extends androidx.support.v4.app.Fragment{}
+-keep class * extends android.support.v4.app.Fragment{}
+-keep class  androidx.navigation.fragment.NavHostFragment.** { *; }
 -keep class com.bink.wallet.model.** { *; }
+-keep class com.bink.wallet.modal.** { *; }
+-keep class com.facebook.AccessToken
+-keep class com.bink.wallet.utils.** { *; }
+-keep class com.bink.wallet.utils.enums.** { *; }
+-keep public class androidx.support.v7.widget.** { *; }
 -keep public class android.support.v7.widget.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
