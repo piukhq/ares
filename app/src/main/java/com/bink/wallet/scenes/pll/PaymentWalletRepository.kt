@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.pll
 
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.logDebug
@@ -23,6 +24,9 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     storePaymentsCards(response, fetchError)
+
+                    SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
+
                     paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e

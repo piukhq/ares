@@ -243,7 +243,7 @@ class SettingsFragment :
 
     private fun clearUserDetails() {
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
-        LocalStoreUtils.clearPreferences()
+        LocalStoreUtils.clearPreferences(requireContext())
         try {
             findNavController().navigateIfAdded(
                 this@SettingsFragment,

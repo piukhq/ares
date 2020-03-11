@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
+import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
 import kotlinx.coroutines.launch
@@ -54,6 +55,7 @@ class LoyaltyViewModel constructor(
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
+    //todo Remove the localCardsDataMerger. Use cardsDataMerger instead.
     private val _localCardsDataMerger = MediatorLiveData<UserDataResult>()
     val localCardsDataMerger: LiveData<UserDataResult>
         get() = _localCardsDataMerger
@@ -72,6 +74,11 @@ class LoyaltyViewModel constructor(
         _cardsDataMerger.addSource(dismissedCardData) {
             _cardsDataMerger.value =
                 combineCardsData(membershipCardData, membershipPlanData, dismissedCardData)
+        }
+
+        _cardsDataMerger.addSource(localMembershipCardData) {
+            _cardsDataMerger.value =
+                combineCardsData(localMembershipCardData, membershipPlanData, dismissedCardData)
         }
 
         _localCardsDataMerger.addSource(localMembershipCardData) {
@@ -143,6 +150,17 @@ class LoyaltyViewModel constructor(
 
     fun fetchMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    }
+
+    fun fetchPeriodicMembershipCards() {
+        val shouldMakePeriodicCall =
+            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
+
+        if (shouldMakePeriodicCall) {
+            fetchMembershipCards()
+        } else {
+            fetchLocalMembershipCards()
+        }
     }
 
     fun fetchMembershipPlans(fromPersistence: Boolean) {
