@@ -1,5 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
+import android.text.InputFilter
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +21,7 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
+import java.util.Locale
 
 
 @Suppress("UNCHECKED_CAST")
@@ -122,6 +125,19 @@ class AddAuthAdapter(
             }
         }
 
+        private val emailTextWatcher = object : SimplifiedTextWatcher {
+            override fun onTextChanged(
+                currentText: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int
+            ) {
+                brands[adapterPosition].second.value =
+                    currentText.toString().toLowerCase(Locale.ROOT)
+                buttonRefresh()
+            }
+        }
+
         override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
             binding.planField = item.first
             with(binding.contentAddAuthText) {
@@ -132,7 +148,23 @@ class AddAuthAdapter(
                         isEnabled = false
                     }
                 }
-                addTextChangedListener(textWatcher)
+                if (item.first.common_name == COMMON_NAME_EMAIL) {
+                    binding.contentAddAuthText.filters = arrayOf(object : InputFilter.AllCaps() {
+                        override fun filter(
+                            source: CharSequence?,
+                            start: Int,
+                            end: Int,
+                            dest: Spanned?,
+                            dstart: Int,
+                            dend: Int
+                        ): CharSequence {
+                            return source.toString().toLowerCase(Locale.ROOT)
+                        }
+                    })
+                    addTextChangedListener(emailTextWatcher)
+                } else {
+                    addTextChangedListener(textWatcher)
+                }
                 if (brands[adapterPosition].second.value.isNullOrBlank()) {
                     error = null
                 } else {
@@ -288,5 +320,9 @@ class AddAuthAdapter(
             }
             binding.executePendingBindings()
         }
+    }
+
+    companion object {
+        private const val COMMON_NAME_EMAIL = "email"
     }
 }
