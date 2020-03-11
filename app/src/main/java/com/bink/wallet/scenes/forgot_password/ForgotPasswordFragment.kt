@@ -79,14 +79,8 @@ class ForgotPasswordFragment :
             )
         }
 
-        viewModel.forgotPasswordError.observeNonNull(this) {
+        viewModel.forgotPasswordError.observeErrorNonNull(requireContext(), this) {
             viewModel.isLoading.value = false
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.error_description)
-                )
-            }
         }
     }
 

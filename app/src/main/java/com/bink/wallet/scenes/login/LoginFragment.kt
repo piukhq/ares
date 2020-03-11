@@ -99,14 +99,13 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 viewModel.getMembershipPlans()
             }
 
-            logInErrorResponse.observeNonNull(this@LoginFragment) {
+            logInErrorResponse.observeErrorNonNull(
+                requireContext(),
+                this@LoginFragment,
+                EMPTY_STRING,
+                getString(R.string.incorrect_credentials)
+            ) {
                 isLoading.value = false
-                if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                    requireContext().displayModalPopup(
-                        EMPTY_STRING,
-                        getString(R.string.incorrect_credentials)
-                    )
-                }
             }
 
             isLoading.observeNonNull(this@LoginFragment) {

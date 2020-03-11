@@ -9,8 +9,6 @@ import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.*
 import kotlinx.coroutines.launch
 
@@ -88,8 +86,7 @@ class LoginViewModel constructor(
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData,
-            false
+            membershipPlanErrorLiveData
         )
     }
 }

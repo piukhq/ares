@@ -222,19 +222,24 @@ class LoyaltyCardDetailsFragment :
             configureLoginStatus(status)
         }
 
-        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment
+        ) {
+            if (!UtilFunctions.hasCertificatePinningFailed(it)) {
                 with(viewModel.deleteError) {
                     if (value is HttpException) {
                         val error = value as HttpException
-                        requireContext().displayModalPopup(
-                            getString(R.string.title_2_4),
-                            getString(
-                                R.string.description_2_4,
-                                error.code().toString(),
-                                error.localizedMessage
+                        if (error.code() < ApiErrorUtils.SERVER_ERROR) {
+                            requireContext().displayModalPopup(
+                                getString(R.string.title_2_4),
+                                getString(
+                                    R.string.description_2_4,
+                                    error.code().toString(),
+                                    error.localizedMessage
+                                )
                             )
-                        )
+                        }
                     } else {
                         requireContext().displayModalPopup(
                             getString(R.string.title_2_4),
@@ -247,6 +252,11 @@ class LoyaltyCardDetailsFragment :
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
+
+        viewModel.refreshError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment
+        )
     }
 
     private fun fetchData() {
@@ -616,6 +626,20 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            findNavController().navigate(
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.GHOST,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            )
+                        }
+                    }
+                }
                 LinkStatus.STATUS_NO_REASON_CODES -> {
                     viewModel.membershipPlan.value?.let {
                         val directions =
@@ -748,6 +772,20 @@ class LoyaltyCardDetailsFragment :
                                 isFromNoReasonCodes = true
                             )
                         findNavController().navigateIfAdded(this, directions)
+                    }
+                }
+                LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.GHOST,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 else -> {

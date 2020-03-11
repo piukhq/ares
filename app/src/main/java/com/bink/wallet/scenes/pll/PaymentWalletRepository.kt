@@ -3,11 +3,11 @@ package com.bink.wallet.scenes.pll
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
-import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.LinkedBlockingQueue
 
 class PaymentWalletRepository(
@@ -24,6 +24,9 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     storePaymentsCards(response, fetchError)
+
+                    SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
+
                     paymentCards.value = response.toMutableList()
                 } catch (e: Throwable) {
                     fetchError.value = e
@@ -120,7 +123,7 @@ class PaymentWalletRepository(
         val jobs = LinkedBlockingQueue<Deferred<*>>()
         paymentCardIds.forEach { id ->
             CoroutineScope(Dispatchers.IO).launch {
-                jobs.add(async { apiService.unlinkFromPaymentCardAsync(id, membershipCardId)})
+                jobs.add(async { apiService.unlinkFromPaymentCardAsync(id, membershipCardId) })
                 withContext(Dispatchers.Main) {
                     val localSuccesses = ArrayList<Any>()
                     val localErrors = ArrayList<Throwable>()
