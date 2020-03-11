@@ -1,17 +1,20 @@
 package com.bink.wallet.scenes.forgot_password
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
-import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ForgotPasswordFragmentBinding
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.validateEmail
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -19,17 +22,6 @@ class ForgotPasswordFragment :
     BaseFragment<ForgotPasswordViewModel, ForgotPasswordFragmentBinding>() {
     override val layoutRes: Int = R.layout.forgot_password_fragment
     override val viewModel: ForgotPasswordViewModel by viewModel()
-
-    private val listener: ViewTreeObserver.OnGlobalLayoutListener =
-        ViewTreeObserver.OnGlobalLayoutListener {
-            val rec = Rect()
-            binding.container.getWindowVisibleDisplayFrame(rec)
-            val screenHeight = binding.container.rootView.height
-            val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
-                validateCredentials()
-            }
-        }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -40,7 +32,8 @@ class ForgotPasswordFragment :
 
     override fun onResume() {
         super.onResume()
-        binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        setupLayoutListener(binding.container, ::validateCredentials)
+        registerLayoutListener(binding.container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,7 +92,7 @@ class ForgotPasswordFragment :
 
     override fun onPause() {
         super.onPause()
-        binding.container.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        removeLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {

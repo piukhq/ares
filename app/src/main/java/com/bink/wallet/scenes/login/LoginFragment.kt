@@ -1,23 +1,29 @@
 package com.bink.wallet.scenes.login
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Patterns
 import android.view.View
-import android.view.ViewTreeObserver
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.validateEmail
+import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
@@ -33,17 +39,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override val viewModel: LoginViewModel by viewModel()
 
-    private val listener: ViewTreeObserver.OnGlobalLayoutListener =
-        ViewTreeObserver.OnGlobalLayoutListener {
-            val rec = Rect()
-            binding.container.getWindowVisibleDisplayFrame(rec)
-            val screenHeight = binding.container.rootView.height
-            val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
-                validateCredentials()
-            }
-        }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,7 +48,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onResume() {
         super.onResume()
         logScreenView(LOGIN_VIEW)
-        binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        setupLayoutListener(binding.container, ::validateCredentials)
+        registerLayoutListener(binding.container)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -178,7 +174,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onPause() {
         super.onPause()
-        binding.container.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        removeLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {
