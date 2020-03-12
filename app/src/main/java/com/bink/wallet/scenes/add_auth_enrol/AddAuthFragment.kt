@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,7 +30,9 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
+
 import java.net.SocketTimeoutException
+
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -257,6 +260,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
             SignUpFormType.ENROL -> {
                 with(binding) {
+                    changeConstraints()
                     noAccountText.visibility = View.GONE
                     titleAddAuthText.text = getString(R.string.sign_up_enrol)
                     addCardButton.text = getString(R.string.sign_up_text)
@@ -280,6 +284,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             }
             SignUpFormType.GHOST -> {
+                changeConstraints()
                 binding.noAccountText.visibility = View.GONE
                 binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
                 binding.addCardButton.text = getString(R.string.register_ghost_card_button)
@@ -698,5 +703,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 REGISTRATION_FORM_VIEW
             }
         }
+    }
+
+    private fun changeConstraints() {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.root)
+        constraintSet.connect(
+            R.id.add_card_button,
+            ConstraintSet.TOP,
+            R.id.auth_add_fields,
+            ConstraintSet.BOTTOM,
+            48
+        )
+        constraintSet.applyTo(binding.root)
     }
 }
