@@ -174,8 +174,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             true,
                             getString(R.string.native_join_unavailable_title),
                             getString(
-                                R.string.native_join_unavailable_text,
+                                R.string.native_join_unavailable_text_part_1,
                                 membershipPlan.account?.company_name
+                            ), "", "", "", getString(
+                                R.string.native_join_unavailable_text_part_2
                             )
                         )
                         membershipPlan.account?.plan_url?.let {

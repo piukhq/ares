@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -13,20 +14,11 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.validateEmail
-import com.bink.wallet.utils.validatePassword
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.toInt
-import com.bink.wallet.utils.EMPTY_STRING
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -73,6 +65,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.signUpButton.isEnabled = false
         binding.lifecycleOwner = this
     }
 
@@ -80,10 +73,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         with(binding) {
-            signUpButton.isEnabled = false
-
             viewModel = this@SignUpFragment.viewModel
-
             binding.checkboxTermsConditions.movementMethod = LinkMovementMethod.getInstance()
         }
 
@@ -139,7 +129,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     )
 
-                    viewModel.getMembershipPlans()
+                   getMembershipPlans()
                 }
             }
         }

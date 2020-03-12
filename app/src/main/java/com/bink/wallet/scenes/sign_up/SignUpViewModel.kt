@@ -46,7 +46,7 @@ class SignUpViewModel(
     }
 
     private val passwordMatcher = MediatorLiveData<Boolean>()
-    val isSignUpEnabled = MediatorLiveData<Boolean>()
+    var isSignUpEnabled = MediatorLiveData<Boolean>()
 
     init {
         passwordMatcher.combineNonNull(

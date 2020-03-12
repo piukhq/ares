@@ -37,9 +37,9 @@ class MainActivity : AppCompatActivity() {
 
         Fabric.with(this, Crashlytics())
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        }
+//        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
+//            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+//        }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
     }
