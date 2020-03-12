@@ -41,11 +41,10 @@ class SplashFragment : Fragment() {
 
     private fun getDirections(): Int {
         val rootBeer = RootBeer(context)
-//        return when (rootBeer.isRooted) {
-//            true -> R.id.splash_to_rooted_device
-//            else -> getUnRootedDirections()
-//        }
-        return getUnRootedDirections()
+        return when (rootBeer.isRooted) {
+            true -> R.id.splash_to_rooted_device
+            else -> getUnRootedDirections()
+        }
     }
 
     private fun getUnRootedDirections(): Int {
