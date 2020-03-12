@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.add_join
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
@@ -25,7 +24,7 @@ class AddJoinViewModel constructor(private var paymentWalletRepository: PaymentW
                 fetchError
             )
         } else {
-            paymentWalletRepository.getLocalPaymentCards(_paymentCards, fetchError)
+            paymentWalletRepository.getLocalPaymentCards(paymentCards, fetchError)
         }
     }
 
