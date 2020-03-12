@@ -758,11 +758,11 @@ class LoyaltyCardDetailsFragment :
                             R.drawable.ic_close,
                             true,
                             getString(R.string.title_1_5),
-                            getString(R.string.description_1_5_part_1, it.account?.plan_name),
-                            "",
-                            "",
-                            "",
-                            getString(R.string.description_1_5_part_2)
+                            description = getString(
+                                R.string.description_1_5_part_1,
+                                it.account?.plan_name
+                            ),
+                            description2 = getString(R.string.description_1_5_part_2)
                         )
                         val action =
                             genericModalParameters.let { params ->

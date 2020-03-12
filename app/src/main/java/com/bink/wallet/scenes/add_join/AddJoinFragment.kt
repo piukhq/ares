@@ -10,7 +10,6 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddJoinFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.STORE_LINK_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.CardType
@@ -174,14 +173,11 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             R.drawable.ic_back,
                             true,
                             getString(R.string.native_join_unavailable_title),
-                            getString(
+                            description = getString(
                                 R.string.native_join_unavailable_text_part_1,
                                 membershipPlan.account?.company_name
                             ),
-                            EMPTY_STRING,
-                            EMPTY_STRING,
-                            EMPTY_STRING,
-                            getString(
+                            description2 = getString(
                                 R.string.native_join_unavailable_text_part_2
                             )
                         )
