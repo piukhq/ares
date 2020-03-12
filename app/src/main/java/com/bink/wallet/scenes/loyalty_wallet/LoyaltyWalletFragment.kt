@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -20,6 +19,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
@@ -168,7 +168,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.loadCardsError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipCards(false)
             handleServerDownError(it)
         }
 
@@ -196,7 +196,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
         })
     }
@@ -295,7 +295,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
         } else {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
         }
     }
@@ -326,7 +326,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
-                        Log.d(
+                        logDebug(
                             LoyaltyWalletFragment::class.java.simpleName,
                             getString(R.string.loyalty_wallet_dialog_description)
                         )

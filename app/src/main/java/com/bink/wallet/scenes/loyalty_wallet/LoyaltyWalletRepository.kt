@@ -1,17 +1,14 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.bink.wallet.data.BannersDisplayDao
-import com.bink.wallet.data.MembershipCardDao
-import com.bink.wallet.data.MembershipPlanDao
-import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.data.*
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
 
 
@@ -19,7 +16,8 @@ class LoyaltyWalletRepository(
     private val apiService: ApiService,
     private val membershipCardDao: MembershipCardDao,
     private val membershipPlanDao: MembershipPlanDao,
-    private val bannersDisplayDao: BannersDisplayDao
+    private val bannersDisplayDao: BannersDisplayDao,
+    private val paymentCardDao: PaymentCardDao
 ) {
 
     private val mutableLiveDataDatabaseUpdated: MutableLiveData<Boolean> = MutableLiveData()
@@ -56,7 +54,7 @@ class LoyaltyWalletRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -69,7 +67,7 @@ class LoyaltyWalletRepository(
                     membershipCardDao.deleteAllCards()
                     membershipPlanDao.deleteAllPlans()
                 } catch (e: Throwable) {
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -108,7 +106,7 @@ class LoyaltyWalletRepository(
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -145,22 +143,21 @@ class LoyaltyWalletRepository(
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
                     loadPlansError.value = e
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
     }
 
-    private fun storeMembershipCards(cards: List<MembershipCard>) {
+    private fun storeMembershipCard(card: MembershipCard) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
-                        membershipCardDao.deleteAllCards()
-                        membershipCardDao.storeAll(cards)
+                       membershipCardDao.storeMembershipCard(card)
                     }
                 } catch (e: Throwable) {
-                    Log.d(LoyaltyWalletRepository::class.simpleName, e.toString())
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -176,6 +173,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
                     createError.value = e
@@ -234,6 +232,21 @@ class LoyaltyWalletRepository(
                     paymentCards.postValue(response)
                 } catch (e: Exception) {
                     fetchError.value = e
+                }
+            }
+        }
+    }
+
+    fun getLocalPaymentCards(
+        localPaymentCards: MutableLiveData<List<PaymentCard>>,
+        localFetchError: MutableLiveData<Throwable>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    localPaymentCards.value = paymentCardDao.getAllAsync()
+                } catch (e: Throwable) {
+                    localFetchError.value = e
                 }
             }
         }

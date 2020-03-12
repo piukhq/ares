@@ -1,11 +1,13 @@
 package com.bink.wallet.scenes.sign_up
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.lifecycle.Observer
+import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -13,20 +15,11 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SignUpFragmentBinding
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.validateEmail
-import com.bink.wallet.utils.validatePassword
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.toInt
-import com.bink.wallet.utils.EMPTY_STRING
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,18 +36,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override val viewModel: SignUpViewModel by viewModel()
 
-    private val listener: ViewTreeObserver.OnGlobalLayoutListener =
-        ViewTreeObserver.OnGlobalLayoutListener {
-            val rec = Rect()
-            binding.container.getWindowVisibleDisplayFrame(rec)
-            val screenHeight = binding.container.rootView.height
-            val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * 0.15) {
-                validateCredentials()
-            }
-        }
-
-
     private fun checkPasswordsMatch() =
         if (viewModel.password.value != viewModel.confirmPassword.value &&
             !viewModel.confirmPassword.value.isNullOrEmpty() &&
@@ -68,22 +49,22 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     override fun onResume() {
         super.onResume()
         logScreenView(REGISTER_VIEW)
-        binding.container.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        setupLayoutListener(binding.container, ::validateCredentials)
+        registerLayoutListener(binding.container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.signUpButton.isEnabled = false
         binding.lifecycleOwner = this
+        viewModel.isLoading.value = false
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         with(binding) {
-            signUpButton.isEnabled = false
-
             viewModel = this@SignUpFragment.viewModel
-
             binding.checkboxTermsConditions.movementMethod = LinkMovementMethod.getInstance()
         }
 
@@ -112,8 +93,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         true -> View.VISIBLE
                         else -> View.GONE
                     }
-
-                    signUpButton.isEnabled = !it
                 }
             }
 
@@ -139,7 +118,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     )
 
-                    viewModel.getMembershipPlans()
+                   getMembershipPlans()
                 }
             }
         }
@@ -197,16 +176,14 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     }
                 }
             }
-
             logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding.signUpButton.text.toString()))
         }
-
         initMembershipPlansObserver()
     }
 
     override fun onPause() {
         super.onPause()
-        binding.container.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        removeLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {

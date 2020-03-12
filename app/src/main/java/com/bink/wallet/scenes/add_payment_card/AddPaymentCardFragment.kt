@@ -59,11 +59,27 @@ class AddPaymentCardFragment :
             }
     }
 
+    private fun handleValidation() {
+        viewModel.cardNumber.value?.let { cardNumber ->
+            viewModel.expiryDate.value?.let { expiryDate ->
+                viewModel.cardHolder.value?.let { cardHolder ->
+                    binding.addButton.isEnabled = binding.cardNumber.error.isNullOrEmpty() &&
+                            binding.cardExpiry.error.isNullOrBlank() &&
+                            binding.cardName.error.isNullOrEmpty() &&
+                            cardNumber.isNotEmpty() &&
+                            expiryDate.isNotEmpty() &&
+                            cardHolder.isNotEmpty()
+                }
+            }
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
+        binding.addButton.isEnabled = false
         binding.viewModel = viewModel
 
         viewModel.fetchLocalMembershipPlans()
@@ -73,10 +89,16 @@ class AddPaymentCardFragment :
             cardSwitcher(it)
             cardInfoDisplay()
             updateEnteredCardNumber()
+            handleValidation()
         }
 
         viewModel.cardHolder.observeNonNull(this) {
             cardInfoDisplay()
+            handleValidation()
+        }
+
+        viewModel.expiryDate.observeNonNull(this) {
+            handleValidation()
         }
 
         with(binding.cardNumber) {
@@ -93,7 +115,6 @@ class AddPaymentCardFragment :
                 }
             }
         }
-
         binding.cardExpiry.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 binding.cardExpiry.error =
@@ -159,11 +180,14 @@ class AddPaymentCardFragment :
                     )
                     findNavController().navigateIfAdded(
                         this,
-                        AddPaymentCardFragmentDirections.addPaymentToTerms(params, bankCard, cardNo)
+                        AddPaymentCardFragmentDirections.addPaymentToTerms(
+                            params,
+                            bankCard,
+                            cardNo
+                        )
                     )
                 }
             }
-
             logEvent(
                 getFirebaseIdentifier(
                     ADD_PAYMENT_CARD_VIEW,

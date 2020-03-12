@@ -1,11 +1,11 @@
 package com.bink.wallet.scenes.pll
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 import java.util.concurrent.LinkedBlockingQueue
@@ -206,7 +206,7 @@ class PaymentWalletRepository(
                     paymentCardDao.deleteAll()
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
-                    Log.d(PaymentWalletRepository::class.simpleName, e.toString())
+                    logDebug(PaymentWalletRepository::class.simpleName, e.toString())
                 }
             }
         }

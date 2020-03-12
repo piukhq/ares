@@ -72,7 +72,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                     comparePlans(membershipPlan1, membershipPlan2)
                 }.thenBy { it.account?.company_name?.toLowerCase() }).toTypedArray()
 
-                plansList.add(Pair(getString(R.string.pll_text), plans[0]))
+                plansList.add(Pair(getString(R.string.pll_title), plans[0]))
             }
 
             for (position in 1 until plans.size) {
