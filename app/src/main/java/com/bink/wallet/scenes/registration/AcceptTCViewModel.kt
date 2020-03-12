@@ -24,8 +24,7 @@ class AcceptTCViewModel(
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
-    val membershipPlanDatabaseLiveData =
-        loyaltyWalletRepository.liveDataDatabaseUpdated
+    val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         shouldAcceptBeEnabled.value = false
@@ -42,7 +41,8 @@ class AcceptTCViewModel(
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData
+            membershipPlanErrorLiveData,
+            membershipPlanDatabaseLiveData
         )
     }
 }

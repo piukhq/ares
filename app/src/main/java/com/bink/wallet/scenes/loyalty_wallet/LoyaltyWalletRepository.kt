@@ -20,8 +20,6 @@ class LoyaltyWalletRepository(
     private val paymentCardDao: PaymentCardDao
 ) {
 
-    private val mutableLiveDataDatabaseUpdated: MutableLiveData<Boolean> = MutableLiveData()
-    val liveDataDatabaseUpdated: MutableLiveData<Boolean> get() = mutableLiveDataDatabaseUpdated
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
@@ -78,13 +76,22 @@ class LoyaltyWalletRepository(
         loadPlansError: MutableLiveData<Throwable>,
         fromPersistence: Boolean = false
     ) {
+        retrieveMembershipPlans(mutableMembershipPlans, loadPlansError, null, fromPersistence)
+    }
+
+    fun retrieveMembershipPlans(
+        mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
+        loadPlansError: MutableLiveData<Throwable>,
+        databaseUpdated: MutableLiveData<Boolean>?,
+        fromPersistence: Boolean = false
+    ) {
         if (!fromPersistence) {
             val request = apiService.getMembershipPlansAsync()
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     try {
                         val response = request.await()
-                        storeMembershipPlans(response, loadPlansError)
+                        storeMembershipPlans(response, loadPlansError, databaseUpdated)
                         SharedPreferenceManager.membershipPlansLastRequestTime =
                             System.currentTimeMillis()
                         mutableMembershipPlans.value = response.toMutableList()
@@ -133,13 +140,14 @@ class LoyaltyWalletRepository(
 
     private fun storeMembershipPlans(
         plans: List<MembershipPlan>,
-        loadPlansError: MutableLiveData<Throwable>
+        loadPlansError: MutableLiveData<Throwable>,
+        databaseUpdated: MutableLiveData<Boolean>?
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) { membershipPlanDao.storeAll(plans) }
-                    mutableLiveDataDatabaseUpdated.value = true
+                    databaseUpdated?.value = true
                 } catch (e: Throwable) {
                     // TODO: Have error catching here in a mutable
                     loadPlansError.value = e
