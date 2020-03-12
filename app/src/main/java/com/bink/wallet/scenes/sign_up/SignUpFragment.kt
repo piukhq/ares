@@ -57,6 +57,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.signUpButton.isEnabled = false
         binding.lifecycleOwner = this
+        viewModel.isLoading.value = false
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
