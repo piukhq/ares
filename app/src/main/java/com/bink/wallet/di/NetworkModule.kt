@@ -41,6 +41,8 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
                 LocalStoreUtils.KEY_TOKEN
             )?.replace("\n","")?.trim()
 
+        logError("ConnorDebug", "token: " + jwtToken)
+
         jwtToken?.let {
             logError("NetworkModule", jwtToken)
         }

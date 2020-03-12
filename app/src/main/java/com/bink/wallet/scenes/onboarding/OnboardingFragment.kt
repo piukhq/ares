@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
@@ -207,7 +208,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             try {
                 this.accessToken = accessToken
                 facebookEmail = jsonObject.getString(EMAIL_KEY)
+                Log.e("ConnorDebug", "accessToken: " + accessToken)
+                Log.e("ConnorDebug", "email: " + facebookEmail)
+
             } catch (e: JSONException) {
+                Log.e("ConnorDebug", "error: " + e.message)
+
                 if (!::facebookEmail.isInitialized) {
                     facebookEmail = getString(R.string.empty_string)
                 }

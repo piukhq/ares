@@ -12,8 +12,7 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
     private val membershipPlanData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     private val membershipPlanError: MutableLiveData<Throwable> = MutableLiveData()
-    val membershipPlanDatabaseLiveData =
-        loyaltyWalletRepository.liveDataDatabaseUpdated
+    val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun getMembershipPlans() {
         val wasAnHourAgo =
@@ -21,7 +20,8 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         if (wasAnHourAgo && SharedPreferenceManager.isUserLoggedIn) {
             loyaltyWalletRepository.retrieveMembershipPlans(
                 membershipPlanData,
-                membershipPlanError
+                membershipPlanError,
+                membershipPlanDatabaseLiveData
             )
         }
     }
