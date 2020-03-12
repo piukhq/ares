@@ -57,6 +57,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     private var isRetryJourney = false
     private var isFromNoReasonCodes = false
     private var membershipCardId: String? = null
+    private val singleBottomMargin = 48
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
@@ -713,7 +714,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             ConstraintSet.TOP,
             R.id.auth_add_fields,
             ConstraintSet.BOTTOM,
-            48
+            singleBottomMargin
         )
         constraintSet.applyTo(binding.root)
     }
