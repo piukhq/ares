@@ -60,6 +60,7 @@ class SignUpViewModel(
             passwordValidator,
             passwordMatcher,
             termsCondition,
+            isLoading,
             ::isSignUpButtonEnabled
         )
     }
@@ -68,11 +69,13 @@ class SignUpViewModel(
         emailValidator: Boolean,
         passwordValidator: Boolean,
         passwordMatcher: Boolean,
-        termsAndConditions: Boolean
+        termsAndConditions: Boolean,
+        isLoading: Boolean
     ): Boolean = passwordValidator &&
             emailValidator &&
             passwordMatcher &&
-            termsAndConditions
+            termsAndConditions &&
+            !isLoading
 
     private fun arePasswordsMatching(
         password: String,

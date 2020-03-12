@@ -102,8 +102,6 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         true -> View.VISIBLE
                         else -> View.GONE
                     }
-
-                    signUpButton.isEnabled = !it
                 }
             }
 
@@ -187,10 +185,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     }
                 }
             }
-
             logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding.signUpButton.text.toString()))
         }
-
         initMembershipPlansObserver()
     }
 
