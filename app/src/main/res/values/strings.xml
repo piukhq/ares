@@ -176,7 +176,7 @@
     <string name="recent_history_text">Your recent transaction history.</string>
     <string name="right_arrow">></string>
     <string name="transaction_not_supported_title">Transaction history not supported.</string>
-    <string name="transaction_not_supported_description">Points updated %1$s %2$s ago. \nText explaining to the user that history is not supported for this brand yet.</string>
+    <string name="transaction_not_supported_description"> %1$s does not support displaying your transaction history in the Bink app.\nYou can view your history and balance on the merchant’s website.</string>
     <string name="log_in_pending">Log in pending</string>
     <string name="transaction_history_not_supported">Transaction history not supported.</string>
     <string name="sign_up_pending">Sign up pending</string>
@@ -198,6 +198,7 @@
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
+    <string name="pll_title">Payment Linked Loyalty</string>
     <string name="all_text">All</string>
 
     <!-- LCD Error Screen -->
@@ -209,7 +210,8 @@
     <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn\'t take long.</string>
     <!-- 1.5 -->
     <string name="title_1_5">Transaction history not supported</string>
-    <string name="description_1_5">Unfortunately we\'re not able to show your points balance and transaction history for this brand just yet.</string>
+    <string name="description_1_5_part_1">%1$s does not support displaying your transaction history in the Bink app.</string>
+    <string name="description_1_5_part_2"> You can view your history and balance on the merchant’s website.</string>
 
     <!-- 2.4 -->
     <string name="title_2_4">Error</string>
@@ -275,10 +277,10 @@
     <string name="faq_url">"https://help.bink.com"</string>
     <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
     <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
-    <string name="contact_us_mailto">mailto:%s</string>
+    <string name="contact_us_mailto">mailto:</string>
     <string name="contact_us_email_address">support@bink.com</string>
     <string name="contact_us_email_subject">Bink App Support</string>
-    <string name="contact_us_email_message">\n\n\n\nThe below information will help you, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
+    <string name="contact_us_email_message">\n\n\n\nThe below information will help us with your query, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
     <string name="contact_us_no_email_title">No email app installed</string>
     <string name="contact_us_no_email_message">No Mail accounts set up, please email us directly: support@bink.com.</string>
     <string name="contact_us_select_email_client" tools:ignore="TypographyEllipsis">Choose Email Client...</string>
@@ -290,8 +292,9 @@
     <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
 
     <!-- Native Join Unavailable-->
-    <string name="native_join_unavailable_title">Sign up currently unavailable</string>
-    <string name="native_join_unavailable_text">Go to the %1$s website to join then come back and add your card.</string>
+    <string name="native_join_unavailable_title">Sign up not supported</string>
+    <string name="native_join_unavailable_text_part_1">%1$s does not support signing up for a new loyalty account via the Bink app.</string>
+    <string name="native_join_unavailable_text_part_2">Please go to the merchant’s website to sign up for a card, then return to the Bink app and add your new card details.</string>
     <string name="native_join_unavailable_button_text">Go to merchant site</string>
     <string name="all_fields_must_be_valid">All fields must have passed validation</string>
     <string name="cannot_complete_registration">Cannot complete the registration</string>
@@ -356,7 +359,7 @@
     <string name="add_your_payment_cards">Add your payment cards</string>
     <string name="join_card_description">Link this card to your payment cards to automatically collect rewards.</string>
     <string name="payment_join_title">Add your payment cards</string>
-    <string name="payment_join_description">You will need to add at least one to collect rewards automatically.</string>
+    <string name="payment_join_description">Collect rewards automatically for select loyalty cards by linking them to your payment cards.</string>
     <string name="expired">Expired</string>
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
@@ -370,7 +373,7 @@
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
     <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>
-    <string name="marketing_message_text">I opt in to receive marketing messages\nMake sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates</b>!\nYou can opt out at any time.</string>
+    <string name="marketing_message_text">Opt in to receive marketing messages\nMake sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates</b>!\nYou can opt out at any time.</string>
     <string name="token_api_v1">Token %1$s</string>
     <string name="facebook_unavailable">Facebook is currently unavailable.</string>
     <string name="facebook_cancelled">Facebook login was cancelled.</string>

@@ -753,19 +753,25 @@ class LoyaltyCardDetailsFragment :
                     pendingCardStatusModal()
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.title_1_5),
-                        getString(R.string.description_1_5)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                    viewModel.membershipPlan.value?.let {
+                        genericModalParameters = GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            getString(R.string.title_1_5),
+                            getString(R.string.description_1_5_part_1, it.account?.plan_name),
+                            "",
+                            "",
+                            "",
+                            getString(R.string.description_1_5_part_2)
+                        )
+                        val action =
+                            genericModalParameters.let { params ->
+                                LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                                    params
+                                )
+                            }
+                        action.let { findNavController().navigateIfAdded(this, action) }
+                    }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {

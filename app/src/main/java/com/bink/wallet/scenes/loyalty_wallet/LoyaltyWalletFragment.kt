@@ -168,7 +168,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.loadCardsError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipCards(false)
             handleServerDownError(it)
         }
 
@@ -196,7 +196,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
         })
     }
@@ -295,7 +295,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
         } else {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards()
+            viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
         }
     }

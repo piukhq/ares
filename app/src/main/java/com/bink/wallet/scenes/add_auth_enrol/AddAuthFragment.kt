@@ -17,27 +17,14 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.enums.FieldType
-import com.bink.wallet.utils.enums.HandledException
-import com.bink.wallet.utils.enums.SignUpFieldTypes
-import com.bink.wallet.utils.enums.SignUpFormType
-import com.bink.wallet.utils.enums.TypeOfField
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -156,10 +143,14 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
 
         runBlocking {
-            viewModel.getPaymentCards()
+            if (isNetworkAvailable(requireContext(), false)) {
+                viewModel.getPaymentCards()
+            } else {
+                viewModel.getLocalPaymentCards()
+            }
         }
 
-        viewModel.paymentCards.observeNonNull(this) { paymentCards ->
+        viewModel.paymentCardsMerger.observeNonNull(this) { paymentCards ->
             isPaymentWalletEmpty = paymentCards.isNullOrEmpty()
         }
 
@@ -308,9 +299,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             addFieldToList(it)
                         }
                     }
-
                 }
-
             }
         }
 
