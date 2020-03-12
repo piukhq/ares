@@ -19,12 +19,27 @@ import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
+import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.*
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.HandledException
+import com.bink.wallet.utils.enums.SignUpFieldTypes
+import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.TypeOfField
+import com.bink.wallet.utils.hideKeyboard
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,16 +66,11 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private var isPaymentWalletEmpty: Boolean? = null
-
     private var isRetryJourney = false
-
     private var isFromNoReasonCodes = false
-
     private var membershipCardId: String? = null
-
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
-
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
@@ -76,15 +86,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.currentMembershipPlan.value?.has_vouchers?.let {
                     if (it) {
                         if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
-                            val email =
-                                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                                    ?.let {
-                                        it
+                            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                                ?.let { email ->
+                                    with(pairPlanField) {
+                                        second.disabled = true
+                                        second.value = email
                                     }
-                            with(pairPlanField) {
-                                second.disabled = true
-                                second.value = email
-                            }
+                                }
                         }
                     }
                 }
@@ -115,6 +123,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        binding.toolbar.setNavigationOnClickListener {
+            view?.hideKeyboard()
+            windowFullscreenHandler.toNormalScreen()
+            findNavController().navigateUp()
+        }
+
         with(args) {
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
@@ -135,17 +149,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = viewModel.currentMembershipPlan.value
 
-        binding.cancel.setOnClickListener {
+
+        binding.buttonCancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            findNavController().navigate(AddAuthFragmentDirections.globalToHome())
         }
 
-        binding.close.setOnClickListener {
-            view?.hideKeyboard()
-            windowFullscreenHandler.toNormalScreen()
-            findNavController().popBackStack()
-        }
 
         runBlocking {
             if (isNetworkAvailable(requireContext(), false)) {

@@ -1,6 +1,5 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
@@ -17,6 +16,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -96,7 +96,7 @@ class AddPaymentCardRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.d(AddPaymentCardRepository::class.simpleName, e.toString())
+                    logDebug(AddPaymentCardRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -109,7 +109,7 @@ class AddPaymentCardRepository(
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
-                    Log.d(AddPaymentCardRepository::class.simpleName, e.toString())
+                    logDebug(AddPaymentCardRepository::class.simpleName, e.toString())
                 }
             }
         }

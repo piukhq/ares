@@ -42,7 +42,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             )?.replace("\n","")?.trim()
 
         jwtToken?.let {
-            Log.d("NetworkModule", jwtToken)
+            logError("NetworkModule", jwtToken)
         }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
