@@ -59,7 +59,7 @@ class LoyaltyCardDetailsVouchersAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (vouchers[position].earn?.type) {
-            VOUCHER_TYPE_STAMP -> STAMP_VOUCHER
+            VOUCHER_TYPE_STAMPS -> STAMP_VOUCHER
             else -> PROGRESS_VOUCHER
         }
     }
@@ -244,6 +244,6 @@ class LoyaltyCardDetailsVouchersAdapter(
     companion object {
         private const val PROGRESS_VOUCHER = R.layout.detail_voucher_item
         private const val STAMP_VOUCHER = R.layout.item_stamp_voucher
-        private const val VOUCHER_TYPE_STAMP = "stamp"
+        private const val VOUCHER_TYPE_STAMPS = "stamps"
     }
 }

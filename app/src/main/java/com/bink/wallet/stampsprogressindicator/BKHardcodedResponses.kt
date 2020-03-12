@@ -83,7 +83,7 @@ class BKHardcodedResponses {
                     "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
-                    "          \"type\": \"stamp\",\n" +
+                    "          \"type\": \"stamps\",\n" +
                     "          \"target_value\": 5,\n" +
                     "          \"value\": 3\n" +
                     "        },\n" +
@@ -99,7 +99,7 @@ class BKHardcodedResponses {
                     "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
-                    "          \"type\": \"stamp\",\n" +
+                    "          \"type\": \"stamps\",\n" +
                     "          \"target_value\": 5,\n" +
                     "          \"value\": 5\n" +
                     "        },\n" +
@@ -118,7 +118,7 @@ class BKHardcodedResponses {
                     "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
-                    "          \"type\": \"stamp\",\n" +
+                    "          \"type\": \"stamps\",\n" +
                     "          \"target_value\": 5,\n" +
                     "          \"value\": 5\n" +
                     "        },\n" +
@@ -137,7 +137,7 @@ class BKHardcodedResponses {
                     "        \"subtext\": \"for collecting\",\n" +
                     "        \"earn\": {\n" +
                     "          \"suffix\": \"stamps\",\n" +
-                    "          \"type\": \"stamp\",\n" +
+                    "          \"type\": \"stamps\",\n" +
                     "          \"target_value\": 5,\n" +
                     "          \"value\": 5\n" +
                     "        },\n" +

@@ -24,7 +24,7 @@ fun TextView.setVoucherSubText(subtext: String, targetValue: Float) {
 fun TextView.setVoucherTitle(voucherBurn: Burn?) {
     text = context.getString(
         R.string.voucher_stamp_title,
-        voucherBurn?.prefix, voucherBurn?.suffix, voucherBurn?.type
+        voucherBurn?.prefix, voucherBurn?.suffix
     )
 }
 
