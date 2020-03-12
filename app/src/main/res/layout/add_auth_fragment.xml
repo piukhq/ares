@@ -122,18 +122,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_padding_size_extra_large"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
                         android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:background="@drawable/gradient_button_selector"
                         android:text="@string/sign_up_text"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
+                        android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toTopOf="@+id/no_account_text"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintVertical_chainStyle="packed"
-                        app:layout_constraintTop_toBottomOf="@+id/auth_add_fields" />
+                        app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
                         android:id="@+id/no_account_text"
@@ -145,10 +142,9 @@
                         android:text="@string/no_account_text"
                         android:textColor="@color/black"
                         android:textSize="@dimen/size_sub_headline"
-                        app:layout_constraintTop_toBottomOf="@id/add_card_button"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
