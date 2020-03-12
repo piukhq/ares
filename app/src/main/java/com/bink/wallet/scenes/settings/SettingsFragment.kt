@@ -206,7 +206,6 @@ class SettingsFragment :
 
             SettingsItemType.LOGOUT -> {
                 if (isNetworkAvailable(requireActivity(), true)) {
-
                     requireContext().displayModalPopup(
                         getString(R.string.settings_menu_log_out),
                         getString(R.string.log_out_confirmation),

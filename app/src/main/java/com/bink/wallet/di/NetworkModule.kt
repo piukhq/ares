@@ -2,8 +2,6 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import com.bink.sdk.BinkCore
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
@@ -40,8 +38,6 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_TOKEN
             )?.replace("\n","")?.trim()
-
-        logError("ConnorDebug", "token: " + jwtToken)
 
         jwtToken?.let {
             logError("NetworkModule", jwtToken)

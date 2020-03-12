@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.registration
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -49,7 +48,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.e("ConnorDebug", "accept tcs")
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -141,7 +139,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         viewModel.membershipPlanDatabaseLiveData.observeNonNull(this@AcceptTCFragment) {
             finishLogInProcess()
         }
-
 
         viewModel.membershipPlanErrorLiveData.observeNonNull(this@AcceptTCFragment) {
             finishLogInProcess()
