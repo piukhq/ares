@@ -174,18 +174,20 @@ class SettingsFragment :
                 )
 
             SettingsItemType.CONTACT_US -> {
-                val intent = Intent(Intent.ACTION_SENDTO)
-                intent.data = Uri.parse(
-                    getString(
-                        R.string.contact_us_mailto,
-                        getString(R.string.contact_us_email_address)
-                    )
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "message/rfc882"
+                intent.putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf(getString(R.string.contact_us_email_address))
                 )
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
                 intent.putExtra(
                     Intent.EXTRA_TEXT, getString(
                         R.string.contact_us_email_message,
-                        viewModel.loginData.value?.email,
+                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                            ?.let { localEmail ->
+                                localEmail
+                            },
                         BuildConfig.VERSION_NAME,
                         BuildConfig.VERSION_CODE.toString(),
                         android.os.Build.VERSION.RELEASE,
