@@ -48,7 +48,6 @@ class AddPaymentCardFragment :
             } else {
                 null
             }
-        handleValidation()
     }
 
     private fun validateCardNumber() {
@@ -95,6 +94,10 @@ class AddPaymentCardFragment :
 
         viewModel.cardHolder.observeNonNull(this) {
             cardInfoDisplay()
+            handleValidation()
+        }
+
+        viewModel.expiryDate.observeNonNull(this) {
             handleValidation()
         }
 
