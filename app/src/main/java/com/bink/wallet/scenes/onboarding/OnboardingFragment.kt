@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
@@ -24,7 +23,6 @@ import com.facebook.login.LoginResult
 import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-
 
 @Suppress("DEPRECATION")
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
@@ -49,6 +47,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         FacebookSdk.sdkInitialize(context)
         LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
+        clearFacebookLogin()
     }
 
     override fun onResume() {
@@ -208,12 +207,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             try {
                 this.accessToken = accessToken
                 facebookEmail = jsonObject.getString(EMAIL_KEY)
-                Log.e("ConnorDebug", "accessToken: " + accessToken)
-                Log.e("ConnorDebug", "email: " + facebookEmail)
-
             } catch (e: JSONException) {
-                Log.e("ConnorDebug", "error: " + e.message)
-
                 if (!::facebookEmail.isInitialized) {
                     facebookEmail = getString(R.string.empty_string)
                 }
@@ -245,6 +239,16 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             directions.let { _ ->
                 directions?.let { findNavController().navigateIfAdded(this, it) }
             }
+        }
+    }
+
+    // There is a scenario in which a user logs in with Facebook, but then does not accept
+    // terms and conditions (force quits the app). If the user returns to the app the Facebook
+    // login button will show 'Log Out' which is a bug. So this is just a safety check
+    // to log the user out of Facebook in that case.
+    private fun clearFacebookLogin() {
+        if (AccessToken.getCurrentAccessToken() != null) {
+            LoginManager.getInstance().logOut()
         }
     }
 }
