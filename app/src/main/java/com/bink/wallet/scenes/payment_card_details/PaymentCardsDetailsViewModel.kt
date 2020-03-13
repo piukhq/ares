@@ -3,13 +3,11 @@ package com.bink.wallet.scenes.payment_card_details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
-import com.bink.wallet.utils.DateTimeUtils
 import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
@@ -66,12 +64,11 @@ class PaymentCardsDetailsViewModel(
     }
 
     fun getMembershipCards() {
-        val shouldMakePeriodicCall =
-            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    }
 
-        if (shouldMakePeriodicCall) {
-            loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
-        }
+    fun storePaymentCard(card: PaymentCard) {
+        paymentWalletRepository.storePaymentCard(card)
     }
 
     private fun updatePaymentCard(cardId: String) {
