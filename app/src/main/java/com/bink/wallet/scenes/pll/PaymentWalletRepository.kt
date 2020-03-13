@@ -5,8 +5,15 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -48,6 +55,20 @@ class PaymentWalletRepository(
                     }
                 } catch (e: Throwable) {
                     fetchError.value = e
+                }
+            }
+        }
+    }
+
+    fun storePaymentCard(card: PaymentCard) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    withContext(Dispatchers.IO) {
+                        paymentCardDao.store(card)
+                    }
+                } catch (e: Throwable) {
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
