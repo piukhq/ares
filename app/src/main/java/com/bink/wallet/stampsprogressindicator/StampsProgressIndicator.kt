@@ -23,35 +23,7 @@ class StampsProgressIndicator @JvmOverloads constructor(
     )
 
     fun setupStamps(maxProgress: Int, currentProgress: Int, voucherStatus: String) {
-        val stampBackgroundDrawable =
-            when (voucherStatus) {
-                VoucherStates.IN_PROGRESS.state -> resources.getDrawable(
-                    R.drawable.bg_stamp_in_progress,
-                    null
-                )
-                VoucherStates.ISSUED.state -> {
-                    resources.getDrawable(
-                        R.drawable.bg_stamp_earned,
-                        null
-                    )
-                }
-                VoucherStates.REDEEMED.state -> {
-                    resources.getDrawable(
-                        R.drawable.bg_stamp_redeemed,
-                        null
-                    )
-                }
-                VoucherStates.EXPIRED.state -> {
-                    resources.getDrawable(
-                        R.drawable.bg_stamp_expired,
-                        null
-                    )
-                }
-                else -> resources.getDrawable(
-                    R.drawable.bg_stamp_pending,
-                    null
-                )
-            }
+        val stampBackgroundDrawable = getStatusDrawable(voucherStatus)
         binding.container.removeAllViews()
         (1..maxProgress).forEachIndexed { index, _ ->
             binding.container.addView(
@@ -80,4 +52,34 @@ class StampsProgressIndicator @JvmOverloads constructor(
             )
         }
     }
+
+    private fun getStatusDrawable(voucherStatus: String) =
+        when (voucherStatus) {
+            VoucherStates.IN_PROGRESS.state -> resources.getDrawable(
+                R.drawable.bg_stamp_in_progress,
+                null
+            )
+            VoucherStates.ISSUED.state -> {
+                resources.getDrawable(
+                    R.drawable.bg_stamp_earned,
+                    null
+                )
+            }
+            VoucherStates.REDEEMED.state -> {
+                resources.getDrawable(
+                    R.drawable.bg_stamp_redeemed,
+                    null
+                )
+            }
+            VoucherStates.EXPIRED.state -> {
+                resources.getDrawable(
+                    R.drawable.bg_stamp_expired,
+                    null
+                )
+            }
+            else -> resources.getDrawable(
+                R.drawable.bg_stamp_pending,
+                null
+            )
+        }
 }
