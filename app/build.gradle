@@ -12,7 +12,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000006"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000008"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
 
