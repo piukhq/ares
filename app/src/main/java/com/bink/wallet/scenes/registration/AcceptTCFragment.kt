@@ -72,7 +72,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             requireContext(),
             this,
             getString(R.string.facebook_failed),
-            ""
+            "",
+            true
         ) {
             binding.accept.isClickable = false
             val timer = Timer()

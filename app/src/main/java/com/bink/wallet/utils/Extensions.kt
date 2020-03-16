@@ -24,9 +24,9 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
-import java.util.*
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
+import java.util.*
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -85,12 +85,13 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
     })
 }
 
-fun LiveData<Throwable>.observeErrorNonNull(
+fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
     defaultErrorTitle: String,
     defaultErrorMessage: String,
-    observer: ((t: Throwable) -> Unit)?
+    isUserDriven: Boolean,
+    observer: ((t: Exception) -> Unit)?
 ) {
     this.observe(owner, Observer {
         it?.let {
@@ -102,8 +103,12 @@ fun LiveData<Throwable>.observeErrorNonNull(
                     context.getString(R.string.error_server_down_title),
                     context.getString(R.string.error_server_down_message)
                 )
-            } else if (UtilFunctions.hasCertificatePinningFailed(it)) {
+                logDebug("PINNING", "isHttp")
+            } else if (UtilFunctions.hasCertificatePinningFailed(it) &&
+                isUserDriven
+            ) {
                 UtilFunctions.showCertificatePinningDialog(context)
+                logDebug("PINNING", "isPinning")
             } else {
                 if (defaultErrorTitle.isNotEmpty() || defaultErrorMessage.isNotEmpty()) {
                     context.displayModalPopup(
@@ -111,6 +116,7 @@ fun LiveData<Throwable>.observeErrorNonNull(
                         defaultErrorMessage
                     )
                 }
+                logDebug("PINNING", "issOther")
             }
         }
 
@@ -120,26 +126,36 @@ fun LiveData<Throwable>.observeErrorNonNull(
     })
 }
 
-fun LiveData<Throwable>.observeErrorNonNull(
+fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
-    observer: ((t: Throwable) -> Unit)?
-) = observeErrorNonNull(context, owner, "", "", observer)
+    isUserDriven: Boolean,
+    observer: ((t: Exception) -> Unit)?
+) = observeErrorNonNull(context, owner, "", "", isUserDriven, observer)
 
-fun LiveData<Throwable>.observeErrorNonNull(
+fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
+    isUserDriven: Boolean,
     owner: LifecycleOwner
-) = observeErrorNonNull(context, owner, "", "", null)
+) = observeErrorNonNull(context, owner, "", "", isUserDriven, null)
 
-fun LiveData<Throwable>.observeNetworkDrivenErrorNonNull(
+fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
     context: Context,
     owner: LifecycleOwner,
     defaultErrorTitle: String,
     defaultErrorMessage: String,
-    observer: ((t: Throwable) -> Unit)?
+    isUserDriven: Boolean,
+    observer: ((t: Exception) -> Unit)?
 ) {
     if (UtilFunctions.isNetworkAvailable(context, true)) {
-        observeErrorNonNull(context, owner, defaultErrorTitle, defaultErrorMessage, observer)
+        observeErrorNonNull(
+            context,
+            owner,
+            defaultErrorTitle,
+            defaultErrorMessage,
+            isUserDriven,
+            observer
+        )
     }
 }
 

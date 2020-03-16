@@ -21,7 +21,7 @@ class SettingsViewModel constructor(
     var loginData = MutableLiveData<LoginData>()
     val itemsList = ListLiveData<SettingsItem>()
     val logOutResponse = MutableLiveData<ResponseBody>()
-    val logOutErrorResponse = MutableLiveData<Throwable>()
+    val logOutErrorResponse = MutableLiveData<Exception>()
 
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)

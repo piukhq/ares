@@ -22,8 +22,8 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     private val _fetchCardsError = MutableLiveData<Exception>()
     val fetchCardsError: LiveData<Exception>
         get() = _fetchCardsError
-    private val _fetchLocalCardsError = MutableLiveData<Throwable>()
-    val fetchLocalCardsError: LiveData<Throwable>
+    private val _fetchLocalCardsError = MutableLiveData<Exception>()
+    val fetchLocalCardsError: LiveData<Exception>
         get() = _fetchLocalCardsError
 
     private val _paymentCardsMerger = MediatorLiveData<List<PaymentCard>>()

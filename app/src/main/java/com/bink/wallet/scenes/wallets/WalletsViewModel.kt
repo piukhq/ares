@@ -19,11 +19,11 @@ class WalletsViewModel(
     var membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     var membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
-    private val _fetchError = MutableLiveData<Throwable>()
-    val fetchError: LiveData<Throwable>
+    private val _fetchError = MutableLiveData<Exception>()
+    val fetchError: LiveData<Exception>
         get() = _fetchError
-    private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError: LiveData<Throwable>
+    private val _loadCardsError = MutableLiveData<Exception>()
+    val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
 
     fun fetchMembershipCards() {

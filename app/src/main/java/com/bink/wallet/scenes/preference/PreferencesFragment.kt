@@ -39,7 +39,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
-        viewModel.savePreferenceError.observeErrorNonNull(requireContext(), this)
+        viewModel.savePreferenceError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.preferences.observeNonNull(this) { preferences ->
             binding.progressSpinner.visibility = View.GONE

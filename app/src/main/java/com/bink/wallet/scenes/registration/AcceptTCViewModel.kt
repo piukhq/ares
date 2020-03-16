@@ -19,14 +19,14 @@ class AcceptTCViewModel(
     val shouldLoadingBeVisible = ObservableBoolean(false)
 
     var facebookAuthResult = MutableLiveData<FacebookAuthResponse>()
-    var facebookAuthError = MutableLiveData<Throwable>()
+    var facebookAuthError = MutableLiveData<Exception>()
     var marketingPreferences = MutableLiveData<ResponseBody>()
-    var marketingError = MutableLiveData<Throwable>()
+    var marketingError = MutableLiveData<Exception>()
     val shouldAcceptBeEnabled = MutableLiveData<Boolean>()
 
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
-    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
+    val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {

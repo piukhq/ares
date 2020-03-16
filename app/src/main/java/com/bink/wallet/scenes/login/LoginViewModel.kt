@@ -20,18 +20,18 @@ class LoginViewModel constructor(
     val loginBody = MutableLiveData<LoginBody>()
     val loginData = MutableLiveData<LoginData>()
     val logInResponse = MutableLiveData<SignUpResponse>()
-    private val _logInErrorResponse = MutableLiveData<Throwable>()
-    val logInErrorResponse: LiveData<Throwable>
+    private val _logInErrorResponse = MutableLiveData<Exception>()
+    val logInErrorResponse: LiveData<Exception>
         get() = _logInErrorResponse
-    private val _authErrorResponse = MutableLiveData<Throwable>()
-    val authErrorResponse: LiveData<Throwable>
+    private val _authErrorResponse = MutableLiveData<Exception>()
+    val authErrorResponse: LiveData<Exception>
         get() = _authErrorResponse
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
-    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
+    val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val passwordValidator = Transformations.map(password) {
