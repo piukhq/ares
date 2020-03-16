@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.DetailVoucherItemBinding
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.scenes.loyalty_details.OnVoucherClickListener
 import com.bink.wallet.utils.FLOAT_ONE_HUNDRED
 import com.bink.wallet.utils.FLOAT_ZERO
 import com.bink.wallet.utils.INT_ONE_HUNDRED
@@ -16,8 +17,8 @@ import com.bink.wallet.utils.setTimestamp
 import kotlin.math.roundToInt
 
 class AccumulatorVouchersViewHolder(
-    var binding: DetailVoucherItemBinding,
-    val onClickListener: (Any) -> Unit = {}
+    private val binding: DetailVoucherItemBinding,
+    private val onVoucherClickListener: OnVoucherClickListener? = null
 ) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(thisVoucher: Voucher) {
@@ -36,7 +37,7 @@ class AccumulatorVouchersViewHolder(
             }
             root.apply {
                 this.setOnClickListener {
-                    onClickListener(thisVoucher)
+                    onVoucherClickListener?.invoke(thisVoucher)
                 }
             }
         }

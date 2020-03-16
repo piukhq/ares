@@ -23,7 +23,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.util.*
+import java.util.Calendar
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -772,12 +772,13 @@ class LoyaltyCardDetailsFragment :
                 it.state == VoucherStates.IN_PROGRESS.state ||
                         it.state == VoucherStates.ISSUED.state
             }?.let { vouchers ->
-                adapter = LoyaltyCardDetailsVouchersAdapter(
-                    vouchers,
-                    onClickListener = { thisVoucher ->
-                        viewVoucherDetails(thisVoucher as Voucher)
+                adapter = VouchersAdapter(
+                    vouchers
+                ).apply {
+                    setOnVoucherClickListener { voucher ->
+                        viewVoucherDetails(voucher)
                     }
-                )
+                }
             }
         }
     }

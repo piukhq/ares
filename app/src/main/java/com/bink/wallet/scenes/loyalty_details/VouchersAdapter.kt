@@ -1,9 +1,7 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
@@ -11,15 +9,13 @@ import com.bink.wallet.databinding.DetailVoucherItemBinding
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.scenes.loyalty_details.voucherviewholders.AccumulatorVouchersViewHolder
 import com.bink.wallet.scenes.loyalty_details.voucherviewholders.StampVouchersViewHolder
-import com.bink.wallet.utils.*
-import com.bink.wallet.utils.enums.VoucherStates
-import kotlin.math.roundToInt
 
-class LoyaltyCardDetailsVouchersAdapter(
-    private val vouchers: List<Voucher>,
-    val onClickListener: (Any) -> Unit = {}
+typealias OnVoucherClickListener = (Voucher) -> Unit
+class VouchersAdapter(
+    private val vouchers: List<Voucher>
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var onVoucherClickListener: OnVoucherClickListener? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,7 +30,7 @@ class LoyaltyCardDetailsVouchersAdapter(
                         parent,
                         false
                     ),
-                    onClickListener
+                    onVoucherClickListener
                 )
             }
             else -> {
@@ -44,7 +40,7 @@ class LoyaltyCardDetailsVouchersAdapter(
                     parent,
                     false
                 ) as DetailVoucherItemBinding
-                AccumulatorVouchersViewHolder(binding, onClickListener)
+                AccumulatorVouchersViewHolder(binding, onVoucherClickListener)
             }
         }
     }
@@ -63,6 +59,10 @@ class LoyaltyCardDetailsVouchersAdapter(
             VOUCHER_TYPE_STAMPS -> STAMP_VOUCHER
             else -> PROGRESS_VOUCHER
         }
+    }
+
+    fun setOnVoucherClickListener(onVoucherClickListener: OnVoucherClickListener) {
+        this.onVoucherClickListener = onVoucherClickListener
     }
 
     companion object {
