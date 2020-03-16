@@ -100,7 +100,11 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     )
                 )
             }
-            viewModel.getMembershipPlans()
+            viewModel.let {
+                it.shouldLoadingBeVisible.set(true)
+                it.getMembershipPlans()
+            }
+            binding.accept.isEnabled = false
         }
 
         binding.accept.setOnClickListener {
@@ -146,6 +150,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     }
 
     private fun finishLogInProcess() {
+        viewModel.shouldAcceptBeEnabled.value = true
+        binding.accept.isEnabled = true
         findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
     }
 }

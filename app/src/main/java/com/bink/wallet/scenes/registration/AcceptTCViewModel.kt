@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.registration
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.auth.FacebookAuthRequest
@@ -14,6 +15,8 @@ class AcceptTCViewModel(
     val loginRepository: LoginRepository,
     val loyaltyWalletRepository: LoyaltyWalletRepository
 ) : BaseViewModel() {
+
+    val shouldLoadingBeVisible = ObservableBoolean(false)
 
     var facebookAuthResult = MutableLiveData<FacebookAuthResponse>()
     var facebookAuthError = MutableLiveData<Throwable>()
