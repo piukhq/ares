@@ -34,20 +34,20 @@ class LoyaltyViewModel constructor(
     val localPaymentCards: LiveData<List<PaymentCard>>
         get() = _localPaymentCards
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
-    private val _addError = MutableLiveData<Throwable>()
-    val addError: LiveData<Throwable>
+    private val _addError = MutableLiveData<Exception>()
+    val addError: LiveData<Exception>
         get() = _addError
-    private val _fetchError = MutableLiveData<Throwable>()
-    val fetchError: LiveData<Throwable>
+    private val _fetchError = MutableLiveData<Exception>()
+    val fetchError: LiveData<Exception>
         get() = _fetchError
-    private val _loadPlansError = MutableLiveData<Throwable>()
-    val loadPlansError: MutableLiveData<Throwable>
+    private val _loadPlansError = MutableLiveData<Exception>()
+    val loadPlansError: MutableLiveData<Exception>
         get() = _loadPlansError
-    private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError: LiveData<Throwable>
+    private val _loadCardsError = MutableLiveData<Exception>()
+    val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
-    private val _deleteCardError = MutableLiveData<Throwable>()
-    val deleteCardError: MutableLiveData<Throwable>
+    private val _deleteCardError = MutableLiveData<Exception>()
+    val deleteCardError: MutableLiveData<Exception>
         get() = _deleteCardError
     private val _cardsDataMerger = MediatorLiveData<UserDataResult>()
     val cardsDataMerger: LiveData<UserDataResult>

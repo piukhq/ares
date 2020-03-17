@@ -12,7 +12,7 @@ class AddJoinViewModel constructor(private var paymentWalletRepository: PaymentW
     BaseViewModel() {
     val membershipPlan = MutableLiveData<MembershipPlan>()
     val paymentCards = MutableLiveData<List<PaymentCard>>()
-    val fetchError = MutableLiveData<Throwable>()
+    val fetchError = MutableLiveData<Exception>()
 
     fun getPaymentCards() {
         val shouldMakePeriodicCall =

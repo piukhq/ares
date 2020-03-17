@@ -32,7 +32,7 @@ class LoginRepository(
     fun doAuthenticationWork(
         loginResponse: LoginResponse,
         loginData: MutableLiveData<LoginBody>,
-        authErrorResponse: MutableLiveData<Throwable>
+        authErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.loginOrRegisterAsync(loginResponse)
@@ -41,7 +41,7 @@ class LoginRepository(
                     val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
                     loginData.value = response.consent
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     authErrorResponse.value = e
                 }
             }
@@ -51,7 +51,7 @@ class LoginRepository(
     fun authWithFacebook(
         facebookAuthRequest: FacebookAuthRequest,
         authResult: MutableLiveData<FacebookAuthResponse>,
-        authError: MutableLiveData<Throwable>
+        authError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.authWithFacebookAsync(facebookAuthRequest)
@@ -60,7 +60,7 @@ class LoginRepository(
                     val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
                     authResult.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     authError.value = e
                 }
             }
@@ -70,7 +70,7 @@ class LoginRepository(
     fun signUp(
         signUpRequest: SignUpRequest,
         signUpResponse: MutableLiveData<SignUpResponse>,
-        signUpErrorResponse: MutableLiveData<Throwable>
+        signUpErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.signUpAsync(signUpRequest)
@@ -79,7 +79,7 @@ class LoginRepository(
                     val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
                     signUpResponse.value = response
-                } catch (e: Throwable) {
+                } catch (e: java.lang.Exception) {
                     signUpErrorResponse.value = e
                 }
             }
@@ -89,7 +89,7 @@ class LoginRepository(
     fun logIn(
         logInRequest: SignUpRequest,
         signUpResponse: MutableLiveData<SignUpResponse>,
-        signUpErrorResponse: MutableLiveData<Throwable>
+        signUpErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.logInAsync(logInRequest)
@@ -98,7 +98,7 @@ class LoginRepository(
                     val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
                     signUpResponse.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     signUpErrorResponse.value = e
                 }
             }
@@ -108,7 +108,7 @@ class LoginRepository(
     fun checkMarketingPref(
         checkedOption: MarketingOption,
         marketingResponse: MutableLiveData<ResponseBody>,
-        marketingError: MutableLiveData<Throwable>
+        marketingError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.checkMarketingPrefAsync(checkedOption)
@@ -116,7 +116,7 @@ class LoginRepository(
                 try {
                     val response = request.await()
                     marketingResponse.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     marketingError.value = e
                 }
             }
@@ -126,7 +126,7 @@ class LoginRepository(
     fun forgotPassword(
         email: String,
         forgotPasswordResponse: MutableLiveData<ResponseBody>,
-        forgotPasswordError: MutableLiveData<Throwable>
+        forgotPasswordError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
@@ -134,7 +134,7 @@ class LoginRepository(
                 try {
                     val response = request.await()
                     forgotPasswordResponse.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     forgotPasswordError.value = e
                 }
             }
@@ -143,7 +143,7 @@ class LoginRepository(
 
     fun logOut(
         logOutResponse: MutableLiveData<ResponseBody>,
-        logOutErrorResponse: MutableLiveData<Throwable>
+        logOutErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.logOutAsync()
@@ -151,7 +151,7 @@ class LoginRepository(
                 try {
                     val response = request.await()
                     logOutResponse.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     logOutErrorResponse.value = e
                 }
             }
@@ -160,14 +160,14 @@ class LoginRepository(
 
     fun getPreferences(
         preferenceResponse: MutableLiveData<List<Preference>>,
-        preferenceErrorResponse: MutableLiveData<Throwable>
+        preferenceErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPreferencesAsync()
             withContext(Dispatchers.Main) {
                 try {
                     preferenceResponse.value = request.await()
-                } catch (e: Throwable) {
+                } catch (e: java.lang.Exception) {
                     preferenceErrorResponse.value = e
                 }
             }
@@ -177,7 +177,7 @@ class LoginRepository(
     fun setPreference(
         json: String,
         preferenceResponse: MutableLiveData<ResponseBody>,
-        preferenceErrorResponse: MutableLiveData<Throwable>
+        preferenceErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.putPreferencesAsync(
@@ -189,7 +189,7 @@ class LoginRepository(
             try {
                 val response = request.await()
                 preferenceResponse.value = response
-            } catch (e: Throwable) {
+            } catch (e: Exception) {
                 preferenceErrorResponse.value = e
             }
         }

@@ -36,7 +36,7 @@ class AddPaymentCardRepository(
         card: PaymentCardAdd,
         cardNumber: String,
         mutableAddCard: MutableLiveData<PaymentCard>,
-        error: MutableLiveData<Throwable>
+        error: MutableLiveData<Exception>
     ) {
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
@@ -53,7 +53,7 @@ class AddPaymentCardRepository(
             }
 
             if (spreedlyEnvironmentKey == null) {
-                error.value = Throwable(spreedlyKeyMissingError)
+                error.value = Exception(spreedlyKeyMissingError)
                 return
             }
 
@@ -80,7 +80,7 @@ class AddPaymentCardRepository(
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
                         doAddPaymentCard(card, mutableAddCard, error)
-                    } catch (e: Throwable) {
+                    } catch (e: Exception) {
                         error.value = e
                     }
                 }
@@ -118,7 +118,7 @@ class AddPaymentCardRepository(
     private fun doAddPaymentCard(
         card: PaymentCardAdd,
         mutableAddCard: MutableLiveData<PaymentCard>,
-        error: MutableLiveData<Throwable>
+        error: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.addPaymentCardAsync(card)
@@ -127,7 +127,7 @@ class AddPaymentCardRepository(
                     val response = request.await()
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     error.value = e
                 }
             }

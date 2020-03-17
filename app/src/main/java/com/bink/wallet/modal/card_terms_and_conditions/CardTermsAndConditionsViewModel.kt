@@ -10,7 +10,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 class CardTermsAndConditionsViewModel(private val repository: AddPaymentCardRepository) :
     BaseModalViewModel() {
     val paymentCard = MutableLiveData<PaymentCard>()
-    val error = MutableLiveData<Throwable>()
+    val error = MutableLiveData<Exception>()
     var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 

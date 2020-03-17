@@ -15,10 +15,10 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
     val membershipCard = MutableLiveData<MembershipCard>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
     val unlinkedRequestBody = MutableLiveData<ResponseBody>()
-    val linkError = MutableLiveData<Throwable>()
-    val unlinkError = MutableLiveData<Throwable>()
-    val fetchError = MutableLiveData<Throwable>()
-    val localFetchError = MutableLiveData<Throwable>()
+    val linkError = MutableLiveData<Exception>()
+    val unlinkError = MutableLiveData<Exception>()
+    val fetchError = MutableLiveData<Exception>()
+    val localFetchError = MutableLiveData<Exception>()
 
     val paymentCard = MutableLiveData<PaymentCard>()
 
@@ -34,17 +34,17 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
     val paymentCardsMerger: LiveData<List<PaymentCard>>
         get() = _paymentCardsMerger
 
-    val _unlinkErrors = MutableLiveData<ArrayList<Throwable>>()
-    val unlinkErrors: LiveData<ArrayList<Throwable>>
+    val _unlinkErrors = MutableLiveData<ArrayList<Exception>>()
+    val unlinkErrors: LiveData<ArrayList<Exception>>
         get() = _unlinkErrors
 
     val unlinkSuccesses: LiveData<ArrayList<Any>>
         get() = _unlinkSuccesses
     private val _unlinkSuccesses = MutableLiveData<ArrayList<Any>>()
 
-    val linkErrors: LiveData<MutableList<Throwable>>
+    val linkErrors: LiveData<MutableList<Exception>>
         get() = _linkErrors
-    private val _linkErrors = MutableLiveData<MutableList<Throwable>>()
+    private val _linkErrors = MutableLiveData<MutableList<Exception>>()
 
     val linkSuccesses: LiveData<ArrayList<Any>>
         get() = _linkSuccesses

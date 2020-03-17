@@ -138,7 +138,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = viewModel.currentMembershipPlan.value
 
-
         binding.buttonCancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
@@ -190,12 +189,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         }
 
-        viewModel.fetchCardsError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                getString(R.string.error_title),
-                getString(R.string.error_description)
-            )
-        }
+        viewModel.fetchCardsError.observeErrorNonNull(requireContext(), this, false) {}
 
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {

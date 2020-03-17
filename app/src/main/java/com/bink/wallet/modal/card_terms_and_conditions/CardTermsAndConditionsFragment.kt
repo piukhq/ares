@@ -62,7 +62,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             requireContext(),
             this,
             getString(R.string.payment_card_error_title),
-            getString(R.string.payment_card_error_message)
+            getString(R.string.payment_card_error_message),
+            true
         ) {
             binding.progressSpinner.visibility = View.GONE
             binding.firstButton.isEnabled = true

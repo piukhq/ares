@@ -11,7 +11,7 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
 
     private val membershipPlanData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
-    private val membershipPlanError: MutableLiveData<Throwable> = MutableLiveData()
+    private val membershipPlanError: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun getMembershipPlans() {
