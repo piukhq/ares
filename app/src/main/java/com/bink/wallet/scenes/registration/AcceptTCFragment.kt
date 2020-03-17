@@ -105,14 +105,11 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     )
                 )
             }
-            viewModel.let {
-                it.shouldLoadingBeVisible.set(true)
-                it.getMembershipPlans()
-            }
-            binding.accept.isEnabled = false
+            viewModel.getMembershipPlans()
         }
 
         binding.accept.setOnClickListener {
+            startLoading()
             if (isNetworkAvailable(requireContext(), true)) {
                 accessToken?.token?.let { token ->
                     accessToken?.userId?.let { userId ->
@@ -127,6 +124,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                         }
                     }
                 }
+            } else {
+                stopLoading()
             }
 
             logEvent(
@@ -157,8 +156,17 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     }
 
     private fun finishLogInProcess() {
+        stopLoading()
+        findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+    }
+
+    private fun stopLoading() {
         viewModel.shouldAcceptBeEnabled.value = true
         binding.accept.isEnabled = true
-        findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+    }
+
+    private fun startLoading() {
+        viewModel.shouldLoadingBeVisible.set(true)
+        binding.accept.isEnabled = false
     }
 }
