@@ -136,7 +136,7 @@ class PaymentCardWalletFragment :
             viewModel.paymentUpdateDone.observeNonNull(this) { paymentUpdateDone ->
                 if (loyaltyUpdateDone && paymentUpdateDone) {
                     binding.paymentCardRecycler.visibility = View.VISIBLE
-                    binding.progressSpinner.visibility = View.GONE
+                    binding.swipeRefresh.isRefreshing = false
 
                     SharedPreferenceManager.isPaymentEmpty =
                         viewModel.paymentCards.value.isNullOrEmpty()
@@ -210,7 +210,7 @@ class PaymentCardWalletFragment :
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
-            binding.progressSpinner.visibility = View.VISIBLE
+            binding.swipeRefresh.isRefreshing = true
             binding.paymentCardRecycler.visibility = View.GONE
             viewModel.getPeriodicPaymentCards()
         }
