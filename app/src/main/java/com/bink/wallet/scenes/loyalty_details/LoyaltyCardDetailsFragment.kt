@@ -23,7 +23,6 @@ import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
 import java.util.*
 
 class LoyaltyCardDetailsFragment :
@@ -248,6 +247,12 @@ class LoyaltyCardDetailsFragment :
         viewModel.deleteError.observeErrorNonNull(
             requireContext(),
             this@LoyaltyCardDetailsFragment,
+            getString(R.string.title_2_4),
+            getString(
+                R.string.description_2_4,
+                viewModel.deleteError.value?.cause?.message,
+                viewModel.deleteError.value?.localizedMessage
+            ),
             true
         ) {}
 

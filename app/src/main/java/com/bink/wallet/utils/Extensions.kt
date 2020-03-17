@@ -26,7 +26,8 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.*
+import java.util.Locale
+
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -103,12 +104,10 @@ fun LiveData<Exception>.observeErrorNonNull(
                     context.getString(R.string.error_server_down_title),
                     context.getString(R.string.error_server_down_message)
                 )
-                logDebug("PINNING", "isHttp")
             } else if (UtilFunctions.hasCertificatePinningFailed(it) &&
                 isUserDriven
             ) {
                 UtilFunctions.showCertificatePinningDialog(context)
-                logDebug("PINNING", "isPinning")
             } else {
                 if (defaultErrorTitle.isNotEmpty() || defaultErrorMessage.isNotEmpty()) {
                     context.displayModalPopup(
@@ -116,7 +115,6 @@ fun LiveData<Exception>.observeErrorNonNull(
                         defaultErrorMessage
                     )
                 }
-                logDebug("PINNING", "issOther")
             }
         }
 
