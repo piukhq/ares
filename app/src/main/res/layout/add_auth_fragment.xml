@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_extra_large"
                     android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="@dimen/auth_add_button_margin_bottom"
                     android:background="@drawable/gradient_button_selector"
                     android:text="@string/sign_up_text"
                     android:textAllCaps="false"
