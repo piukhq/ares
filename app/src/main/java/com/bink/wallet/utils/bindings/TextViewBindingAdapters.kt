@@ -16,8 +16,8 @@ fun TextView.setNumberOrBarcodeDescription(isBarcodeAvailable: Boolean) {
 }
 
 @BindingAdapter("voucherSubtext", "voucherTargetValue", requireAll = true)
-fun TextView.setVoucherSubText(subtext: String, targetValue: Float) {
-    text = context.getString(R.string.voucher_stamp_subtext, subtext, targetValue.toInt())
+fun TextView.setVoucherSubText(subtext: String?, targetValue: Float) {
+    text = context.getString(R.string.voucher_stamp_subtext, targetValue.toInt())
 }
 
 @BindingAdapter("voucherBurn")

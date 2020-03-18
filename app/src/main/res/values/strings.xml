@@ -467,7 +467,7 @@
     </string>
     <string name="payment_card_needed_button_text">Add card</string>
     <string name="voucher_stamp_title">%s %s</string>
-    <string name="voucher_stamp_subtext">%s %d stamps</string>
+    <string name="voucher_stamp_subtext">for collecting %d stamps</string>
     <string name="voucher_stamp_collected">%d/%d stamps</string>
 
     <!-- Certificate Pinning -->
