@@ -5,8 +5,15 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -16,7 +23,7 @@ class PaymentWalletRepository(
 ) {
     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
-        fetchError: MutableLiveData<Throwable>
+        fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
@@ -28,7 +35,7 @@ class PaymentWalletRepository(
                     SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
 
                     paymentCards.value = response.toMutableList()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     fetchError.value = e
                 }
             }
@@ -37,7 +44,7 @@ class PaymentWalletRepository(
 
     private fun storePaymentsCards(
         cards: List<PaymentCard>,
-        fetchError: MutableLiveData<Throwable>
+        fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -46,8 +53,22 @@ class PaymentWalletRepository(
                         paymentCardDao.deleteAll()
                         paymentCardDao.storeAll(cards)
                     }
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     fetchError.value = e
+                }
+            }
+        }
+    }
+
+    fun storePaymentCard(card: PaymentCard) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    withContext(Dispatchers.IO) {
+                        paymentCardDao.store(card)
+                    }
+                } catch (e: Exception) {
+                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -55,13 +76,13 @@ class PaymentWalletRepository(
 
     fun getLocalPaymentCards(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Throwable>
+        localFetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     localPaymentCards.value = paymentCardDao.getAllAsync()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     localFetchError.value = e
                 }
             }
@@ -71,7 +92,7 @@ class PaymentWalletRepository(
     fun linkPaymentCard(
         membershipCardId: String,
         paymentCardId: String,
-        linkError: MutableLiveData<Throwable>,
+        linkError: MutableLiveData<Exception>,
         paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -80,7 +101,7 @@ class PaymentWalletRepository(
                 try {
                     val response = request.await()
                     paymentCardMutableValue.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     linkError.value = e
                 }
             }
@@ -90,7 +111,7 @@ class PaymentWalletRepository(
     fun unlinkPaymentCard(
         paymentCardId: String,
         membershipCardId: String,
-        unlinkError: MutableLiveData<Throwable>?,
+        unlinkError: MutableLiveData<Exception>?,
         unlinkedBody: MutableLiveData<ResponseBody>?,
         paymentCard: MutableLiveData<PaymentCard>
     ) {
@@ -107,7 +128,7 @@ class PaymentWalletRepository(
                         }
                     }
                     paymentCard.value = paymentCardValue
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     unlinkError?.value = e
                 }
             }
@@ -118,7 +139,7 @@ class PaymentWalletRepository(
         paymentCardIds: List<String>,
         membershipCardId: String,
         unlinkSuccesses: MutableLiveData<ArrayList<Any>>,
-        unlinkErrors: MutableLiveData<ArrayList<Throwable>>
+        unlinkErrors: MutableLiveData<ArrayList<Exception>>
     ) {
         val jobs = LinkedBlockingQueue<Deferred<*>>()
         paymentCardIds.forEach { id ->
@@ -126,7 +147,7 @@ class PaymentWalletRepository(
                 jobs.add(async { apiService.unlinkFromPaymentCardAsync(id, membershipCardId) })
                 withContext(Dispatchers.Main) {
                     val localSuccesses = ArrayList<Any>()
-                    val localErrors = ArrayList<Throwable>()
+                    val localErrors = ArrayList<Exception>()
                     runBlocking {
                         for (it in jobs) {
                             try {
@@ -134,7 +155,7 @@ class PaymentWalletRepository(
                                 response?.let {
                                     localSuccesses.add(response)
                                 }
-                            } catch (e: Throwable) {
+                            } catch (e: Exception) {
                                 localErrors.add(e)
                             }
                         }
@@ -150,7 +171,7 @@ class PaymentWalletRepository(
         paymentCardIds: List<String>,
         membershipCardId: String,
         linkSuccesses: MutableLiveData<ArrayList<Any>>,
-        linkErrors: MutableLiveData<MutableList<Throwable>>
+        linkErrors: MutableLiveData<MutableList<Exception>>
     ) {
         val jobs = LinkedBlockingQueue<Deferred<*>>()
         paymentCardIds.forEach { id ->
@@ -158,7 +179,7 @@ class PaymentWalletRepository(
                 jobs.add(async { apiService.linkToPaymentCardAsync(membershipCardId, id) })
                 withContext(Dispatchers.Main) {
                     val localSuccesses = ArrayList<Any>()
-                    val localErrors = ArrayList<Throwable>()
+                    val localErrors = ArrayList<Exception>()
                     runBlocking {
                         for (it in jobs) {
                             try {
@@ -167,7 +188,7 @@ class PaymentWalletRepository(
                                     localSuccesses.add(response)
 
                                 }
-                            } catch (e: Throwable) {
+                            } catch (e: Exception) {
                                 localErrors.add(e)
                             }
                         }
@@ -183,7 +204,7 @@ class PaymentWalletRepository(
     fun deletePaymentCard(
         id: String?,
         mutableDeleteCard: MutableLiveData<ResponseBody>,
-        deleteError: MutableLiveData<Throwable>
+        deleteError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deletePaymentCardAsync(it) }
@@ -192,7 +213,7 @@ class PaymentWalletRepository(
                     val response = request?.await()
                     paymentCardDao.deletePaymentCardById(id.toString())
                     mutableDeleteCard.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     deleteError.value = e
                 }
             }
@@ -204,7 +225,7 @@ class PaymentWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     paymentCardDao.deleteAll()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     // TODO: Have error catching here in a mutable
                     logDebug(PaymentWalletRepository::class.simpleName, e.toString())
                 }
@@ -214,7 +235,7 @@ class PaymentWalletRepository(
 
     fun getLocalData(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Throwable>,
+        localFetchError: MutableLiveData<Exception>,
         updateDone: MutableLiveData<Boolean>
     ) {
         CoroutineScope(Dispatchers.IO).launch {

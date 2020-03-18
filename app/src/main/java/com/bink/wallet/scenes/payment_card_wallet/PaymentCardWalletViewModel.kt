@@ -24,14 +24,14 @@ class PaymentCardWalletViewModel(
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
 
-    private val _fetchError = MutableLiveData<Throwable>()
-    val fetchError: LiveData<Throwable> get() = _fetchError
-    private val _deleteError = MutableLiveData<Throwable>()
-    val deleteError: LiveData<Throwable> get() = _deleteError
-    private val _deleteCardError = MutableLiveData<Throwable>()
-    val deleteCardError: LiveData<Throwable> get() = _deleteCardError
-    private val _addError = MutableLiveData<Throwable>()
-    val addError: LiveData<Throwable> get() = _addError
+    private val _fetchError = MutableLiveData<Exception>()
+    val fetchError: LiveData<Exception> get() = _fetchError
+    private val _deleteError = MutableLiveData<Exception>()
+    val deleteError: LiveData<Exception> get() = _deleteError
+    private val _deleteCardError = MutableLiveData<Exception>()
+    val deleteCardError: LiveData<Exception> get() = _deleteCardError
+    private val _addError = MutableLiveData<Exception>()
+    val addError: LiveData<Exception> get() = _addError
     val loyaltyUpdateDone = MutableLiveData<Boolean>()
     val paymentUpdateDone = MutableLiveData<Boolean>()
 

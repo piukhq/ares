@@ -3,13 +3,11 @@ package com.bink.wallet.scenes.payment_card_details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
-import com.bink.wallet.utils.DateTimeUtils
 import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
@@ -25,20 +23,20 @@ class PaymentCardsDetailsViewModel(
     val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val deleteRequest = MutableLiveData<ResponseBody>()
 
-    private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError: LiveData<Throwable>
+    private val _loadCardsError = MutableLiveData<Exception>()
+    val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
 
-    private val _linkError = MutableLiveData<Throwable>()
-    val linkError: LiveData<Throwable>
+    private val _linkError = MutableLiveData<Exception>()
+    val linkError: LiveData<Exception>
         get() = _linkError
 
-    private val _unlinkError = MutableLiveData<Throwable>()
-    val unlinkError: LiveData<Throwable>
+    private val _unlinkError = MutableLiveData<Exception>()
+    val unlinkError: LiveData<Exception>
         get() = _unlinkError
 
-    private var _deleteError = MutableLiveData<Throwable>()
-    val deleteError: LiveData<Throwable>
+    private var _deleteError = MutableLiveData<Exception>()
+    val deleteError: LiveData<Exception>
         get() = _deleteError
 
     fun linkPaymentCard(cardId: String, paymentCardId: String) {
@@ -66,12 +64,11 @@ class PaymentCardsDetailsViewModel(
     }
 
     fun getMembershipCards() {
-        val shouldMakePeriodicCall =
-            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    }
 
-        if (shouldMakePeriodicCall) {
-            loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
-        }
+    fun storePaymentCard(card: PaymentCard) {
+        paymentWalletRepository.storePaymentCard(card)
     }
 
     private fun updatePaymentCard(cardId: String) {

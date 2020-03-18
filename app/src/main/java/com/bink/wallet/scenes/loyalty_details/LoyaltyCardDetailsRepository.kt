@@ -21,7 +21,7 @@ class LoyaltyCardDetailsRepository(
     suspend fun deleteMembershipCard(
         id: String?,
         mutableDeleteCard: MutableLiveData<String>,
-        error: MutableLiveData<Throwable>
+        error: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
@@ -32,7 +32,7 @@ class LoyaltyCardDetailsRepository(
                     mutableDeleteCard.value = id
                 } catch (e: HttpException) {
                     error.value = e
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     error.value = e
                 }
             }
@@ -42,7 +42,7 @@ class LoyaltyCardDetailsRepository(
     fun refreshMembershipCard(
         cardId: String,
         membershipCard: MutableLiveData<MembershipCard>,
-        refreshError: MutableLiveData<Throwable>,
+        refreshError: MutableLiveData<Exception>,
         addError: Boolean
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -51,7 +51,7 @@ class LoyaltyCardDetailsRepository(
                 try {
                     val response = request.await()
                     membershipCard.value = response.first { card -> card.id == cardId }
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     if (addError)
                         refreshError.value = e
                 }
@@ -61,8 +61,8 @@ class LoyaltyCardDetailsRepository(
 
     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
-        localStoreError: MutableLiveData<Throwable>,
-        fetchError: MutableLiveData<Throwable>
+        localStoreError: MutableLiveData<Exception>,
+        fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getPaymentCardsAsync()
@@ -71,7 +71,7 @@ class LoyaltyCardDetailsRepository(
                     val response = request.await()
                     storePaymentsCards(response, localStoreError)
                     paymentCards.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     fetchError.value = e
                 }
             }
@@ -80,13 +80,13 @@ class LoyaltyCardDetailsRepository(
 
     fun getLocalPaymentCards(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Throwable>
+        localFetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     localPaymentCards.value = paymentCardDao.getAllAsync()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     localFetchError.value = e
                 }
             }
@@ -95,7 +95,7 @@ class LoyaltyCardDetailsRepository(
 
     private fun storePaymentsCards(
         cards: List<PaymentCard>,
-        storeError: MutableLiveData<Throwable>
+        storeError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -104,7 +104,7 @@ class LoyaltyCardDetailsRepository(
                         paymentCardDao.deleteAll()
                         paymentCardDao.storeAll(cards)
                     }
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     storeError.value = e
                 }
             }

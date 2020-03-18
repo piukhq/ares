@@ -67,8 +67,11 @@ object UtilFunctions {
         )
     }
 
-    fun hasCertificatePinningFailed(error: Throwable): Boolean {
-        return error.toString().contains(CERT_PINNING_ERROR)
+    fun hasCertificatePinningFailed(error: Exception): Boolean {
+        return error.toString().contains(CERT_PINNING_GENERAL_ERROR) ||
+                error.message?.contains(
+                    CERT_PINNING_GENERAL_ERROR
+                ) == true
     }
 
     fun showCertificatePinningDialog(context: Context) {

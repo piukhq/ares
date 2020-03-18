@@ -15,16 +15,11 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
-import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.facebook.login.LoginManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -211,7 +206,6 @@ class SettingsFragment :
 
             SettingsItemType.LOGOUT -> {
                 if (isNetworkAvailable(requireActivity(), true)) {
-                    LoginManager.getInstance().logOut()
                     requireContext().displayModalPopup(
                         getString(R.string.settings_menu_log_out),
                         getString(R.string.log_out_confirmation),
@@ -247,9 +241,14 @@ class SettingsFragment :
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
         LocalStoreUtils.clearPreferences(requireContext())
         try {
-            findNavController().navigateIfAdded(
-                this@SettingsFragment,
-                R.id.settings_to_onboarding
+            startActivity(
+                Intent(requireContext(), MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .apply {
+                        putSessionHandlerNavigationDestination(
+                            SESSION_HANDLER_DESTINATION_ONBOARDING
+                        )
+                    }
             )
         } catch (e: Exception) {
             (requireActivity() as MainActivity).restartApp()
