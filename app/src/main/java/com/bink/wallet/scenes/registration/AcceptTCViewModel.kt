@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.registration
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.auth.FacebookAuthRequest
@@ -15,22 +16,21 @@ class AcceptTCViewModel(
     val loyaltyWalletRepository: LoyaltyWalletRepository
 ) : BaseViewModel() {
 
+    val shouldLoadingBeVisible = ObservableBoolean(false)
+
     var facebookAuthResult = MutableLiveData<FacebookAuthResponse>()
-    var facebookAuthError = MutableLiveData<Throwable>()
+    var facebookAuthError = MutableLiveData<Exception>()
     var marketingPreferences = MutableLiveData<ResponseBody>()
-    var marketingError = MutableLiveData<Throwable>()
-    var shouldAcceptBeEnabledTC = MutableLiveData<Boolean>()
-    var shouldAcceptBeEnabledPrivacy = MutableLiveData<Boolean>()
+    var marketingError = MutableLiveData<Exception>()
+    val shouldAcceptBeEnabled = MutableLiveData<Boolean>()
 
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
-    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
-    val membershipPlanDatabaseLiveData =
-        loyaltyWalletRepository.liveDataDatabaseUpdated
+    val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        shouldAcceptBeEnabledTC.value = false
-        shouldAcceptBeEnabledPrivacy.value = false
+        shouldAcceptBeEnabled.value = false
     }
 
     fun authWithFacebook(facebookAuthRequest: FacebookAuthRequest) {
@@ -45,7 +45,7 @@ class AcceptTCViewModel(
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
             membershipPlanErrorLiveData,
-            false
+            membershipPlanDatabaseLiveData
         )
     }
 }

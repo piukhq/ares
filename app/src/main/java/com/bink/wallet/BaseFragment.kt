@@ -1,9 +1,11 @@
 package com.bink.wallet
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard
@@ -35,6 +38,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             requireActivity()
         )
     }
+
+    private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
@@ -102,5 +107,25 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 bundle
             )
         }
+    }
+
+    fun setupLayoutListener(container: View, onLayoutChange: (() -> Unit)) {
+        this.layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rec = Rect()
+            container.getWindowVisibleDisplayFrame(rec)
+            val screenHeight = container.rootView.height
+            val keypadHeight = screenHeight - rec.bottom
+            if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
+                onLayoutChange()
+            }
+        }
+    }
+
+    fun registerLayoutListener(container: View) {
+        container.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+    }
+
+    fun removeLayoutListener(container: View) {
+        container.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
     }
 }

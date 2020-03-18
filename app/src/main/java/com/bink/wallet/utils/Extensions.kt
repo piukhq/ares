@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
@@ -19,8 +20,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.utils.enums.BuildTypes
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.util.Locale
+
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -79,6 +86,76 @@ fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (t: T) -> Un
     })
 }
 
+fun LiveData<Exception>.observeErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner,
+    defaultErrorTitle: String,
+    defaultErrorMessage: String,
+    isUserDriven: Boolean,
+    observer: ((t: Exception) -> Unit)?
+) {
+    this.observe(owner, Observer {
+        it?.let {
+            if (((it is HttpException)
+                        && it.code() >= ApiErrorUtils.SERVER_ERROR)
+                || it is SocketTimeoutException
+            ) {
+                context.displayModalPopup(
+                    context.getString(R.string.error_server_down_title),
+                    context.getString(R.string.error_server_down_message)
+                )
+            } else if (UtilFunctions.hasCertificatePinningFailed(it) &&
+                isUserDriven
+            ) {
+                UtilFunctions.showCertificatePinningDialog(context)
+            } else {
+                if (defaultErrorTitle.isNotEmpty() || defaultErrorMessage.isNotEmpty()) {
+                    context.displayModalPopup(
+                        defaultErrorTitle,
+                        defaultErrorMessage
+                    )
+                }
+            }
+        }
+
+        observer?.let { safeObserver ->
+            it?.let(safeObserver)
+        }
+    })
+}
+
+fun LiveData<Exception>.observeErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner,
+    isUserDriven: Boolean,
+    observer: ((t: Exception) -> Unit)?
+) = observeErrorNonNull(context, owner, "", "", isUserDriven, observer)
+
+fun LiveData<Exception>.observeErrorNonNull(
+    context: Context,
+    isUserDriven: Boolean,
+    owner: LifecycleOwner
+) = observeErrorNonNull(context, owner, "", "", isUserDriven, null)
+
+fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
+    context: Context,
+    owner: LifecycleOwner,
+    defaultErrorTitle: String,
+    defaultErrorMessage: String,
+    isUserDriven: Boolean,
+    observer: ((t: Exception) -> Unit)?
+) {
+    if (UtilFunctions.isNetworkAvailable(context, true)) {
+        observeErrorNonNull(
+            context,
+            owner,
+            defaultErrorTitle,
+            defaultErrorMessage,
+            isUserDriven,
+            observer
+        )
+    }
+}
 
 fun Boolean?.toInt() = if (this != null && this) 1 else 0
 
@@ -194,5 +271,23 @@ fun CardBalance?.formatBalance(): String {
     } else {
         this?.prefix?.plus(balanceValue.toInt())
             .toString()
+    }
+}
+
+fun logError(tag: String?, message: String?, exception: Exception? = null) {
+    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        tag?.let {
+            message?.let {
+                Log.e(tag, message, exception)
+            }
+        }
+    }
+}
+
+fun logDebug(tag: String?, message: String?) {
+    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        message?.let {
+            Log.d(tag, it)
+        }
     }
 }

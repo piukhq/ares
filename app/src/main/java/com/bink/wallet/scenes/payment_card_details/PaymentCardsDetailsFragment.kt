@@ -12,11 +12,14 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
-import com.bink.wallet.utils.UtilFunctions.hasCertificatePinningFailed
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.SCROLL_DELAY
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,7 +60,8 @@ class PaymentCardsDetailsFragment :
 
         binding.paymentCardDetail = viewModel.paymentCard.value
         viewModel.membershipCardData.value?.let {
-            binding.paymentHeader.membershipCardsWrapper = MembershipCardListWrapper(it.toMutableList())
+            binding.paymentHeader.membershipCardsWrapper =
+                MembershipCardListWrapper(it.toMutableList())
         }
         binding.footerSecurity.setOnClickListener {
             val action =
@@ -158,25 +162,26 @@ class PaymentCardsDetailsFragment :
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
-        viewModel.deleteError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                EMPTY_STRING,
-                getString(R.string.card_error_dialog)
-            )
-        }
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this,
+            EMPTY_STRING,
+            getString(R.string.card_error_dialog),
+            true,
+            null
+        )
 
         viewModel.paymentCard.observeNonNull(this) {
             binding.paymentCardDetail = it
 
+            viewModel.storePaymentCard(it)
+
             viewModel.getMembershipCards()
         }
 
-        viewModel.linkError.observeNonNull(this) {
-            hasCertificatePinningFailed(it, requireContext())
-        }
-        viewModel.unlinkError.observeNonNull(this) {
-            hasCertificatePinningFailed(it, requireContext())
-        }
+        viewModel.linkError.observeErrorNonNull(requireContext(), true, this)
+
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
     }
 
     override fun onPause() {

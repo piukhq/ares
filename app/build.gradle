@@ -12,7 +12,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "1000000002"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20000000"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
 
@@ -52,7 +52,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {

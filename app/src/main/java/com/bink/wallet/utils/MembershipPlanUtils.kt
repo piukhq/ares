@@ -58,6 +58,9 @@ object MembershipPlanUtils {
                         ) {
                             return LoginStatus.STATUS_LOGIN_FAILED
                         }
+                        if (!reasonCodes.intersect(listOf(CardCodes.X105.code)).isNullOrEmpty()) {
+                            return LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD
+                        }
                         if (reasonCodes.isNullOrEmpty()) {
                             return LoginStatus.STATUS_NO_REASON_CODES
                         }
@@ -99,8 +102,16 @@ object MembershipPlanUtils {
                         return LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING
                     }
                     FAILED.status -> {
+                        var isGhostCard = false
+
+                        membershipCard.status?.reason_codes?.forEach { reasonCode ->
+                            isGhostCard = reasonCode == CardCodes.X105.name
+                        }
+
                         return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
                             LinkStatus.STATUS_NO_REASON_CODES
+                        } else if (isGhostCard) {
+                            LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD
                         } else {
                             LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
                         }

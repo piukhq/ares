@@ -26,17 +26,17 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
     val linkStatus = MutableLiveData<LinkStatus>()
 
     // Error region
-    private val _refreshError = MutableLiveData<Throwable>()
-    val refreshError: LiveData<Throwable>
+    private val _refreshError = MutableLiveData<Exception>()
+    val refreshError: LiveData<Exception>
         get() = _refreshError
-    private val _deleteError = MutableLiveData<Throwable>()
-    val deleteError: LiveData<Throwable>
+    private val _deleteError = MutableLiveData<Exception>()
+    val deleteError: LiveData<Exception>
         get() = _deleteError
-    private val _paymentCardsFetchError = MutableLiveData<Throwable>()
-    val paymentCardsFetchError: LiveData<Throwable>
+    private val _paymentCardsFetchError = MutableLiveData<Exception>()
+    val paymentCardsFetchError: LiveData<Exception>
         get() = _paymentCardsFetchError
-    private val _localPaymentStoreError = MutableLiveData<Throwable>()
-    val localPaymentStoreError: LiveData<Throwable>
+    private val _localPaymentStoreError = MutableLiveData<Exception>()
+    val localPaymentStoreError: LiveData<Exception>
         get() = _localPaymentStoreError
 
     //Merger Region

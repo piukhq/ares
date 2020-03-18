@@ -1,6 +1,5 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
@@ -17,6 +16,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class AddPaymentCardRepository(
         card: PaymentCardAdd,
         cardNumber: String,
         mutableAddCard: MutableLiveData<PaymentCard>,
-        error: MutableLiveData<Throwable>
+        error: MutableLiveData<Exception>
     ) {
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
@@ -53,7 +53,7 @@ class AddPaymentCardRepository(
             }
 
             if (spreedlyEnvironmentKey == null) {
-                error.value = Throwable(spreedlyKeyMissingError)
+                error.value = Exception(spreedlyKeyMissingError)
                 return
             }
 
@@ -80,7 +80,7 @@ class AddPaymentCardRepository(
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
                         doAddPaymentCard(card, mutableAddCard, error)
-                    } catch (e: Throwable) {
+                    } catch (e: Exception) {
                         error.value = e
                     }
                 }
@@ -96,7 +96,7 @@ class AddPaymentCardRepository(
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
                 } catch (e: Throwable) {
-                    Log.d(AddPaymentCardRepository::class.simpleName, e.toString())
+                    logDebug(AddPaymentCardRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -109,7 +109,7 @@ class AddPaymentCardRepository(
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
                 } catch (e: Throwable) {
-                    Log.d(AddPaymentCardRepository::class.simpleName, e.toString())
+                    logDebug(AddPaymentCardRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -118,7 +118,7 @@ class AddPaymentCardRepository(
     private fun doAddPaymentCard(
         card: PaymentCardAdd,
         mutableAddCard: MutableLiveData<PaymentCard>,
-        error: MutableLiveData<Throwable>
+        error: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.addPaymentCardAsync(card)
@@ -127,7 +127,7 @@ class AddPaymentCardRepository(
                     val response = request.await()
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     error.value = e
                 }
             }

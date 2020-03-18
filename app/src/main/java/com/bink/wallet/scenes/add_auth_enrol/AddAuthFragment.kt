@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,17 +19,19 @@ import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
+
+import java.net.SocketTimeoutException
 
 
 class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>() {
@@ -51,16 +54,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     }
 
     private var isPaymentWalletEmpty: Boolean? = null
-
     private var isRetryJourney = false
-
     private var isFromNoReasonCodes = false
-
     private var membershipCardId: String? = null
-
+    private val singleBottomMargin = 48
     private val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
-
     private val planBooleanFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
@@ -76,15 +75,13 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 viewModel.currentMembershipPlan.value?.has_vouchers?.let {
                     if (it) {
                         if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
-                            val email =
-                                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                                    ?.let {
-                                        it
+                            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                                ?.let { email ->
+                                    with(pairPlanField) {
+                                        second.disabled = true
+                                        second.value = email
                                     }
-                            with(pairPlanField) {
-                                second.disabled = true
-                                second.value = email
-                            }
+                                }
                         }
                     }
                 }
@@ -115,6 +112,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        binding.toolbar.setNavigationOnClickListener {
+            view?.hideKeyboard()
+            windowFullscreenHandler.toNormalScreen()
+            findNavController().navigateUp()
+        }
+
         with(args) {
             viewModel.currentMembershipPlan.value = currentMembershipPlan
             this@AddAuthFragment.membershipCardId = membershipCardId
@@ -135,24 +138,22 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
         binding.item = viewModel.currentMembershipPlan.value
 
-
-        binding.cancel.setOnClickListener {
+        binding.buttonCancel.setOnClickListener {
             view?.hideKeyboard()
             windowFullscreenHandler.toNormalScreen()
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            findNavController().navigate(AddAuthFragmentDirections.globalToHome())
         }
 
-        binding.close.setOnClickListener {
-            view?.hideKeyboard()
-            windowFullscreenHandler.toNormalScreen()
-            findNavController().popBackStack()
-        }
 
         runBlocking {
-            viewModel.getPaymentCards()
+            if (isNetworkAvailable(requireContext(), false)) {
+                viewModel.getPaymentCards()
+            } else {
+                viewModel.getLocalPaymentCards()
+            }
         }
 
-        viewModel.paymentCards.observeNonNull(this) { paymentCards ->
+        viewModel.paymentCardsMerger.observeNonNull(this) { paymentCards ->
             isPaymentWalletEmpty = paymentCards.isNullOrEmpty()
         }
 
@@ -188,12 +189,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
         }
 
-        viewModel.fetchCardsError.observeNonNull(this) {
-            requireContext().displayModalPopup(
-                getString(R.string.error_title),
-                getString(R.string.error_description)
-            )
-        }
+        viewModel.fetchCardsError.observeErrorNonNull(requireContext(), this, false) {}
 
         when (signUpFormType) {
             SignUpFormType.ADD_AUTH -> {
@@ -259,6 +255,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             }
             SignUpFormType.ENROL -> {
                 with(binding) {
+                    changeConstraints()
                     noAccountText.visibility = View.GONE
                     titleAddAuthText.text = getString(R.string.sign_up_enrol)
                     addCardButton.text = getString(R.string.sign_up_text)
@@ -282,6 +279,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
 
             }
             SignUpFormType.GHOST -> {
+                changeConstraints()
                 binding.noAccountText.visibility = View.GONE
                 binding.titleAddAuthText.text = getString(R.string.register_ghost_card_title)
                 binding.addCardButton.text = getString(R.string.register_ghost_card_button)
@@ -301,9 +299,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                             addFieldToList(it)
                         }
                     }
-
                 }
-
             }
         }
 
@@ -439,10 +435,20 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
                 }
                 else -> {
-                    requireContext().displayModalPopup(
-                        getString(R.string.add_card_error_title),
-                        getString(R.string.add_card_error_message)
-                    )
+                    if (((exception is HttpException)
+                                && exception.code() >= ApiErrorUtils.SERVER_ERROR)
+                        || exception is SocketTimeoutException
+                    ) {
+                        requireContext().displayModalPopup(
+                            requireContext().getString(R.string.error_server_down_title),
+                            requireContext().getString(R.string.error_server_down_message)
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.add_card_error_title),
+                            getString(R.string.add_card_error_message)
+                        )
+                    }
                 }
             }
             hideLoadingViews()
@@ -512,22 +518,33 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     return@setOnClickListener
                                 }
 
-                                val currentRequest = MembershipCardRequest(
-                                    Account(
-                                        addRegisterFieldsRequest.add_fields,
-                                        null,
-                                        null,
-                                        null,
-                                        null
-                                    ),
-                                    membershipPlan.id
-                                )
+                                val currentRequest: MembershipCardRequest
 
                                 if (isRetryJourney && !membershipCardId.isNullOrEmpty()) {
+                                    currentRequest = MembershipCardRequest(
+                                        Account(
+                                            null,
+                                            null,
+                                            null,
+                                            addRegisterFieldsRequest.registration_fields,
+                                            null
+                                        ),
+                                        membershipPlan.id
+                                    )
                                     membershipCardId?.let {
-                                        viewModel.updateMembershipCard(it, currentRequest)
+                                        viewModel.ghostMembershipCard(it, currentRequest)
                                     }
                                 } else {
+                                    currentRequest = MembershipCardRequest(
+                                        Account(
+                                            addRegisterFieldsRequest.add_fields,
+                                            null,
+                                            null,
+                                            null,
+                                            null
+                                        ),
+                                        membershipPlan.id
+                                    )
                                     viewModel.createMembershipCard(
                                         currentRequest
                                     )
@@ -584,10 +601,12 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     ),
                     viewModel.currentMembershipPlan.value?.id
                 )
-                viewModel.ghostMembershipCard(
-                    membershipCard,
-                    currentRequest
-                )
+                if (!isRetryJourney) {
+                    viewModel.ghostMembershipCard(
+                        membershipCard.id,
+                        currentRequest
+                    )
+                }
             }
 
             when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
@@ -679,5 +698,18 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                 REGISTRATION_FORM_VIEW
             }
         }
+    }
+
+    private fun changeConstraints() {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.root)
+        constraintSet.connect(
+            R.id.add_card_button,
+            ConstraintSet.TOP,
+            R.id.auth_add_fields,
+            ConstraintSet.BOTTOM,
+            singleBottomMargin
+        )
+        constraintSet.applyTo(binding.root)
     }
 }

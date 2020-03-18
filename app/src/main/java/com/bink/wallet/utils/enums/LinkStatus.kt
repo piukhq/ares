@@ -62,5 +62,12 @@ enum class LinkStatus(
         R.drawable.ic_lcd_module_icons_points_login,
         R.string.error_title,
         R.string.description_please_try_again
+    ),
+    STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD(
+        3.0f,
+        R.drawable.ic_lcd_module_icons_points_login,
+        R.string.loyalty_card_details_register,
+        R.string.description_please_try_again
     )
+
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
@@ -34,7 +35,10 @@ class LoyaltyCardDetailsFragment :
     }
 
     companion object {
-        const val MAX_ALPHA = 127f
+        // The reason the max is 248, is because the alpha of our toolbar background requires
+        // a value up to 255. The opacity we've received from designers is 97%, so 3% of 255
+        // leaves us with 248.
+        const val MAX_ALPHA = 248f
         const val MIN_ALPHA = 0f
         const val MIN_DIST = 0
         const val MAX_DIST = 650
@@ -42,6 +46,7 @@ class LoyaltyCardDetailsFragment :
 
     private var scrollY = 0
     private var isFromPll = false
+    private var isAnimating = false
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -63,12 +68,12 @@ class LoyaltyCardDetailsFragment :
             val tiles = arrayListOf<String>()
             viewModel.apply {
                 membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+                membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipPlan.value?.images
                     ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
-                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
-                membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             }
         }
 
@@ -78,7 +83,7 @@ class LoyaltyCardDetailsFragment :
         handleFootersListeners()
 
         val colorDrawable =
-            ColorDrawable(ContextCompat.getColor(requireContext(), R.color.cool_grey))
+            ColorDrawable(ContextCompat.getColor(requireContext(), android.R.color.white))
         colorDrawable.alpha = MIN_ALPHA.toInt()
         binding.toolbar.background = colorDrawable
 
@@ -97,10 +102,26 @@ class LoyaltyCardDetailsFragment :
             val scrollValue = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
+
+            if (scrollValue == 0) {
+                isAnimating = false
+                binding.containerToolbarTitle.visibility = View.GONE
+            }
+
             colorDrawable.alpha = scrollValue
             if (scrollValue == MAX_ALPHA.toInt()) {
                 viewModel.membershipPlan.value?.account?.company_name?.let { name ->
                     binding.toolbarTitle.text = name
+                    if (!isAnimating) {
+                        isAnimating = true
+                        binding.containerToolbarTitle.visibility = View.VISIBLE
+                        binding.containerToolbarTitle.startAnimation(
+                            AnimationUtils.loadAnimation(
+                                requireContext(),
+                                android.R.anim.fade_in
+                            )
+                        )
+                    }
                 }
                 var voucherTitle = false
                 viewModel.membershipCard.value?.let { it ->
@@ -135,6 +156,8 @@ class LoyaltyCardDetailsFragment :
                 viewModel.updateMembershipCard(true)
             } else {
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                viewModel.setAccountStatus()
+                viewModel.setLinkStatus()
                 setLoadingState(false)
             }
         }
@@ -222,31 +245,27 @@ class LoyaltyCardDetailsFragment :
             configureLoginStatus(status)
         }
 
-        viewModel.deleteError.observeNonNull(this@LoyaltyCardDetailsFragment) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                with(viewModel.deleteError) {
-                    if (value is HttpException) {
-                        val error = value as HttpException
-                        requireContext().displayModalPopup(
-                            getString(R.string.title_2_4),
-                            getString(
-                                R.string.description_2_4,
-                                error.code().toString(),
-                                error.localizedMessage
-                            )
-                        )
-                    } else {
-                        requireContext().displayModalPopup(
-                            getString(R.string.title_2_4),
-                            getString(R.string.loyalty_card_delete_error_message)
-                        )
-                    }
-                }
-            }
-        }
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this@LoyaltyCardDetailsFragment,
+            getString(R.string.title_2_4),
+            getString(
+                R.string.description_2_4,
+                viewModel.deleteError.value?.cause?.message,
+                viewModel.deleteError.value?.localizedMessage
+            ),
+            true
+        ) {}
+
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
+
+        viewModel.refreshError.observeErrorNonNull(
+            requireContext(),
+            true,
+            this@LoyaltyCardDetailsFragment
+        )
     }
 
     private fun fetchData() {
@@ -616,6 +635,20 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+                LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            findNavController().navigate(
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.GHOST,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            )
+                        }
+                    }
+                }
                 LinkStatus.STATUS_NO_REASON_CODES -> {
                     viewModel.membershipPlan.value?.let {
                         val directions =
@@ -708,19 +741,25 @@ class LoyaltyCardDetailsFragment :
                     pendingCardStatusModal()
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    genericModalParameters = GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.title_1_5),
-                        getString(R.string.description_1_5)
-                    )
-                    val action =
-                        genericModalParameters.let { params ->
-                            LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                params
-                            )
-                        }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                    viewModel.membershipPlan.value?.let {
+                        genericModalParameters = GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            getString(R.string.title_1_5),
+                            getString(R.string.description_1_5_part_1, it.account?.plan_name),
+                            "",
+                            "",
+                            "",
+                            getString(R.string.description_1_5_part_2)
+                        )
+                        val action =
+                            genericModalParameters.let { params ->
+                                LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                                    params
+                                )
+                            }
+                        action.let { findNavController().navigateIfAdded(this, action) }
+                    }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
@@ -748,6 +787,20 @@ class LoyaltyCardDetailsFragment :
                                 isFromNoReasonCodes = true
                             )
                         findNavController().navigateIfAdded(this, directions)
+                    }
+                }
+                LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.GHOST,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 else -> {

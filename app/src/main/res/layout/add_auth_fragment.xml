@@ -16,128 +16,137 @@
 
         <Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:navigationIcon="@drawable/ic_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-                android:id="@+id/close"
-                style="?actionButtonStyle"
+        <Button
+                android:id="@+id/button_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_close"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <TextView
-                android:id="@+id/cancel"
-                style="?actionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:foreground="?selectableItemBackground"
                 android:text="@string/cancel_text"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_medium"
+                app:layout_constraintBottom_toBottomOf="@id/toolbar"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
                 tools:ignore="ContentDescription" />
 
-        <com.bink.wallet.ModalBrandHeader
-                android:id="@+id/add_join_reward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:membershipPlan="@{item}" />
-
-        <TextView
-                android:id="@+id/title_add_auth_text"
-                style="@style/TitleTextView"
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:text="@string/log_in_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_join_reward" />
-
-        <TextView
-                android:id="@+id/description_add_auth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:letterSpacing="0"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
-
-        <ProgressBar
-                android:id="@+id/progress_spinner"
-                style="@style/ProgressSpinner"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/toolbar"
-                tools:visibility="visible" />
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/auth_add_fields"
-                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                app:layout_constraintBottom_toTopOf="@+id/add_card_button"
-                app:layout_constraintTop_toBottomOf="@+id/description_add_auth"
-                tools:itemCount="3"
-                tools:listitem="@layout/add_auth_text_item" />
-
-        <Button
-                android:id="@+id/add_card_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_extra_large"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                android:background="@drawable/gradient_button_selector"
-                android:text="@string/sign_up_text"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/no_account_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/auth_add_fields" />
-
-        <Button
-                android:id="@+id/no_account_text"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                android:foreground="?selectableItemBackground"
-                android:text="@string/no_account_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline"
+                android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <com.bink.wallet.ModalBrandHeader
+                        android:id="@+id/add_join_reward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:membershipPlan="@{item}" />
+
+                <TextView
+                        android:id="@+id/title_add_auth_text"
+                        style="@style/TitleTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:text="@string/log_in_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/add_join_reward" />
+
+                <TextView
+                        android:id="@+id/description_add_auth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:letterSpacing="0"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/size_sub_headline"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text" />
+
+                <ProgressBar
+                        android:id="@+id/progress_spinner"
+                        style="@style/ProgressSpinner"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginBottom="@dimen/margin_padding_size_small"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/auth_add_fields"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginBottom="@dimen/margin_padding_size_small"
+                        android:scrollIndicators="none"
+                        android:scrollbars="none"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintVertical_bias="0"
+                        app:layout_constraintTop_toBottomOf="@+id/description_add_auth"
+                        tools:itemCount="3"
+                        tools:listitem="@layout/add_auth_text_item" />
+
+                <Button
+                        android:id="@+id/add_card_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_extra_large"
+                        android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
+                        android:background="@drawable/gradient_button_selector"
+                        android:text="@string/sign_up_text"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toTopOf="@+id/no_account_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                <Button
+                        android:id="@+id/no_account_text"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:foreground="?selectableItemBackground"
+                        android:text="@string/no_account_text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/size_sub_headline"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,7 +2,6 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
@@ -41,7 +40,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             )?.replace("\n","")?.trim()
 
         jwtToken?.let {
-            Log.d("NetworkModule", jwtToken)
+            logError("NetworkModule", jwtToken)
         }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
@@ -52,7 +51,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         val response = chain.proceed(newRequest)
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
-            LocalStoreUtils.clearPreferences()
+            LocalStoreUtils.clearPreferences(appContext)
             appContext.startActivity(
                 Intent(appContext, MainActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

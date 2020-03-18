@@ -24,7 +24,6 @@ import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-
 @Suppress("DEPRECATION")
 class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentBinding>() {
     override val layoutRes: Int
@@ -48,6 +47,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         FacebookSdk.sdkInitialize(context)
         LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
         callbackManager = CallbackManager.Factory.create()
+        clearFacebookLogin()
     }
 
     override fun onResume() {
@@ -90,8 +90,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
 
         binding.logInEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_log_in)
-
+            if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
+                findNavController().navigateIfAdded(
+                    this,
+                    OnboardingFragmentDirections.onboardingToLogIn()
+                )
+            }
             logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
         }
 
@@ -133,8 +137,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             }
         }
         binding.signUpWithEmail.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.onboarding_to_sign_up)
-
+            if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
+                findNavController().navigateIfAdded(
+                    this,
+                    OnboardingFragmentDirections.onboardingToSignUp()
+                )
+            }
             logEvent(
                 getFirebaseIdentifier(
                     ONBOARDING_VIEW,
@@ -231,6 +239,16 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             directions.let { _ ->
                 directions?.let { findNavController().navigateIfAdded(this, it) }
             }
+        }
+    }
+
+    // There is a scenario in which a user logs in with Facebook, but then does not accept
+    // terms and conditions (force quits the app). If the user returns to the app the Facebook
+    // login button will show 'Log Out' which is a bug. So this is just a safety check
+    // to log the user out of Facebook in that case.
+    private fun clearFacebookLogin() {
+        if (AccessToken.getCurrentAccessToken() != null) {
+            LoginManager.getInstance().logOut()
         }
     }
 }

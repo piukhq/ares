@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
+import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
 import kotlinx.coroutines.launch
@@ -33,20 +34,20 @@ class LoyaltyViewModel constructor(
     val localPaymentCards: LiveData<List<PaymentCard>>
         get() = _localPaymentCards
     val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
-    private val _addError = MutableLiveData<Throwable>()
-    val addError: LiveData<Throwable>
+    private val _addError = MutableLiveData<Exception>()
+    val addError: LiveData<Exception>
         get() = _addError
-    private val _fetchError = MutableLiveData<Throwable>()
-    val fetchError: LiveData<Throwable>
+    private val _fetchError = MutableLiveData<Exception>()
+    val fetchError: LiveData<Exception>
         get() = _fetchError
-    private val _loadPlansError = MutableLiveData<Throwable>()
-    val loadPlansError: MutableLiveData<Throwable>
+    private val _loadPlansError = MutableLiveData<Exception>()
+    val loadPlansError: MutableLiveData<Exception>
         get() = _loadPlansError
-    private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError: LiveData<Throwable>
+    private val _loadCardsError = MutableLiveData<Exception>()
+    val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
-    private val _deleteCardError = MutableLiveData<Throwable>()
-    val deleteCardError: MutableLiveData<Throwable>
+    private val _deleteCardError = MutableLiveData<Exception>()
+    val deleteCardError: MutableLiveData<Exception>
         get() = _deleteCardError
     private val _cardsDataMerger = MediatorLiveData<UserDataResult>()
     val cardsDataMerger: LiveData<UserDataResult>
@@ -54,6 +55,7 @@ class LoyaltyViewModel constructor(
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
+    //todo Remove the localCardsDataMerger. Use cardsDataMerger instead.
     private val _localCardsDataMerger = MediatorLiveData<UserDataResult>()
     val localCardsDataMerger: LiveData<UserDataResult>
         get() = _localCardsDataMerger
@@ -145,6 +147,16 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
     }
 
+    fun fetchPeriodicMembershipCards() {
+        val shouldMakePeriodicCall =
+            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
+        if (shouldMakePeriodicCall) {
+            fetchMembershipCards()
+        } else {
+            fetchLocalMembershipCards(true)
+        }
+    }
+
     fun fetchMembershipPlans(fromPersistence: Boolean) {
         viewModelScope.launch {
             loyaltyWalletRepository.retrieveMembershipPlans(
@@ -155,8 +167,12 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun fetchLocalMembershipCards() {
-        loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
+    fun fetchLocalMembershipCards(isFromPeriodicCall: Boolean) {
+        if (isFromPeriodicCall) {
+            loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
+        } else {
+            loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
+        }
     }
 
     fun fetchLocalMembershipPlans() {

@@ -61,6 +61,7 @@
                     android:layout_marginTop="@dimen/margin_padding_size_small">
 
                 <ImageView
+                        android:id="@+id/bottom_navigation_plus"
                         android:layout_width="@dimen/add_button_size"
                         android:layout_height="@dimen/add_button_size"
                         android:layout_marginStart="@dimen/margin_padding_size_small"
