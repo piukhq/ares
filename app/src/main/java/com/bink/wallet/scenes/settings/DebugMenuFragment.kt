@@ -43,9 +43,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             recycler.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        viewModel.logOutResponse.observeNonNull(this) {
-
-        }
+        viewModel.logOutResponse.observeNonNull(this) {}
     }
 
     private fun onDebugItemClick(item: DebugItem) {
@@ -65,8 +63,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         val items =
             arrayOf<CharSequence>(
                 ApiVersion.DEV.name,
-                ApiVersion.STAGING.name,
-                ApiVersion.DAEDALUS.name
+                ApiVersion.STAGING.name
             )
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
