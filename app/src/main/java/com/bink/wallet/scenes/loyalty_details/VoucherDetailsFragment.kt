@@ -51,7 +51,7 @@ class VoucherDetailsFragment :
             with(binding.recycler) {
                 layoutManager = LinearLayoutManager(requireContext())
                 val vouchers = listOf(voucher)
-                adapter = LoyaltyCardDetailsVouchersAdapter(vouchers)
+                adapter = VouchersAdapter(vouchers)
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->

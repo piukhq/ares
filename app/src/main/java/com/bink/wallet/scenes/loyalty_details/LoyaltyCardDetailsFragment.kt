@@ -23,7 +23,8 @@ import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+import retrofit2.HttpException
+import java.util.Calendar
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -821,17 +822,16 @@ class LoyaltyCardDetailsFragment :
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             viewModel.membershipCard.value?.vouchers?.filter {
-                listOf(
-                    VoucherStates.IN_PROGRESS.state,
-                    VoucherStates.ISSUED.state
-                ).contains(it.state)
+                it.state == VoucherStates.IN_PROGRESS.state ||
+                        it.state == VoucherStates.ISSUED.state
             }?.let { vouchers ->
-                adapter = LoyaltyCardDetailsVouchersAdapter(
-                    vouchers,
-                    onClickListener = { thisVoucher ->
-                        viewVoucherDetails(thisVoucher as Voucher)
+                adapter = VouchersAdapter(
+                    vouchers
+                ).apply {
+                    setOnVoucherClickListener { voucher ->
+                        viewVoucherDetails(voucher)
                     }
-                )
+                }
             }
         }
     }

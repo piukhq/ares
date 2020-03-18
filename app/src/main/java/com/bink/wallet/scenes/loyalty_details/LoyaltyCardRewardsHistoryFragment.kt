@@ -21,6 +21,7 @@ class LoyaltyCardRewardsHistoryFragment :
             .shouldDisplayBack(requireActivity())
             .build()
     }
+
     override val viewModel: LoyaltyCardRewardsHistoryViewModel by viewModel()
     override val layoutRes: Int
         get() = R.layout.loyalty_card_rewards_history
@@ -40,7 +41,7 @@ class LoyaltyCardRewardsHistoryFragment :
     }
 
     private fun setupVouchers() {
-        with (binding.recycler) {
+        with(binding.recycler) {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             isNestedScrollingEnabled = true
@@ -56,11 +57,13 @@ class LoyaltyCardRewardsHistoryFragment :
                     it.expiry_date
                 }
             }?.let { vouchers ->
-                adapter = LoyaltyCardDetailsVouchersAdapter(vouchers,
-                        onClickListener = { thisVoucher ->
-                           viewVoucherDetails(thisVoucher as Voucher)
-                        }
-                )
+                adapter = VouchersAdapter(
+                    vouchers
+                ).apply {
+                    setOnVoucherClickListener { voucher ->
+                        viewVoucherDetails(voucher)
+                    }
+                }
             }
         }
     }
