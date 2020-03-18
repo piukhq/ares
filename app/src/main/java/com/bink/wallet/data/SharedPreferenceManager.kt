@@ -37,7 +37,7 @@ object SharedPreferenceManager {
     }
 
     var storedApiUrl: String?
-        get() = preferences.getString(API_VERSION, ApiVersion.DEV.url)
+        get() = preferences.getString(API_VERSION, null)
         set(value) = preferences.edit {
             it.putString(API_VERSION, value)
         }

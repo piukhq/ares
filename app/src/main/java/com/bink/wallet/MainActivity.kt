@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -105,11 +106,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun forceRunApp() {
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
-        launchIntent?.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        finishAffinity()
-        startActivity(launchIntent)
-        exitProcess(0)
+        Handler().postDelayed({
+            val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+            launchIntent?.addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        or Intent.FLAG_ACTIVITY_NEW_TASK
+            )
+            finishAffinity()
+            startActivity(launchIntent)
+            exitProcess(0)
+        }, 1000)
     }
 
     private fun getMembershipPlans() {

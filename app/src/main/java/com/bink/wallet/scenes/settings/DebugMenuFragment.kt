@@ -76,10 +76,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             when (selection) {
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
-                2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
             }
             viewModel.logOut()
             (requireActivity() as MainActivity).forceRunApp()
+
         }
         adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()

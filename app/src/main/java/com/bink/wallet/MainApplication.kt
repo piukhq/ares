@@ -17,7 +17,6 @@ class MainApplication : Application() {
         startKoin {
             androidContext(this@MainApplication)
             SharedPreferenceManager.init(this@MainApplication)
-
             if (SharedPreferenceManager.storedApiUrl.isNullOrEmpty()) {
                 SharedPreferenceManager.storedApiUrl = ApiConstants.BASE_URL
             } else {
@@ -25,5 +24,9 @@ class MainApplication : Application() {
             }
             modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
         }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
     }
 }
