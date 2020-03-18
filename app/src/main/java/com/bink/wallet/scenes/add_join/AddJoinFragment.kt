@@ -150,15 +150,30 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            currentMembershipPlan?.let {
-                val action = AddJoinFragmentDirections.addJoinToGhost(
-                    SignUpFormType.ADD_AUTH,
-                    it,
-                    isRetryJourney,
-                    membershipCardId,
-                    isFromNoReasonCodes
+            if (!viewModel.paymentCards.value.isNullOrEmpty()) {
+                currentMembershipPlan?.let {
+                    findNavController().navigate(
+                        AddJoinFragmentDirections.addJoinToGhost(
+                            SignUpFormType.ADD_AUTH,
+                            it,
+                            isRetryJourney,
+                            membershipCardId,
+                            isFromNoReasonCodes
+                        )
+                    )
+                }
+            } else {
+                findNavController().navigate(
+                    AddJoinFragmentDirections.actionAddJoinToPaymentCardNeededFragment(
+                        GenericModalParameters(
+                            R.drawable.ic_back,
+                            false,
+                            getString(R.string.native_join_no_payment_cards_title),
+                            getString(R.string.native_join_no_payment_cards_description),
+                            firstButtonText = getString(R.string.payment_card_needed_button_text)
+                        )
+                    )
                 )
-                findNavController().navigateIfAdded(this, action)
             }
 
             logEvent(getFirebaseIdentifier(STORE_LINK_VIEW, binding.addCardButton.text.toString()))
