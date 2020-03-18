@@ -150,19 +150,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            if (!viewModel.paymentCards.value.isNullOrEmpty()) {
-                currentMembershipPlan?.let {
-                    findNavController().navigate(
-                        AddJoinFragmentDirections.addJoinToGhost(
-                            SignUpFormType.ADD_AUTH,
-                            it,
-                            isRetryJourney,
-                            membershipCardId,
-                            isFromNoReasonCodes
-                        )
-                    )
-                }
-            } else {
+            if (currentMembershipPlan?.feature_set?.has_vouchers == true &&
+                viewModel.paymentCards.value.isNullOrEmpty()
+            ) {
                 findNavController().navigate(
                     AddJoinFragmentDirections.actionAddJoinToPaymentCardNeededFragment(
                         GenericModalParameters(
@@ -174,6 +164,19 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                         )
                     )
                 )
+            } else {
+                currentMembershipPlan?.let {
+                    findNavController().navigate(
+                        AddJoinFragmentDirections.addJoinToGhost(
+                            SignUpFormType.ADD_AUTH,
+                            it,
+                            isRetryJourney,
+                            membershipCardId,
+                            isFromNoReasonCodes
+                        )
+                    )
+                }
+
             }
 
             logEvent(getFirebaseIdentifier(STORE_LINK_VIEW, binding.addCardButton.text.toString()))
@@ -209,7 +212,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             }
                         }
                         AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
-                    } else if (membershipPlan.has_vouchers == true &&
+                    } else if (membershipPlan.feature_set?.has_vouchers == true &&
                         viewModel.paymentCards.value.isNullOrEmpty()
                     ) {
                         AddJoinFragmentDirections.actionAddJoinToPaymentCardNeededFragment(
