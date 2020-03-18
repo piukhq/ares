@@ -111,18 +111,26 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
         }
+        mainViewModel.isLoading.value?.let {
+            if (it) {
+                binding.swipeLayout.isRefreshing = true
+            }
+        }
         viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
             setCardsData(localUserDataResult)
         }
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
-            binding.swipeLayout.isRefreshing = true
             binding.swipeLayout.isEnabled = true
         }
 
         viewModel.localPaymentCards.observeNonNull(this) {
             walletAdapter.paymentCards = it.toMutableList()
+        }
+
+        mainViewModel.isLoading.observeNonNull(this) {
+            binding.swipeLayout.isRefreshing = it
         }
 
         binding.loyaltyWalletList.apply {
@@ -157,7 +165,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                binding.swipeLayout.isRefreshing = true
+                mainViewModel.startLoading()
                 viewModel.fetchMembershipPlans(false)
                 viewModel.fetchMembershipCards()
                 viewModel.fetchDismissedCards()
@@ -190,7 +198,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
-            binding.swipeLayout.isRefreshing = true
             binding.swipeLayout.isEnabled = true
         }
 
@@ -244,7 +251,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun disableIndicators() {
         binding.loyaltyWalletList.visibility = View.VISIBLE
-        binding.swipeLayout.isRefreshing = false
+        mainViewModel.stopLoading()
     }
 
     private fun onCardClicked(item: Any) {
@@ -287,7 +294,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun fetchData() {
-        binding.swipeLayout.isRefreshing = true
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
             viewModel.fetchPeriodicMembershipCards()
@@ -301,7 +307,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun onBannerRemove(item: Any) {
         binding.swipeLayout.isEnabled = false
-        binding.swipeLayout.isRefreshing = false
         when (item) {
             is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
             else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
@@ -317,7 +322,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                            binding.swipeLayout.isRefreshing = true
                             viewModel.deleteCard(membershipCard.id)
                         } else {
                             disableIndicators()

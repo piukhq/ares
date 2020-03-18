@@ -146,6 +146,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     }
 
     private fun finishLogInProcess() {
-        findNavController().navigateIfAdded(this, R.id.accept_to_lcd)
+        findNavController().navigateIfAdded(this, AcceptTCFragmentDirections.acceptToLcd(true))
     }
 }

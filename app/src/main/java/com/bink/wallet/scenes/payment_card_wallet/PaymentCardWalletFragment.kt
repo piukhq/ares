@@ -210,7 +210,6 @@ class PaymentCardWalletFragment :
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
-            binding.swipeRefresh.isRefreshing = true
             binding.paymentCardRecycler.visibility = View.GONE
             viewModel.getPeriodicPaymentCards()
         }

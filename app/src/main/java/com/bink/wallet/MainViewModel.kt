@@ -9,6 +9,7 @@ import com.bink.wallet.utils.DateTimeUtils
 class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
+    val isLoading = MutableLiveData<Boolean>()
     private val membershipPlanData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     private val membershipPlanError: MutableLiveData<Throwable> = MutableLiveData()
@@ -26,4 +27,11 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         }
     }
 
+    fun startLoading() {
+        isLoading.value = true
+    }
+
+    fun stopLoading() {
+        isLoading.value = false
+    }
 }

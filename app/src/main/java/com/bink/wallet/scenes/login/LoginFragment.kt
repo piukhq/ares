@@ -168,7 +168,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     private fun finishLogInProcess() {
         if (SharedPreferenceManager.isUserLoggedIn) {
-            findNavController().navigate(LoginFragmentDirections.globalToHome())
+            findNavController().navigate(LoginFragmentDirections.globalToHome(true))
         }
     }
 
