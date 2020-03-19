@@ -10,6 +10,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
@@ -68,36 +69,11 @@ class SettingsFragment :
             layoutManager = LinearLayoutManager(activity)
             adapter = settingsAdapter
         }
-
-        viewModel.itemsList.value?.let {
-            for (i in 0 until it.list.size) {
-                val item = it.list[i]
-                if (item.type == SettingsItemType.EMAIL_ADDRESS) {
-                    val email =
-                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                            ?.let { localEmail ->
-                                localEmail
-                            }
-
-                    val newItem =
-                        SettingsItem(
-                            item.title,
-                            email,
-                            item.type
-                        )
-                    viewModel.itemsList.setItem(i, newItem)
-                }
-            }
-        }
-
         viewModel.itemsList.observe(this, this)
     }
 
     private fun settingsItemClick(item: SettingsItem) {
         when (item.type) {
-            SettingsItemType.VERSION_NUMBER,
-            SettingsItemType.BASE_URL,
-            SettingsItemType.EMAIL_ADDRESS,
             SettingsItemType.HEADER -> {
                 // these items are to do nothing at all, as they'll never be clickable
             }
@@ -119,6 +95,13 @@ class SettingsFragment :
                         )
                     )
                 }
+            }
+
+            SettingsItemType.DEBUG_MENU -> {
+                findNavController().navigateIfAdded(
+                    this,
+                    SettingsFragmentDirections.settingsToDebug()
+                )
             }
             SettingsItemType.FAQS ->
                 startActivity(
@@ -251,7 +234,7 @@ class SettingsFragment :
                     }
             )
         } catch (e: Exception) {
-            (requireActivity() as MainActivity).restartApp()
+            (requireActivity() as MainActivity).forceRunApp()
         }
     }
 }

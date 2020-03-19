@@ -4,10 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-                name="item"
-                type="com.bink.wallet.model.SettingsItem"
-                />
+                name="debugItem"
+                type="com.bink.wallet.model.DebugItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,8 +31,8 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_sans_extrabold"
-                    android:text="@{item.title}"
+                    android:fontFamily="@font/nunito_sans"
+                    android:text="@{debugItem.title}"
                     android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline" />
 
@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_sans_light"
-                    android:text="@{item.value}"
+                    android:text="@{debugItem.content}"
                     android:textColor="@color/black"
                     android:textSize="@dimen/size_body_large" />
         </LinearLayout>
@@ -62,7 +62,7 @@
                 android:id="@+id/environment_spacer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_separator_line_height"
-                android:background="@color/separator_color"
+                android:background="@color/pale_grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

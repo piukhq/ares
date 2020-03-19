@@ -7,11 +7,12 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.ENVIRONMENTS_TO_DEBUG
+import com.bink.wallet.utils.enums.BuildTypes
+import java.util.*
+import kotlin.collections.ArrayList
 
 object SettingsItemsPopulation {
     fun populateItems(res: Resources): ArrayList<SettingsItem> {
-        val buildTypes: List<String> = ENVIRONMENTS_TO_DEBUG
-
         val itemsList = ArrayList<SettingsItem>()
         itemsList.add(
             SettingsItem(
@@ -105,7 +106,7 @@ object SettingsItemsPopulation {
             )
         )
 
-        if (buildTypes.contains(BuildConfig.BUILD_TYPE)) {
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
             itemsList.add(
                 SettingsItem(
                     res.getString(R.string.settings_menu_debug),
@@ -115,33 +116,12 @@ object SettingsItemsPopulation {
             )
             itemsList.add(
                 SettingsItem(
-                    res.getString(R.string.current_version),
-                    versionName(res),
-                    SettingsItemType.VERSION_NUMBER
-                )
-            )
-            itemsList.add(
-                SettingsItem(
-                    res.getString(R.string.environment_base_url),
-                    ApiConstants.BASE_URL,
-                    SettingsItemType.BASE_URL
-                )
-            )
-            itemsList.add(
-                SettingsItem(
-                    res.getString(R.string.current_email_address),
-                    null,
-                    SettingsItemType.EMAIL_ADDRESS
+                    "Debug",
+                    "Only accessible on debug builds",
+                    SettingsItemType.DEBUG_MENU
                 )
             )
         }
         return itemsList
     }
-
-    private fun versionName(res: Resources): String =
-        res.getString(
-            R.string.version_name_format,
-            BuildConfig.VERSION_NAME,
-            BuildConfig.VERSION_CODE
-        )
 }

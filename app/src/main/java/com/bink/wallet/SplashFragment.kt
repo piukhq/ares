@@ -74,7 +74,7 @@ class SplashFragment : Fragment() {
                  *      Since in the future we might want to redirect the user to
                  * different screens we can do that based on a destination
                  * string in the intent
-                 *      If the user isn't logged in then it is sent to onboadring.
+                 *      If the user isn't logged in then it is sent to onboarding.
                  * Since an 'else' branch can't be merged together with another
                  * option in a when clause, we will have for two clauses with the
                  * same destination for now.

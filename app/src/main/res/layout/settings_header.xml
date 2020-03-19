@@ -13,19 +13,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
+
         <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/nunito_sans_extrabold"
+                android:paddingStart="@dimen/margin_padding_size_small"
+                android:paddingTop="@dimen/margin_padding_size_medium_large"
+                android:paddingEnd="@dimen/margin_padding_size_small"
                 android:text="@{item.title}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_headline"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:paddingStart="@dimen/margin_padding_size_small"
-                android:paddingEnd="@dimen/margin_padding_size_small"
-                android:paddingTop="@dimen/margin_padding_size_medium_large"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
