@@ -25,8 +25,4 @@ class MainApplication : Application() {
             modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
         }
     }
-
-    override fun onTerminate() {
-        super.onTerminate()
-    }
 }

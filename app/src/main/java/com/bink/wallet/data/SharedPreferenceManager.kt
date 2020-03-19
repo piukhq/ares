@@ -7,8 +7,10 @@ import com.bink.wallet.utils.enums.ApiVersion
 object SharedPreferenceManager {
 
     private const val FILE_NAME = "BinkPrefs"
+    private const val ENV_FILE_NAME = "EnvBinkPrefs"
     private const val MODE = Context.MODE_PRIVATE
     private lateinit var preferences: SharedPreferences
+    private lateinit var environmentPreferences: SharedPreferences
 
     //----- KEYS -----
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
@@ -28,19 +30,20 @@ object SharedPreferenceManager {
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
+        environmentPreferences = context.getSharedPreferences(ENV_FILE_NAME, MODE)
     }
+
+    var storedApiUrl: String?
+        get() = environmentPreferences.getString(API_VERSION, ApiVersion.DEV.url)
+        set(value) = environmentPreferences.edit {
+            it.putString(API_VERSION, value)
+        }
 
     private inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {
         val editor = edit()
         operation(editor)
         editor.apply()
     }
-
-    var storedApiUrl: String?
-        get() = preferences.getString(API_VERSION, null)
-        set(value) = preferences.edit {
-            it.putString(API_VERSION, value)
-        }
 
     var isAddJourney: Boolean
         get() = preferences.getBoolean(IS_ADD_JOURNEY.first, IS_ADD_JOURNEY.second)

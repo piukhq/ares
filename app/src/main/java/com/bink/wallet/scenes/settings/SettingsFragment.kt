@@ -234,7 +234,7 @@ class SettingsFragment :
                 R.id.settings_to_onboarding
             )
         } catch (e: Exception) {
-            (requireActivity() as MainActivity).restartApp()
+            (requireActivity() as MainActivity).forceRunApp()
         }
     }
 }

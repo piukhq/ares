@@ -135,9 +135,7 @@ fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
         .client(client)
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
 
-
     return retrofitBuilder.build()
-
 }
 
 fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
