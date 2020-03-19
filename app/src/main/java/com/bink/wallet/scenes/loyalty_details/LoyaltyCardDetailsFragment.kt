@@ -23,7 +23,6 @@ import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
 import java.util.Calendar
 
 class LoyaltyCardDetailsFragment :
@@ -302,13 +301,12 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun viewVoucherDetails(voucher: Voucher) {
-        val directions = viewModel.membershipPlan.value?.let { membershipPlan ->
-            LoyaltyCardDetailsFragmentDirections.detailToVoucher(
-                membershipPlan, voucher
-            )
-        }
-        if (directions != null) {
-            findNavController().navigateIfAdded(this, directions)
+        viewModel.membershipPlan.value?.let { membershipPlan ->
+                findNavController().navigate(
+                    LoyaltyCardDetailsFragmentDirections.detailToVoucher(
+                        membershipPlan, voucher
+                    )
+                )
         }
     }
 

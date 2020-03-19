@@ -262,7 +262,8 @@
 
     <fragment
             android:id="@+id/loyalty_card_detail_fragment"
-            android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment">
+            android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment"
+            tools:layout="@layout/fragment_loyalty_card_details">
 
         <argument
                 android:name="membershipPlan"
