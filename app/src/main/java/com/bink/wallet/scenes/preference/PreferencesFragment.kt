@@ -10,9 +10,9 @@ import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
@@ -39,16 +39,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
-        viewModel.savePreferenceError.observeNonNull(this) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                if (isNetworkAvailable(requireContext())) {
-                    requireContext().displayModalPopup(
-                        EMPTY_STRING,
-                        getString(R.string.preference_update_error)
-                    )
-                }
-            }
-        }
+        viewModel.savePreferenceError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.preferences.observeNonNull(this) { preferences ->
             binding.progressSpinner.visibility = View.GONE

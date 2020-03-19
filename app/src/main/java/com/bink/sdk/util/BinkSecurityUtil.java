@@ -32,6 +32,9 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import static com.bink.wallet.utils.ExtensionsKt.logDebug;
+import static com.bink.wallet.utils.ExtensionsKt.logError;
+
 /**
  * Bink
  * <p>
@@ -47,9 +50,7 @@ public class BinkSecurityUtil {
     private static final String AES_MODE_KITKAT = "AES/GCM/NoPadding";
     private static final String AES_MODE = "AES/ECB/PKCS7Padding";
     private static final String RSA_MODE = "RSA/ECB/PKCS1Padding";
-    private static final byte[] FIXED_IV = new byte[]{
-            0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
-            0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b};
+    private static final byte[] FIXED_IV = new byte[]{0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b};
 
     private static BinkSecurityUtil instance;
     private Cipher encryptCipher;
@@ -83,7 +84,7 @@ public class BinkSecurityUtil {
                     decryptCipher = Cipher.getInstance(AES_MODE);
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
+                logError(TAG, e.getMessage(), e);
             }
         }
     }
@@ -100,8 +101,7 @@ public class BinkSecurityUtil {
                 KeyPair kp = kpg.generateKeyPair();
                 PublicKey publicKey = kp.getPublic();
                 PrivateKey privateKey = kp.getPrivate();
-                Certificate[] outChain = {createCertificate("CN=CA", publicKey, privateKey),
-                        createCertificate("CN=Client", publicKey, privateKey)};
+                Certificate[] outChain = {createCertificate("CN=CA", publicKey, privateKey), createCertificate("CN=Client", publicKey, privateKey)};
                 keyStore.setKeyEntry(KEY_ALIAS, privateKey, null, outChain);
             }
 
@@ -118,14 +118,12 @@ public class BinkSecurityUtil {
             byte[] key = rsaDecrypt(Base64.decode(encryptedKeyB64, Base64.DEFAULT), keyStore);
             return new SecretKeySpec(key, "AES");
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            logError(TAG, e.getMessage(), e);
         }
-
         return null;
     }
 
-    private X509Certificate createCertificate(String dn, PublicKey publicKey,
-                                              PrivateKey privateKey) throws Exception {
+    private X509Certificate createCertificate(String dn, PublicKey publicKey, PrivateKey privateKey) throws Exception {
         X509V3CertificateGenerator certGenerator = new X509V3CertificateGenerator();
         certGenerator.setSerialNumber(BigInteger.ONE);
         certGenerator.setIssuerDN(new X509Name(dn));
@@ -154,8 +152,7 @@ public class BinkSecurityUtil {
         KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(KEY_ALIAS, null);
         Cipher output = Cipher.getInstance(RSA_MODE);
         output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
-        CipherInputStream cipherInputStream = new CipherInputStream(
-                new ByteArrayInputStream(encrypted), output);
+        CipherInputStream cipherInputStream = new CipherInputStream(new ByteArrayInputStream(encrypted), output);
         ArrayList<Byte> values = new ArrayList<>();
         int nextByte;
         while ((nextByte = cipherInputStream.read()) != -1) {
@@ -183,7 +180,7 @@ public class BinkSecurityUtil {
                 byte[] inputByte = input.getBytes(CHAR_SET);
                 return new String(Base64.encode(encryptCipher.doFinal(inputByte), Base64.DEFAULT), CHAR_SET);
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
+                logError(TAG, e.getMessage(), e);
             }
 
             return input;
@@ -199,7 +196,7 @@ public class BinkSecurityUtil {
                 byte[] inputByte = encrypted.getBytes(CHAR_SET);
                 return new String(decryptCipher.doFinal(Base64.decode(inputByte, Base64.DEFAULT)), CHAR_SET);
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
+                logError(TAG, e.getMessage(), e);
             }
 
             return encrypted;
@@ -215,7 +212,7 @@ public class BinkSecurityUtil {
                 secretKey = null;
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            logError(TAG, e.getMessage(), e);
         }
     }
 
@@ -231,7 +228,7 @@ public class BinkSecurityUtil {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            logError(TAG, e.getMessage(), e);
         }
 
         return false;
@@ -241,7 +238,7 @@ public class BinkSecurityUtil {
         if (BinkSecurityUtil.getInstance() != null) {
             return BinkSecurityUtil.getInstance().encryption(input);
         } else {
-            Log.d("BinkSecurityUtil.class", "This class has given a null instance.");
+            logDebug("BinkSecurityUtil.class", "This class has given a null instance.");
             return input;
         }
     }
@@ -250,7 +247,7 @@ public class BinkSecurityUtil {
         if (BinkSecurityUtil.getInstance() != null) {
             return BinkSecurityUtil.getInstance().decryption(encrypted);
         } else {
-            Log.d("BinkSecurityUtil.class", "This class has given a null instance.");
+            logDebug("BinkSecurityUtil.class", "This class has given a null instance.");
             return encrypted;
         }
     }

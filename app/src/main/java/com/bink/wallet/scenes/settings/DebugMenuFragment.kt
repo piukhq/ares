@@ -13,6 +13,7 @@ import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.utils.enums.ApiVersion
+import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,7 +44,19 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             recycler.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        viewModel.logOutResponse.observeNonNull(this) {}
+        viewModel.logOutResponse.observeNonNull(this) {
+            restartApplication()
+        }
+
+        viewModel.logOutErrorResponse.observeNetworkDrivenErrorNonNull(
+            requireContext(),
+            this,
+            "",
+            "",
+            true
+        ) {
+            restartApplication()
+        }
     }
 
     private fun onDebugItemClick(item: DebugItem) {
@@ -77,11 +90,17 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
             }
-            viewModel.logOut()
-            (requireActivity() as MainActivity).forceRunApp()
-
+            if (SharedPreferenceManager.isUserLoggedIn) {
+                viewModel.logOut()
+            } else {
+                restartApplication()
+            }
         }
         adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()
+    }
+
+    private fun restartApplication() {
+        (requireActivity() as MainActivity).forceRunApp()
     }
 }

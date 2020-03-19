@@ -4,10 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
                 name="item"
-                type="com.bink.wallet.model.SettingsItem" />
+                type="com.bink.wallet.model.SettingsItem"
+                />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +62,7 @@
                 android:id="@+id/environment_spacer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_separator_line_height"
-                android:background="@color/pale_grey"
+                android:background="@color/separator_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

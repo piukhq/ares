@@ -35,7 +35,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         val loyaltyWalletsFragment = LoyaltyWalletFragment()
         val paymentCardWalletFragment = PaymentCardWalletFragment()
 
-        viewModel.fetchMembershipPlans()
+        viewModel.fetchStoredMembershipPlans()
         viewModel.fetchMembershipCards()
         viewModel.fetchPaymentCards()
 
@@ -109,7 +109,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
     private fun initSharedMembershipPlanObserver() {
         mainViewModel.membershipPlanDatabaseLiveData.observeNonNull(this) {
-            viewModel.fetchMembershipPlans()
+            viewModel.fetchStoredMembershipPlans()
         }
     }
 

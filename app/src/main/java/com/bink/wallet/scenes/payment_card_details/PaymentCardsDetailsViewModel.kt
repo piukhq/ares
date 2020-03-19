@@ -23,23 +23,23 @@ class PaymentCardsDetailsViewModel(
     val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val deleteRequest = MutableLiveData<ResponseBody>()
 
-    private val _loadCardsError = MutableLiveData<Throwable>()
-    val loadCardsError: LiveData<Throwable>
+    private val _loadCardsError = MutableLiveData<Exception>()
+    val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
 
-    private val _linkError = MutableLiveData<Throwable>()
-    val linkError: LiveData<Throwable>
+    private val _linkError = MutableLiveData<Exception>()
+    val linkError: LiveData<Exception>
         get() = _linkError
 
-    private val _unlinkError = MutableLiveData<Throwable>()
-    val unlinkError: LiveData<Throwable>
+    private val _unlinkError = MutableLiveData<Exception>()
+    val unlinkError: LiveData<Exception>
         get() = _unlinkError
 
-    private var _deleteError = MutableLiveData<Throwable>()
-    val deleteError: LiveData<Throwable>
+    private var _deleteError = MutableLiveData<Exception>()
+    val deleteError: LiveData<Exception>
         get() = _deleteError
 
-     fun linkPaymentCard(cardId: String, paymentCardId: String) {
+    fun linkPaymentCard(cardId: String, paymentCardId: String) {
         updatePaymentCard(cardId)
         paymentWalletRepository.linkPaymentCard(
             cardId,
@@ -65,6 +65,10 @@ class PaymentCardsDetailsViewModel(
 
     fun getMembershipCards() {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    }
+
+    fun storePaymentCard(card: PaymentCard) {
+        paymentWalletRepository.storePaymentCard(card)
     }
 
     private fun updatePaymentCard(cardId: String) {

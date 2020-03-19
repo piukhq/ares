@@ -2,16 +2,12 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
-import com.bink.wallet.utils.putSessionHandlerNavigationDestination
+import com.bink.wallet.utils.*
 import com.facebook.login.LoginManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
@@ -48,13 +44,13 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
     interceptor.level = HttpLoggingInterceptor.Level.BODY
 
     val headerAuthorizationInterceptor = Interceptor { chain ->
-        val jwtToken = LocalStoreUtils.getAppSharedPref(
-            LocalStoreUtils.KEY_TOKEN
-        )?.let {
-            it
-        }
+        val jwtToken =
+            LocalStoreUtils.getAppSharedPref(
+                LocalStoreUtils.KEY_TOKEN
+            )?.replace("\n","")?.trim()
+
         jwtToken?.let {
-            Log.d("NetworkModule", jwtToken)
+            logError("NetworkModule", jwtToken)
         }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
@@ -66,7 +62,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
             LoginManager.getInstance().logOut()
-            LocalStoreUtils.clearPreferences()
+            LocalStoreUtils.clearPreferences(appContext)
             appContext.startActivity(
                 Intent(appContext, MainActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

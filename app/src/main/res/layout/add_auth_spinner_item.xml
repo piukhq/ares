@@ -54,7 +54,7 @@
                 android:layout_marginTop="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:alpha="0.3"
-                android:background="@android:color/darker_gray"
+                android:background="@color/separator_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/content_add_auth_spinner" />

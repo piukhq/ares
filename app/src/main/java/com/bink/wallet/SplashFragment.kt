@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.sdk.BinkCore
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
@@ -53,6 +54,7 @@ class SplashFragment : Fragment() {
             val key = binkCore.sessionConfig.apiKey
             val email = binkCore.sessionConfig.userEmail
             if (!key.isNullOrEmpty()) {
+                SharedPreferenceManager.isUserLoggedIn = true
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN,
                     getString(R.string.token_api_v1, key)

@@ -54,6 +54,7 @@ val viewModelModules = module {
             get(NetworkQualifiers.BinkApiInterface),
             get(),
             get(),
+            get(),
             get()
         )
     }
@@ -146,9 +147,10 @@ fun provideLoyaltyCardRepository(
     restApiService: ApiService,
     membershipPlanDao: MembershipPlanDao,
     membershipCardDao: MembershipCardDao,
-    bannersDisplayDao: BannersDisplayDao
+    bannersDisplayDao: BannersDisplayDao,
+    paymentCardDao: PaymentCardDao
 ): LoyaltyWalletRepository =
-    LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao, bannersDisplayDao)
+    LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao, bannersDisplayDao, paymentCardDao)
 
 fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,

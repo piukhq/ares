@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.bink.sdk.BinkCore
 import com.bink.wallet.data.SharedPreferenceManager
 
 object LocalStoreUtils {
@@ -52,7 +53,9 @@ object LocalStoreUtils {
         return encryptedSharedPreferences.contains(key)
     }
 
-    fun clearPreferences() {
+    fun clearPreferences(context: Context) {
+        BinkCore(context).sessionConfig.apiKey = null
+        SharedPreferenceManager.clear()
         encryptedSharedPreferences.edit().let {
             it.clear()
             it.apply()

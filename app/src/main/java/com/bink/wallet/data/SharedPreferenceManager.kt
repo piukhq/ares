@@ -20,6 +20,8 @@ object SharedPreferenceManager {
     private const val MEMBERSHIP_PLAN_LAST_REQUEST_TIME = "membershipPlanLastRequestTime"
     private const val IS_USER_LOGGED_IN_KEY = "isUserLoggedIn"
     private const val API_VERSION = "apiVersion"
+    private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
+    private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -73,6 +75,18 @@ object SharedPreferenceManager {
         get() = preferences.getLong(MEMBERSHIP_PLAN_LAST_REQUEST_TIME, 0)
         set(value) = preferences.edit {
             it.putLong(MEMBERSHIP_PLAN_LAST_REQUEST_TIME, value)
+        }
+
+    var paymentCardsLastRequestTime: Long
+        get() = preferences.getLong(PAYMENT_CARDS_LAST_REQUEST_TIME, 0)
+        set(value) = preferences.edit {
+            it.putLong(PAYMENT_CARDS_LAST_REQUEST_TIME, value)
+        }
+
+    var membershipCardsLastRequestTime: Long
+        get() = preferences.getLong(MEMBERSHIP_CARDS_LAST_REQUEST_TIME, 0)
+        set(value) = preferences.edit {
+            it.putLong(MEMBERSHIP_CARDS_LAST_REQUEST_TIME, value)
         }
 
     var isUserLoggedIn: Boolean

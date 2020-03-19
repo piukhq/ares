@@ -24,20 +24,18 @@ class SignUpViewModel(
     val password = MutableLiveData<String>()
     val confirmPassword = MutableLiveData<String>()
     val termsCondition = MutableLiveData<Boolean>()
-    val privacyPolicy = MutableLiveData<Boolean>()
     val marketingMessages = MutableLiveData<Boolean>()
     val isLoading = MutableLiveData<Boolean>()
 
     val signUpResponse = MutableLiveData<SignUpResponse>()
-    val signUpErrorResponse = MutableLiveData<Throwable>()
+    val signUpErrorResponse = MutableLiveData<Exception>()
     val marketingPrefResponse = MutableLiveData<ResponseBody>()
-    val marketingPrefErrorResponse = MutableLiveData<Throwable>()
+    val marketingPrefErrorResponse = MutableLiveData<Exception>()
 
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
-    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
-    val membershipPlanDatabaseLiveData =
-        loyaltyWalletRepository.liveDataDatabaseUpdated
+    val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
@@ -47,7 +45,7 @@ class SignUpViewModel(
     }
 
     private val passwordMatcher = MediatorLiveData<Boolean>()
-    val isSignUpEnabled = MediatorLiveData<Boolean>()
+    var isSignUpEnabled = MediatorLiveData<Boolean>()
 
     init {
         passwordMatcher.combineNonNull(
@@ -61,7 +59,7 @@ class SignUpViewModel(
             passwordValidator,
             passwordMatcher,
             termsCondition,
-            privacyPolicy,
+            isLoading,
             ::isSignUpButtonEnabled
         )
     }
@@ -71,12 +69,12 @@ class SignUpViewModel(
         passwordValidator: Boolean,
         passwordMatcher: Boolean,
         termsAndConditions: Boolean,
-        privacyPolicy: Boolean
+        isLoading: Boolean
     ): Boolean = passwordValidator &&
             emailValidator &&
             passwordMatcher &&
             termsAndConditions &&
-            privacyPolicy
+            !isLoading
 
     private fun arePasswordsMatching(
         password: String,
@@ -104,7 +102,7 @@ class SignUpViewModel(
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
             membershipPlanErrorLiveData,
-            false
+            membershipPlanDatabaseLiveData
         )
     }
 }

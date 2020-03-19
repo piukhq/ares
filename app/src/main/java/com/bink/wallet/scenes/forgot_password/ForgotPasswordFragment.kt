@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.forgot_password
 
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -14,6 +15,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ForgotPasswordFragment :
     BaseFragment<ForgotPasswordViewModel, ForgotPasswordFragmentBinding>() {
+    override val layoutRes: Int = R.layout.forgot_password_fragment
+    override val viewModel: ForgotPasswordViewModel by viewModel()
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -21,9 +25,16 @@ class ForgotPasswordFragment :
             .build()
     }
 
-    override val layoutRes: Int = R.layout.forgot_password_fragment
+    override fun onResume() {
+        super.onResume()
+        setupLayoutListener(binding.container, ::validateCredentials)
+        registerLayoutListener(binding.container)
+    }
 
-    override val viewModel: ForgotPasswordViewModel by viewModel()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -32,33 +43,21 @@ class ForgotPasswordFragment :
 
         viewModel.email.observeNonNull(this) {
             requireContext().validateEmail(it, binding.emailText)
-            setLoginButtonEnableStatus()
         }
 
-        binding.buttonContinueEmail.setOnClickListener {
+        binding.buttonContinue.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                requireContext().validateEmail(viewModel.email.value, binding.emailText)
-                if (binding.emailText.error != null) {
-                    requireContext().displayModalPopup(
-                        EMPTY_STRING,
-                        getString(R.string.invalid_email_text)
-                    )
-                } else {
-                    viewModel.isLoading.value = true
-                    viewModel.forgotPassword()
-                }
+                viewModel.forgotPassword()
             }
         }
 
         viewModel.isLoading.observeNonNull(this@ForgotPasswordFragment) {
-            with(binding) {
-                progressSpinner.visibility = when (it) {
-                    true -> View.VISIBLE
-                    else -> View.GONE
-                }
-
-                buttonContinueEmail.isEnabled = !it
+            binding.progressSpinner.visibility = if (it) {
+                View.VISIBLE
+            } else {
+                View.GONE
             }
+            binding.buttonContinue.isEnabled = !it
         }
 
         viewModel.forgotPasswordResponse.observeNonNull(this) {
@@ -75,23 +74,25 @@ class ForgotPasswordFragment :
             )
         }
 
-        viewModel.forgotPasswordError.observeNonNull(this) {
+        viewModel.forgotPasswordError.observeErrorNonNull(requireContext(), this, true) {
             viewModel.isLoading.value = false
-            if (!UtilFunctions.hasCertificatePinningFailed(it, requireContext())) {
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(R.string.error_description)
-                )
-            }
         }
     }
 
-    private fun setLoginButtonEnableStatus() {
-        with(binding) {
-            viewModel?.let {
-                buttonContinueEmail.isEnabled =
-                    (binding.emailText.error == null &&
-                            (it.email.value ?: EMPTY_STRING).isNotBlank())
+    override fun onPause() {
+        super.onPause()
+        removeLayoutListener(binding.container)
+    }
+
+    private fun validateCredentials() {
+        viewModel.email.value?.let {
+            if (it.isNotEmpty()) {
+                binding.emailText.error =
+                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                        getString(R.string.invalid_email_format)
+                    } else {
+                        null
+                    }
             }
         }
     }

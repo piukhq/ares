@@ -46,7 +46,7 @@ fun ImageView.loadImage(item: MembershipPlan?) {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
-            Log.e("loadImage", e.localizedMessage, e)
+            logError("loadImage", e.localizedMessage, e)
         }
     } else {
         visibility = View.INVISIBLE
@@ -67,7 +67,7 @@ fun ImageView.loadImage(item: MembershipCard?) {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
-            Log.e("loadImage", e.localizedMessage, e)
+            logError("loadImage", e.localizedMessage, e)
         }
     } else {
         visibility = View.INVISIBLE
@@ -159,7 +159,7 @@ fun ImageView.image(plan: MembershipPlan?) {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(this)
         } catch (e: NoSuchElementException) {
-            Log.e("loadImage", e.localizedMessage, e)
+            logError("loadImage", e.localizedMessage, e)
         }
     }
 }
@@ -202,13 +202,17 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         })
         .into(binding.image)
 
-    if (card?.card?.barcode.isNullOrEmpty() ||
-        card?.card?.membership_id.isNullOrEmpty()
-    ) {
-        binding.tapCard.visibility = View.GONE
-    } else {
-        binding.tapCard.text =
-            binding.root.context.getString(R.string.tap_card_to_show_card_number)
+    binding.tapCard.text = when {
+        !card?.card?.barcode.isNullOrEmpty() -> {
+            context.getString(R.string.tap_card_to_show_barcode)
+        }
+        !card?.card?.membership_id.isNullOrEmpty() -> {
+            context.getString(R.string.tap_card_to_show_card_number)
+        }
+        else -> {
+            binding.tapCard.visibility = View.GONE
+            EMPTY_STRING
+        }
     }
 }
 

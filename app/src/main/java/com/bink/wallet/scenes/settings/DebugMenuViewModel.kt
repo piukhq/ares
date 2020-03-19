@@ -14,8 +14,8 @@ class DebugMenuViewModel(private val loginRepository: LoginRepository) : BaseVie
     private val _logOutResponse = MutableLiveData<ResponseBody>()
     val logOutResponse: LiveData<ResponseBody>
         get() = _logOutResponse
-    private val _logOutErrorResponse = MutableLiveData<Throwable>()
-    val logOutErrorResponse: LiveData<Throwable>
+    private val _logOutErrorResponse = MutableLiveData<Exception>()
+    val logOutErrorResponse: LiveData<Exception>
         get() = _logOutErrorResponse
 
     fun logOut() {

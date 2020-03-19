@@ -91,22 +91,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun restartApp() {
-        val startActivity = Intent(this, MainActivity::class.java)
-        val pendingIntentId = 123456
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            pendingIntentId,
-            startActivity,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
-        finish()
-    }
-
     fun forceRunApp() {
         Handler().postDelayed({
+            LocalStoreUtils.clearPreferences(this)
             val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
             launchIntent?.addFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP
