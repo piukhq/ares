@@ -148,7 +148,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.progressSpinner.visibility = View.VISIBLE
                 viewModel.fetchMembershipPlans(false)
                 viewModel.fetchMembershipCards()
-                viewModel.fetchDismissedCards()
             } else {
                 isRefresh = false
                 disableIndicators()
@@ -156,13 +155,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.loadCardsError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipCards(false)
             handleServerDownError(it)
+            viewModel.fetchLocalMembershipCards(false)
         }
 
         viewModel.loadPlansError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipPlans()
             handleServerDownError(it)
+            viewModel.fetchLocalMembershipPlans()
         }
 
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
@@ -205,7 +204,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.third.isNotEmpty() &&
-                    userDataResult.result.second.isNotEmpty()) {
+                    userDataResult.result.second.isNotEmpty()
+                ) {
                     walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
                     disableIndicators()
                 }
