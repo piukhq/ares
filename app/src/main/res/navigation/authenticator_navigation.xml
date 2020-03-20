@@ -146,7 +146,8 @@
 
     <fragment
             android:id="@+id/add_join"
-            android:name="com.bink.wallet.scenes.add_join.AddJoinFragment">
+            android:name="com.bink.wallet.scenes.add_join.AddJoinFragment"
+            tools:layout="@layout/add_join_fragment">
 
         <argument
                 android:name="currentMembershipPlan"
