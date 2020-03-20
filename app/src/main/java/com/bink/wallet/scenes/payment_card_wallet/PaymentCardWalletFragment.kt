@@ -42,6 +42,8 @@ class PaymentCardWalletFragment :
 
     override val viewModel: PaymentCardWalletViewModel by viewModel()
 
+    private var isRefreshing = false
+
     override fun onResume() {
         super.onResume()
 
@@ -99,9 +101,7 @@ class PaymentCardWalletFragment :
         fetchPaymentCards(false)
 
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
-            viewModel.fetchLocalData()
-
+            isRefreshing = true
             viewModel.getPaymentCards()
         }
 
@@ -172,6 +172,15 @@ class PaymentCardWalletFragment :
                 }
             }
         }
+
+        viewModel.fetchError.observeErrorNonNull(requireContext(), this, isRefreshing) {
+            if (isRefreshing) {
+
+            }
+            isRefreshing = false
+            binding.swipeRefresh.isRefreshing = false
+            viewModel.fetchLocalData()
+        }
     }
 
     private fun populateWallet() {
@@ -221,6 +230,7 @@ class PaymentCardWalletFragment :
         membershipPlans: List<MembershipPlan>
     ) {
         viewModel.run {
+            isRefreshing = false
             localMembershipCardData.value = membershipCards
             localMembershipPlanData.value = membershipPlans
         }
