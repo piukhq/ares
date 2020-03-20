@@ -12,8 +12,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
-import com.bink.wallet.model.spreedly.response.SpreedlyResponse
 import com.bink.wallet.scenes.login.LoginResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
@@ -21,6 +19,7 @@ import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface ApiService {
+
     @GET("/ubiquity/service")
     fun checkRegisteredUser(): Deferred<LoginResponse>
 
