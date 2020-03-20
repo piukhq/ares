@@ -161,7 +161,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     scrollPagesAutomatically(this@with)
                 }
             })
-
             scrollPagesAutomatically(this)
         }
     }
