@@ -132,51 +132,23 @@ class PaymentCardWalletFragment :
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
         }
 
+        viewModel.paymentCards.observeNonNull(this) {
+            if (isRefreshing) {
+                isRefreshing = false
+                binding.swipeRefresh.isRefreshing = false
+                updatePaymentCardList()
+            }
+        }
+
         viewModel.loyaltyUpdateDone.observeNonNull(this) { loyaltyUpdateDone ->
             viewModel.paymentUpdateDone.observeNonNull(this) { paymentUpdateDone ->
                 if (loyaltyUpdateDone && paymentUpdateDone) {
-                    binding.paymentCardRecycler.visibility = View.VISIBLE
-                    binding.progressSpinner.visibility = View.GONE
-
-                    SharedPreferenceManager.isPaymentEmpty =
-                        viewModel.paymentCards.value.isNullOrEmpty()
-
-                    walletItems.clear()
-
-                    if (viewModel.dismissedCardData.value?.firstOrNull { it.id == JOIN_CARD } == null &&
-                        SharedPreferenceManager.isPaymentEmpty) {
-                        if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
-                            walletItems.add(JoinCardItem())
-                        }
-                    }
-
-                    viewModel.paymentCards.value?.let { paymentCards ->
-                        walletItems.addAll(paymentCards)
-                    }
-
-                    walletAdapter.paymentCards = walletItems
-
-                    viewModel.localMembershipPlanData.value?.let { plans ->
-                        viewModel.localMembershipCardData.value?.let { cards ->
-                            walletAdapter.onClickListener = {
-                                clickHandler(it, plans, cards)
-                            }
-                        }
-                    }
-
-                    walletAdapter.onRemoveListener = {
-                        onBannerRemove(it)
-                    }
-
-                    walletAdapter.notifyDataSetChanged()
+                    updatePaymentCardList()
                 }
             }
         }
 
         viewModel.fetchError.observeErrorNonNull(requireContext(), this, isRefreshing) {
-            if (isRefreshing) {
-
-            }
             isRefreshing = false
             binding.swipeRefresh.isRefreshing = false
             viewModel.fetchLocalData()
@@ -230,9 +202,45 @@ class PaymentCardWalletFragment :
         membershipPlans: List<MembershipPlan>
     ) {
         viewModel.run {
-            isRefreshing = false
             localMembershipCardData.value = membershipCards
             localMembershipPlanData.value = membershipPlans
         }
+    }
+
+    private fun updatePaymentCardList() {
+        binding.paymentCardRecycler.visibility = View.VISIBLE
+        binding.progressSpinner.visibility = View.GONE
+
+        SharedPreferenceManager.isPaymentEmpty =
+            viewModel.paymentCards.value.isNullOrEmpty()
+
+        walletItems.clear()
+
+        if (viewModel.dismissedCardData.value?.firstOrNull { it.id == JOIN_CARD } == null &&
+            SharedPreferenceManager.isPaymentEmpty) {
+            if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
+                walletItems.add(JoinCardItem())
+            }
+        }
+
+        viewModel.paymentCards.value?.let { paymentCards ->
+            walletItems.addAll(paymentCards)
+        }
+
+        walletAdapter.paymentCards = walletItems
+
+        viewModel.localMembershipPlanData.value?.let { plans ->
+            viewModel.localMembershipCardData.value?.let { cards ->
+                walletAdapter.onClickListener = {
+                    clickHandler(it, plans, cards)
+                }
+            }
+        }
+
+        walletAdapter.onRemoveListener = {
+            onBannerRemove(it)
+        }
+
+        walletAdapter.notifyDataSetChanged()
     }
 }
