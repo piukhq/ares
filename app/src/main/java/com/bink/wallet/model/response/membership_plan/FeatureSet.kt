@@ -14,5 +14,5 @@ data class FeatureSet(
     val card_type: Int?,
     val linking_support: List<String>?,
     val apps: List<Apps>?,
-    val has_vouchers: Boolean
+    val has_vouchers: Boolean?
 ) : Parcelable
