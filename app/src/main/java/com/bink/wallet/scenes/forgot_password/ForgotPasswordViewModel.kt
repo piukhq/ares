@@ -13,8 +13,8 @@ class ForgotPasswordViewModel(private val loginRepository: LoginRepository) : Ba
     private val _forgotPasswordResponse = MutableLiveData<ResponseBody>()
     val forgotPasswordResponse: LiveData<ResponseBody>
         get() = _forgotPasswordResponse
-    private val _forgotPasswordError = MutableLiveData<Throwable>()
-    val forgotPasswordError: LiveData<Throwable>
+    private val _forgotPasswordError = MutableLiveData<Exception>()
+    val forgotPasswordError: LiveData<Exception>
         get() = _forgotPasswordError
     val email = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()

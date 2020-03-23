@@ -2,12 +2,15 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.bink.wallet.utils.enums.ApiVersion
 
 object SharedPreferenceManager {
 
     private const val FILE_NAME = "BinkPrefs"
+    private const val ENV_FILE_NAME = "EnvBinkPrefs"
     private const val MODE = Context.MODE_PRIVATE
     private lateinit var preferences: SharedPreferences
+    private lateinit var environmentPreferences: SharedPreferences
 
     //----- KEYS -----
     private const val IS_ADD_JOURNEY_KEY = "isAddJourney"
@@ -16,6 +19,7 @@ object SharedPreferenceManager {
     private const val IS_PAYMENT_JOIN_KEY = "isPaymentJoinBannerDismissed"
     private const val MEMBERSHIP_PLAN_LAST_REQUEST_TIME = "membershipPlanLastRequestTime"
     private const val IS_USER_LOGGED_IN_KEY = "isUserLoggedIn"
+    private const val API_VERSION = "apiVersion"
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
 
@@ -28,7 +32,14 @@ object SharedPreferenceManager {
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
+        environmentPreferences = context.getSharedPreferences(ENV_FILE_NAME, MODE)
     }
+
+    var storedApiUrl: String?
+        get() = environmentPreferences.getString(API_VERSION, ApiVersion.DEV.url)
+        set(value) = environmentPreferences.edit {
+            it.putString(API_VERSION, value)
+        }
 
     private inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {
         val editor = edit()

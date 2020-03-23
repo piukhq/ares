@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.sdk.BinkCore
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
@@ -53,6 +54,7 @@ class SplashFragment : Fragment() {
             val key = binkCore.sessionConfig.apiKey
             val email = binkCore.sessionConfig.userEmail
             if (!key.isNullOrEmpty()) {
+                SharedPreferenceManager.isUserLoggedIn = true
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN,
                     getString(R.string.token_api_v1, key)
@@ -72,7 +74,7 @@ class SplashFragment : Fragment() {
                  *      Since in the future we might want to redirect the user to
                  * different screens we can do that based on a destination
                  * string in the intent
-                 *      If the user isn't logged in then it is sent to onboadring.
+                 *      If the user isn't logged in then it is sent to onboarding.
                  * Since an 'else' branch can't be merged together with another
                  * option in a when clause, we will have for two clauses with the
                  * same destination for now.

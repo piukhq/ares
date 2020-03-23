@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -21,6 +22,7 @@ import io.fabric.sdk.android.Fabric
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +32,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         logUserPropertiesAtStartUp()
@@ -90,18 +91,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun restartApp() {
-        val startActivity = Intent(this, MainActivity::class.java)
-        val pendingIntentId = 123456
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            pendingIntentId,
-            startActivity,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        val mgr = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent)
-        finish()
+    fun forceRunApp() {
+        Handler().postDelayed({
+            LocalStoreUtils.clearPreferences(this)
+            val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+            launchIntent?.addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        or Intent.FLAG_ACTIVITY_NEW_TASK
+            )
+            finishAffinity()
+            startActivity(launchIntent)
+            exitProcess(0)
+        }, 1000)
     }
 
     private fun getMembershipPlans() {

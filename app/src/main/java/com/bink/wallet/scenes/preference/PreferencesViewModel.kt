@@ -9,8 +9,8 @@ import okhttp3.ResponseBody
 class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseViewModel() {
 
     val preferences = MutableLiveData<List<Preference>>()
-    val preferenceErrorResponse = MutableLiveData<Throwable>()
-    val savePreferenceError = MutableLiveData<Throwable>()
+    val preferenceErrorResponse = MutableLiveData<Exception>()
+    val savePreferenceError = MutableLiveData<Exception>()
     val savePreference = MutableLiveData<ResponseBody>()
 
     fun getPreferences() {

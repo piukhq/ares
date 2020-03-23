@@ -8,6 +8,7 @@ import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
+import com.facebook.login.LoginManager
 import okhttp3.ResponseBody
 
 class SettingsViewModel constructor(
@@ -20,11 +21,12 @@ class SettingsViewModel constructor(
     var loginData = MutableLiveData<LoginData>()
     val itemsList = ListLiveData<SettingsItem>()
     val logOutResponse = MutableLiveData<ResponseBody>()
-    val logOutErrorResponse = MutableLiveData<Throwable>()
+    val logOutErrorResponse = MutableLiveData<Exception>()
 
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
         loyaltyWalletRepository.clearMembershipCards()
         paymentWalletRepository.clearPaymentCards()
+        LoginManager.getInstance().logOut()
     }
 }

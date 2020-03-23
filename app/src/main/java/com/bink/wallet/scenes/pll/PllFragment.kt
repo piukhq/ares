@@ -181,9 +181,9 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
         }
 
-        viewModel.fetchError.observeErrorNonNull(requireContext(), this)
+        viewModel.fetchError.observeErrorNonNull(requireContext(), false, this)
 
-        viewModel.linkError.observeErrorNonNull(requireContext(), this) {
+        viewModel.linkError.observeErrorNonNull(requireContext(), this, true) {
             if (!NetworkUtils.isConnected(requireContext())) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.description_error))
@@ -205,7 +205,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        viewModel.unlinkError.observeErrorNonNull(requireContext(), this) {
+        viewModel.unlinkError.observeErrorNonNull(requireContext(),  this, true) {
             if (!NetworkUtils.isConnected(requireContext())) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.description_error))

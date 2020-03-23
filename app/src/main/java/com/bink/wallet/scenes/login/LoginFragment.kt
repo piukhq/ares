@@ -104,7 +104,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 requireContext(),
                 this@LoginFragment,
                 EMPTY_STRING,
-                getString(R.string.incorrect_credentials)
+                getString(R.string.incorrect_credentials),
+                true
             ) {
                 isLoading.value = false
             }

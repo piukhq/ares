@@ -96,7 +96,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 }
             }
 
-            signUpErrorResponse.observeErrorNonNull(requireContext(), this@SignUpFragment) {
+            signUpErrorResponse.observeErrorNonNull(requireContext(), this@SignUpFragment, true) {
                 isLoading.value = false
             }
 

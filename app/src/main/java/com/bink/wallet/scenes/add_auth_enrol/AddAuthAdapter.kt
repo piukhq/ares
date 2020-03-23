@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.add_auth_enrol
 
 import android.text.InputFilter
 import android.text.Spanned
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +54,7 @@ class AddAuthAdapter(
                 currentItem.second.value
             )
         ) {
-            text.error = text.resources?.getString(
+            text.error = text.context.getString(
                 R.string.add_auth_error_message,
                 (currentItem.first as PlanFields).column
             )

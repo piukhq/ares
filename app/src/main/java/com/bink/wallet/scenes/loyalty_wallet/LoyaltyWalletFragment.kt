@@ -19,7 +19,6 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.*
 import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
@@ -100,9 +99,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-
         viewModel.fetchPeriodicMembershipCards()
-
         logScreenView(LOYALTY_WALLET_VIEW)
     }
 
@@ -146,10 +143,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
             ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
         }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
         fetchData()
@@ -185,21 +178,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             handleServerDownError(it)
         }
 
-        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this)
-
-        viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
-            setCardsData(userDataResult)
-        }
-
-        viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
-            setCardsData(localUserDataResult)
-        }
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
             binding.swipeLayout.isEnabled = true
         }
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
             viewModel.fetchLocalMembershipPlans()
@@ -225,10 +215,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             is UserDataResult.UserDataSuccess -> {
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
-                walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
+                // We should only stop loading & show membership cards if we have membership plans too
+                if (userDataResult.result.third.isNotEmpty() &&
+                    userDataResult.result.second.isNotEmpty()) {
+                    walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
+                    disableIndicators()
+                }
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
-                disableIndicators()
             }
         }
     }
@@ -294,14 +288,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun fetchData() {
+        viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
             viewModel.fetchPeriodicMembershipCards()
-            viewModel.fetchDismissedCards()
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards(false)
-            viewModel.fetchDismissedCards()
         }
     }
 

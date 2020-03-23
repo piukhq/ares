@@ -28,15 +28,14 @@ class SignUpViewModel(
     val isLoading = MutableLiveData<Boolean>()
 
     val signUpResponse = MutableLiveData<SignUpResponse>()
-    val signUpErrorResponse = MutableLiveData<Throwable>()
+    val signUpErrorResponse = MutableLiveData<Exception>()
     val marketingPrefResponse = MutableLiveData<ResponseBody>()
-    val marketingPrefErrorResponse = MutableLiveData<Throwable>()
+    val marketingPrefErrorResponse = MutableLiveData<Exception>()
 
     val membershipPlanMutableLiveData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
-    val membershipPlanErrorLiveData: MutableLiveData<Throwable> = MutableLiveData()
-    val membershipPlanDatabaseLiveData =
-        loyaltyWalletRepository.liveDataDatabaseUpdated
+    val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
@@ -102,7 +101,8 @@ class SignUpViewModel(
     fun getMembershipPlans() {
         loyaltyWalletRepository.retrieveMembershipPlans(
             membershipPlanMutableLiveData,
-            membershipPlanErrorLiveData
+            membershipPlanErrorLiveData,
+            membershipPlanDatabaseLiveData
         )
     }
 }

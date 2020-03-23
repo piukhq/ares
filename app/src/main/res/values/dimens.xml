@@ -100,6 +100,7 @@
 
     <!--Add Auth Screen -->
     <dimen name="margin_large">64dp</dimen>
+    <dimen name="auth_add_button_margin_bottom">8dp</dimen>
 
     <!--Pll Screen -->
     <dimen name="title_margin_top">@dimen/margin_padding_size_medium_large</dimen>
@@ -145,6 +146,9 @@
     <dimen name="voucher_details_card_padding_bottom">40dp</dimen>
     <dimen name="voucher_details_code_padding_bottom">32dp</dimen>
     <dimen name="voucher_details_first_date_margin_top">12dp</dimen>
+    <dimen name="voucher_stamp_size">24dp</dimen>
+    <dimen name="voucher_stamp_margin_horizontal">12dp</dimen>
+    <dimen name="voucher_stamp_width">7dp</dimen>
 
     <!-- LCD -->
     <dimen name="layout_elevation">5dp</dimen>
@@ -152,4 +156,6 @@
     <dimen name="loyalty_card_header_placeholder_text_margin_horizontal">16dp</dimen>
     <dimen name="loyalty_card_header_placeholder_text_margin_vertical">16dp</dimen>
     <dimen name="loyalty_card_header_corner_radius">12dp</dimen>
+    <dimen name="burger_king_stamp_size">24dp</dimen>
+    <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
 </resources>

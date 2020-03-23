@@ -2,15 +2,13 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import com.bink.sdk.BinkCore
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
-import com.bink.wallet.network.ApiConstants.Companion.BASE_URL
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.*
+import com.facebook.login.LoginManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
@@ -25,8 +23,18 @@ import java.util.concurrent.TimeUnit
 val networkModule = module {
     single(NetworkQualifiers.BinkOkHttp) { provideDefaultOkHttpClient(get()) }
     single(NetworkQualifiers.SpreedlyOkHttp) { provideSpreedlyOkHttpClient() }
-    single(NetworkQualifiers.SpreedlyRetrofit) { provideRetrofit(get(NetworkQualifiers.SpreedlyOkHttp), BASE_URL) }
-    single(NetworkQualifiers.BinkRetrofit) { provideRetrofit(get(NetworkQualifiers.BinkOkHttp), BASE_URL) }
+    single(NetworkQualifiers.SpreedlyRetrofit) {
+        provideRetrofit(
+            get(NetworkQualifiers.SpreedlyOkHttp),
+            SharedPreferenceManager.storedApiUrl.toString()
+        )
+    }
+    single(NetworkQualifiers.BinkRetrofit) {
+        provideRetrofit(
+            get(NetworkQualifiers.BinkOkHttp),
+            SharedPreferenceManager.storedApiUrl.toString()
+        )
+    }
     single(NetworkQualifiers.BinkApiInterface) { provideApiService(get(NetworkQualifiers.BinkRetrofit)) }
     single(NetworkQualifiers.SpreedlyApiInterface) { provideSpreedlyApiService(get(NetworkQualifiers.SpreedlyRetrofit)) }
 }
@@ -46,13 +54,15 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         }
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
-            .header("Content-Type", "application/json;v=1.1")
+            .header("Content-Type", "application/json")
+            .header("Accept", "application/json; v=1.1")
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .url(request)
             .build()
         val response = chain.proceed(newRequest)
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
+            LoginManager.getInstance().logOut()
             LocalStoreUtils.clearPreferences(appContext)
             appContext.startActivity(
                 Intent(appContext, MainActivity::class.java)
@@ -116,19 +126,18 @@ fun provideSpreedlyOkHttpClient(): OkHttpClient {
 }
 
 fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
-    val retrofitBuilder =  Retrofit.Builder()
+    val retrofitBuilder = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(client)
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
 
-
     return retrofitBuilder.build()
-
 }
 
 fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
-fun provideSpreedlyApiService(retrofit: Retrofit): ApiSpreedly = retrofit.create(ApiSpreedly::class.java)
+fun provideSpreedlyApiService(retrofit: Retrofit): ApiSpreedly =
+    retrofit.create(ApiSpreedly::class.java)
 
 

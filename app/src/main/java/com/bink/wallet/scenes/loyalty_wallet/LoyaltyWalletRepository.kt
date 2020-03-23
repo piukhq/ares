@@ -20,12 +20,10 @@ class LoyaltyWalletRepository(
     private val paymentCardDao: PaymentCardDao
 ) {
 
-    private val mutableLiveDataDatabaseUpdated: MutableLiveData<Boolean> = MutableLiveData()
-    val liveDataDatabaseUpdated: MutableLiveData<Boolean> get() = mutableLiveDataDatabaseUpdated
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
-        loadCardsError: MutableLiveData<Throwable>
+        loadCardsError: MutableLiveData<Exception>
     ) {
         val request = apiService.getMembershipCardsAsync()
         CoroutineScope(Dispatchers.IO).launch {
@@ -53,7 +51,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     localMembershipCards.value = membershipCardDao.getAllAsync()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
@@ -66,7 +64,7 @@ class LoyaltyWalletRepository(
                 try {
                     membershipCardDao.deleteAllCards()
                     membershipPlanDao.deleteAllPlans()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
@@ -75,7 +73,16 @@ class LoyaltyWalletRepository(
 
     fun retrieveMembershipPlans(
         mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
-        loadPlansError: MutableLiveData<Throwable>,
+        loadPlansError: MutableLiveData<Exception>,
+        fromPersistence: Boolean = false
+    ) {
+        retrieveMembershipPlans(mutableMembershipPlans, loadPlansError, null, fromPersistence)
+    }
+
+    fun retrieveMembershipPlans(
+        mutableMembershipPlans: MutableLiveData<List<MembershipPlan>>,
+        loadPlansError: MutableLiveData<Exception>,
+        databaseUpdated: MutableLiveData<Boolean>?,
         fromPersistence: Boolean = false
     ) {
         if (!fromPersistence) {
@@ -84,11 +91,11 @@ class LoyaltyWalletRepository(
                 withContext(Dispatchers.Main) {
                     try {
                         val response = request.await()
-                        storeMembershipPlans(response, loadPlansError)
+                        storeMembershipPlans(response, loadPlansError, databaseUpdated)
                         SharedPreferenceManager.membershipPlansLastRequestTime =
                             System.currentTimeMillis()
                         mutableMembershipPlans.value = response.toMutableList()
-                    } catch (e: java.lang.Exception) {
+                    } catch (e: Exception) {
                         loadPlansError.value = e
                     }
                 }
@@ -104,7 +111,7 @@ class LoyaltyWalletRepository(
                 try {
                     val response = membershipPlanDao.getAllAsync()
                     localMembershipPlans.value = response
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     // TODO: Have error catching here in a mutable
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -115,7 +122,7 @@ class LoyaltyWalletRepository(
     fun deleteMembershipCard(
         id: String?,
         mutableDeleteCard: MutableLiveData<String>,
-        deleteCardError: MutableLiveData<Throwable>
+        deleteCardError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = id?.let { apiService.deleteCardAsync(it) }
@@ -124,7 +131,7 @@ class LoyaltyWalletRepository(
                     request?.await()
                     mutableDeleteCard.value = id
                     membershipCardDao.deleteCard(id.toString())
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     deleteCardError.value = e
                 }
             }
@@ -133,14 +140,15 @@ class LoyaltyWalletRepository(
 
     private fun storeMembershipPlans(
         plans: List<MembershipPlan>,
-        loadPlansError: MutableLiveData<Throwable>
+        loadPlansError: MutableLiveData<Exception>,
+        databaseUpdated: MutableLiveData<Boolean>?
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) { membershipPlanDao.storeAll(plans) }
-                    mutableLiveDataDatabaseUpdated.value = true
-                } catch (e: Throwable) {
+                    databaseUpdated?.value = true
+                } catch (e: Exception) {
                     // TODO: Have error catching here in a mutable
                     loadPlansError.value = e
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
@@ -154,9 +162,9 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
-                       membershipCardDao.storeMembershipCard(card)
+                        membershipCardDao.storeMembershipCard(card)
                     }
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
             }
@@ -239,13 +247,13 @@ class LoyaltyWalletRepository(
 
     fun getLocalPaymentCards(
         localPaymentCards: MutableLiveData<List<PaymentCard>>,
-        localFetchError: MutableLiveData<Throwable>
+        localFetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     localPaymentCards.value = paymentCardDao.getAllAsync()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     localFetchError.value = e
                 }
             }
@@ -254,7 +262,7 @@ class LoyaltyWalletRepository(
 
     fun addBannerAsDismissed(
         id: String,
-        addError: MutableLiveData<Throwable>,
+        addError: MutableLiveData<Exception>,
         dismissedBannerDisplay: MutableLiveData<String> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -262,7 +270,7 @@ class LoyaltyWalletRepository(
                 try {
                     bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
                     dismissedBannerDisplay.value = id
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     addError.value = e
                 }
             }
@@ -271,13 +279,13 @@ class LoyaltyWalletRepository(
 
     fun retrieveDismissedCards(
         localMembershipCards: MutableLiveData<List<BannerDisplay>>,
-        fetchError: MutableLiveData<Throwable>
+        fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
                     localMembershipCards.value = bannersDisplayDao.getDismissedBanners()
-                } catch (e: Throwable) {
+                } catch (e: Exception) {
                     fetchError.value = e
                 }
             }
@@ -288,7 +296,7 @@ class LoyaltyWalletRepository(
         localMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         localMembershipCards: MutableLiveData<List<MembershipCard>>,
         localDismissedMembershipCards: MutableLiveData<List<BannerDisplay>>,
-        fetchError: MutableLiveData<Throwable>,
+        fetchError: MutableLiveData<Exception>,
         updateDone: MutableLiveData<Boolean>
     ) {
         CoroutineScope(Dispatchers.IO).launch {

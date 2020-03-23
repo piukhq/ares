@@ -129,6 +129,14 @@
     </fragment>
 
     <fragment
+            android:id="@+id/debug_menu_screen"
+            android:name="com.bink.wallet.scenes.settings.DebugMenuFragment">
+        <action
+                android:id="@+id/debug_to_onboarding"
+                app:destination="@+id/onboarding_fragment" />
+    </fragment>
+
+    <fragment
             android:id="@+id/browse_brands"
             android:name="com.bink.wallet.scenes.browse_brands.BrowseBrandsFragment">
 
@@ -143,7 +151,8 @@
 
     <fragment
             android:id="@+id/add_join"
-            android:name="com.bink.wallet.scenes.add_join.AddJoinFragment">
+            android:name="com.bink.wallet.scenes.add_join.AddJoinFragment"
+            tools:layout="@layout/add_join_fragment">
 
         <argument
                 android:name="currentMembershipPlan"
@@ -532,6 +541,13 @@
         <action
                 android:id="@+id/settings_to_preferences"
                 app:destination="@+id/preference_fragment" />
+        <action
+                android:id="@+id/settings_to_debug"
+                app:destination="@+id/debug_menu_screen"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -618,6 +634,9 @@
         <action
                 android:id="@+id/onboarding_to_log_in"
                 app:destination="@+id/login_fragment" />
+        <action
+                android:id="@+id/onboarding_to_debug"
+                app:destination="@+id/debug_menu_screen" />
     </fragment>
 
     <fragment

@@ -24,7 +24,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.util.*
+import java.util.Calendar
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -68,12 +68,12 @@ class LoyaltyCardDetailsFragment :
             val tiles = arrayListOf<String>()
             viewModel.apply {
                 membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
+                membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
+                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipPlan.value?.images
                     ?.filter { image -> image.type == 2 }
                     ?.forEach { image -> tiles.add(image.url.toString()) }
                 this.tiles.value = tiles
-                isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
-                membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
             }
         }
 
@@ -156,6 +156,8 @@ class LoyaltyCardDetailsFragment :
                 viewModel.updateMembershipCard(true)
             } else {
                 binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+                viewModel.setAccountStatus()
+                viewModel.setLinkStatus()
                 setLoadingState(false)
             }
         }
@@ -245,37 +247,23 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deleteError.observeErrorNonNull(
             requireContext(),
-            this@LoyaltyCardDetailsFragment
-        ) {
-            if (!UtilFunctions.hasCertificatePinningFailed(it)) {
-                with(viewModel.deleteError) {
-                    if (value is HttpException) {
-                        val error = value as HttpException
-                        if (error.code() < ApiErrorUtils.SERVER_ERROR) {
-                            requireContext().displayModalPopup(
-                                getString(R.string.title_2_4),
-                                getString(
-                                    R.string.description_2_4,
-                                    error.code().toString(),
-                                    error.localizedMessage
-                                )
-                            )
-                        }
-                    } else {
-                        requireContext().displayModalPopup(
-                            getString(R.string.title_2_4),
-                            getString(R.string.loyalty_card_delete_error_message)
-                        )
-                    }
-                }
-            }
-        }
+            this@LoyaltyCardDetailsFragment,
+            getString(R.string.title_2_4),
+            getString(
+                R.string.description_2_4,
+                viewModel.deleteError.value?.cause?.message,
+                viewModel.deleteError.value?.localizedMessage
+            ),
+            true
+        ) {}
+
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
         }
 
         viewModel.refreshError.observeErrorNonNull(
             requireContext(),
+            true,
             this@LoyaltyCardDetailsFragment
         )
     }
@@ -834,17 +822,16 @@ class LoyaltyCardDetailsFragment :
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             viewModel.membershipCard.value?.vouchers?.filter {
-                listOf(
-                    VoucherStates.IN_PROGRESS.state,
-                    VoucherStates.ISSUED.state
-                ).contains(it.state)
+                it.state == VoucherStates.IN_PROGRESS.state ||
+                        it.state == VoucherStates.ISSUED.state
             }?.let { vouchers ->
-                adapter = LoyaltyCardDetailsVouchersAdapter(
-                    vouchers,
-                    onClickListener = { thisVoucher ->
-                        viewVoucherDetails(thisVoucher as Voucher)
+                adapter = VouchersAdapter(
+                    vouchers
+                ).apply {
+                    setOnVoucherClickListener { voucher ->
+                        viewVoucherDetails(voucher)
                     }
-                )
+                }
             }
         }
     }

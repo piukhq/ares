@@ -9,11 +9,15 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AcceptTcFragmentBinding
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
-import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.TERMS_AND_CONDITIONS_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
@@ -68,7 +72,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             requireContext(),
             this,
             getString(R.string.facebook_failed),
-            ""
+            "",
+            true
         ) {
             binding.accept.isClickable = false
             val timer = Timer()
@@ -104,18 +109,23 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         binding.accept.setOnClickListener {
-            accessToken?.token?.let { token ->
-                accessToken?.userId?.let { userId ->
-                    userEmail?.let { email ->
-                        viewModel.authWithFacebook(
-                            FacebookAuthRequest(
-                                token,
-                                email,
-                                userId
+            startLoading()
+            if (isNetworkAvailable(requireContext(), true)) {
+                accessToken?.token?.let { token ->
+                    accessToken?.userId?.let { userId ->
+                        userEmail?.let { email ->
+                            viewModel.authWithFacebook(
+                                FacebookAuthRequest(
+                                    token,
+                                    email,
+                                    userId
+                                )
                             )
-                        )
+                        }
                     }
                 }
+            } else {
+                stopLoading()
             }
 
             logEvent(
@@ -146,6 +156,17 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     }
 
     private fun finishLogInProcess() {
+        stopLoading()
         findNavController().navigateIfAdded(this, AcceptTCFragmentDirections.acceptToLcd(true))
+    }
+
+    private fun stopLoading() {
+        viewModel.shouldAcceptBeEnabled.value = true
+        binding.accept.isEnabled = true
+    }
+
+    private fun startLoading() {
+        viewModel.shouldLoadingBeVisible.set(true)
+        binding.accept.isEnabled = false
     }
 }

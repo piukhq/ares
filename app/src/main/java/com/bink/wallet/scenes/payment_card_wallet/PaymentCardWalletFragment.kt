@@ -113,9 +113,9 @@ class PaymentCardWalletFragment :
             viewModel.fetchLocalData()
         }
 
-        viewModel.deleteCardError.observeErrorNonNull(requireContext(), this)
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
-        viewModel.deleteError.observeErrorNonNull(requireContext(), this)
+        viewModel.deleteError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
             layoutManager = GridLayoutManager(context, 1)
