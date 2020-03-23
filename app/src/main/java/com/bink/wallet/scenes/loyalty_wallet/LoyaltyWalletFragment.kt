@@ -22,9 +22,10 @@ import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -217,7 +218,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.third.isNotEmpty() &&
-                    userDataResult.result.second.isNotEmpty()) {
+                    userDataResult.result.second.isNotEmpty()
+                ) {
                     walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
                     disableIndicators()
                 }
