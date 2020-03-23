@@ -11,7 +11,7 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.Consent
-import com.bink.wallet.model.PostServiceConsent
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
@@ -58,7 +58,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     this@LoginFragment,
                     R.id.login_to_forgot_password
                 )
-
                 logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.forgotPassword.text.toString()))
             }
         }
@@ -67,9 +66,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         viewModel.retrieveStoredLoginData()
         binding.viewModel = viewModel
-        viewModel.loginData.observeNonNull(this) {
-            viewModel.authenticate()
-        }
 
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
@@ -90,17 +86,41 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     LocalStoreUtils.KEY_EMAIL,
                     it.email ?: EMPTY_STRING
                 )
-                viewModel.getMembershipPlans()
+
+                email.value?.let { email ->
+                    postService(
+                        PostServiceRequest(
+                            consent = Consent(
+                                email = email,
+                                timestamp = System.currentTimeMillis() / 1000
+                            )
+                        )
+                    )
+                }
+
+                postServiceResponse.observeNonNull(this@LoginFragment) {
+                    getMembershipPlans()
+                }
             }
 
-            logInErrorResponse.observeErrorNonNull(
+            logInErrorResponse.observeNetworkDrivenErrorNonNull(
                 requireContext(),
                 this@LoginFragment,
                 EMPTY_STRING,
                 getString(R.string.incorrect_credentials),
                 true
             ) {
-                isLoading.value = false
+                handleErrorResponse()
+            }
+
+            postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
+                requireContext(),
+                this@LoginFragment,
+                EMPTY_STRING,
+                getString(R.string.incorrect_credentials),
+                true
+            ) {
+                handleErrorResponse()
             }
 
             isLoading.observeNonNull(this@LoginFragment) {
@@ -112,10 +132,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
                     logInButton.isEnabled = !it
                 }
-            }
-
-            authErrorResponse.observeNonNull(this@LoginFragment) {
-                // this is here for monitoring, but we don't need to report to the user at the moment
             }
         }
 
@@ -130,18 +146,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     binding.emailField.error == null
                 ) {
                     binding.progressSpinner.visibility = View.VISIBLE
-//                    viewModel.logIn(
-//                        SignUpRequest(
-//                            email = viewModel.email.value,
-//                            password = viewModel.password.value
-//                        )
-//                    )
-                    viewModel.postService(
-                        PostServiceConsent(
-                            consent = Consent(
-                                email = viewModel.email.value!!,
-                                timestamp = System.currentTimeMillis()
-                            )
+                    viewModel.logIn(
+                        SignUpRequest(
+                            email = viewModel.email.value,
+                            password = viewModel.password.value
                         )
                     )
                 } else {
@@ -172,6 +180,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         if (SharedPreferenceManager.isUserLoggedIn) {
             findNavController().navigate(LoginFragmentDirections.globalToHome())
         }
+    }
+
+    private fun handleErrorResponse() {
+        viewModel.isLoading.value = false
     }
 
     override fun onPause() {

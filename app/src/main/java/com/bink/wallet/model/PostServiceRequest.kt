@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class PostServiceConsent(val consent: Consent) : Parcelable
+data class PostServiceRequest(val consent: Consent) : Parcelable
 
 @Parcelize
 @JsonClass(generateAdapter = true)

@@ -4,7 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.*
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
-import com.bink.wallet.model.PostServiceConsent
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -25,9 +25,6 @@ class LoginViewModel constructor(
     private val _logInErrorResponse = MutableLiveData<Exception>()
     val logInErrorResponse: LiveData<Exception>
         get() = _logInErrorResponse
-    private val _authErrorResponse = MutableLiveData<Exception>()
-    val authErrorResponse: LiveData<Exception>
-        get() = _authErrorResponse
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
@@ -36,11 +33,11 @@ class LoginViewModel constructor(
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
-    val _postServiceResponse = MutableLiveData<ResponseBody>()
+    private val _postServiceResponse = MutableLiveData<ResponseBody>()
     val postServiceResponse: LiveData<ResponseBody>
         get() = _postServiceResponse
 
-    val _postServiceErrorResponse = MutableLiveData<Exception>()
+    private val _postServiceErrorResponse = MutableLiveData<Exception>()
     val postServiceErrorResponse: LiveData<Exception>
         get() = _postServiceErrorResponse
 
@@ -64,20 +61,7 @@ class LoginViewModel constructor(
         emailValidator: Boolean,
         passwordValidator: Boolean
     ): Boolean = emailValidator && passwordValidator
-
-
-    fun authenticate() {
-        loginRepository.doAuthenticationWork(
-            LoginResponse(
-                LoginBody(
-                    System.currentTimeMillis() / 1000,
-                    loginData.value?.email ?: EMPTY_STRING,
-                    0.0,
-                    0.0
-                )
-            ), loginBody, _authErrorResponse
-        )
-    }
+    
 
     fun logIn(loginRequest: SignUpRequest) {
         loginRepository.logIn(loginRequest, logInResponse, _logInErrorResponse)
@@ -100,7 +84,7 @@ class LoginViewModel constructor(
         )
     }
 
-    fun postService(postServiceRequest: PostServiceConsent) {
+    fun postService(postServiceRequest: PostServiceRequest) {
         loginRepository.postService(
             postServiceRequest,
             _postServiceResponse,

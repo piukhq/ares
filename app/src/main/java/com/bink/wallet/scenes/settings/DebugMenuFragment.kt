@@ -76,7 +76,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         val items =
             arrayOf<CharSequence>(
                 ApiVersion.DEV.name,
-                ApiVersion.STAGING.name
+                ApiVersion.STAGING.name,
+                ApiVersion.DAEDALUS.name
             )
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
@@ -89,6 +90,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             when (selection) {
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
+                2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
             }
             if (SharedPreferenceManager.isUserLoggedIn) {
                 viewModel.logOut()
