@@ -1,5 +1,6 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.PostServiceConsent
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
@@ -12,8 +13,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
-import com.bink.wallet.model.spreedly.response.SpreedlyResponse
 import com.bink.wallet.scenes.login.LoginResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
@@ -86,6 +85,9 @@ interface ApiService {
     fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
     ): Deferred<ResponseBody>
+
+    @POST("/ubiquity/service")
+    fun postService(@Body consentRequest: PostServiceConsent): Deferred<ResponseBody>
 
     @GET("/ubiquity/payment_card/{payment_id}")
     fun getPaymentCardAsync(

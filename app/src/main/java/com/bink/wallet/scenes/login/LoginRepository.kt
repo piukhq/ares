@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.login
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.LoginDataDao
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.PostServiceConsent
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
@@ -99,6 +100,24 @@ class LoginRepository(
                     signUpResponse.value = response
                 } catch (e: Exception) {
                     signUpErrorResponse.value = e
+                }
+            }
+        }
+    }
+
+    fun postService(
+        postServiceRequest: PostServiceConsent,
+        postServiceResponse: MutableLiveData<ResponseBody>,
+        postServiceErrorResponse: MutableLiveData<Exception>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.postService(postServiceRequest)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    postServiceResponse.value = response
+                } catch (e: Exception) {
+                    postServiceErrorResponse.value = e
                 }
             }
         }

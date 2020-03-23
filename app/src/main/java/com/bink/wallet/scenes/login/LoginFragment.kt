@@ -10,21 +10,14 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.LoginFragmentBinding
+import com.bink.wallet.model.Consent
+import com.bink.wallet.model.PostServiceConsent
 import com.bink.wallet.model.request.SignUpRequest
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.validateEmail
-import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
@@ -137,10 +130,18 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     binding.emailField.error == null
                 ) {
                     binding.progressSpinner.visibility = View.VISIBLE
-                    viewModel.logIn(
-                        SignUpRequest(
-                            email = viewModel.email.value,
-                            password = viewModel.password.value
+//                    viewModel.logIn(
+//                        SignUpRequest(
+//                            email = viewModel.email.value,
+//                            password = viewModel.password.value
+//                        )
+//                    )
+                    viewModel.postService(
+                        PostServiceConsent(
+                            consent = Consent(
+                                email = viewModel.email.value!!,
+                                timestamp = System.currentTimeMillis()
+                            )
                         )
                     )
                 } else {
