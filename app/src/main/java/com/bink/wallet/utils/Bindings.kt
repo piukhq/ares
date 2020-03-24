@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -110,6 +109,8 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
+        var shouldShowBarcodeImage = true
+        val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
         when (membershipCard?.membershipCard?.card?.barcode_type) {
             0, null -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
@@ -120,17 +121,40 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
             6 -> format = BarcodeFormat.ITF
             7 -> format = BarcodeFormat.CODE_39
         }
+        barcodeNumberLength?.let {
+            when (format) {
+                BarcodeFormat.ITF -> {
+                    if (barcodeNumberLength.rem(2) != 0) {
+                        shouldShowBarcodeImage = false
+                    }
+                }
+                BarcodeFormat.EAN_13 -> {
+                    if (barcodeNumberLength < 12 ||
+                        barcodeNumberLength > 13
+                    ) {
+                        shouldShowBarcodeImage = false
+                    }
+                }
+                else -> {
 
-        val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(
-                membershipCard?.membershipCard?.card?.barcode,
-                format,
-                widthPx.toInt(),
-                heightPx.toInt()
-            )
-        val barcodeEncoder = BarcodeEncoder()
-        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-        setImageBitmap(bitmap)
+                }
+            }
+        }
+
+        if (shouldShowBarcodeImage) {
+            val bitMatrix: BitMatrix =
+                multiFormatWriter.encode(
+                    membershipCard?.membershipCard?.card?.barcode,
+                    format,
+                    widthPx.toInt(),
+                    heightPx.toInt()
+                )
+            val barcodeEncoder = BarcodeEncoder()
+            val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+            setImageBitmap(bitmap)
+        } else {
+            visibility = View.GONE
+        }
     }
 }
 
