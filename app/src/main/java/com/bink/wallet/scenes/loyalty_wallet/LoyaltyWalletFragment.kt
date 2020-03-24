@@ -162,7 +162,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 mainViewModel.startLoading()
                 viewModel.fetchMembershipPlans(false)
                 viewModel.fetchMembershipCards()
-                viewModel.fetchDismissedCards()
             } else {
                 isRefresh = false
                 disableIndicators()
@@ -170,13 +169,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.loadCardsError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipCards(false)
             handleServerDownError(it)
+            viewModel.fetchLocalMembershipCards(false)
         }
 
         viewModel.loadPlansError.observeNonNull(this) {
-            viewModel.fetchLocalMembershipPlans()
             handleServerDownError(it)
+            viewModel.fetchLocalMembershipPlans()
         }
 
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)

@@ -15,7 +15,9 @@ class StampVouchersViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(voucher: Voucher) {
         binding.voucher = voucher
-
+        binding.root.setOnClickListener {
+            onVoucherClickListener?.invoke(voucher)
+        }
         if (voucher.state == VoucherStates.REDEEMED.state ||
             voucher.state == VoucherStates.EXPIRED.state ||
             voucher.state == VoucherStates.NONE.state
