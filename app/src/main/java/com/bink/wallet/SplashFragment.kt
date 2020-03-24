@@ -11,9 +11,11 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.scottyab.rootbeer.RootBeer
+import java.util.*
 
 class SplashFragment : Fragment() {
 
@@ -24,6 +26,9 @@ class SplashFragment : Fragment() {
     }
 
     external fun spreedlyKey(): String
+    external fun paymentCardHashingDevKey(): String
+    external fun paymentCardHashingStagingKey(): String
+    external fun paymentCardHashingProdKey(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +42,7 @@ class SplashFragment : Fragment() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
+        persistPaymentCardHashSecret()
         findNavController().navigateIfAdded(this, getDirections())
     }
 
@@ -83,6 +89,22 @@ class SplashFragment : Fragment() {
                     SESSION_HANDLER_DESTINATION_ONBOARDING -> R.id.splash_to_onboarding
                     else -> R.id.splash_to_onboarding
                 }
+        }
+    }
+
+    private fun persistPaymentCardHashSecret() {
+        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH)) {
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
+            )
+        } else if (BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH)) {
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
+            )
+        } else if (BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH)) {
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
+            )
         }
     }
 }

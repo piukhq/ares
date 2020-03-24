@@ -16,6 +16,7 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
+import com.bink.wallet.utils.SecurityUtils
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,22 @@ class AddPaymentCardRepository(
         mutableAddCard: MutableLiveData<PaymentCard>,
         error: MutableLiveData<Exception>
     ) {
+
+        //todo hash payment card
+        //todo if api v1.2
+        card.card.month?.let { safeMonth ->
+            card.card.year?.let { safeYear ->
+                var paymentCardHash = SecurityUtils.getPaymentCardHash(
+                    cardNumber,
+                    safeMonth.toString(),
+                    safeYear.toString()
+                )
+
+                if (paymentCardHash.isNotEmpty()) {
+                    card.card.hash = paymentCardHash
+                }
+            }
+        }
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
         // This can only happen on release, so we have to guard it with the following condition.
@@ -79,7 +96,12 @@ class AddPaymentCardRepository(
                             first_six_digits = response.transaction.payment_method.first_six_digits
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
-                        doAddPaymentCard(card, mutableAddCard, error)
+
+                        doAddPaymentCard(
+                            card,
+                            mutableAddCard,
+                            error
+                        )
                     } catch (e: Exception) {
                         error.value = e
                     }

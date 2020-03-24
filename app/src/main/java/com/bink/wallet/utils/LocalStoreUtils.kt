@@ -13,6 +13,7 @@ object LocalStoreUtils {
     const val KEY_EMAIL = "encrypted_email"
     const val KEY_TOKEN = "encrypted_token"
     const val KEY_SPREEDLY = "encrypted_spreedly_token"
+    const val KEY_PAYMENT_HASH_SECRET = "payment_hash_secret"
 
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 

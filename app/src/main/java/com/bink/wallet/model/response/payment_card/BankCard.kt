@@ -20,7 +20,8 @@ data class BankCard(
     val provider: String?,
     val type: String?,
     var token: String?,
-    var fingerprint: String?
+    var fingerprint: String?,
+    var hash: String?
 ) : Parcelable {
 
     companion object {
