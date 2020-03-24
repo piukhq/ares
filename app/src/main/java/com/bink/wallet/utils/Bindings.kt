@@ -124,7 +124,9 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         barcodeNumberLength?.let {
             when (format) {
                 BarcodeFormat.ITF -> {
-                    if (barcodeNumberLength.rem(2) != 0) {
+                    if (barcodeNumberLength.rem(2) != 0 ||
+                        membershipCard.membershipCard.card?.barcode?.contains(("^[a-zA-Z]*$").toRegex()) == true
+                    ) {
                         shouldShowBarcodeImage = false
                     }
                 }
@@ -136,7 +138,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
                     }
                 }
                 else -> {
-
                 }
             }
         }
