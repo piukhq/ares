@@ -83,9 +83,13 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         viewModel.paymentCardsMerger.observeNonNull(this) {
             viewModel.membershipCard.value?.let { membershipCard ->
                 val adapterItems = mutableListOf<PllAdapterItem>().apply {
-                    add(PllAdapterItem.PllBrandHeaderItem(viewModel.membershipPlan.value!!))
+                    viewModel.membershipPlan.value?.let { membershipPlan ->
+                        add(PllAdapterItem.PllBrandHeaderItem(membershipPlan))
+                    }
                     add(PllAdapterItem.PllTitleItem)
-                    add(PllAdapterItem.PllDescriptionItem(viewModel.membershipPlan.value?.account?.plan_name_card!!))
+                    viewModel.membershipPlan.value?.account?.plan_name_card?.let { planName ->
+                        add(PllAdapterItem.PllDescriptionItem(planName))
+                    }
                     addAll(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
                 }
                 adapter.paymentCards = adapterItems
