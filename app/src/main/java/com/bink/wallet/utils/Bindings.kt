@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -110,6 +109,10 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         val heightPx = context.toPixelFromDip(80f)
         val widthPx = context.toPixelFromDip(320f)
         var format: BarcodeFormat? = null
+        var shouldShowBarcodeImage = true
+        val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
+        val EAN_13_BARCODE_LENGTH_LIMIT = 12
+
         when (membershipCard?.membershipCard?.card?.barcode_type) {
             0, null -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
@@ -120,17 +123,40 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
             6 -> format = BarcodeFormat.ITF
             7 -> format = BarcodeFormat.CODE_39
         }
+        membershipCard?.membershipCard?.card?.barcode?.let { barcode ->
+            barcodeNumberLength?.let {
+                when (format) {
+                    BarcodeFormat.ITF -> {
+                        // For the ITF barcode format, the library will cause a crash if trying to generate a barcode
+                        // that contains letters or has an uneven length
+                        shouldShowBarcodeImage = !(barcodeNumberLength.rem(2) != 0 ||
+                                barcode.contains(LETTER_REGEX))
+                    }
+                    BarcodeFormat.EAN_13 -> {
+                        // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
+                        // that has a length below or above the specified limits
+                        shouldShowBarcodeImage = barcodeNumberLength == EAN_13_BARCODE_LENGTH_LIMIT
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
 
-        val bitMatrix: BitMatrix =
-            multiFormatWriter.encode(
-                membershipCard?.membershipCard?.card?.barcode,
-                format,
-                widthPx.toInt(),
-                heightPx.toInt()
-            )
-        val barcodeEncoder = BarcodeEncoder()
-        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-        setImageBitmap(bitmap)
+        if (shouldShowBarcodeImage) {
+            val bitMatrix: BitMatrix =
+                multiFormatWriter.encode(
+                    membershipCard?.membershipCard?.card?.barcode,
+                    format,
+                    widthPx.toInt(),
+                    heightPx.toInt()
+                )
+            val barcodeEncoder = BarcodeEncoder()
+            val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+            setImageBitmap(bitmap)
+        } else {
+            visibility = View.GONE
+        }
     }
 }
 
