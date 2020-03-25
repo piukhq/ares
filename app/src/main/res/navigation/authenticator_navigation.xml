@@ -36,6 +36,11 @@
             android:id="@+id/home_wallet"
             android:name="com.bink.wallet.scenes.wallets.WalletsFragment">
 
+        <argument
+                android:name="shouldRefresh"
+                android:defaultValue="false"
+                app:argType="boolean" />
+
         <action
                 android:id="@+id/home_to_add"
                 app:destination="@id/add_fragment" />

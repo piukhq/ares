@@ -191,7 +191,6 @@ class PaymentCardWalletFragment :
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
-            binding.progressSpinner.visibility = View.VISIBLE
             binding.paymentCardRecycler.visibility = View.GONE
             viewModel.getPeriodicPaymentCards()
         }
@@ -209,7 +208,6 @@ class PaymentCardWalletFragment :
 
     private fun updatePaymentCardList() {
         binding.paymentCardRecycler.visibility = View.VISIBLE
-        binding.progressSpinner.visibility = View.GONE
 
         SharedPreferenceManager.isPaymentEmpty =
             viewModel.paymentCards.value.isNullOrEmpty()
