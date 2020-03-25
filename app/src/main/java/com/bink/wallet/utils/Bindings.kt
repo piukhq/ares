@@ -111,6 +111,9 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         var format: BarcodeFormat? = null
         var shouldShowBarcodeImage = true
         val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
+        val EAN_13_BARCODE_LOWER_LIMIT = 12
+        val EAN_13_BARCODE_UPPER_LIMIT = 13
+
         when (membershipCard?.membershipCard?.card?.barcode_type) {
             0, null -> format = BarcodeFormat.CODE_128
             1 -> format = BarcodeFormat.QR_CODE
@@ -125,18 +128,17 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
             barcodeNumberLength?.let {
                 when (format) {
                     BarcodeFormat.ITF -> {
-                        if (barcodeNumberLength.rem(2) != 0 ||
-                            barcode.contains(LETTER_REGEX)
-                        ) {
-                            shouldShowBarcodeImage = false
-                        }
+                        // For the ITF barcode format, the library will cause a crash if trying to generate a barcode
+                        // that contains letters or has an uneven length
+                        shouldShowBarcodeImage = !(barcodeNumberLength.rem(2) != 0 ||
+                                barcode.contains(LETTER_REGEX))
                     }
                     BarcodeFormat.EAN_13 -> {
-                        if (barcodeNumberLength < 12 ||
-                            barcodeNumberLength > 13
-                        ) {
-                            shouldShowBarcodeImage = false
-                        }
+                        // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
+                        // that has a length below or above the specified limits
+                        shouldShowBarcodeImage =
+                            !(barcodeNumberLength < EAN_13_BARCODE_LOWER_LIMIT ||
+                                    barcodeNumberLength > EAN_13_BARCODE_UPPER_LIMIT)
                     }
                     else -> {
                     }
