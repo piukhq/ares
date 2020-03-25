@@ -121,23 +121,25 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
             6 -> format = BarcodeFormat.ITF
             7 -> format = BarcodeFormat.CODE_39
         }
-        barcodeNumberLength?.let {
-            when (format) {
-                BarcodeFormat.ITF -> {
-                    if (barcodeNumberLength.rem(2) != 0 ||
-                        membershipCard.membershipCard.card?.barcode?.contains(("[a-zA-Z]").toRegex()) == true
-                    ) {
-                        shouldShowBarcodeImage = false
+        membershipCard?.membershipCard?.card?.barcode?.let { barcode ->
+            barcodeNumberLength?.let {
+                when (format) {
+                    BarcodeFormat.ITF -> {
+                        if (barcodeNumberLength.rem(2) != 0 ||
+                            barcode.contains(LETTER_REGEX)
+                        ) {
+                            shouldShowBarcodeImage = false
+                        }
                     }
-                }
-                BarcodeFormat.EAN_13 -> {
-                    if (barcodeNumberLength < 12 ||
-                        barcodeNumberLength > 13
-                    ) {
-                        shouldShowBarcodeImage = false
+                    BarcodeFormat.EAN_13 -> {
+                        if (barcodeNumberLength < 12 ||
+                            barcodeNumberLength > 13
+                        ) {
+                            shouldShowBarcodeImage = false
+                        }
                     }
-                }
-                else -> {
+                    else -> {
+                    }
                 }
             }
         }
