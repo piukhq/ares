@@ -216,9 +216,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
-                if (userDataResult.result.third.isNotEmpty() &&
-                    userDataResult.result.second.isNotEmpty()
-                ) {
+                if (userDataResult.result.second.isNotEmpty()) {
                     walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
                     disableIndicators()
                 }
