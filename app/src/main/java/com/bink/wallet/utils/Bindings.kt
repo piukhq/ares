@@ -125,7 +125,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
             when (format) {
                 BarcodeFormat.ITF -> {
                     if (barcodeNumberLength.rem(2) != 0 ||
-                        membershipCard.membershipCard.card?.barcode?.contains(("^[a-zA-Z]*$").toRegex()) == true
+                        membershipCard.membershipCard.card?.barcode?.contains(("[a-zA-Z]").toRegex()) == true
                     ) {
                         shouldShowBarcodeImage = false
                     }
