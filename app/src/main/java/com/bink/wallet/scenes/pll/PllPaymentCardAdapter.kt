@@ -14,7 +14,7 @@ import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PllPaymentCardAdapter(
     var membershipCard: MembershipCard?,
-    var paymentCards: List<PllPaymentCardWrapper> = listOf()
+    var paymentCards: List<PllAdapterItem> = listOf()
 ) :
     RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
 
@@ -31,20 +31,22 @@ class PllPaymentCardAdapter(
 
     override fun getItemCount() = paymentCards.size
 
+//    override fun getItemId(position: Int): Long = paymentCards[position].id
+
     override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
         paymentCards[position].let { cardWrapper ->
             cardWrapper.let {
-                holder.bindCard(cardWrapper)
+                holder.bindCard((cardWrapper as PllAdapterItem.PaymentCardWrapperItem).pllPaymentCardWrapper)
             }
         }
     }
 
-    fun notifyChanges(newList: List<PllPaymentCardWrapper>) {
+    fun notifyChanges(newList: List<PllAdapterItem>) {
         val oldList = paymentCards
         paymentCards = newList
         DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                oldList[oldItemPosition].paymentCard.id == newList[newItemPosition].paymentCard.id
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = true
+//                oldList[oldItemPosition].paymentCard.id == newList[newItemPosition].paymentCard.id
 
             override fun getOldListSize(): Int = oldList.size
 
@@ -80,11 +82,18 @@ class PllPaymentCardAdapter(
                 }
             }
 
-            if (paymentCards.last() == paymentCard) {
-                binding.separator.visibility = View.GONE
-            } else {
-                binding.separator.visibility = View.VISIBLE
-            }
+//            if (paymentCards.last() == paymentCard) {
+//                binding.separator.visibility = View.GONE
+//            } else {
+//                binding.separator.visibility = View.VISIBLE
+//            }
         }
+    }
+
+    companion object {
+        private const val PAYMENT_CARD_ITEM_ID = R.layout.pll_payment_card_item
+        private const val BRAND_HEADER_ITEM_ID = R.layout.modal_brand_header
+        private const val TITLE_ITEM_ID = R.layout.item_pll_title
+        private const val DESCRIPTION_ITEM_ID = R.layout.item_pll_description
     }
 }
