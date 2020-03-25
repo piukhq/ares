@@ -12,14 +12,16 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.ModalBrandHeaderBinding
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.getCardTypeFromProvider
 import com.bink.wallet.utils.loadImage
 
+typealias OnBrandHeaderClickListener = (String) -> Unit
 class PllPaymentCardAdapter(
     var paymentCards: List<PllAdapterItem> = listOf()
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var onBrandHeaderClickListener: OnBrandHeaderClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
@@ -74,7 +76,8 @@ class PllPaymentCardAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             BRAND_HEADER_ITEM_ID -> (holder as BrandHeaderViewHolder).bind(
-                (paymentCards[position] as PllAdapterItem.PllBrandHeaderItem).membershipPlan
+                (paymentCards[position] as PllAdapterItem.PllBrandHeaderItem).membershipPlan,
+                onBrandHeaderClickListener
             )
             DESCRIPTION_ITEM_ID -> {
                 (holder as PllDescriptionViewHolder).bind(
@@ -85,7 +88,7 @@ class PllPaymentCardAdapter(
                 paymentCards[position].let { cardWrapper ->
                     cardWrapper.let {
                         (holder as PllPaymentCardViewHolder).bindCard(
-                            (cardWrapper as PllAdapterItem.PaymentCardWrapperItem).pllPaymentCardWrapper,
+                            (cardWrapper as PllAdapterItem.PaymentCardItem),
                             paymentCards.last() == cardWrapper
                         )
                     }
@@ -112,12 +115,21 @@ class PllPaymentCardAdapter(
         }).dispatchUpdatesTo(this)
     }
 
+    fun setOnBrandHeaderClickListener(onBrandHeaderClickListener: OnBrandHeaderClickListener) {
+        this.onBrandHeaderClickListener = onBrandHeaderClickListener
+    }
+
     class BrandHeaderViewHolder(val binding: ModalBrandHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(membershipPlan: MembershipPlan) {
+        fun bind(membershipPlan: MembershipPlan, onBrandHeaderClickListener: OnBrandHeaderClickListener?) {
             binding.brandImage.loadImage(membershipPlan)
             membershipPlan.account?.plan_name_card?.let {
                 binding.loyaltyScheme.text =
                     binding.root.context.getString(R.string.loyalty_info, membershipPlan.account.plan_name_card)
+            }
+            binding.root.setOnClickListener {
+                membershipPlan.account?.plan_description?.let {
+                    onBrandHeaderClickListener?.invoke(it)
+                }
             }
         }
     }
@@ -132,7 +144,7 @@ class PllPaymentCardAdapter(
 
     inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindCard(paymentCard: PllPaymentCardWrapper, isLast: Boolean) {
+        fun bindCard(paymentCard: PllAdapterItem.PaymentCardItem, isLast: Boolean) {
             binding.paymentCard = paymentCard
 
             with(binding.imageView) {

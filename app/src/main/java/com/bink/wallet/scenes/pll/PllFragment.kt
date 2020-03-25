@@ -12,7 +12,6 @@ import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
@@ -59,23 +58,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-//        binding.brandHeader.setOnClickListener {
-//            viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
-//                findNavController().navigateIfAdded(
-//                    this,
-//                    PllFragmentDirections.pllToBrandHeader(
-//                        GenericModalParameters(
-//                            R.drawable.ic_close,
-//                            true,
-//                            viewModel.membershipPlan.value?.account?.plan_name
-//                                ?: getString(R.string.plan_description),
-//                            planDescription
-//                        )
-//                    )
-//                )
-//            }
-//        }
-
         runBlocking {
             if (isNetworkAvailable(requireActivity())) {
                 viewModel.getPaymentCards()
@@ -107,6 +89,19 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     addAll(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
                 }
                 adapter.paymentCards = adapterItems
+                adapter.setOnBrandHeaderClickListener {
+                    findNavController().navigate(
+                        PllFragmentDirections.pllToBrandHeader(
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                true,
+                                viewModel.membershipPlan.value?.account?.plan_name
+                                    ?: getString(R.string.plan_description),
+                                it
+                            )
+                        )
+                    )
+                }
                 adapter.notifyDataSetChanged()
             }
         }
@@ -149,17 +144,16 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 isNetworkAvailable(requireActivity(), true) -> {
                     viewModel.membershipCard.value?.let {
                         adapter.paymentCards.forEach { pllItem ->
-                            if (pllItem is PllAdapterItem.PaymentCardWrapperItem) {
-                                val card = pllItem.pllPaymentCardWrapper
-                                if (card.isSelected &&
-                                    !card.paymentCard.isLinkedToMembershipCard(it)
+                            if (pllItem is PllAdapterItem.PaymentCardItem) {
+                                if (pllItem.isSelected &&
+                                    !pllItem.paymentCard.isLinkedToMembershipCard(it)
                                 ) {
-                                    selectedCards.add(card.paymentCard.id.toString())
+                                    selectedCards.add(pllItem.paymentCard.id.toString())
                                 } else if (viewModel.membershipCard.value != null &&
-                                    !card.isSelected &&
-                                    card.paymentCard.isLinkedToMembershipCard(it)
+                                    !pllItem.isSelected &&
+                                    pllItem.paymentCard.isLinkedToMembershipCard(it)
                                 ) {
-                                    unselectedCards.add(card.paymentCard.id.toString())
+                                    unselectedCards.add(pllItem.paymentCard.id.toString())
                                 }
                             }
                         }
@@ -253,8 +247,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         private fun List<PaymentCard>.toPllPaymentCardWrapperList(
             isAddJourney: Boolean,
             membershipCard: MembershipCard
-        ): List<PllAdapterItem.PaymentCardWrapperItem> {
-            val listPaymentCards = mutableListOf<PllAdapterItem.PaymentCardWrapperItem>()
+        ): List<PllAdapterItem.PaymentCardItem> {
+            val listPaymentCards = mutableListOf<PllAdapterItem.PaymentCardItem>()
             this.forEach { card ->
                 val isSelected = if (isAddJourney) {
                     true
@@ -262,11 +256,9 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     card.isLinkedToMembershipCard(membershipCard)
                 }
                 listPaymentCards.add(
-                    PllAdapterItem.PaymentCardWrapperItem(
-                        PllPaymentCardWrapper(
-                            card,
-                            isSelected
-                        )
+                    PllAdapterItem.PaymentCardItem(
+                        card,
+                        isSelected
                     )
                 )
             }
