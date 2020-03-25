@@ -1,34 +1,53 @@
 package com.bink.sdk.util;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
+import androidx.room.util.FileUtil;
+
 import com.bink.sdk.config.SessionConfig;
+import com.bink.wallet.R;
 
 import org.bouncycastle.asn1.x509.X509Name;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.spec.RSAKeyGenParameterSpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -44,25 +63,29 @@ import static com.bink.wallet.utils.ExtensionsKt.logError;
 public class BinkSecurityUtil {
     private String TAG = getClass().getSimpleName();
 
+    private String publicKeyString = "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
+
     private static final String KEY_ALIAS = "BINKAndroidKeyStore";
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
     private static final String CHAR_SET = "UTF-8";
     private static final String AES_MODE_KITKAT = "AES/GCM/NoPadding";
     private static final String AES_MODE = "AES/ECB/PKCS7Padding";
-    private static final String RSA_MODE = "RSA/ECB/PKCS1Padding";
+    private static final String RSA_MODE = "RSA/ECB/OAEPPADDING";
     private static final byte[] FIXED_IV = new byte[]{0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b};
 
     private static BinkSecurityUtil instance;
     private Cipher encryptCipher;
     private Cipher decryptCipher;
     private Key secretKey;
+    private  Context context;
 
-    public static void create(SessionConfig sessionConfig) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void create(SessionConfig sessionConfig, Context context) {
         if (instance == null) {
             instance = new BinkSecurityUtil();
         }
 
-        instance.createSecretKey(sessionConfig);
+        instance.createSecretKey(sessionConfig, context);
     }
 
     private static BinkSecurityUtil getInstance() {
@@ -72,7 +95,9 @@ public class BinkSecurityUtil {
     private BinkSecurityUtil() {
     }
 
-    private void createSecretKey(SessionConfig sessionConfig) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createSecretKey(SessionConfig sessionConfig, Context context) {
+        this.context = context;
         if (secretKey == null) {
             try {
                 secretKey = getSecretKey(sessionConfig);
@@ -89,22 +114,27 @@ public class BinkSecurityUtil {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private Key getSecretKey(SessionConfig sessionConfig) {
         try {
             KeyStore keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
             keyStore.load(null);
             if (!keyStore.containsAlias(KEY_ALIAS)) {
+                Log.e("ConnorDebug","using my key");
                 SecureRandom random = new SecureRandom();
                 RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(1024, RSAKeyGenParameterSpec.F4);
                 KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
                 kpg.initialize(spec, random);
                 KeyPair kp = kpg.generateKeyPair();
-                PublicKey publicKey = kp.getPublic();
+//                KeyPair kp = new KeyPair(new Key());
+//                PublicKey publicKey = get("src/main/java/com/bink/sdk/util/dev_public_key.der");
+                PublicKey publicKey = loadPublicKey(context);
                 PrivateKey privateKey = kp.getPrivate();
                 Certificate[] outChain = {createCertificate("CN=CA", publicKey, privateKey), createCertificate("CN=Client", publicKey, privateKey)};
                 keyStore.setKeyEntry(KEY_ALIAS, privateKey, null, outChain);
             }
 
+//            String encryptedKeyB64 =
             String encryptedKeyB64 = sessionConfig.getEncryptedKey();
             if (encryptedKeyB64 == null) {
                 byte[] key = new byte[16];
@@ -243,6 +273,45 @@ public class BinkSecurityUtil {
         }
     }
 
+    public static String getEncryptedMessage(Context context, String messageToEncrypt) {
+
+        /**
+         * You can't use Cipher.getInstance("RSA") in Android
+         * See https://stackoverflow.com/a/31401015/3405101
+         */
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        }
+
+        PublicKey publicKey = null;
+        try {
+            publicKey = loadPublicKey(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+        byte[] bytes = new byte[0];
+        try {
+            bytes = cipher.doFinal(messageToEncrypt.getBytes());
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+        byte[] androidEncode = Base64.encode(bytes, Base64.NO_WRAP);
+        return new String(androidEncode, StandardCharsets.UTF_8);
+    }
+
     public static String decrypt(String encrypted) {
         if (BinkSecurityUtil.getInstance() != null) {
             return BinkSecurityUtil.getInstance().decryption(encrypted);
@@ -254,5 +323,46 @@ public class BinkSecurityUtil {
 
     public static void clear() {
         BinkSecurityUtil.getInstance().removeKey();
+    }
+
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public static PublicKey get(String filename)
+//            throws Exception {
+//        String lol="dev_public_key.der";
+//        Path pathToFile = Paths.get(lol);
+//        Log.e("ConnorDebug", "pathToFile: " + pathToFile.toAbsolutePath());
+////        URL path = getResource("myFile.txt");
+//        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+//
+//        X509EncodedKeySpec spec =
+//                new X509EncodedKeySpec(keyBytes);
+//        KeyFactory kf = KeyFactory.getInstance("RSA");
+//        return kf.generatePublic(spec);
+//    }
+
+    private static PublicKey loadPublicKey(Context context) throws Exception {
+        // Loading Public key from resources Raw folder
+        InputStream resourceAsStream = context.getResources().openRawResource(R.raw.dev_public_key);
+        byte[] keyBytes = toByteArray(resourceAsStream);
+
+        X509EncodedKeySpec spec =
+                new X509EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        return kf.generatePublic(spec);
+    }
+
+    public static byte[] toByteArray(InputStream in) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[1024];
+        int len;
+
+        // read bytes from the input stream and store them in buffer
+        while ((len = in.read(buffer)) != -1) {
+            // write bytes from the buffer into output stream
+            os.write(buffer, 0, len);
+        }
+
+        return os.toByteArray();
     }
 }

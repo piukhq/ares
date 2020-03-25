@@ -1,5 +1,7 @@
 package com.bink.sdk.config;
 
+import android.content.Context;
+
 import java.util.Set;
 
 /**
@@ -64,5 +66,7 @@ public interface SessionConfig {
     String getEncryptedKey();
 
     void clear();
+
+    String encryptSomething(Context context, String string);
 
 }

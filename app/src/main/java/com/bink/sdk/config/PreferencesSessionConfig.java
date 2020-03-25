@@ -46,13 +46,13 @@ public class PreferencesSessionConfig implements SessionConfig {
 
     public PreferencesSessionConfig(String preferencesName, Context context) {
         preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
-        setupEncryption();
+        setupEncryption(context);
         loadPreferences();
     }
 
-    private void setupEncryption() {
+    private void setupEncryption(Context context) {
         encryptedKey = preferences.getString(PREF_ENCRYPTION_KEY, null);
-        BinkSecurityUtil.create(this);
+        BinkSecurityUtil.create(this, context);
     }
 
     private void loadPreferences() {
@@ -254,6 +254,11 @@ public class PreferencesSessionConfig implements SessionConfig {
         preferences.edit()
                 .putString(PREF_ENCRYPTION_KEY, encryptedKey)
                 .apply();
+    }
+
+    @Override
+    public String encryptSomething(Context context,  String string) {
+        return BinkSecurityUtil.getEncryptedMessage(context, string);
     }
 
     public String getEncryptedKey() {

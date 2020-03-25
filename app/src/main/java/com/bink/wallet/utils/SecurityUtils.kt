@@ -1,6 +1,11 @@
 package com.bink.wallet.utils
 
+import android.util.Base64
+import android.util.Log
+import com.bink.sdk.BinkCore
+import com.bink.sdk.util.BinkSecurityUtil
 import java.math.BigInteger
+import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
 class SecurityUtils {
@@ -19,7 +24,13 @@ class SecurityUtils {
             val hashSecret = LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_PAYMENT_HASH_SECRET
             )
-            return getSHA512("\\($pan)\\($month)\\($year)\\($hashSecret)")
+
+//            val data = Base64.decode(hashSecret, Base64.DEFAULT)
+//            val text = String(data, StandardCharsets.UTF_8)
+
+//            Log.e("ConnorDebug", "hashSecret: " + BinkCore().sessionConfig.encryptSomething("Uf5AIu6ehfHM2By6GAsIDsclEYFlWQNt"))
+//            Log.e("ConnorDebug", "decoded: " + text)
+            return getSHA512("\\($pan)\\($month)\\($year)\\(Uf5AIu6ehfHM2By6GAsIDsclEYFlWQNt)")
         }
 
         fun getSHA512(input: String): String {
