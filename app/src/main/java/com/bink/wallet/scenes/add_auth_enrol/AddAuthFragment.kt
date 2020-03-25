@@ -316,34 +316,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     )
                 )
             )
-//            viewModel.currentMembershipPlan.value?.feature_set?.linking_support?.let { linkingSupport ->
-//                if (linkingSupport.contains(TypeOfField.REGISTRATION.name)
-//                ) {
-//                    viewModel.currentMembershipPlan.value?.let {
-//                        findNavController().navigateIfAdded(
-//                            this,
-//                            AddAuthFragmentDirections.toGhost(
-//                                SignUpFormType.GHOST,
-//                                it,
-//                                isRetryJourney
-//                            )
-//                        )
-//                    }
-//                } else {
-//                    findNavController().navigateIfAdded(
-//                        this,
-//                        AddAuthFragmentDirections.signUpToGhostRegistrationUnavailable(
-//                            GenericModalParameters(
-//                                R.drawable.ic_close,
-//                                true,
-//                                getString(R.string.title_ghost_card_not_available),
-//                                getString(R.string.description_ghost_card_not_available)
-//                            )
-//                        )
-//                    )
-//
-//                }
-//            }
 
             logEvent(
                 getFirebaseIdentifier(

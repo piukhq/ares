@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="membershipPlan"
+                type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel" />
+    </data>
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:navigationIcon="@drawable/ic_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+                android:id="@+id/button_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="?selectableItemBackground"
+                android:text="@string/cancel_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_medium"
+                app:layout_constraintBottom_toBottomOf="@id/toolbar"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                tools:ignore="ContentDescription" />
+
+        <com.bink.wallet.ModalBrandHeader
+                android:id="@+id/add_join_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_large"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:membershipPlan="@{membershipPlan}" />
+
+        <TextView
+                android:id="@+id/title_add_auth_text"
+                style="@style/TitleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:text="@{viewModel.titleText}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_join_reward"
+                tools:text="AuthTitle" />
+
+        <TextView
+                android:id="@+id/description_add_auth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:letterSpacing="0"
+                android:text="@{viewModel.descriptionText}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
+                tools:text="AuthDescription" />
+
+        <Button
+                android:id="@+id/add_auth_cta"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_extra_large"
+                android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                android:background="@drawable/gradient_button_selector"
+                android:text="@{viewModel.ctaText}"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="AuthCta" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</layout>

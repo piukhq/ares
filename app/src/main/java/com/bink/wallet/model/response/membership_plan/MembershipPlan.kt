@@ -39,4 +39,10 @@ class MembershipPlan(
             else -> null
         }
     }
+
+    fun areTransactionsAvailable() =
+        feature_set?.has_points != null &&
+                feature_set.has_points &&
+                feature_set.transactions_available != null &&
+                feature_set.transactions_available
 }

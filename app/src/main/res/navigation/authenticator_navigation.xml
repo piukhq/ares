@@ -191,6 +191,12 @@
         <action
                 android:id="@+id/action_add_join_to_paymentCardNeededFragment"
                 app:destination="@id/paymentCardNeededModalFragment" />
+        <action
+                android:id="@+id/addJoinToAddCardFragment"
+                app:destination="@+id/addCardFragment" />
+        <action
+                android:id="@+id/addJoinToGetNewCardFragment"
+                app:destination="@+id/getNewCardFragment" />
 
     </fragment>
 
@@ -728,6 +734,56 @@
         <action
                 android:id="@+id/action_paymentCardNeededFragment_to_add_payment_card"
                 app:destination="@id/add_payment_card" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/baseAddAuthFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.BaseAddAuthFragment"
+            android:label="BaseAddAuthFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/addCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.AddCardFragment"
+            android:label="AddCardFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/getNewCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.GetNewCardFragment"
+            android:label="GetNewCardFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+    </fragment>
+
+
+    <fragment
+            android:id="@+id/ghostCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.GhostCardFragment"
+            android:label="GhostCardFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </fragment>
 
 </navigation>

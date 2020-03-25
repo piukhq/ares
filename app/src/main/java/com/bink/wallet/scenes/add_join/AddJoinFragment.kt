@@ -14,7 +14,6 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.STORE_LINK_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -166,14 +165,17 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 )
             } else {
                 currentMembershipPlan?.let {
+                    //                    findNavController().navigate(
+//                        AddJoinFragmentDirections.addJoinToGhost(
+//                            SignUpFormType.ADD_AUTH,
+//                            it,
+//                            isRetryJourney,
+//                            membershipCardId,
+//                            isFromNoReasonCodes
+//                        )
+//                    )
                     findNavController().navigate(
-                        AddJoinFragmentDirections.addJoinToGhost(
-                            SignUpFormType.ADD_AUTH,
-                            it,
-                            isRetryJourney,
-                            membershipCardId,
-                            isFromNoReasonCodes
-                        )
+                        AddJoinFragmentDirections.addJoinToAddCardFragment(it, isRetryJourney)
                     )
                 }
 
@@ -225,13 +227,15 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             )
                         )
                     } else {
-                        AddJoinFragmentDirections.addJoinToGhost(
-                            SignUpFormType.ENROL,
-                            membershipPlan,
-                            isRetryJourney,
-                            membershipCardId,
-                            isFromNoReasonCodes
-                        )
+//                        AddJoinFragmentDirections.addJoinToGhost(
+//                            SignUpFormType.ENROL,
+//                            membershipPlan,
+//                            isRetryJourney,
+//                            membershipCardId,
+//                            isFromNoReasonCodes
+//                        )
+
+                        AddJoinFragmentDirections.addJoinToGetNewCardFragment(membershipPlan)
                     }
                 findNavController().navigate(getNewCardNavigationDirections)
 

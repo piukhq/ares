@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +32,10 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         get() = _paymentCardsMerger
 
     val currentMembershipPlan = MutableLiveData<MembershipPlan>()
+
+    val ctaText = ObservableField<String>()
+    val titleText = ObservableField<String>()
+    val descriptionText = ObservableField<String>()
 
     init {
         _paymentCardsMerger.addSource(paymentCards) {
