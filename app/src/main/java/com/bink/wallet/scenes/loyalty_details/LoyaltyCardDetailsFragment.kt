@@ -302,11 +302,11 @@ class LoyaltyCardDetailsFragment :
 
     private fun viewVoucherDetails(voucher: Voucher) {
         viewModel.membershipPlan.value?.let { membershipPlan ->
-                findNavController().navigate(
-                    LoyaltyCardDetailsFragmentDirections.detailToVoucher(
-                        membershipPlan, voucher
-                    )
+            findNavController().navigate(
+                LoyaltyCardDetailsFragmentDirections.detailToVoucher(
+                    membershipPlan, voucher
                 )
+            )
         }
     }
 
@@ -760,6 +760,7 @@ class LoyaltyCardDetailsFragment :
                     }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
+                LoginStatus.STATUS_CARD_ALREADY_EXISTS,
                 LoginStatus.STATUS_LOGIN_FAILED -> {
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
