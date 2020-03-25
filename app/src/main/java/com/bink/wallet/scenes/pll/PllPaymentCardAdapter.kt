@@ -6,37 +6,90 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.ItemPllDescriptionBinding
+import com.bink.wallet.ItemPllTitleBinding
 import com.bink.wallet.R
+import com.bink.wallet.databinding.ModalBrandHeaderBinding
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
-import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
 import com.bink.wallet.utils.getCardTypeFromProvider
+import com.bink.wallet.utils.loadImage
 
 class PllPaymentCardAdapter(
-    var membershipCard: MembershipCard?,
     var paymentCards: List<PllAdapterItem> = listOf()
 ) :
-    RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PllPaymentCardViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<PllPaymentCardItemBinding>(
-            inflater,
-            R.layout.pll_payment_card_item,
-            parent,
-            false
-        )
-        return PllPaymentCardViewHolder(binding)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            BRAND_HEADER_ITEM_ID -> {
+                val inflater = LayoutInflater.from(parent.context)
+                val binding = DataBindingUtil.inflate<ModalBrandHeaderBinding>(
+                    inflater,
+                    R.layout.modal_brand_header,
+                    parent,
+                    false
+                )
+                BrandHeaderViewHolder(binding)
+            }
+            TITLE_ITEM_ID -> {
+                val inflater = LayoutInflater.from(parent.context)
+                val binding = DataBindingUtil.inflate<ItemPllTitleBinding>(
+                    inflater,
+                    R.layout.item_pll_title,
+                    parent,
+                    false
+                )
+                PllTitleViewHolder(binding)
+            }
+            DESCRIPTION_ITEM_ID -> {
+                val inflater = LayoutInflater.from(parent.context)
+                val binding = DataBindingUtil.inflate<ItemPllDescriptionBinding>(
+                    inflater,
+                    R.layout.item_pll_description,
+                    parent,
+                    false
+                )
+                PllDescriptionViewHolder(binding)
+            }
+            else -> {
+                val inflater = LayoutInflater.from(parent.context)
+                val binding = DataBindingUtil.inflate<PllPaymentCardItemBinding>(
+                    inflater,
+                    R.layout.pll_payment_card_item,
+                    parent,
+                    false
+                )
+                PllPaymentCardViewHolder(binding)
+            }
+        }
 
     override fun getItemCount() = paymentCards.size
 
-//    override fun getItemId(position: Int): Long = paymentCards[position].id
+    override fun getItemId(position: Int): Long = paymentCards[position].id.toLong()
 
-    override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
-        paymentCards[position].let { cardWrapper ->
-            cardWrapper.let {
-                holder.bindCard((cardWrapper as PllAdapterItem.PaymentCardWrapperItem).pllPaymentCardWrapper)
+    override fun getItemViewType(position: Int): Int = paymentCards[position].id
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            BRAND_HEADER_ITEM_ID -> (holder as BrandHeaderViewHolder).bind(
+                (paymentCards[position] as PllAdapterItem.PllBrandHeaderItem).membershipPlan
+            )
+            DESCRIPTION_ITEM_ID -> {
+                (holder as PllDescriptionViewHolder).bind(
+                    (paymentCards[position] as PllAdapterItem.PllDescriptionItem).planName
+                )
+            }
+            PAYMENT_CARD_ITEM_ID -> {
+                paymentCards[position].let { cardWrapper ->
+                    cardWrapper.let {
+                        (holder as PllPaymentCardViewHolder).bindCard(
+                            (cardWrapper as PllAdapterItem.PaymentCardWrapperItem).pllPaymentCardWrapper,
+                            paymentCards.last() == cardWrapper
+                        )
+                    }
+                }
             }
         }
     }
@@ -59,9 +112,27 @@ class PllPaymentCardAdapter(
         }).dispatchUpdatesTo(this)
     }
 
+    class BrandHeaderViewHolder(val binding: ModalBrandHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(membershipPlan: MembershipPlan) {
+            binding.brandImage.loadImage(membershipPlan)
+            membershipPlan.account?.plan_name_card?.let {
+                binding.loyaltyScheme.text =
+                    binding.root.context.getString(R.string.loyalty_info, membershipPlan.account.plan_name_card)
+            }
+        }
+    }
+
+    class PllTitleViewHolder(val binding: ItemPllTitleBinding) : RecyclerView.ViewHolder(binding.root)
+
+    class PllDescriptionViewHolder(val binding: ItemPllDescriptionBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(planName: String) {
+            binding.planNameCard = planName
+        }
+    }
+
     inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindCard(paymentCard: PllPaymentCardWrapper) {
+        fun bindCard(paymentCard: PllPaymentCardWrapper, isLast: Boolean) {
             binding.paymentCard = paymentCard
 
             with(binding.imageView) {
@@ -82,11 +153,11 @@ class PllPaymentCardAdapter(
                 }
             }
 
-//            if (paymentCards.last() == paymentCard) {
-//                binding.separator.visibility = View.GONE
-//            } else {
-//                binding.separator.visibility = View.VISIBLE
-//            }
+            if (isLast) {
+                binding.separator.visibility = View.GONE
+            } else {
+                binding.separator.visibility = View.VISIBLE
+            }
         }
     }
 
