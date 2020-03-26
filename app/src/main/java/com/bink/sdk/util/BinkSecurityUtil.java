@@ -51,7 +51,7 @@ public class BinkSecurityUtil {
     private static final String CHAR_SET = "UTF-8";
     private static final String AES_MODE_KITKAT = "AES/GCM/NoPadding";
     private static final String AES_MODE = "AES/ECB/PKCS7Padding";
-    private static final String RSA_MODE = "RSA/ECB/OAEPPADDING";
+    private static final String RSA_MODE = "RSA/ECB/PKCS1Padding";
     private static final byte[] FIXED_IV = new byte[]{0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b};
 
     private static BinkSecurityUtil instance;
