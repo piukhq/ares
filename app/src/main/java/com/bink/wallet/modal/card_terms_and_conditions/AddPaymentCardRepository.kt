@@ -1,6 +1,8 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.bink.sdk.BinkCore
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
@@ -34,6 +36,7 @@ class AddPaymentCardRepository(
     private val spreedlyKeyMissingError = "Spreedly Environment Key Missing"
 
     fun sendAddCard(
+        context: Context,
         card: PaymentCardAdd,
         cardNumber: String,
         mutableAddCard: MutableLiveData<PaymentCard>,
@@ -50,8 +53,39 @@ class AddPaymentCardRepository(
                     safeYear.toString()
                 )
 
-                if (paymentCardHash.isNotEmpty()) {
-                    card.card.hash = paymentCardHash
+//                if (paymentCardHash.isNotEmpty()) {
+//                    card.card.hash = paymentCardHash
+//                }
+                val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
+                )
+
+                // ENCRYPTION TIME
+
+                val encryptedHash = BinkCore(context).sessionConfig.encryptSomething(context, paymentCardHash, publicEncryptionKey)
+                val encryptedMonth = BinkCore(context).sessionConfig.encryptSomething(context, safeMonth, publicEncryptionKey)
+                val encryptedYear = BinkCore(context).sessionConfig.encryptSomething(context, safeYear, publicEncryptionKey)
+                val encryptedfirstSix = BinkCore(context).sessionConfig.encryptSomething(context, card.card.first_six_digits, publicEncryptionKey)
+                val encryptedLastFour = BinkCore(context).sessionConfig.encryptSomething(context, card.card.last_four_digits, publicEncryptionKey)
+
+                if (encryptedHash.isNotEmpty()) {
+                    card.card.hash = encryptedHash
+                }
+
+                if (encryptedMonth.isNotEmpty()) {
+                    card.card.month = encryptedMonth
+                }
+
+                if (encryptedYear.isNotEmpty()) {
+                    card.card.year = encryptedYear
+                }
+
+                if (encryptedfirstSix.isNotEmpty()) {
+                    card.card.first_six_digits = encryptedfirstSix
+                }
+
+                if (encryptedLastFour.isNotEmpty()) {
+                    card.card.last_four_digits = encryptedLastFour
                 }
             }
         }
@@ -89,6 +123,7 @@ class AddPaymentCardRepository(
                 )
                 withContext(Dispatchers.Main) {
                     try {
+                        //todo encrypt spreedly
                         val response = spreedlyRequest.await()
                         card.card.apply {
                             token = response.transaction.payment_method.token

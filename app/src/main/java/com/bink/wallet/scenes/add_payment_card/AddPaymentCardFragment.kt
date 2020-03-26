@@ -159,8 +159,8 @@ class AddPaymentCardFragment :
                     val bankCard = BankCard(
                         cardNo.substring(0, 6),
                         cardNo.substring(cardNo.length - 4),
-                        cardExp[0].toInt(),
-                        cardExp[1].toInt() + YEAR_BASE_ADDITION,
+                        cardExp[0],
+                        (cardExp[1].toInt() + YEAR_BASE_ADDITION).toString(),
                         getString(R.string.country_code_gb),
                         getString(R.string.currency_code_gbp),
                         binding.cardName.text.toString(),

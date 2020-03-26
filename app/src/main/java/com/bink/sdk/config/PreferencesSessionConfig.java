@@ -257,8 +257,8 @@ public class PreferencesSessionConfig implements SessionConfig {
     }
 
     @Override
-    public String encryptSomething(Context context,  String string) {
-        return BinkSecurityUtil.getEncryptedMessage(context, string);
+    public String encryptSomething(Context context,  String string, String publicKey) {
+        return BinkSecurityUtil.getEncryptedMessage(context, string, publicKey);
     }
 
     public String getEncryptedKey() {

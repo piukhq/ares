@@ -63,8 +63,6 @@ import static com.bink.wallet.utils.ExtensionsKt.logError;
 public class BinkSecurityUtil {
     private String TAG = getClass().getSimpleName();
 
-    private String publicKeyString = "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=";
-
     private static final String KEY_ALIAS = "BINKAndroidKeyStore";
     private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
     private static final String CHAR_SET = "UTF-8";
@@ -126,9 +124,7 @@ public class BinkSecurityUtil {
                 KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
                 kpg.initialize(spec, random);
                 KeyPair kp = kpg.generateKeyPair();
-//                KeyPair kp = new KeyPair(new Key());
-//                PublicKey publicKey = get("src/main/java/com/bink/sdk/util/dev_public_key.der");
-                PublicKey publicKey = loadPublicKey(context);
+                PublicKey publicKey = kp.getPublic();
                 PrivateKey privateKey = kp.getPrivate();
                 Certificate[] outChain = {createCertificate("CN=CA", publicKey, privateKey), createCertificate("CN=Client", publicKey, privateKey)};
                 keyStore.setKeyEntry(KEY_ALIAS, privateKey, null, outChain);
@@ -273,7 +269,7 @@ public class BinkSecurityUtil {
         }
     }
 
-    public static String getEncryptedMessage(Context context, String messageToEncrypt) {
+    public static String getEncryptedMessage(Context context, String messageToEncrypt, String publicKeyString) {
 
         /**
          * You can't use Cipher.getInstance("RSA") in Android
@@ -290,7 +286,7 @@ public class BinkSecurityUtil {
 
         PublicKey publicKey = null;
         try {
-            publicKey = loadPublicKey(context);
+            publicKey = loadPublicKey(context, publicKeyString);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -340,15 +336,29 @@ public class BinkSecurityUtil {
 //        return kf.generatePublic(spec);
 //    }
 
-    private static PublicKey loadPublicKey(Context context) throws Exception {
-        // Loading Public key from resources Raw folder
-        InputStream resourceAsStream = context.getResources().openRawResource(R.raw.dev_public_key);
-        byte[] keyBytes = toByteArray(resourceAsStream);
+    private static PublicKey loadPublicKey(Context context, String publicKeyString) throws Exception {
+//        // Loading Public key from resources Raw folder
+//        InputStream resourceAsStream = context.getResources().openRawResource(R.raw.dev_public_key);
+//        byte[] keyBytes = toByteArray(resourceAsStream);
+//
+//        X509EncodedKeySpec spec =
+//                new X509EncodedKeySpec(keyBytes);
+//        KeyFactory kf = KeyFactory.getInstance("RSA");
+//        return kf.generatePublic(spec);
 
-        X509EncodedKeySpec spec =
-                new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePublic(spec);
+
+            try{
+                byte[] byteKey = Base64.decode(publicKeyString.getBytes(), Base64.DEFAULT);
+                X509EncodedKeySpec X509publicKey = new X509EncodedKeySpec(byteKey);
+                KeyFactory kf = KeyFactory.getInstance("RSA");
+
+                return kf.generatePublic(X509publicKey);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
     }
 
     public static byte[] toByteArray(InputStream in) throws IOException {

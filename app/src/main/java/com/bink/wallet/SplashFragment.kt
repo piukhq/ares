@@ -27,9 +27,13 @@ class SplashFragment : Fragment() {
     }
 
     external fun spreedlyKey(): String
+    //todo move this to where we need it
     external fun paymentCardHashingDevKey(): String
     external fun paymentCardHashingStagingKey(): String
     external fun paymentCardHashingProdKey(): String
+    external fun paymentCardEncryptionPublicKeyDev(): String
+    external fun paymentCardEncryptionPublicKeyStaging(): String
+    external fun paymentCardEncryptionPublicKeyProd(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,25 +125,37 @@ third encrypt
 2020-03-25 18:48:18.706 20580-20580/com.bink.wallet.debug E/ConnorDebug: hashSecret year: EUpu1BgJJIeC+2UTUJwbddb4Naf7lzD9rSSdgwuBQ/gLZVf7Aa8jYfP8MPcqV6X7UiV0doy8Tnwij1e4Q0crBmfrBUhbVFJom+7RYvnWGnIrg9gdI37hwJO9gHjXmtdJht/X1WW3Naf6JlWkbeOWoBRMJeBG8DCxJhih7SKANrnY2Y5ZoR6RsQYGPhay/mEJ1XQoE4kNoj4jn3zqwjCVdrkR6PHBl9oAyr3aVe7HHq2NRdDVjUhNe/VGyhFqz+6Cpa47MDFL+RJZMfSvRp9TOeyH8j5dDM+oryOfTnP9oYYKW9esiO2IXkTBkx/C8MbhV3O2NMC6Zzuz2pD6xyK6WRw0iAia7I3yXhN8m37h00iVSQhAn5Fh2q6JVkP7jcrHVHze2522Qm4FcX3eSequJFRJ1B5ZrbVpy0vN68NowxnT+MOhmJdsmRVD+U5BpjU9RxLpPqB+yU65EUGDwhAtXX9OsQSLFIzzPwefFPKVRxzaHprgxLeIq28uPwwZ/F6mFCj5q30BqFhMOj3k26kP8kDTMAchXvCO4g5jUn0BLm8SGUlvtHTA3BbQm7z1sqD+xzXNbi4SoUvJcsqR2PrSG2fFic5hMZlmD8KYIbimFowCZtBSjX5fPRJXhY25pR9woaYEIWApiFF6t749HQBGmt84DYYsO4yFB7vnKQoxyWc=
 
          */
-        Log.e("ConnorDebug", "hashSecret pan: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "cc8c1d29664a15f5363cba5a0eb67c38e9319ef003ec25ae6f36f33ce744b00091d417e7d0de73eec95741c42c82f8249a4a15774a13df3702751332b89d6271"))
-        Log.e("ConnorDebug", "hashSecret pan: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "4242424242424242"))
-        Log.e("ConnorDebug", "hashSecret first six: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "424242"))
-        Log.e("ConnorDebug", "hashSecret last four: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "4242"))
-        Log.e("ConnorDebug", "hashSecret month: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "2"))
-        Log.e("ConnorDebug", "hashSecret year: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "2030"))
+//        Log.e("ConnorDebug", "hashSecret pan: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "cc8c1d29664a15f5363cba5a0eb67c38e9319ef003ec25ae6f36f33ce744b00091d417e7d0de73eec95741c42c82f8249a4a15774a13df3702751332b89d6271"))
+//        Log.e("ConnorDebug", "hashSecret pan: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "4242424242424242"))
+//        Log.e("ConnorDebug", "hashSecret first six: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "424242"))
+//        Log.e("ConnorDebug", "hashSecret last four: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "4242"))
+//        Log.e("ConnorDebug", "hashSecret month: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "2"))
+//        Log.e("ConnorDebug", "hashSecret year: " + BinkCore(requireContext()).sessionConfig.encryptSomething(requireContext(), "2030"))
 
         //todo these should be encoded base64
         if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH)) {
             LocalStoreUtils.setAppSharedPref(
                 LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
             )
+
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY, paymentCardEncryptionPublicKeyProd()
+            )
         } else if (BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH)) {
             LocalStoreUtils.setAppSharedPref(
                 LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
             )
+
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY, paymentCardEncryptionPublicKeyStaging()
+            )
         } else if (BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH)) {
             LocalStoreUtils.setAppSharedPref(
                 LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
+            )
+
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY, paymentCardEncryptionPublicKeyDev()
             )
         }
     }

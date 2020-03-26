@@ -12,8 +12,8 @@ import java.util.*
 data class BankCard(
     var first_six_digits: String?,
     var last_four_digits: String?,
-    val month: Int?,
-    val year: Int?,
+    var month: String?,
+    var year: String?,
     val country: String?,
     val currency_code: String?,
     val name_on_card: String?,
@@ -39,13 +39,13 @@ data class BankCard(
 
     fun isExpired(): Boolean {
         val cal = Calendar.getInstance()
-        if (year != null && month != null) {
-            if (year < cal.get(Calendar.YEAR) ||
-                (year == cal.get(Calendar.YEAR) &&
-                 month <= cal.get(Calendar.MONTH))) {
-                return true
-            }
-        }
+//        if (year != null && month != null) {
+//            if (year < cal.get(Calendar.YEAR) ||
+//                (year == cal.get(Calendar.YEAR) &&
+//                 month <= cal.get(Calendar.MONTH))) {
+//                return true
+//            }
+//        }
         return false
     }
 }
