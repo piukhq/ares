@@ -20,6 +20,7 @@ import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface ApiService {
+
     @GET("/ubiquity/service")
     fun checkRegisteredUser(): Deferred<LoginResponse>
 

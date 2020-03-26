@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
+import com.bink.wallet.model.response.membership_card.Burn
+import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
@@ -43,11 +45,9 @@ class VoucherDetailsFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.membershipPlan.value = args.membershipPlan
-        viewModel.voucher.value = args.voucher
-        binding.membershipPlan = viewModel.membershipPlan.value
+        binding.membershipPlan = args.membershipPlan
 
-        viewModel.voucher.value?.let { voucher ->
+        args.voucher.let { voucher ->
             with(binding.recycler) {
                 layoutManager = LinearLayoutManager(requireContext())
                 val vouchers = listOf(voucher)
@@ -55,131 +55,73 @@ class VoucherDetailsFragment :
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
-                    if (earn.target_value != null &&
-                        burn.value != null
-                    ) {
-                        binding.code.textAndShow(voucher.code)
-                        when (voucher.state) {
-                            VoucherStates.IN_PROGRESS.state -> {
-                                binding.mainText.text =
+                    binding.code.textAndShow(voucher.code)
+                    when (voucher.state) {
+                        VoucherStates.IN_PROGRESS.state -> {
+                            setInProgressVoucher(earn, burn)
+                        }
+                        VoucherStates.ISSUED.state -> {
+                            setIssuedVoucher(earn, burn)
+                            setVoucherDates(
+                                firstDate = voucher.date_issued?.let {
                                     getString(
-                                        R.string.voucher_detail_text_in_progress,
-                                        displayValue(
-                                            earn.target_value,
-                                            earn.prefix,
-                                            earn.suffix,
-                                            earn.currency,
-                                            null
-                                        ),
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            burn.type
-                                        )
+                                        R.string.voucher_detail_date_issued,
+                                        dateTimeFormatTransactionTime(it)
                                     )
-                            }
-                            VoucherStates.ISSUED.state -> {
-                                setVoucherDetails(
-                                    title = getString(
-                                        R.string.voucher_detail_title_issued,
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            burn.type
-                                        )
-                                    ),
-                                    body = getString(
-                                        R.string.plr_redeem_instructions,
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            null
-                                        )
-                                    ),
-                                    firstDate = voucher.date_issued?.let {
-                                        getString(
-                                            R.string.voucher_detail_date_issued,
-                                            dateTimeFormatTransactionTime(it)
-                                        )
-                                    },
-                                    secondDate = voucher.expiry_date?.let {
-                                        getString(
-                                            R.string.voucher_detail_date_expires,
-                                            dateTimeFormatTransactionTime(it)
-                                        )
-                                    }
-                                )
-                                binding.code.setTextColor(
-                                    resources.getColor(
-                                        R.color.green_ok,
-                                        null
+                                },
+                                secondDate = voucher.expiry_date?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_expires,
+                                        dateTimeFormatTransactionTime(it)
                                     )
+                                }
+                            )
+                            binding.code.setTextColor(
+                                resources.getColor(
+                                    R.color.green_ok,
+                                    null
                                 )
-                            }
-                            VoucherStates.EXPIRED.state -> {
-                                setVoucherDetails(
-                                    title = getString(
-                                        R.string.voucher_detail_title_expired,
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            burn.type
-                                        )
-                                    ),
-                                    firstDate = voucher.date_issued?.let {
-                                        getString(
-                                            R.string.voucher_detail_date_issued,
-                                            dateTimeFormatTransactionTime(it)
-                                        )
-                                    },
-                                    secondDate = voucher.expiry_date?.let {
-                                        getString(
-                                            R.string.voucher_detail_date_expired,
-                                            dateTimeFormatTransactionTime(it)
-                                        )
-                                    }
-                                )
-                            }
-                            VoucherStates.REDEEMED.state -> {
-                                setVoucherDetails(
-                                    title = getString(
-                                        R.string.voucher_detail_title_redeemed,
-                                        displayValue(
-                                            burn.value,
-                                            burn.prefix,
-                                            burn.suffix,
-                                            burn.currency,
-                                            burn.type
-                                        )
-                                    ),
-                                    firstDate = voucher.date_issued?.let {
-                                        getString(
-                                            R.string.voucher_detail_date_issued,
-                                            dateTimeFormatTransactionTime(it)
-                                        )
-                                    },
-                                    secondDate = voucher.date_redeemed?.let {
-                                        getString(
-                                            R.string.voucher_detail_date_redeemed,
-                                            dateTimeFormatTransactionTime(it)
-                                        )
-                                    }
-                                )
-                            }
+                            )
+                        }
+                        VoucherStates.EXPIRED.state -> {
+                            setExpiredVoucher(earn, burn)
+                            setVoucherDates(
+                                voucher.date_issued?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_issued,
+                                        dateTimeFormatTransactionTime(it)
+                                    )
+                                },
+                                voucher.expiry_date?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_expired,
+                                        dateTimeFormatTransactionTime(it)
+                                    )
+                                }
+                            )
+                        }
+                        VoucherStates.REDEEMED.state -> {
+                            setRedeemedVoucher(earn, burn)
+                            setVoucherDates(
+                                voucher.date_issued?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_issued,
+                                        dateTimeFormatTransactionTime(it)
+                                    )
+                                },
+                                voucher.date_redeemed?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_redeemed,
+                                        dateTimeFormatTransactionTime(it)
+                                    )
+                                }
+                            )
                         }
                     }
                 }
             }
 
-            viewModel.membershipPlan.value?.account?.plan_documents?.forEach { document ->
+            args.membershipPlan.account?.plan_documents?.forEach { document ->
                 document.display?.let {
                     if (it.contains(DocumentTypes.VOUCHER.type)) {
                         binding.linkText.apply {
@@ -203,21 +145,127 @@ class VoucherDetailsFragment :
         }
     }
 
-    private fun setVoucherDetails(
+    private fun setVoucherTitleAndBody(
         title: String? = null,
-        body: String? = null,
-        firstDate: String? = null,
-        secondDate: String? = null
+        body: String? = null
+
     ) {
-        binding.apply {
-            mainTitle.textAndShow(title)
-            mainText.textAndShow(body)
-            dateOne.textAndShow(firstDate)
-            dateTwo.textAndShow(secondDate)
+        binding.mainTitle.textAndShow(title)
+        binding.mainText.textAndShow(body)
+    }
+
+    private fun setVoucherDates(firstDate: String?, secondDate: String?) {
+        binding.dateOne.textAndShow(firstDate)
+        binding.dateTwo.textAndShow(secondDate)
+    }
+
+    private fun setInProgressVoucher(earn: Earn, burn: Burn) {
+        if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
+            setVoucherTitleAndBody(
+                getString(R.string.voucher_stamp_in_progress_title),
+                getString(R.string.voucher_stamp_in_progress_body)
+            )
+        } else {
+            setVoucherTitleAndBody(
+                body = getString(
+                    R.string.voucher_detail_text_in_progress,
+                    displayValue(
+                        earn.target_value,
+                        earn.prefix,
+                        earn.suffix,
+                        earn.currency,
+                        null
+                    ),
+                    displayValue(
+                        burn.value,
+                        burn.prefix,
+                        burn.suffix,
+                        burn.currency,
+                        burn.type
+                    )
+                )
+            )
+        }
+    }
+
+    private fun setIssuedVoucher(earn: Earn, burn: Burn) {
+        if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
+            setVoucherTitleAndBody(
+                getString(R.string.voucher_stamp_issued_title),
+                getString(R.string.voucher_stamp_issued_body)
+            )
+        } else {
+            setVoucherTitleAndBody(
+                title = getString(
+                    R.string.voucher_detail_title_issued,
+                    displayValue(
+                        burn.value,
+                        burn.prefix,
+                        burn.suffix,
+                        burn.currency,
+                        burn.type
+                    )
+                ),
+                body = getString(
+                    R.string.plr_redeem_instructions,
+                    displayValue(
+                        burn.value,
+                        burn.prefix,
+                        burn.suffix,
+                        burn.currency,
+                        null
+                    )
+                )
+            )
+        }
+    }
+
+    private fun setRedeemedVoucher(earn: Earn, burn: Burn) {
+        if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
+            setVoucherTitleAndBody(
+                getString(R.string.voucher_stamp_redeemed_title),
+                getString(R.string.voucher_stamp_redeemed_body)
+            )
+        } else {
+            setVoucherTitleAndBody(
+                title = getString(
+                    R.string.voucher_detail_title_redeemed,
+                    displayValue(
+                        burn.value,
+                        burn.prefix,
+                        burn.suffix,
+                        burn.currency,
+                        burn.type
+                    )
+                )
+            )
+        }
+    }
+
+    private fun setExpiredVoucher(earn: Earn, burn: Burn) {
+        if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
+            setVoucherTitleAndBody(
+                getString(R.string.voucher_stamp_expired_title),
+                getString(R.string.voucher_stamp_expired_body)
+            )
+        } else {
+            setVoucherTitleAndBody(
+                title = getString(
+                    R.string.voucher_detail_title_expired,
+                    displayValue(
+                        burn.value,
+                        burn.prefix,
+                        burn.suffix,
+                        burn.currency,
+                        burn.type
+                    )
+                )
+            )
         }
     }
 
     companion object {
+        private const val STAMP_VOUCHER_EARN_TYPE = "stamps"
         private fun dateTimeFormatTransactionTime(timeStamp: Long) =
             DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
     }

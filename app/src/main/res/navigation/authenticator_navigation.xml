@@ -36,6 +36,11 @@
             android:id="@+id/home_wallet"
             android:name="com.bink.wallet.scenes.wallets.WalletsFragment">
 
+        <argument
+                android:name="shouldRefresh"
+                android:defaultValue="false"
+                app:argType="boolean" />
+
         <action
                 android:id="@+id/home_to_add"
                 app:destination="@id/add_fragment" />
@@ -146,7 +151,8 @@
 
     <fragment
             android:id="@+id/add_join"
-            android:name="com.bink.wallet.scenes.add_join.AddJoinFragment">
+            android:name="com.bink.wallet.scenes.add_join.AddJoinFragment"
+            tools:layout="@layout/add_join_fragment">
 
         <argument
                 android:name="currentMembershipPlan"
@@ -270,7 +276,8 @@
 
     <fragment
             android:id="@+id/loyalty_card_detail_fragment"
-            android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment">
+            android:name="com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsFragment"
+            tools:layout="@layout/fragment_loyalty_card_details">
 
         <argument
                 android:name="membershipPlan"

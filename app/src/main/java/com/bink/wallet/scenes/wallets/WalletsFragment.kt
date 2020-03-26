@@ -44,6 +44,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             actionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        arguments?.let {
+            with(WalletsFragmentArgs.fromBundle(it)) {
+                handleLoading(shouldRefresh)
+            }
+        }
+
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
             binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
@@ -107,6 +113,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         initSharedMembershipPlanObserver()
     }
 
+    override fun onDestroyView() {
+        arguments?.clear()
+
+        super.onDestroyView()
+    }
+
     private fun initSharedMembershipPlanObserver() {
         mainViewModel.membershipPlanDatabaseLiveData.observeNonNull(this) {
             viewModel.fetchStoredMembershipPlans()
@@ -122,4 +134,11 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         )?.commit()
     }
 
+    private fun handleLoading(shouldRefresh: Boolean) {
+        if (shouldRefresh) {
+            mainViewModel.startLoading()
+        } else {
+            mainViewModel.stopLoading()
+        }
+    }
 }

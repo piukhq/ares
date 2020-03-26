@@ -253,7 +253,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     private fun finaliseAuthenticationFlow() {
         if (SharedPreferenceManager.isUserLoggedIn) {
-            findNavController().navigate(SignUpFragmentDirections.globalToHome())
+            findNavController().navigate(SignUpFragmentDirections.globalToHome(true))
         }
     }
 

@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginTop="@dimen/number_margin_top"
-                android:text="@{viewModel.barcode.membershipCard.card.membership_id}"
+                android:text="@{viewModel.cardNumber}"
                 android:textColor="@color/blue_accent"
                 android:textSize="@dimen/size_sub_headline"
                 android:textStyle="bold"
