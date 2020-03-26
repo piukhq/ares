@@ -157,37 +157,37 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
             isPaymentWalletEmpty = paymentCards.isNullOrEmpty()
         }
 
-        binding.addJoinReward.setOnClickListener {
-            viewModel.currentMembershipPlan.value?.let {
-                if (it.account?.plan_description != null) {
-                    findNavController().navigateIfAdded(
-                        this,
-                        AddAuthFragmentDirections.signUpToBrandHeader(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                true,
-                                viewModel.currentMembershipPlan.value?.account?.plan_name
-                                    ?: getString(R.string.plan_description),
-                                it.account.plan_description
-                            )
-                        )
-                    )
-                } else if (it.account?.plan_name_card != null) {
-                    it.account.plan_name?.let { planName ->
-                        findNavController().navigateIfAdded(
-                            this,
-                            AddAuthFragmentDirections.signUpToBrandHeader(
-                                GenericModalParameters(
-                                    R.drawable.ic_close,
-                                    true,
-                                    planName
-                                )
-                            )
-                        )
-                    }
-                }
-            }
-        }
+//        binding.addJoinReward.setOnClickListener {
+//            viewModel.currentMembershipPlan.value?.let {
+//                if (it.account?.plan_description != null) {
+//                    findNavController().navigateIfAdded(
+//                        this,
+//                        AddAuthFragmentDirections.signUpToBrandHeader(
+//                            GenericModalParameters(
+//                                R.drawable.ic_close,
+//                                true,
+//                                viewModel.currentMembershipPlan.value?.account?.plan_name
+//                                    ?: getString(R.string.plan_description),
+//                                it.account.plan_description
+//                            )
+//                        )
+//                    )
+//                } else if (it.account?.plan_name_card != null) {
+//                    it.account.plan_name?.let { planName ->
+//                        findNavController().navigateIfAdded(
+//                            this,
+//                            AddAuthFragmentDirections.signUpToBrandHeader(
+//                                GenericModalParameters(
+//                                    R.drawable.ic_close,
+//                                    true,
+//                                    planName
+//                                )
+//                            )
+//                        )
+//                    }
+//                }
+//            }
+//        }
 
         viewModel.fetchCardsError.observeErrorNonNull(requireContext(), this, false) {}
 
