@@ -86,7 +86,7 @@ android {
             initWith debug
             debuggable true
             applicationIdSuffix ".beta"
-//            signingConfig signingConfigs.binkSigningConfig
+            signingConfig signingConfigs.binkSigningConfig
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
