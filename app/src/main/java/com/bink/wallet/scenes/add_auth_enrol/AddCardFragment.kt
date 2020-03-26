@@ -81,7 +81,9 @@ class AddCardFragment : BaseAddAuthFragment() {
 
     private fun addNoAccountButton() {
         val noAccountButton = Button(requireContext())
-        val constraintSet = ConstraintSet().clone(binding.root)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.root)
+       // constraintSet.connect(binding.addAuthCta.id, )
         binding.root.addView(noAccountButton)
         noAccountButton.text = getString(R.string.no_account_text)
     }
