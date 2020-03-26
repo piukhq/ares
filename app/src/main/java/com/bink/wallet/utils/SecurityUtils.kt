@@ -1,5 +1,6 @@
 package com.bink.wallet.utils
 
+import com.bink.wallet.network.ApiConstants
 import java.math.BigInteger
 import java.security.MessageDigest
 

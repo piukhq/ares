@@ -14,6 +14,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.model.spreedly.SpreedlyCreditCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
+import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
@@ -43,51 +44,8 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>
     ) {
 
-        //todo hash payment card
-        //todo if api v1.2
-        card.card.month?.let { safeMonth ->
-            card.card.year?.let { safeYear ->
-                var paymentCardHash = SecurityUtils.getPaymentCardHash(
-                    cardNumber,
-                    safeMonth.toString(),
-                    safeYear.toString()
-                )
-
-//                if (paymentCardHash.isNotEmpty()) {
-//                    card.card.hash = paymentCardHash
-//                }
-                val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
-                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
-                )
-
-                // ENCRYPTION TIME
-
-                val encryptedHash = BinkCore(context).sessionConfig.encryptValue(paymentCardHash, publicEncryptionKey)
-                val encryptedMonth = BinkCore(context).sessionConfig.encryptValue(safeMonth, publicEncryptionKey)
-                val encryptedYear = BinkCore(context).sessionConfig.encryptValue(safeYear, publicEncryptionKey)
-                val encryptedfirstSix = BinkCore(context).sessionConfig.encryptValue(card.card.first_six_digits, publicEncryptionKey)
-                val encryptedLastFour = BinkCore(context).sessionConfig.encryptValue(card.card.last_four_digits, publicEncryptionKey)
-
-                if (encryptedHash.isNotEmpty()) {
-                    card.card.hash = encryptedHash
-                }
-
-                if (encryptedMonth.isNotEmpty()) {
-                    card.card.month = encryptedMonth
-                }
-
-                if (encryptedYear.isNotEmpty()) {
-                    card.card.year = encryptedYear
-                }
-
-                if (encryptedfirstSix.isNotEmpty()) {
-                    card.card.first_six_digits = encryptedfirstSix
-                }
-
-                if (encryptedLastFour.isNotEmpty()) {
-                    card.card.last_four_digits = encryptedLastFour
-                }
-            }
+        if (ApiConstants.API_VERSION == "1.2") {
+            encryptCardDetails(context, card, cardNumber)
         }
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
@@ -186,6 +144,64 @@ class AddPaymentCardRepository(
                     mutableAddCard.value = response
                 } catch (e: Exception) {
                     error.value = e
+                }
+            }
+        }
+    }
+
+    private fun encryptCardDetails(context: Context, card: PaymentCardAdd, cardNumber: String) {
+        card.card.month?.let { safeMonth ->
+            card.card.year?.let { safeYear ->
+                var paymentCardHash = SecurityUtils.getPaymentCardHash(
+                    cardNumber,
+                    safeMonth.toString(),
+                    safeYear.toString()
+                )
+
+//                if (paymentCardHash.isNotEmpty()) {
+//                    card.card.hash = paymentCardHash
+//                }
+                val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
+                )
+
+                // ENCRYPTION TIME
+
+                val encryptedHash = BinkCore(context).sessionConfig.encryptValue(
+                    paymentCardHash,
+                    publicEncryptionKey
+                )
+                val encryptedMonth =
+                    BinkCore(context).sessionConfig.encryptValue(safeMonth, publicEncryptionKey)
+                val encryptedYear =
+                    BinkCore(context).sessionConfig.encryptValue(safeYear, publicEncryptionKey)
+                val encryptedfirstSix = BinkCore(context).sessionConfig.encryptValue(
+                    card.card.first_six_digits,
+                    publicEncryptionKey
+                )
+                val encryptedLastFour = BinkCore(context).sessionConfig.encryptValue(
+                    card.card.last_four_digits,
+                    publicEncryptionKey
+                )
+
+                if (encryptedHash.isNotEmpty()) {
+                    card.card.hash = encryptedHash
+                }
+
+                if (encryptedMonth.isNotEmpty()) {
+                    card.card.month = encryptedMonth
+                }
+
+                if (encryptedYear.isNotEmpty()) {
+                    card.card.year = encryptedYear
+                }
+
+                if (encryptedfirstSix.isNotEmpty()) {
+                    card.card.first_six_digits = encryptedfirstSix
+                }
+
+                if (encryptedLastFour.isNotEmpty()) {
+                    card.card.last_four_digits = encryptedLastFour
                 }
             }
         }
