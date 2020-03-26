@@ -18,19 +18,32 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocuments
 import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.*
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.HandledException
+import com.bink.wallet.utils.enums.SignUpFieldTypes
+import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.TypeOfField
+import com.bink.wallet.utils.hideKeyboard
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-
 import java.net.SocketTimeoutException
 
 
@@ -259,10 +272,16 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     noAccountText.visibility = View.GONE
                     titleAddAuthText.text = getString(R.string.sign_up_enrol)
                     addCardButton.text = getString(R.string.sign_up_text)
-                    descriptionAddAuth.text = getString(
+                    var description = getString(
                         R.string.enrol_description,
                         viewModel.currentMembershipPlan.value?.account?.plan_name_card
                     )
+                    viewModel.currentMembershipPlan.value?.account?.plan_summary?.let {
+                        if (it.isNotEmpty()) {
+                            description = it
+                        }
+                    }
+                    descriptionAddAuth.text = description
                     viewModel.currentMembershipPlan.value?.account?.enrol_fields?.map {
                         it.typeOfField = TypeOfField.ENROL
                         addFieldToList(it)
