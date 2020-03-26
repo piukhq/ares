@@ -1,7 +1,7 @@
 package com.bink.wallet.scenes.login
 
 import androidx.lifecycle.MutableLiveData
-import com.bink.wallet.data.LoginDataDao
+import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
@@ -11,7 +11,9 @@ import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.utils.CONTENT_TYPE
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +24,7 @@ import okhttp3.ResponseBody
 
 class LoginRepository(
     private val apiService: ApiService,
-    private val loginDataDao: LoginDataDao
+    private val binkDatabase: BinkDatabase
 ) {
     companion object {
         const val DEFAULT_LOGIN_ID = "0"
@@ -190,6 +192,23 @@ class LoginRepository(
                 preferenceResponse.value = response
             } catch (e: Exception) {
                 preferenceErrorResponse.value = e
+            }
+        }
+    }
+
+    fun clearData(
+        clearResponse: MutableLiveData<Unit>,
+        clearDataError: MutableLiveData<Exception>
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = binkDatabase.clearAllTables()
+                    clearResponse.value = response
+                } catch (e: Exception) {
+//                    clearDataError.value = e
+                    logDebug(DebugMenuViewModel::class.simpleName, e.toString())
+                }
             }
         }
     }
