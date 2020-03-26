@@ -67,6 +67,6 @@ public interface SessionConfig {
 
     void clear();
 
-    String encryptSomething(Context context, String string, String publicKey);
+    String encryptValue(String value, String publicKey);
 
 }

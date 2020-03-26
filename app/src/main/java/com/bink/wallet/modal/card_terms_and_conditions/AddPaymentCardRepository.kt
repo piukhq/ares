@@ -62,11 +62,11 @@ class AddPaymentCardRepository(
 
                 // ENCRYPTION TIME
 
-                val encryptedHash = BinkCore(context).sessionConfig.encryptSomething(context, paymentCardHash, publicEncryptionKey)
-                val encryptedMonth = BinkCore(context).sessionConfig.encryptSomething(context, safeMonth, publicEncryptionKey)
-                val encryptedYear = BinkCore(context).sessionConfig.encryptSomething(context, safeYear, publicEncryptionKey)
-                val encryptedfirstSix = BinkCore(context).sessionConfig.encryptSomething(context, card.card.first_six_digits, publicEncryptionKey)
-                val encryptedLastFour = BinkCore(context).sessionConfig.encryptSomething(context, card.card.last_four_digits, publicEncryptionKey)
+                val encryptedHash = BinkCore(context).sessionConfig.encryptValue(paymentCardHash, publicEncryptionKey)
+                val encryptedMonth = BinkCore(context).sessionConfig.encryptValue(safeMonth, publicEncryptionKey)
+                val encryptedYear = BinkCore(context).sessionConfig.encryptValue(safeYear, publicEncryptionKey)
+                val encryptedfirstSix = BinkCore(context).sessionConfig.encryptValue(card.card.first_six_digits, publicEncryptionKey)
+                val encryptedLastFour = BinkCore(context).sessionConfig.encryptValue(card.card.last_four_digits, publicEncryptionKey)
 
                 if (encryptedHash.isNotEmpty()) {
                     card.card.hash = encryptedHash
