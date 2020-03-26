@@ -763,6 +763,11 @@
                 android:name="isRetryJourney"
                 android:defaultValue="false"
                 app:argType="boolean" />
+
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
     </fragment>
 
     <fragment

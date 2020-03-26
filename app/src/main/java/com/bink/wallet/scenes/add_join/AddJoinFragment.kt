@@ -175,7 +175,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 //                        )
 //                    )
                     findNavController().navigate(
-                        AddJoinFragmentDirections.addJoinToAddCardFragment(it, isRetryJourney)
+                        AddJoinFragmentDirections.addJoinToAddCardFragment(it, isRetryJourney, isFromNoReasonCodes)
                     )
                 }
 
