@@ -201,12 +201,12 @@ class LoginRepository(
         clearDataError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
                 try {
                     val response = binkDatabase.clearAllTables()
-                    clearResponse.value = response
+                    clearResponse.postValue(response)
                 } catch (e: Exception) {
-//                    clearDataError.value = e
+                    clearDataError.postValue(e)
                     logDebug(DebugMenuViewModel::class.simpleName, e.toString())
                 }
             }
