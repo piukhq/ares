@@ -34,6 +34,10 @@ class AddPaymentCardRepository(
     private val membershipPlanDao: MembershipPlanDao
 ) {
 
+    companion object {
+        const val ENCRYPTION_API_VERSION = "1.2"
+    }
+
     private val spreedlyKeyMissingError = "Spreedly Environment Key Missing"
 
     fun sendAddCard(
@@ -44,7 +48,7 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>
     ) {
 
-        if (ApiConstants.API_VERSION == "1.2") {
+        if (ApiConstants.API_VERSION == ENCRYPTION_API_VERSION) {
             encryptCardDetails(context, card, cardNumber)
         }
 
@@ -81,13 +85,16 @@ class AddPaymentCardRepository(
                 )
                 withContext(Dispatchers.Main) {
                     try {
-                        //todo encrypt spreedly
                         val response = spreedlyRequest.await()
                         card.card.apply {
                             token = response.transaction.payment_method.token
                             fingerprint = response.transaction.payment_method.fingerprint
                             first_six_digits = response.transaction.payment_method.first_six_digits
                             last_four_digits = response.transaction.payment_method.last_four_digits
+                        }
+
+                        if (ApiConstants.API_VERSION == ENCRYPTION_API_VERSION) {
+                            encryptCardDetails(context, card, cardNumber)
                         }
 
                         doAddPaymentCard(
@@ -154,18 +161,13 @@ class AddPaymentCardRepository(
             card.card.year?.let { safeYear ->
                 var paymentCardHash = SecurityUtils.getPaymentCardHash(
                     cardNumber,
-                    safeMonth.toString(),
-                    safeYear.toString()
+                    safeMonth,
+                    safeYear
                 )
 
-//                if (paymentCardHash.isNotEmpty()) {
-//                    card.card.hash = paymentCardHash
-//                }
                 val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
                     LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
                 )
-
-                // ENCRYPTION TIME
 
                 val encryptedHash = BinkCore(context).sessionConfig.encryptValue(
                     paymentCardHash,

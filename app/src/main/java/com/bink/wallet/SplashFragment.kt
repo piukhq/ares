@@ -25,14 +25,13 @@ class SplashFragment : Fragment() {
         }
     }
 
-    external fun spreedlyKey(): String
-    //todo move this to where we need it
-    external fun paymentCardHashingDevKey(): String
-    external fun paymentCardHashingStagingKey(): String
-    external fun paymentCardHashingProdKey(): String
-    external fun paymentCardEncryptionPublicKeyDev(): String
-    external fun paymentCardEncryptionPublicKeyStaging(): String
-    external fun paymentCardEncryptionPublicKeyProd(): String
+    private external fun spreedlyKey(): String
+    private external fun paymentCardHashingDevKey(): String
+    private external fun paymentCardHashingStagingKey(): String
+    private external fun paymentCardHashingProdKey(): String
+    private external fun paymentCardEncryptionPublicKeyDev(): String
+    private external fun paymentCardEncryptionPublicKeyStaging(): String
+    private external fun paymentCardEncryptionPublicKeyProd(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,31 +96,37 @@ class SplashFragment : Fragment() {
     }
 
     private fun persistPaymentCardHashSecret() {
-        //todo these should be encoded base64
-        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH)) {
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
-            )
+        when {
+            BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH) -> {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
+                )
 
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY, paymentCardEncryptionPublicKeyProd()
-            )
-        } else if (BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH)) {
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
-            )
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
+                    paymentCardEncryptionPublicKeyProd()
+                )
+            }
+            BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH) -> {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
+                )
 
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY, paymentCardEncryptionPublicKeyStaging()
-            )
-        } else if (BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH)) {
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
-            )
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
+                    paymentCardEncryptionPublicKeyStaging()
+                )
+            }
+            BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH) -> {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
+                )
 
-            LocalStoreUtils.setAppSharedPref(
-                LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY, paymentCardEncryptionPublicKeyDev()
-            )
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
+                    paymentCardEncryptionPublicKeyDev()
+                )
+            }
         }
     }
 }

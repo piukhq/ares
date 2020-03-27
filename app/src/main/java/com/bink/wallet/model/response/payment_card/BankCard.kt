@@ -39,13 +39,21 @@ data class BankCard(
 
     fun isExpired(): Boolean {
         val cal = Calendar.getInstance()
-//        if (year != null && month != null) {
-//            if (year < cal.get(Calendar.YEAR) ||
-//                (year == cal.get(Calendar.YEAR) &&
-//                 month <= cal.get(Calendar.MONTH))) {
-//                return true
-//            }
-//        }
+        year?.let { safeYear ->
+            month?.let { safeMonth ->
+                val comparableYear = safeYear.toInt()
+                val comparableMonth = safeMonth.toInt()
+                if (year != null && month != null) {
+                    if (comparableYear < cal.get(Calendar.YEAR) ||
+                        (comparableYear == cal.get(Calendar.YEAR) &&
+                                comparableMonth <= cal.get(Calendar.MONTH))
+                    ) {
+                        return true
+                    }
+                }
+            }
+        }
+
         return false
     }
 }
