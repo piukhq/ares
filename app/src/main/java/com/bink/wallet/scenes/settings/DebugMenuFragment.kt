@@ -77,8 +77,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 applyChanges()
             } else {
                 requireContext().displayModalPopup(
-                    "No changes to apply",
-                    "Select something in order to restart"
+                    getString(R.string.no_changes_to_apply),
+                    getString(R.string.select_something_message)
                 )
             }
         }
