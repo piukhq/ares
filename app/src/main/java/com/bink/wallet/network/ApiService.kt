@@ -87,7 +87,6 @@ interface ApiService {
         @Path("payment_id") cardId: String
     ): Deferred<ResponseBody>
 
-    @Headers( "Content-Type: application/json;v=1.2")
     @POST("/ubiquity/service")
     fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
 

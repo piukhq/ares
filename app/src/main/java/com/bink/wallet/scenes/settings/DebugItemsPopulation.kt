@@ -6,7 +6,6 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.LocalStoreUtils
 
 object DebugItemsPopulation {
@@ -24,6 +23,13 @@ object DebugItemsPopulation {
                 res.getString(R.string.debug_environment_base_url_title),
                 SharedPreferenceManager.storedApiUrl.toString(),
                 DebugItemType.ENVIRONMENT
+            )
+        )
+        itemsList.add(
+            DebugItem(
+                res.getString(R.string.debug_backend_version),
+                SharedPreferenceManager.storedBackendVersion.toString(),
+                DebugItemType.BACKEND_VERSION
             )
         )
         LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
