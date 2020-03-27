@@ -15,7 +15,7 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.scottyab.rootbeer.RootBeer
-import java.util.*
+import java.util.Locale
 
 class SplashFragment : Fragment() {
 

@@ -1,6 +1,5 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.modal.generic.BaseModalViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -15,9 +14,9 @@ class CardTermsAndConditionsViewModel(private val repository: AddPaymentCardRepo
     var localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     var localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
-    fun sendAddCard(context: Context, card: PaymentCardAdd, cardNumber: String) {
+    fun sendAddCard(card: PaymentCardAdd, cardNumber: String) {
         error.value = null
-        repository.sendAddCard(context, card, cardNumber, paymentCard, error)
+        repository.sendAddCard(card, cardNumber, paymentCard, error)
     }
 
     fun fetchLocalMembershipCards() {

@@ -76,7 +76,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             binding.progressSpinner.visibility = View.VISIBLE
             userBankCard?.let {
                 viewModel.sendAddCard(
-                    requireContext(),
                     PaymentCardAdd(
                         it,
                         Account(

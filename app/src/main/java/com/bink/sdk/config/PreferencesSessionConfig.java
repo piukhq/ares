@@ -256,11 +256,6 @@ public class PreferencesSessionConfig implements SessionConfig {
                 .apply();
     }
 
-    @Override
-    public String encryptValue(String value, String publicKey) {
-        return BinkSecurityUtil.getEncryptedMessage(value, publicKey);
-    }
-
     public String getEncryptedKey() {
         return encryptedKey;
     }

@@ -64,7 +64,4 @@ public interface SessionConfig {
     String getEncryptedKey();
 
     void clear();
-
-    String encryptValue(String value, String publicKey);
-
 }

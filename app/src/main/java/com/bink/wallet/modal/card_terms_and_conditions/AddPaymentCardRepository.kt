@@ -1,8 +1,6 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.bink.sdk.BinkCore
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
@@ -41,7 +39,6 @@ class AddPaymentCardRepository(
     private val spreedlyKeyMissingError = "Spreedly Environment Key Missing"
 
     fun sendAddCard(
-        context: Context,
         card: PaymentCardAdd,
         cardNumber: String,
         mutableAddCard: MutableLiveData<PaymentCard>,
@@ -49,7 +46,7 @@ class AddPaymentCardRepository(
     ) {
 
         if (ApiConstants.API_VERSION == ENCRYPTION_API_VERSION) {
-            encryptCardDetails(context, card, cardNumber)
+            encryptCardDetails(card, cardNumber)
         }
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
@@ -94,7 +91,7 @@ class AddPaymentCardRepository(
                         }
 
                         if (ApiConstants.API_VERSION == ENCRYPTION_API_VERSION) {
-                            encryptCardDetails(context, card, cardNumber)
+                            encryptCardDetails(card, cardNumber)
                         }
 
                         doAddPaymentCard(
@@ -156,7 +153,7 @@ class AddPaymentCardRepository(
         }
     }
 
-    private fun encryptCardDetails(context: Context, card: PaymentCardAdd, cardNumber: String) {
+    private fun encryptCardDetails(card: PaymentCardAdd, cardNumber: String) {
         card.card.month?.let { safeMonth ->
             card.card.year?.let { safeYear ->
                 var paymentCardHash = SecurityUtils.getPaymentCardHash(
@@ -169,41 +166,54 @@ class AddPaymentCardRepository(
                     LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
                 )
 
-                val encryptedHash = BinkCore(context).sessionConfig.encryptValue(
-                    paymentCardHash,
-                    publicEncryptionKey
-                )
-                val encryptedMonth =
-                    BinkCore(context).sessionConfig.encryptValue(safeMonth, publicEncryptionKey)
-                val encryptedYear =
-                    BinkCore(context).sessionConfig.encryptValue(safeYear, publicEncryptionKey)
-                val encryptedfirstSix = BinkCore(context).sessionConfig.encryptValue(
-                    card.card.first_six_digits,
-                    publicEncryptionKey
-                )
-                val encryptedLastFour = BinkCore(context).sessionConfig.encryptValue(
-                    card.card.last_four_digits,
-                    publicEncryptionKey
-                )
+                publicEncryptionKey?.let { safeKey ->
+                    val encryptedHash = SecurityUtils.encryptMessage(
+                        paymentCardHash,
+                        publicEncryptionKey
+                    )
+                    val encryptedMonth =
+                        SecurityUtils.encryptMessage(safeMonth, safeKey)
 
-                if (encryptedHash.isNotEmpty()) {
-                    card.card.hash = encryptedHash
-                }
+                    val encryptedYear =
+                        SecurityUtils.encryptMessage(safeYear, publicEncryptionKey)
 
-                if (encryptedMonth.isNotEmpty()) {
-                    card.card.month = encryptedMonth
-                }
+                    var encryptedfirstSix = ""
 
-                if (encryptedYear.isNotEmpty()) {
-                    card.card.year = encryptedYear
-                }
+                    card.card.first_six_digits?.let { safeSixDigits ->
+                        encryptedfirstSix = SecurityUtils.encryptMessage(
+                            safeSixDigits,
+                            publicEncryptionKey
+                        )
+                    }
 
-                if (encryptedfirstSix.isNotEmpty()) {
-                    card.card.first_six_digits = encryptedfirstSix
-                }
+                    var encryptedLastFour = ""
 
-                if (encryptedLastFour.isNotEmpty()) {
-                    card.card.last_four_digits = encryptedLastFour
+                    card.card.last_four_digits?.let { safeFourDigits ->
+                        encryptedLastFour = SecurityUtils.encryptMessage(
+                            safeFourDigits,
+                            publicEncryptionKey
+                        )
+                    }
+
+                    if (encryptedHash.isNotEmpty()) {
+                        card.card.hash = encryptedHash
+                    }
+
+                    if (encryptedMonth.isNotEmpty()) {
+                        card.card.month = encryptedMonth
+                    }
+
+                    if (encryptedYear.isNotEmpty()) {
+                        card.card.year = encryptedYear
+                    }
+
+                    if (encryptedfirstSix.isNotEmpty()) {
+                        card.card.first_six_digits = encryptedfirstSix
+                    }
+
+                    if (encryptedLastFour.isNotEmpty()) {
+                        card.card.last_four_digits = encryptedLastFour
+                    }
                 }
             }
         }

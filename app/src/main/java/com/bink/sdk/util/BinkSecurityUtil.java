@@ -245,23 +245,6 @@ public class BinkSecurityUtil {
         }
     }
 
-    public static String getEncryptedMessage(String messageToEncrypt, String publicKeyString) {
-        Cipher cipher;
-        PublicKey publicKey;
-        publicKey = loadPublicKey(publicKeyString);
-        byte[] bytes = new byte[0];
-        try {
-            cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-            bytes = cipher.doFinal(messageToEncrypt.getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        byte[] androidEncode = Base64.encode(bytes, Base64.NO_WRAP);
-        return new String(androidEncode, StandardCharsets.UTF_8);
-    }
-
     public static String decrypt(String encrypted) {
         if (BinkSecurityUtil.getInstance() != null) {
             return BinkSecurityUtil.getInstance().decryption(encrypted);
@@ -273,19 +256,5 @@ public class BinkSecurityUtil {
 
     public static void clear() {
         BinkSecurityUtil.getInstance().removeKey();
-    }
-
-    private static PublicKey loadPublicKey(String publicKeyString) {
-        try {
-            byte[] byteKey = Base64.decode(publicKeyString.getBytes(), Base64.DEFAULT);
-            X509EncodedKeySpec X509publicKey = new X509EncodedKeySpec(byteKey);
-            KeyFactory kf = KeyFactory.getInstance("RSA");
-
-            return kf.generatePublic(X509publicKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }
