@@ -83,7 +83,6 @@ android {
 //            }
 //        }
         beta {
-            initWith debug
             debuggable true
             applicationIdSuffix ".beta"
             signingConfig signingConfigs.binkSigningConfig
