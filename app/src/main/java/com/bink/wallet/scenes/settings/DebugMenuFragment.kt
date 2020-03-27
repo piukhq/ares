@@ -50,7 +50,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         }
 
         viewModel.logOutResponse.observeNonNull(this) {
-            restartApplication()
+            viewModel.clearData()
+
         }
 
         viewModel.logOutErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -60,6 +61,14 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             EMPTY_STRING,
             true
         ) {
+            viewModel.clearData()
+        }
+
+        viewModel.clearResponse.observeNonNull(this) {
+            restartApplication()
+        }
+
+        viewModel.clearErrorResponse.observeNonNull(this) {
             restartApplication()
         }
 

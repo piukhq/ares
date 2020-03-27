@@ -139,9 +139,9 @@ val viewModelModules = module {
 
 fun provideLoginRepository(
     restApiService: ApiService,
-    loginDataDao: LoginDataDao
+    binkDatabase: BinkDatabase
 ): LoginRepository =
-    LoginRepository(restApiService, loginDataDao)
+    LoginRepository(restApiService, binkDatabase)
 
 fun provideLoyaltyCardRepository(
     restApiService: ApiService,
@@ -150,7 +150,13 @@ fun provideLoyaltyCardRepository(
     bannersDisplayDao: BannersDisplayDao,
     paymentCardDao: PaymentCardDao
 ): LoyaltyWalletRepository =
-    LoyaltyWalletRepository(restApiService, membershipCardDao, membershipPlanDao, bannersDisplayDao, paymentCardDao)
+    LoyaltyWalletRepository(
+        restApiService,
+        membershipCardDao,
+        membershipPlanDao,
+        bannersDisplayDao,
+        paymentCardDao
+    )
 
 fun provideLoyaltyCardDetailsRepository(
     restApiService: ApiService,
