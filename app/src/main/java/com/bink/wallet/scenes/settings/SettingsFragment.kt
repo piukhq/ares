@@ -10,7 +10,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
@@ -212,13 +211,22 @@ class SettingsFragment :
         }
 
         viewModel.logOutResponse.observeNonNull(this@SettingsFragment) {
-            clearUserDetails()
+            viewModel.clearData()
         }
 
         viewModel.logOutErrorResponse.observeNonNull(this@SettingsFragment) {
+            viewModel.clearData()
+        }
+
+        viewModel.clearDataResponse.observeNonNull(this) {
+            clearUserDetails()
+        }
+
+        viewModel.clearErrorResponse.observeNonNull(this) {
             clearUserDetails()
         }
     }
+
 
     private fun clearUserDetails() {
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
