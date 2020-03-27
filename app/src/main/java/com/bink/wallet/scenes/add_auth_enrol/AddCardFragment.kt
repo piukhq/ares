@@ -80,11 +80,40 @@ class AddCardFragment : BaseAddAuthFragment() {
     }
 
     private fun addNoAccountButton() {
-        val noAccountButton = Button(requireContext())
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.root)
-       // constraintSet.connect(binding.addAuthCta.id, )
-        binding.root.addView(noAccountButton)
-        noAccountButton.text = getString(R.string.no_account_text)
+//        val noAccountButton = Button(requireContext())
+//        binding.layout.addView(noAccountButton)
+//        noAccountButton.id = View.generateViewId()
+//        noAccountButton.textSize = resources.getDimension(R.dimen.size_sub_headline)
+//        noAccountButton.foreground =
+//        noAccountButton.text = getString(R.string.no_account_text)
+//        val constraintSet = ConstraintSet()
+//        constraintSet.clone(binding.layout)
+//        constraintSet.connect(
+//            binding.addAuthCta.id,
+//            ConstraintSet.BOTTOM,
+//            noAccountButton.id,
+//            ConstraintSet.TOP,
+//            0
+//        )
+//        constraintSet.connect(
+//            noAccountButton.id,
+//            ConstraintSet.BOTTOM,
+//            binding.layout.id,
+//            ConstraintSet.BOTTOM,
+//            36
+//        )
+//        constraintSet.connect(
+//            noAccountButton.id,
+//            ConstraintSet.END,
+//            binding.layout.id,
+//            ConstraintSet.END
+//        )
+//        constraintSet.connect(
+//            noAccountButton.id,
+//            ConstraintSet.START,
+//            binding.layout.id,
+//            ConstraintSet.START
+//        )
+//        constraintSet.applyTo(binding.layout)
     }
 }
