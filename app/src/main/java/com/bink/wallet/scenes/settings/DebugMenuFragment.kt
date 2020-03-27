@@ -114,9 +114,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         adb.setPositiveButton(
             getString(R.string.ok)
         ) { _, _ ->
-            when (selection) {
-                0 -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
-                1 -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
+            if (selection == 0) {
+                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
+            } else {
+                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
             }
             shouldApplyChanges = true
         }
