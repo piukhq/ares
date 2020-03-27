@@ -72,20 +72,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     )
                 )
 
-                viewModel.currentMembershipPlan.value?.has_vouchers?.let {
-                    if (it) {
-                        if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
-                            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                                ?.let { email ->
-                                    with(pairPlanField) {
-                                        second.disabled = true
-                                        second.value = email
-                                    }
-                                }
-                        }
-                    }
-                }
-
                 if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
                     planBooleanFieldsList.add(
                         pairPlanField
