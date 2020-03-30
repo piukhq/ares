@@ -3,11 +3,14 @@ package com.bink.wallet.scenes.add_auth_enrol
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
+import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
+import com.bink.wallet.utils.navigateIfAdded
 
 class AddCardFragment : BaseAddAuthFragment() {
 
@@ -104,4 +107,17 @@ class AddCardFragment : BaseAddAuthFragment() {
         getString(R.string.enter_credentials)
     }
 
+    private fun navigateToGhostRegistrationUnavailableScreen() {
+        findNavController().navigateIfAdded(
+            this,
+            BaseAddAuthFragmentDirections.baseAddAuthToGhostRegistrationUnavailable(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    true,
+                    getString(R.string.title_ghost_card_not_available),
+                    getString(R.string.description_ghost_card_not_available)
+                )
+            )
+        )
+    }
 }

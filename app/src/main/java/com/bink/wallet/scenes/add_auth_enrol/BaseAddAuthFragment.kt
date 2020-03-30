@@ -9,17 +9,16 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
 
     override val layoutRes: Int
         get() = R.layout.base_add_auth_fragment
-    override val viewModel: AddAuthViewModel by sharedViewModel()
+    override val viewModel: AddAuthViewModel by viewModel()
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -27,7 +26,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private val args: BaseAddAuthFragmentArgs by navArgs()
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,20 +81,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 }
             }
         }
-    }
-
-    fun navigateToGhostRegistrationUnavailableScreen() {
-        findNavController().navigateIfAdded(
-            this,
-            BaseAddAuthFragmentDirections.baseAddAuthToGhostRegistrationUnavailable(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    getString(R.string.title_ghost_card_not_available),
-                    getString(R.string.description_ghost_card_not_available)
-                )
-            )
-        )
     }
 
     private fun handleToolbarAction() {
