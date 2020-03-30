@@ -748,6 +748,9 @@
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/baseAddAuthToGhostRegistrationUnavailable"
+                app:destination="@id/ghost_registration_unavailable" />
     </fragment>
 
     <fragment

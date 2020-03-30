@@ -9,6 +9,7 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -32,6 +33,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onViewCreated(view, savedInstanceState)
         binding.membershipPlan = args.membershipPlan
         binding.viewModel = viewModel
+        binding.footerSimple.viewModel = viewModel
+        binding.footerComposed.viewModel = viewModel
 
         SharedPreferenceManager.isLoyaltySelected = true
 
@@ -46,11 +49,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         binding.addJoinReward.setOnClickListener {
-            handleBrandHeaderClickListener()
+            navigateToBrandHeader()
         }
     }
 
-    private fun handleBrandHeaderClickListener() {
+    private fun navigateToBrandHeader() {
         binding.membershipPlan?.let { plan ->
             if (plan.account?.plan_description != null) {
                 findNavController().navigateIfAdded(
@@ -80,6 +83,20 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 }
             }
         }
+    }
+
+    fun navigateToGhostRegistrationUnavailableScreen() {
+        findNavController().navigateIfAdded(
+            this,
+            BaseAddAuthFragmentDirections.baseAddAuthToGhostRegistrationUnavailable(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    true,
+                    getString(R.string.title_ghost_card_not_available),
+                    getString(R.string.description_ghost_card_not_available)
+                )
+            )
+        )
     }
 
     private fun handleToolbarAction() {

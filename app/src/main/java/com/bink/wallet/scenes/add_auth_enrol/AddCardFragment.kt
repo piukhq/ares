@@ -3,10 +3,11 @@ package com.bink.wallet.scenes.add_auth_enrol
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 
 class AddCardFragment : BaseAddAuthFragment() {
 
@@ -18,26 +19,32 @@ class AddCardFragment : BaseAddAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isRetryJourney = addCardArgs.isRetryJourney
-        isFromNoReasonCodes = addCardArgs.isFromNoReasonCodes
+        setViewsContent()
 
-
-        if (isRetryJourney && !isFromNoReasonCodes) {
-
-        } else {
-            addNoAccountButton()
+        binding.footerComposed.noAccount.setOnClickListener {
+            navigateToGhostRegistrationUnavailableScreen()
+            logNoAccountClick()
         }
 
-        setViewsContent(isRetryJourney)
+        binding.footerComposed.addAuthCta.setOnClickListener { logCTAClick(it) }
+        binding.footerSimple.addAuthCta.setOnClickListener { logCTAClick(it) }
     }
 
-
-    private fun setViewsContent(isRetryJourney: Boolean) {
-        viewModel.ctaText.set(retrieveCTAText(isRetryJourney))
-        viewModel.titleText.set(retrieveTitleText(isRetryJourney))
-        viewModel.descriptionText.set(retrieveDescriptionText(isRetryJourney))
+    override fun onResume() {
+        super.onResume()
+        logScreenView(ADD_AUTH_FORM_VIEW)
     }
 
-    private fun retrieveDescriptionText(isRetryJourney: Boolean): String {
+    private fun setViewsContent() {
+        viewModel.ctaText.set(retrieveCTAText())
+        viewModel.titleText.set(retrieveTitleText())
+        viewModel.descriptionText.set(retrieveDescriptionText())
+        viewModel.isNoAccountFooter.set(!isFooterSimple())
+    }
+
+    private fun isFooterSimple() = isRetryJourney && !isFromNoReasonCodes
+
+    private fun retrieveDescriptionText(): String {
         binding.membershipPlan?.let { membershipPlan ->
             if (isRetryJourney) {
                 if (membershipPlan.areTransactionsAvailable()) {
@@ -67,53 +74,34 @@ class AddCardFragment : BaseAddAuthFragment() {
         return EMPTY_STRING
     }
 
-    private fun retrieveCTAText(isRetryJourney: Boolean) = if (isRetryJourney) {
+    private fun logNoAccountClick() {
+        logEvent(
+            FirebaseEvents.getFirebaseIdentifier(
+                ADD_AUTH_FORM_VIEW,
+                binding.footerComposed.noAccount.text.toString()
+            )
+        )
+    }
+
+    private fun logCTAClick(button: View) {
+        logEvent(
+            FirebaseEvents.getFirebaseIdentifier(
+                ADD_AUTH_FORM_VIEW,
+                (button as Button).text.toString()
+            )
+        )
+    }
+
+    private fun retrieveCTAText() = if (isRetryJourney) {
         getString(R.string.log_in_text)
     } else {
         getString(R.string.add_card)
     }
 
-    private fun retrieveTitleText(isRetryJourney: Boolean) = if (isRetryJourney) {
+    private fun retrieveTitleText() = if (isRetryJourney) {
         getString(R.string.log_in_text)
     } else {
         getString(R.string.enter_credentials)
     }
 
-    private fun addNoAccountButton() {
-//        val noAccountButton = Button(requireContext())
-//        binding.layout.addView(noAccountButton)
-//        noAccountButton.id = View.generateViewId()
-//        noAccountButton.textSize = resources.getDimension(R.dimen.size_sub_headline)
-//        noAccountButton.foreground =
-//        noAccountButton.text = getString(R.string.no_account_text)
-//        val constraintSet = ConstraintSet()
-//        constraintSet.clone(binding.layout)
-//        constraintSet.connect(
-//            binding.addAuthCta.id,
-//            ConstraintSet.BOTTOM,
-//            noAccountButton.id,
-//            ConstraintSet.TOP,
-//            0
-//        )
-//        constraintSet.connect(
-//            noAccountButton.id,
-//            ConstraintSet.BOTTOM,
-//            binding.layout.id,
-//            ConstraintSet.BOTTOM,
-//            36
-//        )
-//        constraintSet.connect(
-//            noAccountButton.id,
-//            ConstraintSet.END,
-//            binding.layout.id,
-//            ConstraintSet.END
-//        )
-//        constraintSet.connect(
-//            noAccountButton.id,
-//            ConstraintSet.START,
-//            binding.layout.id,
-//            ConstraintSet.START
-//        )
-//        constraintSet.applyTo(binding.layout)
-    }
 }

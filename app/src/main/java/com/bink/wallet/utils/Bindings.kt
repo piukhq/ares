@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.ObservableBoolean
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R

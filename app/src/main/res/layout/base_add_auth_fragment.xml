@@ -85,32 +85,27 @@
                 app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
                 tools:text="AuthDescription" />
 
-        <Button
-                android:id="@+id/add_auth_cta"
-                android:layout_width="0dp"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/auth_fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description_add_auth" />
+
+        <include
+                android:id="@+id/footer_composed"
+                layout="@layout/bottom_add_auth_no_account" />
+
+        <include
+                android:id="@+id/footer_simple"
+                layout="@layout/bottom_add_auth"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_extra_large"
                 android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-                android:background="@drawable/gradient_button_selector"
-                android:text="@{viewModel.ctaText}"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="AuthCta" />
-
-        <Button
-                android:id="@+id/no_account_text"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                android:foreground="?selectableItemBackground"
-                android:text="@string/no_account_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

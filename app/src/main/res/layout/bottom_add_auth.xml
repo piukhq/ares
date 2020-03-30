@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/add_auth_cta"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_padding_size_extra_large"
-        android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-        android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-        android:background="@drawable/gradient_button_selector"
-        android:text="@{viewModel.ctaText}"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/no_account_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="AuthCta" />
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel" />
+    </data>
+
+    <Button
+            android:id="@+id/add_auth_cta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient_button_selector"
+            android:enabled="@{viewModel.haveValidationsPassed}"
+            android:text="@{viewModel.ctaText}"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            tools:visibility="gone"
+            app:isVisible="@{!viewModel.isNoAccountFooter()}" />
+</layout>
