@@ -56,6 +56,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
             }
         }
     }
+
     suspend fun deleteCard(id: String?) {
         repository.deleteMembershipCard(id, deletedCard, _deleteError)
     }
