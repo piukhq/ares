@@ -1,8 +1,5 @@
 package com.bink.wallet
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -24,7 +21,6 @@ import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
 
-
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
@@ -33,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
         logUserPropertiesAtStartUp()
 
         Fabric.with(this, Crashlytics())

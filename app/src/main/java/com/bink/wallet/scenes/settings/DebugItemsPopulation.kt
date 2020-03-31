@@ -6,7 +6,6 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.LocalStoreUtils
 
 object DebugItemsPopulation {
@@ -32,6 +31,13 @@ object DebugItemsPopulation {
                     res.getString(R.string.debug_current_email_address),
                     it,
                     DebugItemType.EMAIL
+                )
+            )
+            itemsList.add(
+                DebugItem(
+                    res.getString(R.string.debug_environment_open_zendesk_title),
+                    "",
+                    DebugItemType.ZENDESK
                 )
             )
         }
