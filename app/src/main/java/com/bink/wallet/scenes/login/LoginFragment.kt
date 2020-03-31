@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.login
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -94,7 +93,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     getString(R.string.token_api_v1, it.api_key)
                 )
 
-                Log.e("ConnorDebug", "it.email: " + it.email)
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_EMAIL,
                     it.email ?: EMPTY_STRING
