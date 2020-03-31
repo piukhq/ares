@@ -51,7 +51,6 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
         viewModel.logOutResponse.observeNonNull(this) {
             viewModel.clearData()
-
         }
 
         viewModel.logOutErrorResponse.observeNetworkDrivenErrorNonNull(

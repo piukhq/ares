@@ -52,9 +52,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            debuggable false
+            initWith debug
+//            minifyEnabled true
+//            shrinkResources true
+//            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -251,4 +252,5 @@ dependencies {
     // Facebook
     implementation 'com.facebook.android:facebook-login:5.9.0'
 
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
 }
