@@ -150,7 +150,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addCardButton.setOnClickListener {
-            if (currentMembershipPlan?.feature_set?.has_vouchers == true &&
+            if ((currentMembershipPlan?.feature_set?.has_vouchers == true ||
+                        currentMembershipPlan?.has_vouchers == true) &&
                 viewModel.paymentCards.value.isNullOrEmpty()
             ) {
                 findNavController().navigate(
@@ -212,7 +213,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             }
                         }
                         AddJoinFragmentDirections.addJoinToJoinUnavailable(genericModalParameters)
-                    } else if (membershipPlan.feature_set?.has_vouchers == true &&
+                    } else if ((membershipPlan.feature_set?.has_vouchers == true ||
+                                membershipPlan.has_vouchers == true) &&
                         viewModel.paymentCards.value.isNullOrEmpty()
                     ) {
                         AddJoinFragmentDirections.actionAddJoinToPaymentCardNeededFragment(

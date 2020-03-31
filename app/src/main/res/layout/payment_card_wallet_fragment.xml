@@ -31,20 +31,5 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <ProgressBar
-                android:id="@+id/progress_spinner"
-                style="@style/ProgressSpinner"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="@dimen/margin_padding_size_small"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginBottom="@dimen/margin_padding_size_small"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/swipe_refresh"
-                app:layout_constraintStart_toStartOf="@+id/swipe_refresh"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -19,20 +19,6 @@
                     android:layout_height="match_parent"
                     tools:itemCount="3"
                     tools:listitem="@layout/loyalty_wallet_item" />
-
-            <ProgressBar
-                    android:id="@+id/progress_spinner"
-                    style="@style/ProgressSpinner"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="@dimen/margin_padding_size_small"
-                    android:layout_marginTop="@dimen/margin_padding_size_small"
-                    android:layout_marginBottom="@dimen/margin_padding_size_small"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/loyalty_wallet_list"
-                    app:layout_constraintStart_toStartOf="@+id/loyalty_wallet_list"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
