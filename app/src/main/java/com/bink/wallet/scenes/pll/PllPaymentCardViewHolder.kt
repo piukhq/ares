@@ -12,8 +12,9 @@ class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
 
         with(binding.imageView) {
             val type = paymentCard.paymentCard.card?.provider?.getCardTypeFromProvider()
-            if (type != null)
+            if (type != null) {
                 setImageResource(type.addLogo)
+            }
         }
 
         with(binding.toggle) {
@@ -28,10 +29,10 @@ class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
             }
         }
 
-        if (isLast) {
-            binding.separator.visibility = View.GONE
+        binding.separator.visibility = if (isLast) {
+            View.GONE
         } else {
-            binding.separator.visibility = View.VISIBLE
+            View.VISIBLE
         }
     }
 }
