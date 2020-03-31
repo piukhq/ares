@@ -47,10 +47,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         binding.addJoinReward.setOnClickListener {
-            navigateToBrandHeader()
+          //  navigateToBrandHeader()
         }
     }
 
+    //TODO move this in children
     private fun navigateToBrandHeader() {
         binding.membershipPlan?.let { plan ->
             if (plan.account?.plan_description != null) {
