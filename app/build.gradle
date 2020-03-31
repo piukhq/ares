@@ -41,6 +41,13 @@ android {
                 keyAlias = System.getenv("BINK_KEYSTORE_ALIAS")
             }
         }
+
+        releaseSigningConfig {
+            storeFile file("/Users/macbookpro/Desktop/key0")
+            storePassword "mara12"
+            keyAlias "key0"
+            keyPassword "mara12"
+        }
     }
     defaultConfig {
         applicationId "com.bink.wallet"
@@ -52,10 +59,10 @@ android {
     }
     buildTypes {
         release {
-            initWith debug
-//            minifyEnabled true
-//            shrinkResources true
-//            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            debuggable true
+            signingConfig signingConfigs.binkSigningConfig
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {

@@ -33,6 +33,11 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //TODO Mandatory to be included, commented for now as it's causing a crash
+//        LocalStoreUtils.setAppSharedPref(
+//            LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
+//        )
+
         setAppPrefs()
     }
 
@@ -84,6 +89,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
             val key = binkCore.sessionConfig.apiKey
             val email = binkCore.sessionConfig.userEmail
             if (!key.isNullOrEmpty()) {
+                //TODO here we should retrieve the email and send it to the the api
                 val jwt = JWT(key)
                 if(email.isNullOrEmpty()) {
                    // email = jwt
