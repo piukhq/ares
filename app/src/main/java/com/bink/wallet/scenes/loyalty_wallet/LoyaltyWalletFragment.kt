@@ -36,7 +36,8 @@ import java.net.SocketTimeoutException
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
     override val viewModel: LoyaltyViewModel by viewModel()
-    val mainViewModel: MainViewModel by sharedViewModel()
+    private val mainViewModel: MainViewModel by sharedViewModel()
+
     override val layoutRes: Int
         get() = R.layout.fragment_loyalty_wallet
 
@@ -185,7 +186,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
             binding.swipeLayout.isEnabled = true
         }
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

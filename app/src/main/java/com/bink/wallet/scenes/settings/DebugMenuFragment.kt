@@ -45,7 +45,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         }
 
         viewModel.logOutResponse.observeNonNull(this) {
-            restartApplication()
+            viewModel.clearData()
+
         }
 
         viewModel.logOutErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -55,6 +56,14 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             "",
             true
         ) {
+            viewModel.clearData()
+        }
+
+        viewModel.clearResponse.observeNonNull(this) {
+            restartApplication()
+        }
+
+        viewModel.clearErrorResponse.observeNonNull(this) {
             restartApplication()
         }
     }
@@ -90,6 +99,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
             }
+
             if (SharedPreferenceManager.isUserLoggedIn) {
                 viewModel.logOut()
             } else {

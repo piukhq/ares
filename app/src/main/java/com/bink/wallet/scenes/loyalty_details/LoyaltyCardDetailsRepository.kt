@@ -51,6 +51,9 @@ class LoyaltyCardDetailsRepository(
                 try {
                     val response = request.await()
                     membershipCard.value = response.first { card -> card.id == cardId }
+                        .also {
+                            membershipCardDao.storeMembershipCard(it)
+                        }
                 } catch (e: Exception) {
                     if (addError)
                         refreshError.value = e
