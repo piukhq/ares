@@ -7,6 +7,7 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -107,7 +108,6 @@ open class GenericModalFragment :
         findNavController().navigateIfAdded(this, destination)
     }
 
-    @Suppress("DEPRECATION")
     protected fun setupUi(parameters: GenericModalParameters) {
         with(binding) {
             if (!parameters.isCloseModal) {
@@ -121,7 +121,7 @@ open class GenericModalFragment :
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
                 } else {
-                    Html.fromHtml(parameters.description)
+                    HtmlCompat.fromHtml(parameters.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 }
             description.movementMethod = LinkMovementMethod.getInstance()
 
@@ -129,7 +129,7 @@ open class GenericModalFragment :
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
                 } else {
-                    Html.fromHtml(parameters.description2)
+                    HtmlCompat.fromHtml(parameters.description2, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 }
             descriptionSecondPart.movementMethod = LinkMovementMethod.getInstance()
 
@@ -148,7 +148,7 @@ open class GenericModalFragment :
         }
     }
 
-    protected fun onNavigationButtonClicked() {
+    private fun onNavigationButtonClicked() {
         requireActivity().onBackPressed()
     }
 

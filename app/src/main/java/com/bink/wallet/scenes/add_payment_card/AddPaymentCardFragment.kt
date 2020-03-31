@@ -170,18 +170,17 @@ class AddPaymentCardFragment :
                         BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
                     )
 
-                    val params = GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.terms_and_conditions_title),
-                        getString(R.string.terms_and_conditions_text),
-                        getString(R.string.accept_button_text),
-                        getString(R.string.decline_button_text)
-                    )
-                    findNavController().navigateIfAdded(
-                        this,
+                    findNavController().navigate(
                         AddPaymentCardFragmentDirections.addPaymentToTerms(
-                            params,
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                false,
+                                getString(R.string.terms_and_conditions_title),
+                                getString(R.string.terms_and_conditions_text),
+                                getString(R.string.accept_button_text),
+                                getString(R.string.decline_button_text),
+                                description2 = getString(R.string.terms_and_conditions_second_paragraph)
+                            ),
                             bankCard,
                             cardNo
                         )

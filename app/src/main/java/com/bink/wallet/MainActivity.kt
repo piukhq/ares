@@ -1,8 +1,5 @@
 package com.bink.wallet
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -83,8 +80,7 @@ class MainActivity : AppCompatActivity() {
                 LoginManager.getInstance().logOut()
                 findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
             }
-            R.id.pll_empty_fragment,
-            R.id.card_terms_and_conditions -> {
+            R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
             }
             else -> super.onBackPressed()
