@@ -15,9 +15,9 @@ Java_com_bink_wallet_SplashFragment_spreedlyKey(
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_bink_wallet_SplashFragment_paymentCardHashingDevKey(
         JNIEnv *env,
-jobject /* this */) {
-std::string key = "Uf5AIu6ehfHM2By6GAsIDsclEYFlWQNt";
-return env->NewStringUTF(key.c_str());
+        jobject /* this */) {
+    std::string key = "Uf5AIu6ehfHM2By6GAsIDsclEYFlWQNt";
+    return env->NewStringUTF(key.c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL

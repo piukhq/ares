@@ -16,9 +16,10 @@ import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
-import com.bink.wallet.utils.SecurityUtils
 import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.SecurityUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,10 +32,6 @@ class AddPaymentCardRepository(
     private val membershipCardDao: MembershipCardDao,
     private val membershipPlanDao: MembershipPlanDao
 ) {
-
-    companion object {
-        const val ENCRYPTION_API_VERSION = "1.2"
-    }
 
     private val spreedlyKeyMissingError = "Spreedly Environment Key Missing"
 
@@ -177,16 +174,16 @@ class AddPaymentCardRepository(
                     val encryptedYear =
                         SecurityUtils.encryptMessage(safeYear, publicEncryptionKey)
 
-                    var encryptedfirstSix = ""
+                    var encryptedFirstSix = EMPTY_STRING
 
                     card.card.first_six_digits?.let { safeSixDigits ->
-                        encryptedfirstSix = SecurityUtils.encryptMessage(
+                        encryptedFirstSix = SecurityUtils.encryptMessage(
                             safeSixDigits,
                             publicEncryptionKey
                         )
                     }
 
-                    var encryptedLastFour = ""
+                    var encryptedLastFour = EMPTY_STRING
 
                     card.card.last_four_digits?.let { safeFourDigits ->
                         encryptedLastFour = SecurityUtils.encryptMessage(
@@ -207,8 +204,8 @@ class AddPaymentCardRepository(
                         card.card.year = encryptedYear
                     }
 
-                    if (encryptedfirstSix.isNotEmpty()) {
-                        card.card.first_six_digits = encryptedfirstSix
+                    if (encryptedFirstSix.isNotEmpty()) {
+                        card.card.first_six_digits = encryptedFirstSix
                     }
 
                     if (encryptedLastFour.isNotEmpty()) {
@@ -217,5 +214,9 @@ class AddPaymentCardRepository(
                 }
             }
         }
+    }
+
+    companion object {
+        const val ENCRYPTION_API_VERSION = "1.2"
     }
 }

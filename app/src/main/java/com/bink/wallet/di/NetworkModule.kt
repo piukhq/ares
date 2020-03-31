@@ -48,7 +48,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         val jwtToken =
             LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_TOKEN
-            )?.replace("\n", "")?.trim()
+            )?.replace("\n", EMPTY_STRING)?.trim()
 
         jwtToken?.let {
             logError("NetworkModule", jwtToken)

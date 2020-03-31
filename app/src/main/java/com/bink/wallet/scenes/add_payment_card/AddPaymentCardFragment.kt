@@ -167,7 +167,7 @@ class AddPaymentCardFragment :
                         cardNo.cardValidation().type,
                         cardNo.cardValidation().type,
                         BankCard.tokenGenerator(),
-                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]), ""
+                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]), EMPTY_STRING
                     )
 
                     val params = GenericModalParameters(

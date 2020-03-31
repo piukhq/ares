@@ -19,7 +19,7 @@ class SecurityUtils {
             year: String
         ): String {
             if (pan.isEmpty() || month.isEmpty() || year.isEmpty()) {
-                return ""
+                return EMPTY_STRING
             }
 
             val hashSecret = LocalStoreUtils.getAppSharedPref(
@@ -58,7 +58,7 @@ class SecurityUtils {
                 bytes = cipher.doFinal(messageToEncrypt.toByteArray())
             } catch (e: Exception) {
                 e.printStackTrace()
-                return ""
+                return EMPTY_STRING
             }
 
             val androidEncode = Base64.encode(bytes, Base64.NO_WRAP)
@@ -69,9 +69,9 @@ class SecurityUtils {
             try {
                 val byteKey = Base64.decode(publicKeyString.toByteArray(), Base64.DEFAULT)
                 val X509publicKey = X509EncodedKeySpec(byteKey)
-                val kf = KeyFactory.getInstance("RSA")
+                val keyFactory = KeyFactory.getInstance("RSA")
 
-                return kf.generatePublic(X509publicKey)
+                return keyFactory.generatePublic(X509publicKey)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -79,6 +79,4 @@ class SecurityUtils {
             return null
         }
     }
-
-
 }
