@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.forgot_password
 
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -66,10 +65,7 @@ class ForgotPasswordFragment :
                 getString(R.string.forgot_password_title),
                 getString(R.string.forgot_password_dialog_description),
                 okAction = {
-                    findNavController().navigateIfAdded(
-                        this,
-                        R.id.forgot_password_to_onboarding
-                    )
+                    findNavController().navigate(ForgotPasswordFragmentDirections.forgotPasswordToOnboarding())
                 }
             )
         }
@@ -88,7 +84,7 @@ class ForgotPasswordFragment :
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
                 binding.emailText.error =
-                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                    if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
                         null

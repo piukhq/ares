@@ -11,6 +11,7 @@ import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.combineNonNull
@@ -41,7 +42,7 @@ class SignUpViewModel(
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
     }
     private val emailValidator = Transformations.map(email) {
-        Patterns.EMAIL_ADDRESS.matcher(it).matches()
+        UtilFunctions.isValidField(EMAIL_REGEX, it)
     }
 
     private val passwordMatcher = MediatorLiveData<Boolean>()
