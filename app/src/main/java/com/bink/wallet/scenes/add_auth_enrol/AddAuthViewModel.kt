@@ -37,7 +37,7 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val ctaText = ObservableField<String>()
     val titleText = ObservableField<String>()
     val descriptionText = ObservableField<String>()
-    val isNoAccountFooter = ObservableBoolean(true)
+    val isNoAccountFooter = ObservableBoolean()
     val haveValidationsPassed = ObservableBoolean(false)
 
     init {

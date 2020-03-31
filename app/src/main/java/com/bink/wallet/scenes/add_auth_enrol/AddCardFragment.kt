@@ -110,7 +110,7 @@ class AddCardFragment : BaseAddAuthFragment() {
     private fun navigateToGhostRegistrationUnavailableScreen() {
         findNavController().navigateIfAdded(
             this,
-            BaseAddAuthFragmentDirections.baseAddAuthToGhostRegistrationUnavailable(
+            AddCardFragmentDirections.addCardToGhostRegistrationUnavailable(
                 GenericModalParameters(
                     R.drawable.ic_close,
                     true,

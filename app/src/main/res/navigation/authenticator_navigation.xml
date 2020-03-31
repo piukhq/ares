@@ -748,9 +748,6 @@
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
-        <action
-                android:id="@+id/baseAddAuthToGhostRegistrationUnavailable"
-                app:destination="@id/ghost_registration_unavailable" />
     </fragment>
 
     <fragment
@@ -771,6 +768,12 @@
                 android:name="isFromNoReasonCodes"
                 android:defaultValue="false"
                 app:argType="boolean" />
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/addCardToGhostRegistrationUnavailable"
+                app:destination="@id/ghost_registration_unavailable" />
     </fragment>
 
     <fragment
@@ -781,6 +784,9 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
     </fragment>
 
 
@@ -792,6 +798,9 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
     </fragment>
 
 </navigation>
