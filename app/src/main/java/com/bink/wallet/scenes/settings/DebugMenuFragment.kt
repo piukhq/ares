@@ -12,12 +12,15 @@ import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
+import zendesk.core.AnonymousIdentity
+import zendesk.core.Zendesk
+import zendesk.support.guide.HelpCenterActivity
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
     override val layoutRes: Int
@@ -33,6 +36,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setZendeskIdentity()
 
         viewModel.debugItems.value = ListHolder()
         DebugItemsPopulation.populateItems(requireContext().resources)
@@ -77,6 +81,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             DebugItemType.ENVIRONMENT -> {
                 displayPicker()
             }
+            DebugItemType.ZENDESK -> {
+                HelpCenterActivity.builder()
+                    .show(requireActivity())
+            }
         }
     }
 
@@ -112,5 +120,14 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
     private fun restartApplication() {
         (requireActivity() as MainActivity).forceRunApp()
+    }
+
+    private fun setZendeskIdentity() {
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
+            val identity = AnonymousIdentity.Builder()
+                .withEmailIdentifier(safeEmail)
+                .build()
+            Zendesk.INSTANCE.setIdentity(identity)
+        }
     }
 }

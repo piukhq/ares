@@ -15,6 +15,8 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.scottyab.rootbeer.RootBeer
+import zendesk.core.Zendesk
+import zendesk.support.Support
 import java.util.Locale
 
 class SplashFragment : Fragment() {
@@ -32,6 +34,9 @@ class SplashFragment : Fragment() {
     private external fun paymentCardEncryptionPublicKeyDev(): String
     private external fun paymentCardEncryptionPublicKeyStaging(): String
     private external fun paymentCardEncryptionPublicKeyProd(): String
+    private external fun zendeskUrl(): String
+    private external fun zendeskAppId(): String
+    private external fun zendeskOAuthId(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +51,7 @@ class SplashFragment : Fragment() {
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
         persistPaymentCardHashSecret()
+        configureZendesk()
         findNavController().navigateIfAdded(this, getDirections())
     }
 
@@ -128,5 +134,16 @@ class SplashFragment : Fragment() {
                 )
             }
         }
+    }
+
+    private fun configureZendesk() {
+        Zendesk.INSTANCE.init(
+            requireActivity(),
+            zendeskUrl(),
+            zendeskAppId(),
+            zendeskOAuthId()
+        )
+
+        Support.INSTANCE.init(Zendesk.INSTANCE)
     }
 }

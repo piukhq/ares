@@ -288,6 +288,7 @@
     <string name="debug_current_version_title">Current version</string>
     <string name="debug_current_version_content">%s build %d</string>
     <string name="debug_environment_base_url_title">Environment Base URL</string>
+    <string name="debug_environment_open_zendesk_title">Launch Zendesk</string>
     <string name="debug_current_email_address">Current email address</string>
 
     <string name="security_and_privacy_title">Security and privacy</string>

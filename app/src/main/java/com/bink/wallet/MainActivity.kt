@@ -21,7 +21,6 @@ import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
 
-
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
@@ -30,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
         logUserPropertiesAtStartUp()
 
         Fabric.with(this, Crashlytics())

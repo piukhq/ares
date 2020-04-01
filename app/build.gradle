@@ -10,6 +10,7 @@ plugins {
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20000000"
@@ -250,5 +251,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     // Facebook
     implementation 'com.facebook.android:facebook-login:5.9.0'
+
+    /** ZENDESK **/
+    implementation group: 'com.zendesk', name: 'support', version: '3.0.2'
 
 }
