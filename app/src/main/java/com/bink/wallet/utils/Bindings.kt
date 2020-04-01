@@ -5,7 +5,12 @@ import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.text.format.DateFormat
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -220,6 +225,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
+                (binding.brandImage.layoutParams as ConstraintLayout.LayoutParams)
+                    .dimensionRatio = "${resource?.minimumWidth}:${resource?.minimumHeight}"
                 binding.container.setBackgroundColor(Color.TRANSPARENT)
                 binding.cardPlaceholderText.visibility = View.GONE
                 return false
