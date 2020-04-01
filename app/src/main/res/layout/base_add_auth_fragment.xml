@@ -97,7 +97,10 @@
 
         <include
                 android:id="@+id/footer_composed"
-                layout="@layout/bottom_add_auth_no_account" />
+                layout="@layout/bottom_add_auth_no_account"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         <include
                 android:id="@+id/footer_simple"

@@ -12,6 +12,10 @@
                 app:touchAnchorId="@id/auth_fields"
                 app:touchAnchorSide="top" />
 
+        <OnClick
+                app:clickAction="toggle"
+                app:targetId="@id/auth_fields" />
+
         <KeyFrameSet>
             <KeyAttribute
                     android:alpha="1.0"
@@ -57,7 +61,19 @@
                 android:scaleX="1.0"
                 android:scaleY="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_join_reward"/>
+                app:layout_constraintTop_toBottomOf="@id/add_join_reward" />
+
+        <Constraint android:id="@id/footer_composed">
+            <PropertySet
+                    app:applyMotionScene="false"
+                    app:visibilityMode="ignore" />
+        </Constraint>
+
+        <Constraint android:id="@id/footer_simple">
+            <PropertySet
+                    app:applyMotionScene="false"
+                    app:visibilityMode="ignore" />
+        </Constraint>
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/collapsed">
@@ -74,12 +90,16 @@
                 android:id="@id/title_add_auth_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="56dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/continue_button_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="@id/toolbar"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:layout_constraintTop_toTopOf="@id/toolbar"/>
-
+                app:layout_constraintTop_toTopOf="@id/toolbar" />
+        <Constraint
+                android:id="@+id/auth_fields"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
     </ConstraintSet>
-
 </MotionScene>

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import com.bink.wallet.R
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
+import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.TypeOfField
 
 class GetNewCardFragment : BaseAddAuthFragment() {
 
@@ -11,6 +13,37 @@ class GetNewCardFragment : BaseAddAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViewsContent()
+
+        viewModel.currentMembershipPlan.value?.account?.enrol_fields?.map {
+            it.typeOfField = TypeOfField.ENROL
+            addFieldToList(it)
+        }
+
+        viewModel.currentMembershipPlan.value?.account?.plan_documents?.map {
+            it.display?.let { display ->
+                if (display.contains(SignUpFormType.ENROL.type)) {
+                    addFieldToList(it)
+                }
+            }
+        }
+
+        addItems()
+    }
+
+    private fun addItems() {
+        binding.membershipPlan?.account?.enrol_fields?.map {
+            it.typeOfField = TypeOfField.ENROL
+            addFieldToList(it)
+        }
+
+        binding.membershipPlan?.account?.plan_documents?.map {
+            it.display?.let { display ->
+                if (display.contains(SignUpFormType.ENROL.type)) {
+                    addFieldToList(it)
+                }
+            }
+        }
+        mapItems()
     }
 
     override fun onResume() {

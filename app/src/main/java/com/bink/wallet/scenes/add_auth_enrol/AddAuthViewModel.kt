@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -37,8 +38,11 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val ctaText = ObservableField<String>()
     val titleText = ObservableField<String>()
     val descriptionText = ObservableField<String>()
-    val isNoAccountFooter = ObservableBoolean()
+    val isNoAccountFooter = ObservableBoolean(false)
     val haveValidationsPassed = ObservableBoolean(false)
+
+    val planFieldsList = MutableLiveData<List<Pair<Any, PlanFieldsRequest>>>()
+    val planDocumentsList = MutableLiveData<List<Pair<Any, PlanFieldsRequest>>>()
 
     init {
         _paymentCardsMerger.addSource(paymentCards) {

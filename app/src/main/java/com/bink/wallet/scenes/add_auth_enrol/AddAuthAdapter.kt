@@ -21,6 +21,7 @@ import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.logError
+import com.google.android.material.textfield.TextInputEditText
 import java.util.Locale
 
 
@@ -193,7 +194,7 @@ class AddAuthAdapter(
             binding.executePendingBindings()
         }
 
-        private fun AppCompatEditText.checkIfFieldIsValid() {
+        private fun TextInputEditText.checkIfFieldIsValid() {
             try {
                 checkIfError(adapterPosition, this)
                 buttonRefresh()

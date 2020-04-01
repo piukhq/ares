@@ -4,11 +4,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.request.membership_card.Account
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+import com.bink.wallet.model.response.membership_plan.PlanDocuments
+import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -26,6 +35,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private val args: BaseAddAuthFragmentArgs by navArgs()
+    val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
+        mutableListOf()
+    val planDocumentsList: MutableList<Pair<Any, PlanFieldsRequest>> =
+        mutableListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,16 +53,110 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             handleToolbarAction()
             findNavController().navigateUp()
         }
-
         binding.buttonCancel.setOnClickListener {
             handleToolbarAction()
             findNavController().navigate(AddAuthFragmentDirections.globalToHome())
         }
-
         binding.addJoinReward.setOnClickListener {
             navigateToBrandHeader()
         }
     }
+
+    fun addFieldToList(planField: Any) {
+        when (planField) {
+            is PlanFields -> {
+                val pairPlanField = Pair(
+                    planField, PlanFieldsRequest(
+                        planField.column, EMPTY_STRING
+                    )
+                )
+
+                if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+                    planDocumentsList.add(
+                        pairPlanField
+                    )
+                } else if (!planField.column.equals(BARCODE_TEXT)) {
+                    planFieldsList.add(
+                        pairPlanField
+                    )
+                }
+            }
+
+            is PlanDocuments -> {
+                planDocumentsList.add(
+                    Pair(
+                        planField, PlanFieldsRequest(
+                            planField.name, EMPTY_STRING
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    fun mapItems() {
+        planDocumentsList.map { planFieldsList.add(it) }
+        val addRegisterFieldsRequest = Account()
+
+        planFieldsList.map {
+            if (it.first is PlanFields) {
+                when ((it.first as PlanFields).typeOfField) {
+                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
+                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
+                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
+                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+                }
+            } else
+                addRegisterFieldsRequest.plan_documents?.add(it.second)
+        }
+        populateRecycler(addRegisterFieldsRequest)
+    }
+
+    private fun populateRecycler(addRegisterFieldsRequest: Account) {
+        binding.authFields.apply {
+            layoutManager = GridLayoutManager(activity, 1)
+            adapter = AddAuthAdapter(
+                planFieldsList.toList(),
+                buttonRefresh = {
+                    addRegisterFieldsRequest.plan_documents?.map { plan ->
+                        var required = true
+                        planDocumentsList.map { field ->
+                            if (field.second.column == plan.column) {
+                                (field.first as PlanDocuments).checkbox?.let { bool ->
+                                    required = !bool
+                                }
+                            }
+                        }
+                        if (required && plan.value != true.toString()) {
+//                            binding.addCardButton.isEnabled = false
+                            return@AddAuthAdapter
+                        }
+                    }
+
+                    planFieldsList.map {
+                        val item = it.first
+                        if (item is PlanFields && item.type != FieldType.BOOLEAN_OPTIONAL.type) {
+                            if (it.second.value.isNullOrEmpty()) {
+                                //binding.addCardButton.isEnabled = false
+                                return@AddAuthAdapter
+                            } else {
+                                if (!UtilFunctions.isValidField(
+                                        (it.first as PlanFields).validation,
+                                        it.second.value
+                                    )
+                                ) {
+                                    //binding.addCardButton.isEnabled = false
+                                    return@AddAuthAdapter
+                                }
+                            }
+                        }
+                    }
+                    //binding.addCardButton.isEnabled = true
+                }
+            )
+        }
+    }
+
     private fun navigateToBrandHeader() {
         binding.membershipPlan?.let { plan ->
             if (plan.account?.plan_description != null) {
@@ -85,5 +192,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private fun handleToolbarAction() {
         view?.hideKeyboard()
         windowFullscreenHandler.toNormalScreen()
+    }
+
+    companion object {
+        private const val BARCODE_TEXT = "Barcode"
     }
 }

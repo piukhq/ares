@@ -36,7 +36,7 @@
                 app:planField="@{planField}"
                 tools:text="Email" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/content_add_auth_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
