@@ -64,5 +64,4 @@ public interface SessionConfig {
     String getEncryptedKey();
 
     void clear();
-
 }

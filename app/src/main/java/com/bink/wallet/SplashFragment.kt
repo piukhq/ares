@@ -11,9 +11,11 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.scottyab.rootbeer.RootBeer
+import java.util.Locale
 
 class SplashFragment : Fragment() {
 
@@ -23,7 +25,13 @@ class SplashFragment : Fragment() {
         }
     }
 
-    external fun spreedlyKey(): String
+    private external fun spreedlyKey(): String
+    private external fun paymentCardHashingDevKey(): String
+    private external fun paymentCardHashingStagingKey(): String
+    private external fun paymentCardHashingProdKey(): String
+    private external fun paymentCardEncryptionPublicKeyDev(): String
+    private external fun paymentCardEncryptionPublicKeyStaging(): String
+    private external fun paymentCardEncryptionPublicKeyProd(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +45,7 @@ class SplashFragment : Fragment() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
+        persistPaymentCardHashSecret()
         findNavController().navigateIfAdded(this, getDirections())
     }
 
@@ -83,6 +92,41 @@ class SplashFragment : Fragment() {
                     SESSION_HANDLER_DESTINATION_ONBOARDING -> R.id.splash_to_onboarding
                     else -> R.id.splash_to_onboarding
                 }
+        }
+    }
+
+    private fun persistPaymentCardHashSecret() {
+        when {
+            BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH) -> {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
+                )
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
+                    paymentCardEncryptionPublicKeyProd()
+                )
+            }
+            BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH) -> {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
+                )
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
+                    paymentCardEncryptionPublicKeyStaging()
+                )
+            }
+            BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH) -> {
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
+                )
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
+                    paymentCardEncryptionPublicKeyDev()
+                )
+            }
         }
     }
 }

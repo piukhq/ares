@@ -1,90 +1,102 @@
 package com.bink.wallet.scenes.pll
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
-import com.bink.wallet.databinding.PllPaymentCardItemBinding
-import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.payment_card.PllPaymentCardWrapper
-import com.bink.wallet.utils.getCardTypeFromProvider
+
+typealias OnBrandHeaderClickListener = (String) -> Unit
 
 class PllPaymentCardAdapter(
-    var membershipCard: MembershipCard?,
-    var paymentCards: List<PllPaymentCardWrapper> = listOf()
+    var paymentCards: List<PllAdapterItem> = listOf()
 ) :
-    RecyclerView.Adapter<PllPaymentCardAdapter.PllPaymentCardViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PllPaymentCardViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<PllPaymentCardItemBinding>(
-            inflater,
-            R.layout.pll_payment_card_item,
-            parent,
-            false
-        )
-        return PllPaymentCardViewHolder(binding)
-    }
+    private var onBrandHeaderClickListener: OnBrandHeaderClickListener? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            BRAND_HEADER_ITEM -> {
+                BrandHeaderViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.modal_brand_header,
+                        parent,
+                        false
+                    )
+                )
+            }
+            TITLE_ITEM -> {
+                PllTitleViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.item_pll_title,
+                        parent,
+                        false
+                    )
+                )
+            }
+            DESCRIPTION_ITEM -> {
+                PllDescriptionViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.item_pll_description,
+                        parent,
+                        false
+                    )
+                )
+            }
+            else -> {
+                PllPaymentCardViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.pll_payment_card_item,
+                        parent,
+                        false
+                    )
+                )
+            }
+        }
 
     override fun getItemCount() = paymentCards.size
 
-    override fun onBindViewHolder(holder: PllPaymentCardViewHolder, position: Int) {
-        paymentCards[position].let { cardWrapper ->
-            cardWrapper.let {
-                holder.bindCard(cardWrapper)
+    override fun getItemId(position: Int): Long = paymentCards[position].id.toLong()
+
+    override fun getItemViewType(position: Int): Int = paymentCards[position].id
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            BRAND_HEADER_ITEM -> (holder as BrandHeaderViewHolder).bind(
+                (paymentCards[position] as PllAdapterItem.PllBrandHeaderItem).membershipPlan,
+                onBrandHeaderClickListener
+            )
+            DESCRIPTION_ITEM -> {
+                (holder as PllDescriptionViewHolder).bind(
+                    (paymentCards[position] as PllAdapterItem.PllDescriptionItem).planName
+                )
             }
-        }
-    }
-
-    fun notifyChanges(newList: List<PllPaymentCardWrapper>) {
-        val oldList = paymentCards
-        paymentCards = newList
-        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                oldList[oldItemPosition].paymentCard.id == newList[newItemPosition].paymentCard.id
-
-            override fun getOldListSize(): Int = oldList.size
-
-            override fun getNewListSize(): Int = newList.size
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                oldList[oldItemPosition] == newList[newItemPosition]
-
-
-        }).dispatchUpdatesTo(this)
-    }
-
-    inner class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bindCard(paymentCard: PllPaymentCardWrapper) {
-            binding.paymentCard = paymentCard
-
-            with(binding.imageView) {
-                val type = paymentCard.paymentCard.card?.provider?.getCardTypeFromProvider()
-                if (type != null)
-                    setImageResource(type.addLogo)
-            }
-
-            with(binding.toggle) {
-                setOnCheckedChangeListener(null)
-
-                isChecked = paymentCard.isSelected
-                displayCustomSwitch(paymentCard.isSelected)
-
-                setOnCheckedChangeListener { _, isChecked ->
-                    paymentCard.isSelected = isChecked
-                    displayCustomSwitch(isChecked)
+            PAYMENT_CARD_ITEM -> {
+                paymentCards[position].let { cardWrapper ->
+                    cardWrapper.let {
+                        (holder as PllPaymentCardViewHolder).bindCard(
+                            (cardWrapper as PllAdapterItem.PaymentCardItem),
+                            paymentCards.last() == cardWrapper
+                        )
+                    }
                 }
             }
-
-            if (paymentCards.last() == paymentCard) {
-                binding.separator.visibility = View.GONE
-            } else {
-                binding.separator.visibility = View.VISIBLE
-            }
         }
+    }
+
+    fun setOnBrandHeaderClickListener(onBrandHeaderClickListener: OnBrandHeaderClickListener) {
+        this.onBrandHeaderClickListener = onBrandHeaderClickListener
+    }
+
+    companion object {
+        private const val PAYMENT_CARD_ITEM = R.layout.pll_payment_card_item
+        private const val BRAND_HEADER_ITEM = R.layout.modal_brand_header
+        private const val TITLE_ITEM = R.layout.item_pll_title
+        private const val DESCRIPTION_ITEM = R.layout.item_pll_description
     }
 }

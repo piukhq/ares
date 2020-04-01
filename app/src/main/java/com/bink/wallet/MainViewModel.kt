@@ -11,7 +11,8 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
     BaseViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
     private val membershipPlanData: MutableLiveData<List<MembershipPlan>> =
         MutableLiveData()
     private val membershipPlanError: MutableLiveData<Exception> = MutableLiveData()

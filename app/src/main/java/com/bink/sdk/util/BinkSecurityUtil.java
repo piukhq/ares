@@ -2,7 +2,6 @@ package com.bink.sdk.util;
 
 import android.os.Build;
 import android.util.Base64;
-import android.util.Log;
 
 import com.bink.sdk.config.SessionConfig;
 

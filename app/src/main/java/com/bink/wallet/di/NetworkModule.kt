@@ -5,6 +5,7 @@ import android.content.Intent
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
+import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.*
@@ -47,7 +48,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         val jwtToken =
             LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_TOKEN
-            )?.replace("\n","")?.trim()
+            )?.replace("\n", EMPTY_STRING)?.trim()
 
         jwtToken?.let {
             logError("NetworkModule", jwtToken)
@@ -55,7 +56,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         val request = chain.request().url().newBuilder().build()
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
-            .header("Accept", "application/json; v=1.1")
+            .header("Accept", "application/json; v=" + ApiConstants.API_VERSION)
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .url(request)
             .build()
