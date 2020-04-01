@@ -22,7 +22,6 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
-import com.bink.wallet.utils.EMPTY_STRING
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
@@ -57,10 +56,9 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //TODO Mandatory to be included, commented for now as it's causing a crash
-//        LocalStoreUtils.setAppSharedPref(
-//            LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
-//        )
+        LocalStoreUtils.setAppSharedPref(
+            LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
+        )
         setAppPrefs()
         persistPaymentCardHashSecret()
         findNavController().navigateIfAdded(this, getDirections())
@@ -148,30 +146,29 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
             val key = binkCore.sessionConfig.apiKey
             val email = binkCore.sessionConfig.userEmail
             if (!key.isNullOrEmpty()) {
-                //TODO here we should retrieve the email and send it to the the api
-//                val jwt = JWT(key)
-                if(email.isNullOrEmpty()) {
-                   // email = jwt
-                }
                 SharedPreferenceManager.isUserLoggedIn = true
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_TOKEN,
                     getString(R.string.token_api_v1, key)
                 )
 
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_EMAIL,
-                    email ?: EMPTY_STRING
-                )
+                if (!email.isNullOrEmpty()) {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_EMAIL,
+                        email
+                    )
 
-                viewModel.postService(
-                    PostServiceRequest(
-                        consent = Consent(
-                            email,
-                            System.currentTimeMillis() / 1000
+                    viewModel.postService(
+                        PostServiceRequest(
+                            consent = Consent(
+                                email,
+                                System.currentTimeMillis() / 1000
+                            )
                         )
                     )
-                )
+                } else {
+                    findNavController().navigateIfAdded(this, getDirections())
+                }
             } else {
                 findNavController().navigateIfAdded(this, getDirections())
             }
