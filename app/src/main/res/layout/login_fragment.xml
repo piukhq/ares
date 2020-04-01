@@ -1,174 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.login.LoginViewModel" />
+            name="viewModel"
+            type="com.bink.wallet.scenes.login.LoginViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <android.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:navigationIcon="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/log_in_screen_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="@string/log_in_email_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_headline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <TextView
+            android:id="@+id/log_in_screen_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_light"
+            android:text="@string/log_in_screen_description"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_description_big"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/log_in_screen_title" />
+
+        <TextView
+            android:id="@+id/email_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="@string/email_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_body_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/log_in_screen_description" />
+
+        <EditText
+            android:id="@+id/email_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_light"
+            android:hint="@string/enter_email_text"
+            android:inputType="textEmailAddress"
+            android:text="@={viewModel.email}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_sub_headline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email_description"
+            tools:ignore="Autofill" />
+
+        <TextView
+            android:id="@+id/password_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="@string/password_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_body_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email_field" />
+
+        <EditText
+            android:id="@+id/password_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_light"
+            android:hint="@string/enter_password"
+            android:inputType="textPassword"
+            android:text="@={viewModel.password}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_sub_headline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password_description"
+            tools:ignore="Autofill" />
+
+        <TextView
+            android:id="@+id/forgot_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_large"
+            android:fontFamily="@font/nunito_sans_semibold"
+            android:textColor="@color/blue_accent"
+            android:textSize="@dimen/text_size_description_big"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password_field" />
+
+        <Button
+            android:id="@+id/log_in_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/gradient_button_margin"
+            android:layout_marginEnd="@dimen/gradient_button_margin"
+            android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+            android:background="@drawable/gradient_button_selector"
+            android:enabled="@{viewModel.isLoginEnabled}"
+            android:fontFamily="@font/nunito_sans_bold"
+            android:text="@string/continue_text"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/size_sub_headline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progress_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white_50_alpha"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                style="@style/ProgressSpinner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-                android:id="@+id/log_in_screen_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:text="@string/log_in_email_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_headline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-        <TextView
-                android:id="@+id/log_in_screen_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="@string/log_in_screen_description"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/log_in_screen_title" />
-
-        <TextView
-                android:id="@+id/email_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:text="@string/email_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_body_large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/log_in_screen_description" />
-
-        <EditText
-                android:id="@+id/email_field"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:hint="@string/enter_email_text"
-                android:inputType="textEmailAddress"
-                android:text="@={viewModel.email}"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/email_description"
-                tools:ignore="Autofill" />
-
-        <TextView
-                android:id="@+id/password_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:text="@string/password_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_body_large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/email_field" />
-
-        <EditText
-                android:id="@+id/password_field"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:hint="@string/enter_password"
-                android:inputType="textPassword"
-                android:text="@={viewModel.password}"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password_description"
-                tools:ignore="Autofill" />
-
-        <TextView
-                android:id="@+id/forgot_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_large"
-                android:fontFamily="@font/nunito_sans_semibold"
-                android:textColor="@color/blue_accent"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/password_field" />
-
-        <Button
-                android:id="@+id/log_in_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/gradient_button_margin"
-                android:layout_marginEnd="@dimen/gradient_button_margin"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-                android:background="@drawable/gradient_button_selector"
-                android:fontFamily="@font/nunito_sans_bold"
-                android:text="@string/continue_text"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/size_sub_headline"
-                android:enabled="@{viewModel.isLoginEnabled}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/progress_spinner"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/white_50_alpha"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            <ProgressBar
-                    style="@style/ProgressSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
