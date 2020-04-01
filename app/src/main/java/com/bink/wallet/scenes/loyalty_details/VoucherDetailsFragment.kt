@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.text.format.DateFormat
 import android.text.style.UnderlineSpan
 import android.view.View
 import androidx.navigation.fragment.navArgs
@@ -21,6 +20,8 @@ import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class VoucherDetailsFragment :
     BaseFragment<VoucherDetailsViewModel, VoucherDetailsFragmentBinding>() {
@@ -267,7 +268,7 @@ class VoucherDetailsFragment :
     companion object {
         private const val STAMP_VOUCHER_EARN_TYPE = "stamps"
         private fun dateTimeFormatTransactionTime(timeStamp: Long) =
-            DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
+            SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.ENGLISH).format(timeStamp * 1000).toString()
     }
 
 }
