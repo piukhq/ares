@@ -55,7 +55,6 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         }
         val request = chain.request().url().newBuilder().build()
 
-        //todo encryption might need modifying to match this logic..
         val header = if (SharedPreferenceManager.storedBackendVersion != null) {
             SharedPreferenceManager.storedBackendVersion
         } else {

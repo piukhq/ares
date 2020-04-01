@@ -44,7 +44,8 @@ class AddPaymentCardRepository(
     ) {
 
         val cachedBackendVersion = SharedPreferenceManager.storedBackendVersion
-        if (cachedBackendVersion != null && cachedBackendVersion == BackendVersion.VERSION_2.version) {
+        if (cachedBackendVersion != null
+            && cachedBackendVersion == BackendVersion.VERSION_2.version) {
             encryptCardDetails(card, cardNumber)
         }
 
@@ -90,7 +91,8 @@ class AddPaymentCardRepository(
                         }
 
                         if (cachedBackendVersion != null
-                            && cachedBackendVersion == BackendVersion.VERSION_2.version) {
+                            && cachedBackendVersion == BackendVersion.VERSION_2.version
+                        ) {
                             encryptCardDetails(card, cardNumber)
                         }
 
