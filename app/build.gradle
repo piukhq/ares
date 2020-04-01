@@ -55,7 +55,6 @@ android {
             minifyEnabled true
             shrinkResources true
             debuggable false
-            signingConfig signingConfigs.binkSigningConfig
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
