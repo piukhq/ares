@@ -200,7 +200,7 @@ fun Context.validateEmail(emailValue: String?, editText: EditText) {
     editText.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
             if (!emailValue.isNullOrEmpty() &&
-                !Patterns.EMAIL_ADDRESS.matcher(emailValue).matches()
+                !UtilFunctions.isValidField(EMAIL_REGEX, emailValue)
             ) {
                 editText.error = getString(R.string.incorrect_email_text)
             } else {

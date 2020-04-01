@@ -11,6 +11,7 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.LoginFragmentBinding
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
@@ -182,7 +183,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
                 binding.emailField.error =
-                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                    if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
                         null

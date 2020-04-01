@@ -16,11 +16,6 @@ class FragmentToolbar(
     var activity: FragmentActivity?,
     var toolbar: Toolbar? = null
 ) {
-
-    companion object {
-        const val NO_TOOLBAR = -1
-    }
-
     class Builder {
         private var resId: Int = 0
         private var menuId: Int = -1
@@ -50,5 +45,9 @@ class FragmentToolbar(
 
         fun build() =
             FragmentToolbar(resId, title, menuId, menuItems, menuClicks, activity, toolbar)
+    }
+
+    companion object {
+        const val NO_TOOLBAR = -1
     }
 }

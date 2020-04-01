@@ -190,7 +190,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
                 binding.emailField.error =
-                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                    if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
                         null
