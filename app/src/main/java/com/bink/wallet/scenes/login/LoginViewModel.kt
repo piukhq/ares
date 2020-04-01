@@ -45,7 +45,7 @@ class LoginViewModel constructor(
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
     }
     private val emailValidator = Transformations.map(email) {
-        Patterns.EMAIL_ADDRESS.matcher(it).matches()
+        UtilFunctions.isValidField(EMAIL_REGEX, it)
     }
     val isLoginEnabled = MediatorLiveData<Boolean>()
 

@@ -34,4 +34,12 @@
         <item name="android:textStyle">normal</item>
         <item name="fontFamily">@font/nunitosans</item>
     </style>
+
+    <style name="BinkZendeskTheme" parent="Theme.MaterialComponents.Light">
+        <!-- todo; In the future when we implement Zendesk as a real feature, we can modify the colours here -->
+        <item name="colorPrimary">#000</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">#000</item>
+    </style>
+
 </resources>

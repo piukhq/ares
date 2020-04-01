@@ -10,6 +10,7 @@ plugins {
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20000000"
@@ -21,7 +22,6 @@ android {
             path file('src/main/cpp/CMakeLists.txt')
         }
     }
-
 
     lintOptions {
         lintConfig file("lint.xml")
@@ -252,4 +252,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:5.9.0'
 
     implementation 'com.auth0.android:jwtdecode:2.0.0'
+
+    /** ZENDESK **/
+    implementation group: 'com.zendesk', name: 'support', version: '3.0.2'
 }

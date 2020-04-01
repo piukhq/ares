@@ -23,6 +23,8 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import zendesk.core.Zendesk
+import zendesk.support.Support
 
 class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     override val layoutRes: Int
@@ -46,6 +48,9 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private external fun paymentCardEncryptionPublicKeyDev(): String
     private external fun paymentCardEncryptionPublicKeyStaging(): String
     private external fun paymentCardEncryptionPublicKeyProd(): String
+    private external fun zendeskUrl(): String
+    private external fun zendeskAppId(): String
+    private external fun zendeskOAuthId(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +66,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         )
         setAppPrefs()
         persistPaymentCardHashSecret()
+        configureZendesk()
         findNavController().navigateIfAdded(this, getDirections())
     }
 
@@ -139,7 +145,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         }
     }
 
-
     private fun setAppPrefs() {
         if (!requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             val binkCore = BinkCore(requireContext())
@@ -173,5 +178,16 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                 findNavController().navigateIfAdded(this, getDirections())
             }
         }
+    }
+
+    private fun configureZendesk() {
+        Zendesk.INSTANCE.init(
+            requireActivity(),
+            zendeskUrl(),
+            zendeskAppId(),
+            zendeskOAuthId()
+        )
+
+        Support.INSTANCE.init(Zendesk.INSTANCE)
     }
 }
