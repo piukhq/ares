@@ -343,7 +343,7 @@ fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Bo
 }
 
 private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
-    SimpleDateFormat(getDateFormat(shortMonth), Locale.ENGLISH).format(timeStamp * 1000).toString()
+    SimpleDateFormat(getDateFormat(shortMonth), Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
 
 private fun getDateFormat(shortMonth: Boolean): String {
     val builder = StringBuilder("dd MMM")

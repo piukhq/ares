@@ -14,6 +14,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
+import com.bink.wallet.utils.ONE_THOUSAND
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
@@ -268,7 +269,7 @@ class VoucherDetailsFragment :
     companion object {
         private const val STAMP_VOUCHER_EARN_TYPE = "stamps"
         private fun dateTimeFormatTransactionTime(timeStamp: Long) =
-            SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.ENGLISH).format(timeStamp * 1000).toString()
+            SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
     }
 
 }
