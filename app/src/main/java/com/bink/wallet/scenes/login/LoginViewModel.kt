@@ -4,6 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.*
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -11,6 +12,7 @@ import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.*
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 
 class LoginViewModel constructor(
     var loginRepository: LoginRepository,
@@ -23,9 +25,6 @@ class LoginViewModel constructor(
     private val _logInErrorResponse = MutableLiveData<Exception>()
     val logInErrorResponse: LiveData<Exception>
         get() = _logInErrorResponse
-    private val _authErrorResponse = MutableLiveData<Exception>()
-    val authErrorResponse: LiveData<Exception>
-        get() = _authErrorResponse
     val email = MutableLiveData<String>()
     val password = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
@@ -33,6 +32,14 @@ class LoginViewModel constructor(
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
+
+    private val _postServiceResponse = MutableLiveData<ResponseBody>()
+    val postServiceResponse: LiveData<ResponseBody>
+        get() = _postServiceResponse
+
+    private val _postServiceErrorResponse = MutableLiveData<Exception>()
+    val postServiceErrorResponse: LiveData<Exception>
+        get() = _postServiceErrorResponse
 
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
@@ -54,20 +61,7 @@ class LoginViewModel constructor(
         emailValidator: Boolean,
         passwordValidator: Boolean
     ): Boolean = emailValidator && passwordValidator
-
-
-    fun authenticate() {
-        loginRepository.doAuthenticationWork(
-            LoginResponse(
-                LoginBody(
-                    System.currentTimeMillis() / 1000,
-                    loginData.value?.email ?: EMPTY_STRING,
-                    0.0,
-                    0.0
-                )
-            ), loginBody, _authErrorResponse
-        )
-    }
+    
 
     fun logIn(loginRequest: SignUpRequest) {
         loginRepository.logIn(loginRequest, logInResponse, _logInErrorResponse)
@@ -87,6 +81,14 @@ class LoginViewModel constructor(
             membershipPlanMutableLiveData,
             membershipPlanErrorLiveData,
             membershipPlanDatabaseLiveData
+        )
+    }
+
+    fun postService(postServiceRequest: PostServiceRequest) {
+        loginRepository.postService(
+            postServiceRequest,
+            _postServiceResponse,
+            _postServiceErrorResponse
         )
     }
 }

@@ -5,10 +5,10 @@ import android.content.Intent
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.BackendVersion
 import com.facebook.login.LoginManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
@@ -54,9 +54,16 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             logError("NetworkModule", jwtToken)
         }
         val request = chain.request().url().newBuilder().build()
+
+        //todo encryption might need modifying to match this logic..
+        val header = if (SharedPreferenceManager.storedBackendVersion != null) {
+            SharedPreferenceManager.storedBackendVersion
+        } else {
+            BackendVersion.VERSION_1.version
+        }
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
-            .header("Accept", "application/json; v=" + ApiConstants.API_VERSION)
+            .header("Accept", header.toString())
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .url(request)
             .build()

@@ -7,6 +7,7 @@ import com.bink.wallet.di.networkModule
 import com.bink.wallet.di.utilsModule
 import com.bink.wallet.di.viewModelModules
 import com.bink.wallet.network.ApiConstants
+import com.bink.wallet.utils.enums.BackendVersion
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -21,6 +22,9 @@ class MainApplication : Application() {
                 SharedPreferenceManager.storedApiUrl = ApiConstants.BASE_URL
             } else {
                 ApiConstants.BASE_URL = SharedPreferenceManager.storedApiUrl.toString()
+            }
+            if (SharedPreferenceManager.storedBackendVersion.isNullOrEmpty()) {
+                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
             }
             modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
         }

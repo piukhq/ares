@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 enum class DebugItemType : Parcelable {
     CURRENT_VERSION,
     ENVIRONMENT,
-    EMAIL
+    EMAIL,
+    BACKEND_VERSION
 }
