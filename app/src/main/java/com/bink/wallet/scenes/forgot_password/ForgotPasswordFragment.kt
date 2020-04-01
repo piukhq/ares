@@ -65,7 +65,7 @@ class ForgotPasswordFragment :
                 getString(R.string.forgot_password_title),
                 getString(R.string.forgot_password_dialog_description),
                 okAction = {
-                    findNavController().navigate(ForgotPasswordFragmentDirections.forgotPasswordToOnboarding())
+                    findNavController().navigateUp()
                 }
             )
         }
