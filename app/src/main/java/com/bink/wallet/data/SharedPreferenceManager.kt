@@ -2,7 +2,6 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.bink.wallet.utils.enums.ApiVersion
 
 object SharedPreferenceManager {
 
@@ -20,6 +19,7 @@ object SharedPreferenceManager {
     private const val MEMBERSHIP_PLAN_LAST_REQUEST_TIME = "membershipPlanLastRequestTime"
     private const val IS_USER_LOGGED_IN_KEY = "isUserLoggedIn"
     private const val API_VERSION = "apiVersion"
+    private const val BACKEND_VERSION = "backendVersion"
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
 
@@ -39,6 +39,12 @@ object SharedPreferenceManager {
         get() = environmentPreferences.getString(API_VERSION, null)
         set(value) = environmentPreferences.edit {
             it.putString(API_VERSION, value)
+        }
+
+    var storedBackendVersion: String?
+        get() = environmentPreferences.getString(BACKEND_VERSION, null)
+        set(value) = environmentPreferences.edit {
+            it.putString(BACKEND_VERSION, value)
         }
 
     private inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {

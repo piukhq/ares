@@ -39,6 +39,7 @@ import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
+import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -135,6 +136,8 @@ val viewModelModules = module {
     viewModel { OnboardingViewModel(get(), get()) }
 
     viewModel { MainViewModel(get()) }
+
+    viewModel { SplashViewModel(get()) }
 }
 
 fun provideLoginRepository(

@@ -1,16 +1,19 @@
 package com.bink.wallet.scenes.sign_up
 
 import android.util.Patterns
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.combineNonNull
@@ -37,11 +40,19 @@ class SignUpViewModel(
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
+    private val _postServiceResponse = MutableLiveData<ResponseBody>()
+    val postServiceResponse: LiveData<ResponseBody>
+        get() = _postServiceResponse
+
+    private val _postServiceErrorResponse = MutableLiveData<Exception>()
+    val postServiceErrorResponse: LiveData<Exception>
+        get() = _postServiceErrorResponse
+
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
     }
     private val emailValidator = Transformations.map(email) {
-        Patterns.EMAIL_ADDRESS.matcher(it).matches()
+        UtilFunctions.isValidField(EMAIL_REGEX, it)
     }
 
     private val passwordMatcher = MediatorLiveData<Boolean>()
@@ -103,6 +114,14 @@ class SignUpViewModel(
             membershipPlanMutableLiveData,
             membershipPlanErrorLiveData,
             membershipPlanDatabaseLiveData
+        )
+    }
+
+    fun postService(postServiceRequest: PostServiceRequest) {
+        loginRepository.postService(
+            postServiceRequest,
+            _postServiceResponse,
+            _postServiceErrorResponse
         )
     }
 }

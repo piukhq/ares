@@ -1,5 +1,7 @@
 package com.bink.wallet.utils
 
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class DateTimeUtils {
@@ -21,5 +23,8 @@ class DateTimeUtils {
             val minutes = TimeUnit.MILLISECONDS.toMinutes(difference)
             return minutes > TWO_MINUTES
         }
+
+        fun dateTimeFormatTransactionTime(timeStamp: Long) =
+            SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
     }
 }

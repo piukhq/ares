@@ -159,29 +159,28 @@ class AddPaymentCardFragment :
                     val bankCard = BankCard(
                         cardNo.substring(0, 6),
                         cardNo.substring(cardNo.length - 4),
-                        cardExp[0].toInt(),
-                        cardExp[1].toInt() + YEAR_BASE_ADDITION,
+                        cardExp[0],
+                        (cardExp[1].toInt() + YEAR_BASE_ADDITION).toString(),
                         getString(R.string.country_code_gb),
                         getString(R.string.currency_code_gbp),
                         binding.cardName.text.toString(),
                         cardNo.cardValidation().type,
                         cardNo.cardValidation().type,
                         BankCard.tokenGenerator(),
-                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1])
+                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]), EMPTY_STRING
                     )
 
-                    val params = GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        getString(R.string.terms_and_conditions_title),
-                        getString(R.string.terms_and_conditions_text),
-                        getString(R.string.accept_button_text),
-                        getString(R.string.decline_button_text)
-                    )
-                    findNavController().navigateIfAdded(
-                        this,
+                    findNavController().navigate(
                         AddPaymentCardFragmentDirections.addPaymentToTerms(
-                            params,
+                            GenericModalParameters(
+                                R.drawable.ic_close,
+                                false,
+                                getString(R.string.terms_and_conditions_title),
+                                getString(R.string.terms_and_conditions_text),
+                                getString(R.string.accept_button_text),
+                                getString(R.string.decline_button_text),
+                                description2 = getString(R.string.terms_and_conditions_second_paragraph)
+                            ),
                             bankCard,
                             cardNo
                         )

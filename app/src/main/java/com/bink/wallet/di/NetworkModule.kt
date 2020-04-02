@@ -8,6 +8,7 @@ import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.enums.BackendVersion
 import com.facebook.login.LoginManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
@@ -47,15 +48,21 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         val jwtToken =
             LocalStoreUtils.getAppSharedPref(
                 LocalStoreUtils.KEY_TOKEN
-            )?.replace("\n","")?.trim()
+            )?.replace("\n", EMPTY_STRING)?.trim()
 
         jwtToken?.let {
             logError("NetworkModule", jwtToken)
         }
         val request = chain.request().url().newBuilder().build()
+
+        val header = if (SharedPreferenceManager.storedBackendVersion != null) {
+            SharedPreferenceManager.storedBackendVersion
+        } else {
+            BackendVersion.VERSION_1.version
+        }
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
-            .header("Accept", "application/json; v=1.1")
+            .header("Accept", header.toString())
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .url(request)
             .build()

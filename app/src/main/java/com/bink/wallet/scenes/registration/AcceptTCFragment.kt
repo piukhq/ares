@@ -7,22 +7,20 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AcceptTcFragmentBinding
+import com.bink.wallet.model.Consent
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.TERMS_AND_CONDITIONS_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_NO
 import com.bink.wallet.utils.enums.MarketingOptions.MARKETING_OPTION_YES
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -72,28 +70,36 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             requireContext(),
             this,
             getString(R.string.facebook_failed),
-            "",
+            EMPTY_STRING,
             true
         ) {
-            binding.accept.isClickable = false
-            val timer = Timer()
-            context?.resources?.getInteger(R.integer.button_disabled_delay)?.toLong()
-                ?.let { delay ->
-                    timer.schedule(object : TimerTask() {
-                        override fun run() {
-                            binding.accept.isClickable = true
-                        }
-                    }, delay)
-                }
+            handleAuthError()
+        }
+
+        viewModel.postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
+            requireContext(), this, getString(R.string.facebook_failed),
+            EMPTY_STRING,
+            true
+        ) {
+            handleAuthError()
         }
 
         viewModel.facebookAuthResult.observeNonNull(this) {
-            runBlocking {
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_TOKEN,
-                    getString(R.string.token_api_v1, it.api_key)
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_TOKEN,
+                getString(R.string.token_api_v1, it.api_key)
+            )
+            userEmail?.let { userEmail ->
+                viewModel.postService(
+                    PostServiceRequest(
+                        consent = Consent(
+                            userEmail,
+                            System.currentTimeMillis() / 1000
+                        )
+                    )
                 )
             }
+
             if (binding.acceptMarketing.isChecked) {
                 viewModel.handleMarketingPreferences(
                     MarketingOption(MARKETING_OPTION_YES.selected)
@@ -105,8 +111,12 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     )
                 )
             }
+        }
+
+        viewModel.postServiceResponse.observeNonNull(this) {
             viewModel.getMembershipPlans()
         }
+
 
         binding.accept.setOnClickListener {
             startLoading()
@@ -127,7 +137,6 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             } else {
                 stopLoading()
             }
-
             logEvent(
                 getFirebaseIdentifier(
                     TERMS_AND_CONDITIONS_VIEW,
@@ -168,5 +177,18 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private fun startLoading() {
         viewModel.shouldLoadingBeVisible.set(true)
         binding.accept.isEnabled = false
+    }
+
+    private fun handleAuthError() {
+        binding.accept.isClickable = false
+        val timer = Timer()
+        context?.resources?.getInteger(R.integer.button_disabled_delay)?.toLong()
+            ?.let { delay ->
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        binding.accept.isClickable = true
+                    }
+                }, delay)
+            }
     }
 }
