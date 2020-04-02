@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
 import android.util.Log
-import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -266,7 +265,7 @@ fun CardBalance?.formatBalance(): String {
     val balanceValue = this?.value?.toFloat() ?: 0f
     val balanceDecimalValue = balanceValue - balanceValue.toInt()
     return if (balanceDecimalValue != 0f) {
-        this?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(this.value?.toFloat()))
+        this?.prefix?.plus(TWO_DECIMALS_FLOAT_FORMAT.format(Locale.ENGLISH, this.value?.toFloat()))
             .toString()
     } else {
         this?.prefix?.plus(balanceValue.toInt())
