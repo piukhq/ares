@@ -59,23 +59,9 @@ class AddPaymentCardFragment :
             }
     }
 
-    private fun handleValidation() {
-        viewModel.cardNumber.value?.let { cardNumber ->
-            viewModel.expiryDate.value?.let { expiryDate ->
-                viewModel.cardHolder.value?.let { cardHolder ->
-                    binding.addButton.isEnabled = binding.cardNumber.error.isNullOrEmpty() &&
-                            binding.cardExpiry.error.isNullOrBlank() &&
-                            binding.cardName.error.isNullOrEmpty() &&
-                            cardNumber.isNotEmpty() &&
-                            expiryDate.isNotEmpty() &&
-                            cardHolder.isNotEmpty()
-                }
-            }
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.lifecycleOwner = this
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
@@ -89,16 +75,10 @@ class AddPaymentCardFragment :
             cardSwitcher(it)
             cardInfoDisplay()
             updateEnteredCardNumber()
-            handleValidation()
         }
 
         viewModel.cardHolder.observeNonNull(this) {
             cardInfoDisplay()
-            handleValidation()
-        }
-
-        viewModel.expiryDate.observeNonNull(this) {
-            handleValidation()
         }
 
         with(binding.cardNumber) {
