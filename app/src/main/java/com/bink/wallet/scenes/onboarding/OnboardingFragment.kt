@@ -11,12 +11,22 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
-import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.ONBOARDING_SCROLL_DURATION_SECONDS
+import com.bink.wallet.utils.PAGE_1
+import com.bink.wallet.utils.PAGE_2
+import com.bink.wallet.utils.PAGE_3
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.facebook.*
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.FacebookSdk
+import com.facebook.GraphRequest
 import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
@@ -52,7 +62,18 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     override fun onResume() {
         super.onResume()
+
         logScreenView(ONBOARDING_VIEW)
+
+        with(binding.pager) {
+            scrollPagesAutomatically(this)
+        }
+    }
+
+    override fun onStop() {
+        resetTimer()
+
+        super.onStop()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -161,22 +182,21 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     scrollPagesAutomatically(this@with)
                 }
             })
-            scrollPagesAutomatically(this)
         }
-    }
-
-    override fun onDestroy() {
-        timer.apply {
-            purge()
-            cancel()
-        }
-        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (isNetworkAvailable(requireActivity(), true)) {
             callbackManager.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun resetTimer() {
+        timer.apply {
+            purge()
+            cancel()
+        }
+        timer = Timer()
     }
 
     private fun scrollPagesAutomatically(pager: ViewPager?) {
