@@ -123,49 +123,38 @@ class AddPaymentCardFragment :
 
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                validateCardName()
-                validateCardNumber()
-                binding.cardExpiry.error =
-                    cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
+                val cardNo = binding.cardNumber.text.toString().numberSanitize()
+                val cardExp = binding.cardExpiry.text.toString().split("/")
 
-                if (binding.cardNumber.error.isNullOrEmpty() &&
-                    binding.cardExpiry.error.isNullOrBlank() &&
-                    !binding.cardName.text.isNullOrEmpty()
-                ) {
+                val bankCard = BankCard(
+                    cardNo.substring(0, 6),
+                    cardNo.substring(cardNo.length - 4),
+                    cardExp[0],
+                    (cardExp[1].toInt() + YEAR_BASE_ADDITION).toString(),
+                    getString(R.string.country_code_gb),
+                    getString(R.string.currency_code_gbp),
+                    binding.cardName.text.toString(),
+                    cardNo.cardValidation().type,
+                    cardNo.cardValidation().type,
+                    BankCard.tokenGenerator(),
+                    BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]), EMPTY_STRING
+                )
 
-                    val cardNo = binding.cardNumber.text.toString().numberSanitize()
-                    val cardExp = binding.cardExpiry.text.toString().split("/")
-
-                    val bankCard = BankCard(
-                        cardNo.substring(0, 6),
-                        cardNo.substring(cardNo.length - 4),
-                        cardExp[0],
-                        (cardExp[1].toInt() + YEAR_BASE_ADDITION).toString(),
-                        getString(R.string.country_code_gb),
-                        getString(R.string.currency_code_gbp),
-                        binding.cardName.text.toString(),
-                        cardNo.cardValidation().type,
-                        cardNo.cardValidation().type,
-                        BankCard.tokenGenerator(),
-                        BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]), EMPTY_STRING
+                findNavController().navigate(
+                    AddPaymentCardFragmentDirections.addPaymentToTerms(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            false,
+                            getString(R.string.terms_and_conditions_title),
+                            getString(R.string.terms_and_conditions_text),
+                            getString(R.string.accept_button_text),
+                            getString(R.string.decline_button_text),
+                            description2 = getString(R.string.terms_and_conditions_second_paragraph)
+                        ),
+                        bankCard,
+                        cardNo
                     )
-
-                    findNavController().navigate(
-                        AddPaymentCardFragmentDirections.addPaymentToTerms(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                false,
-                                getString(R.string.terms_and_conditions_title),
-                                getString(R.string.terms_and_conditions_text),
-                                getString(R.string.accept_button_text),
-                                getString(R.string.decline_button_text),
-                                description2 = getString(R.string.terms_and_conditions_second_paragraph)
-                            ),
-                            bankCard,
-                            cardNo
-                        )
-                    )
-                }
+                )
             }
             logEvent(
                 getFirebaseIdentifier(
