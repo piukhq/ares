@@ -106,7 +106,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/auth_add_fields"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginBottom="@dimen/margin_padding_size_small"
                     android:scrollIndicators="none"
