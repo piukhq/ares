@@ -17,6 +17,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
+import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlin.properties.Delegates
@@ -193,8 +195,12 @@ class LoyaltyWalletAdapter(
                     valueWrapper.visibility = View.VISIBLE
                     if (!item.vouchers.isNullOrEmpty()) {
                         item.vouchers?.first()?.let { voucher ->
-                            loyaltyValue.text =
-                                root.context.displayVoucherEarnAndTarget(voucher)
+                            if(voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
+                                loyaltyValue.setVoucherCollectedProgress(voucher.earn)
+                            } else {
+                                loyaltyValue.text =
+                                    root.context.displayVoucherEarnAndTarget(voucher)
+                            }
                             loyaltyValueExtra.text =
                                 root.context.getString(R.string.until_next_reward)
                         }

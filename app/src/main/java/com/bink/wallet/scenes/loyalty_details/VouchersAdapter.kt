@@ -9,6 +9,7 @@ import com.bink.wallet.databinding.DetailVoucherItemBinding
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.scenes.loyalty_details.voucherviewholders.AccumulatorVouchersViewHolder
 import com.bink.wallet.scenes.loyalty_details.voucherviewholders.StampVouchersViewHolder
+import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
 
 typealias OnVoucherClickListener = (Voucher) -> Unit
 class VouchersAdapter(
@@ -56,7 +57,7 @@ class VouchersAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (vouchers[position].earn?.type) {
-            VOUCHER_TYPE_STAMPS -> STAMP_VOUCHER
+            VOUCHER_EARN_TYPE_STAMPS -> STAMP_VOUCHER
             else -> PROGRESS_VOUCHER
         }
     }
@@ -68,6 +69,5 @@ class VouchersAdapter(
     companion object {
         private const val PROGRESS_VOUCHER = R.layout.detail_voucher_item
         private const val STAMP_VOUCHER = R.layout.item_stamp_voucher
-        private const val VOUCHER_TYPE_STAMPS = "stamps"
     }
 }
