@@ -251,7 +251,8 @@ dependencies {
     // Facebook
     implementation 'com.facebook.android:facebook-login:5.9.0'
 
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
+
     /** ZENDESK **/
     implementation group: 'com.zendesk', name: 'support', version: '3.0.2'
-
 }

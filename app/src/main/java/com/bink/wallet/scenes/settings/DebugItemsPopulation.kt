@@ -26,6 +26,13 @@ object DebugItemsPopulation {
                 DebugItemType.ENVIRONMENT
             )
         )
+        itemsList.add(
+            DebugItem(
+                res.getString(R.string.debug_backend_version),
+                SharedPreferenceManager.storedBackendVersion.toString(),
+                DebugItemType.BACKEND_VERSION
+            )
+        )
         LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
             itemsList.add(
                 DebugItem(

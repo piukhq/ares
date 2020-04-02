@@ -3,7 +3,7 @@
 #include <string>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_spreedlyKey(
+Java_com_bink_wallet_scenes_splash_SplashFragment_spreedlyKey(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "1Lf7DiKgkcx5Anw7QxWdDxaKtTa";
@@ -13,7 +13,7 @@ Java_com_bink_wallet_SplashFragment_spreedlyKey(
 // PAYMENT HASHING SECRETS
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_paymentCardHashingDevKey(
+Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardHashingDevKey(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "Uf5AIu6ehfHM2By6GAsIDsclEYFlWQNt";
@@ -21,7 +21,7 @@ Java_com_bink_wallet_SplashFragment_paymentCardHashingDevKey(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_paymentCardHashingStagingKey(
+Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardHashingStagingKey(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "nwQ20oYliVN9EFRmvtOAtp12uJAw8ptT";
@@ -29,7 +29,7 @@ Java_com_bink_wallet_SplashFragment_paymentCardHashingStagingKey(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_paymentCardHashingProdKey(
+Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardHashingProdKey(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "octXGgMMZC02QDajJPiXDC2Q74DJX1g0";
@@ -37,7 +37,7 @@ Java_com_bink_wallet_SplashFragment_paymentCardHashingProdKey(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_paymentCardEncryptionPublicKeyDev(
+Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardEncryptionPublicKeyDev(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAkuwzWAdw2+t7gAy+ciSQ\n"
@@ -56,7 +56,7 @@ Java_com_bink_wallet_SplashFragment_paymentCardEncryptionPublicKeyDev(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_paymentCardEncryptionPublicKeyStaging(
+Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardEncryptionPublicKeyStaging(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAl67uxg9puXz6QT57aXL3\n"
@@ -75,7 +75,7 @@ Java_com_bink_wallet_SplashFragment_paymentCardEncryptionPublicKeyStaging(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_paymentCardEncryptionPublicKeyProd(
+Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardEncryptionPublicKeyProd(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA0mImTn4ZbSXIZ6KFRz52\n"
@@ -96,7 +96,7 @@ Java_com_bink_wallet_SplashFragment_paymentCardEncryptionPublicKeyProd(
 // ZENDESK KEYS
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_zendeskUrl(
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskUrl(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "https://binkcx1573467900.zendesk.com";
@@ -104,7 +104,7 @@ Java_com_bink_wallet_SplashFragment_zendeskUrl(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_zendeskAppId(
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskAppId(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "9604542ca7d21d05137fbc8cb56366bedba80fb52daaa318";
@@ -112,7 +112,7 @@ Java_com_bink_wallet_SplashFragment_zendeskAppId(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_SplashFragment_zendeskOAuthId(
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskOAuthId(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "mobile_sdk_client_13ad51f66e08c5466b42";
