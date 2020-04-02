@@ -225,7 +225,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         if (email.isNullOrEmpty()) {
             val directions =
                 accessToken?.let { OnboardingFragmentDirections.onboardingToAddEmail(it) }
-            directions?.let { findNavController().navigateIfAdded(this, it) }
+            directions?.let {
+                if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
+                    findNavController().navigateIfAdded(this, it)
+                }
+            }
         } else {
             val directions =
                 accessToken?.let {
@@ -236,7 +240,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 }
 
             directions.let { _ ->
-                directions?.let { findNavController().navigateIfAdded(this, it) }
+                directions?.let {
+                    if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
+                        findNavController().navigateIfAdded(this, it)
+                    }
+                }
             }
         }
     }

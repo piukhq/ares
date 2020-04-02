@@ -1,5 +1,6 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
@@ -85,6 +86,9 @@ interface ApiService {
     fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
     ): Deferred<ResponseBody>
+
+    @POST("/ubiquity/service")
+    fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
 
     @GET("/ubiquity/payment_card/{payment_id}")
     fun getPaymentCardAsync(
