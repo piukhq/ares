@@ -17,7 +17,7 @@
 
     <fragment
             android:id="@+id/splash"
-            android:name="com.bink.wallet.SplashFragment">
+            android:name="com.bink.wallet.scenes.splash.SplashFragment">
 
         <action
                 android:id="@+id/splash_to_onboarding"

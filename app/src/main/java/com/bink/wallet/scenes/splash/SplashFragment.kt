@@ -1,25 +1,39 @@
-package com.bink.wallet
+package com.bink.wallet.scenes.splash
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.sdk.BinkCore
+import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
+import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.enums.BuildTypes
+import com.scottyab.rootbeer.RootBeer
+import java.util.Locale
+import com.bink.wallet.databinding.FragmentSplashBinding
+import com.bink.wallet.model.Consent
+import com.bink.wallet.model.PostServiceRequest
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
-import com.scottyab.rootbeer.RootBeer
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
 import zendesk.support.Support
-import java.util.Locale
 
-class SplashFragment : Fragment() {
+class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
+    override val layoutRes: Int
+        get() = R.layout.fragment_splash
+    override val viewModel: SplashViewModel by viewModel()
+
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder().build()
+    }
 
     companion object {
         init {
@@ -41,7 +55,7 @@ class SplashFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
@@ -50,6 +64,7 @@ class SplashFragment : Fragment() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
+        setAppPrefs()
         persistPaymentCardHashSecret()
         configureZendesk()
         findNavController().navigateIfAdded(this, getDirections())
@@ -63,24 +78,18 @@ class SplashFragment : Fragment() {
         }
     }
 
-    private fun getUnRootedDirections(): Int {
-        if (!requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
-            val binkCore = BinkCore(requireContext())
-            val key = binkCore.sessionConfig.apiKey
-            val email = binkCore.sessionConfig.userEmail
-            if (!key.isNullOrEmpty()) {
-                SharedPreferenceManager.isUserLoggedIn = true
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_TOKEN,
-                    getString(R.string.token_api_v1, key)
-                )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_EMAIL,
-                    email ?: EMPTY_STRING
-                )
-            }
+        viewModel.postServiceResponse.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, getDirections())
         }
+        viewModel.postServiceErrorResponse.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, getDirections())
+        }
+    }
+
+    private fun getUnRootedDirections(): Int {
 
         return when (requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
             true -> R.id.global_to_home
@@ -132,6 +141,41 @@ class SplashFragment : Fragment() {
                     LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
                     paymentCardEncryptionPublicKeyDev()
                 )
+            }
+        }
+    }
+
+    private fun setAppPrefs() {
+        if (!requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
+            val binkCore = BinkCore(requireContext())
+            val key = binkCore.sessionConfig.apiKey
+            val email = binkCore.sessionConfig.userEmail
+            if (!key.isNullOrEmpty()) {
+                SharedPreferenceManager.isUserLoggedIn = true
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_TOKEN,
+                    getString(R.string.token_api_v1, key)
+                )
+
+                if (!email.isNullOrEmpty()) {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_EMAIL,
+                        email
+                    )
+
+                    viewModel.postService(
+                        PostServiceRequest(
+                            consent = Consent(
+                                email,
+                                System.currentTimeMillis() / 1000
+                            )
+                        )
+                    )
+                } else {
+                    findNavController().navigateIfAdded(this, getDirections())
+                }
+            } else {
+                findNavController().navigateIfAdded(this, getDirections())
             }
         }
     }

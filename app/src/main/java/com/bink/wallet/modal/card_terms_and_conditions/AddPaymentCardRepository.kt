@@ -5,6 +5,7 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -12,7 +13,6 @@ import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.model.spreedly.SpreedlyCreditCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
-import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.LocalStoreUtils
@@ -20,6 +20,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.enums.BackendVersion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,7 +43,9 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>
     ) {
 
-        if (ApiConstants.API_VERSION == ENCRYPTION_API_VERSION) {
+        val cachedBackendVersion = SharedPreferenceManager.storedBackendVersion
+        if (cachedBackendVersion != null
+            && cachedBackendVersion == BackendVersion.VERSION_2.version) {
             encryptCardDetails(card, cardNumber)
         }
 
@@ -87,7 +90,9 @@ class AddPaymentCardRepository(
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
 
-                        if (ApiConstants.API_VERSION == ENCRYPTION_API_VERSION) {
+                        if (cachedBackendVersion != null
+                            && cachedBackendVersion == BackendVersion.VERSION_2.version
+                        ) {
                             encryptCardDetails(card, cardNumber)
                         }
 
@@ -214,9 +219,5 @@ class AddPaymentCardRepository(
                 }
             }
         }
-    }
-
-    companion object {
-        const val ENCRYPTION_API_VERSION = "1.2"
     }
 }

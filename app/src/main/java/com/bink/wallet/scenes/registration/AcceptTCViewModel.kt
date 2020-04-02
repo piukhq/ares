@@ -1,8 +1,10 @@
 package com.bink.wallet.scenes.registration
 
 import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
@@ -29,6 +31,14 @@ class AcceptTCViewModel(
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
+    private val _postServiceResponse = MutableLiveData<ResponseBody>()
+    val postServiceResponse: LiveData<ResponseBody>
+        get() = _postServiceResponse
+
+    private val _postServiceErrorResponse = MutableLiveData<Exception>()
+    val postServiceErrorResponse: LiveData<Exception>
+        get() = _postServiceErrorResponse
+
     init {
         shouldAcceptBeEnabled.value = false
     }
@@ -46,6 +56,14 @@ class AcceptTCViewModel(
             membershipPlanMutableLiveData,
             membershipPlanErrorLiveData,
             membershipPlanDatabaseLiveData
+        )
+    }
+
+    fun postService(postServiceRequest: PostServiceRequest) {
+        loginRepository.postService(
+            postServiceRequest,
+            _postServiceResponse,
+            _postServiceErrorResponse
         )
     }
 }
