@@ -234,6 +234,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     .show()
             }
         }
+        setFooterFadeEffect()
     }
 
     private fun navigateToLCD() {
@@ -245,6 +246,21 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 )
             }
         }
+    }
+
+    private fun setFooterFadeEffect() {
+        // The padding of the list must equate to the size of the CTA (incl. any margins).
+        val buttonMargin =
+            requireContext().resources.getDimension(R.dimen.margin_padding_size_large)
+        val buttonHeight =
+            requireContext().resources.getDimension(R.dimen.generic_view_button_height)
+        val totalPaymentCardsBottomPadding = (buttonMargin + buttonHeight).toInt()
+        binding.paymentCards.setPadding(0, 0, 0, totalPaymentCardsBottomPadding)
+
+        val fadingViewHeight = totalPaymentCardsBottomPadding * 2
+        val viewParams = binding.viewFadeEffect.layoutParams
+        viewParams.height = fadingViewHeight
+        binding.viewFadeEffect.layoutParams = viewParams
     }
 
     companion object {
