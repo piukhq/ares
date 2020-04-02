@@ -10,21 +10,24 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.LoginFragmentBinding
+import com.bink.wallet.model.Consent
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.SignUpRequest
+import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
@@ -65,7 +68,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     this@LoginFragment,
                     R.id.login_to_forgot_password
                 )
-
                 logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.forgotPassword.text.toString()))
             }
         }
@@ -74,9 +76,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         viewModel.retrieveStoredLoginData()
         binding.viewModel = viewModel
-        viewModel.loginData.observeNonNull(this) {
-            viewModel.authenticate()
-        }
 
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
@@ -97,17 +96,41 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     LocalStoreUtils.KEY_EMAIL,
                     it.email ?: EMPTY_STRING
                 )
-                viewModel.getMembershipPlans()
+
+                email.value?.let { email ->
+                    postService(
+                        PostServiceRequest(
+                            consent = Consent(
+                                email = email,
+                                timestamp = System.currentTimeMillis() / 1000
+                            )
+                        )
+                    )
+                }
+
+                postServiceResponse.observeNonNull(this@LoginFragment) {
+                    getMembershipPlans()
+                }
             }
 
-            logInErrorResponse.observeErrorNonNull(
+            logInErrorResponse.observeNetworkDrivenErrorNonNull(
                 requireContext(),
                 this@LoginFragment,
                 EMPTY_STRING,
                 getString(R.string.incorrect_credentials),
                 true
             ) {
-                isLoading.value = false
+                handleErrorResponse()
+            }
+
+            postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
+                requireContext(),
+                this@LoginFragment,
+                EMPTY_STRING,
+                getString(R.string.incorrect_credentials),
+                true
+            ) {
+                handleErrorResponse()
             }
 
             isLoading.observeNonNull(this@LoginFragment) {
@@ -119,10 +142,6 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
                     logInButton.isEnabled = !it
                 }
-            }
-
-            authErrorResponse.observeNonNull(this@LoginFragment) {
-                // this is here for monitoring, but we don't need to report to the user at the moment
             }
         }
 
@@ -173,6 +192,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
     }
 
+    private fun handleErrorResponse() {
+        viewModel.isLoading.value = false
+    }
+
     override fun onPause() {
         super.onPause()
         removeLayoutListener(binding.container)
@@ -182,7 +205,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
                 binding.emailField.error =
-                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                    if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
                         null

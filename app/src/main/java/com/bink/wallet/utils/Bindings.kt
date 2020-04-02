@@ -3,9 +3,13 @@ package com.bink.wallet.utils
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import android.text.format.DateFormat
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -31,6 +35,8 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
+import java.text.SimpleDateFormat
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 
@@ -220,6 +226,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
+                (binding.brandImage.layoutParams as ConstraintLayout.LayoutParams)
+                    .dimensionRatio = "${resource?.minimumWidth}:${resource?.minimumHeight}"
                 binding.container.setBackgroundColor(Color.TRANSPARENT)
                 binding.cardPlaceholderText.visibility = View.GONE
                 return false
@@ -342,7 +350,7 @@ fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Bo
 }
 
 private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
-    DateFormat.format(getDateFormat(shortMonth), timeStamp * 1000).toString()
+    SimpleDateFormat(getDateFormat(shortMonth), Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
 
 private fun getDateFormat(shortMonth: Boolean): String {
     val builder = StringBuilder("dd MMM")

@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.text.format.DateFormat
 import android.text.style.UnderlineSpan
 import android.view.View
 import androidx.navigation.fragment.navArgs
@@ -15,6 +14,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
+import com.bink.wallet.utils.DateTimeUtils.Companion.dateTimeFormatTransactionTime
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
 import com.bink.wallet.utils.enums.VoucherStates
@@ -266,8 +266,6 @@ class VoucherDetailsFragment :
 
     companion object {
         private const val STAMP_VOUCHER_EARN_TYPE = "stamps"
-        private fun dateTimeFormatTransactionTime(timeStamp: Long) =
-            DateFormat.format("dd MMM yyyy HH:mm:ss", timeStamp * 1000).toString()
     }
 
 }

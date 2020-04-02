@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Patterns
 import android.view.View
-import android.view.ViewTreeObserver
-import androidx.lifecycle.Observer
-import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SignUpFragmentBinding
+import com.bink.wallet.model.Consent
+import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.*
@@ -20,7 +18,6 @@ import com.bink.wallet.utils.FirebaseEvents.REGISTER_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
@@ -97,29 +94,47 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
 
             signUpErrorResponse.observeErrorNonNull(requireContext(), this@SignUpFragment, true) {
-                isLoading.value = false
+                handleErrorResponse()
+            }
+
+            postServiceErrorResponse.observeErrorNonNull(
+                requireContext(),
+                this@SignUpFragment,
+                true
+            ) {
+                handleErrorResponse()
             }
 
             signUpResponse.observeNonNull(this@SignUpFragment) {
-                runBlocking {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_TOKEN,
-                        getString(R.string.token_api_v1, it.api_key)
-                    )
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_TOKEN,
+                    getString(R.string.token_api_v1, it.api_key)
+                )
 
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_EMAIL,
-                        it.email ?: EMPTY_STRING
-                    )
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    it.email ?: EMPTY_STRING
+                )
 
-                    marketingPref(
-                        MarketingOption(
-                            marketingMessages.value.toInt()
+                marketingPref(
+                    MarketingOption(
+                        marketingMessages.value.toInt()
+                    )
+                )
+                viewModel.email.value?.let { email ->
+                    viewModel.postService(
+                        PostServiceRequest(
+                            consent = Consent(
+                                email,
+                                System.currentTimeMillis() / 1000
+                            )
                         )
                     )
-
-                    getMembershipPlans()
                 }
+            }
+
+            postServiceResponse.observeNonNull(this@SignUpFragment) {
+                getMembershipPlans()
             }
         }
 
@@ -190,7 +205,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
                 binding.emailField.error =
-                    if (!Patterns.EMAIL_ADDRESS.matcher(it).matches()) {
+                    if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
                         null
@@ -219,6 +234,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     }
             }
         }
+    }
+
+    private fun handleErrorResponse() {
+        viewModel.isLoading.value = false
     }
 
     private fun initMembershipPlansObserver() {

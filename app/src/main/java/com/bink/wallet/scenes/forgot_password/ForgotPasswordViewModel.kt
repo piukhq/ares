@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.EMAIL_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import okhttp3.ResponseBody
 
 class ForgotPasswordViewModel(private val loginRepository: LoginRepository) : BaseViewModel() {
@@ -19,7 +21,7 @@ class ForgotPasswordViewModel(private val loginRepository: LoginRepository) : Ba
     val email = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
     val isEmailValid: LiveData<Boolean> = Transformations.map(email) {
-        Patterns.EMAIL_ADDRESS.matcher(it).matches()
+        UtilFunctions.isValidField(EMAIL_REGEX, it)
     }
 
     fun forgotPassword() {

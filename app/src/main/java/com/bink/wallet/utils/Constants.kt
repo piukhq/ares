@@ -26,6 +26,7 @@ const val PAGE_2 = "Page2"
 const val PAGE_3 = "Page3"
 const val ONBOARDING_SCROLL_DURATION_SECONDS = 12000L
 
+const val EMAIL_REGEX = "^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*\$"
 const val PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$"
 const val JOIN_CARD = "JOIN_CARD"
 
@@ -55,3 +56,5 @@ const val RELEASE_BUILD_TYPE = "release"
 const val KEYBOARD_TO_SCREEN_HEIGHT_RATIO = 0.15
 
 val LETTER_REGEX = "[a-zA-Z]".toRegex()
+
+const val VOUCHER_EARN_TYPE_STAMPS = "stamps"
