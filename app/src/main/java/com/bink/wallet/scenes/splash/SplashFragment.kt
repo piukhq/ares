@@ -10,18 +10,18 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.utils.enums.BuildTypes
-import com.scottyab.rootbeer.RootBeer
-import java.util.Locale
 import com.bink.wallet.databinding.FragmentSplashBinding
 import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
+import java.util.Locale
+import com.bink.wallet.utils.enums.BuildTypes
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
 import zendesk.support.Support
@@ -67,7 +67,9 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         setAppPrefs()
         persistPaymentCardHashSecret()
         configureZendesk()
-        findNavController().navigateIfAdded(this, getDirections())
+        if (findNavController().currentDestination?.id == R.id.splash) {
+            findNavController().navigateIfAdded(this, getDirections())
+        }
     }
 
     private fun getDirections(): Int {
