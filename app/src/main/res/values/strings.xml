@@ -425,7 +425,7 @@
 
     <!--  Forgot password screen  -->
     <string name="forgot_password_title">Forgot password</string>
-    <string name="forgot_password_description">Please enter an email address and if it is associated with a Bink account, then a password reset email will be sent.</string>
+    <string name="forgot_password_description">Please enter your email address and if it is associated with a Bink account, then a password reset email will be sent.</string>
     <string name="continue_text">Continue</string>
     <string name="email_text">Email</string>
     <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent.</string>
