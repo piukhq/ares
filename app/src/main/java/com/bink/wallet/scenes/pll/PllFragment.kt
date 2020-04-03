@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -250,17 +251,19 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     private fun setFooterFadeEffect() {
         // The padding of the list must equate to the size of the CTA (incl. any margins).
-        val buttonMargin =
-            requireContext().resources.getDimension(R.dimen.margin_padding_size_large)
-        val buttonHeight =
-            requireContext().resources.getDimension(R.dimen.generic_view_button_height)
-        val totalPaymentCardsBottomPadding = (buttonMargin + buttonHeight).toInt()
-        binding.paymentCards.setPadding(0, 0, 0, totalPaymentCardsBottomPadding)
+        binding.buttonDone.viewTreeObserver.addOnGlobalLayoutListener {
+            val buttomParams = binding.buttonDone.layoutParams as ConstraintLayout.LayoutParams
+            val buttonMargin = buttomParams.bottomMargin
+            val buttonHeight = binding.buttonDone.height
 
-        val fadingViewHeight = totalPaymentCardsBottomPadding * 2
-        val viewParams = binding.viewFadeEffect.layoutParams
-        viewParams.height = fadingViewHeight
-        binding.viewFadeEffect.layoutParams = viewParams
+            val totalPaymentCardsBottomPadding = (buttonMargin + buttonHeight)
+            binding.paymentCards.setPadding(0, 0, 0, totalPaymentCardsBottomPadding)
+
+            val fadingViewHeight = totalPaymentCardsBottomPadding * 2
+            val viewParams = binding.bgPllBottomGradient.layoutParams
+            viewParams.height = fadingViewHeight
+            binding.bgPllBottomGradient.layoutParams = viewParams
+        }
     }
 
     companion object {
