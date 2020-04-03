@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.sign_up
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData

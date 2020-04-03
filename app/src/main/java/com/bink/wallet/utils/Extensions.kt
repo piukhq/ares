@@ -267,7 +267,7 @@ fun CardBalance?.formatBalance(): String {
     val balanceValue = this?.value?.toFloat() ?: 0f
     val balanceDecimalValue = balanceValue - balanceValue.toInt()
     return if (balanceDecimalValue != 0f) {
-        this?.prefix?.plus(TWO_DECIMAL_FLOAT_FORMAT.format(this.value?.toFloat()))
+        this?.prefix?.plus(TWO_DECIMALS_FLOAT_FORMAT.format(Locale.ENGLISH, this.value?.toFloat()))
             .toString()
     } else {
         this?.prefix?.plus(balanceValue.toInt())

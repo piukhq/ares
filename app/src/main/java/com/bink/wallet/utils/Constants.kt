@@ -49,7 +49,8 @@ const val CERT_PINNING_ERROR = "SSLPeerUnverifiedException"
 
 const val CERT_PINNING_GENERAL_ERROR = "SSL"
 
-const val TWO_DECIMAL_FLOAT_FORMAT = "%.2f"
+const val TWO_DECIMALS_FLOAT_FORMAT = "%.2f"
+const val NO_DECIMALS_FORMAT = "%.0f"
 
 const val RELEASE_BUILD_TYPE = "release"
 

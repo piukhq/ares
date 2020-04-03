@@ -13,14 +13,18 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentSplashBinding
 import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
-import com.bink.wallet.utils.*
+import java.util.Locale
 import com.bink.wallet.utils.enums.BuildTypes
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.bink.wallet.utils.getSessionHandlerNavigationDestination
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
 import zendesk.support.Support
-import java.util.*
 
 class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     override val layoutRes: Int
