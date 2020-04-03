@@ -195,8 +195,9 @@ class LoyaltyWalletAdapter(
                     valueWrapper.visibility = View.VISIBLE
                     if (!item.vouchers.isNullOrEmpty()) {
                         item.vouchers?.first()?.let { voucher ->
-                            if(voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
+                            if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
                                 loyaltyValue.setVoucherCollectedProgress(voucher.earn)
+//                                loyaltyValue.text = root.context.getString(R.string.voucher_stamp_collected, voucher.earn.value?.toInt(), voucher.earn.target_value.toInt()) + " "
                             } else {
                                 loyaltyValue.text =
                                     root.context.displayVoucherEarnAndTarget(voucher)

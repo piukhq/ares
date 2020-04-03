@@ -59,8 +59,7 @@
                         android:textSize="@dimen/text_size_description_smaller"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/title"
-                        app:voucherSubtext="@{voucher.subtext}"
-                        app:voucherTargetValue="@{voucher.earn.target_value}"
+                        app:voucherEarnSubtitle="@{voucher.earn}"
                         tools:text="for collecting 5" />
 
                 <TextView
