@@ -1,11 +1,12 @@
 package com.bink.wallet.utils
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.util.DisplayMetrics
 import android.util.Log
-import android.util.Patterns
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -26,7 +27,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.Locale
+import java.util.*
 
 
 fun Context.toPixelFromDip(value: Float) =

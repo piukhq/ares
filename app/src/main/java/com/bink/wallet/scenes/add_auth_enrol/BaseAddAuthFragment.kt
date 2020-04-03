@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -40,14 +41,23 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     val planDocumentsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
+    private var originalMode: Int? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        originalMode = activity?.window?.attributes?.softInputMode
+
+        activity?.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
         binding.membershipPlan = args.membershipPlan
         binding.viewModel = viewModel
         binding.footerSimple.viewModel = viewModel
         binding.footerComposed.viewModel = viewModel
 
         SharedPreferenceManager.isLoyaltySelected = true
+
 
         binding.toolbar.setNavigationOnClickListener {
             handleToolbarAction()
@@ -62,6 +72,17 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        isKeyBoardVisible(binding.layout, ::beginTransition)
+        registerLayoutListener(binding.layout)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        originalMode?.let { activity?.window?.setSoftInputMode(it) }
+    }
+
     fun addFieldToList(planField: Any) {
         when (planField) {
             is PlanFields -> {
@@ -70,7 +91,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                         planField.column, EMPTY_STRING
                     )
                 )
-
                 if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
                     planDocumentsList.add(
                         pairPlanField
@@ -92,6 +112,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 )
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        removeLayoutListener(binding.layout)
     }
 
     fun mapItems() {
@@ -151,7 +176,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                             }
                         }
                     }
-                    //binding.addCardButton.isEnabled = true
                 }
             )
         }
@@ -187,6 +211,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 }
             }
         }
+    }
+
+    private fun beginTransition() {
+        binding.layout.transitionToState(R.id.collapsed)
     }
 
     private fun handleToolbarAction() {

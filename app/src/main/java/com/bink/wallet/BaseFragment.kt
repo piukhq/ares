@@ -121,6 +121,18 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
+    fun isKeyBoardVisible(container: View, onLayoutChange: (() -> Unit)) {
+        this.layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rec = Rect()
+            container.getWindowVisibleDisplayFrame(rec)
+            val screenHeight = container.rootView.height
+            val keypadHeight = screenHeight - rec.bottom
+            if (keypadHeight > screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
+                onLayoutChange()
+            }
+        }
+    }
+
     fun registerLayoutListener(container: View) {
         container.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
     }
