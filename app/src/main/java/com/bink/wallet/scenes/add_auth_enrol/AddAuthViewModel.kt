@@ -6,12 +6,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.enums.TypeOfField
 
 class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
@@ -40,9 +43,8 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val descriptionText = ObservableField<String>()
     val isNoAccountFooter = ObservableBoolean(false)
     val haveValidationsPassed = ObservableBoolean(false)
+    val isKeyboardHidden = ObservableBoolean(true)
 
-    val planFieldsList = MutableLiveData<List<Pair<Any, PlanFieldsRequest>>>()
-    val planDocumentsList = MutableLiveData<List<Pair<Any, PlanFieldsRequest>>>()
 
     init {
         _paymentCardsMerger.addSource(paymentCards) {

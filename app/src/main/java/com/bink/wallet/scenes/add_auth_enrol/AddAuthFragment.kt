@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
@@ -12,8 +11,8 @@ import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.membership_plan.PlanDocuments
-import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.model.response.membership_plan.PlanDocument
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
@@ -136,7 +135,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         var required = true
                         planBooleanFieldsList.map { field ->
                             if (field.second.column == plan.column) {
-                                (field.first as PlanDocuments).checkbox?.let { hasCheckbox ->
+                                (field.first as PlanDocument).checkbox?.let { hasCheckbox ->
                                     if (!hasCheckbox) {
                                         required = false
                                     }
@@ -153,9 +152,9 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                     }
 
                     planFieldsList.map {
-                        if (it.first is PlanFields) {
+                        if (it.first is PlanField) {
                             if (!UtilFunctions.isValidField(
-                                    (it.first as PlanFields).validation,
+                                    (it.first as PlanField).validation,
                                     it.second.value
                                 )
                             ) {

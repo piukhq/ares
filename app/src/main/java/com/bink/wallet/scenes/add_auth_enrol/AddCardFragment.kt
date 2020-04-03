@@ -5,17 +5,11 @@ import android.view.View
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.model.request.membership_card.Account
-import com.bink.wallet.model.response.membership_plan.PlanDocuments
-import com.bink.wallet.model.response.membership_plan.PlanFields
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
@@ -121,24 +115,23 @@ class AddCardFragment : BaseAddAuthFragment() {
     private fun addItems() {
         with(binding.membershipPlan!!) {
             account?.let {
-                account.add_fields?.map { planFields ->
-                    planFields.typeOfField = TypeOfField.ADD
-                    addFieldToList(planFields)
+                account.add_fields?.map { planField ->
+                    planField.typeOfField = TypeOfField.ADD
+                    addPlanField(planField)
                 }
-                account.authorise_fields?.map { planFields ->
-                    planFields.typeOfField = TypeOfField.AUTH
-                    addFieldToList(planFields)
+                account.authorise_fields?.map { planField ->
+                    planField.typeOfField = TypeOfField.AUTH
+                    addPlanField(planField)
                 }
-                account.plan_documents?.map { planDocuments ->
-                    planDocuments.display?.let { display ->
+                account.plan_documents?.map { planDocument ->
+                    planDocument.display?.let { display ->
                         if (display.contains(SignUpFormType.ADD_AUTH.type)) {
-                            addFieldToList(planDocuments)
+                            addPlanDocument(planDocument)
                         }
                     }
                 }
             }
         }
-
         mapItems()
     }
 

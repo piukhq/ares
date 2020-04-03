@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import androidx.navigation.fragment.findNavController
@@ -13,8 +14,8 @@ import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
-import com.bink.wallet.model.response.membership_plan.PlanDocuments
-import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.model.response.membership_plan.PlanDocument
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
@@ -58,7 +59,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
         SharedPreferenceManager.isLoyaltySelected = true
 
-
         binding.toolbar.setNavigationOnClickListener {
             handleToolbarAction()
             findNavController().navigateUp()
@@ -74,8 +74,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     override fun onResume() {
         super.onResume()
-        isKeyBoardVisible(binding.layout, ::beginTransition)
-        registerLayoutListener(binding.layout)
+        setupKeyboardHiddenListener(binding.layout, ::endTransition)
+        setUpKeyboardVisibleListener(binding.layout, ::beginTransition)
+        registerKeyboardHiddenLayoutListener(binding.layout)
+        registerKeyboardVisibleLayoutListener(binding.layout)
     }
 
     override fun onDestroy() {
@@ -83,40 +85,39 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         originalMode?.let { activity?.window?.setSoftInputMode(it) }
     }
 
-    fun addFieldToList(planField: Any) {
-        when (planField) {
-            is PlanFields -> {
-                val pairPlanField = Pair(
-                    planField, PlanFieldsRequest(
-                        planField.column, EMPTY_STRING
-                    )
-                )
-                if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-                    planDocumentsList.add(
-                        pairPlanField
-                    )
-                } else if (!planField.column.equals(BARCODE_TEXT)) {
-                    planFieldsList.add(
-                        pairPlanField
-                    )
-                }
-            }
-
-            is PlanDocuments -> {
-                planDocumentsList.add(
-                    Pair(
-                        planField, PlanFieldsRequest(
-                            planField.name, EMPTY_STRING
-                        )
-                    )
-                )
-            }
+    fun addPlanField(planField: PlanField) {
+        val pairPlanField = Pair(
+            planField, PlanFieldsRequest(
+                planField.column, EMPTY_STRING
+            )
+        )
+        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+            planDocumentsList.add(
+                pairPlanField
+            )
+        } else if (!planField.column.equals(BARCODE_TEXT)) {
+            planFieldsList.add(
+                pairPlanField
+            )
         }
+    }
+
+    fun addPlanDocument(planDocument: PlanDocument) {
+        planDocumentsList.add(
+            Pair(
+                planDocument, PlanFieldsRequest(
+                    planDocument.name, EMPTY_STRING
+                )
+            )
+        )
     }
 
     override fun onPause() {
         super.onPause()
-        removeLayoutListener(binding.layout)
+        planDocumentsList.clear()
+        planFieldsList.clear()
+        removeKeyboardHiddenLayoutListener(binding.layout)
+        removeKeyboardVisibleLayoutListener(binding.layout)
     }
 
     fun mapItems() {
@@ -124,8 +125,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         val addRegisterFieldsRequest = Account()
 
         planFieldsList.map {
-            if (it.first is PlanFields) {
-                when ((it.first as PlanFields).typeOfField) {
+            if (it.first is PlanField) {
+                when ((it.first as PlanField).typeOfField) {
                     TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
                     TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
                     TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
@@ -147,12 +148,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                         var required = true
                         planDocumentsList.map { field ->
                             if (field.second.column == plan.column) {
-                                (field.first as PlanDocuments).checkbox?.let { bool ->
+                                (field.first as PlanDocument).checkbox?.let { bool ->
                                     required = !bool
                                 }
                             }
                         }
-                        if (required && plan.value != true.toString()) {
+                        if (required &&
+                            plan.value != true.toString()
+                        ) {
 //                            binding.addCardButton.isEnabled = false
                             return@AddAuthAdapter
                         }
@@ -160,13 +163,15 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
                     planFieldsList.map {
                         val item = it.first
-                        if (item is PlanFields && item.type != FieldType.BOOLEAN_OPTIONAL.type) {
+                        if (item is PlanField &&
+                            item.type != FieldType.BOOLEAN_OPTIONAL.type
+                        ) {
                             if (it.second.value.isNullOrEmpty()) {
                                 //binding.addCardButton.isEnabled = false
                                 return@AddAuthAdapter
                             } else {
                                 if (!UtilFunctions.isValidField(
-                                        (it.first as PlanFields).validation,
+                                        (it.first as PlanField).validation,
                                         it.second.value
                                     )
                                 ) {
@@ -214,7 +219,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun beginTransition() {
+        viewModel.isKeyboardHidden.set(false)
         binding.layout.transitionToState(R.id.collapsed)
+    }
+
+    private fun endTransition() {
+        Handler().postDelayed({
+            viewModel.isKeyboardHidden.set(true)
+        }, 20)
     }
 
     private fun handleToolbarAction() {

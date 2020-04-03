@@ -30,16 +30,16 @@ class GhostCardFragment : BaseAddAuthFragment() {
         with(binding.membershipPlan!!) {
             account?.add_fields?.map {
                 it.typeOfField = TypeOfField.ADD
-                addFieldToList(it)
+                addPlanField(it)
             }
             account?.registration_fields?.map {
                 it.typeOfField = TypeOfField.REGISTRATION
-                addFieldToList(it)
+                addPlanField(it)
             }
             account?.plan_documents?.map {
                 it.display?.let { display ->
                     if (display.contains(SignUpFormType.GHOST.type)) {
-                        addFieldToList(it)
+                        addPlanDocument(it)
                     }
                 }
             }

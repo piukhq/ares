@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutDescription="@xml/collapsing_toolbar">
+
         <Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="0dp"
@@ -90,9 +91,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:paddingBottom="@dimen/margin_padding_size_medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description_add_auth" />
 
         <include

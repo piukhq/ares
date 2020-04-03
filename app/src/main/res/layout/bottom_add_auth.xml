@@ -11,7 +11,7 @@
 
     <Button
             android:id="@+id/add_auth_cta"
-            isVisible="@{!viewModel.isNoAccountFooter()}"
+            isVisible="@{!viewModel.isNoAccountFooter() &amp;&amp; viewModel.isKeyboardHidden()}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient_button_selector"

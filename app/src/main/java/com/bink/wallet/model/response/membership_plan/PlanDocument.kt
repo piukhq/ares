@@ -1,18 +1,15 @@
 package com.bink.wallet.model.response.membership_plan
 
 import android.os.Parcelable
-import com.bink.wallet.utils.enums.TypeOfField
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class PlanFields(
-    val column: String?,
-    val validation: String?,
-    val common_name: String?,
-    val type: Int?,
-    val choice: List<String>?,
+data class PlanDocument(
+    val name: String?,
     val description: String?,
-    var typeOfField: TypeOfField?
+    val url: String?,
+    val display: List<String>?,
+    val checkbox: Boolean?
 ) : Parcelable

@@ -70,7 +70,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             ConstraintSet.TOP,
             marginPercent * lastCardHeight / INT_ONE_HUNDRED
         )
-
         constraintSet.applyTo(binding.root)
     }
 

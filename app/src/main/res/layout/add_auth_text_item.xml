@@ -12,7 +12,7 @@
 
         <variable
                 name="planField"
-                type="com.bink.wallet.model.response.membership_plan.PlanFields" />
+                type="com.bink.wallet.model.response.membership_plan.PlanField" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

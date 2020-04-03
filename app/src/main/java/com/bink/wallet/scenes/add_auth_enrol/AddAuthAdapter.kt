@@ -15,8 +15,8 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBinding
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
-import com.bink.wallet.model.response.membership_plan.PlanDocuments
-import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.model.response.membership_plan.PlanDocument
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
@@ -36,10 +36,10 @@ class AddAuthAdapter(
 
     init {
         brands.map { pair ->
-            if (pair.first is PlanFields &&
-                (pair.first as PlanFields).type == FieldType.TEXT.type
+            if (pair.first is PlanField &&
+                (pair.first as PlanField).type == FieldType.TEXT.type
             ) {
-                (pair.first as PlanFields).column?.let { column ->
+                (pair.first as PlanField).column?.let { column ->
                     finalTextField = column
                 }
             }
@@ -51,13 +51,13 @@ class AddAuthAdapter(
         val currentItem = brands[position]
 
         if (!UtilFunctions.isValidField(
-                (currentItem.first as PlanFields).validation,
+                (currentItem.first as PlanField).validation,
                 currentItem.second.value
             )
         ) {
             text.error = text.context.getString(
                 R.string.add_auth_error_message,
-                (currentItem.first as PlanFields).column
+                (currentItem.first as PlanField).column
             )
         }
     }
@@ -76,9 +76,9 @@ class AddAuthAdapter(
 
     override fun getItemViewType(position: Int): Int {
         brands[position].first.apply {
-            if (this is PlanFields && type != null) {
+            if (this is PlanField && type != null) {
                 return type
-            } else if (this is PlanDocuments) {
+            } else if (this is PlanDocument) {
                 return if (this.checkbox == null || this.checkbox) {
                     FieldType.BOOLEAN_REQUIRED.type
                 } else {
@@ -91,19 +91,19 @@ class AddAuthAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         brands[position].let {
-            if (it.first is PlanFields) {
+            if (it.first is PlanField) {
                 when (holder) {
-                    is TextFieldHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
-                    is SpinnerViewHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
-                    is CheckBoxHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
-                    is DisplayHolder -> holder.bind(it as Pair<PlanFields, PlanFieldsRequest>)
+                    is TextFieldHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
+                    is SpinnerViewHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
+                    is CheckBoxHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
+                    is DisplayHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
                 }
             } else {
                 when (getItemViewType(position)) {
                     FieldType.DISPLAY.type ->
-                        (holder as DisplayHolder).bind(it as Pair<PlanDocuments, PlanFieldsRequest>)
+                        (holder as DisplayHolder).bind(it as Pair<PlanDocument, PlanFieldsRequest>)
                     else ->
-                        (holder as CheckBoxHolder).bind(it as Pair<PlanDocuments, PlanFieldsRequest>)
+                        (holder as CheckBoxHolder).bind(it as Pair<PlanDocument, PlanFieldsRequest>)
                 }
             }
         }
@@ -112,7 +112,7 @@ class AddAuthAdapter(
     override fun getItemCount() = brands.size
 
     inner class TextFieldHolder(val binding: AddAuthTextItemBinding) :
-        BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
+        BaseViewHolder<Pair<PlanField, PlanFieldsRequest>>(binding) {
 
         private val textWatcher = object : SimplifiedTextWatcher {
             override fun onTextChanged(
@@ -139,7 +139,7 @@ class AddAuthAdapter(
             }
         }
 
-        override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+        override fun bind(item: Pair<PlanField, PlanFieldsRequest>) {
             binding.planField = item.first
             with(binding.contentAddAuthText) {
                 hint = item.first.description
@@ -205,7 +205,7 @@ class AddAuthAdapter(
     }
 
     inner class SpinnerViewHolder(val binding: AddAuthSpinnerItemBinding) :
-        BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
+        BaseViewHolder<Pair<PlanField, PlanFieldsRequest>>(binding) {
 
         private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -219,12 +219,12 @@ class AddAuthAdapter(
                 id: Long
             ) {
                 brands[adapterPosition].second.value =
-                    (brands[adapterPosition].first as PlanFields).choice?.get(position)
+                    (brands[adapterPosition].first as PlanField).choice?.get(position)
             }
 
         }
 
-        override fun bind(item: Pair<PlanFields, PlanFieldsRequest>) {
+        override fun bind(item: Pair<PlanField, PlanFieldsRequest>) {
             val spinner = binding.contentAddAuthSpinner
             binding.planField = item.first
             brands[adapterPosition].second.value = item.first.choice?.get(0)
@@ -255,11 +255,11 @@ class AddAuthAdapter(
                 }
 
                 when (item.first) {
-                    is PlanFields ->
+                    is PlanField ->
                         text =
-                            (item.first as PlanFields).description
+                            (item.first as PlanField).description
                     else -> {
-                        (item.first as PlanDocuments).let {
+                        (item.first as PlanDocument).let {
                             it.description?.let { description ->
                                 text = description
                                 it.name?.let { name ->
@@ -295,11 +295,11 @@ class AddAuthAdapter(
 
             with(binding.contentAddAuthDisplay) {
                 when (item.first) {
-                    is PlanFields ->
+                    is PlanField ->
                         text =
-                            (item.first as PlanFields).description
+                            (item.first as PlanField).description
                     else -> {
-                        (item.first as PlanDocuments).let {
+                        (item.first as PlanDocument).let {
                             it.description?.let { description ->
                                 text = description
                                 it.name?.let { name ->

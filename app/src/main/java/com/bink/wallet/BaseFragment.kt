@@ -39,7 +39,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         )
     }
 
-    private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var keyboardVisibleListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
@@ -109,8 +110,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun setupLayoutListener(container: View, onLayoutChange: (() -> Unit)) {
-        this.layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+    fun setupKeyboardHiddenListener(container: View, onLayoutChange: (() -> Unit)) {
+        this.keyboardHiddenListener = ViewTreeObserver.OnGlobalLayoutListener {
             val rec = Rect()
             container.getWindowVisibleDisplayFrame(rec)
             val screenHeight = container.rootView.height
@@ -121,8 +122,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun isKeyBoardVisible(container: View, onLayoutChange: (() -> Unit)) {
-        this.layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+    fun setUpKeyboardVisibleListener(container: View, onLayoutChange: (() -> Unit)) {
+        this.keyboardVisibleListener = ViewTreeObserver.OnGlobalLayoutListener {
             val rec = Rect()
             container.getWindowVisibleDisplayFrame(rec)
             val screenHeight = container.rootView.height
@@ -133,11 +134,19 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun registerLayoutListener(container: View) {
-        container.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+    fun registerKeyboardHiddenLayoutListener(container: View) {
+        container.viewTreeObserver.addOnGlobalLayoutListener(keyboardHiddenListener)
     }
 
-    fun removeLayoutListener(container: View) {
-        container.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+    fun registerKeyboardVisibleLayoutListener(container: View) {
+        container.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibleListener)
+    }
+
+    fun removeKeyboardHiddenLayoutListener(container: View) {
+        container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardHiddenListener)
+    }
+
+    fun removeKeyboardVisibleLayoutListener(container: View) {
+        container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardVisibleListener)
     }
 }

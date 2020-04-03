@@ -59,8 +59,7 @@
                 app:layout_constraintTop_toBottomOf="@id/add_join_reward" />
 
 
-        <Constraint
-                android:id="@id/footer_composed">
+        <Constraint android:id="@id/footer_composed">
             <PropertySet
                     app:applyMotionScene="false"
                     app:visibilityMode="ignore" />
@@ -98,5 +97,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
     </ConstraintSet>
 </MotionScene>

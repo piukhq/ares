@@ -13,7 +13,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.databinding.ObservableBoolean
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
@@ -21,7 +20,7 @@ import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.model.response.membership_plan.PlanFields
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
@@ -272,22 +271,22 @@ fun TextView.textBalance(card: MembershipCard?) {
 
 @BindingAdapter("planField")
 fun TextView.title(
-    planFields: PlanFields?
+    planField: PlanField?
 ) {
-    if (!planFields?.column.isNullOrEmpty()) {
-        this.text = planFields?.column
+    if (!planField?.column.isNullOrEmpty()) {
+        this.text = planField?.column
     }
 }
 
 @BindingAdapter("planField")
 fun Spinner.setValues(
-    planFields: PlanFields?
+    planField: PlanField?
 ) {
-    if (planFields != null && !planFields.choice.isNullOrEmpty())
+    if (planField != null && !planField.choice.isNullOrEmpty())
         adapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_dropdown_item,
-            planFields.choice
+            planField.choice
         )
 }
 
