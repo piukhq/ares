@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +40,18 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun onResume() {
         super.onResume()
+        setFooterFadeEffect(
+            mutableListOf(binding.buttonDone),
+            binding.paymentCards,
+            binding.bgPllBottomGradient
+        )
+        registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        removeFooterListener(binding.root)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -235,7 +245,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     .show()
             }
         }
-        setFooterFadeEffect()
     }
 
     private fun navigateToLCD() {
@@ -246,23 +255,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     directions
                 )
             }
-        }
-    }
-
-    private fun setFooterFadeEffect() {
-        // The padding of the list must equate to the size of the CTA (incl. any margins).
-        binding.buttonDone.viewTreeObserver.addOnGlobalLayoutListener {
-            val buttomParams = binding.buttonDone.layoutParams as ConstraintLayout.LayoutParams
-            val buttonMargin = buttomParams.bottomMargin
-            val buttonHeight = binding.buttonDone.height
-
-            val totalPaymentCardsBottomPadding = (buttonMargin + buttonHeight)
-            binding.paymentCards.setPadding(0, 0, 0, totalPaymentCardsBottomPadding)
-
-            val fadingViewHeight = totalPaymentCardsBottomPadding * 2
-            val viewParams = binding.bgPllBottomGradient.layoutParams
-            viewParams.height = fadingViewHeight
-            binding.bgPllBottomGradient.layoutParams = viewParams
         }
     }
 

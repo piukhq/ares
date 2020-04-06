@@ -165,6 +165,6 @@
     <dimen name="generic_view_button_height">48dp</dimen>
 
     <!-- PLL Screen -->
-    <dimen name="pll_screen_default_fade_view_height">1dp</dimen>
+    <dimen name="footer_default_fade_view_height">1dp</dimen>
 
 </resources>

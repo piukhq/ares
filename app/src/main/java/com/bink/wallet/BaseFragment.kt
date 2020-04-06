@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
@@ -41,6 +43,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     private lateinit var keyboardVisibleListener: ViewTreeObserver.OnGlobalLayoutListener
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var footerListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
@@ -142,6 +145,10 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         container.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibleListener)
     }
 
+    fun registerFooterListener(container: View) {
+        container.viewTreeObserver.addOnGlobalLayoutListener(footerListener)
+    }
+
     fun removeKeyboardHiddenLayoutListener(container: View) {
         container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardHiddenListener)
     }
@@ -149,4 +156,47 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     fun removeKeyboardVisibleLayoutListener(container: View) {
         container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardVisibleListener)
     }
+
+    fun removeFooterListener(container: View) {
+        container.viewTreeObserver.removeOnGlobalLayoutListener(footerListener)
+    }
+
+
+    fun setFooterFadeEffect(
+        footerViews: List<View>,
+        recyclerView: RecyclerView,
+        gradientView: View
+    ) {
+        // The padding of the list must equate to the size of the CTA (incl. any margins).
+        footerListener = ViewTreeObserver.OnGlobalLayoutListener {
+            var footerMargin = 0
+            var footerHeight = 0
+            footerViews.forEach { footerView ->
+                val footerParams = footerView.layoutParams as ConstraintLayout.LayoutParams
+                footerMargin = +footerParams.bottomMargin
+                footerHeight = +footerView.height
+                footerView.bringToFront()
+            }
+
+            val recyclerParams = recyclerView.layoutParams as ConstraintLayout.LayoutParams
+            val listMargin = 3 * recyclerParams.bottomMargin
+
+            val totalRecyclerBottomPadding =
+                (footerMargin + footerHeight + listMargin)
+            recyclerView.setPadding(
+                0,
+                0,
+                0,
+                totalRecyclerBottomPadding
+            )
+
+            val fadingViewHeight = totalRecyclerBottomPadding * 2
+            val viewParams = gradientView.layoutParams
+            viewParams.height = fadingViewHeight
+            gradientView.layoutParams = viewParams
+
+
+        }
+    }
+
 }

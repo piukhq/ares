@@ -78,6 +78,18 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         setUpKeyboardVisibleListener(binding.layout, ::beginTransition)
         registerKeyboardHiddenLayoutListener(binding.layout)
         registerKeyboardVisibleLayoutListener(binding.layout)
+        setFooterFadeEffect(
+            mutableListOf(binding.footerSimple.addAuthCta),
+            binding.authFields,
+            binding.footerSimple.footerBottomGradient
+        )
+        setFooterFadeEffect(
+            mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
+            binding.authFields,
+            binding.footerComposed.footerBottomGradient
+        )
+        registerFooterListener(binding.footerSimple.root)
+        registerFooterListener(binding.footerComposed.root)
     }
 
     override fun onDestroy() {
@@ -118,6 +130,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         planFieldsList.clear()
         removeKeyboardHiddenLayoutListener(binding.layout)
         removeKeyboardVisibleLayoutListener(binding.layout)
+        removeFooterListener(binding.footerSimple.root)
+        removeFooterListener(binding.footerComposed.root)
     }
 
     fun mapItems() {
