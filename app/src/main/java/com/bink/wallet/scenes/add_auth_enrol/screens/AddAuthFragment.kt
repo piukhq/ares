@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth_enrol
+package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
 import android.view.View
@@ -14,6 +14,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable

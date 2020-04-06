@@ -202,7 +202,7 @@
 
     <fragment
             android:id="@+id/add_auth_fragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.AddAuthFragment">
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.AddAuthFragment">
 
         <argument
                 android:name="signUpFormType"
@@ -738,7 +738,7 @@
 
     <fragment
             android:id="@+id/baseAddAuthFragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.BaseAddAuthFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment"
             android:label="BaseAddAuthFragment"
             tools:layout="@layout/base_add_auth_fragment">
         <argument
@@ -752,7 +752,7 @@
 
     <fragment
             android:id="@+id/addCardFragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.AddCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.AddCardFragment"
             android:label="AddCardFragment"
             tools:layout="@layout/base_add_auth_fragment">
         <argument
@@ -778,7 +778,7 @@
 
     <fragment
             android:id="@+id/getNewCardFragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.GetNewCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.GetNewCardFragment"
             android:label="GetNewCardFragment"
             tools:layout="@layout/base_add_auth_fragment">
         <argument
@@ -792,7 +792,7 @@
 
     <fragment
             android:id="@+id/ghostCardFragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.GhostCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.GhostCardFragment"
             android:label="GhostCardFragment"
             tools:layout="@layout/base_add_auth_fragment">
         <argument

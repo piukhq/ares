@@ -53,6 +53,7 @@
                 android:id="@+id/footer_bottom_gradient"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/footer_default_fade_view_height"
+                isVisible="@{viewModel.isKeyboardHidden()}"
                 android:background="@drawable/bg_btn_gradient"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

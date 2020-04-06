@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth_enrol
+package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
 import android.view.View

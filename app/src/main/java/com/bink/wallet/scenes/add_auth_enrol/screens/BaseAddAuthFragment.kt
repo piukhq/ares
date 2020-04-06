@@ -1,8 +1,9 @@
-package com.bink.wallet.scenes.add_auth_enrol
+package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,6 +17,8 @@ import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.*
+import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
@@ -43,6 +46,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         mutableListOf()
 
     private var originalMode: Int? = null
+    private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,22 +79,24 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     override fun onResume() {
         super.onResume()
-        setupKeyboardHiddenListener(binding.layout, ::endTransition)
-        setUpKeyboardVisibleListener(binding.layout, ::beginTransition)
-        registerKeyboardHiddenLayoutListener(binding.layout)
-        registerKeyboardVisibleLayoutListener(binding.layout)
-        setFooterFadeEffect(
-            mutableListOf(binding.footerSimple.addAuthCta),
-            binding.authFields,
-            binding.footerSimple.footerBottomGradient
-        )
-        setFooterFadeEffect(
-            mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
-            binding.authFields,
-            binding.footerComposed.footerBottomGradient
-        )
-        registerFooterListener(binding.footerSimple.root)
-        registerFooterListener(binding.footerComposed.root)
+        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            handleKeyboardHiddenListener(binding.layout, ::endTransition)
+            handleKeyboardVisibleListener(binding.layout, ::beginTransition)
+        }
+        footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            handleFooterFadeEffect(
+                mutableListOf(binding.footerSimple.addAuthCta),
+                binding.authFields,
+                binding.footerSimple.footerBottomGradient
+            )
+            handleFooterFadeEffect(
+                mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
+                binding.authFields,
+                binding.footerComposed.footerBottomGradient
+            )
+        }
+        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
     }
 
     override fun onDestroy() {
@@ -128,10 +135,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onPause()
         planDocumentsList.clear()
         planFieldsList.clear()
-        removeKeyboardHiddenLayoutListener(binding.layout)
-        removeKeyboardVisibleLayoutListener(binding.layout)
-        removeFooterListener(binding.footerSimple.root)
-        removeFooterListener(binding.footerComposed.root)
+        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(footerLayoutListener)
     }
 
     fun mapItems() {
@@ -233,14 +238,18 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun beginTransition() {
-        viewModel.isKeyboardHidden.set(false)
-        binding.layout.transitionToState(R.id.collapsed)
+        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(footerLayoutListener)
+        Handler().postDelayed({
+            binding.layout.transitionToState(R.id.collapsed)
+            viewModel.isKeyboardHidden.set(false)
+        }, 100)
     }
 
     private fun endTransition() {
+        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
         Handler().postDelayed({
             viewModel.isKeyboardHidden.set(true)
-        }, 20)
+        }, 100)
     }
 
     private fun handleToolbarAction() {
