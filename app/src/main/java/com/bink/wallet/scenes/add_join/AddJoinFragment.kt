@@ -175,9 +175,16 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 //                            isFromNoReasonCodes
 //                        )
 //                    )
+
                     findNavController().navigate(
-                        AddJoinFragmentDirections.addJoinToAddCardFragment(it, isRetryJourney, isFromNoReasonCodes)
+                        AddJoinFragmentDirections.addJoinToAddCardFragment(
+                            it,
+                            isRetryJourney,
+                            isFromNoReasonCodes,
+                            membershipCardId.toString()
+                        )
                     )
+
                 }
 
             }
@@ -236,8 +243,12 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 //                            membershipCardId,
 //                            isFromNoReasonCodes
 //                        )
+                        AddJoinFragmentDirections.addJoinToGetNewCardFragment(
+                            membershipPlan,
+                            membershipCardId.toString(),
+                            isRetryJourney
+                        )
 
-                        AddJoinFragmentDirections.addJoinToGetNewCardFragment(membershipPlan)
                     }
                 findNavController().navigate(getNewCardNavigationDirections)
 

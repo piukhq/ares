@@ -1,5 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol.view_models
 
+import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -7,8 +9,8 @@ import com.bink.wallet.utils.enums.TypeOfField
 class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletRepository) :
     AddAuthViewModel(loyaltyWalletRepository) {
 
-    override fun addItems() {
-        currentMembershipPlan.value?.let {
+    override fun addItems(membershipPlan: MembershipPlan) {
+        membershipPlan.let {
             it.account?.let { account ->
                 account.add_fields?.map { planField ->
                     planField.typeOfField = TypeOfField.ADD
@@ -28,5 +30,20 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
             }
         }
         mapItems()
+    }
+
+    fun handleRequest(isRetryJourney: Boolean, membershipCardId: String, membershipPlan: MembershipPlan) {
+        val currentRequest = MembershipCardRequest(
+            addRegisterFieldsRequest.value,
+            membershipPlan.id
+        )
+        if (isRetryJourney) {
+            updateMembershipCard(membershipCardId, currentRequest)
+
+        } else {
+            createMembershipCard(
+                currentRequest
+            )
+        }
     }
 }

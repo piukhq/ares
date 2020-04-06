@@ -748,6 +748,10 @@
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+
     </fragment>
 
     <fragment
@@ -758,7 +762,6 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
-
         <argument
                 android:name="isRetryJourney"
                 android:defaultValue="false"
@@ -768,6 +771,9 @@
                 android:name="isFromNoReasonCodes"
                 android:defaultValue="false"
                 app:argType="boolean" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
@@ -787,6 +793,13 @@
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
     </fragment>
 
 
@@ -798,9 +811,19 @@
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/ghostToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
     </fragment>
 
 </navigation>

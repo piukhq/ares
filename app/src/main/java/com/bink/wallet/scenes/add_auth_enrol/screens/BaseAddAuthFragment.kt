@@ -14,15 +14,13 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
-import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.FieldType
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,16 +40,21 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private var originalMode: Int? = null
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
     private lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    var membershipCardId: String? = null
+    var isRetryJourney = false
+    var currentMembershipPlan: MembershipPlan? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        currentMembershipPlan = args.membershipPlan
+        membershipCardId = args.membershipCardId
 
         SharedPreferenceManager.isLoyaltySelected = true
 
         setKeyboardTypeToAdjustResize()
 
-        viewModel.currentMembershipPlan.value = args.membershipPlan
         binding.viewModel = viewModel
+        binding.membershipPlan = args.membershipPlan
         binding.footerSimple.viewModel = viewModel
         binding.footerComposed.viewModel = viewModel
 
@@ -70,6 +73,48 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
             populateRecycler(it)
+        }
+
+        binding.footerComposed.addAuthCta.setOnClickListener {
+            if (viewModel.createCardError.value == null) {
+                if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                    viewModel.addRegisterFieldsRequest.value?.plan_documents?.map { plan ->
+                        var required = true
+                        viewModel.planDocumentsList.map { field ->
+                            if (field.second.column == plan.column) {
+                                (field.first as PlanDocument).checkbox?.let { hasCheckbox ->
+                                    if (!hasCheckbox) {
+                                        required = false
+                                    }
+                                }
+                            }
+                        }
+                        if (required && plan.value != true.toString()) {
+                            requireContext().displayModalPopup(
+                                EMPTY_STRING,
+                                getString(R.string.required_fields)
+                            )
+                            return@setOnClickListener
+                        }
+                    }
+
+                    viewModel.planFieldsList.map {
+                        if (it.first is PlanField) {
+                            if (!UtilFunctions.isValidField(
+                                    (it.first as PlanField).validation,
+                                    it.second.value
+                                )
+                            ) {
+                                requireContext().displayModalPopup(
+                                    null,
+                                    getString(R.string.all_fields_must_be_valid)
+                                )
+                                return@setOnClickListener
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -128,7 +173,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun navigateToBrandHeader() {
-        viewModel.currentMembershipPlan.value?.let { plan ->
+        currentMembershipPlan?.let { plan ->
             if (plan.account?.plan_description != null) {
                 findNavController().navigateIfAdded(
                     this,

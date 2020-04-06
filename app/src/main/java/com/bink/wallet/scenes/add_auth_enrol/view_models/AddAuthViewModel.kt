@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.add_auth_enrol.view_models
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.request.membership_card.Account
@@ -13,7 +12,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
-import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
@@ -22,25 +20,6 @@ import com.bink.wallet.utils.enums.TypeOfField
 
 open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
-
-    val newMembershipCard = MutableLiveData<MembershipCard>()
-    val createCardError = MutableLiveData<Exception>()
-    val paymentCards = MutableLiveData<List<PaymentCard>>()
-    private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
-    val localPaymentCards: LiveData<List<PaymentCard>>
-        get() = _localPaymentCards
-    private val _fetchCardsError = MutableLiveData<Exception>()
-    val fetchCardsError: LiveData<Exception>
-        get() = _fetchCardsError
-    private val _fetchLocalCardsError = MutableLiveData<Exception>()
-    val fetchLocalCardsError: LiveData<Exception>
-        get() = _fetchLocalCardsError
-
-    private val _paymentCardsMerger = MediatorLiveData<List<PaymentCard>>()
-    val paymentCardsMerger: LiveData<List<PaymentCard>>
-        get() = _paymentCardsMerger
-
-    val currentMembershipPlan = MutableLiveData<MembershipPlan>()
 
     val ctaText = ObservableField<String>()
     val titleText = ObservableField<String>()
@@ -54,17 +33,16 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     val planDocumentsList: MutableList<Pair<Any, PlanFieldsRequest>> =
         mutableListOf()
 
-    val addRegisterFieldsRequest = MutableLiveData<Account>()
+    private val _addRegisterFieldsRequest = MutableLiveData<Account>()
+    val addRegisterFieldsRequest: LiveData<Account>
+        get() = _addRegisterFieldsRequest
+    private val _newMembershipCard = MutableLiveData<MembershipCard>()
+    val newMembershipCard: LiveData<MembershipCard>
+        get() = _newMembershipCard
+    private val _createCardError = MutableLiveData<Exception>()
+    val createCardError: LiveData<Exception>
+        get() = _createCardError
 
-
-    init {
-        _paymentCardsMerger.addSource(paymentCards) {
-            _paymentCardsMerger.value = paymentCards.value
-        }
-        _paymentCardsMerger.addSource(localPaymentCards) {
-            _paymentCardsMerger.value = localPaymentCards.value
-        }
-    }
 
     fun addPlanField(planField: PlanField) {
         val pairPlanField = Pair(
@@ -83,7 +61,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         }
     }
 
-    open fun addItems() {}
+    open fun addItems(membershipPlan: MembershipPlan) {}
 
     fun addPlanDocument(planDocument: PlanDocument) {
         planDocumentsList.add(
@@ -110,14 +88,14 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             } else
                 addRegisterFieldsRequest.plan_documents?.add(it.second)
         }
-        this.addRegisterFieldsRequest.value = addRegisterFieldsRequest
+        _addRegisterFieldsRequest.value = addRegisterFieldsRequest
     }
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
         loyaltyWalletRepository.createMembershipCard(
             membershipCardRequest,
-            newMembershipCard,
-            createCardError
+            _newMembershipCard,
+            _createCardError
         )
     }
 
@@ -128,8 +106,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         loyaltyWalletRepository.updateMembershipCard(
             membershipCardId,
             membershipCardRequest,
-            newMembershipCard,
-            createCardError
+            _newMembershipCard,
+            _createCardError
         )
     }
 
@@ -140,16 +118,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         loyaltyWalletRepository.ghostMembershipCard(
             membershipCardId,
             membershipCardRequest,
-            newMembershipCard,
-            createCardError
+            _newMembershipCard,
+            _createCardError
         )
-    }
-
-    fun getPaymentCards() {
-        loyaltyWalletRepository.getPaymentCards(paymentCards, _fetchCardsError)
-    }
-
-    fun getLocalPaymentCards() {
-        loyaltyWalletRepository.getLocalPaymentCards(_localPaymentCards, _fetchLocalCardsError)
     }
 }

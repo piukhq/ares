@@ -16,7 +16,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddCardFragment : BaseAddAuthFragment() {
 
-    private var isRetryJourney = false
     private var isFromNoReasonCodes = false
 
     override val viewModel: AddCardViewModel by viewModel()
@@ -27,6 +26,8 @@ class AddCardFragment : BaseAddAuthFragment() {
         super.onViewCreated(view, savedInstanceState)
         isRetryJourney = addCardArgs.isRetryJourney
         isFromNoReasonCodes = addCardArgs.isFromNoReasonCodes
+        currentMembershipPlan = addCardArgs.membershipPlan
+
         setViewsContent()
 
         binding.footerComposed.noAccount.setOnClickListener {
@@ -34,10 +35,12 @@ class AddCardFragment : BaseAddAuthFragment() {
             logNoAccountClick()
         }
 
-        binding.footerComposed.addAuthCta.setOnClickListener { logCTAClick(it) }
-        binding.footerSimple.addAuthCta.setOnClickListener { logCTAClick(it) }
+        binding.footerComposed.addAuthCta.setOnClickListener { logCTAClick(it); handleAuthCtaRequest() }
+        binding.footerSimple.addAuthCta.setOnClickListener { logCTAClick(it); handleAuthCtaRequest() }
 
-        viewModel.addItems()
+        currentMembershipPlan?.let {
+            viewModel.addItems(it)
+        }
     }
 
     override fun onResume() {
@@ -55,7 +58,7 @@ class AddCardFragment : BaseAddAuthFragment() {
     private fun isFooterSimple() = isRetryJourney && !isFromNoReasonCodes
 
     private fun retrieveDescriptionText(): String {
-        viewModel.currentMembershipPlan.value?.let { membershipPlan ->
+        currentMembershipPlan?.let { membershipPlan ->
             if (isRetryJourney) {
                 if (membershipPlan.areTransactionsAvailable()) {
                     membershipPlan.account?.plan_name?.let {
@@ -112,6 +115,14 @@ class AddCardFragment : BaseAddAuthFragment() {
         getString(R.string.log_in_text)
     } else {
         getString(R.string.enter_credentials)
+    }
+
+    private fun handleAuthCtaRequest() {
+        membershipCardId?.let {
+            currentMembershipPlan?.let { plan ->
+                viewModel.handleRequest(isRetryJourney, it, plan)
+            }
+        }
     }
 
     private fun navigateToGhostRegistrationUnavailableScreen() {
