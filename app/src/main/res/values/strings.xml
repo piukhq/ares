@@ -477,8 +477,8 @@
     </string>
     <string name="payment_card_needed_button_text">Add card</string>
     <string name="voucher_stamp_title">%s %s</string>
-    <string name="voucher_stamp_subtext">for collecting %d stamps</string>
-    <string name="voucher_stamp_collected">%d/%d stamps</string>
+    <string name="voucher_stamp_subtext">for collecting %1$d %2$s</string>
+    <string name="voucher_stamp_collected">%1$d/%2$d %3$s</string>
     <string name="voucher_collected">Collected:</string>
     <string name="voucher_stamp_in_progress_title">About this voucher</string>
     <string name="voucher_stamp_in_progress_body">Spend £5 or more to get a stamp. Collect 5 Stamps and get a FREE Whopper.</string>
