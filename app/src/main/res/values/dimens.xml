@@ -134,6 +134,8 @@
     <dimen name="loyalty_card_margin_horizontal">8dp</dimen>
     <dimen name="add_card_margin_horizontal">8dp</dimen>
     <dimen name="continue_button_margin">52dp</dimen>
+    <dimen name="login_button_margin_bottom">64dp</dimen>
+    <dimen name="login_button_width">260dp</dimen>
 
     <!-- PLR -->
     <dimen name="voucher_padding_top">12dp</dimen>
@@ -158,4 +160,11 @@
     <dimen name="loyalty_card_header_corner_radius">12dp</dimen>
     <dimen name="burger_king_stamp_size">24dp</dimen>
     <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
+
+    <!-- Generic Views -->
+    <dimen name="generic_view_button_height">48dp</dimen>
+
+    <!-- PLL Screen -->
+    <dimen name="pll_screen_default_fade_view_height">1dp</dimen>
+
 </resources>

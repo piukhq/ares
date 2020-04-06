@@ -15,9 +15,13 @@ fun TextView.setNumberOrBarcodeDescription(isBarcodeAvailable: Boolean) {
     }
 }
 
-@BindingAdapter("voucherSubtext", "voucherTargetValue", requireAll = true)
-fun TextView.setVoucherSubText(subtext: String?, targetValue: Float) {
-    text = context.getString(R.string.voucher_stamp_subtext, targetValue.toInt())
+@BindingAdapter("voucherEarnSubtitle", requireAll = true)
+fun TextView.setVoucherSubText(voucherEarn: Earn) {
+    text = context.getString(
+        R.string.voucher_stamp_subtext,
+        voucherEarn.target_value?.toInt(),
+        voucherEarn.suffix
+    )
 }
 
 @BindingAdapter("voucherBurn")
@@ -33,6 +37,7 @@ fun TextView.setVoucherCollectedProgress(voucherEarn: Earn) {
     text = context.getString(
         R.string.voucher_stamp_collected,
         voucherEarn.value?.toInt(),
-        voucherEarn.target_value?.toInt()
+        voucherEarn.target_value?.toInt(),
+        voucherEarn.suffix
     )
 }

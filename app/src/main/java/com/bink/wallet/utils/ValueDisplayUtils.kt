@@ -1,5 +1,7 @@
 package com.bink.wallet.utils
 
+import java.util.Locale
+
 object ValueDisplayUtils {
     fun displayValue(
         value: Float?,
@@ -19,9 +21,9 @@ object ValueDisplayUtils {
                     if (value != it.toInt().toFloat() ||
                         forceTwoDecimals
                     ) {
-                        "%.2f".format(it)
+                        TWO_DECIMALS_FLOAT_FORMAT.format(Locale.ENGLISH, it)
                     } else {
-                        "%.0f".format(it)
+                        NO_DECIMALS_FORMAT.format(it)
                     }
                 )
             }

@@ -28,8 +28,8 @@
             android:id="@+id/payment_cards"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            app:layout_constraintBottom_toTopOf="@+id/button_done"
+            android:clipToPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -49,5 +49,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/bg_pll_bottom_gradient"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/pll_screen_default_fade_view_height"
+            android:background="@drawable/bg_btn_gradient"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
