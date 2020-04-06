@@ -3,48 +3,86 @@ package com.bink.wallet.scenes.browse_brands
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BrandItemBinding
+import com.bink.wallet.BrandsSectionTitleBinding
+import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.enums.CardType
 
 
 class BrowseBrandsAdapter(
-    private val brands: List<Pair<String?, MembershipPlan>>,
+    private val brands: List<BrowseBrandsListItem>,
     private val splitPosition: Int,
     val itemClickListener: (MembershipPlan) -> Unit = {}
-) : RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BrandsViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = BrandItemBinding.inflate(inflater)
-        binding.apply {
-            container.setOnClickListener {
-                item?.apply {
-                    itemClickListener(this)
-                }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            BRAND_ITEM -> {
+                BrandsViewHolder(
+                    DataBindingUtil.inflate<BrandItemBinding>(
+                        LayoutInflater.from(parent.context),
+                        R.layout.item_brand,
+                        parent,
+                        false
+                    ).apply {
+                        container.setOnClickListener {
+                            item?.apply {
+                                itemClickListener(this)
+                            }
+                        }
+                    })
+            }
+            else -> {
+                SectionTitleViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(
+                            parent.context
+                        ),
+                        R.layout.item_brands_section_title,
+                        parent,
+                        false
+                    )
+                )
             }
         }
-        return BrandsViewHolder(binding)
-    }
 
     override fun getItemCount() = brands.size
 
-    override fun onBindViewHolder(holder: BrandsViewHolder, position: Int) {
-        brands[position].let {
-            holder.bind(
-                it,
-                position == itemCount - 1 || position == splitPosition
-            )
+    override fun getItemViewType(position: Int): Int = brands[position].id
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.MembershipPlanItem).let {
+                (holder as BrandsViewHolder).bind(
+                    it.membershipPlan,
+                    position == itemCount - 1 || position == splitPosition
+                )
+            }
+            SECTION_TITLE_ITEM -> {
+                (holder as SectionTitleViewHolder).bind(
+                    (brands[position] as BrowseBrandsListItem.BrandsSectionTitleItem).sectionTitle
+                )
+            }
+        }
+    }
+
+    class SectionTitleViewHolder(val binding: BrandsSectionTitleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(sectionTitle: String) {
+            binding.sectionTitle.text = sectionTitle
         }
     }
 
     class BrandsViewHolder(val binding: BrandItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Pair<String?, MembershipPlan>, isLast: Boolean) {
+        fun bind(item: MembershipPlan, isLast: Boolean) {
+            binding.item = item
             binding.browseBrandsDescription.visibility =
-                if (item.second.getCardType() == CardType.PLL) {
+                if (item.getCardType() == CardType.PLL) {
                     View.VISIBLE
                 } else {
                     View.GONE
@@ -55,9 +93,11 @@ class BrowseBrandsAdapter(
             } else {
                 View.VISIBLE
             }
-
-            binding.item = item.second
-            binding.executePendingBindings()
         }
+    }
+
+    companion object {
+        private const val BRAND_ITEM = R.layout.item_brand
+        private const val SECTION_TITLE_ITEM = R.layout.item_brands_section_title
     }
 }

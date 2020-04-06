@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.browse_brands
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
@@ -60,7 +59,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         var plans = args.membershipPlans
-        val plansList = ArrayList<Pair<String?, MembershipPlan>>()
+        val plansList = mutableListOf<BrowseBrandsListItem>()
         var splitPosition = 0
 
         if (plans.isNotEmpty()) {
@@ -68,29 +67,25 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                                                                   membershipPlan2 ->
                 comparePlans(membershipPlan1, membershipPlan2)
             }.thenBy { it.account?.company_name?.toLowerCase(Locale.ENGLISH) }).toTypedArray()
-
-            plansList.add(Pair(getString(R.string.pll_title), plans[0]))
+            plansList.add(BrowseBrandsListItem.BrandsSectionTitleItem(getString(R.string.pll_title)))
         }
 
         for (position in 1 until plans.size) {
             if (plans[position - 1].getCardType() == CardType.PLL &&
                 plans[position].getCardType() != CardType.PLL
             ) {
-                plansList.add(Pair(getString(R.string.all_text), plans[position]))
+                plansList.add(BrowseBrandsListItem.BrandsSectionTitleItem(getString(R.string.all_text)))
+                plansList.add(BrowseBrandsListItem.MembershipPlanItem(plans[position]))
                 splitPosition = position - 1
             } else {
-                plansList.add(Pair(null, plans[position]))
+                plansList.add(BrowseBrandsListItem.MembershipPlanItem(plans[position]))
             }
         }
-
-        binding.browseBrandsContainer.apply {
-            layoutManager = GridLayoutManager(activity, 1)
-            adapter =
-                BrowseBrandsAdapter(
-                    plansList,
-                    splitPosition,
-                    itemClickListener = { toAddJoinScreen(it) })
-        }
+        binding.browseBrandsContainer.adapter =
+            BrowseBrandsAdapter(
+                plansList,
+                splitPosition,
+                itemClickListener = { toAddJoinScreen(it) })
     }
 
     private fun toAddJoinScreen(membershipPlan: MembershipPlan) {

@@ -2,12 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data class=".BrandsSectionTitleBinding">
-
-        <variable
-            name="sectionTitle"
-            type="String" />
-    </data>
+    <data class=".BrandsSectionTitleBinding"/>
 
     <TextView
         android:id="@+id/section_title"
@@ -18,7 +13,6 @@
         android:layout_marginEnd="@dimen/margin_padding_size_medium"
         android:layout_marginBottom="@dimen/margin_padding_size_medium"
         android:fontFamily="@font/nunito_sans_extrabold"
-        android:text="@{sectionTitle}"
         android:textColor="@color/black"
         android:textSize="@dimen/size_headline"
         tools:text="@string/pll_title" />

@@ -64,11 +64,13 @@
             android:id="@+id/browse_brands_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/title_margin"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_bar" />
+            app:layout_constraintTop_toBottomOf="@+id/search_bar"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_brand" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

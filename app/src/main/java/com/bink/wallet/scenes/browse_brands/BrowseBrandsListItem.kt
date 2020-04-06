@@ -10,5 +10,5 @@ sealed class BrowseBrandsListItem(val id: Int) {
     ) : BrowseBrandsListItem(R.layout.item_brand)
 
     data class BrandsSectionTitleItem(val sectionTitle: String) :
-        BrowseBrandsListItem(R.layout.item_pll_title)
+        BrowseBrandsListItem(R.layout.item_brands_section_title)
 }
