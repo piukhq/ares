@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth_enrol
+package com.bink.wallet.scenes.add_auth_enrol.view_models
 
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -11,12 +11,16 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.TypeOfField
 
-class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
+open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
 
     val newMembershipCard = MutableLiveData<MembershipCard>()
@@ -45,6 +49,13 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
     val haveValidationsPassed = ObservableBoolean(false)
     val isKeyboardHidden = ObservableBoolean(true)
 
+    val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
+        mutableListOf()
+    val planDocumentsList: MutableList<Pair<Any, PlanFieldsRequest>> =
+        mutableListOf()
+
+    val addRegisterFieldsRequest = MutableLiveData<Account>()
+
 
     init {
         _paymentCardsMerger.addSource(paymentCards) {
@@ -53,6 +64,53 @@ class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyW
         _paymentCardsMerger.addSource(localPaymentCards) {
             _paymentCardsMerger.value = localPaymentCards.value
         }
+    }
+
+    fun addPlanField(planField: PlanField) {
+        val pairPlanField = Pair(
+            planField, PlanFieldsRequest(
+                planField.column, EMPTY_STRING
+            )
+        )
+        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+            planDocumentsList.add(
+                pairPlanField
+            )
+        } else if (!planField.column.equals(BaseAddAuthFragment.BARCODE_TEXT)) {
+            planFieldsList.add(
+                pairPlanField
+            )
+        }
+    }
+
+    open fun addItems() {}
+
+    fun addPlanDocument(planDocument: PlanDocument) {
+        planDocumentsList.add(
+            Pair(
+                planDocument, PlanFieldsRequest(
+                    planDocument.name, EMPTY_STRING
+                )
+            )
+        )
+    }
+
+    fun mapItems() {
+        planDocumentsList.map { planFieldsList.add(it) }
+        val addRegisterFieldsRequest = Account()
+
+        planFieldsList.map {
+            if (it.first is PlanField) {
+                when ((it.first as PlanField).typeOfField) {
+                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
+                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
+                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
+                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+                }
+            } else
+                addRegisterFieldsRequest.plan_documents?.add(it.second)
+        }
+        this.addRegisterFieldsRequest.value = addRegisterFieldsRequest
     }
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {

@@ -7,17 +7,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
-import com.bink.wallet.utils.enums.SignUpFormType
-import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.navigateIfAdded
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddCardFragment : BaseAddAuthFragment() {
 
     private var isRetryJourney = false
     private var isFromNoReasonCodes = false
+
+    override val viewModel: AddCardViewModel by viewModel()
 
     private val addCardArgs: AddCardFragmentArgs by navArgs()
 
@@ -35,7 +37,7 @@ class AddCardFragment : BaseAddAuthFragment() {
         binding.footerComposed.addAuthCta.setOnClickListener { logCTAClick(it) }
         binding.footerSimple.addAuthCta.setOnClickListener { logCTAClick(it) }
 
-        addItems()
+        viewModel.addItems()
     }
 
     override fun onResume() {
@@ -53,7 +55,7 @@ class AddCardFragment : BaseAddAuthFragment() {
     private fun isFooterSimple() = isRetryJourney && !isFromNoReasonCodes
 
     private fun retrieveDescriptionText(): String {
-        binding.membershipPlan?.let { membershipPlan ->
+        viewModel.currentMembershipPlan.value?.let { membershipPlan ->
             if (isRetryJourney) {
                 if (membershipPlan.areTransactionsAvailable()) {
                     membershipPlan.account?.plan_name?.let {
@@ -110,29 +112,6 @@ class AddCardFragment : BaseAddAuthFragment() {
         getString(R.string.log_in_text)
     } else {
         getString(R.string.enter_credentials)
-    }
-
-    private fun addItems() {
-        with(binding.membershipPlan!!) {
-            account?.let {
-                account.add_fields?.map { planField ->
-                    planField.typeOfField = TypeOfField.ADD
-                    addPlanField(planField)
-                }
-                account.authorise_fields?.map { planField ->
-                    planField.typeOfField = TypeOfField.AUTH
-                    addPlanField(planField)
-                }
-                account.plan_documents?.map { planDocument ->
-                    planDocument.display?.let { display ->
-                        if (display.contains(SignUpFormType.ADD_AUTH.type)) {
-                            addPlanDocument(planDocument)
-                        }
-                    }
-                }
-            }
-        }
-        mapItems()
     }
 
     private fun navigateToGhostRegistrationUnavailableScreen() {

@@ -17,7 +17,8 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var finalTextField: String = EMPTY_STRING
     var brands = mutableListOf<Pair<Any, PlanFieldsRequest>>()
-    var buttonRefresh : () -> Unit = {}
+    var buttonRefresh: () -> Unit = {}
+    var item = null
 
     init {
         brands.map { pair ->
@@ -31,6 +32,9 @@ abstract class BaseAddAuthViewHolder<T>(
         }
     }
 
+    override fun bind(item: T) {
+
+    }
 
     fun checkIfError(position: Int, text: AppCompatEditText) {
         val currentItem = brands[position]

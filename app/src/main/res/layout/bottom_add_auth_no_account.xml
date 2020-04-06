@@ -7,7 +7,7 @@
 
         <variable
                 name="viewModel"
-                type="com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel" />
+                type="com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -11,7 +11,6 @@ class CheckboxViewHolder(
     BaseAddAuthViewHolder<Pair<Any, PlanFieldsRequest>>(binding) {
 
     override fun bind(item: Pair<Any, PlanFieldsRequest>) {
-
         with(binding.contentAddAuthSwitch) {
             brands[adapterPosition].second.apply {
                 isChecked = if (value == true.toString()) {

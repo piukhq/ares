@@ -14,17 +14,15 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.request.membership_card.Account
-import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
-import com.bink.wallet.scenes.add_auth_enrol.*
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
-import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -40,10 +38,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private val args: BaseAddAuthFragmentArgs by navArgs()
-    val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
-        mutableListOf()
-    val planDocumentsList: MutableList<Pair<Any, PlanFieldsRequest>> =
-        mutableListOf()
 
     private var originalMode: Int? = null
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
@@ -52,17 +46,15 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        originalMode = activity?.window?.attributes?.softInputMode
+        SharedPreferenceManager.isLoyaltySelected = true
 
-        activity?.window?.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
-        binding.membershipPlan = args.membershipPlan
+        setKeyboardTypeToAdjustResize()
+
+        viewModel.currentMembershipPlan.value = args.membershipPlan
         binding.viewModel = viewModel
         binding.footerSimple.viewModel = viewModel
         binding.footerComposed.viewModel = viewModel
 
-        SharedPreferenceManager.isLoyaltySelected = true
 
         binding.toolbar.setNavigationOnClickListener {
             handleToolbarAction()
@@ -75,97 +67,27 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         binding.addJoinReward.setOnClickListener {
             navigateToBrandHeader()
         }
+
+        viewModel.addRegisterFieldsRequest.observeNonNull(this) {
+            populateRecycler(it)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            handleKeyboardHiddenListener(binding.layout, ::endTransition)
-            handleKeyboardVisibleListener(binding.layout, ::beginTransition)
-        }
-        footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            handleFooterFadeEffect(
-                mutableListOf(binding.footerSimple.addAuthCta),
-                binding.authFields,
-                binding.footerSimple.footerBottomGradient
-            )
-            handleFooterFadeEffect(
-                mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
-                binding.authFields,
-                binding.footerComposed.footerBottomGradient
-            )
-        }
-        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
+        enableGlobalListeners()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        originalMode?.let { activity?.window?.setSoftInputMode(it) }
-    }
-
-    fun addPlanField(planField: PlanField) {
-        val pairPlanField = Pair(
-            planField, PlanFieldsRequest(
-                planField.column, EMPTY_STRING
-            )
-        )
-        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-            planDocumentsList.add(
-                pairPlanField
-            )
-        } else if (!planField.column.equals(BARCODE_TEXT)) {
-            planFieldsList.add(
-                pairPlanField
-            )
-        }
-    }
-
-    fun addPlanDocument(planDocument: PlanDocument) {
-        planDocumentsList.add(
-            Pair(
-                planDocument, PlanFieldsRequest(
-                    planDocument.name, EMPTY_STRING
-                )
-            )
-        )
-    }
-
-    override fun onPause() {
-        super.onPause()
-        planDocumentsList.clear()
-        planFieldsList.clear()
-        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
-        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(footerLayoutListener)
-    }
-
-    fun mapItems() {
-        planDocumentsList.map { planFieldsList.add(it) }
-        val addRegisterFieldsRequest = Account()
-
-        planFieldsList.map {
-            if (it.first is PlanField) {
-                when ((it.first as PlanField).typeOfField) {
-                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
-                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
-                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
-                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
-                }
-            } else
-                addRegisterFieldsRequest.plan_documents?.add(it.second)
-        }
-        populateRecycler(addRegisterFieldsRequest)
-    }
 
     private fun populateRecycler(addRegisterFieldsRequest: Account) {
         binding.authFields.apply {
-            layoutManager = GridLayoutManager(activity, 1)
+            layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = AddAuthAdapter(
-                planFieldsList.toList(),
+                viewModel.planFieldsList.toList(),
                 buttonRefresh = {
                     addRegisterFieldsRequest.plan_documents?.map { plan ->
                         var required = true
-                        planDocumentsList.map { field ->
+                        viewModel.planDocumentsList.map { field ->
                             if (field.second.column == plan.column) {
                                 (field.first as PlanDocument).checkbox?.let { bool ->
                                     required = !bool
@@ -180,7 +102,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                         }
                     }
 
-                    planFieldsList.map {
+                    viewModel.planFieldsList.map {
                         val item = it.first
                         if (item is PlanField &&
                             item.type != FieldType.BOOLEAN_OPTIONAL.type
@@ -206,7 +128,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun navigateToBrandHeader() {
-        binding.membershipPlan?.let { plan ->
+        viewModel.currentMembershipPlan.value?.let { plan ->
             if (plan.account?.plan_description != null) {
                 findNavController().navigateIfAdded(
                     this,
@@ -237,6 +159,47 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
     }
 
+    private fun handleToolbarAction() {
+        view?.hideKeyboard()
+        windowFullscreenHandler.toNormalScreen()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disableGlobalListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        originalMode?.let { activity?.window?.setSoftInputMode(it) }
+    }
+
+    private fun enableGlobalListeners() {
+        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            handleKeyboardHiddenListener(binding.layout, ::endTransition)
+            handleKeyboardVisibleListener(binding.layout, ::beginTransition)
+        }
+        footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            handleFooterFadeEffect(
+                mutableListOf(binding.footerSimple.addAuthCta),
+                binding.authFields,
+                binding.footerSimple.footerBottomGradient
+            )
+            handleFooterFadeEffect(
+                mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
+                binding.authFields,
+                binding.footerComposed.footerBottomGradient
+            )
+        }
+        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
+    }
+
+    private fun disableGlobalListeners() {
+        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(footerLayoutListener)
+    }
+
     private fun beginTransition() {
         binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(footerLayoutListener)
         Handler().postDelayed({
@@ -252,12 +215,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }, 100)
     }
 
-    private fun handleToolbarAction() {
-        view?.hideKeyboard()
-        windowFullscreenHandler.toNormalScreen()
+    private fun setKeyboardTypeToAdjustResize() {
+        originalMode = activity?.window?.attributes?.softInputMode
+        activity?.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
     }
 
     companion object {
-        private const val BARCODE_TEXT = "Barcode"
+        const val BARCODE_TEXT = "Barcode"
     }
 }

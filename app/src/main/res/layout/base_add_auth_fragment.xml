@@ -5,14 +5,9 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-                name="membershipPlan"
-                type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
-
         <variable
                 name="viewModel"
-                type="com.bink.wallet.scenes.add_auth_enrol.AddAuthViewModel" />
+                type="com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel" />
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -54,7 +49,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:membershipPlan="@{membershipPlan}" />
+                app:membershipPlan="@{viewModel.currentMembershipPlan}" />
 
         <TextView
                 android:id="@+id/title_add_auth_text"
