@@ -62,9 +62,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     override fun onResume() {
         super.onResume()
-
         logScreenView(ONBOARDING_VIEW)
-
         with(binding.pager) {
             scrollPagesAutomatically(this)
         }
@@ -72,7 +70,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     override fun onStop() {
         resetTimer()
-
         super.onStop()
     }
 
