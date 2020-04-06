@@ -68,9 +68,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }
     }
 
-    override fun onStop() {
+    override fun onPause() {
         resetTimer()
-        super.onStop()
+        super.onPause()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
