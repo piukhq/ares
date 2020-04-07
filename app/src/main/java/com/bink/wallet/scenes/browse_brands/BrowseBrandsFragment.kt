@@ -9,23 +9,21 @@ import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFragmentBinding>() {
+
     private val args by navArgs<BrowseBrandsFragmentArgs>()
+    override val layoutRes = R.layout.browse_brands_fragment
+    override val viewModel: BrowseBrandsViewModel by viewModel()
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
-
-    override val layoutRes: Int
-        get() = R.layout.browse_brands_fragment
-
-    override val viewModel: BrowseBrandsViewModel by viewModel()
 
     override fun onResume() {
         super.onResume()
@@ -68,6 +66,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 comparePlans(membershipPlan1, membershipPlan2)
             }.thenBy { it.account?.company_name?.toLowerCase(Locale.ENGLISH) }).toTypedArray()
             plansList.add(BrowseBrandsListItem.BrandsSectionTitleItem(getString(R.string.pll_title)))
+            plansList.add(BrowseBrandsListItem.MembershipPlanItem(plans[0]))
         }
 
         for (position in 1 until plans.size) {
@@ -76,7 +75,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             ) {
                 plansList.add(BrowseBrandsListItem.BrandsSectionTitleItem(getString(R.string.all_text)))
                 plansList.add(BrowseBrandsListItem.MembershipPlanItem(plans[position]))
-                splitPosition = position - 1
+                splitPosition = position
             } else {
                 plansList.add(BrowseBrandsListItem.MembershipPlanItem(plans[position]))
             }
@@ -84,17 +83,18 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         binding.browseBrandsContainer.adapter =
             BrowseBrandsAdapter(
                 plansList,
-                splitPosition,
-                itemClickListener = { toAddJoinScreen(it) })
-    }
-
-    private fun toAddJoinScreen(membershipPlan: MembershipPlan) {
-        val action = BrowseBrandsFragmentDirections.browseToAddJoin(
-            membershipPlan,
-            null,
-            isFromJoinCard = false,
-            isRetryJourney = false
-        )
-        findNavController().navigateIfAdded(this, action)
+                splitPosition
+            ).apply {
+                setOnBrandItemClickListener { membershipPlan ->
+                    findNavController().navigate(
+                        BrowseBrandsFragmentDirections.browseToAddJoin(
+                            membershipPlan,
+                            null,
+                            isFromJoinCard = false,
+                            isRetryJourney = false
+                        )
+                    )
+                }
+            }
     }
 }

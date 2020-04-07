@@ -1,39 +1,31 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.BrandItemBinding
-import com.bink.wallet.BrandsSectionTitleBinding
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.enums.CardType
 
+typealias OnBrandItemClickListener = (MembershipPlan) -> Unit
 
 class BrowseBrandsAdapter(
     private val brands: List<BrowseBrandsListItem>,
-    private val splitPosition: Int,
-    val itemClickListener: (MembershipPlan) -> Unit = {}
+    private val splitPosition: Int
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var onBrandItemClickListener: OnBrandItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             BRAND_ITEM -> {
                 BrandsViewHolder(
-                    DataBindingUtil.inflate<BrandItemBinding>(
+                    DataBindingUtil.inflate(
                         LayoutInflater.from(parent.context),
                         R.layout.item_brand,
                         parent,
                         false
-                    ).apply {
-                        container.setOnClickListener {
-                            item?.apply {
-                                itemClickListener(this)
-                            }
-                        }
-                    })
+                    )
+                )
             }
             else -> {
                 SectionTitleViewHolder(
@@ -58,7 +50,8 @@ class BrowseBrandsAdapter(
             BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.MembershipPlanItem).let {
                 (holder as BrandsViewHolder).bind(
                     it.membershipPlan,
-                    position == itemCount - 1 || position == splitPosition
+                    position == itemCount - 1 || position == splitPosition,
+                    onBrandItemClickListener
                 )
             }
             SECTION_TITLE_ITEM -> {
@@ -69,31 +62,8 @@ class BrowseBrandsAdapter(
         }
     }
 
-    class SectionTitleViewHolder(val binding: BrandsSectionTitleBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(sectionTitle: String) {
-            binding.sectionTitle.text = sectionTitle
-        }
-    }
-
-    class BrandsViewHolder(val binding: BrandItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: MembershipPlan, isLast: Boolean) {
-            binding.item = item
-            binding.browseBrandsDescription.visibility =
-                if (item.getCardType() == CardType.PLL) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-
-            binding.separator.visibility = if (isLast) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
-        }
+    fun setOnBrandItemClickListener(onBrandItemClickListener: OnBrandItemClickListener?) {
+        this.onBrandItemClickListener = onBrandItemClickListener
     }
 
     companion object {
