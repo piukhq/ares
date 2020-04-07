@@ -49,7 +49,7 @@ class BrowseBrandsAdapter(
         when (getItemViewType(position)) {
             BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.MembershipPlanItem).let {
                 (holder as BrandsViewHolder).bind(
-                    it.membershipPlan,
+                    it,
                     position == itemCount - 1 || position == splitPosition,
                     onBrandItemClickListener
                 )
