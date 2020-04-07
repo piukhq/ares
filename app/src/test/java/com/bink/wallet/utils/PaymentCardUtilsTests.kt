@@ -147,37 +147,37 @@ class PaymentCardUtilsTests {
 
     @Test
     fun checkStarLayoutVeryShort() {
-        assertEquals("****", "4242".cardStarFormatter())
+        assertEquals("••••", "4242".cardStarFormatter())
     }
 
     @Test
     fun checkStarLayoutShort() {
-        assertEquals("**** ****", "42424242".cardStarFormatter())
+        assertEquals("•••• ••••", "42424242".cardStarFormatter())
     }
 
     @Test
     fun checkStarLayoutMedium() {
-        assertEquals("**** **** ****", "4242 4242 4242".cardStarFormatter())
+        assertEquals("•••• •••• ••••", "4242 4242 4242".cardStarFormatter())
     }
 
     @Test
     fun checkStarLayoutAlmostFull() {
-        assertEquals("**** **** **** 42", "4242 4242 4242 42".cardStarFormatter())
+        assertEquals("•••• •••• •••• 42", "4242 4242 4242 42".cardStarFormatter())
     }
 
     @Test
     fun checkStarLayoutLong() {
-        assertEquals("**** **** **** 4242", "4242 4242 4242 4242".cardStarFormatter())
+        assertEquals("•••• •••• •••• 4242", "4242 4242 4242 4242".cardStarFormatter())
     }
 
     @Test
     fun checkStarAmExLayoutAlmostFull() {
-        assertEquals("**** **** **** 242", "3442 424242 4242".cardStarFormatter())
+        assertEquals("•••• •••• •••• 242", "3442 424242 4242".cardStarFormatter())
     }
 
     @Test
     fun checkStarAmExLayoutLong() {
-        assertEquals("**** **** **** 2424", "3442 424242 42424".cardStarFormatter())
+        assertEquals("•••• •••• •••• 2424", "3442 424242 42424".cardStarFormatter())
     }
 
     @Test
