@@ -164,6 +164,7 @@
 
     <!-- Generic Views -->
     <dimen name="generic_view_button_height">48dp</dimen>
+    <dimen name="toolbar_title_text_size">18sp</dimen>
 
     <!-- PLL Screen -->
     <dimen name="pll_screen_default_fade_view_height">1dp</dimen>
