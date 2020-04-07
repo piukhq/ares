@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.bink.wallet.scenes.browse_brands.BrowseBrandsListItem.MembershipPlanItem" />
+            type="com.bink.wallet.scenes.browse_brands.BrowseBrandsListItem.BrandItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

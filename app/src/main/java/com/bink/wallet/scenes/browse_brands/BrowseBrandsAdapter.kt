@@ -47,7 +47,7 @@ class BrowseBrandsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.MembershipPlanItem).let {
+            BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.BrandItem).let {
                 (holder as BrandsViewHolder).bind(
                     it,
                     position == itemCount - 1 || position == splitPosition,
@@ -56,7 +56,7 @@ class BrowseBrandsAdapter(
             }
             SECTION_TITLE_ITEM -> {
                 (holder as SectionTitleViewHolder).bind(
-                    (brands[position] as BrowseBrandsListItem.BrandsSectionTitleItem).sectionTitle
+                    (brands[position] as BrowseBrandsListItem.SectionTitleItem).sectionTitle
                 )
             }
         }

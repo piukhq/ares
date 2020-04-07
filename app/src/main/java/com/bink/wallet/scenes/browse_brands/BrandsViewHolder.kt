@@ -9,7 +9,7 @@ class BrandsViewHolder(val binding: BrandItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
-        item: BrowseBrandsListItem.MembershipPlanItem,
+        item: BrowseBrandsListItem.BrandItem,
         isLast: Boolean,
         onBrandItemClickListener: OnBrandItemClickListener?
     ) {

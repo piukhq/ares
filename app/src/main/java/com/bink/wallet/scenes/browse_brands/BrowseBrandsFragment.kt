@@ -68,7 +68,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         membershipCardIds: List<String>,
         membershipPlans: List<MembershipPlan>
     ) {
-        val plansList = mutableListOf<BrowseBrandsListItem>()
+        val browseBrandsItemsList = mutableListOf<BrowseBrandsListItem>()
         var splitPosition = 0
 
         val sortedMembershipPlans =
@@ -79,9 +79,9 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                     it.account?.company_name?.toLowerCase(Locale.ENGLISH)
                 }
             ).toTypedArray()
-        plansList.add(BrowseBrandsListItem.BrandsSectionTitleItem(getString(R.string.pll_title)))
-        plansList.add(
-            BrowseBrandsListItem.MembershipPlanItem(
+        browseBrandsItemsList.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.pll_title)))
+        browseBrandsItemsList.add(
+            BrowseBrandsListItem.BrandItem(
                 sortedMembershipPlans[0],
                 sortedMembershipPlans[0].id in membershipCardIds
             )
@@ -92,29 +92,29 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             if (sortedMembershipPlans[position - 1].getCardType() == CardType.PLL &&
                 sortedMembershipPlans[position].getCardType() != CardType.PLL
             ) {
-                plansList.add(
-                    BrowseBrandsListItem.BrandsSectionTitleItem(
+                browseBrandsItemsList.add(
+                    BrowseBrandsListItem.SectionTitleItem(
                         getString(R.string.all_text)
                     )
                 )
-                plansList.add(
-                    BrowseBrandsListItem.MembershipPlanItem(
+                browseBrandsItemsList.add(
+                    BrowseBrandsListItem.BrandItem(
                         sortedMembershipPlans[position],
                         sortedMembershipPlans[position].id in membershipCardIds
                     )
                 )
                 splitPosition = position
             } else {
-                plansList.add(
-                    BrowseBrandsListItem.MembershipPlanItem(
+                browseBrandsItemsList.add(
+                    BrowseBrandsListItem.BrandItem(
                         sortedMembershipPlans[position],
                         sortedMembershipPlans[position].id in membershipCardIds
                     )
                 )
             }
         }
-        binding.browseBrandsContainer.adapter = BrowseBrandsAdapter(
-            plansList,
+        binding.brandsRecyclerView.adapter = BrowseBrandsAdapter(
+            browseBrandsItemsList,
             splitPosition
         ).apply {
             setOnBrandItemClickListener { membershipPlan ->

@@ -61,7 +61,7 @@
             app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/browse_brands_container"
+            android:id="@+id/brands_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
