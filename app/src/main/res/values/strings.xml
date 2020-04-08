@@ -492,5 +492,6 @@
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
     <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
+    <string name="payment_card_dimension_ratio">82:27</string>
 
 </resources>
