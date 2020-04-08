@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import androidx.navigation.fragment.findNavController
@@ -18,11 +17,11 @@ import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
-import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
@@ -45,7 +44,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     var navigationHandler: AuthNavigationHandler? = null
     var animationHelper: AuthAnimationHelper? = null
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(args) {
@@ -57,14 +55,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         navigationHandler = AuthNavigationHandler(this, args.membershipPlan)
         animationHelper = AuthAnimationHelper(this, binding)
 
-
         setKeyboardTypeToAdjustResize()
+        setRecyclerViewBottomPadding()
 
         binding.viewModel = viewModel
         binding.membershipPlan = args.membershipPlan
         binding.footerSimple.viewModel = viewModel
         binding.footerComposed.viewModel = viewModel
-
 
         binding.toolbar.setNavigationOnClickListener {
             handleToolbarAction()
@@ -77,7 +74,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         binding.addJoinReward.setOnClickListener {
             navigationHandler?.navigateToBrandHeader()
         }
-
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
             populateRecycler(it)
         }
@@ -129,7 +125,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onResume()
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)
     }
-
 
     private fun populateRecycler(addRegisterFieldsRequest: Account) {
         binding.authFields.apply {
@@ -189,18 +184,16 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun beginTransition() {
+        viewModel.isKeyboardHidden.set(false)
+        binding.layout.loadLayoutDescription(R.xml.keyboard_toolbar)
         binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(animationHelper?.footerLayoutListener)
-        Handler().postDelayed({
-            binding.layout.transitionToState(R.id.collapsed)
-            viewModel.isKeyboardHidden.set(false)
-        }, 100)
+
     }
 
     private fun endTransition() {
+        viewModel.isKeyboardHidden.set(true)
+        binding.layout.loadLayoutDescription(R.xml.collapsing_toolbar)
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(animationHelper?.footerLayoutListener)
-        Handler().postDelayed({
-            viewModel.isKeyboardHidden.set(true)
-        }, 100)
     }
 
     private fun setKeyboardTypeToAdjustResize() {
@@ -210,7 +203,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         )
     }
 
-    companion object {
-        const val BARCODE_TEXT = "Barcode"
+    private fun setRecyclerViewBottomPadding() {
+        binding.authFields.setPadding(
+            0, 0, 0,
+            requireContext().toDipFromPixel(requireContext().toPixelFromDip(binding.footerSimple.root.height.toFloat())).toInt()
+        )
     }
 }

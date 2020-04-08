@@ -19,7 +19,7 @@ class TextFieldViewHolder(
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
-    var finalTextField: String = EMPTY_STRING
+    private var finalTextField: String = EMPTY_STRING
 
     init {
         addAuthItems.map { item ->
@@ -66,6 +66,7 @@ class TextFieldViewHolder(
 
         with(binding.contentAddAuthText) {
             hint = planField.description
+
             setText(planRequest.value)
 
             planRequest.disabled?.let {

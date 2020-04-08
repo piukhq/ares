@@ -13,7 +13,6 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
-import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.UtilFunctions
@@ -47,11 +46,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
             AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, EMPTY_STRING))
-        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-            addAuthItemsList.add(addAuthItemWrapper)
-        } else if (!planField.column.equals(BaseAddAuthFragment.BARCODE_TEXT)) {
-            addAuthItemsList.add(addAuthItemWrapper)
-        }
+        addAuthItemsList.add(addAuthItemWrapper)
     }
 
     fun addPlanDocument(planDocument: PlanDocument) {
@@ -64,7 +59,6 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     }
 
     open fun addItems(membershipPlan: MembershipPlan) {}
-
 
     fun mapItems() {
         val addRegisterFieldsRequest = Account()
@@ -80,7 +74,23 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                 addRegisterFieldsRequest.plan_documents?.add(addAuthItem.fieldsRequest)
             }
         }
+        arrangeAuthItems()
         _addRegisterFieldsRequest.value = addRegisterFieldsRequest
+    }
+
+    private fun arrangeAuthItems() {
+        val planDocuments =
+            addAuthItemsList.filter { item ->
+                item.getFieldType() == AddAuthItemType.PLAN_DOCUMENT ||
+                        item.getFieldType() == AddAuthItemType.PLAN_FIELD && (item.fieldType as PlanField).isBooleanType()
+            }
+        val planFields =
+            addAuthItemsList.filter { item ->
+                item.getFieldType() == AddAuthItemType.PLAN_FIELD && !(item.fieldType as PlanField).isBooleanType()
+            }
+        addAuthItemsList.clear()
+        planFields.forEach { item -> addAuthItemsList.add(item) }
+        planDocuments.forEach { item -> addAuthItemsList.add(item) }
     }
 
     fun didPlanDocumentsPassValidations(addRegisterFieldsRequest: Account): Boolean {
@@ -95,7 +105,6 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                     }
                 }
             }
-
             if (required &&
                 planDocument.value != true.toString()
             ) {

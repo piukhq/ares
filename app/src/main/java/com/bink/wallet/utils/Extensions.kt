@@ -1,10 +1,8 @@
 package com.bink.wallet.utils
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -130,13 +128,13 @@ fun LiveData<Exception>.observeErrorNonNull(
     owner: LifecycleOwner,
     isUserDriven: Boolean,
     observer: ((t: Exception) -> Unit)?
-) = observeErrorNonNull(context, owner, "", "", isUserDriven, observer)
+) = observeErrorNonNull(context, owner, EMPTY_STRING, EMPTY_STRING, isUserDriven, observer)
 
 fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     isUserDriven: Boolean,
     owner: LifecycleOwner
-) = observeErrorNonNull(context, owner, "", "", isUserDriven, null)
+) = observeErrorNonNull(context, owner,  EMPTY_STRING, EMPTY_STRING, isUserDriven, null)
 
 fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
     context: Context,

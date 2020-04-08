@@ -7,10 +7,7 @@ import TextFieldViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.databinding.AddAuthDisplayItemBinding
-import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
-import com.bink.wallet.databinding.AddAuthSwitchItemBinding
-import com.bink.wallet.databinding.AddAuthTextItemBinding
+import com.bink.wallet.databinding.*
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -37,11 +34,10 @@ class AddAuthAdapter(
                     is DisplayViewHolder -> holder.bind(addAuthItem)
                 }
             } else {
-                when (getItemViewType(position)) {
-                    FieldType.DISPLAY.type ->
-                        (holder as DisplayViewHolder).bind(addAuthItem)
-                    else ->
-                        (holder as CheckboxViewHolder).bind(addAuthItem)
+                if (getItemViewType(position) == FieldType.DISPLAY.type) {
+                    (holder as DisplayViewHolder).bind(addAuthItem)
+                } else {
+                    (holder as CheckboxViewHolder).bind(addAuthItem)
                 }
             }
         }
@@ -61,7 +57,7 @@ class AddAuthAdapter(
             FieldType.DISPLAY.type -> DisplayViewHolder(
                 AddAuthDisplayItemBinding.inflate(inflater)
             )
-            else -> CheckboxViewHolder(AddAuthSwitchItemBinding.inflate(inflater))
+            else -> CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater))
         }
     }
 
