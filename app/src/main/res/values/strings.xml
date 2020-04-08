@@ -83,7 +83,7 @@
     <string name="button_text_log_in">Log in</string>
 
     <!-- Loyalty Card Details -->
-    <string name="view_history">View History</string>
+    <string name="view_history">View history</string>
     <string name="about_membership">About membership</string>
     <string name="about_membership_title_template">About %s</string>
     <string name="about_membership_plan_name">About %1$s</string>
