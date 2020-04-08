@@ -179,7 +179,7 @@ fun String.cardStarConcatenator(shortPartLen: Int): String {
     return part1a + part2
 }
 
-fun String.starMeUp() = replace("[\\d]".toRegex(), "*")
+fun String.starMeUp() = replace("[\\d]".toRegex(), "•")
 
 fun String.dateValidation(): Boolean {
     val new = formatDate()
