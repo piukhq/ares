@@ -50,6 +50,17 @@
             app:layout_constraintTop_toTopOf="@id/brand_logo"
             tools:text="Harvey Nichols" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_in_wallet"
+            app:isVisible="@{item.planInLoyaltyWallet}"
+            app:layout_constraintBottom_toBottomOf="@id/browse_brands_title"
+            app:layout_constraintStart_toEndOf="@id/browse_brands_title"
+            app:layout_constraintTop_toTopOf="@id/browse_brands_title"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:id="@+id/browse_brands_description"
             android:layout_width="wrap_content"
