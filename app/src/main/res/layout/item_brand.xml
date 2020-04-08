@@ -36,7 +36,7 @@
             android:id="@+id/browse_brands_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="@dimen/margin_padding_size_triple_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@{item.membershipPlan.account.company_name}"
@@ -49,6 +49,17 @@
             app:layout_constraintStart_toEndOf="@+id/brand_logo"
             app:layout_constraintTop_toTopOf="@id/brand_logo"
             tools:text="Harvey Nichols" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_in_wallet"
+            app:isVisible="@{item.planInLoyaltyWallet}"
+            app:layout_constraintBottom_toBottomOf="@id/browse_brands_title"
+            app:layout_constraintStart_toEndOf="@id/browse_brands_title"
+            app:layout_constraintTop_toTopOf="@id/browse_brands_title"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/browse_brands_description"
