@@ -41,19 +41,3 @@ fun TextView.setVoucherCollectedProgress(voucherEarn: Earn) {
         voucherEarn.suffix
     )
 }
-
-@BindingAdapter("isPlanInWallet")
-fun TextView.setInWalletIcon(isPlanInWallet: Boolean) {
-    compoundDrawablePadding = if (isPlanInWallet) {
-        setCompoundDrawablesWithIntrinsicBounds(
-            null,
-            null,
-            resources.getDrawable(R.drawable.ic_in_wallet, null),
-            null
-        )
-        resources.getDimension(R.dimen.in_wallet_icon_padding).toInt()
-    } else {
-        setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-        0
-    }
-}
