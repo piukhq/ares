@@ -25,6 +25,7 @@ object FirebaseEvents {
     const val INFORMATION_MODAL_VIEW = "InformationModal"
     const val SETTINGS_VIEW = "Settings"
     const val PREFERENCES_VIEW = "Preferences"
+    const val SPLASH_VIEW = "SplashScreen"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)
