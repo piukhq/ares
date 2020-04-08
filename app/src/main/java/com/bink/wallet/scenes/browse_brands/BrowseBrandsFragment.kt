@@ -2,28 +2,29 @@ package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Locale
 
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFragmentBinding>() {
+
+    private val args by navArgs<BrowseBrandsFragmentArgs>()
+    override val layoutRes = R.layout.browse_brands_fragment
+    override val viewModel: BrowseBrandsViewModel by viewModel()
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
-
-    override val layoutRes: Int
-        get() = R.layout.browse_brands_fragment
-
-    override val viewModel: BrowseBrandsViewModel by viewModel()
 
     override fun onResume() {
         super.onResume()
@@ -43,12 +44,10 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                 return when {
                     (isPlanPLL(membershipPlan1) ||
                             isPlanPLL(membershipPlan2)) &&
-                            (type1 >
-                                    type2) -> -1
+                            (type1 > type2) -> -1
                     (isPlanPLL(membershipPlan1) ||
                             isPlanPLL(membershipPlan2)) &&
-                            (type1 <
-                                    type2) -> 1
+                            (type1 < type2) -> 1
                     else -> 0
                 }
             }
@@ -58,52 +57,90 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.lifecycleOwner = this
+        setupBrandsAdapter(
+            args.membershipCards.toList().getOwnedMembershipCardsIds(),
+            args.membershipPlans.toList()
+        )
+    }
 
-        arguments?.let { brandsList ->
-            var plans = BrowseBrandsFragmentArgs.fromBundle(brandsList).membershipPlans
+    private fun setupBrandsAdapter(
+        membershipCardIds: List<String>,
+        membershipPlans: List<MembershipPlan>
+    ) {
+        val browseBrandsItemsList = mutableListOf<BrowseBrandsListItem>()
+        var splitPosition = 0
 
-            val plansList = ArrayList<Pair<String?, MembershipPlan>>()
-
-            var splitPosition = 0
-
-            if (plans.isNotEmpty()) {
-                plans = plans.sortedWith(Comparator<MembershipPlan> { membershipPlan1,
-                                                                      membershipPlan2 ->
+        val sortedMembershipPlans =
+            membershipPlans.sortedWith(
+                Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
                     comparePlans(membershipPlan1, membershipPlan2)
-                }.thenBy { it.account?.company_name?.toLowerCase() }).toTypedArray()
-
-                plansList.add(Pair(getString(R.string.pll_title), plans[0]))
-            }
-
-            for (position in 1 until plans.size) {
-                if (plans[position - 1].getCardType() == CardType.PLL &&
-                    plans[position].getCardType() != CardType.PLL
-                ) {
-                    plansList.add(Pair(getString(R.string.all_text), plans[position]))
-                    splitPosition = position - 1
-                } else {
-                    plansList.add(Pair(null, plans[position]))
+                }.thenBy {
+                    it.account?.company_name?.toLowerCase(Locale.ENGLISH)
                 }
-            }
+            ).toTypedArray()
+        browseBrandsItemsList.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.pll_title)))
+        browseBrandsItemsList.add(
+            BrowseBrandsListItem.BrandItem(
+                sortedMembershipPlans[0],
+                sortedMembershipPlans[0].id in membershipCardIds
+            )
+        )
 
-            binding.browseBrandsContainer.apply {
-                layoutManager = GridLayoutManager(activity, 1)
-                adapter =
-                    BrowseBrandsAdapter(
-                        plansList,
-                        splitPosition,
-                        itemClickListener = { toAddJoinScreen(it) })
+
+        for (position in 1 until sortedMembershipPlans.size) {
+            if (sortedMembershipPlans[position - 1].getCardType() == CardType.PLL &&
+                sortedMembershipPlans[position].getCardType() != CardType.PLL
+            ) {
+                browseBrandsItemsList.add(
+                    BrowseBrandsListItem.SectionTitleItem(
+                        getString(R.string.all_text)
+                    )
+                )
+                browseBrandsItemsList.add(
+                    BrowseBrandsListItem.BrandItem(
+                        sortedMembershipPlans[position],
+                        sortedMembershipPlans[position].id in membershipCardIds
+                    )
+                )
+                splitPosition = position
+            } else {
+                browseBrandsItemsList.add(
+                    BrowseBrandsListItem.BrandItem(
+                        sortedMembershipPlans[position],
+                        sortedMembershipPlans[position].id in membershipCardIds
+                    )
+                )
+            }
+        }
+        binding.brandsRecyclerView.adapter = BrowseBrandsAdapter(
+            browseBrandsItemsList,
+            splitPosition
+        ).apply {
+            setOnBrandItemClickListener { membershipPlan ->
+                findNavController().navigate(
+                    BrowseBrandsFragmentDirections.browseToAddJoin(
+                        membershipPlan,
+                        null,
+                        isFromJoinCard = false,
+                        isRetryJourney = false
+                    )
+                )
             }
         }
     }
 
-    private fun toAddJoinScreen(membershipPlan: MembershipPlan) {
-        val action = BrowseBrandsFragmentDirections.browseToAddJoin(
-            membershipPlan,
-            null,
-            isFromJoinCard = false,
-            isRetryJourney = false
-        )
-        findNavController().navigateIfAdded(this, action)
+    companion object {
+        private fun List<MembershipCard>.getOwnedMembershipCardsIds(): List<String> {
+            val membershipCardsIds = mutableListOf<String>()
+            this.forEach { membershipCard ->
+                membershipCard.membership_plan?.let { membership_planId ->
+                    if (membership_planId !in membershipCardsIds) {
+                        membershipCardsIds.add(membership_planId)
+                    }
+                }
+            }
+            return membershipCardsIds
+        }
     }
 }

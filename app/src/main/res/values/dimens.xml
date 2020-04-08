@@ -49,6 +49,7 @@
     <dimen name="list_margin">64dp</dimen>
     <dimen name="search_bar_height">42dp</dimen>
     <dimen name="list_item_height">88dp</dimen>
+    <dimen name="in_wallet_icon_padding">8dp</dimen>
 
     <!-- Add Screen -->
     <dimen name="add_card_margin">20dp</dimen>
