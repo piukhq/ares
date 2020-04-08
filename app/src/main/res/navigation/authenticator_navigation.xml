@@ -748,9 +748,17 @@
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
         <argument
                 android:name="membershipCardId"
                 app:argType="string" />
+        <action android:id="@+id/authToLoyaltyDetails"
+            app:destination="@id/loyalty_card_detail_fragment"/>
 
     </fragment>
 
@@ -780,6 +788,14 @@
         <action
                 android:id="@+id/addCardToGhostRegistrationUnavailable"
                 app:destination="@id/ghost_registration_unavailable" />
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment"/>
     </fragment>
 
     <fragment
@@ -787,12 +803,20 @@
             android:name="com.bink.wallet.scenes.add_auth_enrol.screens.GetNewCardFragment"
             android:label="GetNewCardFragment"
             tools:layout="@layout/base_add_auth_fragment">
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
         <argument
                 android:name="membershipPlan"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment"/>
         <argument
                 android:name="membershipCardId"
                 app:argType="string" />
@@ -822,8 +846,13 @@
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />
         <action
-                android:id="@+id/ghostToPllEmpty"
+                android:id="@+id/authToPllEmpty"
                 app:destination="@+id/pll_empty_fragment" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment"/>
     </fragment>
 
 </navigation>

@@ -2,18 +2,36 @@ import android.text.InputFilter
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
 import com.bink.wallet.databinding.AddAuthTextItemBinding
-import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.SimplifiedTextWatcher
+import com.bink.wallet.utils.enums.AddAuthItemType
+import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 
 class TextFieldViewHolder(
-    val binding: AddAuthTextItemBinding) :
-    BaseAddAuthViewHolder<Pair<PlanField, PlanFieldsRequest>>(binding) {
+    val binding: AddAuthTextItemBinding
+) :
+    BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
+
+    var finalTextField: String = EMPTY_STRING
+
+    init {
+        addAuthItems.map { item ->
+            if (item.getFieldType() == AddAuthItemType.PLAN_FIELD &&
+                (item.fieldType as PlanField).type == FieldType.TEXT.type
+            ) {
+                item.fieldType.column?.let { column ->
+                    finalTextField = column
+                }
+            }
+        }
+    }
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -22,8 +40,8 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            brands[adapterPosition].second.value = currentText.toString()
-            buttonRefresh()
+            addAuthItems[adapterPosition].fieldsRequest.value = currentText.toString()
+            checkValidation()
         }
     }
 
@@ -34,23 +52,29 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            brands[adapterPosition].second.value =
+            addAuthItems[adapterPosition].fieldsRequest.value =
                 currentText.toString().toLowerCase(Locale.ROOT)
-            buttonRefresh()
+            checkValidation()
         }
     }
 
-    override fun bind(item: Pair<PlanField, PlanFieldsRequest>) {
-        binding.planField = item.first
+    override fun bind(item: AddAuthItemWrapper) {
+        val planField = item.fieldType as PlanField
+        val planRequest = item.fieldsRequest
+
+        binding.planField = planField
+
         with(binding.contentAddAuthText) {
-            hint = item.first.description
-            setText(item.second.value)
-            item.second.disabled?.let {
+            hint = planField.description
+            setText(planRequest.value)
+
+            planRequest.disabled?.let {
                 if (it) {
                     isEnabled = false
                 }
             }
-            if (item.first.common_name == AddAuthAdapter.COMMON_NAME_EMAIL) {
+
+            if (planField.common_name == AddAuthAdapter.COMMON_NAME_EMAIL) {
                 binding.contentAddAuthText.filters = arrayOf(object : InputFilter.AllCaps() {
                     override fun filter(
                         source: CharSequence?,
@@ -67,18 +91,19 @@ class TextFieldViewHolder(
             } else {
                 addTextChangedListener(textWatcher)
             }
-            if (brands[adapterPosition].second.value.isNullOrBlank()) {
+            if (planRequest.value.isNullOrBlank()) {
                 error = null
             } else {
-                checkIfError(adapterPosition, this)
+                checkIfFieldIsValid()
             }
 
             imeOptions =
-                if (item.second.column == finalTextField) {
+                if (planRequest.column == finalTextField) {
                     EditorInfo.IME_ACTION_DONE
                 } else {
                     EditorInfo.IME_ACTION_NEXT
                 }
+
             setOnFocusChangeListener { _, isFocus ->
                 if (!isFocus) {
                     checkIfFieldIsValid()
@@ -98,7 +123,7 @@ class TextFieldViewHolder(
     private fun TextInputEditText.checkIfFieldIsValid() {
         try {
             checkIfError(adapterPosition, this)
-            buttonRefresh()
+            checkValidation()
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
         }

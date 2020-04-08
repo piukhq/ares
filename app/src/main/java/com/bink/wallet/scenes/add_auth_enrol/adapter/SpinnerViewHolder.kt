@@ -1,14 +1,15 @@
 import android.view.View
 import android.widget.AdapterView
 import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
-import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 
 class SpinnerViewHolder(
     val binding: AddAuthSpinnerItemBinding
 ) :
-    BaseAddAuthViewHolder<Pair<PlanField, PlanFieldsRequest>>(binding) {
+    BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -21,16 +22,17 @@ class SpinnerViewHolder(
             position: Int,
             id: Long
         ) {
-            brands[adapterPosition].second.value =
-                (brands[adapterPosition].first as PlanField).choice?.get(position)
+            addAuthItems[adapterPosition].fieldsRequest.value =
+                (addAuthItems[adapterPosition].fieldType as PlanField).choice?.get(position)
         }
 
     }
 
-    override fun bind(item: Pair<PlanField, PlanFieldsRequest>) {
+    override fun bind(item: AddAuthItemWrapper) {
         val spinner = binding.contentAddAuthSpinner
-        binding.planField = item.first
-        brands[adapterPosition].second.value = item.first.choice?.get(0)
+        val planField = item.fieldType as PlanField
+        binding.planField = planField
+        addAuthItems[adapterPosition].fieldsRequest.value = planField.choice?.get(0)
         with(spinner) {
             isFocusable = false
             onItemSelectedListener = itemSelectedListener

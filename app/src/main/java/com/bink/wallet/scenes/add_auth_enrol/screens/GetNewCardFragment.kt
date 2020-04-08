@@ -8,6 +8,7 @@ import com.bink.wallet.R
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GetNewCardViewModel
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
+import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GetNewCardFragment : BaseAddAuthFragment() {
@@ -27,7 +28,9 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         currentMembershipPlan?.let {
             viewModel.addItems(it)
         }
-
+        viewModel.newMembershipCard.observeNonNull(this) {
+            handleNavigationAfterCardCreation(it, false)
+        }
         binding.footerSimple.addAuthCta.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()

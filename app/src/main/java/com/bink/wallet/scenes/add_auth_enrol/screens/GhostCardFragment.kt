@@ -3,15 +3,13 @@ package com.bink.wallet.scenes.add_auth_enrol.screens
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
-import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GhostCardViewModel
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
 import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GhostCardFragment : BaseAddAuthFragment() {
@@ -32,6 +30,15 @@ class GhostCardFragment : BaseAddAuthFragment() {
         binding.footerSimple.addAuthCta.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()
+        }
+
+        viewModel.newMembershipCard.observeNonNull(this) {
+            currentMembershipPlan?.let { plan ->
+                if (!isRetryJourney) {
+                    viewModel.createGhostCardRequest(it.id, plan)
+                }
+            }
+            handleNavigationAfterCardCreation(it, true)
         }
     }
 
@@ -65,21 +72,6 @@ class GhostCardFragment : BaseAddAuthFragment() {
         membershipCardId?.let {
             currentMembershipPlan?.let { plan ->
                 viewModel.handleRequest(isRetryJourney, it, plan)
-            }
-        }
-    }
-
-    private fun navigateToPllEmpty(membershipCard: MembershipCard) {
-        if (membershipCard.membership_transactions.isNullOrEmpty()) {
-            currentMembershipPlan?.let { membershipPlan ->
-                findNavController().navigateIfAdded(
-                    this,
-                    GhostCardFragmentDirections.ghostToPllEmpty(
-                        membershipPlan,
-                        membershipCard,
-                        false
-                    )
-                )
             }
         }
     }

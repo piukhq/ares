@@ -12,6 +12,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddCardFragment : BaseAddAuthFragment() {
@@ -40,6 +41,10 @@ class AddCardFragment : BaseAddAuthFragment() {
 
         currentMembershipPlan?.let {
             viewModel.addItems(it)
+        }
+
+        viewModel.newMembershipCard.observeNonNull(this) {
+            handleNavigationAfterCardCreation(it, false)
         }
     }
 

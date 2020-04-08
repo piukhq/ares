@@ -33,34 +33,45 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
         membershipCardId: String,
         membershipPlan: MembershipPlan
     ) {
-        val currentRequest: MembershipCardRequest
-
         if (isRetryJourney) {
-            currentRequest = MembershipCardRequest(
-                Account(
-                    null,
-                    null,
-                    null,
-                    addRegisterFieldsRequest.value?.registration_fields,
-                    null
-                ),
-                membershipPlan.id
-            )
-            ghostMembershipCard(membershipCardId, currentRequest)
+            createGhostCardRequest(membershipCardId, membershipPlan)
         } else {
-            currentRequest = MembershipCardRequest(
-                Account(
-                    addRegisterFieldsRequest.value?.add_fields,
-                    null,
-                    null,
-                    null,
-                    null
-                ),
-                membershipPlan.id
-            )
-            createMembershipCard(
-                currentRequest
-            )
+            createMembershipCardRequest(membershipPlan)
         }
+    }
+
+    fun createGhostCardRequest(
+        membershipCardId: String,
+        membershipPlan: MembershipPlan
+    ) {
+        val currentRequest = MembershipCardRequest(
+            Account(
+                null,
+                null,
+                null,
+                addRegisterFieldsRequest.value?.registration_fields,
+                null
+            ),
+            membershipPlan.id
+        )
+        ghostMembershipCard(membershipCardId, currentRequest)
+    }
+
+    private fun createMembershipCardRequest(
+        membershipPlan: MembershipPlan
+    ) {
+        val currentRequest = MembershipCardRequest(
+            Account(
+                addRegisterFieldsRequest.value?.add_fields,
+                null,
+                null,
+                null,
+                null
+            ),
+            membershipPlan.id
+        )
+        createMembershipCard(
+            currentRequest
+        )
     }
 }

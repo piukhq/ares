@@ -6,9 +6,6 @@ import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthFragmentBinding
-import com.bink.wallet.model.request.membership_card.Account
-import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.ApiErrorUtils.Companion.getApiErrorMessage
@@ -16,7 +13,6 @@ import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.enums.HandledException
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -109,77 +105,10 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
         }
 
         viewModel.newMembershipCard.observeNonNull(this) { membershipCard ->
-            if (viewModel.newMembershipCard.hasActiveObservers())
-                viewModel.newMembershipCard.removeObservers(this)
-//            if (signUpFormType == SignUpFormType.GHOST) {
-//                val currentRequest = MembershipCardRequest(
-//                    Account(
-//                        null,
-//                        null,
-//                        null,
-//                        addRegisterFieldsRequest.registration_fields,
-//                        null
-//                    ),
-//                    viewModel.currentMembershipPlan.value?.id
-//                )
-//                if (!isRetryJourney) {
-//                    viewModel.ghostMembershipCard(
-//                        membershipCard.id,
-//                        currentRequest
-//                    )
-//                }
-//            }
-
-//            when (viewModel.currentMembershipPlan.value?.feature_set?.card_type) {
-//                CardType.VIEW.type, CardType.STORE.type -> {
-//                    viewModel.currentMembershipPlan.value?.let { membershipPlan ->
-//                        findNavController().navigateIfAdded(
-//                            this,
-//                            AddAuthFragmentDirections.signUpToDetails(
-//                                membershipPlan,
-//                                membershipCard
-//                            )
-//                        )
-//                    }
-//                }
-//                CardType.PLL.type -> {
-//                    if (signUpFormType == SignUpFormType.GHOST) {
-//                        handlePllGhost(membershipCard)
-//                    } else {
-////                        viewModel.paymentCards.value?.let { paymentCards ->
-////                            handlePll(membershipCard, paymentCards)
-////                        }
-//                    }
-//                }
-//            }
             hideLoadingViews()
         }
     }
 
-
-    private fun handlePll(membershipCard: MembershipCard, paymentCards: List<PaymentCard>) {
-//        viewModel.currentMembershipPlan.value?.let { membershipPlan ->
-//            if (paymentCards.isNullOrEmpty()) {
-//                findNavController().navigateIfAdded(
-//                    this,
-//                    AddAuthFragmentDirections.signUpToPllEmpty(
-//                        membershipPlan,
-//                        membershipCard,
-//                        false
-//                    )
-//                )
-//            } else {
-//                findNavController().navigateIfAdded(
-//                    this,
-//                    AddAuthFragmentDirections.signUpToPll(
-//                        membershipCard,
-//                        membershipPlan,
-//                        true
-//                    )
-//                )
-//            }
-//        }
-    }
 
     private fun hideLoadingViews() {
         with(binding) {

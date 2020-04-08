@@ -11,36 +11,37 @@ import com.bink.wallet.databinding.AddAuthDisplayItemBinding
 import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthSwitchItemBinding
 import com.bink.wallet.databinding.AddAuthTextItemBinding
-import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 
 
 @Suppress("UNCHECKED_CAST")
 class AddAuthAdapter(
-    val brands: List<Pair<Any, PlanFieldsRequest>>,
-    val buttonRefresh: () -> Unit = {}
+    private val addAuthItems: MutableList<AddAuthItemWrapper>,
+    val checkValidation: () -> Unit = {}
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
-        holder.brands = brands.toMutableList()
-        holder.buttonRefresh = buttonRefresh
+        holder.addAuthItems = addAuthItems
+        holder.checkValidation = checkValidation
 
-        brands[position].let {
-            if (it.first is PlanField) {
+        addAuthItems[position].let { addAuthItem ->
+            if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
                 when (holder) {
-                    is TextFieldViewHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
-                    is SpinnerViewHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
-                    is CheckboxViewHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
-                    is DisplayViewHolder -> holder.bind(it as Pair<PlanField, PlanFieldsRequest>)
+                    is TextFieldViewHolder -> holder.bind(addAuthItem)
+                    is SpinnerViewHolder -> holder.bind(addAuthItem)
+                    is CheckboxViewHolder -> holder.bind(addAuthItem)
+                    is DisplayViewHolder -> holder.bind(addAuthItem)
                 }
             } else {
                 when (getItemViewType(position)) {
                     FieldType.DISPLAY.type ->
-                        (holder as DisplayViewHolder).bind(it as Pair<PlanDocument, PlanFieldsRequest>)
+                        (holder as DisplayViewHolder).bind(addAuthItem)
                     else ->
-                        (holder as CheckboxViewHolder).bind(it as Pair<PlanDocument, PlanFieldsRequest>)
+                        (holder as CheckboxViewHolder).bind(addAuthItem)
                 }
             }
         }
@@ -65,11 +66,14 @@ class AddAuthAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        brands[position].first.apply {
-            if (this is PlanField && type != null) {
-                return type
-            } else if (this is PlanDocument) {
-                return if (checkbox == null || checkbox) {
+        with(addAuthItems[position]) {
+            if (getFieldType() == AddAuthItemType.PLAN_FIELD) {
+                (fieldType as PlanField).type?.let {
+                    return it
+                }
+            } else {
+                val checkBox = (fieldType as PlanDocument).checkbox
+                return if (checkBox == null || checkBox) {
                     FieldType.BOOLEAN_REQUIRED.type
                 } else {
                     FieldType.DISPLAY.type
@@ -79,7 +83,7 @@ class AddAuthAdapter(
         return 0
     }
 
-    override fun getItemCount() = brands.size
+    override fun getItemCount() = addAuthItems.size
 
     companion object {
         const val COMMON_NAME_EMAIL = "email"

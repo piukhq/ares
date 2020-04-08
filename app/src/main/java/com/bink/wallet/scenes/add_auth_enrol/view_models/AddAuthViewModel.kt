@@ -12,9 +12,12 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.TypeOfField
 
@@ -28,10 +31,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     val haveValidationsPassed = ObservableBoolean(false)
     val isKeyboardHidden = ObservableBoolean(true)
 
-    val planFieldsList: MutableList<Pair<Any, PlanFieldsRequest>> =
-        mutableListOf()
-    val planDocumentsList: MutableList<Pair<Any, PlanFieldsRequest>> =
-        mutableListOf()
+    val addAuthItemsList: MutableList<AddAuthItemWrapper> = mutableListOf()
 
     private val _addRegisterFieldsRequest = MutableLiveData<Account>()
     val addRegisterFieldsRequest: LiveData<Account>
@@ -45,50 +45,84 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
 
 
     fun addPlanField(planField: PlanField) {
-        val pairPlanField = Pair(
-            planField, PlanFieldsRequest(
-                planField.column, EMPTY_STRING
+        val addAuthItemWrapper =
+            AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, EMPTY_STRING))
+        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
+            addAuthItemsList.add(addAuthItemWrapper)
+        } else if (!planField.column.equals(BaseAddAuthFragment.BARCODE_TEXT)) {
+            addAuthItemsList.add(addAuthItemWrapper)
+        }
+    }
+
+    fun addPlanDocument(planDocument: PlanDocument) {
+        addAuthItemsList.add(
+            AddAuthItemWrapper(
+                planDocument,
+                PlanFieldsRequest(planDocument.name, EMPTY_STRING)
             )
         )
-        if (planField.type == FieldType.BOOLEAN_OPTIONAL.type) {
-            planDocumentsList.add(
-                pairPlanField
-            )
-        } else if (!planField.column.equals(BaseAddAuthFragment.BARCODE_TEXT)) {
-            planFieldsList.add(
-                pairPlanField
-            )
-        }
     }
 
     open fun addItems(membershipPlan: MembershipPlan) {}
 
-    fun addPlanDocument(planDocument: PlanDocument) {
-        planDocumentsList.add(
-            Pair(
-                planDocument, PlanFieldsRequest(
-                    planDocument.name, EMPTY_STRING
-                )
-            )
-        )
-    }
 
     fun mapItems() {
-        planDocumentsList.map { planFieldsList.add(it) }
         val addRegisterFieldsRequest = Account()
-
-        planFieldsList.map {
-            if (it.first is PlanField) {
-                when ((it.first as PlanField).typeOfField) {
-                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(it.second)
-                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(it.second)
-                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(it.second)
-                    else -> addRegisterFieldsRequest.registration_fields?.add(it.second)
+        addAuthItemsList.forEach { addAuthItem ->
+            if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+                when ((addAuthItem.fieldType as PlanField).typeOfField) {
+                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(addAuthItem.fieldsRequest)
+                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(addAuthItem.fieldsRequest)
+                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(addAuthItem.fieldsRequest)
+                    else -> addRegisterFieldsRequest.registration_fields?.add(addAuthItem.fieldsRequest)
                 }
-            } else
-                addRegisterFieldsRequest.plan_documents?.add(it.second)
+            } else {
+                addRegisterFieldsRequest.plan_documents?.add(addAuthItem.fieldsRequest)
+            }
         }
         _addRegisterFieldsRequest.value = addRegisterFieldsRequest
+    }
+
+    fun didPlanDocumentsPassValidations(addRegisterFieldsRequest: Account): Boolean {
+        addRegisterFieldsRequest.plan_documents?.map { planDocument ->
+            var required = true
+            addAuthItemsList.filter { addAuthItem ->
+                addAuthItem.getFieldType() == AddAuthItemType.PLAN_DOCUMENT
+            }.map { addAuthItem ->
+                if (addAuthItem.fieldsRequest.column == planDocument.column) {
+                    (addAuthItem.fieldType as PlanDocument).checkbox?.let { bool ->
+                        required = !bool
+                    }
+                }
+            }
+
+            if (required &&
+                planDocument.value != true.toString()
+            ) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun didPlanFieldsPassValidations(): Boolean {
+        addAuthItemsList.filter { item -> item.getFieldType() == AddAuthItemType.PLAN_FIELD }
+            .map { addAuthItem ->
+                val item = addAuthItem.fieldType as PlanField
+                if (item.type != FieldType.BOOLEAN_OPTIONAL.type) {
+                    if (addAuthItem.fieldsRequest.value.isNullOrEmpty()) {
+                        return false
+                    } else if (!UtilFunctions.isValidField(
+                            item.validation,
+                            addAuthItem.fieldsRequest.value
+                        )
+                    ) {
+
+                        return false
+                    }
+                }
+            }
+        return true
     }
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
