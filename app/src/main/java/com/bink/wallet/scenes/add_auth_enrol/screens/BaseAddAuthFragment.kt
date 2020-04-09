@@ -19,10 +19,11 @@ import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.enums.HandledException
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
 
@@ -48,6 +49,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onViewCreated(view, savedInstanceState)
         with(args) {
             currentMembershipPlan = membershipPlan
+            this@BaseAddAuthFragment.isRetryJourney = isRetryJourney
             this@BaseAddAuthFragment.membershipCardId = membershipCardId
         }
         SharedPreferenceManager.isLoyaltySelected = true
@@ -56,7 +58,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         animationHelper = AuthAnimationHelper(this, binding)
 
         setKeyboardTypeToAdjustResize()
-        setRecyclerViewBottomPadding()
+        //setRecyclerViewBottomPadding()
 
         binding.viewModel = viewModel
         binding.membershipPlan = args.membershipPlan
@@ -69,7 +71,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
         binding.buttonCancel.setOnClickListener {
             handleToolbarAction()
-            findNavController().navigate(AddAuthFragmentDirections.globalToHome())
+            findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome())
         }
         binding.addJoinReward.setOnClickListener {
             navigationHandler?.navigateToBrandHeader()
@@ -78,44 +80,39 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler(it)
         }
 
-        binding.footerComposed.addAuthCta.setOnClickListener {
-            if (viewModel.createCardError.value == null) {
-                if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-//                    viewModel.addRegisterFieldsRequest.value?.plan_documents?.map { plan ->
-//                        var required = true
-//                        viewModel.planDocumentsList.map { field ->
-//                            if (field.second.column == plan.column) {
-//                                (field.first as PlanDocument).checkbox?.let { hasCheckbox ->
-//                                    if (!hasCheckbox) {
-//                                        required = false
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        if (required && plan.value != true.toString()) {
-//                            requireContext().displayModalPopup(
-//                                EMPTY_STRING,
-//                                getString(R.string.required_fields)
-//                            )
-//                            return@setOnClickListener
-//                        }
-//                    }
-//
-//                    viewModel.planFieldsList.map {
-//                        if (it.first is PlanField) {
-//                            if (!UtilFunctions.isValidField(
-//                                    (it.first as PlanField).validation,
-//                                    it.second.value
-//                                )
-//                            ) {
-//                                requireContext().displayModalPopup(
-//                                    null,
-//                                    getString(R.string.all_fields_must_be_valid)
-//                                )
-//                                return@setOnClickListener
-//                            }
-//                        }
-//                    }
+        viewModel.createCardError.observeNonNull(this) { exception ->
+            when (ExceptionHandlingUtils.onHttpException(exception)) {
+                HandledException.BAD_REQUEST -> {
+                    if (exception is HttpException) {
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            ApiErrorUtils.getApiErrorMessage(
+                                exception,
+                                getString(R.string.error_scheme_already_exists)
+                            )
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.error),
+                            getString(R.string.error_scheme_already_exists)
+                        )
+                    }
+                }
+                else -> {
+                    if (((exception is HttpException)
+                                && exception.code() >= ApiErrorUtils.SERVER_ERROR)
+                        || exception is SocketTimeoutException
+                    ) {
+                        requireContext().displayModalPopup(
+                            requireContext().getString(R.string.error_server_down_title),
+                            requireContext().getString(R.string.error_server_down_message)
+                        )
+                    } else {
+                        requireContext().displayModalPopup(
+                            getString(R.string.add_card_error_title),
+                            getString(R.string.add_card_error_message)
+                        )
+                    }
                 }
             }
         }
@@ -203,10 +200,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         )
     }
 
-    private fun setRecyclerViewBottomPadding() {
-        binding.authFields.setPadding(
-            0, 0, 0,
-            requireContext().toDipFromPixel(requireContext().toPixelFromDip(binding.footerSimple.root.height.toFloat())).toInt()
-        )
-    }
+//    private fun setRecyclerViewBottomPadding() {
+//        binding.authFields.setPadding(
+//            0, 0, 0,
+//            requireContext().toDipFromPixel(requireContext().toPixelFromDip(binding.footerSimple.root.height)).toInt()
+//        )
+//    }
 }

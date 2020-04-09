@@ -7,7 +7,46 @@
             app:constraintSetStart="@id/collapsed"
             app:duration="300">
 
+
+        <KeyFrameSet>
+            <KeyAttribute
+                    android:alpha="1.0"
+                    app:framePosition="0"
+                    app:motionTarget="@id/add_join_reward" />
+            <KeyAttribute
+                    android:alpha="0.0"
+                    app:framePosition="100"
+                    app:motionTarget="@id/add_join_reward" />
+            <KeyAttribute
+                    android:alpha="1.0"
+                    app:framePosition="0"
+                    app:motionTarget="@id/description_add_auth" />
+            <KeyAttribute
+                    android:alpha="0.0"
+                    app:framePosition="100"
+                    app:motionTarget="@id/description_add_auth" />
+        </KeyFrameSet>
+
     </Transition>
+
+
+    <ConstraintSet>
+        <Constraint android:id="@id/footer_composed">
+            <PropertySet
+                    app:applyMotionScene="false"
+                    app:visibilityMode="ignore" />
+        </Constraint>
+
+        <Constraint android:id="@id/footer_simple">
+            <PropertySet
+                    app:applyMotionScene="false"
+                    app:visibilityMode="ignore" />
+        </Constraint>
+
+        <Constraint android:id="@id/footer_bottom_gradient">
+            <PropertySet app:applyMotionScene="false" />
+        </Constraint>
+    </ConstraintSet>
 
     <ConstraintSet android:id="@+id/collapsed">
         <Constraint
