@@ -83,7 +83,7 @@
     <string name="button_text_log_in">Log in</string>
 
     <!-- Loyalty Card Details -->
-    <string name="view_history">View History</string>
+    <string name="view_history">View history</string>
     <string name="about_membership">About membership</string>
     <string name="about_membership_title_template">About %s</string>
     <string name="about_membership_plan_name">About %1$s</string>
@@ -376,7 +376,7 @@
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
-    <string name="_mock_card_ending">**** **** **** 1234</string>
+    <string name="_mock_card_ending">•••• •••• •••• 1234</string>
     <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
