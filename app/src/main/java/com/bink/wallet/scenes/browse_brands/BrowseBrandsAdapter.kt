@@ -1,118 +1,73 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.databinding.BrandListItemBinding
+import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.toPixelFromDip
 
+typealias OnBrandItemClickListener = (MembershipPlan) -> Unit
 
 class BrowseBrandsAdapter(
-    private val brands: List<Pair<String?, MembershipPlan>>,
-    private val splitPosition: Int,
-    val itemClickListener: (MembershipPlan) -> Unit = {}
-) : RecyclerView.Adapter<BrowseBrandsAdapter.BrandsViewHolder>() {
+    private val brands: List<BrowseBrandsListItem>,
+    private val splitPosition: Int
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var onBrandItemClickListener: OnBrandItemClickListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BrandsViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = BrandListItemBinding.inflate(inflater)
-        binding.apply {
-            root.setOnClickListener {
-                item?.apply {
-                    itemClickListener(this)
-                }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
+            BRAND_ITEM -> {
+                BrandsViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.item_brand,
+                        parent,
+                        false
+                    )
+                )
+            }
+            else -> {
+                SectionTitleViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(
+                            parent.context
+                        ),
+                        R.layout.item_brands_section_title,
+                        parent,
+                        false
+                    )
+                )
             }
         }
-        return BrandsViewHolder(binding)
-    }
 
     override fun getItemCount() = brands.size
 
-    override fun onBindViewHolder(holder: BrandsViewHolder, position: Int) {
-        brands[position].let {
-            holder.bind(
-                it,
-                position == itemCount - 1 || position == splitPosition
-            )
+    override fun getItemViewType(position: Int): Int = brands[position].id
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.BrandItem).let {
+                (holder as BrandsViewHolder).bind(
+                    it,
+                    position == itemCount - 1 || position == splitPosition,
+                    onBrandItemClickListener
+                )
+            }
+            SECTION_TITLE_ITEM -> {
+                (holder as SectionTitleViewHolder).bind(
+                    (brands[position] as BrowseBrandsListItem.SectionTitleItem).sectionTitle
+                )
+            }
         }
     }
 
-    class BrandsViewHolder(val binding: BrandListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    fun setOnBrandItemClickListener(onBrandItemClickListener: OnBrandItemClickListener?) {
+        this.onBrandItemClickListener = onBrandItemClickListener
+    }
 
-        fun bind(item: Pair<String?, MembershipPlan>, isLast: Boolean) {
-            if (item.first != null) {
-                binding.sectionTitle.text = item.first
-                binding.sectionTitle.visibility = View.VISIBLE
-            } else {
-                binding.sectionTitle.visibility = View.GONE
-            }
-
-            if (item.second.getCardType() == CardType.PLL) {
-                resetTitlePosition()
-            } else {
-                centerPlanTitlePosition()
-            }
-
-            binding.separator.visibility = if (isLast) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
-
-            binding.item = item.second
-            binding.executePendingBindings()
-        }
-
-        private fun centerPlanTitlePosition() {
-            binding.browseBrandsDescription.visibility = View.GONE
-            val constraintSet = ConstraintSet()
-            constraintSet.apply {
-                clone(binding.constraintLayout)
-                connect(
-                    binding.browseBrandsTitle.id,
-                    ConstraintSet.BOTTOM,
-                    binding.constraintLayout.id,
-                    ConstraintSet.BOTTOM,
-                    0
-                )
-                connect(
-                    binding.browseBrandsTitle.id,
-                    ConstraintSet.TOP,
-                    binding.constraintLayout.id,
-                    ConstraintSet.TOP,
-                    0
-                )
-                applyTo(binding.constraintLayout)
-            }
-        }
-
-        private fun resetTitlePosition() {
-            binding.browseBrandsDescription.visibility = View.VISIBLE
-            val marginValue = 24f
-            val constraintSet = ConstraintSet()
-            constraintSet.apply {
-                clone(binding.constraintLayout)
-                connect(
-                    binding.browseBrandsTitle.id,
-                    ConstraintSet.BOTTOM,
-                    -1,
-                    ConstraintSet.BOTTOM,
-                    0
-                )
-                connect(
-                    binding.browseBrandsTitle.id,
-                    ConstraintSet.TOP,
-                    binding.constraintLayout.id,
-                    ConstraintSet.TOP,
-                    binding.root.context.toPixelFromDip(marginValue).toInt()
-                )
-                applyTo(binding.constraintLayout)
-            }
-        }
+    companion object {
+        private const val BRAND_ITEM = R.layout.item_brand
+        private const val SECTION_TITLE_ITEM = R.layout.item_brands_section_title
     }
 }
