@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.view.View
@@ -35,6 +36,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.synthetic.main.pll_payment_card_item.view.*
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -350,7 +352,10 @@ fun TextView.setTimestamp(timeStamp: Long, format: String = "%s", shortMonth: Bo
 }
 
 private fun dateFormatTransactionTime(timeStamp: Long, shortMonth: Boolean = false) =
-    SimpleDateFormat(getDateFormat(shortMonth), Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
+    SimpleDateFormat(
+        getDateFormat(shortMonth),
+        Locale.ENGLISH
+    ).format(timeStamp * ONE_THOUSAND).toString()
 
 private fun getDateFormat(shortMonth: Boolean): String {
     val builder = StringBuilder("dd MMM")
@@ -361,19 +366,28 @@ private fun getDateFormat(shortMonth: Boolean): String {
 }
 
 @BindingAdapter("transactionArrow")
-fun TextView.setArrow(membershipTransactions: MembershipTransactions) {
+fun ImageView.setArrow(membershipTransactions: MembershipTransactions) {
     membershipTransactions.amounts?.get(0)?.value?.let {
         when {
             it < 0 -> {
-                setTextColor(ContextCompat.getColor(context, R.color.black))
+                rotation = 180f
+                setColorFilter(
+                    ContextCompat.getColor(context, R.color.black),
+                    PorterDuff.Mode.SRC_IN
+                )
             }
             it == 0.0 -> {
-                setTextColor(ContextCompat.getColor(context, R.color.amber_pending))
-                text = context.getString(R.string.arrow_left)
+                rotation = -90f
+                setColorFilter(
+                    ContextCompat.getColor(context, R.color.amber_pending),
+                    PorterDuff.Mode.SRC_IN
+                )
             }
             else -> {
-                setTextColor(ContextCompat.getColor(context, R.color.green_ok))
-                text = context.getString(R.string.up_arrow)
+                setColorFilter(
+                    ContextCompat.getColor(context, R.color.green_ok),
+                    PorterDuff.Mode.SRC_IN
+                )
             }
         }
     }
