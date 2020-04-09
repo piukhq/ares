@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.enums.BuildTypes
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var isFirstLaunch = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,16 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         getMembershipPlans()
         super.onResume()
+        if (isFirstLaunch) {
+            if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+                firebaseAnalytics.setCurrentScreen(
+                    this,
+                    SPLASH_VIEW,
+                    SPLASH_VIEW
+                )
+            }
+            isFirstLaunch = false
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
