@@ -331,6 +331,7 @@
     <string name="payment_card_pending">Pending</string>
     <string name="payment_card_retry">Retry</string>
     <string name="payment_card_dimension_ratio">82:27</string>
+    <string name="payment_card_redacted_card_number_part">••••&#160;&#160;&#160;&#160;••••&#160;&#160;&#160;&#160;••••&#160;&#160;&#160;&#160;</string>
 
     <!-- Payment Card entry -->
     <string name="empty_string" />

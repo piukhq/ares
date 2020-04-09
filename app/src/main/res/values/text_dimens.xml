@@ -12,6 +12,7 @@
 
     <dimen name="payment_card_title_size">18sp</dimen>
     <dimen name="link_status_text_size">15sp</dimen>
+    <dimen name="redacted_card_number_text_size">10sp</dimen>
 
     <dimen name="transaction_arrow_size">30sp</dimen>
 </resources>
