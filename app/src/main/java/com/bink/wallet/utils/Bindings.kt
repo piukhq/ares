@@ -36,7 +36,6 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.pll_payment_card_item.view.*
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.absoluteValue
