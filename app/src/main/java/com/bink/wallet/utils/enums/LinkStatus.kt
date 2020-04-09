@@ -7,13 +7,14 @@ enum class LinkStatus(
     val drawable: Int,
     val statusText: Int,
     val descriptionText: Int,
-    var descriptionParams: List<*>? = null
+    var descriptionParams: List<*>? = null,
+    var pluralSize: Int = 0
 ) {
     STATUS_LINKED_TO_SOME_OR_ALL(
         2.1f,
         R.drawable.ic_active_linked,
         R.string.link_status_linked,
-        R.string.description_linked
+        R.plurals.description_linked
     ),
     STATUS_LINKABLE_NO_PAYMENT_CARDS(
         2.2f,

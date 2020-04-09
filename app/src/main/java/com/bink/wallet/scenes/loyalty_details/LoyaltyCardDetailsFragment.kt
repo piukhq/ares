@@ -22,7 +22,6 @@ import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.ValueDisplayUtils
-import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
@@ -517,6 +516,7 @@ class LoyaltyCardDetailsFragment :
                                 paymentCards.size
                             )
                         linkStatus.descriptionParams = activeLinkedParams
+                        linkStatus.pluralSize = paymentCards.size
                     }
                 }
             }
@@ -537,20 +537,12 @@ class LoyaltyCardDetailsFragment :
                     getString(linkStatus.descriptionText)
             } else {
                 linkStatus.descriptionParams?.let { descParams ->
-                    linkDescription.text =
-                        getString(
-                            linkStatus.descriptionText,
-                            descParams[0],
-                            descParams[1]
-                        )
-                }
-                linkStatus.descriptionParams?.let { descParams ->
-                    linkDescription.text =
-                        getString(
-                            linkStatus.descriptionText,
-                            descParams[0],
-                            descParams[1]
-                        )
+                    linkDescription.text = resources.getQuantityString(
+                        linkStatus.descriptionText,
+                        linkStatus.pluralSize,
+                        descParams[0],
+                        descParams[1]
+                    )
                 }
             }
         }

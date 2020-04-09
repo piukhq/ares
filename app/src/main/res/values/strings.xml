@@ -146,7 +146,10 @@
 
     <!-- 2.1 -->
     <string name="link_status_linked">Linked</string>
-    <string name="description_linked">To %1$d of %2$d cards</string>
+    <plurals name="description_linked">
+        <item quantity="one">To %1$d of %2$d card</item>
+        <item quantity="other">To %1$d of %2$d cards</item>
+    </plurals>
     <!-- 2.2 -->
     <string name="link_status_linkable_no_cards">Link</string>
     <string name="description_no_cards">To payment cards</string>
