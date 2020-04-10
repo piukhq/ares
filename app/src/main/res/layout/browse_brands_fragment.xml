@@ -22,43 +22,55 @@
                 style="@style/TitleTextView"
                 android:layout_gravity="center"
                 android:text="@string/browse_brands" />
+
         </Toolbar>
 
         <EditText
             android:id="@+id/search_bar"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/search_bar_height"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
-            android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_corners_edit_text"
-            android:cursorVisible="false"
             android:drawableStart="@drawable/ic_search_inactive"
-            android:drawablePadding="@dimen/margin_padding_size_large"
+            android:drawablePadding="@dimen/margin_padding_size_small"
             android:hint="@string/search"
             android:inputType="text"
             android:paddingStart="@dimen/margin_padding_size_small"
             android:paddingEnd="@dimen/margin_padding_size_small"
-            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/brands_recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_goneMarginBottom="8dp"
             tools:ignore="Autofill,LabelFor" />
 
-        <TextView
-            android:id="@+id/menu_title"
-            style="@style/MenuTextAppearance"
-            android:layout_marginTop="@dimen/title_margin"
-            android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:layout_marginBottom="@dimen/margin_padding_size_small"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="@string/filter"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/search_bar"
-            app:layout_constraintEnd_toEndOf="@+id/toolbar"
-            app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        <ImageButton
+            android:id="@+id/calc_clear_txt_Prise"
+            style="?actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_search"
+            app:layout_constraintBottom_toBottomOf="@id/search_bar"
+            app:layout_constraintEnd_toEndOf="@id/search_bar"
+            app:layout_constraintTop_toTopOf="@id/search_bar"
+            tools:ignore="ContentDescription" />
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/menu_title"-->
+        <!--            style="@style/MenuTextAppearance"-->
+        <!--            android:layout_marginTop="@dimen/title_margin"-->
+        <!--            android:layout_marginEnd="@dimen/margin_padding_size_medium"-->
+        <!--            android:layout_marginBottom="@dimen/margin_padding_size_small"-->
+        <!--            android:background="?android:attr/selectableItemBackgroundBorderless"-->
+        <!--            android:clickable="true"-->
+        <!--            android:focusable="true"-->
+        <!--            android:text="@string/filter"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintEnd_toEndOf="@id/toolbar"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/toolbar" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/brands_recycler_view"
@@ -68,7 +80,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_bar"
+            app:layout_constraintTop_toBottomOf="@id/search_bar"
             tools:itemCount="3"
             tools:listitem="@layout/item_brand" />
 
