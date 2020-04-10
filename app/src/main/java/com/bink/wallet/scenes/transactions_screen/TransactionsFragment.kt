@@ -54,9 +54,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
         }
 
         viewModel.membershipCard.observeForever { membershipCard ->
-            //TODO: Use proper membershipCard values to check instead of current mock false == true
-            //membershipCard.plan?.feature_set?.transactions_available
-            if (false == true) {
+            if (membershipCard.plan?.feature_set?.transactions_available == true) {
                 membershipCard.membership_transactions?.let { transactions ->
                     if (transactions.isEmpty()) {
                         binding.pointsDescription.text = getString(R.string.no_transactions_text)
