@@ -69,7 +69,9 @@ class LoyaltyCardDetailsFragment :
         binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            if(checkIfCurrentFragment()) {
+                findNavController().navigateIfAdded(this, R.id.global_to_home)
+            }
         }
 
         fetchData()
@@ -239,9 +241,11 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 directions?.let {
-                    findNavController().navigateIfAdded(
-                        this@LoyaltyCardDetailsFragment, it
-                    )
+                    if(checkIfCurrentFragment()) {
+                        findNavController().navigateIfAdded(
+                            this@LoyaltyCardDetailsFragment, it
+                        )
+                    }
                 }
             }
         }
@@ -274,7 +278,9 @@ class LoyaltyCardDetailsFragment :
         ) {}
 
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            if(checkIfCurrentFragment()) {
+                findNavController().navigateIfAdded(this, R.id.global_to_home)
+            }
         }
 
         viewModel.refreshError.observeErrorNonNull(
@@ -304,26 +310,30 @@ class LoyaltyCardDetailsFragment :
             description = plan_description
         }
 
-        findNavController().navigateIfAdded(
-            this,
-            LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                GenericModalParameters(
-                    R.drawable.ic_close,
-                    true,
-                    aboutText,
-                    description
+        if(checkIfCurrentFragment()) {
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                    GenericModalParameters(
+                        R.drawable.ic_close,
+                        true,
+                        aboutText,
+                        description
+                    )
                 )
             )
-        )
+        }
     }
 
     private fun viewVoucherDetails(voucher: Voucher) {
         viewModel.membershipPlan.value?.let { membershipPlan ->
-            findNavController().navigate(
-                LoyaltyCardDetailsFragmentDirections.detailToVoucher(
-                    membershipPlan, voucher
+            if(checkIfCurrentFragment()) {
+                findNavController().navigate(
+                    LoyaltyCardDetailsFragmentDirections.detailToVoucher(
+                        membershipPlan, voucher
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -387,17 +397,19 @@ class LoyaltyCardDetailsFragment :
                 description = plan_description
             }
 
-            findNavController().navigateIfAdded(
-                this,
-                LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        aboutText,
-                        description
+            if(checkIfCurrentFragment()) {
+                findNavController().navigateIfAdded(
+                    this,
+                    LoyaltyCardDetailsFragmentDirections.detailToAbout(
+                        GenericModalParameters(
+                            R.drawable.ic_close,
+                            true,
+                            aboutText,
+                            description
+                        )
                     )
                 )
-            )
+            }
         }
 
         binding.footerSecurity.setOnClickListener {
@@ -411,7 +423,9 @@ class LoyaltyCardDetailsFragment :
                         description2 = getString(R.string.security_and_privacy_copy_2)
                     )
                 )
-            findNavController().navigateIfAdded(this, action)
+            if(checkIfCurrentFragment()) {
+                findNavController().navigateIfAdded(this, action)
+            }
         }
 
         binding.footerDelete.setOnClickListener {
@@ -560,10 +574,9 @@ class LoyaltyCardDetailsFragment :
                                 )
                             }
                         directions?.let { _ ->
-                            findNavController().navigateIfAdded(
-                                this,
-                                directions
-                            )
+                            if(checkIfCurrentFragment()) {
+                                findNavController().navigateIfAdded(this, directions)
+                            }
                         }
                     }
                 }
@@ -576,7 +589,9 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                     directions?.let {
-                        findNavController().navigateIfAdded(this, it)
+                        if(checkIfCurrentFragment()) {
+                            findNavController().navigateIfAdded(this, it)
+                        }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
@@ -590,10 +605,9 @@ class LoyaltyCardDetailsFragment :
 
                         }
                     directions?.let { _ ->
-                        findNavController().navigateIfAdded(
-                            this,
-                            directions
-                        )
+                        if(checkIfCurrentFragment()) {
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
@@ -606,7 +620,9 @@ class LoyaltyCardDetailsFragment :
                                 getString(R.string.description_2_4)
                             )
                         )
-                    findNavController().navigateIfAdded(this, directions)
+                    if(checkIfCurrentFragment()) {
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
@@ -626,7 +642,9 @@ class LoyaltyCardDetailsFragment :
                                 getString(R.string.description_2_8_2)
                             )
                         )
-                    findNavController().navigateIfAdded(this, directions)
+                    if(checkIfCurrentFragment()) {
+                        findNavController().navigateIfAdded(this, directions)
+                    }
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
@@ -639,7 +657,9 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            if(checkIfCurrentFragment()) {
+                                findNavController().navigateIfAdded(this, directions)
+                            }
                         }
                     }
                 }
@@ -667,7 +687,9 @@ class LoyaltyCardDetailsFragment :
                                 isRetryJourney = true,
                                 isFromNoReasonCodes = true
                             )
-                        findNavController().navigateIfAdded(this, directions)
+                        if(checkIfCurrentFragment()) {
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 else -> {
@@ -683,11 +705,13 @@ class LoyaltyCardDetailsFragment :
             ) {
                 binding.cardHeader.setOnClickListener {
                     viewModel.membershipPlan.value?.let { plan ->
-                        findNavController().navigate(
-                            LoyaltyCardDetailsFragmentDirections.detailToBarcode(
-                                plan, membershipCard
+                        if(checkIfCurrentFragment()) {
+                            findNavController().navigate(
+                                LoyaltyCardDetailsFragmentDirections.detailToBarcode(
+                                    plan, membershipCard
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -704,7 +728,9 @@ class LoyaltyCardDetailsFragment :
                     getString(R.string.description_lcd_pending)
                 )
             )
-        findNavController().navigateIfAdded(this, directions)
+        if(checkIfCurrentFragment()) {
+            findNavController().navigateIfAdded(this, directions)
+        }
     }
 
     private fun setPointsModuleClickListener() {
@@ -723,7 +749,9 @@ class LoyaltyCardDetailsFragment :
                                     viewModel.membershipCard.value!!,
                                     viewModel.membershipPlan.value!!
                                 )
-                            findNavController().navigateIfAdded(this, action)
+                            if(checkIfCurrentFragment()) {
+                                findNavController().navigateIfAdded(this, action)
+                            }
                         }
                     }
                 }
@@ -743,7 +771,9 @@ class LoyaltyCardDetailsFragment :
                                 params
                             )
                         }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                    action.let {   if(checkIfCurrentFragment()) {
+                        findNavController().navigateIfAdded(this, action)
+                    }}
                 }
                 LoginStatus.STATUS_PENDING -> {
                     pendingCardStatusModal()
@@ -766,7 +796,11 @@ class LoyaltyCardDetailsFragment :
                                     params
                                 )
                             }
-                        action.let { findNavController().navigateIfAdded(this, action) }
+                        action.let {
+                            if(checkIfCurrentFragment()) {
+                                findNavController().navigateIfAdded(this, action)
+                            }
+                        }
                     }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
@@ -781,7 +815,9 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            if(checkIfCurrentFragment()) {
+                                findNavController().navigateIfAdded(this, directions)
+                            }
                         }
                     }
                 }
@@ -795,7 +831,9 @@ class LoyaltyCardDetailsFragment :
                                 isRetryJourney = true,
                                 isFromNoReasonCodes = true
                             )
-                        findNavController().navigateIfAdded(this, directions)
+                        if(checkIfCurrentFragment()) {
+                            findNavController().navigateIfAdded(this, directions)
+                        }
                     }
                 }
                 LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD -> {
@@ -808,7 +846,9 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            if(checkIfCurrentFragment()) {
+                                findNavController().navigateIfAdded(this, directions)
+                            }
                         }
                     }
                 }
@@ -844,4 +884,6 @@ class LoyaltyCardDetailsFragment :
             }
         }
     }
+
+    private fun checkIfCurrentFragment() = findNavController().currentDestination?.id == R.id.loyalty_card_detail_fragment
 }
