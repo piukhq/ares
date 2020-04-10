@@ -158,18 +158,20 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     fun setFooterFadeEffect(
         footerViews: List<View>,
         recyclerView: RecyclerView,
-        gradientView: View
+        gradientView: View,
+        needsFooterPadding: Boolean
     ) {
         // The padding of the list must equate to the size of the CTA (incl. any margins).
         footerListener = ViewTreeObserver.OnGlobalLayoutListener {
-            handleFooterFadeEffect(footerViews, recyclerView, gradientView)
+            handleFooterFadeEffect(footerViews, recyclerView, gradientView, needsFooterPadding)
         }
     }
 
     fun handleFooterFadeEffect(
         footerViews: List<View>,
         recyclerView: RecyclerView,
-        gradientView: View
+        gradientView: View,
+        needsFooterPadding: Boolean
     ) {
         var footerMargin = 0
         var footerHeight = 0
@@ -183,16 +185,20 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         val recyclerParams = recyclerView.layoutParams as ConstraintLayout.LayoutParams
         val listMargin = 3 * recyclerParams.bottomMargin
 
-        val totalRecyclerBottomPadding =
+        var totalRecyclerBottomPadding =
             (footerMargin + footerHeight + listMargin)
+
+        val fadingViewHeight = totalRecyclerBottomPadding * 2
+
+        if(needsFooterPadding) {
+            totalRecyclerBottomPadding = fadingViewHeight
+        }
         recyclerView.setPadding(
             0,
             0,
             0,
             totalRecyclerBottomPadding
         )
-
-        val fadingViewHeight = totalRecyclerBottomPadding * 2
         val viewParams = gradientView.layoutParams
         viewParams.height = fadingViewHeight
         gradientView.layoutParams = viewParams

@@ -101,14 +101,14 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             }.map { addAuthItem ->
                 if (addAuthItem.fieldsRequest.column == planDocument.column) {
                     (addAuthItem.fieldType as PlanDocument).checkbox?.let { bool ->
-                        required = !bool
+                        required = bool
+                    }
+                    if (required &&
+                        planDocument.value != true.toString()
+                    ) {
+                        return false
                     }
                 }
-            }
-            if (required &&
-                planDocument.value != true.toString()
-            ) {
-                return false
             }
         }
         return true

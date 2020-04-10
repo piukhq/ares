@@ -39,7 +39,6 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         )
         if (isRetryJourney) {
             updateMembershipCard(membershipCardId, currentRequest)
-
         } else {
             createMembershipCard(
                 currentRequest

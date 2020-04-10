@@ -58,7 +58,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         animationHelper = AuthAnimationHelper(this, binding)
 
         setKeyboardTypeToAdjustResize()
-        //setRecyclerViewBottomPadding()
 
         binding.viewModel = viewModel
         binding.membershipPlan = args.membershipPlan
@@ -172,6 +171,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     override fun onPause() {
         animationHelper?.disableGlobalListeners()
+        binding.loadingIndicator.visibility = View.GONE
         super.onPause()
     }
 
@@ -199,11 +199,4 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
     }
-
-//    private fun setRecyclerViewBottomPadding() {
-//        binding.authFields.setPadding(
-//            0, 0, 0,
-//            requireContext().toDipFromPixel(requireContext().toPixelFromDip(binding.footerSimple.root.height)).toInt()
-//        )
-//    }
 }

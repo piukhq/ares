@@ -174,10 +174,6 @@
                 app:argType="boolean" />
 
         <action
-                android:id="@+id/add_join_to_ghost"
-                app:destination="@id/ghostCardFragment" />
-
-        <action
                 android:id="@+id/add_join_to_join_unavailable"
                 app:destination="@+id/join_unavailable" />
 

@@ -149,7 +149,6 @@ class LoyaltyWalletRepository(
                     withContext(Dispatchers.IO) { membershipPlanDao.storeAll(plans) }
                     databaseUpdated?.value = true
                 } catch (e: Exception) {
-                    // TODO: Have error catching here in a mutable
                     loadPlansError.value = e
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }

@@ -12,7 +12,10 @@ class AuthAnimationHelper(
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
     lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
 
-    fun enableGlobalListeners(onEndTransition: () -> Unit = {}, onStartTransition: () -> Unit = {}) {
+    fun enableGlobalListeners(
+        onEndTransition: () -> Unit = {},
+        onStartTransition: () -> Unit = {}
+    ) {
         layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             fragment.handleKeyboardHiddenListener(binding.layout, onEndTransition)
             fragment.handleKeyboardVisibleListener(binding.layout, onStartTransition)
@@ -21,12 +24,14 @@ class AuthAnimationHelper(
             fragment.handleFooterFadeEffect(
                 mutableListOf(binding.footerSimple.addAuthCta),
                 binding.authFields,
-                binding.footerSimple.footerBottomGradient
+                binding.footerSimple.footerBottomGradient,
+                true
             )
             fragment.handleFooterFadeEffect(
                 mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
                 binding.authFields,
-                binding.footerComposed.footerBottomGradient
+                binding.footerComposed.footerBottomGradient,
+                true
             )
         }
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)

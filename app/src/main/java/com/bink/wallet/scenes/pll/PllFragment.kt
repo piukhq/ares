@@ -43,7 +43,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         setFooterFadeEffect(
             mutableListOf(binding.buttonDone),
             binding.paymentCards,
-            binding.bgPllBottomGradient
+            binding.bgPllBottomGradient,
+            false
         )
         registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)

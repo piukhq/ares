@@ -123,6 +123,7 @@ class AddCardFragment : BaseAddAuthFragment() {
     }
 
     private fun handleAuthCtaRequest() {
+        binding.loadingIndicator.visibility = View.VISIBLE
         membershipCardId?.let {
             currentMembershipPlan?.let { plan ->
                 viewModel.handleRequest(isRetryJourney, it, plan)

@@ -166,16 +166,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 )
             } else {
                 currentMembershipPlan?.let {
-                    //                    findNavController().navigate(
-//                        AddJoinFragmentDirections.addJoinToGhost(
-//                            SignUpFormType.ADD_AUTH,
-//                            it,
-//                            isRetryJourney,
-//                            membershipCardId,
-//                            isFromNoReasonCodes
-//                        )
-//                    )
-
                     findNavController().navigate(
                         AddJoinFragmentDirections.addJoinToAddCardFragment(
                             it,
@@ -236,13 +226,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             )
                         )
                     } else {
-//                        AddJoinFragmentDirections.addJoinToGhost(
-//                            SignUpFormType.ENROL,
-//                            membershipPlan,
-//                            isRetryJourney,
-//                            membershipCardId,
-//                            isFromNoReasonCodes
-//                        )
                         AddJoinFragmentDirections.addJoinToGetNewCardFragment(
                             membershipPlan,
                             membershipCardId.toString(),
