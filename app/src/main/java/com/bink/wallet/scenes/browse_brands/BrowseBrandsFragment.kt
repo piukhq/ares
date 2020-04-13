@@ -1,11 +1,12 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
-import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
@@ -14,7 +15,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
-class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFragmentBinding>() {
+class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBinding>() {
 
     private val args by navArgs<BrowseBrandsFragmentArgs>()
     override val layoutRes = R.layout.browse_brands_fragment
@@ -57,11 +58,25 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         setupBrandsAdapter(
             args.membershipCards.toList().getOwnedMembershipCardsIds(),
             args.membershipPlans.toList()
         )
+
+        binding.buttonClearSearch.setOnClickListener {
+            binding.inputSearch.setText("")
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+
+//        viewModel.searchText.observe(viewLifecycleOwner, Observer {
+//            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+//        })
     }
 
     private fun setupBrandsAdapter(

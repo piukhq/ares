@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:minHeight="@dimen/list_item_height">
+        android:minHeight="@dimen/browse_brands_list_item_height">
 
         <ImageView
             android:id="@+id/brand_logo"

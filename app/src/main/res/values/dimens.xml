@@ -46,10 +46,11 @@
     <dimen name="title_margin">8dp</dimen>
 
     <!-- Browse Brands Screen -->
-    <dimen name="list_margin">64dp</dimen>
-    <dimen name="search_bar_height">42dp</dimen>
-    <dimen name="list_item_height">88dp</dimen>
-    <dimen name="in_wallet_icon_padding">8dp</dimen>
+    <dimen name="browse_brands_search_bar_height">42dp</dimen>
+    <dimen name="browse_brands_list_item_height">88dp</dimen>
+    <dimen name="browse_brands_in_wallet_icon_padding">8dp</dimen>
+    <dimen name="browse_brands_search_input_padding_end">42dp</dimen>
+    <dimen name="browse_brands_search_bar_elevation">4dp</dimen>
 
     <!-- Add Screen -->
     <dimen name="add_card_margin">20dp</dimen>
@@ -137,6 +138,7 @@
     <dimen name="continue_button_margin">52dp</dimen>
     <dimen name="login_button_margin_bottom">64dp</dimen>
     <dimen name="login_button_width">260dp</dimen>
+    <dimen name="list_margin">64dp</dimen>
 
     <!-- PLR -->
     <dimen name="voucher_padding_top">12dp</dimen>
