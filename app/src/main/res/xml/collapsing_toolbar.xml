@@ -5,12 +5,10 @@
     <Transition
             android:id="@+id/transition"
             app:constraintSetEnd="@id/collapsed"
-            app:constraintSetStart="@id/expanded"
-            app:duration="300">
+            app:constraintSetStart="@id/expanded">
 
         <OnSwipe
                 app:dragDirection="dragUp"
-                app:onTouchUp="stop"
                 app:touchAnchorId="@id/auth_fields"
                 app:touchAnchorSide="top" />
 

@@ -24,9 +24,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
         currentMembershipPlan = ghostCardArgs.membershipPlan
 
         setViewsContent()
-        currentMembershipPlan?.let {
-            viewModel.addItems(it)
-        }
+
         binding.footerSimple.addAuthCta.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()

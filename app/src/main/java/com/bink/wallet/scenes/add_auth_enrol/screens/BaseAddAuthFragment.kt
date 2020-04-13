@@ -1,11 +1,14 @@
 package com.bink.wallet.scenes.add_auth_enrol.screens
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
@@ -24,8 +27,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import androidx.recyclerview.widget.RecyclerView
-import android.graphics.Rect
 
 
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
@@ -82,6 +83,37 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler(it)
         }
 
+        binding.layout.setTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionTrigger(
+                p0: MotionLayout?,
+                p1: Int,
+                p2: Boolean,
+                p3: Float
+            ) {
+
+            }
+
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+                if (binding.layout.endState == R.id.collapsed && !viewModel.isKeyboardHidden.get()) {
+                    binding.footerComposed.root.visibility = View.GONE
+                    binding.footerSimple.root.visibility = View.GONE
+                }
+            }
+
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
+
+            }
+
+            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
+                if (binding.layout.currentState == R.id.collapsed &&
+                    !viewModel.isKeyboardHidden.get()
+                ) {
+                    binding.layout.loadLayoutDescription(R.xml.keyboard_toolbar)
+                }
+            }
+
+        })
+
         viewModel.createCardError.observeNonNull(this) { exception ->
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
@@ -127,7 +159,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun populateRecycler(addRegisterFieldsRequest: Account) {
         binding.authFields.apply {
-            layoutManager = object: GridLayoutManager(requireContext(), 1) {
+            layoutManager = object : GridLayoutManager(requireContext(), 1) {
                 override fun requestChildRectangleOnScreen(
                     parent: RecyclerView,
                     child: View,
@@ -136,7 +168,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 ): Boolean {
                     return false
                 }
-        }
+            }
             adapter = AddAuthAdapter(
                 viewModel.addAuthItemsList,
                 checkValidation = {
@@ -194,9 +226,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
-        binding.layout.loadLayoutDescription(R.xml.keyboard_toolbar)
+        binding.layout.transitionToState(R.id.collapsed)
         binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(animationHelper?.footerLayoutListener)
-
     }
 
     private fun endTransition() {

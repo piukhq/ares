@@ -25,9 +25,6 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
         setViewsContent()
 
-        currentMembershipPlan?.let {
-            viewModel.addItems(it)
-        }
         viewModel.newMembershipCard.observeNonNull(this) {
             handleNavigationAfterCardCreation(it, false)
         }

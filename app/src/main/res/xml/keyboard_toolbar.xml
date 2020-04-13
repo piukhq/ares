@@ -30,16 +30,16 @@
     </Transition>
 
     <ConstraintSet android:id="@+id/collapsed">
-        <Constraint android:id="@id/footer_composed">
-            <PropertySet
-                    app:applyMotionScene="false"
-                    app:visibilityMode="ignore" />
+        <Constraint
+                android:id="@id/footer_composed"
+                android:visibility="visible">
+
         </Constraint>
 
-        <Constraint android:id="@id/footer_simple">
-            <PropertySet
-                    app:applyMotionScene="false"
-                    app:visibilityMode="ignore" />
+        <Constraint
+                android:id="@id/footer_simple"
+                android:visibility="visible">
+
         </Constraint>
 
         <Constraint android:id="@id/footer_bottom_gradient">
