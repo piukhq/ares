@@ -24,6 +24,9 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
+import androidx.recyclerview.widget.RecyclerView
+import android.graphics.Rect
+
 
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
 
@@ -119,12 +122,22 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     override fun onResume() {
         super.onResume()
+//        binding.layout.loadLayoutDescription(R.xml.keyboard_toolbar)
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)
     }
 
     private fun populateRecycler(addRegisterFieldsRequest: Account) {
         binding.authFields.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
+            layoutManager = object: GridLayoutManager(requireContext(), 1) {
+                override fun requestChildRectangleOnScreen(
+                    parent: RecyclerView,
+                    child: View,
+                    rect: Rect,
+                    immediate: Boolean
+                ): Boolean {
+                    return false
+                }
+        }
             adapter = AddAuthAdapter(
                 viewModel.addAuthItemsList,
                 checkValidation = {
@@ -172,6 +185,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     override fun onPause() {
         animationHelper?.disableGlobalListeners()
         binding.loadingIndicator.visibility = View.GONE
+        viewModel.addAuthItemsList.clear()
         super.onPause()
     }
 
