@@ -22,7 +22,7 @@ class SpinnerViewHolder(
             position: Int,
             id: Long
         ) {
-            addAuthItems[adapterPosition].fieldsRequest.value =
+            addAuthItems[adapterPosition].fieldsRequest?.value =
                 (addAuthItems[adapterPosition].fieldType as PlanField).choice?.get(position)
         }
 
@@ -32,7 +32,7 @@ class SpinnerViewHolder(
         val spinner = binding.contentAddAuthSpinner
         val planField = item.fieldType as PlanField
         binding.planField = planField
-        addAuthItems[adapterPosition].fieldsRequest.value = planField.choice?.get(0)
+        addAuthItems[adapterPosition].fieldsRequest?.value = planField.choice?.get(0)
         with(spinner) {
             isFocusable = false
             onItemSelectedListener = itemSelectedListener

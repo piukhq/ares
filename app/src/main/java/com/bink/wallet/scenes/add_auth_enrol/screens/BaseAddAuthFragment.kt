@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -76,43 +75,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             handleToolbarAction()
             findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome())
         }
-        binding.addJoinReward.setOnClickListener {
-            navigationHandler?.navigateToBrandHeader()
-        }
+
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
             populateRecycler(it)
         }
-
-        binding.layout.setTransitionListener(object : MotionLayout.TransitionListener {
-            override fun onTransitionTrigger(
-                p0: MotionLayout?,
-                p1: Int,
-                p2: Boolean,
-                p3: Float
-            ) {
-
-            }
-
-            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-                if (binding.layout.endState == R.id.collapsed && !viewModel.isKeyboardHidden.get()) {
-                    binding.footerComposed.root.visibility = View.GONE
-                    binding.footerSimple.root.visibility = View.GONE
-                }
-            }
-
-            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
-
-            }
-
-            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
-                if (binding.layout.currentState == R.id.collapsed &&
-                    !viewModel.isKeyboardHidden.get()
-                ) {
-                    binding.layout.loadLayoutDescription(R.xml.keyboard_toolbar)
-                }
-            }
-
-        })
 
         viewModel.createCardError.observeNonNull(this) { exception ->
             when (ExceptionHandlingUtils.onHttpException(exception)) {
@@ -171,6 +137,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             }
             adapter = AddAuthAdapter(
                 viewModel.addAuthItemsList,
+                currentMembershipPlan,
+                viewModel.titleText.get(),
+                viewModel.descriptionText.get(),
                 checkValidation = {
                     if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
                         viewModel.haveValidationsPassed.set(false)
@@ -181,8 +150,19 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                         return@AddAuthAdapter
                     }
                     viewModel.haveValidationsPassed.set(true)
+                },
+                navigateToHeader = {
+                    navigationHandler?.navigateToBrandHeader()
                 }
             )
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                        recyclerView.clearFocus()
+                    }
+                }
+            })
         }
     }
 
@@ -226,14 +206,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
-        binding.layout.transitionToState(R.id.collapsed)
-        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(animationHelper?.footerLayoutListener)
     }
 
     private fun endTransition() {
         viewModel.isKeyboardHidden.set(true)
-        binding.layout.loadLayoutDescription(R.xml.collapsing_toolbar)
-        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(animationHelper?.footerLayoutListener)
     }
 
     private fun setKeyboardTypeToAdjustResize() {

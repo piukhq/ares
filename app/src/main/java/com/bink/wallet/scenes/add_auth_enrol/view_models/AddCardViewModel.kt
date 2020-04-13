@@ -10,17 +10,18 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
     AddAuthViewModel(loyaltyWalletRepository) {
 
     override fun addItems(membershipPlan: MembershipPlan) {
+        super.addItems(membershipPlan)
         membershipPlan.let {
             it.account?.let { account ->
-                account.add_fields?.map { planField ->
+                account.add_fields?.forEach { planField ->
                     planField.typeOfField = TypeOfField.ADD
                     addPlanField(planField)
                 }
-                account.authorise_fields?.map { planField ->
+                account.authorise_fields?.forEach { planField ->
                     planField.typeOfField = TypeOfField.AUTH
                     addPlanField(planField)
                 }
-                account.plan_documents?.map { planDocument ->
+                account.plan_documents?.forEach { planDocument ->
                     planDocument.display?.let { display ->
                         if (display.contains(SignUpFormType.ADD_AUTH.type)) {
                             addPlanDocument(planDocument)
@@ -32,7 +33,11 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         mapItems()
     }
 
-    fun handleRequest(isRetryJourney: Boolean, membershipCardId: String, membershipPlan: MembershipPlan) {
+    fun handleRequest(
+        isRetryJourney: Boolean,
+        membershipCardId: String,
+        membershipPlan: MembershipPlan
+    ) {
         val currentRequest = MembershipCardRequest(
             addRegisterFieldsRequest.value,
             membershipPlan.id

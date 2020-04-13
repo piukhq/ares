@@ -40,7 +40,7 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            addAuthItems[adapterPosition].fieldsRequest.value = currentText.toString()
+            addAuthItems[adapterPosition].fieldsRequest?.value = currentText.toString()
             checkValidation()
         }
     }
@@ -52,7 +52,7 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            addAuthItems[adapterPosition].fieldsRequest.value =
+            addAuthItems[adapterPosition].fieldsRequest?.value =
                 currentText.toString().toLowerCase(Locale.ROOT)
             checkValidation()
         }
@@ -67,9 +67,9 @@ class TextFieldViewHolder(
         with(binding.contentAddAuthText) {
             hint = planField.description
 
-            setText(planRequest.value)
+            setText(planRequest?.value)
 
-            planRequest.disabled?.let {
+            planRequest?.disabled?.let {
                 if (it) {
                     isEnabled = false
                 }
@@ -92,14 +92,14 @@ class TextFieldViewHolder(
             } else {
                 addTextChangedListener(textWatcher)
             }
-            if (planRequest.value.isNullOrBlank()) {
+            if (planRequest?.value.isNullOrBlank()) {
                 error = null
             } else {
                 checkIfFieldIsValid()
             }
 
             imeOptions =
-                if (planRequest.column == finalTextField) {
+                if (planRequest?.column == finalTextField) {
                     EditorInfo.IME_ACTION_DONE
                 } else {
                     EditorInfo.IME_ACTION_NEXT

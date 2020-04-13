@@ -25,7 +25,7 @@ abstract class BaseAddAuthViewHolder<T>(
         val currentItem = addAuthItems[position]
         if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
             val currentPlanField = currentItem.fieldType as PlanField
-            val requestValue = currentItem.fieldsRequest.value
+            val requestValue = currentItem.fieldsRequest?.value
             if (!UtilFunctions.isValidField(
                     currentPlanField.validation,
                     requestValue

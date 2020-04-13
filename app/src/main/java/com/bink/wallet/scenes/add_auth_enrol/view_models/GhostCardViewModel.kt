@@ -9,6 +9,7 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
     AddAuthViewModel(loyaltyWalletRepository) {
 
     override fun addItems(membershipPlan: MembershipPlan) {
+        super.addItems(membershipPlan)
         membershipPlan.account?.add_fields?.map {
             it.typeOfField = com.bink.wallet.utils.enums.TypeOfField.ADD
             addPlanField(it)

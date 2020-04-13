@@ -6,5 +6,6 @@ enum class FieldType(val type: Int) {
     SPINNER(2),
     BOOLEAN_OPTIONAL(3),
     BOOLEAN_REQUIRED(4),
-    DISPLAY(5)
+    DISPLAY(5),
+    HEADER( 6)
 }

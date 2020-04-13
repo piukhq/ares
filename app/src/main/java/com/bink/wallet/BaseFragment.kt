@@ -188,10 +188,10 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         var totalRecyclerBottomPadding =
             (footerMargin + footerHeight + listMargin)
 
-        val fadingViewHeight = totalRecyclerBottomPadding * 2
+        val fadingViewHeight = totalRecyclerBottomPadding * 1.49
 
         if(needsFooterPadding) {
-            totalRecyclerBottomPadding = fadingViewHeight
+            totalRecyclerBottomPadding = fadingViewHeight.toInt()
         }
         recyclerView.setPadding(
             0,
@@ -200,7 +200,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             totalRecyclerBottomPadding
         )
         val viewParams = gradientView.layoutParams
-        viewParams.height = fadingViewHeight
+        viewParams.height = fadingViewHeight.toInt()
         gradientView.layoutParams = viewParams
     }
 }

@@ -58,20 +58,30 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         )
     }
 
-    open fun addItems(membershipPlan: MembershipPlan) {}
+    private fun addHeader() {
+        addAuthItemsList.add(AddAuthItemWrapper(FieldType.HEADER))
+    }
+
+    open fun addItems(membershipPlan: MembershipPlan) {
+        addHeader()
+    }
 
     fun mapItems() {
         val addRegisterFieldsRequest = Account()
         addAuthItemsList.forEach { addAuthItem ->
-            if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-                when ((addAuthItem.fieldType as PlanField).typeOfField) {
-                    TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(addAuthItem.fieldsRequest)
-                    TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(addAuthItem.fieldsRequest)
-                    TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(addAuthItem.fieldsRequest)
-                    else -> addRegisterFieldsRequest.registration_fields?.add(addAuthItem.fieldsRequest)
+            addAuthItem.fieldsRequest?.let {
+                if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+                    when ((addAuthItem.fieldType as PlanField).typeOfField) {
+                        TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(addAuthItem.fieldsRequest)
+                        TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(
+                            addAuthItem.fieldsRequest
+                        )
+                        TypeOfField.ENROL -> addRegisterFieldsRequest.enrol_fields?.add(addAuthItem.fieldsRequest)
+                        else -> addRegisterFieldsRequest.registration_fields?.add(addAuthItem.fieldsRequest)
+                    }
+                } else {
+                    addRegisterFieldsRequest.plan_documents?.add(addAuthItem.fieldsRequest)
                 }
-            } else {
-                addRegisterFieldsRequest.plan_documents?.add(addAuthItem.fieldsRequest)
             }
         }
         arrangeAuthItems()
@@ -88,7 +98,10 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             addAuthItemsList.filter { item ->
                 item.getFieldType() == AddAuthItemType.PLAN_FIELD && !(item.fieldType as PlanField).isBooleanType()
             }
+        val header =
+            addAuthItemsList.filter { item -> item.getFieldType() == AddAuthItemType.HEADER }
         addAuthItemsList.clear()
+        addAuthItemsList.add(header[0])
         planFields.forEach { item -> addAuthItemsList.add(item) }
         planDocuments.forEach { item -> addAuthItemsList.add(item) }
     }
@@ -99,7 +112,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             addAuthItemsList.filter { addAuthItem ->
                 addAuthItem.getFieldType() == AddAuthItemType.PLAN_DOCUMENT
             }.map { addAuthItem ->
-                if (addAuthItem.fieldsRequest.column == planDocument.column) {
+                if (addAuthItem.fieldsRequest?.column == planDocument.column) {
                     (addAuthItem.fieldType as PlanDocument).checkbox?.let { bool ->
                         required = bool
                     }
@@ -119,11 +132,11 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             .map { addAuthItem ->
                 val item = addAuthItem.fieldType as PlanField
                 if (item.type != FieldType.BOOLEAN_OPTIONAL.type) {
-                    if (addAuthItem.fieldsRequest.value.isNullOrEmpty()) {
+                    if (addAuthItem.fieldsRequest?.value.isNullOrEmpty()) {
                         return false
                     } else if (!UtilFunctions.isValidField(
                             item.validation,
-                            addAuthItem.fieldsRequest.value
+                            addAuthItem.fieldsRequest?.value
                         )
                     ) {
 

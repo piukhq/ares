@@ -14,12 +14,12 @@ class CheckboxViewHolder(
 
     override fun bind(item: AddAuthItemWrapper) {
         with(binding) {
-            item.fieldsRequest.apply {
-                contentAddAuthCheckbox.isChecked = if (value == true.toString()) {
+            item.fieldsRequest?.let {
+                contentAddAuthCheckbox.isChecked = if (it.value == true.toString()) {
                     true
                 } else {
-                    if (value.isNullOrBlank()) {
-                        value = false.toString()
+                    if (it.value.isNullOrBlank()) {
+                        it.value = false.toString()
                     }
                     false
                 }
@@ -41,7 +41,7 @@ class CheckboxViewHolder(
     }
 
     private fun handleCheckBoxChange(isChecked: Boolean) {
-        addAuthItems[adapterPosition].fieldsRequest.value = isChecked.toString()
+        addAuthItems[adapterPosition].fieldsRequest?.value = isChecked.toString()
         checkValidation()
     }
 

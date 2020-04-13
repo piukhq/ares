@@ -10,6 +10,7 @@ class GetNewCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
     AddAuthViewModel(loyaltyWalletRepository) {
 
     override fun addItems(membershipPlan: MembershipPlan) {
+        super.addItems(membershipPlan)
         membershipPlan.account?.enrol_fields?.map {
             it.typeOfField = TypeOfField.ENROL
             addPlanField(it)
