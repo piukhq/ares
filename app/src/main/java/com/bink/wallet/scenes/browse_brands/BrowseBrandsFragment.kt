@@ -12,6 +12,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
+import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
@@ -72,12 +73,8 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 searchQuery
             ).sortedByCardTypeAndCompany()
             adapter.setSearchResultList(formatBrandItemsList(filteredBrands))
-            binding.brandsRecyclerView.scrollToPosition(0)
-            binding.labelNoMatch.visibility = if (filteredBrands.isNullOrEmpty()) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+//            binding.brandsRecyclerView.setVisible(!filteredBrands.isNullOrEmpty())
+            binding.labelNoMatch.setVisible(filteredBrands.isNullOrEmpty())
         })
     }
 
@@ -103,17 +100,26 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
     private fun formatBrandItemsList(membershipPlans: List<MembershipPlan>): List<BrowseBrandsListItem> {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
         var hasAllSubtitle = false
+
         if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
             browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.pll_title)))
         }
-        membershipPlans.forEach {
-            if (!it.isPlanPLL() && !hasAllSubtitle) {
+        membershipPlans.forEachIndexed { index, membershipPlan ->
+            val isLast = index == membershipPlans.size - 1
+            var isBeforeSectionTitle = false
+
+            if (!membershipPlan.isPlanPLL() && !hasAllSubtitle) {
                 browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.all_text)))
                 hasAllSubtitle = true
             }
+            if (!isLast && !membershipPlans[index + 1].isPlanPLL() && !hasAllSubtitle) {
+                isBeforeSectionTitle = true
+            }
             browseBrandsItems.add(
                 BrowseBrandsListItem.BrandItem(
-                    it, it.id in membershipCardIds
+                    membershipPlan,
+                    membershipPlan.id in membershipCardIds,
+                    !isLast && !isBeforeSectionTitle
                 )
             )
         }

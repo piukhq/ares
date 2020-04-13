@@ -6,7 +6,8 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 sealed class BrowseBrandsListItem(val id: Int) {
     data class BrandItem(
         val membershipPlan: MembershipPlan,
-        val isPlanInLoyaltyWallet: Boolean = false
+        val isPlanInLoyaltyWallet: Boolean = false,
+        var hasSeparator: Boolean
     ) : BrowseBrandsListItem(R.layout.item_brand)
 
     data class SectionTitleItem(val sectionTitle: String) :

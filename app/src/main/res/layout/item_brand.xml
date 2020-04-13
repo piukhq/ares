@@ -8,6 +8,8 @@
         <variable
             name="item"
             type="com.bink.wallet.scenes.browse_brands.BrowseBrandsListItem.BrandItem" />
+
+        <import type="com.bink.wallet.utils.enums.CardType" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,8 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_triple_small"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
-            android:includeFontPadding="false"
             android:fontFamily="@font/nunito_sans_extrabold"
+            android:includeFontPadding="false"
             android:text="@{item.membershipPlan.account.company_name}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/size_sub_headline"
@@ -69,6 +71,7 @@
             android:maxLines="2"
             android:text="@string/brand_list_item_description"
             android:textSize="@dimen/size_body"
+            app:isVisible="@{item.membershipPlan.getCardType() == CardType.PLL}"
             app:layout_constraintBottom_toBottomOf="@id/brand_logo"
             app:layout_constraintEnd_toStartOf="@id/brands_arrow"
             app:layout_constraintHorizontal_bias="0"
@@ -97,6 +100,7 @@
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:background="@color/grey_10"
+            app:isVisible="@{item.hasSeparator}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
