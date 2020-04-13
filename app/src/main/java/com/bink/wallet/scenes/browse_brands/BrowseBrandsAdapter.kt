@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.browse_brands
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -10,8 +11,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 typealias OnBrandItemClickListener = (MembershipPlan) -> Unit
 
 class BrowseBrandsAdapter(
-    private var brands: List<BrowseBrandsListItem>,
-    private var splitPosition: Int
+    private var brands: List<BrowseBrandsListItem> = listOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var onBrandItemClickListener: OnBrandItemClickListener? = null
 
@@ -50,7 +50,8 @@ class BrowseBrandsAdapter(
             BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.BrandItem).let {
                 (holder as BrandsViewHolder).bind(
                     it,
-                    position == itemCount - 1 || position == splitPosition,
+                    position == itemCount - 1 ||
+                            brands[position + 1] is BrowseBrandsListItem.SectionTitleItem,
                     onBrandItemClickListener
                 )
             }
@@ -66,10 +67,12 @@ class BrowseBrandsAdapter(
         this.onBrandItemClickListener = onBrandItemClickListener
     }
 
-    fun setSearchResultList(brands: List<BrowseBrandsListItem>, splitPosition: Int = -1) {
-        this.splitPosition = splitPosition
-        this.brands = brands
-        this.notifyDataSetChanged()
+    fun setSearchResultList(newBrandsList: List<BrowseBrandsListItem>) {
+        val oldBrands = this.brands
+        this.brands = newBrandsList
+        DiffUtil.calculateDiff(
+            BrandItemsDiffUtil(newBrandsList, oldBrands), true
+        ).dispatchUpdatesTo(this)
     }
 
     companion object {

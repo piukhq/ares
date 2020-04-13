@@ -40,7 +40,7 @@ class MembershipPlan(
         }
     }
 
-    private fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
+    fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
 
     fun comparePlans(
         membershipPlan2: MembershipPlan

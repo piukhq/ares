@@ -12,7 +12,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
-import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
@@ -40,10 +39,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
 
-        adapter = BrowseBrandsAdapter(
-            listOf(),
-            0
-        ).apply {
+        adapter = BrowseBrandsAdapter().apply {
             setOnBrandItemClickListener { membershipPlan ->
                 findNavController().navigate(
                     BrowseBrandsFragmentDirections.browseToAddJoin(
@@ -57,13 +53,12 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         }
         binding.brandsRecyclerView.adapter = adapter
         membershipCardIds = args.membershipCards.toList().getOwnedMembershipCardsIds()
-        setupBrandsAdapter(
-            args.membershipPlans.toList(),
-            true
+        adapter.setSearchResultList(
+            formatBrandItemsList(args.membershipPlans.toList().sortedByCardTypeAndCompany())
         )
 
         binding.buttonClearSearch.setOnClickListener {
-            binding.inputSearch.setText("")
+            binding.inputSearch.setText(EMPTY_STRING)
         }
     }
 
@@ -72,56 +67,25 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         binding.lifecycleOwner = this
 
         viewModel.searchText.observe(viewLifecycleOwner, Observer { searchQuery ->
-            filterBrands(args.membershipPlans.toList(), searchQuery)
+            val filteredBrands = filterBrands(
+                args.membershipPlans.toList(),
+                searchQuery
+            ).sortedByCardTypeAndCompany()
+            adapter.setSearchResultList(formatBrandItemsList(filteredBrands))
+            binding.brandsRecyclerView.scrollToPosition(0)
+            binding.labelNoMatch.visibility = if (filteredBrands.isNullOrEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         })
     }
 
-    private fun setupBrandsAdapter(
+    private fun filterBrands(
         membershipPlans: List<MembershipPlan>,
-        hasSectionTitles: Boolean
-    ) {
-        val browseBrandsItemsList = mutableListOf<BrowseBrandsListItem>()
-        var splitPosition = 0
-        val sortedMembershipPlans = membershipPlans.getSortedMembershipPlans()
-
-        if (hasSectionTitles) {
-            browseBrandsItemsList.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.pll_title)))
-        }
-        browseBrandsItemsList.add(
-            BrowseBrandsListItem.BrandItem(
-                sortedMembershipPlans[0],
-                sortedMembershipPlans[0].id in membershipCardIds
-            )
-        )
-
-        for (position in 1 until sortedMembershipPlans.size) {
-            if (sortedMembershipPlans[position - 1].getCardType() == CardType.PLL &&
-                sortedMembershipPlans[position].getCardType() != CardType.PLL
-            ) {
-                if (hasSectionTitles) {
-                    browseBrandsItemsList.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.all_text)))
-                }
-                browseBrandsItemsList.add(
-                    BrowseBrandsListItem.BrandItem(
-                        sortedMembershipPlans[position],
-                        sortedMembershipPlans[position].id in membershipCardIds
-                    )
-                )
-                splitPosition = position
-            } else {
-                browseBrandsItemsList.add(
-                    BrowseBrandsListItem.BrandItem(
-                        sortedMembershipPlans[position],
-                        sortedMembershipPlans[position].id in membershipCardIds
-                    )
-                )
-            }
-        }
-        adapter.setSearchResultList(browseBrandsItemsList, splitPosition)
-    }
-
-    private fun filterBrands(membershipPlans: List<MembershipPlan>, searchQuery: String) {
-        if (searchQuery != EMPTY_STRING) {
+        searchQuery: String
+    ): List<MembershipPlan> {
+        return if (searchQuery != EMPTY_STRING) {
             val searchList = mutableListOf<MembershipPlan>()
             membershipPlans.forEach {
                 if (it.account?.company_name?.toLowerCase(Locale.ENGLISH)
@@ -130,23 +94,30 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                     searchList.add(it)
                 }
             }
-            if (!searchList.isNullOrEmpty()) {
-                binding.labelNoMatch.visibility = View.GONE
-                setupBrandsAdapter(
-                    searchList,
-                    false
-                )
-            } else {
-                binding.labelNoMatch.visibility = View.VISIBLE
-                adapter.setSearchResultList(listOf())
-            }
+            searchList
         } else {
-            binding.labelNoMatch.visibility = View.GONE
-            setupBrandsAdapter(
-                args.membershipPlans.toList(),
-                true
+            membershipPlans
+        }
+    }
+
+    private fun formatBrandItemsList(membershipPlans: List<MembershipPlan>): List<BrowseBrandsListItem> {
+        val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
+        var hasAllSubtitle = false
+        if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
+            browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.pll_title)))
+        }
+        membershipPlans.forEach {
+            if (!it.isPlanPLL() && !hasAllSubtitle) {
+                browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.all_text)))
+                hasAllSubtitle = true
+            }
+            browseBrandsItems.add(
+                BrowseBrandsListItem.BrandItem(
+                    it, it.id in membershipCardIds
+                )
             )
         }
+        return browseBrandsItems
     }
 
     companion object {
@@ -162,7 +133,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             return membershipCardsIds
         }
 
-        private fun List<MembershipPlan>.getSortedMembershipPlans(): List<MembershipPlan> =
+        private fun List<MembershipPlan>.sortedByCardTypeAndCompany(): List<MembershipPlan> =
             this.sortedWith(
                 Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
                     membershipPlan1.comparePlans(membershipPlan2)
