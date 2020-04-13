@@ -10,8 +10,8 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 typealias OnBrandItemClickListener = (MembershipPlan) -> Unit
 
 class BrowseBrandsAdapter(
-    private val brands: List<BrowseBrandsListItem>,
-    private val splitPosition: Int
+    private var brands: List<BrowseBrandsListItem>,
+    private var splitPosition: Int
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var onBrandItemClickListener: OnBrandItemClickListener? = null
 
@@ -64,6 +64,12 @@ class BrowseBrandsAdapter(
 
     fun setOnBrandItemClickListener(onBrandItemClickListener: OnBrandItemClickListener?) {
         this.onBrandItemClickListener = onBrandItemClickListener
+    }
+
+    fun setSearchResultList(brands: List<BrowseBrandsListItem>, splitPosition: Int = -1) {
+        this.splitPosition = splitPosition
+        this.brands = brands
+        this.notifyDataSetChanged()
     }
 
     companion object {

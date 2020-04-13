@@ -47,6 +47,7 @@
     <string name="browse_brands">Browse Brands</string>
     <string name="filter">Filters</string>
     <string name="search">Search</string>
+    <string name="browse_brands_no_match_label_text">No matches</string>
 
     <!-- Add Join -->
     <string name="add_join_screen_reward_info">Rewards info ></string>

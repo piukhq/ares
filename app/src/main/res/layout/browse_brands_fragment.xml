@@ -12,8 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".scenes.browse_brands.BrowseBrandsFragment">
+        android:layout_height="match_parent">
 
         <Toolbar
             android:id="@+id/toolbar"
@@ -38,10 +37,8 @@
             android:layout_height="@dimen/browse_brands_search_bar_height"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:layout_marginBottom="@dimen/margin_padding_size_small"
             android:background="@drawable/rounded_corners_edit_text"
             android:elevation="@dimen/browse_brands_search_bar_elevation"
-            app:layout_constraintBottom_toTopOf="@id/brands_recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -54,6 +51,7 @@
                 android:drawableStart="@drawable/ic_search_inactive"
                 android:drawablePadding="@dimen/margin_padding_size_small"
                 android:hint="@string/search"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:paddingStart="@dimen/margin_padding_size_small"
                 android:paddingEnd="@dimen/browse_brands_search_input_padding_end"
@@ -62,7 +60,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_goneMarginBottom="8dp"
                 tools:ignore="Autofill,LabelFor" />
 
             <ImageButton
@@ -77,30 +74,30 @@
                 tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/menu_title"-->
-        <!--            style="@style/MenuTextAppearance"-->
-        <!--            android:layout_marginTop="@dimen/title_margin"-->
-        <!--            android:layout_marginEnd="@dimen/margin_padding_size_medium"-->
-        <!--            android:layout_marginBottom="@dimen/margin_padding_size_small"-->
-        <!--            android:background="?android:attr/selectableItemBackgroundBorderless"-->
-        <!--            android:clickable="true"-->
-        <!--            android:focusable="true"-->
-        <!--            android:text="@string/filter"-->
-        <!--            android:visibility="gone"-->
-        <!--            app:layout_constraintEnd_toEndOf="@id/toolbar"-->
-        <!--            app:layout_constraintTop_toTopOf="@id/toolbar" />-->
+        <TextView
+            android:id="@+id/label_no_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/nunito_sans_light"
+            android:text="@string/browse_brands_no_match_label_text"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_bar_wrapper" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/brands_recycler_view"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_bar_wrapper"
+            app:layout_constraintVertical_bias="0"
             tools:itemCount="3"
             tools:listitem="@layout/item_brand" />
 
