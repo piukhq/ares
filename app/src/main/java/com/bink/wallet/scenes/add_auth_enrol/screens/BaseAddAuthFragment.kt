@@ -122,7 +122,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     override fun onResume() {
         super.onResume()
-//        binding.layout.loadLayoutDescription(R.xml.keyboard_toolbar)
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)
     }
 
@@ -175,7 +174,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             }
         }
     }
-
 
     private fun handleToolbarAction() {
         view?.hideKeyboard()

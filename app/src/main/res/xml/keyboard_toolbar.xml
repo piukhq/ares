@@ -30,6 +30,21 @@
     </Transition>
 
     <ConstraintSet android:id="@+id/collapsed">
+        <Constraint android:id="@id/footer_composed">
+            <PropertySet
+                    app:applyMotionScene="false"
+                    app:visibilityMode="ignore" />
+        </Constraint>
+
+        <Constraint android:id="@id/footer_simple">
+            <PropertySet
+                    app:applyMotionScene="false"
+                    app:visibilityMode="ignore" />
+        </Constraint>
+
+        <Constraint android:id="@id/footer_bottom_gradient">
+            <PropertySet app:applyMotionScene="false" />
+        </Constraint>
         <Constraint
                 android:id="@id/add_join_reward"
                 android:layout_width="wrap_content"
@@ -71,15 +86,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        <Constraint
-                android:id="@id/footer_composed"
-                android:visibility="gone">
-        </Constraint>
+        <!--        <Constraint-->
+        <!--                android:id="@id/footer_composed"-->
+        <!--                android:visibility="gone">-->
+        <!--        </Constraint>-->
 
-        <Constraint
-                android:id="@id/footer_simple"
-                android:visibility="gone">
-        </Constraint>
+        <!--        <Constraint-->
+        <!--                android:id="@id/footer_simple"-->
+        <!--                android:visibility="gone">-->
+        <!--        </Constraint>-->
 
     </ConstraintSet>
 </MotionScene>

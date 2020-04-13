@@ -39,10 +39,6 @@ class AddCardFragment : BaseAddAuthFragment() {
         binding.footerComposed.addAuthCta.setOnClickListener { logCTAClick(it); handleAuthCtaRequest() }
         binding.footerSimple.addAuthCta.setOnClickListener { logCTAClick(it); handleAuthCtaRequest() }
 
-        currentMembershipPlan?.let {
-            viewModel.addItems(it)
-        }
-
         viewModel.newMembershipCard.observeNonNull(this) {
             handleNavigationAfterCardCreation(it, false)
         }
@@ -50,6 +46,9 @@ class AddCardFragment : BaseAddAuthFragment() {
 
     override fun onResume() {
         super.onResume()
+        currentMembershipPlan?.let {
+            viewModel.addItems(it)
+        }
         logScreenView(ADD_AUTH_FORM_VIEW)
     }
 

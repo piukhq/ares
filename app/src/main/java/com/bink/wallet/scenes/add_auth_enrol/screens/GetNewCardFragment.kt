@@ -39,6 +39,9 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
     override fun onResume() {
         super.onResume()
+        currentMembershipPlan?.let {
+            viewModel.addItems(it)
+        }
         logScreenView(ENROL_FORM_VIEW)
     }
 

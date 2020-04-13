@@ -44,6 +44,9 @@ class GhostCardFragment : BaseAddAuthFragment() {
 
     override fun onResume() {
         super.onResume()
+        currentMembershipPlan?.let {
+            viewModel.addItems(it)
+        }
         logScreenView(REGISTRATION_FORM_VIEW)
     }
 
