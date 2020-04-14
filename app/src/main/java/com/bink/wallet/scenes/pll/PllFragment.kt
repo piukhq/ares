@@ -44,7 +44,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             mutableListOf(binding.buttonDone),
             binding.paymentCards,
             binding.bgPllBottomGradient,
-            false
+            false,
+            3
         )
         registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)

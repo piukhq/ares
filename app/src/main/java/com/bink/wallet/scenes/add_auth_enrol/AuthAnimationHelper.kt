@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
+import android.view.View
 import android.view.ViewTreeObserver
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
@@ -25,14 +26,19 @@ class AuthAnimationHelper(
                 mutableListOf(binding.footerSimple.addAuthCta),
                 binding.authFields,
                 binding.footerSimple.footerBottomGradient,
-                true
+                true,
+                1
             )
             fragment.handleFooterFadeEffect(
                 mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
                 binding.authFields,
                 binding.footerComposed.footerBottomGradient,
-                true
+                true,
+                3
             )
+        }
+        if (binding.footerComposed.root.visibility == View.VISIBLE) {
+            binding.footerComposed.root.bringToFront()
         }
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
