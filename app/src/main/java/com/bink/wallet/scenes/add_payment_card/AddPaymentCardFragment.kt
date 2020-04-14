@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.add_payment_card
 
 import android.os.Bundle
 import android.text.InputFilter
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -9,11 +10,21 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.BankCard
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.cardFormatter
+import com.bink.wallet.utils.cardStarFormatter
+import com.bink.wallet.utils.cardValidation
+import com.bink.wallet.utils.ccSanitize
+import com.bink.wallet.utils.dateValidation
 import com.bink.wallet.utils.enums.PaymentCardType
+import com.bink.wallet.utils.formatDate
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.numberSanitize
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.presentedCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.min
@@ -163,6 +174,18 @@ class AddPaymentCardFragment :
                 )
             )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+    override fun onStop() {
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+        super.onStop()
     }
 
     private fun cardExpiryErrorCheck(text: String): String? {
