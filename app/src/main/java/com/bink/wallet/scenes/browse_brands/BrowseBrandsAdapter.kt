@@ -63,10 +63,6 @@ class BrowseBrandsAdapter :
         this.onBrandItemClickListener = onBrandItemClickListener
     }
 
-    fun setSearchResultList(newBrandsList: List<BrowseBrandsListItem>) {
-        submitList(newBrandsList)
-    }
-
     companion object {
         private const val BRAND_ITEM = R.layout.item_brand
         private const val SECTION_TITLE_ITEM = R.layout.item_brands_section_title
