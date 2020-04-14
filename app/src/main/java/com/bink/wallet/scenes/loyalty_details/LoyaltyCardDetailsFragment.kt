@@ -633,11 +633,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.ADD_AUTH,
+                                LoyaltyCardDetailsFragmentDirections.detailToAddCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             findNavController().navigateIfAdded(this, directions)
                         }
@@ -647,11 +646,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             findNavController().navigate(
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.GHOST,
+                                LoyaltyCardDetailsFragmentDirections.detailToGhostCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             )
                         }
@@ -775,11 +773,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.ADD_AUTH,
+                                LoyaltyCardDetailsFragmentDirections.detailToAddCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             findNavController().navigateIfAdded(this, directions)
                         }
@@ -802,11 +799,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.GHOST,
+                                LoyaltyCardDetailsFragmentDirections.detailToGhostCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             findNavController().navigateIfAdded(this, directions)
                         }

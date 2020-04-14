@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.add_auth_enrol
+package com.bink.wallet.scenes
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView

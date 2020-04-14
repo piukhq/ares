@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -46,8 +45,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     override fun onResume() {
         super.onResume()
         logScreenView(REGISTER_VIEW)
-        setupLayoutListener(binding.container, ::validateCredentials)
-        registerLayoutListener(binding.container)
+        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
+        registerKeyboardHiddenLayoutListener(binding.container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -198,7 +197,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override fun onPause() {
         super.onPause()
-        removeLayoutListener(binding.container)
+        removeKeyboardHiddenLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {

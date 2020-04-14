@@ -12,7 +12,7 @@ data class Account(
     val plan_url: String?,
     val plan_summary: String?,
     val plan_description: String?,
-    val plan_documents: List<PlanDocuments>?,
+    val plan_documents: List<PlanDocument>?,
     val barcode_redeem_instructions: String?,
     val plan_register_info: String?,
     val company_name: String?,
@@ -20,8 +20,8 @@ data class Account(
     val enrol_incentive: String?,
     val category: String?,
     val tiers: List<Tiers>?,
-    val add_fields: List<PlanFields>?,
-    val authorise_fields: List<PlanFields>?,
-    val registration_fields: List<PlanFields>?,
-    val enrol_fields: List<PlanFields>?
+    val add_fields: List<PlanField>?,
+    val authorise_fields: List<PlanField>?,
+    val registration_fields: List<PlanField>?,
+    val enrol_fields: List<PlanField>?
 ) : Parcelable

@@ -16,7 +16,7 @@ import com.bink.wallet.model.LoyaltyWalletItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.add_auth_enrol.BaseViewHolder
+import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget

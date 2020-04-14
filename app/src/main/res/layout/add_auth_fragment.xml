@@ -130,12 +130,12 @@
                     android:text="@string/sign_up_text"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toTopOf="@+id/no_account_text"
+                    app:layout_constraintBottom_toTopOf="@+id/no_account"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
-                    android:id="@+id/no_account_text"
+                    android:id="@+id/no_account"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

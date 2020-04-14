@@ -179,10 +179,6 @@
                 app:argType="boolean" />
 
         <action
-                android:id="@+id/add_join_to_ghost"
-                app:destination="@id/add_auth_fragment" />
-
-        <action
                 android:id="@+id/add_join_to_join_unavailable"
                 app:destination="@+id/join_unavailable" />
 
@@ -196,60 +192,12 @@
         <action
                 android:id="@+id/action_add_join_to_paymentCardNeededFragment"
                 app:destination="@id/paymentCardNeededModalFragment" />
-
-    </fragment>
-
-    <fragment
-            android:id="@+id/add_auth_fragment"
-            android:name="com.bink.wallet.scenes.add_auth_enrol.AddAuthFragment">
-
-        <argument
-                android:name="signUpFormType"
-                app:argType="com.bink.wallet.utils.enums.SignUpFormType" />
-
-        <argument
-                android:name="currentMembershipPlan"
-                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
-
-        <argument
-                android:name="isRetryJourney"
-                app:argType="boolean" />
-
-        <argument
-                android:name="membershipCardId"
-                android:defaultValue="@null"
-                app:argType="string"
-                app:nullable="true" />
-        <argument
-                android:name="isFromNoReasonCodes"
-                android:defaultValue="false"
-                app:argType="boolean" />
-
         <action
-                android:id="@+id/sign_up_to_details"
-                app:destination="@id/loyalty_card_detail_fragment"
-                app:popUpTo="@+id/loyalty_fragment" />
-
+                android:id="@+id/addJoinToAddCardFragment"
+                app:destination="@+id/addCardFragment" />
         <action
-                android:id="@+id/to_ghost"
-                app:destination="@id/add_auth_fragment"
-                app:popUpTo="@+id/loyalty_fragment" />
-
-        <action
-                android:id="@+id/sign_up_to_pll_empty"
-                app:destination="@id/pll_empty_fragment" />
-
-        <action
-                android:id="@+id/sign_up_to_brand_header"
-                app:destination="@id/brand_header" />
-
-        <action
-                android:id="@+id/sign_up_to_ghost_registration_unavailable"
-                app:destination="@+id/ghost_registration_unavailable" />
-
-        <action
-                android:id="@+id/sign_up_to_pll"
-                app:destination="@+id/pll_fragment" />
+                android:id="@+id/addJoinToGetNewCardFragment"
+                app:destination="@+id/getNewCardFragment" />
 
     </fragment>
 
@@ -314,8 +262,12 @@
                 app:destination="@+id/pll_empty_fragment" />
 
         <action
-                android:id="@+id/detail_to_auth"
-                app:destination="@+id/add_auth_fragment" />
+                android:id="@+id/detail_to_add_card"
+                app:destination="@+id/addCardFragment" />
+
+        <action
+                android:id="@+id/detail_to_ghost_card"
+                app:destination="@id/ghostCardFragment" />
 
         <action
                 android:id="@+id/detail_to_about"
@@ -733,6 +685,136 @@
         <action
                 android:id="@+id/action_paymentCardNeededFragment_to_add_payment_card"
                 app:destination="@id/add_payment_card" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/baseAddAuthFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment"
+            android:label="BaseAddAuthFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+        <argument
+                android:name="isRetryJourney"
+                app:argType="boolean" />
+
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action
+                android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment" />
+
+    </fragment>
+
+    <fragment
+            android:id="@+id/addCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.AddCardFragment"
+            android:label="AddCardFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
+
+        <argument
+                android:name="isFromNoReasonCodes"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/addCardToGhostRegistrationUnavailable"
+                app:destination="@id/ghost_registration_unavailable" />
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action
+                android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/getNewCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.GetNewCardFragment"
+            android:label="GetNewCardFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action
+                android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
+    </fragment>
+
+
+    <fragment
+            android:id="@+id/ghostCardFragment"
+            android:name="com.bink.wallet.scenes.add_auth_enrol.screens.GhostCardFragment"
+            android:label="GhostCardFragment"
+            tools:layout="@layout/base_add_auth_fragment">
+        <argument
+                android:name="membershipPlan"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+        <argument
+                android:name="membershipCardId"
+                app:argType="string" />
+        <argument
+                android:name="isRetryJourney"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        <action
+                android:id="@+id/baseAddAuthToBrandHeader"
+                app:destination="@id/brand_header" />
+        <action
+                android:id="@+id/authToPllEmpty"
+                app:destination="@+id/pll_empty_fragment" />
+        <action
+                android:id="@+id/authToPll"
+                app:destination="@+id/pll_fragment" />
+        <action
+                android:id="@+id/authToLoyaltyDetails"
+                app:destination="@id/loyalty_card_detail_fragment" />
     </fragment>
 
 </navigation>

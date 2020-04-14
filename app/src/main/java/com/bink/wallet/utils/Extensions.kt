@@ -25,7 +25,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.Locale
+import java.util.*
 
 
 fun Context.toPixelFromDip(value: Float) =
@@ -128,13 +128,13 @@ fun LiveData<Exception>.observeErrorNonNull(
     owner: LifecycleOwner,
     isUserDriven: Boolean,
     observer: ((t: Exception) -> Unit)?
-) = observeErrorNonNull(context, owner, "", "", isUserDriven, observer)
+) = observeErrorNonNull(context, owner, EMPTY_STRING, EMPTY_STRING, isUserDriven, observer)
 
 fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     isUserDriven: Boolean,
     owner: LifecycleOwner
-) = observeErrorNonNull(context, owner, "", "", isUserDriven, null)
+) = observeErrorNonNull(context, owner,  EMPTY_STRING, EMPTY_STRING, isUserDriven, null)
 
 fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
     context: Context,

@@ -17,7 +17,7 @@ object UtilFunctions {
     fun isValidField(regex: String?, fieldValue: String?): Boolean {
         if (regex != null && fieldValue != null)
             return Pattern.compile(regex.let { it }).matcher(fieldValue.let { it }).matches()
-        if (regex == null || regex.isNullOrEmpty())
+        if (regex.isNullOrEmpty())
             return true
         return false
     }
