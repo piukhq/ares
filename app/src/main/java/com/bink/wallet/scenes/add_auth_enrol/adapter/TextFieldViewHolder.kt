@@ -65,7 +65,20 @@ class TextFieldViewHolder(
         binding.planField = planField
 
         with(binding.contentAddAuthText) {
-            hint = planField.description
+            planField.description?.length?.let {
+                val hintText = if (it > 40) {
+                    planField.description.subSequence(
+                        0,
+                        40
+                    ).toString() + "\n" + planField.description.subSequence(
+                        41,
+                        planField.description.length - 1
+                    )
+                } else {
+                    planField.description
+                }
+                hint = hintText
+            }
 
             setText(planRequest?.value)
 

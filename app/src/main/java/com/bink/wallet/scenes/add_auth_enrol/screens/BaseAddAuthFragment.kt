@@ -163,6 +163,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                     }
                 }
             })
+
         }
     }
 
