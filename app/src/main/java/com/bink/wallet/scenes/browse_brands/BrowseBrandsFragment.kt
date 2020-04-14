@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -60,6 +61,10 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
         binding.buttonClearSearch.setOnClickListener {
             binding.inputSearch.setText(EMPTY_STRING)
+        }
+
+        binding.buttonFilters.setOnClickListener {
+            Toast.makeText(context, "Filters", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -147,5 +152,15 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                     it.account?.company_name?.toLowerCase(Locale.ENGLISH)
                 }
             )
+
+        private fun List<MembershipPlan>.getFilters(): List<String> {
+            val filters = mutableListOf<String>()
+            this.forEach { membershipPlan ->
+                membershipPlan.account?.category?.let { category ->
+                    filters.add(category)
+                }
+            }
+            return filters
+        }
     }
 }
