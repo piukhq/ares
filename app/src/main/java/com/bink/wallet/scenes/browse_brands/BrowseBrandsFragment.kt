@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
@@ -64,17 +65,23 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         }
         binding.filtersList.layoutManager = GridLayoutManager(context, 2)
         membershipCardIds = args.membershipCards.toList().getOwnedMembershipCardsIds()
-        adapter.setSearchResultList(
+        adapter.submitList(
             formatBrandItemsList(args.membershipPlans.toList().sortedByCardTypeAndCompany())
         )
 
         binding.buttonClearSearch.setOnClickListener {
-            binding.inputSearch.setText(EMPTY_STRING)
+            viewModel.searchText.value = EMPTY_STRING
         }
 
         binding.buttonFilters.setOnClickListener {
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
         }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                binding.brandsRecyclerView.scrollToPosition(0)
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,7 +93,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 args.membershipPlans.toList(),
                 searchQuery
             ).sortedByCardTypeAndCompany()
-            adapter.setSearchResultList(formatBrandItemsList(filteredBrands))
+            adapter.submitList(formatBrandItemsList(filteredBrands))
 //            binding.brandsRecyclerView.setVisible(!filteredBrands.isNullOrEmpty())
             binding.labelNoMatch.setVisible(filteredBrands.isNullOrEmpty())
         })
