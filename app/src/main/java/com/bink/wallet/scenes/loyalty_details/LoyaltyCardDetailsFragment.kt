@@ -16,14 +16,28 @@ import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Voucher
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.formatBalance
+import com.bink.wallet.utils.SCROLL_DELAY
+import com.bink.wallet.utils.MembershipPlanUtils
+import com.bink.wallet.utils.getElapsedTime
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.enums.*
+import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.SignUpFormType
+import com.bink.wallet.utils.enums.LinkStatus
+import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.linkCard
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+import java.util.Calendar
+
 
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
@@ -451,6 +465,7 @@ class LoyaltyCardDetailsFragment :
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                 viewModel.membershipCard.value?.let { card ->
                     if (!card.vouchers.isNullOrEmpty() &&
+
                         card.status?.state == MembershipCardStatus.AUTHORISED.status
                     ) {
                         setPlrPointsModuleText()
@@ -558,7 +573,11 @@ class LoyaltyCardDetailsFragment :
                                 )
                             }
                         directions?.let { _ ->
-                            findNavController().navigateIfAdded(this, directions, currentDestination)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
 
                         }
                     }
@@ -636,7 +655,11 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions, currentDestination)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
 
                         }
                     }
@@ -794,7 +817,11 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions, currentDestination)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
 
                         }
                     }
@@ -823,7 +850,11 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions, currentDestination)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
 
                         }
                     }

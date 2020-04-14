@@ -25,7 +25,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.Locale
+import java.util.*
 
 
 fun Context.toPixelFromDip(value: Float) =
@@ -37,8 +37,11 @@ fun Context.toPixelFromDip(@IntegerRes resId: Int) =
 fun Context.toDipFromPixel(value: Float) =
     value / (resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
-fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int, currentDestinationId : Int? = null) {
-    if(currentDestinationId != null) {
+fun NavController.navigateIfAdded(
+    fragment: Fragment, @IdRes resId: Int,
+    currentDestinationId: Int? = null
+) {
+    if (currentDestinationId != null) {
         if (fragment.isAdded && currentDestinationId == currentDestination?.id) {
             navigate(resId)
         }
@@ -49,8 +52,12 @@ fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int, current
     }
 }
 
-fun NavController.navigateIfAdded(fragment: Fragment, navDirections: NavDirections, currentDestinationId : Int? = null) {
-    if(currentDestinationId != null) {
+fun NavController.navigateIfAdded(
+    fragment: Fragment,
+    navDirections: NavDirections,
+    currentDestinationId: Int? = null
+) {
+    if (currentDestinationId != null) {
         if (fragment.isAdded && currentDestinationId == currentDestination?.id) {
             navigate(navDirections)
         }
