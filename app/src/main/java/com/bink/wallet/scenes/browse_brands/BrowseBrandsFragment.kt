@@ -3,10 +3,10 @@ package com.bink.wallet.scenes.browse_brands
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
@@ -23,6 +23,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
     private val args by navArgs<BrowseBrandsFragmentArgs>()
     private lateinit var adapter: BrowseBrandsAdapter
+    private val filtersAdapter = BrandsFiltersAdapter()
     private var membershipCardIds = listOf<String>()
     override val layoutRes = R.layout.browse_brands_fragment
     override val viewModel: BrowseBrandsViewModel by viewModel()
@@ -55,6 +56,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             }
         }
         binding.brandsRecyclerView.adapter = adapter
+        binding.filtersList.adapter = filtersAdapter.apply {
+            setOnFilterClickListener {
+                Log.d("WRKR", it.toString())
+            }
+            setFilters(args.membershipPlans.toList().getCategories().map { BrandsFilter(it) })
+        }
+        binding.filtersList.layoutManager = GridLayoutManager(context, 2)
         membershipCardIds = args.membershipCards.toList().getOwnedMembershipCardsIds()
         adapter.setSearchResultList(
             formatBrandItemsList(args.membershipPlans.toList().sortedByCardTypeAndCompany())
@@ -65,8 +73,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         }
 
         binding.buttonFilters.setOnClickListener {
-            Toast.makeText(context, "Filters", Toast.LENGTH_SHORT).show()
-            Log.d("WRKR", args.membershipPlans.toList().getCategories().toString())
+            binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
         }
     }
 
@@ -159,7 +166,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             val categories = mutableListOf<String>()
             this.forEach { membershipPlan ->
                 membershipPlan.account?.category?.let { category ->
-                    if(category !in categories) {
+                    if (category !in categories) {
                         categories.add(category)
                     }
                 }
