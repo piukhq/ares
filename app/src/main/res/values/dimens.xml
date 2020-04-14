@@ -171,5 +171,7 @@
 
     <!-- PLL Screen -->
     <dimen name="pll_screen_default_fade_view_height">1dp</dimen>
+    <dimen name="browse_brands_filter_width">164dp</dimen>
+    <dimen name="browse_brands_filter_height">40dp</dimen>
 
 </resources>

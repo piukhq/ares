@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -65,6 +66,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
         binding.buttonFilters.setOnClickListener {
             Toast.makeText(context, "Filters", Toast.LENGTH_SHORT).show()
+            Log.d("WRKR", args.membershipPlans.toList().getCategories().toString())
         }
     }
 
@@ -153,14 +155,16 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 }
             )
 
-        private fun List<MembershipPlan>.getFilters(): List<String> {
-            val filters = mutableListOf<String>()
+        private fun List<MembershipPlan>.getCategories(): List<String> {
+            val categories = mutableListOf<String>()
             this.forEach { membershipPlan ->
                 membershipPlan.account?.category?.let { category ->
-                    filters.add(category)
+                    if(category !in categories) {
+                        categories.add(category)
+                    }
                 }
             }
-            return filters
+            return categories
         }
     }
 }
