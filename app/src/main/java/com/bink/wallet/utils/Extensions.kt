@@ -37,15 +37,27 @@ fun Context.toPixelFromDip(@IntegerRes resId: Int) =
 fun Context.toDipFromPixel(value: Float) =
     value / (resources.displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 
-fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int) {
-    if (fragment.isAdded) {
-        navigate(resId)
+fun NavController.navigateIfAdded(fragment: Fragment, @IdRes resId: Int, currentDestinationId : Int? = null) {
+    if(currentDestinationId != null) {
+        if (fragment.isAdded && currentDestinationId == currentDestination?.id) {
+            navigate(resId)
+        }
+    } else {
+        if (fragment.isAdded) {
+            navigate(resId)
+        }
     }
 }
 
-fun NavController.navigateIfAdded(fragment: Fragment, navDirections: NavDirections) {
-    if (fragment.isAdded) {
-        navigate(navDirections)
+fun NavController.navigateIfAdded(fragment: Fragment, navDirections: NavDirections, currentDestinationId : Int? = null) {
+    if(currentDestinationId != null) {
+        if (fragment.isAdded && currentDestinationId == currentDestination?.id) {
+            navigate(navDirections)
+        }
+    } else {
+        if (fragment.isAdded) {
+            navigate(navDirections)
+        }
     }
 }
 
