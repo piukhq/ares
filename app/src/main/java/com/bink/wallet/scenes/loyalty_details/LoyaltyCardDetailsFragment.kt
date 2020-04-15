@@ -666,6 +666,7 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             findNavController().navigateIfAdded(
+                                this,
                                 LoyaltyCardDetailsFragmentDirections.detailToGhostCard(
                                     plan,
                                     membershipCardId = card.id,
