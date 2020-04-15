@@ -3,7 +3,7 @@ import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
-import android.widget.DatePicker
+import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -155,10 +155,17 @@ class TextFieldViewHolder(
             SignUpFieldTypes.MEMORABLE_DATE.common_name -> {
                 val datePickerDialog = DatePickerDialog(
                     binding.root.context,
-                    DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth -> setText("$dayOfMonth $month $year") },
-                    2020,
-                    2,
-                    2
+                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        setText(
+                            binding.root.context.getString(
+                                R.string.date_format, dayOfMonth, month, year
+                            )
+                        )
+                        checkValidation()
+                    },
+                    Calendar.getInstance().get(Calendar.YEAR),
+                    Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
                 )
                 setOnClickListener {
                     datePickerDialog.show()
