@@ -3,11 +3,18 @@ package com.bink.wallet.scenes.loyalty_wallet
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.*
 import com.bink.wallet.model.BannerDisplay
+import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
 
@@ -176,6 +183,16 @@ class LoyaltyWalletRepository(
         mutableMembershipCard: MutableLiveData<MembershipCard>,
         createError: MutableLiveData<Exception>
     ) {
+
+        val cachedBackendVersion = SharedPreferenceManager.storedBackendVersion
+        if (cachedBackendVersion != null
+            && cachedBackendVersion == BackendVersion.VERSION_2.version
+        ) {
+            membershipCardRequest.account?.let { safeAccount ->
+                encryptMembershipCardFields(safeAccount)
+            }
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
             withContext(Dispatchers.Main) {
@@ -315,6 +332,35 @@ class LoyaltyWalletRepository(
                     updateDone.value = true
                 } catch (exception: Exception) {
                     fetchError.value = exception
+                }
+            }
+        }
+    }
+
+    private fun encryptMembershipCardFields(account: Account) {
+        doEncryptionMembershipCardFields(account.registration_fields)
+        doEncryptionMembershipCardFields(account.add_fields)
+        doEncryptionMembershipCardFields(account.authorise_fields)
+        doEncryptionMembershipCardFields(account.enrol_fields)
+        doEncryptionMembershipCardFields(account.plan_documents)
+    }
+
+    private fun doEncryptionMembershipCardFields(fields: MutableList<PlanFieldsRequest>?) {
+        val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
+            LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
+        )
+
+        publicEncryptionKey?.let { safePubKey ->
+            fields?.let { safeAddAuthFields ->
+                for (planFieldRequest: PlanFieldsRequest in safeAddAuthFields) {
+                    if (planFieldRequest.isSensitive) {
+                        planFieldRequest.value?.let { safeValue ->
+                            val encryptedValue =
+                                SecurityUtils.encryptMessage(safeValue, safePubKey)
+                            planFieldRequest.value = encryptedValue
+                        }
+
+                    }
                 }
             }
         }
