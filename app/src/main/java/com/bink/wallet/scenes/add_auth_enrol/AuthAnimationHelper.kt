@@ -36,9 +36,9 @@ class AuthAnimationHelper(
                 true,
                 3
             )
-        }
-        if (binding.footerComposed.root.visibility == View.VISIBLE) {
-            binding.footerComposed.root.bringToFront()
+            if (binding.footerComposed.root.visibility == View.VISIBLE) {
+                binding.footerComposed.root.bringToFront()
+            }
         }
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
