@@ -1,6 +1,9 @@
+import android.app.DatePickerDialog
 import android.text.InputFilter
+import android.text.InputType
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
+import android.widget.DatePicker
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -10,6 +13,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
@@ -79,6 +83,9 @@ class TextFieldViewHolder(
                 }
                 hint = hintText
             }
+            item.fieldType.common_name?.let {
+                displayCustomKeyboard(it)
+            }
 
             setText(planRequest?.value)
 
@@ -88,7 +95,7 @@ class TextFieldViewHolder(
                 }
             }
 
-            if (planField.common_name == AddAuthAdapter.COMMON_NAME_EMAIL) {
+            if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
                 binding.contentAddAuthText.filters = arrayOf(object : InputFilter.AllCaps() {
                     override fun filter(
                         source: CharSequence?,
@@ -132,6 +139,36 @@ class TextFieldViewHolder(
         }
 
         binding.executePendingBindings()
+    }
+
+    private fun TextInputEditText.displayCustomKeyboard(commonName: String) {
+        inputType = when (commonName) {
+            SignUpFieldTypes.PHONE.common_name,
+            SignUpFieldTypes.PHONE_NUMBER_1.common_name,
+            SignUpFieldTypes.PHONE_NUMBER_2.common_name -> {
+                InputType.TYPE_CLASS_NUMBER
+            }
+            SignUpFieldTypes.EMAIL.common_name -> {
+                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            }
+            SignUpFieldTypes.DATE_OF_BIRTH.common_name,
+            SignUpFieldTypes.MEMORABLE_DATE.common_name -> {
+                val datePickerDialog = DatePickerDialog(
+                    binding.root.context,
+                    DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth -> setText("$dayOfMonth $month $year") },
+                    2020,
+                    2,
+                    2
+                )
+                setOnClickListener {
+                    datePickerDialog.show()
+                }
+                InputType.TYPE_NULL
+            }
+            else -> {
+                InputType.TYPE_CLASS_TEXT
+            }
+        }
     }
 
     private fun TextInputEditText.checkIfFieldIsValid() {

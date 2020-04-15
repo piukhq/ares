@@ -45,7 +45,6 @@
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/nunito_sans"
-                android:inputType='@{(planField.type == FieldType.PASSWORD.type ) ? (InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE  | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE}'
                 android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

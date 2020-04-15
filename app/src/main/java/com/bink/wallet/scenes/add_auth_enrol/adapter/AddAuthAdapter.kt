@@ -108,7 +108,4 @@ class AddAuthAdapter(
 
     override fun getItemCount() = addAuthItems.size
 
-    companion object {
-        const val COMMON_NAME_EMAIL = "email"
-    }
 }
