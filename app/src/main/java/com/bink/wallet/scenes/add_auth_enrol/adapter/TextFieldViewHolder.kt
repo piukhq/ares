@@ -3,12 +3,12 @@ import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
-import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
+import com.bink.wallet.utils.DATE_FORMAT
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.SimplifiedTextWatcher
 import com.bink.wallet.utils.enums.AddAuthItemType
@@ -16,7 +16,9 @@ import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
 import java.util.*
+
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -156,10 +158,18 @@ class TextFieldViewHolder(
                 val datePickerDialog = DatePickerDialog(
                     binding.root.context,
                     DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        val calendar = Calendar.getInstance()
+                        calendar.set(Calendar.MONTH, month)
+                        calendar.set(Calendar.YEAR, year)
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        val date = Date(calendar.timeInMillis)
+
+                        val dateFormatter = SimpleDateFormat(
+                            DATE_FORMAT, Locale.ENGLISH
+                        )
+                        val strDate = dateFormatter.format(date)
                         setText(
-                            binding.root.context.getString(
-                                R.string.date_format, dayOfMonth, month, year
-                            )
+                            strDate.toString()
                         )
                         checkValidation()
                     },
