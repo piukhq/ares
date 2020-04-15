@@ -12,7 +12,8 @@ import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
-import java.util.*
+import java.util.Locale
+
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -66,18 +67,7 @@ class TextFieldViewHolder(
 
         with(binding.contentAddAuthText) {
             planField.description?.length?.let {
-                val hintText = if (it > 40) {
-                    planField.description.subSequence(
-                        0,
-                        40
-                    ).toString() + "\n" + planField.description.subSequence(
-                        41,
-                        planField.description.length - 1
-                    )
-                } else {
-                    planField.description
-                }
-                hint = hintText
+                hint = planField.description
             }
 
             setText(planRequest?.value)

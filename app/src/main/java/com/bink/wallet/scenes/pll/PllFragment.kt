@@ -35,6 +35,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     private var directions: NavDirections? = null
     private var isAddJourney = false
+    private val footerQuotient = 3
     val unselectedCards = mutableListOf<String>()
     val selectedCards = mutableListOf<String>()
 
@@ -45,7 +46,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             binding.paymentCards,
             binding.bgPllBottomGradient,
             false,
-            3
+            footerQuotient
         )
         registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)

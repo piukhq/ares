@@ -12,6 +12,8 @@ class AuthAnimationHelper(
 
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
     lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private val quotientFooterSimple = 1
+    private val quotientFooterComposed = 3
 
     fun enableGlobalListeners(
         onEndTransition: () -> Unit = {},
@@ -27,14 +29,14 @@ class AuthAnimationHelper(
                 binding.authFields,
                 binding.footerSimple.footerBottomGradient,
                 true,
-                1
+                quotientFooterSimple
             )
             fragment.handleFooterFadeEffect(
                 mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
                 binding.authFields,
                 binding.footerComposed.footerBottomGradient,
                 true,
-                3
+                quotientFooterComposed
             )
             if (binding.footerComposed.root.visibility == View.VISIBLE) {
                 binding.footerComposed.root.bringToFront()
