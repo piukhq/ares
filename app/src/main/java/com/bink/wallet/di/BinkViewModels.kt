@@ -73,7 +73,7 @@ val viewModelModules = module {
 
     viewModel { BarcodeViewModel() }
 
-    viewModel { AddViewModel() }
+    viewModel { AddViewModel(get()) }
 
     viewModel { AddJoinViewModel(get()) }
 

@@ -49,6 +49,7 @@
     <dimen name="list_margin">64dp</dimen>
     <dimen name="search_bar_height">42dp</dimen>
     <dimen name="list_item_height">88dp</dimen>
+    <dimen name="in_wallet_icon_padding">8dp</dimen>
 
     <!-- Add Screen -->
     <dimen name="add_card_margin">20dp</dimen>
@@ -160,9 +161,11 @@
     <dimen name="loyalty_card_header_corner_radius">12dp</dimen>
     <dimen name="burger_king_stamp_size">24dp</dimen>
     <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
+    <dimen name="loyalty_card_details_module_radius">4dp</dimen>
 
     <!-- Generic Views -->
     <dimen name="generic_view_button_height">48dp</dimen>
+    <dimen name="toolbar_title_text_size">18sp</dimen>
 
     <!-- PLL Screen -->
     <dimen name="footer_default_fade_view_height">1dp</dimen>

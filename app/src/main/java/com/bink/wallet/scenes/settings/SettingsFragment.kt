@@ -54,12 +54,8 @@ class SettingsFragment :
         for (item in SettingsItemsPopulation.populateItems(resources)) {
             viewModel.itemsList.addItem(item)
         }
-
-        with(binding.toolbar) {
-            title = getString(R.string.settings)
-            setNavigationIcon(R.drawable.ic_close)
-        }
-
+        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+        
         val settingsAdapter = SettingsAdapter(
             viewModel.itemsList,
             itemClickListener = { settingsItemClick(it) })

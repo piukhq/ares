@@ -83,7 +83,7 @@
     <string name="button_text_log_in">Log in</string>
 
     <!-- Loyalty Card Details -->
-    <string name="view_history">View History</string>
+    <string name="view_history">View history</string>
     <string name="about_membership">About membership</string>
     <string name="about_membership_title_template">About %s</string>
     <string name="about_membership_plan_name">About %1$s</string>
@@ -117,7 +117,7 @@
     <string name="loyalty_card_details_header_placeholder_text">%s Membership Card</string>
 
     <!-- 1.1 -->
-    <string name="points_prefix_or_suffix">%1$s%2$s</string>
+    <string name="points_prefix_or_suffix">%1$s %2$s</string>
     <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
     <!-- 1.2 -->
     <string name="description_last_checked">Last checked %1$s %2$s ago</string>
@@ -146,7 +146,10 @@
 
     <!-- 2.1 -->
     <string name="link_status_linked">Linked</string>
-    <string name="description_linked">To %1$d of %2$d cards</string>
+    <plurals name="description_linked">
+        <item quantity="one">To %1$d of %2$d card</item>
+        <item quantity="other">To %1$d of %2$d cards</item>
+    </plurals>
     <!-- 2.2 -->
     <string name="link_status_linkable_no_cards">Link</string>
     <string name="description_no_cards">To payment cards</string>
@@ -374,7 +377,7 @@
     <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
     <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
     <string name="card_name">Card name</string>
-    <string name="_mock_card_ending">**** **** **** 1234</string>
+    <string name="_mock_card_ending">•••• •••• •••• 1234</string>
     <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
@@ -477,8 +480,8 @@
     </string>
     <string name="payment_card_needed_button_text">Add card</string>
     <string name="voucher_stamp_title">%s %s</string>
-    <string name="voucher_stamp_subtext">for collecting %d stamps</string>
-    <string name="voucher_stamp_collected">%d/%d stamps</string>
+    <string name="voucher_stamp_subtext">for collecting %1$d %2$s</string>
+    <string name="voucher_stamp_collected">%1$d/%2$d %3$s</string>
     <string name="voucher_collected">Collected:</string>
     <string name="voucher_stamp_in_progress_title">About this voucher</string>
     <string name="voucher_stamp_in_progress_body">Spend £5 or more to get a stamp. Collect 5 Stamps and get a FREE Whopper.</string>
