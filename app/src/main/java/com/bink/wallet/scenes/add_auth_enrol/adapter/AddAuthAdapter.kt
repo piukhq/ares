@@ -7,11 +7,7 @@ import TextFieldViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.databinding.AddAuthDisplayItemBinding
-import com.bink.wallet.databinding.AddAuthHeaderItemBinding
-import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
-import com.bink.wallet.databinding.AddAuthTextItemBinding
-import com.bink.wallet.databinding.AddAuthCheckboxItemBinding
+import com.bink.wallet.databinding.*
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -79,10 +75,8 @@ class AddAuthAdapter(
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             FieldType.TEXT.type,
-            FieldType.PASSWORD.type -> {
-                TextFieldViewHolder(
-                    AddAuthTextItemBinding.inflate(inflater)
-                )
+            FieldType.SENSITIVE.type -> {
+                TextFieldViewHolder((AddAuthTextItemBinding.inflate(inflater)))
             }
             FieldType.SPINNER.type -> {
                 SpinnerViewHolder(
@@ -135,7 +129,7 @@ class AddAuthAdapter(
         itemWrapper == addAuthItems.last { item ->
             item.getFieldType() == AddAuthItemType.PLAN_FIELD &&
                     ((item.fieldType as PlanField).type == FieldType.TEXT.type ||
-                            item.fieldType.type == FieldType.PASSWORD.type)
+                            item.fieldType.type == FieldType.SENSITIVE.type)
         }
 
     private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {

@@ -22,11 +22,9 @@ import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.ValueDisplayUtils
-import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.formatBalance
 import com.bink.wallet.utils.getElapsedTime
