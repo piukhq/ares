@@ -65,8 +65,8 @@ class AddAuthAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            FieldType.TEXT.type,
-            FieldType.PASSWORD.type -> TextFieldHolder(AddAuthTextItemBinding.inflate(inflater))
+            FieldType.TEXT.type -> TextFieldHolder(AddAuthTextItemBinding.inflate(inflater), false)
+            FieldType.SENSITIVE.type -> TextFieldHolder(AddAuthTextItemBinding.inflate(inflater), true)
             FieldType.SPINNER.type -> SpinnerViewHolder(AddAuthSpinnerItemBinding.inflate(inflater))
             FieldType.DISPLAY.type -> DisplayHolder(AddAuthDisplayItemBinding.inflate(inflater))
             else -> CheckBoxHolder(AddAuthSwitchItemBinding.inflate(inflater))
@@ -110,7 +110,7 @@ class AddAuthAdapter(
 
     override fun getItemCount() = brands.size
 
-    inner class TextFieldHolder(val binding: AddAuthTextItemBinding) :
+    inner class TextFieldHolder(val binding: AddAuthTextItemBinding, isSensitive: Boolean) :
         BaseViewHolder<Pair<PlanFields, PlanFieldsRequest>>(binding) {
 
         private val textWatcher = object : SimplifiedTextWatcher {
@@ -121,6 +121,8 @@ class AddAuthAdapter(
                 p3: Int
             ) {
                 brands[adapterPosition].second.value = currentText.toString()
+                brands[adapterPosition].second.isSensitive = isSensitive
+
                 buttonRefresh()
             }
         }

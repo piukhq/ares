@@ -39,6 +39,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Calendar
 
+
 class LoyaltyCardDetailsFragment :
     BaseFragment<LoyaltyCardDetailsViewModel, FragmentLoyaltyCardDetailsBinding>() {
     override fun builder(): FragmentToolbar {
@@ -55,6 +56,7 @@ class LoyaltyCardDetailsFragment :
         const val MIN_ALPHA = 0f
         const val MIN_DIST = 0
         const val MAX_DIST = 650
+        const val currentDestination = R.id.loyalty_card_detail_fragment
     }
 
     private var scrollY = 0
@@ -70,7 +72,8 @@ class LoyaltyCardDetailsFragment :
         binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home, currentDestination)
+
         }
 
         fetchData()
@@ -111,58 +114,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            val scrollValue = v?.scrollY?.let {
-                getAlphaForActionBar(it)
-            }!!
-
-            if (scrollValue == 0) {
-                isAnimating = false
-                binding.containerToolbarTitle.visibility = View.GONE
-            }
-
-            colorDrawable.alpha = scrollValue
-            if (scrollValue == MAX_ALPHA.toInt()) {
-                viewModel.membershipPlan.value?.account?.company_name?.let { name ->
-                    binding.toolbarTitle.text = name
-                    if (!isAnimating) {
-                        isAnimating = true
-                        binding.containerToolbarTitle.visibility = View.VISIBLE
-                        binding.containerToolbarTitle.startAnimation(
-                            AnimationUtils.loadAnimation(
-                                requireContext(),
-                                android.R.anim.fade_in
-                            )
-                        )
-                    }
-                }
-                var voucherTitle = false
-                viewModel.membershipCard.value?.let { it ->
-                    if (!it.vouchers.isNullOrEmpty()) {
-                        if (it.status?.state == MembershipCardStatus.AUTHORISED.status) {
-                            it.vouchers?.first()?.let { voucher ->
-                                binding.toolbarSubtitle.text = getVoucherToolbarSubtitle(voucher.earn)
-                            }
-                        } else {
-                            binding.toolbarSubtitle.text = EMPTY_STRING
-
-                        }
-                        voucherTitle = true
-                    }
-                }
-                if (!voucherTitle) {
-                    viewModel.membershipCard.value?.balances?.first().let { balance ->
-                        binding.toolbarSubtitle.text =
-                            ValueDisplayUtils.displayValue(
-                                balance?.value?.toFloat(),
-                                balance?.prefix,
-                                balance?.suffix,
-                                null
-                            )
-                    }
-                }
-            }
-        }
+        setUpScrollView(colorDrawable)
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             if (isNetworkAvailable(requireActivity(), true)) {
@@ -237,8 +189,9 @@ class LoyaltyCardDetailsFragment :
                     }
                 directions?.let {
                     findNavController().navigateIfAdded(
-                        this@LoyaltyCardDetailsFragment, it
+                        this@LoyaltyCardDetailsFragment, it, currentDestination
                     )
+
                 }
             }
         }
@@ -271,7 +224,8 @@ class LoyaltyCardDetailsFragment :
         ) {}
 
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            findNavController().navigateIfAdded(this, R.id.global_to_home, currentDestination)
+
         }
 
         viewModel.refreshError.observeErrorNonNull(
@@ -279,6 +233,65 @@ class LoyaltyCardDetailsFragment :
             true,
             this@LoyaltyCardDetailsFragment
         )
+    }
+
+    private fun setUpScrollView(colorDrawable: ColorDrawable) {
+        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+            val scrollValue = v?.scrollY?.let {
+                getAlphaForActionBar(it)
+            }!!
+
+            if (scrollValue < MAX_ALPHA.toInt()) {
+                isAnimating = false
+                binding.containerToolbarTitle.visibility = View.GONE
+            }
+
+            colorDrawable.alpha = scrollValue
+            if (scrollValue == MAX_ALPHA.toInt()) {
+                viewModel.membershipPlan.value?.account?.company_name?.let { name ->
+                    binding.toolbarTitle.text = name
+                    if (!isAnimating) {
+                        isAnimating = true
+                        binding.containerToolbarTitle.visibility = View.VISIBLE
+                        binding.containerToolbarTitle.startAnimation(
+                            AnimationUtils.loadAnimation(
+                                requireContext(),
+                                android.R.anim.fade_in
+                            )
+                        )
+                    }
+                }
+                var voucherTitle = false
+                viewModel.membershipCard.value?.let { it ->
+                    if (!it.vouchers.isNullOrEmpty() &&
+                        it.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        if (!it.vouchers.isNullOrEmpty()) {
+                            it.vouchers?.first()?.let { voucher ->
+                                voucherTitle = true
+                                binding.toolbarSubtitle.text = getString(
+                                    R.string.voucher_stamp_collected,
+                                    voucher.earn?.value?.toInt(),
+                                    voucher.earn?.target_value?.toInt(),
+                                    voucher.earn?.suffix
+                                )
+                            }
+                        }
+                    }
+                }
+                if (!voucherTitle) {
+                    viewModel.membershipCard.value?.balances?.first().let { balance ->
+                        binding.toolbarSubtitle.text =
+                            ValueDisplayUtils.displayValue(
+                                balance?.value?.toFloat(),
+                                balance?.prefix,
+                                balance?.suffix,
+                                null
+                            )
+                    }
+                }
+            }
+        }
     }
 
     private fun fetchData() {
@@ -310,17 +323,21 @@ class LoyaltyCardDetailsFragment :
                     aboutText,
                     description
                 )
-            )
+            ),
+            currentDestination
         )
+
     }
 
     private fun viewVoucherDetails(voucher: Voucher) {
         viewModel.membershipPlan.value?.let { membershipPlan ->
-            findNavController().navigate(
+            findNavController().navigateIfAdded(
+                this,
                 LoyaltyCardDetailsFragmentDirections.detailToVoucher(
                     membershipPlan, voucher
-                )
+                ), currentDestination
             )
+
         }
     }
 
@@ -369,6 +386,11 @@ class LoyaltyCardDetailsFragment :
         logScreenView(LOYALTY_DETAIL_VIEW)
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
+            if (isAnimating) {
+                binding.containerToolbarTitle.visibility = View.VISIBLE
+            } else {
+                binding.containerToolbarTitle.visibility = View.GONE
+            }
         }, SCROLL_DELAY)
     }
 
@@ -393,8 +415,10 @@ class LoyaltyCardDetailsFragment :
                         aboutText,
                         description
                     )
-                )
+                ),
+                currentDestination
             )
+
         }
 
         binding.footerSecurity.setOnClickListener {
@@ -408,7 +432,8 @@ class LoyaltyCardDetailsFragment :
                         description2 = getString(R.string.security_and_privacy_copy_2)
                     )
                 )
-            findNavController().navigateIfAdded(this, action)
+            findNavController().navigateIfAdded(this, action, currentDestination)
+
         }
 
         binding.footerDelete.setOnClickListener {
@@ -513,6 +538,7 @@ class LoyaltyCardDetailsFragment :
                                 paymentCards.size
                             )
                         linkStatus.descriptionParams = activeLinkedParams
+                        linkStatus.pluralSize = paymentCards.size
                     }
                 }
             }
@@ -533,20 +559,12 @@ class LoyaltyCardDetailsFragment :
                     getString(linkStatus.descriptionText)
             } else {
                 linkStatus.descriptionParams?.let { descParams ->
-                    linkDescription.text =
-                        getString(
-                            linkStatus.descriptionText,
-                            descParams[0],
-                            descParams[1]
-                        )
-                }
-                linkStatus.descriptionParams?.let { descParams ->
-                    linkDescription.text =
-                        getString(
-                            linkStatus.descriptionText,
-                            descParams[0],
-                            descParams[1]
-                        )
+                    linkDescription.text = resources.getQuantityString(
+                        linkStatus.descriptionText,
+                        linkStatus.pluralSize,
+                        descParams[0],
+                        descParams[1]
+                    )
                 }
             }
         }
@@ -566,8 +584,10 @@ class LoyaltyCardDetailsFragment :
                         directions?.let { _ ->
                             findNavController().navigateIfAdded(
                                 this,
-                                directions
+                                directions,
+                                currentDestination
                             )
+
                         }
                     }
                 }
@@ -580,7 +600,8 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                     directions?.let {
-                        findNavController().navigateIfAdded(this, it)
+                        findNavController().navigateIfAdded(this, it, currentDestination)
+
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS_LINKED -> {
@@ -594,10 +615,8 @@ class LoyaltyCardDetailsFragment :
 
                         }
                     directions?.let { _ ->
-                        findNavController().navigateIfAdded(
-                            this,
-                            directions
-                        )
+                        findNavController().navigateIfAdded(this, directions, currentDestination)
+
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_GENERIC_ERROR -> {
@@ -610,7 +629,8 @@ class LoyaltyCardDetailsFragment :
                                 getString(R.string.description_2_4)
                             )
                         )
-                    findNavController().navigateIfAdded(this, directions)
+                    findNavController().navigateIfAdded(this, directions, currentDestination)
+
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING -> {
@@ -630,7 +650,8 @@ class LoyaltyCardDetailsFragment :
                                 getString(R.string.description_2_8_2)
                             )
                         )
-                    findNavController().navigateIfAdded(this, directions)
+                    findNavController().navigateIfAdded(this, directions, currentDestination)
+
                 }
 
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED -> {
@@ -643,20 +664,27 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
+
                         }
                     }
                 }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
-                            findNavController().navigate(
+                            findNavController().navigateIfAdded(
+                                this,
                                 LoyaltyCardDetailsFragmentDirections.detailToAuth(
                                     SignUpFormType.GHOST,
                                     plan,
                                     isRetryJourney = true,
                                     membershipCardId = card.id
-                                )
+                                ),
+                                currentDestination
                             )
                         }
                     }
@@ -671,7 +699,8 @@ class LoyaltyCardDetailsFragment :
                                 isRetryJourney = true,
                                 isFromNoReasonCodes = true
                             )
-                        findNavController().navigateIfAdded(this, directions)
+                        findNavController().navigateIfAdded(this, directions, currentDestination)
+
                     }
                 }
                 else -> {
@@ -687,11 +716,14 @@ class LoyaltyCardDetailsFragment :
             ) {
                 binding.cardHeader.setOnClickListener {
                     viewModel.membershipPlan.value?.let { plan ->
-                        findNavController().navigate(
+                        findNavController().navigateIfAdded(
+                            this,
                             LoyaltyCardDetailsFragmentDirections.detailToBarcode(
                                 plan, membershipCard
-                            )
+                            ),
+                            currentDestination
                         )
+
                     }
                 }
             }
@@ -708,7 +740,8 @@ class LoyaltyCardDetailsFragment :
                     getString(R.string.description_lcd_pending)
                 )
             )
-        findNavController().navigateIfAdded(this, directions)
+        findNavController().navigateIfAdded(this, directions, currentDestination)
+
     }
 
     private fun setPointsModuleClickListener() {
@@ -727,7 +760,9 @@ class LoyaltyCardDetailsFragment :
                                     viewModel.membershipCard.value!!,
                                     viewModel.membershipPlan.value!!
                                 )
-                            findNavController().navigateIfAdded(this, action)
+
+                            findNavController().navigateIfAdded(this, action, currentDestination)
+
                         }
                     }
                 }
@@ -747,8 +782,11 @@ class LoyaltyCardDetailsFragment :
                                 params
                             )
                         }
-                    action.let { findNavController().navigateIfAdded(this, action) }
+                    action.let {
+                        findNavController().navigateIfAdded(this, action, currentDestination)
+                    }
                 }
+
                 LoginStatus.STATUS_PENDING -> {
                     pendingCardStatusModal()
                 }
@@ -770,7 +808,10 @@ class LoyaltyCardDetailsFragment :
                                     params
                                 )
                             }
-                        action.let { findNavController().navigateIfAdded(this, action) }
+                        action.let {
+                            findNavController().navigateIfAdded(this, action, currentDestination)
+
+                        }
                     }
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
@@ -785,7 +826,12 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
+
                         }
                     }
                 }
@@ -799,7 +845,8 @@ class LoyaltyCardDetailsFragment :
                                 isRetryJourney = true,
                                 isFromNoReasonCodes = true
                             )
-                        findNavController().navigateIfAdded(this, directions)
+                        findNavController().navigateIfAdded(this, directions, currentDestination)
+
                     }
                 }
                 LoginStatus.STATUS_REGISTRATION_REQUIRED_GHOST_CARD -> {
@@ -812,7 +859,12 @@ class LoyaltyCardDetailsFragment :
                                     isRetryJourney = true,
                                     membershipCardId = card.id
                                 )
-                            findNavController().navigateIfAdded(this, directions)
+                            findNavController().navigateIfAdded(
+                                this,
+                                directions,
+                                currentDestination
+                            )
+
                         }
                     }
                 }
