@@ -141,13 +141,13 @@ class LoyaltyCardDetailsFragment :
                     if (!it.vouchers.isNullOrEmpty()) {
                         if (it.status?.state == MembershipCardStatus.AUTHORISED.status) {
                             it.vouchers?.first()?.let { voucher ->
-                                voucherTitle = true
                                 binding.toolbarSubtitle.text = getVoucherToolbarSubtitle(voucher.earn)
                             }
                         } else {
                             binding.toolbarSubtitle.text = EMPTY_STRING
-                            voucherTitle = true
+
                         }
+                        voucherTitle = true
                     }
                 }
                 if (!voucherTitle) {
