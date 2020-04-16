@@ -36,7 +36,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+import java.util.Calendar
 
 
 class LoyaltyCardDetailsFragment :
