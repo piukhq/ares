@@ -15,6 +15,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
@@ -268,12 +269,8 @@ class LoyaltyCardDetailsFragment :
                         if (!it.vouchers.isNullOrEmpty()) {
                             it.vouchers?.first()?.let { voucher ->
                                 voucherTitle = true
-                                binding.toolbarSubtitle.text = getString(
-                                    R.string.voucher_stamp_collected,
-                                    voucher.earn?.value?.toInt(),
-                                    voucher.earn?.target_value?.toInt(),
-                                    voucher.earn?.suffix
-                                )
+                                binding.toolbarSubtitle.text =
+                                    getVoucherToolbarSubtitle(voucher.earn)
                             }
                         }
                     }
@@ -474,7 +471,6 @@ class LoyaltyCardDetailsFragment :
             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
                 viewModel.membershipCard.value?.let { card ->
                     if (!card.vouchers.isNullOrEmpty() &&
-
                         card.status?.state == MembershipCardStatus.AUTHORISED.status
                     ) {
                         setPlrPointsModuleText()
@@ -900,4 +896,35 @@ class LoyaltyCardDetailsFragment :
             }
         }
     }
+
+    private fun getVoucherToolbarSubtitle(earn: Earn?): String =
+        if (earn?.suffix != null) {
+            getString(
+                R.string.voucher_stamp_collected,
+                earn.value?.toInt(),
+                earn.target_value?.toInt(),
+                earn.suffix
+            )
+        } else {
+            if (earn?.value?.rem(100) ?: 0 != 0f) {
+                getString(
+                    R.string.loyalty_wallet_plr_value,
+                    ValueDisplayUtils.displayValue(
+                        earn?.value,
+                        earn?.prefix,
+                        earn?.suffix,
+                        earn?.currency,
+                        forceTwoDecimals = true
+                    ),
+                    earn?.prefix + earn?.target_value?.toInt()
+                )
+            } else {
+                getString(
+                    R.string.loyalty_wallet_plr_value,
+                    earn?.prefix + earn?.value?.toInt(),
+                    earn?.prefix + earn?.target_value?.toInt()
+                )
+            }
+        }
+
 }
