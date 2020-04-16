@@ -12,7 +12,7 @@ import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
-import java.util.*
+import java.util.Locale
 
 
 class TextFieldViewHolder(
