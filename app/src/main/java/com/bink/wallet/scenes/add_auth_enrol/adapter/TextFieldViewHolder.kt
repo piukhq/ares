@@ -1,6 +1,8 @@
 import android.text.InputFilter
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.AppCompatEditText
+import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -8,6 +10,7 @@ import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.SimplifiedTextWatcher
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.logError
@@ -130,6 +133,28 @@ class TextFieldViewHolder(
             checkValidation()
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+            error = context?.getString(
+                R.string.add_auth_error_message,
+                ex.message
+            )
+        }
+    }
+
+    private fun checkIfError(position: Int, text: AppCompatEditText) {
+        val currentItem = addAuthItems[position]
+        if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+            val currentPlanField = currentItem.fieldType as PlanField
+            val requestValue = currentItem.fieldsRequest?.value
+            if (!UtilFunctions.isValidField(
+                    currentPlanField.validation,
+                    requestValue
+                )
+            ) {
+                text.error = text.context.getString(
+                    R.string.add_auth_error_message,
+                    currentPlanField.column
+                )
+            }
         }
     }
 }

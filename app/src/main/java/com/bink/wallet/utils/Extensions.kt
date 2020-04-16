@@ -25,7 +25,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.*
+import java.util.Locale
 
 
 fun Context.toPixelFromDip(value: Float) =

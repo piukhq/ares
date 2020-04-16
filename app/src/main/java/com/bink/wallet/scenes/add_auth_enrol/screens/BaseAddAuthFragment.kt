@@ -58,7 +58,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         SharedPreferenceManager.isLoyaltySelected = true
 
         navigationHandler = AuthNavigationHandler(this, args.membershipPlan)
-        animationHelper = AuthAnimationHelper(this, binding)
+        animationHelper = AuthAnimationHelper(this, binding, RecyclerViewHelper())
 
         setKeyboardTypeToAdjustResize()
 

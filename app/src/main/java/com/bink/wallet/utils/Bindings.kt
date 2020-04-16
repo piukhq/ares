@@ -5,7 +5,12 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter

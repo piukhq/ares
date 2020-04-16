@@ -4,10 +4,12 @@ import android.view.View
 import android.view.ViewTreeObserver
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
+import com.bink.wallet.utils.RecyclerViewHelper
 
 class AuthAnimationHelper(
     val fragment: BaseAddAuthFragment,
-    val binding: BaseAddAuthFragmentBinding
+    val binding: BaseAddAuthFragmentBinding,
+    private val recyclerViewHelper: RecyclerViewHelper
 ) {
 
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
@@ -24,14 +26,14 @@ class AuthAnimationHelper(
             fragment.handleKeyboardVisibleListener(binding.layout, onStartTransition)
         }
         footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            fragment.handleFooterFadeEffect(
+            recyclerViewHelper.handleFooterFadeEffect(
                 mutableListOf(binding.footerSimple.addAuthCta),
                 binding.authFields,
                 binding.footerSimple.footerBottomGradient,
                 true,
                 quotientFooterSimple
             )
-            fragment.handleFooterFadeEffect(
+            recyclerViewHelper.handleFooterFadeEffect(
                 mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
                 binding.authFields,
                 binding.footerComposed.footerBottomGradient,

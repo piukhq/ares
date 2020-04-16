@@ -5,6 +5,7 @@ import com.bink.wallet.R
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.scenes.add_auth_enrol.screens.AddCardFragmentDirections
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
@@ -84,5 +85,19 @@ class AuthNavigationHandler(
                 )
             )
         }
+    }
+
+    fun navigateToGhostRegistrationUnavailableScreen() {
+        fragment.findNavController().navigateIfAdded(
+            fragment,
+            AddCardFragmentDirections.addCardToGhostRegistrationUnavailable(
+                GenericModalParameters(
+                    R.drawable.ic_close,
+                    true,
+                    fragment.getString(R.string.title_ghost_card_not_available),
+                    fragment.getString(R.string.description_ghost_card_not_available)
+                )
+            )
+        )
     }
 }
