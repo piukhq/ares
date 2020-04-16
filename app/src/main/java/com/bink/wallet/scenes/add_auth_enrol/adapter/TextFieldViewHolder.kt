@@ -20,7 +20,8 @@ import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 
