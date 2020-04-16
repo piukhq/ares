@@ -237,6 +237,9 @@
     <string name="enrol_description">Fill out the form below to get a new %1$s, and start collecting rewards.</string>
     <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
     <string name="login_description">You can log in to your %1$s account to view your %2$s details.</string>
+    <string name="points_history_not_available_title">Transaction history unavailable</string>
+    <string name="points_history_not_available_description">Your %s history is not available yet</string>
+    <string name="no_transaction_history_yet">We are unable to currently show the transaction history for this loyalty scheme yet</string>
 
     <!-- Pll Screen -->
     <string name="pll_description">The payment cards below will be linked to your %s. Simply pay with them to collect points.</string>
