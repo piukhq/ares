@@ -3,6 +3,8 @@ import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.AppCompatEditText
+import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -11,6 +13,7 @@ import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.DATE_FORMAT
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.SimplifiedTextWatcher
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
@@ -18,6 +21,8 @@ import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.Locale
+
 
 
 class TextFieldViewHolder(
@@ -72,18 +77,7 @@ class TextFieldViewHolder(
 
         with(binding.contentAddAuthText) {
             planField.description?.length?.let {
-                val hintText = if (it > 40) {
-                    planField.description.subSequence(
-                        0,
-                        40
-                    ).toString() + "\n" + planField.description.subSequence(
-                        41,
-                        planField.description.length - 1
-                    )
-                } else {
-                    planField.description
-                }
-                hint = hintText
+                hint = planField.description
             }
             item.fieldType.common_name?.let {
                 displayCustomKeyboard(it)
@@ -194,6 +188,28 @@ class TextFieldViewHolder(
             checkValidation()
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+            error = context?.getString(
+                R.string.add_auth_error_message,
+                ex.message
+            )
+        }
+    }
+
+    private fun checkIfError(position: Int, text: AppCompatEditText) {
+        val currentItem = addAuthItems[position]
+        if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+            val currentPlanField = currentItem.fieldType as PlanField
+            val requestValue = currentItem.fieldsRequest?.value
+            if (!UtilFunctions.isValidField(
+                    currentPlanField.validation,
+                    requestValue
+                )
+            ) {
+                text.error = text.context.getString(
+                    R.string.add_auth_error_message,
+                    currentPlanField.column
+                )
+            }
         }
     }
 }

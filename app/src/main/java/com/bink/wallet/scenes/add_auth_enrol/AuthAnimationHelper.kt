@@ -4,14 +4,18 @@ import android.view.View
 import android.view.ViewTreeObserver
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
 import com.bink.wallet.scenes.add_auth_enrol.screens.BaseAddAuthFragment
+import com.bink.wallet.utils.RecyclerViewHelper
 
 class AuthAnimationHelper(
     val fragment: BaseAddAuthFragment,
-    val binding: BaseAddAuthFragmentBinding
+    val binding: BaseAddAuthFragmentBinding,
+    private val recyclerViewHelper: RecyclerViewHelper
 ) {
 
     private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
     lateinit var footerLayoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private val quotientFooterSimple = 1
+    private val quotientFooterComposed = 3
 
     fun enableGlobalListeners(
         onEndTransition: () -> Unit = {},
@@ -22,23 +26,23 @@ class AuthAnimationHelper(
             fragment.handleKeyboardVisibleListener(binding.layout, onStartTransition)
         }
         footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            fragment.handleFooterFadeEffect(
+            recyclerViewHelper.handleFooterFadeEffect(
                 mutableListOf(binding.footerSimple.addAuthCta),
                 binding.authFields,
                 binding.footerSimple.footerBottomGradient,
                 true,
-                1
+                quotientFooterSimple
             )
-            fragment.handleFooterFadeEffect(
+            recyclerViewHelper.handleFooterFadeEffect(
                 mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
                 binding.authFields,
                 binding.footerComposed.footerBottomGradient,
                 true,
-                3
+                quotientFooterComposed
             )
-        }
-        if (binding.footerComposed.root.visibility == View.VISIBLE) {
-            binding.footerComposed.root.bringToFront()
+            if (binding.footerComposed.root.visibility == View.VISIBLE) {
+                binding.footerComposed.root.bringToFront()
+            }
         }
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
         binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)

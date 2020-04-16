@@ -20,8 +20,8 @@ import com.bink.wallet.utils.enums.FieldType
 class AddAuthAdapter(
     private val addAuthItems: MutableList<AddAuthItemWrapper>,
     val membershipPlan: MembershipPlan?,
-    val headerTitle: String?,
-    val headerDescription: String?,
+    private val headerTitle: String?,
+    private val headerDescription: String?,
     val checkValidation: () -> Unit = {},
     val navigateToHeader: () -> Unit = {}
 ) :

@@ -11,7 +11,6 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
 
-
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
     private val membershipCardDao: MembershipCardDao,
@@ -19,7 +18,6 @@ class LoyaltyWalletRepository(
     private val bannersDisplayDao: BannersDisplayDao,
     private val paymentCardDao: PaymentCardDao
 ) {
-
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
@@ -137,6 +135,7 @@ class LoyaltyWalletRepository(
             }
         }
     }
+
 
     private fun storeMembershipPlans(
         plans: List<MembershipPlan>,

@@ -35,25 +35,27 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     private var directions: NavDirections? = null
     private var isAddJourney = false
+    private val footerQuotient = 3
     val unselectedCards = mutableListOf<String>()
     val selectedCards = mutableListOf<String>()
+    private val recyclerViewHelper: RecyclerViewHelper = RecyclerViewHelper()
 
     override fun onResume() {
         super.onResume()
-        setFooterFadeEffect(
+        recyclerViewHelper.setFooterFadeEffect(
             mutableListOf(binding.buttonDone),
             binding.paymentCards,
             binding.bgPllBottomGradient,
             false,
-            3
+            footerQuotient
         )
-        registerFooterListener(binding.root)
+        recyclerViewHelper.registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)
     }
 
     override fun onPause() {
         super.onPause()
-        removeFooterListener(binding.root)
+        recyclerViewHelper.removeFooterListener(binding.root)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

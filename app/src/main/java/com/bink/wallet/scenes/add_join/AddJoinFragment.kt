@@ -231,7 +231,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                             membershipCardId.toString(),
                             isRetryJourney
                         )
-
                     }
                 findNavController().navigate(getNewCardNavigationDirections)
 
