@@ -86,91 +86,7 @@ class AddPaymentCardFragment :
             cardInfoDisplay()
         }
 
-        binding.cardNumber.addTextChangedListener(object : TextWatcher {
-            private val MAX_SYMBOLS = 19
-            private val MAX_DIGITS = 16
-            private val MAX_UNSEPARATED_DIGITS = 4
-            private val DIVIDER = ' '
-            private val DIVIDER_LENGTH = 1
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                if (s.length <= MAX_SYMBOLS) {
-                    if (!isDesiredFormat(
-                            s,
-                            MAX_SYMBOLS,
-                            MAX_UNSEPARATED_DIGITS + DIVIDER_LENGTH,
-                            DIVIDER
-                        )
-                    ) {
-                        s.replace(
-                            0,
-                            s.length,
-                            buildCorrectString(
-                                getDigitArray(s, MAX_DIGITS),
-                                MAX_UNSEPARATED_DIGITS,
-                                DIVIDER
-                            )
-                        )
-                    }
-                }
-            }
-
-            private fun isDesiredFormat(
-                s: Editable,
-                maxSymbols: Int,
-                batchSize: Int,
-                divider: Char
-            ): Boolean {
-                var isCorrect =
-                    s.length <= maxSymbols
-                for (i in s.indices) {
-                    isCorrect = if (i > 0 && (i + 1) % batchSize == 0) {
-                        isCorrect and (divider == s[i])
-                    } else {
-                        isCorrect and Character.isDigit(s[i])
-                    }
-                }
-                return isCorrect
-            }
-
-            private fun buildCorrectString(
-                digits: CharArray,
-                dividerPosition: Int,
-                divider: Char
-            ): String? {
-                val formatted = StringBuilder()
-                for (i in digits.indices) {
-                    if (digits[i] != 0.toChar()) {
-                        formatted.append(digits[i])
-                        if (i > 0 && i < digits.size - 1 && (i + 1) % dividerPosition == 0) {
-                            formatted.append(divider)
-                        }
-                    }
-                }
-                return formatted.toString()
-            }
-
-            private fun getDigitArray(s: Editable, size: Int): CharArray {
-                val digits = CharArray(size)
-                var index = 0
-                var i = 0
-                while (i < s.length && index < size) {
-                    val current = s[i]
-                    if (Character.isDigit(current)) {
-                        digits[index] = current
-                        index++
-                    }
-                    i++
-                }
-                return digits
-            }
-        })
+        setUpCardInputFormat()
 
         viewModel.cardHolder.observeNonNull(this) {
             cardInfoDisplay()
@@ -258,6 +174,94 @@ class AddPaymentCardFragment :
                 )
             )
         }
+    }
+
+    private fun setUpCardInputFormat() {
+        binding.cardNumber.addTextChangedListener(object : TextWatcher {
+            private val MAX_SYMBOLS = 19
+            private val MAX_DIGITS = 16
+            private val MAX_UNSEPARATED_DIGITS = 4
+            private val DIVIDER = ' '
+            private val DIVIDER_LENGTH = 1
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                if (s.length <= MAX_SYMBOLS) {
+                    if (!isDesiredFormat(
+                            s,
+                            MAX_SYMBOLS,
+                            MAX_UNSEPARATED_DIGITS + DIVIDER_LENGTH,
+                            DIVIDER
+                        )
+                    ) {
+                        s.replace(
+                            0,
+                            s.length,
+                            buildCorrectString(
+                                getDigitArray(s, MAX_DIGITS),
+                                MAX_UNSEPARATED_DIGITS,
+                                DIVIDER
+                            )
+                        )
+                    }
+                }
+            }
+
+            private fun isDesiredFormat(
+                s: Editable,
+                maxSymbols: Int,
+                batchSize: Int,
+                divider: Char
+            ): Boolean {
+                var isCorrect =
+                    s.length <= maxSymbols
+                for (i in s.indices) {
+                    isCorrect = if (i > 0 && (i + 1) % batchSize == 0) {
+                        isCorrect and (divider == s[i])
+                    } else {
+                        isCorrect and Character.isDigit(s[i])
+                    }
+                }
+                return isCorrect
+            }
+
+            private fun buildCorrectString(
+                digits: CharArray,
+                dividerPosition: Int,
+                divider: Char
+            ): String? {
+                val formatted = StringBuilder()
+                for (i in digits.indices) {
+                    if (digits[i] != 0.toChar()) {
+                        formatted.append(digits[i])
+                        if (i > 0 && i < digits.size - 1 && (i + 1) % dividerPosition == 0) {
+                            formatted.append(divider)
+                        }
+                    }
+                }
+                return formatted.toString()
+            }
+
+            private fun getDigitArray(s: Editable, size: Int): CharArray {
+                val digits = CharArray(size)
+                var index = 0
+                var i = 0
+                while (i < s.length && index < size) {
+                    val current = s[i]
+                    if (Character.isDigit(current)) {
+                        digits[index] = current
+                        index++
+                    }
+                    i++
+                }
+                return digits
+            }
+        })
     }
 
     private fun cardExpiryErrorCheck(text: String): String? {
