@@ -16,22 +16,22 @@ import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Voucher
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.formatBalance
-import com.bink.wallet.utils.SCROLL_DELAY
-import com.bink.wallet.utils.MembershipPlanUtils
-import com.bink.wallet.utils.getElapsedTime
-import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
+import com.bink.wallet.utils.MembershipPlanUtils
+import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.ValueDisplayUtils
-import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.formatBalance
+import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.linkCard
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -113,62 +113,7 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
-            val scrollValue = v?.scrollY?.let {
-                getAlphaForActionBar(it)
-            }!!
-
-            if (scrollValue == 0) {
-                isAnimating = false
-                binding.containerToolbarTitle.visibility = View.GONE
-            }
-
-            colorDrawable.alpha = scrollValue
-            if (scrollValue == MAX_ALPHA.toInt()) {
-                viewModel.membershipPlan.value?.account?.company_name?.let { name ->
-                    binding.toolbarTitle.text = name
-                    if (!isAnimating) {
-                        isAnimating = true
-                        binding.containerToolbarTitle.visibility = View.VISIBLE
-                        binding.containerToolbarTitle.startAnimation(
-                            AnimationUtils.loadAnimation(
-                                requireContext(),
-                                android.R.anim.fade_in
-                            )
-                        )
-                    }
-                }
-                var voucherTitle = false
-                viewModel.membershipCard.value?.let { it ->
-                    if (!it.vouchers.isNullOrEmpty() &&
-                        it.status?.state == MembershipCardStatus.AUTHORISED.status
-                    ) {
-                        if (!it.vouchers.isNullOrEmpty()) {
-                            it.vouchers?.first()?.let { voucher ->
-                                voucherTitle = true
-                                binding.toolbarSubtitle.text = getString(
-                                    R.string.voucher_stamp_collected,
-                                    voucher.earn?.value?.toInt(),
-                                    voucher.earn?.target_value?.toInt(),
-                                    voucher.earn?.suffix
-                                )
-                            }
-                        }
-                    }
-                }
-                if (!voucherTitle) {
-                    viewModel.membershipCard.value?.balances?.first().let { balance ->
-                        binding.toolbarSubtitle.text =
-                            ValueDisplayUtils.displayValue(
-                                balance?.value?.toFloat(),
-                                balance?.prefix,
-                                balance?.suffix,
-                                null
-                            )
-                    }
-                }
-            }
-        }
+        setUpScrollView(colorDrawable)
 
         binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
             if (isNetworkAvailable(requireActivity(), true)) {
@@ -289,6 +234,65 @@ class LoyaltyCardDetailsFragment :
         )
     }
 
+    private fun setUpScrollView(colorDrawable: ColorDrawable) {
+        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+            val scrollValue = v?.scrollY?.let {
+                getAlphaForActionBar(it)
+            }!!
+
+            if (scrollValue < MAX_ALPHA.toInt()) {
+                isAnimating = false
+                binding.containerToolbarTitle.visibility = View.GONE
+            }
+
+            colorDrawable.alpha = scrollValue
+            if (scrollValue == MAX_ALPHA.toInt()) {
+                viewModel.membershipPlan.value?.account?.company_name?.let { name ->
+                    binding.toolbarTitle.text = name
+                    if (!isAnimating) {
+                        isAnimating = true
+                        binding.containerToolbarTitle.visibility = View.VISIBLE
+                        binding.containerToolbarTitle.startAnimation(
+                            AnimationUtils.loadAnimation(
+                                requireContext(),
+                                android.R.anim.fade_in
+                            )
+                        )
+                    }
+                }
+                var voucherTitle = false
+                viewModel.membershipCard.value?.let { it ->
+                    if (!it.vouchers.isNullOrEmpty() &&
+                        it.status?.state == MembershipCardStatus.AUTHORISED.status
+                    ) {
+                        if (!it.vouchers.isNullOrEmpty()) {
+                            it.vouchers?.first()?.let { voucher ->
+                                voucherTitle = true
+                                binding.toolbarSubtitle.text = getString(
+                                    R.string.voucher_stamp_collected,
+                                    voucher.earn?.value?.toInt(),
+                                    voucher.earn?.target_value?.toInt(),
+                                    voucher.earn?.suffix
+                                )
+                            }
+                        }
+                    }
+                }
+                if (!voucherTitle) {
+                    viewModel.membershipCard.value?.balances?.first().let { balance ->
+                        binding.toolbarSubtitle.text =
+                            ValueDisplayUtils.displayValue(
+                                balance?.value?.toFloat(),
+                                balance?.prefix,
+                                balance?.suffix,
+                                null
+                            )
+                    }
+                }
+            }
+        }
+    }
+
     private fun fetchData() {
         setLoadingState(true)
         if (isNetworkAvailable(requireActivity(), false)) {
@@ -381,6 +385,11 @@ class LoyaltyCardDetailsFragment :
         logScreenView(LOYALTY_DETAIL_VIEW)
         binding.scrollView.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
+            if (isAnimating) {
+                binding.containerToolbarTitle.visibility = View.VISIBLE
+            } else {
+                binding.containerToolbarTitle.visibility = View.GONE
+            }
         }, SCROLL_DELAY)
     }
 
