@@ -1,7 +1,9 @@
 package com.bink.wallet.scenes.add_payment_card
 
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -14,10 +16,8 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.cardFormatter
 import com.bink.wallet.utils.cardStarFormatter
 import com.bink.wallet.utils.cardValidation
-import com.bink.wallet.utils.ccSanitize
 import com.bink.wallet.utils.dateValidation
 import com.bink.wallet.utils.enums.PaymentCardType
 import com.bink.wallet.utils.formatDate
@@ -27,7 +27,6 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.presentedCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.min
 
 class AddPaymentCardFragment :
     BaseFragment<AddPaymentCardViewModel, AddPaymentCardFragmentBinding>() {
@@ -85,8 +84,9 @@ class AddPaymentCardFragment :
         viewModel.cardNumber.observeNonNull(this) {
             cardSwitcher(it)
             cardInfoDisplay()
-            updateEnteredCardNumber()
         }
+
+        setUpCardInputFormat()
 
         viewModel.cardHolder.observeNonNull(this) {
             cardInfoDisplay()
@@ -188,6 +188,94 @@ class AddPaymentCardFragment :
         super.onStop()
     }
 
+    private fun setUpCardInputFormat() {
+        binding.cardNumber.addTextChangedListener(object : TextWatcher {
+            private val MAX_SYMBOLS = 19
+            private val MAX_DIGITS = 16
+            private val MAX_UNSEPARATED_DIGITS = 4
+            private val DIVIDER = ' '
+            private val DIVIDER_LENGTH = 1
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                if (s.length <= MAX_SYMBOLS) {
+                    if (!isDesiredFormat(
+                            s,
+                            MAX_SYMBOLS,
+                            MAX_UNSEPARATED_DIGITS + DIVIDER_LENGTH,
+                            DIVIDER
+                        )
+                    ) {
+                        s.replace(
+                            0,
+                            s.length,
+                            buildCorrectString(
+                                getDigitArray(s, MAX_DIGITS),
+                                MAX_UNSEPARATED_DIGITS,
+                                DIVIDER
+                            )
+                        )
+                    }
+                }
+            }
+
+            private fun isDesiredFormat(
+                s: Editable,
+                maxSymbols: Int,
+                batchSize: Int,
+                divider: Char
+            ): Boolean {
+                var isCorrect =
+                    s.length <= maxSymbols
+                for (i in s.indices) {
+                    isCorrect = if (i > 0 && (i + 1) % batchSize == 0) {
+                        isCorrect and (divider == s[i])
+                    } else {
+                        isCorrect and Character.isDigit(s[i])
+                    }
+                }
+                return isCorrect
+            }
+
+            private fun buildCorrectString(
+                digits: CharArray,
+                dividerPosition: Int,
+                divider: Char
+            ): String? {
+                val formatted = StringBuilder()
+                for (i in digits.indices) {
+                    if (digits[i] != 0.toChar()) {
+                        formatted.append(digits[i])
+                        if (i > 0 && i < digits.size - 1 && (i + 1) % dividerPosition == 0) {
+                            formatted.append(divider)
+                        }
+                    }
+                }
+                return formatted.toString()
+            }
+
+            private fun getDigitArray(s: Editable, size: Int): CharArray {
+                val digits = CharArray(size)
+                var index = 0
+                var i = 0
+                while (i < s.length && index < size) {
+                    val current = s[i]
+                    if (Character.isDigit(current)) {
+                        digits[index] = current
+                        index++
+                    }
+                    i++
+                }
+                return digits
+            }
+        })
+    }
+
     private fun cardExpiryErrorCheck(text: String): String? {
         with(text) {
             if (!dateValidation()) {
@@ -213,53 +301,5 @@ class AddPaymentCardFragment :
     private fun cardInfoDisplay() {
         binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
         binding.displayCardName.text = binding.cardName.text.toString()
-    }
-
-    /***
-     * This function is frustrating as hell for the logic... if the user is entering and it adds
-     * a space every few, and the cursor has to be moved to the end, but if the user is editing
-     * and it has to re-format the number, then the cursor stays in the same place it was!
-     * Remember that the spacing can move between a Visa/MC & AmEx, especially if the user
-     * decides to add a "3" before the start of a previously Visa number... so the number could
-     * go from "4242 4242 4242" to "3424 242424 242", and that causes a bit of insanity on
-     * cursor locations!
-     */
-    private fun updateEnteredCardNumber() {
-        with(binding.cardNumber) {
-            val origNumber = text.toString()
-            val newNumber = origNumber.cardFormatter()
-            if (origNumber.isNotEmpty()) {
-                if (newNumber.isNotEmpty() &&
-                    origNumber != newNumber
-                ) {
-                    val pos = selectionStart
-                    setText(newNumber)
-                    if (newNumber.length > origNumber.length &&
-                        pos == origNumber.length
-                    ) {
-                        setSelection(newNumber.length)
-                    } else if (newNumber.length < origNumber.length &&
-                        pos > newNumber.length
-                    ) {
-                        setSelection(newNumber.length)
-                    }
-                }
-                val sanNumber = origNumber.ccSanitize()
-                val type = sanNumber.substring(
-                    0,
-                    min(4, sanNumber.length)
-                ).presentedCardType()
-                val max = type.len
-                if (sanNumber.length > max) {
-                    val trimmedNumber = if (type == PaymentCardType.NONE) {
-                        sanNumber.substring(0, max)
-                    } else {
-                        sanNumber.substring(0, max).cardFormatter()
-                    }
-                    setText(trimmedNumber)
-                    setSelection(trimmedNumber.length)
-                }
-            }
-        }
     }
 }

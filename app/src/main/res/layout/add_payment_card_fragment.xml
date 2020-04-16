@@ -134,6 +134,7 @@
                     android:hint="@string/card_number_hint"
                     android:imeOptions="actionNext"
                     android:importantForAutofill="no"
+                    android:digits="0123456789 "
                     android:inputType="number"
                     android:maxLength="19"
                     android:nextFocusDown="@id/card_expiry"
