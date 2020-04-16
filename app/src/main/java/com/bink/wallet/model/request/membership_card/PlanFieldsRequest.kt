@@ -7,5 +7,5 @@ data class PlanFieldsRequest(
     var column: String?,
     var value: String?,
     var disabled: Boolean? = null,
-    var isSensitive: Boolean = false
+    @Transient var isSensitive: Boolean = false
 )
