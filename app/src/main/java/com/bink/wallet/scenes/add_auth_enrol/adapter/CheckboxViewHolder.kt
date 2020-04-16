@@ -28,20 +28,20 @@ class CheckboxViewHolder(
             setDescriptionText(this, item)
 
             contentAddAuthCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                handleCheckBoxChange(isChecked)
+                handleCheckBoxChange(item, isChecked)
             }
             addAuthCheckboxText.setOnClickListener {
                 val isChecked = contentAddAuthCheckbox.isChecked
                 contentAddAuthCheckbox.isChecked = !isChecked
-                handleCheckBoxChange(contentAddAuthCheckbox.isChecked)
+                handleCheckBoxChange(item, contentAddAuthCheckbox.isChecked)
             }
             contentAddAuthCheckbox.isFocusable = false
         }
         binding.executePendingBindings()
     }
 
-    private fun handleCheckBoxChange(isChecked: Boolean) {
-        addAuthItems[adapterPosition].fieldsRequest?.value = isChecked.toString()
+    private fun handleCheckBoxChange(item: AddAuthItemWrapper, isChecked: Boolean) {
+        setFieldRequestValue(item, isChecked.toString())
         checkValidation()
     }
 

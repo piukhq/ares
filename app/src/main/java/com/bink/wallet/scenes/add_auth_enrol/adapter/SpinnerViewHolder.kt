@@ -11,6 +11,8 @@ class SpinnerViewHolder(
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
+    private var item: AddAuthItemWrapper? = null
+
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -22,17 +24,22 @@ class SpinnerViewHolder(
             position: Int,
             id: Long
         ) {
-            addAuthItems[adapterPosition].fieldsRequest?.value =
-                (addAuthItems[adapterPosition].fieldType as PlanField).choice?.get(position)
+            item?.let {
+                setFieldRequestValue(
+                    it,
+                    (it.fieldType as PlanField).choice?.get(position).toString()
+                )
+            }
         }
 
     }
 
     override fun bind(item: AddAuthItemWrapper) {
+        this.item = item
         val spinner = binding.contentAddAuthSpinner
         val planField = item.fieldType as PlanField
         binding.planField = planField
-        addAuthItems[adapterPosition].fieldsRequest?.value = planField.choice?.get(0)
+        setFieldRequestValue(item, planField.choice?.get(0).toString())
         with(spinner) {
             isFocusable = false
             onItemSelectedListener = itemSelectedListener
