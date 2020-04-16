@@ -269,12 +269,8 @@ class LoyaltyCardDetailsFragment :
                         if (!it.vouchers.isNullOrEmpty()) {
                             it.vouchers?.first()?.let { voucher ->
                                 voucherTitle = true
-                                binding.toolbarSubtitle.text = getString(
-                                    R.string.voucher_stamp_collected,
-                                    voucher.earn?.value?.toInt(),
-                                    voucher.earn?.target_value?.toInt(),
-                                    voucher.earn?.suffix
-                                )
+                                binding.toolbarSubtitle.text =
+                                    getVoucherToolbarSubtitle(voucher.earn)
                             }
                         }
                     }
