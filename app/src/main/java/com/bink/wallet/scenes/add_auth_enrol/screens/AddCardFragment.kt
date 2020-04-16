@@ -6,7 +6,6 @@ import android.widget.Button
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
 import com.bink.wallet.utils.observeNonNull
@@ -52,41 +51,21 @@ class AddCardFragment : BaseAddAuthFragment() {
     private fun setViewsContent() {
         viewModel.ctaText.set(retrieveCTAText())
         viewModel.titleText.set(retrieveTitleText())
-        viewModel.descriptionText.set(retrieveDescriptionText())
+        currentMembershipPlan?.let {
+            val resourceString = viewModel.retrieveDescriptionText(it, isRetryJourney)?.first
+            val stringValue = viewModel.retrieveDescriptionText(it, isRetryJourney)?.second
+            resourceString?.let {
+                if (stringValue != null) {
+                    viewModel.descriptionText.set(getString(resourceString, stringValue))
+                } else {
+                    viewModel.descriptionText.set(getString(resourceString))
+                }
+            }
+        }
         viewModel.isNoAccountFooter.set(!isFooterSimple())
     }
 
     private fun isFooterSimple() = isRetryJourney && !isFromNoReasonCodes
-
-    private fun retrieveDescriptionText(): String {
-        currentMembershipPlan?.let { membershipPlan ->
-            if (isRetryJourney) {
-                if (membershipPlan.areTransactionsAvailable()) {
-                    membershipPlan.account?.plan_name?.let {
-                        return getString(
-                            R.string.log_in_transaction_available,
-                            it
-                        )
-                    }
-                } else {
-                    membershipPlan.account?.plan_name_card?.let {
-                        return getString(
-                            R.string.log_in_transaction_unavailable,
-                            it
-                        )
-                    }
-                }
-            } else {
-                membershipPlan.account?.company_name?.let { companyName ->
-                    return getString(
-                        R.string.please_enter_credentials,
-                        companyName
-                    )
-                }
-            }
-        }
-        return EMPTY_STRING
-    }
 
     private fun logNoAccountClick() {
         logEvent(

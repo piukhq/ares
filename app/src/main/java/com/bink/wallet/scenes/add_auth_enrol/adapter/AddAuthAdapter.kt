@@ -26,20 +26,26 @@ class AddAuthAdapter(
     val navigateToHeader: () -> Unit = {}
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
+
+
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
-        holder.addAuthItems = addAuthItems
+
         holder.checkValidation = checkValidation
 
         addAuthItems[position].let { addAuthItem ->
             if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
                 when (holder) {
                     is TextFieldViewHolder -> {
+                        holder.setFieldRequestValue = ::setFieldRequest
+                        holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.bind(addAuthItem)
                     }
                     is SpinnerViewHolder -> {
+                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.bind(addAuthItem)
                     }
                     is CheckboxViewHolder -> {
+                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.bind(addAuthItem)
                     }
                     is DisplayViewHolder -> {
@@ -52,6 +58,7 @@ class AddAuthAdapter(
                 if (getItemViewType(position) == FieldType.DISPLAY.type) {
                     (holder as DisplayViewHolder).bind(addAuthItem)
                 } else {
+                    holder.setFieldRequestValue = ::setFieldRequest
                     (holder as CheckboxViewHolder).bind(addAuthItem)
                 }
             } else {
@@ -68,21 +75,31 @@ class AddAuthAdapter(
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             FieldType.TEXT.type,
-            FieldType.PASSWORD.type -> TextFieldViewHolder(
-                AddAuthTextItemBinding.inflate(inflater)
-            )
-            FieldType.SPINNER.type -> SpinnerViewHolder(
-                AddAuthSpinnerItemBinding.inflate(inflater)
-            )
-            FieldType.DISPLAY.type -> DisplayViewHolder(
-                AddAuthDisplayItemBinding.inflate(inflater)
-            )
-            FieldType.HEADER.type -> HeaderViewHolder(
-                AddAuthHeaderItemBinding.inflate(inflater),
-                headerTitle,
-                headerDescription
-            )
-            else -> CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater))
+            FieldType.SENSITIVE.type -> {
+                TextFieldViewHolder((AddAuthTextItemBinding.inflate(inflater)))
+            }
+            FieldType.SPINNER.type -> {
+                SpinnerViewHolder(
+                    AddAuthSpinnerItemBinding.inflate(inflater)
+                )
+            }
+            FieldType.DISPLAY.type -> {
+                DisplayViewHolder(
+                    AddAuthDisplayItemBinding.inflate(inflater)
+                )
+            }
+            FieldType.HEADER.type -> {
+                HeaderViewHolder(
+                    AddAuthHeaderItemBinding.inflate(inflater),
+                    headerTitle,
+                    headerDescription
+                ).apply {
+                    navigateToHeader = this@AddAuthAdapter.navigateToHeader
+                }
+            }
+            else -> {
+                CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater))
+            }
         }
     }
 
@@ -108,4 +125,14 @@ class AddAuthAdapter(
 
     override fun getItemCount() = addAuthItems.size
 
+    private fun isLastEditText(itemWrapper: AddAuthItemWrapper) =
+        itemWrapper == addAuthItems.last { item ->
+            item.getFieldType() == AddAuthItemType.PLAN_FIELD &&
+                    ((item.fieldType as PlanField).type == FieldType.TEXT.type ||
+                            item.fieldType.type == FieldType.SENSITIVE.type)
+        }
+
+    private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
+        itemWrapper.fieldsRequest?.value = value
+    }
 }

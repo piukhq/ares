@@ -3,7 +3,6 @@ import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.widget.AppCompatEditText
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -31,19 +30,8 @@ class TextFieldViewHolder(
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
-    private var finalTextField: String = EMPTY_STRING
-
-    init {
-        addAuthItems.map { item ->
-            if (item.getFieldType() == AddAuthItemType.PLAN_FIELD &&
-                (item.fieldType as PlanField).type == FieldType.TEXT.type
-            ) {
-                item.fieldType.column?.let { column ->
-                    finalTextField = column
-                }
-            }
-        }
-    }
+    var isLastEditText: Boolean = false
+    var item: AddAuthItemWrapper? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -52,7 +40,9 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            addAuthItems[adapterPosition].fieldsRequest?.value = currentText.toString()
+            item?.let {
+                setFieldRequestValue(it, currentText.toString())
+            }
             checkValidation()
         }
     }
@@ -64,13 +54,19 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            addAuthItems[adapterPosition].fieldsRequest?.value =
-                currentText.toString().toLowerCase(Locale.ROOT)
+            item?.let {
+                setFieldRequestValue(
+                    it,
+                    currentText.toString().toLowerCase(Locale.ROOT)
+                )
+            }
             checkValidation()
         }
     }
 
     override fun bind(item: AddAuthItemWrapper) {
+        this.item = item
+
         val planField = item.fieldType as PlanField
         val planRequest = item.fieldsRequest
 
@@ -112,11 +108,11 @@ class TextFieldViewHolder(
             if (planRequest?.value.isNullOrBlank()) {
                 error = null
             } else {
-                checkIfFieldIsValid()
+                checkIfFieldIsValid(item)
             }
 
             imeOptions =
-                if (planRequest?.column == finalTextField) {
+                if (isLastEditText) {
                     EditorInfo.IME_ACTION_DONE
                 } else {
                     EditorInfo.IME_ACTION_NEXT
@@ -124,18 +120,48 @@ class TextFieldViewHolder(
 
             setOnFocusChangeListener { _, isFocus ->
                 if (!isFocus) {
-                    checkIfFieldIsValid()
+                    checkIfFieldIsValid(item)
                 }
             }
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    checkIfFieldIsValid()
+                    checkIfFieldIsValid(item)
                 }
                 false
             }
         }
 
         binding.executePendingBindings()
+    }
+
+    private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
+        try {
+            checkIfError( this, currentItem)
+            checkValidation()
+        } catch (ex: Exception) {
+            logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
+            error = context?.getString(
+                R.string.add_auth_error_message,
+                ex.message
+            )
+        }
+    }
+
+    private fun checkIfError(text: TextInputEditText, currentItem: AddAuthItemWrapper) {
+        if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+            val currentPlanField = currentItem.fieldType as PlanField
+            val requestValue = currentItem.fieldsRequest?.value
+            if (!UtilFunctions.isValidField(
+                    currentPlanField.validation,
+                    requestValue
+                )
+            ) {
+                text.error = text.context.getString(
+                    R.string.add_auth_error_message,
+                    currentPlanField.column
+                )
+            }
+        }
     }
 
     private fun TextInputEditText.displayCustomKeyboard(commonName: String) {
@@ -179,37 +205,6 @@ class TextFieldViewHolder(
             }
             else -> {
                 InputType.TYPE_CLASS_TEXT
-            }
-        }
-    }
-
-    private fun TextInputEditText.checkIfFieldIsValid() {
-        try {
-            checkIfError(adapterPosition, this)
-            checkValidation()
-        } catch (ex: Exception) {
-            logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
-            error = context?.getString(
-                R.string.add_auth_error_message,
-                ex.message
-            )
-        }
-    }
-
-    private fun checkIfError(position: Int, text: AppCompatEditText) {
-        val currentItem = addAuthItems[position]
-        if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-            val currentPlanField = currentItem.fieldType as PlanField
-            val requestValue = currentItem.fieldsRequest?.value
-            if (!UtilFunctions.isValidField(
-                    currentPlanField.validation,
-                    requestValue
-                )
-            ) {
-                text.error = text.context.getString(
-                    R.string.add_auth_error_message,
-                    currentPlanField.column
-                )
             }
         }
     }

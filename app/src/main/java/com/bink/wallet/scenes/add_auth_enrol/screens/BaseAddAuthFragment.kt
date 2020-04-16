@@ -19,10 +19,15 @@ import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.RecyclerViewHelper
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.enums.HandledException
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.hideKeyboard
+import com.bink.wallet.utils.ApiErrorUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
