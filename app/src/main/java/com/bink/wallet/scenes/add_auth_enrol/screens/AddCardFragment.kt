@@ -32,8 +32,15 @@ class AddCardFragment : BaseAddAuthFragment() {
             logNoAccountClick()
         }
 
-        binding.footerComposed.addAuthCta.setOnClickListener { logCTAClick(it); handleAuthCtaRequest() }
-        binding.footerSimple.addAuthCta.setOnClickListener { logCTAClick(it); handleAuthCtaRequest() }
+        binding.footerComposed.addAuthCta.setOnClickListener {
+            logCTAClick(it);
+            handleAuthCtaRequest()
+        }
+
+        binding.footerSimple.addAuthCta.setOnClickListener {
+            logCTAClick(it);
+            handleAuthCtaRequest()
+        }
 
         viewModel.newMembershipCard.observeNonNull(this) {
             handleNavigationAfterCardCreation(it, false)

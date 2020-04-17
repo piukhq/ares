@@ -7,7 +7,11 @@ import TextFieldViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.databinding.*
+import com.bink.wallet.databinding.AddAuthTextItemBinding
+import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
+import com.bink.wallet.databinding.AddAuthDisplayItemBinding
+import com.bink.wallet.databinding.AddAuthHeaderItemBinding
+import com.bink.wallet.databinding.AddAuthCheckboxItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
