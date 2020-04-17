@@ -210,7 +210,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun beginTransition() {
-        binding.authFields.bringToFront()
         viewModel.isKeyboardHidden.set(false)
     }
 
