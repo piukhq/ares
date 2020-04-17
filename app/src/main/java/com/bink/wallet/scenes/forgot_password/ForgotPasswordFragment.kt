@@ -26,8 +26,8 @@ class ForgotPasswordFragment :
 
     override fun onResume() {
         super.onResume()
-        setupLayoutListener(binding.container, ::validateCredentials)
-        registerLayoutListener(binding.container)
+        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
+        registerKeyboardHiddenLayoutListener(binding.container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,7 +77,7 @@ class ForgotPasswordFragment :
 
     override fun onPause() {
         super.onPause()
-        removeLayoutListener(binding.container)
+        removeKeyboardHiddenLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {
