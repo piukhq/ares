@@ -143,7 +143,7 @@ open class GenericModalFragment :
                 secondButton.visibility = View.VISIBLE
                 secondButton.text = parameters.secondButtonText
             } else {
-                secondButton.visibility = View.GONE
+                secondButton.visibility = View.INVISIBLE
             }
         }
     }
