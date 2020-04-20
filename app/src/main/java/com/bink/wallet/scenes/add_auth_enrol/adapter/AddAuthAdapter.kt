@@ -139,8 +139,4 @@ class AddAuthAdapter(
     private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
         itemWrapper.fieldsRequest?.value = value
     }
-
-    companion object {
-        const val COMMON_NAME_EMAIL = "email"
-    }
 }
