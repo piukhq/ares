@@ -26,7 +26,6 @@ import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.formatBalance
 import com.bink.wallet.utils.getElapsedTime
@@ -191,7 +190,6 @@ class LoyaltyCardDetailsFragment :
                     findNavController().navigateIfAdded(
                         this@LoyaltyCardDetailsFragment, it, currentDestination
                     )
-
                 }
             }
         }
@@ -654,11 +652,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.ADD_AUTH,
+                                LoyaltyCardDetailsFragmentDirections.detailToAddCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             findNavController().navigateIfAdded(
                                 this,
@@ -674,11 +671,10 @@ class LoyaltyCardDetailsFragment :
                         viewModel.membershipPlan.value?.let { plan ->
                             findNavController().navigateIfAdded(
                                 this,
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.GHOST,
+                                LoyaltyCardDetailsFragmentDirections.detailToGhostCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 ),
                                 currentDestination
                             )
@@ -816,11 +812,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.ADD_AUTH,
+                                LoyaltyCardDetailsFragmentDirections.detailToAddCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             findNavController().navigateIfAdded(
                                 this,
@@ -849,11 +844,10 @@ class LoyaltyCardDetailsFragment :
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
                             val directions =
-                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
-                                    SignUpFormType.GHOST,
+                                LoyaltyCardDetailsFragmentDirections.detailToGhostCard(
                                     plan,
-                                    isRetryJourney = true,
-                                    membershipCardId = card.id
+                                    membershipCardId = card.id,
+                                    isRetryJourney = true
                                 )
                             findNavController().navigateIfAdded(
                                 this,

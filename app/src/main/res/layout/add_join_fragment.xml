@@ -2,236 +2,237 @@
 
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="item"
-                type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+            name="item"
+            type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-                android:id="@+id/close_button"
-                style="?actionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_close"
-                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/toolbar"
-                tools:ignore="ContentDescription" />
+            android:id="@+id/close_button"
+            style="?actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            tools:ignore="ContentDescription" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:scrollbars="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/button_margin">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/button_margin">
 
                     <com.bink.wallet.ModalBrandHeader
-                            android:id="@+id/add_join_reward"
-                            android:layout_width="wrap_content"
+                        android:id="@+id/add_join_reward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small"
+                        app:membershipPlan="@{item}" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/add_join_store_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small">
+
+                        <ImageView
+                            android:id="@+id/add_join_store_image"
+                            android:layout_width="@dimen/title_image_size"
+                            android:layout_height="@dimen/title_image_size"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_marginTop="@dimen/margin_padding_size_small"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_icons_svl_store_active"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:id="@+id/add_join_store_title"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
                             android:layout_marginStart="@dimen/margin_padding_size_small"
-                            android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                            android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:layout_marginEnd="@dimen/margin_padding_size_small"
-                            app:membershipPlan="@{item}" />
+                            android:text="@string/add_join_store_title"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/size_headline"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/add_join_store_image"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/add_join_store_wrapper"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/add_join_store_description"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_padding_size_medium"
-                            android:layout_marginEnd="@dimen/margin_padding_size_small">
-
-                        <ImageView
-                                android:id="@+id/add_join_store_image"
-                                android:layout_width="@dimen/title_image_size"
-                                android:layout_height="@dimen/title_image_size"
-                                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                                android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_icons_svl_store_active"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:ignore="ContentDescription" />
-
-                        <TextView
-                                android:id="@+id/add_join_store_title"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/margin_padding_size_small"
-                                android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:layout_marginEnd="@dimen/margin_padding_size_small"
-                                android:text="@string/add_join_store_title"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/size_headline"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/add_join_store_image"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                                android:id="@+id/add_join_store_description"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                                android:text="@string/add_join_store_description"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/size_sub_headline"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/add_join_store_title"
-                                app:layout_constraintTop_toBottomOf="@+id/add_join_store_title" />
+                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                            android:text="@string/add_join_store_description"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/size_sub_headline"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/add_join_store_title"
+                            app:layout_constraintTop_toBottomOf="@+id/add_join_store_title" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/add_join_view_wrapper"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_padding_size_small"
-                            android:layout_marginEnd="@dimen/margin_padding_size_small">
+                        android:id="@+id/add_join_view_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small">
 
                         <ImageView
-                                android:id="@+id/add_join_view_image"
-                                android:layout_width="@dimen/title_image_size"
-                                android:layout_height="@dimen/title_image_size"
-                                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                                android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_icons_svl_view_active"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:ignore="ContentDescription" />
+                            android:id="@+id/add_join_view_image"
+                            android:layout_width="@dimen/title_image_size"
+                            android:layout_height="@dimen/title_image_size"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_marginTop="@dimen/margin_padding_size_small"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_icons_svl_view_active"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
 
                         <TextView
-                                android:id="@+id/add_join_view_title"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/margin_padding_size_small"
-                                android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:layout_marginEnd="@dimen/margin_padding_size_small"
-                                android:text="@string/add_join_view_title"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/size_headline"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/add_join_view_image"
-                                app:layout_constraintTop_toTopOf="parent" />
+                            android:id="@+id/add_join_view_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_padding_size_small"
+                            android:layout_marginTop="@dimen/margin_padding_size_small"
+                            android:layout_marginEnd="@dimen/margin_padding_size_small"
+                            android:text="@string/add_join_view_title"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/size_headline"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/add_join_view_image"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                                android:id="@+id/add_join_view_description"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                                android:text="@string/add_join__inactive_view_description"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/size_sub_headline"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/add_join_view_title"
-                                app:layout_constraintTop_toBottomOf="@+id/add_join_view_title" />
+                            android:id="@+id/add_join_view_description"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                            android:text="@string/add_join__inactive_view_description"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/size_sub_headline"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/add_join_view_title"
+                            app:layout_constraintTop_toBottomOf="@+id/add_join_view_title" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/add_join_link_wrapper"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_padding_size_small"
-                            android:layout_marginEnd="@dimen/margin_padding_size_small"
-                            android:layout_marginBottom="@dimen/title_image_size">
+                        android:id="@+id/add_join_link_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_small"
+                        android:layout_marginBottom="@dimen/title_image_size">
 
                         <ImageView
-                                android:id="@+id/add_join_link_image"
-                                android:layout_width="@dimen/title_image_size"
-                                android:layout_height="@dimen/title_image_size"
-                                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                                android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_icons_svl_link_active"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:ignore="ContentDescription" />
+                            android:id="@+id/add_join_link_image"
+                            android:layout_width="@dimen/title_image_size"
+                            android:layout_height="@dimen/title_image_size"
+                            android:layout_marginStart="@dimen/margin_padding_size_medium"
+                            android:layout_marginTop="@dimen/margin_padding_size_small"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_icons_svl_link_active"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="ContentDescription" />
 
                         <TextView
-                                android:id="@+id/add_join_link_title"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/margin_padding_size_small"
-                                android:layout_marginTop="@dimen/margin_padding_size_small"
-                                android:layout_marginEnd="@dimen/margin_padding_size_small"
-                                android:text="@string/add_join_link_title"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/size_headline"
-                                android:textStyle="bold"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@+id/add_join_link_image"
-                                app:layout_constraintTop_toTopOf="parent" />
+                            android:id="@+id/add_join_link_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_padding_size_small"
+                            android:layout_marginTop="@dimen/margin_padding_size_small"
+                            android:layout_marginEnd="@dimen/margin_padding_size_small"
+                            android:text="@string/add_join_link_title"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/size_headline"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/add_join_link_image"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                                android:id="@+id/add_join_link_description"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                                android:text="@string/add_join_active_link_description"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/size_sub_headline"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/add_join_link_title"
-                                app:layout_constraintTop_toBottomOf="@+id/add_join_link_title" />
+                            android:id="@+id/add_join_link_description"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                            android:text="@string/add_join_active_link_description"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/size_sub_headline"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/add_join_link_title"
+                            app:layout_constraintTop_toBottomOf="@+id/add_join_link_title" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Button
-                            android:id="@+id/add_card_button"
-                            style="@style/RoundedGradientButton"
-                            android:layout_width="match_parent"
-                            android:layout_marginStart="@dimen/button_margin"
-                            android:layout_marginEnd="@dimen/button_margin"
-                            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                            android:text="@string/add_join_add_card"
-                            android:textAllCaps="false"
-                            android:visibility="visible" />
+                        android:id="@+id/add_card_button"
+                        style="@style/RoundedGradientButton"
+                        android:layout_width="match_parent"
+                        android:layout_marginStart="@dimen/button_margin"
+                        android:layout_marginEnd="@dimen/button_margin"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:text="@string/add_join_add_card"
+                        android:textAllCaps="false"
+                        android:visibility="visible" />
 
                     <Button
-                            android:id="@+id/get_card_button"
-                            style="@style/RoundedGradientButton"
-                            android:layout_width="match_parent"
-                            android:layout_marginStart="@dimen/button_margin"
-                            android:layout_marginEnd="@dimen/button_margin"
-                            android:text="@string/add_join_get_new_card"
-                            android:textAllCaps="false" />
+                        android:id="@+id/get_card_button"
+                        style="@style/RoundedGradientButton"
+                        android:layout_width="match_parent"
+                        android:layout_marginStart="@dimen/button_margin"
+                        android:layout_marginEnd="@dimen/button_margin"
+                        android:layout_marginBottom="@dimen/margin_padding_size_small_medium"
+                        android:text="@string/add_join_get_new_card"
+                        android:textAllCaps="false" />
                 </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>

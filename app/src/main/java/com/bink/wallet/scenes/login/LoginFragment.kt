@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.login
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Patterns
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -52,8 +51,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun onResume() {
         super.onResume()
         logScreenView(LOGIN_VIEW)
-        setupLayoutListener(binding.container, ::validateCredentials)
-        registerLayoutListener(binding.container)
+        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
+        registerKeyboardHiddenLayoutListener(binding.container)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -198,7 +197,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onPause() {
         super.onPause()
-        removeLayoutListener(binding.container)
+        removeKeyboardHiddenLayoutListener(binding.container)
     }
 
     private fun validateCredentials() {
