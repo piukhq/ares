@@ -76,7 +76,7 @@ class TextFieldViewHolder(
             }
             item.fieldType.common_name?.let {
                 displayCustomKeyboard(it)
-                setstuff(it)
+                createDateAndShowPicker(it)
             }
 
             setText(planRequest?.value)
@@ -180,8 +180,7 @@ class TextFieldViewHolder(
 
     }
 
-
-    private fun setstuff(commonName: String) {
+    private fun createDateAndShowPicker(commonName: String) {
         if (commonName == SignUpFieldTypes.DATE_OF_BIRTH.common_name || commonName == SignUpFieldTypes.MEMORABLE_DATE.common_name) {
             val datePickerDialog = DatePickerDialog(
                 binding.root.context, R.style.BinkDatePicker,
