@@ -88,20 +88,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         viewModel.createCardError.observeNonNull(this) { exception ->
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
-                    if (exception is HttpException) {
-                        requireContext().displayModalPopup(
-                            getString(R.string.error),
-                            ApiErrorUtils.getApiErrorMessage(
-                                exception,
-                                getString(R.string.error_scheme_already_exists)
-                            )
-                        )
-                    } else {
-                        requireContext().displayModalPopup(
-                            getString(R.string.error),
-                            getString(R.string.error_scheme_already_exists)
-                        )
-                    }
+                    requireContext().displayModalPopup(
+                        getString(R.string.error),
+                        getString(R.string.error_server_down_message)
+                    )
                 }
                 else -> {
                     if (((exception is HttpException)
