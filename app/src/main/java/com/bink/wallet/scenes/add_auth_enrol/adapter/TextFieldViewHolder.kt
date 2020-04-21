@@ -1,4 +1,5 @@
 import android.app.DatePickerDialog
+import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
@@ -20,7 +21,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
 
 
 class TextFieldViewHolder(
@@ -134,7 +134,7 @@ class TextFieldViewHolder(
 
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
-            checkIfError( this, currentItem)
+            checkIfError(this, currentItem)
             checkValidation()
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
@@ -175,7 +175,7 @@ class TextFieldViewHolder(
             SignUpFieldTypes.DATE_OF_BIRTH.common_name,
             SignUpFieldTypes.MEMORABLE_DATE.common_name -> {
                 val datePickerDialog = DatePickerDialog(
-                    binding.root.context,
+                    binding.root.context, R.style.BinkDatePicker,
                     DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                         val calendar = Calendar.getInstance()
                         calendar.set(Calendar.MONTH, month)
@@ -198,6 +198,10 @@ class TextFieldViewHolder(
                 )
                 setOnClickListener {
                     datePickerDialog.show()
+                    datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+                        .setTextColor(Color.BLACK)
+                    datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+                        .setTextColor(Color.BLACK)
                 }
                 InputType.TYPE_NULL
             }
