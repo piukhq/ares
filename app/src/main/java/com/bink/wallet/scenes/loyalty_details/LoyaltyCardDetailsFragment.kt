@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.loyalty_details
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -20,7 +19,6 @@ import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.SCROLL_DELAY
@@ -29,12 +27,10 @@ import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.formatBalance
 import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.linkCard
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
