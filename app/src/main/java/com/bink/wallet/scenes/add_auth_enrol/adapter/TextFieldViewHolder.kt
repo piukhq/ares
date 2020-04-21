@@ -3,6 +3,7 @@ import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
@@ -21,7 +22,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -76,6 +76,7 @@ class TextFieldViewHolder(
             }
             item.fieldType.common_name?.let {
                 displayCustomKeyboard(it)
+                createDateAndShowPicker(it)
             }
 
             setText(planRequest?.value)
@@ -172,45 +173,51 @@ class TextFieldViewHolder(
             SignUpFieldTypes.EMAIL.common_name -> {
                 InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             }
-            SignUpFieldTypes.DATE_OF_BIRTH.common_name,
-            SignUpFieldTypes.MEMORABLE_DATE.common_name -> {
-                val datePickerDialog = DatePickerDialog(
-                    binding.root.context, R.style.BinkDatePicker,
-                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                        val calendar = Calendar.getInstance()
-                        calendar.set(Calendar.MONTH, month)
-                        calendar.set(Calendar.YEAR, year)
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                        val date = Date(calendar.timeInMillis)
-
-                        val dateFormatter = SimpleDateFormat(
-                            DATE_FORMAT, Locale.ENGLISH
-                        )
-                        val strDate = dateFormatter.format(date)
-                        setText(
-                            strDate.toString()
-                        )
-                        checkValidation()
-                    },
-                    Calendar.getInstance().get(Calendar.YEAR),
-                    Calendar.getInstance().get(Calendar.MONTH),
-                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-                )
-                binding.contentAddAuthText.isEnabled = true
-                binding.contentAddAuthText.setTextIsSelectable(true)
-                binding.contentAddAuthText.isFocusable = false
-                binding.contentAddAuthText.setOnClickListener {
-                    datePickerDialog.show()
-                    datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-                        .setTextColor(Color.BLACK)
-                    datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-                        .setTextColor(Color.BLACK)
-                }
-                InputType.TYPE_NULL
-            }
             else -> {
                 InputType.TYPE_CLASS_TEXT
             }
+        }
+
+    }
+
+    private fun createDateAndShowPicker(commonName: String) {
+        if (commonName == SignUpFieldTypes.DATE_OF_BIRTH.common_name || commonName == SignUpFieldTypes.MEMORABLE_DATE.common_name) {
+            val datePickerDialog = DatePickerDialog(
+                binding.root.context, R.style.BinkDatePicker,
+                DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    val calendar = Calendar.getInstance()
+                    calendar.set(Calendar.MONTH, month)
+                    calendar.set(Calendar.YEAR, year)
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    val date = Date(calendar.timeInMillis)
+
+                    val dateFormatter = SimpleDateFormat(
+                        DATE_FORMAT, Locale.ENGLISH
+                    )
+                    val strDate = dateFormatter.format(date)
+                    binding.tvDatePicker.text = strDate.toString()
+                    item?.let {
+                        setFieldRequestValue(it, strDate.toString())
+                    }
+                    checkValidation()
+                },
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            )
+            binding.contentAddAuthText.visibility = View.GONE
+            binding.tvDatePicker.visibility = View.VISIBLE
+
+            binding.tvDatePicker.setOnClickListener {
+                datePickerDialog.show()
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+                    .setTextColor(Color.BLACK)
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+                    .setTextColor(Color.BLACK)
+            }
+        } else {
+            binding.contentAddAuthText.visibility = View.VISIBLE
+            binding.tvDatePicker.visibility = View.GONE
         }
     }
 }
