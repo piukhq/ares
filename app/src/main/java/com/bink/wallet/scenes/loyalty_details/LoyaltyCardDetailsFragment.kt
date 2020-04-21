@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_details
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -743,6 +744,7 @@ class LoyaltyCardDetailsFragment :
         binding.pointsWrapper.setOnClickListener {
             val genericModalParameters: GenericModalParameters?
             when (viewModel.accountStatus.value) {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     viewModel.membershipCard.value?.let { membershipCard ->
                         if (!membershipCard.vouchers.isNullOrEmpty() &&
