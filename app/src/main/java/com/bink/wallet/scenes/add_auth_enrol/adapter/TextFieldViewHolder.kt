@@ -196,7 +196,10 @@ class TextFieldViewHolder(
                     Calendar.getInstance().get(Calendar.MONTH),
                     Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
                 )
-                setOnClickListener {
+                binding.contentAddAuthText.isEnabled = true
+                binding.contentAddAuthText.setTextIsSelectable(true)
+                binding.contentAddAuthText.isFocusable = false
+                binding.contentAddAuthText.setOnClickListener {
                     datePickerDialog.show()
                     datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
                         .setTextColor(Color.BLACK)
