@@ -59,3 +59,5 @@ const val KEYBOARD_TO_SCREEN_HEIGHT_RATIO = 0.15
 val LETTER_REGEX = "[a-zA-Z]".toRegex()
 
 const val VOUCHER_EARN_TYPE_STAMPS = "stamps"
+
+const val DATE_FORMAT = "dd/MM/yyyy"

@@ -105,4 +105,19 @@
         <item name="android:colorControlNormal">@color/green_ok</item>
     </style>
 
+    <style name="BinkDatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#FFF</item>
+        <item name="android:headerBackground">#fff</item>
+        <item name="android:headerMonthTextAppearance">@style/BinkDatePickerText</item>
+        <item name="android:headerDayOfMonthTextAppearance">@style/BinkDatePickerText</item>
+        <item name="android:headerYearTextAppearance">@style/BinkDatePickerText</item>
+        <item name="android:textColorPrimaryInverse">@color/white</item>
+        <item name="android:colorControlActivated">#000</item>
+    </style>
+
+    <style name="BinkDatePickerText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#000</item>
+        <item name="fontFamily">@font/nunitosans</item>
+    </style>
+
 </resources>
