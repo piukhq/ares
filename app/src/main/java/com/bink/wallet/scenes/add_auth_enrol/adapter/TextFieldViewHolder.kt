@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import android.text.method.PasswordTransformationMethod
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -164,17 +165,20 @@ class TextFieldViewHolder(
     }
 
     private fun TextInputEditText.displayCustomKeyboard(commonName: String) {
-        inputType = when (commonName) {
+        when (commonName) {
+            SignUpFieldTypes.PASSWORD.common_name -> {
+                transformationMethod = PasswordTransformationMethod()
+            }
             SignUpFieldTypes.PHONE.common_name,
             SignUpFieldTypes.PHONE_NUMBER_1.common_name,
             SignUpFieldTypes.PHONE_NUMBER_2.common_name -> {
-                InputType.TYPE_CLASS_NUMBER
+                inputType = InputType.TYPE_CLASS_NUMBER
             }
             SignUpFieldTypes.EMAIL.common_name -> {
-                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             }
             else -> {
-                InputType.TYPE_CLASS_TEXT
+                inputType = InputType.TYPE_CLASS_TEXT
             }
         }
 
