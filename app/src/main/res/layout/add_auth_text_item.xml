@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,45 +11,45 @@
         <import type="com.bink.wallet.utils.enums.FieldType" />
 
         <variable
-                name="planField"
-                type="com.bink.wallet.model.response.membership_plan.PlanField" />
+            name="planField"
+            type="com.bink.wallet.model.response.membership_plan.PlanField" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-                android:id="@+id/title_add_auth_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/size_medium"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:planField="@{planField}"
-                tools:text="Email" />
+            android:id="@+id/title_add_auth_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/size_medium"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:planField="@{planField}"
+            tools:text="Email" />
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/content_add_auth_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/nunito_sans"
-                android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
-                tools:text="binkdev@testbink.com" />
+            android:id="@+id/content_add_auth_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/nunito_sans"
+            android:textSize="@dimen/size_sub_headline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
+            tools:text="binkdev@testbink.com" />
 
         <TextView
             android:id="@+id/tv_date_picker"
@@ -68,16 +68,16 @@
             tools:text="binkdev@testbink.com" />
 
         <View
-                android:id="@+id/separator"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/item_separator_line_height"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:alpha="0.3"
-                android:background="@color/separator_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/content_add_auth_text" />
+            android:id="@+id/separator"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/item_separator_line_height"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:alpha="0.3"
+            android:background="@color/separator_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/content_add_auth_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
