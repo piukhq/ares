@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.browse_brands
 
+import androidx.annotation.StringRes
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
@@ -10,6 +11,6 @@ sealed class BrowseBrandsListItem(val id: Int) {
         var hasSeparator: Boolean
     ) : BrowseBrandsListItem(R.layout.item_brand)
 
-    data class SectionTitleItem(val sectionTitle: String) :
+    data class SectionTitleItem(@StringRes val sectionTitle: Int) :
         BrowseBrandsListItem(R.layout.item_brands_section_title)
 }
