@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.browse_brands
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.ItemFilterBinding
@@ -50,6 +49,7 @@ class BrandsFiltersAdapter : RecyclerView.Adapter<BrandsFiltersAdapter.FiltersVi
             binding.filter = filter
 
             binding.checkbox.setOnClickListener {
+                filter.isChecked = binding.checkbox.isChecked
                 onFilterClickListener?.invoke(filter)
             }
         }

@@ -7,6 +7,7 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.Locale
 
@@ -18,8 +19,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
     val filteredBrandItems: LiveData<List<BrowseBrandsListItem>>
         get() = _filteredBrandItems
 
-    private val _activeFilters = MutableLiveData<String>()
-    val activeFilters: LiveData<String>
+    private val _activeFilters = MutableLiveData<List<String>>()
+    val activeFilters: LiveData<List<String>>
         get() = _activeFilters
 
     val searchText = MutableLiveData<String>()
@@ -38,13 +39,22 @@ class BrowseBrandsViewModel : BaseViewModel() {
         this.membershipPlans.value = membershipPlans
         this.membershipCardIds.value = membershipCardIds
         _filteredBrandItems.value = formattedBrandItems
+        _activeFilters.value = membershipPlans.getCategories()
     }
 
-    fun filterBrandItems(searchQuery: String, filters: List<String> = listOf()) {
+    fun filterBrandItems() {
         val currentBrandItems = membershipPlans.value?.toMutableList() ?: mutableListOf()
+        val filteredBrandItems = mutableListOf<MembershipPlan>()
+        val searchQuery = searchText.value ?: EMPTY_STRING
+        val filters = _activeFilters.value ?: listOf()
+        currentBrandItems.forEach {
+            if (it.account?.category in filters) {
+                filteredBrandItems.add(it)
+            }
+        }
         if (searchQuery != EMPTY_STRING) {
             val searchList = mutableListOf<MembershipPlan>()
-            currentBrandItems.forEach {
+            filteredBrandItems.forEach {
                 if (it.account?.company_name?.toLowerCase(Locale.ENGLISH)
                         ?.contains(searchQuery.toLowerCase(Locale.ENGLISH)) == true
                 ) {
@@ -58,7 +68,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
         } else {
             membershipCardIds.value?.let {
                 _filteredBrandItems.value =
-                    formatBrandItemsList(currentBrandItems.sortedByCardTypeAndCompany(), it)
+                    formatBrandItemsList(filteredBrandItems.sortedByCardTypeAndCompany(), it)
             }
         }
     }
@@ -93,5 +103,15 @@ class BrowseBrandsViewModel : BaseViewModel() {
             )
         }
         return browseBrandsItems
+    }
+
+    fun updateFilters(brandFilter: BrandsFilter) {
+        val filters = _activeFilters.value?.toMutableList() ?: mutableListOf()
+        if (brandFilter.isChecked) {
+            filters.add(brandFilter.category)
+        } else {
+            filters.remove(brandFilter.category)
+        }
+        _activeFilters.value = filters
     }
 }

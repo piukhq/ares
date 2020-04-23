@@ -70,6 +70,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         binding.filtersList.layoutManager = GridLayoutManager(context, 2)
         binding.filtersList.adapter = filtersAdapter.apply {
             setOnFilterClickListener {
+                viewModel.updateFilters(it)
                 Toast.makeText(context, it.category, Toast.LENGTH_SHORT).show()
             }
             setFilters(args.membershipPlans.toList().getCategories().map { BrandsFilter(it) })
@@ -88,8 +89,12 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
 
-        viewModel.searchText.observe(viewLifecycleOwner, Observer { searchQuery ->
-            viewModel.filterBrandItems(searchQuery)
+        viewModel.searchText.observe(viewLifecycleOwner, Observer {
+            viewModel.filterBrandItems()
+        })
+
+        viewModel.activeFilters.observe(viewLifecycleOwner, Observer {
+            viewModel.filterBrandItems()
         })
 
         viewModel.filteredBrandItems.observeNonNull(this) {
