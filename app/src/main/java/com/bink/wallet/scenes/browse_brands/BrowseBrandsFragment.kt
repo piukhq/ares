@@ -62,7 +62,11 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             }
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                    binding.brandsRecyclerView.scrollToPosition(0)
+                    if (viewModel.activeFilters.value?.size ==
+                        args.membershipPlans.toList().getCategories().size
+                    ) {
+                        binding.brandsRecyclerView.scrollToPosition(0)
+                    }
                 }
             })
         }
@@ -99,25 +103,6 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
         viewModel.filteredBrandItems.observeNonNull(this) {
             adapter.submitList(it)
-        }
-    }
-
-    private fun filterBrands(
-        membershipPlans: List<MembershipPlan>,
-        searchQuery: String
-    ): List<MembershipPlan> {
-        return if (searchQuery != EMPTY_STRING) {
-            val searchList = mutableListOf<MembershipPlan>()
-            membershipPlans.forEach {
-                if (it.account?.company_name?.toLowerCase(Locale.ENGLISH)
-                        ?.contains(searchQuery.toLowerCase(Locale.ENGLISH)) == true
-                ) {
-                    searchList.add(it)
-                }
-            }
-            searchList
-        } else {
-            membershipPlans
         }
     }
 }
