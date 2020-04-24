@@ -54,17 +54,16 @@
                 app:destination="@+id/barcode_fragment" />
 
         <action
-                android:id="@+id/home_to_detail"
-                app:destination="@+id/loyalty_card_detail_fragment" />
-
-        <action
-                android:id="@+id/payment_wallet_to_details"
-                app:destination="@+id/payment_card_detail"
-                app:popUpTo="@id/home_wallet" />
-
-        <action
                 android:id="@+id/home_to_pcd"
                 app:destination="@id/add_payment_card" />
+
+        <action
+            android:id="@+id/home_to_loyalty_wallet"
+            app:destination="@id/loyalty_fragment" />
+
+        <action
+            android:id="@+id/home_to_payment_card_wallet"
+            app:destination="@id/payment_card_fragment" />
     </fragment>
 
     <fragment
@@ -99,7 +98,34 @@
     <fragment
             android:id="@+id/loyalty_fragment"
             android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment"
-            android:label="@string/root" />
+            android:label="@string/root" >
+
+        <action
+            android:id="@+id/home_to_detail"
+            app:destination="@+id/loyalty_card_detail_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/payment_card_fragment"
+        android:name="com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment"
+        >
+
+        <argument
+            android:name="membershipPlans"
+            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+
+        <argument
+            android:name="membershipCards"
+            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
+
+        <!-- todo can this be removed from the wallets fragment -->
+        <action
+            android:id="@+id/payment_wallet_to_details"
+            app:destination="@+id/payment_card_detail"
+            app:popUpTo="@id/home_wallet" />
+
+    </fragment>
 
     <fragment
             android:id="@+id/login_fragment"

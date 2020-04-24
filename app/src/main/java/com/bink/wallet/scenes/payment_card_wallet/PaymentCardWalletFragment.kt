@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
@@ -155,6 +156,11 @@ class PaymentCardWalletFragment :
         }
     }
 
+    override fun onPause() {
+        (activity as MainActivity).hideBar()
+        super.onPause()
+    }
+
     private fun populateWallet() {
         viewModel.fetchLocalData()
     }
@@ -170,7 +176,7 @@ class PaymentCardWalletFragment :
         when (it) {
             is PaymentCard -> {
                 val action =
-                    WalletsFragmentDirections.paymentWalletToDetails(
+                    PaymentCardWalletFragmentDirections.paymentWalletToDetails(
                         it,
                         plans.toTypedArray(),
                         cards.toTypedArray()

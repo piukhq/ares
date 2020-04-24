@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
@@ -200,6 +201,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onPause() {
         disableIndicators()
+        (activity as MainActivity).hideBar()
         super.onPause()
     }
 
@@ -256,7 +258,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     for (membershipPlan in it) {
                         if (item.membership_plan == membershipPlan.id) {
                             val directions =
-                                WalletsFragmentDirections.homeToDetail(
+                                LoyaltyWalletFragmentDirections.homeToDetail(
                                     membershipPlan,
                                     item
                                 )

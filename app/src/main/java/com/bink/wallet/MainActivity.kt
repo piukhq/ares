@@ -4,11 +4,13 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.wallets.WalletsFragment
 import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
@@ -17,6 +19,7 @@ import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.fabric.sdk.android.Fabric
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
+    private var listener = WalletsFragment.Listener.NULL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+        initBottomBarNavigation()
     }
 
     override fun onResume() {
@@ -112,6 +117,14 @@ class MainActivity : AppCompatActivity() {
         }, 1000)
     }
 
+    fun showBar() {
+        bottom_navigation.visibility = View.VISIBLE
+    }
+
+    fun hideBar() {
+        bottom_navigation.visibility = View.GONE
+    }
+
     private fun getMembershipPlans() {
         mainViewModel.getMembershipPlans()
     }
@@ -131,6 +144,47 @@ class MainActivity : AppCompatActivity() {
             setUserProperty(firebaseAnalytics, DEVICE_ZOOM, retrieveZoomStatus(this@MainActivity))
             setUserProperty(firebaseAnalytics, BINK_VERSION, retrieveBinkVersion(this@MainActivity))
         }
+    }
+
+    private fun initBottomBarNavigation() {
+        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.loyalty_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = true
+                    listener.onOpenLoyalty()
+                }
+                R.id.add_menu_item -> {
+//                    viewModel.membershipPlanData.value?.let {
+//                        val directions =
+//                            it.toTypedArray().let { plans ->
+//                                WalletsFragmentDirections.homeToAdd(
+//                                    plans
+//                                )
+//                            }
+//                        directions.let { findNavController().navigateIfAdded(this, it) }
+//                    }
+                }
+                R.id.payment_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = false
+                    listener.onOpenPaymentCards()
+                }
+
+            }
+            true
+        }
+    }
+
+    fun setListener(listener: WalletsFragment.Listener) {
+        this.listener = listener
+    }
+
+    private fun toLoyaltyWalletScreen() {
+//        findNavController(R.id.main_fragment).navigate(
+//            R.id.loyalty_wallet_fragment
+//        )
+
+
+        listener.onOpenLoyalty()
     }
 }
 
