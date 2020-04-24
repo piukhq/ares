@@ -2,7 +2,6 @@ package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.getCategories
@@ -20,7 +18,6 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBinding>() {
 
@@ -75,7 +72,6 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         binding.filtersList.adapter = filtersAdapter.apply {
             setOnFilterClickListener {
                 viewModel.updateFilters(it)
-                Toast.makeText(context, it.category, Toast.LENGTH_SHORT).show()
             }
             setFilters(args.membershipPlans.toList().getCategories().map { BrandsFilter(it) })
         }
