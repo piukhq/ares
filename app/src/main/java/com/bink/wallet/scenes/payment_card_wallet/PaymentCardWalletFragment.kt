@@ -18,7 +18,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
-import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
@@ -156,11 +155,6 @@ class PaymentCardWalletFragment :
         }
     }
 
-    override fun onPause() {
-//        (activity as MainActivity).hideBar()
-        super.onPause()
-    }
-
     private fun populateWallet() {
         viewModel.fetchLocalData()
     }
@@ -189,10 +183,11 @@ class PaymentCardWalletFragment :
             else -> {
                 findNavController().navigateIfAdded(
                     this@PaymentCardWalletFragment,
-                    WalletsFragmentDirections.homeToPcd()
+                    PaymentCardWalletFragmentDirections.homeToPcd()
                 )
             }
         }
+        (activity as MainActivity).hideBar()
     }
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {

@@ -74,12 +74,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 displayNoBarcodeDialog(position)
                             } else {
                                 plan?.let {
-                                    findNavController().navigate(
-                                        LoyaltyWalletFragmentDirections.homeToBarcode(
-                                            plan,
-                                            card
-                                        )
-                                    )
+//                                    findNavController().navigate(
+//                                        LoyaltyWalletFragmentDirections.homeToBarcode(
+//                                            plan,
+//                                            card
+//                                        )
+//                                    )
 
                                     //todo jumpy
                                     (activity as MainActivity).hideBar()
@@ -260,34 +260,34 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 list?.let {
                     for (membershipPlan in it) {
                         if (item.membership_plan == membershipPlan.id) {
-                            val directions =
-                                LoyaltyWalletFragmentDirections.homeToDetail(
-                                    membershipPlan,
-                                    item
-                                )
-                            findNavController().navigateIfAdded(
-                                this@LoyaltyWalletFragment,
-                                directions
-                            )
+//                            val directions =
+//                                LoyaltyWalletFragmentDirections.homeToDetail(
+//                                    membershipPlan,
+//                                    item
+//                                )
+//                            findNavController().navigateIfAdded(
+//                                this@LoyaltyWalletFragment,
+//                                directions
+//                            )
                         }
                     }
                 }
             }
             is MembershipPlan -> {
-                findNavController().navigate(
-                    LoyaltyWalletFragmentDirections.homeToAddJoin(
-                        item,
-                        null,
-                        true,
-                        isRetryJourney = false
-                    )
-                )
+//                findNavController().navigate(
+//                    LoyaltyWalletFragmentDirections.homeToAddJoin(
+//                        item,
+//                        null,
+//                        true,
+//                        isRetryJourney = false
+//                    )
+//                )
             }
-            else ->
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    LoyaltyWalletFragmentDirections.homeToPcd()
-                )
+//            else ->
+//                findNavController().navigateIfAdded(
+//                    this@LoyaltyWalletFragment,
+//                    LoyaltyWalletFragmentDirections.homeToPcd()
+//                )
         }
         (activity as MainActivity).hideBar()
     }

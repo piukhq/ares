@@ -82,14 +82,17 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         (activity as MainActivity).setListener(object : Listener {
             override fun onOpenAddScreen() {
+                Log.e("ConnorDebug", "openaddscreem")
                 toAddCardScreen()
             }
 
             override fun onOpenPaymentCards() {
+                Log.e("ConnorDebug", "openpaymentcards")
                 toPaymentCardsScreen()
             }
 
             override fun onOpenLoyalty() {
+                Log.e("ConnorDebug", "openloyaltycards")
                 toLoyaltyWalletScreen()
             }
         })
@@ -210,14 +213,20 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     }
 
     private fun toAddCardScreen() {
+        Log.e("ConnorDebug", "toAddCardScreen")
         viewModel.membershipPlanData.value?.let {
+            Log.e("ConnorDebug", "toAddCardScreen:: navigate")
+
             val directions =
                 it.toTypedArray().let { plans ->
                     WalletsFragmentDirections.homeToAdd(
                         plans
                     )
                 }
-            directions.let { findNavController().navigateIfAdded(this, it) }
+            directions.let {
+                Log.e("ConnorDebug", "toAddCardScreen:: actually navigate")
+
+                findNavController().navigate(it) }
         }
     }
 

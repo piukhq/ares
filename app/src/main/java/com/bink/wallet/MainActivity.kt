@@ -27,6 +27,7 @@ import kotlin.system.exitProcess
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.navigateIfAdded
 
 class MainActivity : AppCompatActivity() {
@@ -48,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
-//        initBottomBarNavigation()
-        setUpNavigation()
+        initBottomBarNavigation()
+//        setUpNavigation()
 
         //todo clean
         setActionBar(toolbar)
@@ -173,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
-                    listener.onOpenLoyalty()
+                    findNavController(R.id.main_fragment).navigate(R.id.global_to_loyalty_wallet)
                 }
                 R.id.add_menu_item -> {
                     listener.onOpenAddScreen()
@@ -189,8 +190,8 @@ class MainActivity : AppCompatActivity() {
 //                    }
                 }
                 R.id.payment_menu_item -> {
+                    findNavController(R.id.main_fragment).navigate(R.id.global_to_payment_wallet)
                     SharedPreferenceManager.isLoyaltySelected = false
-                    listener.onOpenPaymentCards()
                 }
 
             }
@@ -200,15 +201,6 @@ class MainActivity : AppCompatActivity() {
 
     fun setListener(listener: WalletsFragment.Listener) {
         this.listener = listener
-    }
-
-    private fun toLoyaltyWalletScreen() {
-//        findNavController(R.id.main_fragment).navigate(
-//            R.id.loyalty_wallet_fragment
-//        )
-
-
-        listener.onOpenLoyalty()
     }
 
     fun setUpNavigation() {
