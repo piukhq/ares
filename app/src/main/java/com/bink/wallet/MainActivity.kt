@@ -6,20 +6,21 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageButton
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.login.LoginRepository
-import com.bink.wallet.scenes.wallets.WalletsFragment
 import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.enums.BuildTypes
 import com.crashlytics.android.Crashlytics
 import com.facebook.login.LoginManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -30,7 +31,9 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
-    private var listener = WalletsFragment.Listener.NULL
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var toolbar: Toolbar
+    private lateinit var btnSettings: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,9 @@ class MainActivity : AppCompatActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
         setContentView(R.layout.activity_main)
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+        toolbar = findViewById(R.id.toolbar)
+        btnSettings = findViewById(R.id.settings_button)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
         initBottomBarNavigation()
 
@@ -124,22 +130,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showHomeViews() {
-        bottom_navigation.visibility = View.VISIBLE
+        bottomNavigationView.visibility = View.VISIBLE
         toolbar.visibility = View.VISIBLE
-        settings_button.visibility = View.VISIBLE
+        btnSettings.visibility = View.VISIBLE
     }
 
     fun hideHomeViews() {
-        bottom_navigation.visibility = View.GONE
+        bottomNavigationView.visibility = View.GONE
         toolbar.visibility = View.GONE
-        settings_button.visibility = View.GONE
+        btnSettings.visibility = View.GONE
     }
 
     private fun initToolbar() {
         setActionBar(toolbar)
         actionBar?.setDisplayShowTitleEnabled(false)
 
-        settings_button.setOnClickListener {
+        btnSettings.setOnClickListener {
             findNavController(R.id.main_fragment).navigate(R.id.settings_screen)
             hideHomeViews()
         }
@@ -167,14 +173,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomBarNavigation() {
-        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
                     findNavController(R.id.main_fragment).navigate(R.id.global_to_loyalty_wallet)
                 }
                 R.id.add_menu_item -> {
-                    listener.onOpenAddScreen()
+                    findNavController(R.id.main_fragment).navigate(R.id.add_screen)
                     hideHomeViews()
                 }
                 R.id.payment_menu_item -> {
@@ -185,10 +191,9 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-    }
 
-    fun setListener(listener: WalletsFragment.Listener) {
-        this.listener = listener
+        bottomNavigationView.selectedItemId =
+            if (SharedPreferenceManager.isLoyaltySelected) R.id.loyalty_menu_item else R.id.payment_menu_item
     }
 }
 

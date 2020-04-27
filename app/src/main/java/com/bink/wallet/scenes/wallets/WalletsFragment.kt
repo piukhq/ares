@@ -18,19 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>() {
 
-    interface Listener {
-
-        companion object {
-            val NULL = object : Listener {
-                override fun onOpenAddScreen() {
-                    //
-                }
-            }
-        }
-
-        fun onOpenAddScreen()
-    }
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -57,12 +44,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 handleLoading(shouldRefresh)
             }
         }
-
-        (activity as MainActivity).setListener(object : Listener {
-            override fun onOpenAddScreen() {
-                toAddCardScreen()
-            }
-        })
 
         if (SharedPreferenceManager.isLoyaltySelected) {
             toLoyaltyWalletScreen()
@@ -109,19 +90,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             this@WalletsFragment,
             WalletsFragmentDirections.homeToLoyaltyWallet()
         )
-    }
-
-    private fun toAddCardScreen() {
-        viewModel.membershipPlanData.value?.let {
-            val directions =
-                it.toTypedArray().let { plans ->
-                    WalletsFragmentDirections.homeToAdd(
-                        plans
-                    )
-                }
-            directions.let {
-                findNavController().navigate(it) }
-        }
     }
 
     private fun toPaymentCardsScreen() {

@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
@@ -18,7 +17,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
-    private val args by navArgs<AddFragmentArgs>()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -41,6 +39,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
         (activity as MainActivity).hideHomeViews()
         viewModel.getLocalMembershipCards()
+        viewModel.getLocalMembershipPlans()
         binding.cancelButton.setOnClickListener {
             findNavController().navigateIfAdded(
                 this,
@@ -48,12 +47,14 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             )
         }
         binding.browseBrandsContainer.setOnClickListener {
-            viewModel.membershipCards.value?.let {
-                val directions = AddFragmentDirections.addToBrowse(
-                    args.membershipPlans,
-                    it.toTypedArray()
-                )
-                findNavController().navigateIfAdded(this, directions)
+            viewModel.membershipCards.value?.let { safeMembershipCards ->
+                viewModel.membershipPlans.value?.let { safeMembershipPlans ->
+                    val directions = AddFragmentDirections.addToBrowse(
+                        safeMembershipPlans.toTypedArray(),
+                        safeMembershipCards.toTypedArray()
+                    )
+                    findNavController().navigateIfAdded(this, directions)
+                }
             }
         }
         binding.paymentCardContainer.setOnClickListener {
