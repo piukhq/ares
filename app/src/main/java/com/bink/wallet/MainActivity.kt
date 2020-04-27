@@ -21,11 +21,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.fragment.NavHostFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,14 +46,7 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
         initBottomBarNavigation()
 
-        //todo clean
-        setActionBar(toolbar)
-        actionBar?.setDisplayShowTitleEnabled(false)
-
-        settings_button.setOnClickListener {
-            findNavController(R.id.main_fragment).navigate(R.id.settings_screen)
-            hideBar()
-        }
+        initToolbar()
     }
 
     override fun onResume() {
@@ -111,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.settings_screen -> {
                 findNavController(R.id.main_fragment).popBackStack()
-                showBar()
+                showHomeViews()
             }
             else -> super.onBackPressed()
         }
@@ -132,16 +123,26 @@ class MainActivity : AppCompatActivity() {
         }, 1000)
     }
 
-    fun showBar() {
+    fun showHomeViews() {
         bottom_navigation.visibility = View.VISIBLE
         toolbar.visibility = View.VISIBLE
         settings_button.visibility = View.VISIBLE
     }
 
-    fun hideBar() {
+    fun hideHomeViews() {
         bottom_navigation.visibility = View.GONE
         toolbar.visibility = View.GONE
         settings_button.visibility = View.GONE
+    }
+
+    private fun initToolbar() {
+        setActionBar(toolbar)
+        actionBar?.setDisplayShowTitleEnabled(false)
+
+        settings_button.setOnClickListener {
+            findNavController(R.id.main_fragment).navigate(R.id.settings_screen)
+            hideHomeViews()
+        }
     }
 
     private fun getMembershipPlans() {
@@ -174,16 +175,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.add_menu_item -> {
                     listener.onOpenAddScreen()
-                    hideBar()
-//                    viewModel.membershipPlanData.value?.let {
-//                        val directions =
-//                            it.toTypedArray().let { plans ->
-//                                WalletsFragmentDirections.homeToAdd(
-//                                    plans
-//                                )
-//                            }
-//                        directions.let { findNavController().navigateIfAdded(this, it) }
-//                    }
+                    hideHomeViews()
                 }
                 R.id.payment_menu_item -> {
                     findNavController(R.id.main_fragment).navigate(R.id.global_to_payment_wallet)

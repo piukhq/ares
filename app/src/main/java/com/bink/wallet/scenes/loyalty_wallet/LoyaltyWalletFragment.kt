@@ -82,7 +82,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                     )
 
                                     //todo jumpy
-                                    (activity as MainActivity).hideBar()
+                                    (activity as MainActivity).hideHomeViews()
                                 }
                                 this@LoyaltyWalletFragment.onDestroy()
                             }
@@ -194,7 +194,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        (activity as MainActivity).showBar()
+        (activity as MainActivity).showHomeViews()
         mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards(false)
@@ -288,7 +288,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     LoyaltyWalletFragmentDirections.homeToPcd()
                 )
         }
-        (activity as MainActivity).hideBar()
+        (activity as MainActivity).hideHomeViews()
     }
 
     private fun fetchData() {

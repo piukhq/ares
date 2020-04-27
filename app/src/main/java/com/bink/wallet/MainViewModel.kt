@@ -30,6 +30,13 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         }
     }
 
+    fun getMembershipPlanData(): List<MembershipPlan> {
+        membershipPlanData.value?.let {
+            return it
+        }
+        return listOf()
+    }
+
     fun startLoading() {
         _isLoading.value = true
     }

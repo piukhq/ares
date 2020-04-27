@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
-import android.util.Log
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
@@ -26,23 +25,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 override fun onOpenAddScreen() {
                     //
                 }
-
-                override fun onOpenPaymentCards() {
-                    //
-                }
-
-                override fun onOpenLoyalty() {
-                    //
-                }
             }
         }
 
-        fun onOpenLoyalty()
-
         fun onOpenAddScreen()
-
-        fun onOpenPaymentCards()
-
     }
 
     override fun builder(): FragmentToolbar {
@@ -59,20 +45,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        val loyaltyWalletsFragment = LoyaltyWalletFragment()
-//        val paymentCardWalletFragment = PaymentCardWalletFragment()
-
-        (activity as MainActivity).showBar()
+        (activity as MainActivity).showHomeViews()
 
 
         viewModel.fetchStoredMembershipPlans()
         viewModel.fetchMembershipCards()
         viewModel.fetchPaymentCards()
-
-//        requireActivity().apply {
-//            setActionBar(binding.toolbar)
-//            actionBar?.setDisplayShowTitleEnabled(false)
-//        }
 
         arguments?.let {
             with(WalletsFragmentArgs.fromBundle(it)) {
@@ -82,76 +60,15 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         (activity as MainActivity).setListener(object : Listener {
             override fun onOpenAddScreen() {
-                Log.e("ConnorDebug", "openaddscreem")
                 toAddCardScreen()
-            }
-
-            override fun onOpenPaymentCards() {
-                Log.e("ConnorDebug", "openpaymentcards")
-                toPaymentCardsScreen()
-            }
-
-            override fun onOpenLoyalty() {
-                Log.e("ConnorDebug", "openloyaltycards")
-                toLoyaltyWalletScreen()
             }
         })
 
-        //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
             toLoyaltyWalletScreen()
         } else {
             toPaymentCardsScreen()
         }
-
-//        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-//            when (menuItem.itemId) {
-//                R.id.loyalty_menu_item -> {
-//                    SharedPreferenceManager.isLoyaltySelected = true
-////                    replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-//
-//
-////                    val action =
-////                        WalletsFragmentDirections.paymentWalletToDetails(
-////                            it,
-////                            plans.toTypedArray(),
-////                            cards.toTypedArray()
-////                        )
-////                    findNavController().navigateIfAdded(
-////                        this@PaymentCardWalletFragment,
-////                        action
-////                    )
-//
-//
-//                    toLoyaltyWalletScreen()
-//                }
-//                R.id.add_menu_item -> {
-//                    viewModel.membershipPlanData.value?.let {
-//                        val directions =
-//                            it.toTypedArray().let { plans ->
-//                                WalletsFragmentDirections.homeToAdd(
-//                                    plans
-//                                )
-//                            }
-//                        directions.let { findNavController().navigateIfAdded(this, it) }
-//                    }
-//                }
-//                R.id.payment_menu_item -> {
-//                    SharedPreferenceManager.isLoyaltySelected = false
-////                    replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
-//                    if (viewModel.membershipCardData.value != null &&
-//                        viewModel.membershipPlanData.value != null
-//                    ) {
-////                        paymentCardWalletFragment.setData(
-////                            viewModel.membershipCardData.value!!,
-////                            viewModel.membershipPlanData.value!!
-////                        )
-//                    }
-//                }
-//
-//            }
-//            true
-//        }
 
         viewModel.paymentCards.observeNonNull(this) {
             SharedPreferenceManager.isPaymentEmpty = it.isNullOrEmpty()
@@ -165,21 +82,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             }
         }
 
-//        binding.settingsButton.setOnClickListener {
-//            findNavController().navigateIfAdded(this, R.id.settings_screen)
-//        }
         initSharedMembershipPlanObserver()
     }
 
     override fun onDestroyView() {
         arguments?.clear()
-        Log.e("ConnorDebug", "ondestroyview")
         super.onDestroyView()
-    }
-
-    override fun onPause() {
-        Log.e("ConnorDebug", "onPause")
-        super.onPause()
     }
 
     private fun initSharedMembershipPlanObserver() {
@@ -187,15 +95,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             viewModel.fetchStoredMembershipPlans()
         }
     }
-
-//    private fun replaceFragment(removedFragment: Fragment, addedFragment: Fragment) {
-//        fragmentManager?.beginTransaction()?.remove(removedFragment)
-//            ?.commit()
-//        fragmentManager?.beginTransaction()?.replace(
-//            R.id.wallet_content,
-//            addedFragment
-//        )?.commit()
-//    }
 
     private fun handleLoading(shouldRefresh: Boolean) {
         if (shouldRefresh) {
@@ -213,10 +112,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     }
 
     private fun toAddCardScreen() {
-        Log.e("ConnorDebug", "toAddCardScreen")
         viewModel.membershipPlanData.value?.let {
-            Log.e("ConnorDebug", "toAddCardScreen:: navigate")
-
             val directions =
                 it.toTypedArray().let { plans ->
                     WalletsFragmentDirections.homeToAdd(
@@ -224,8 +120,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                     )
                 }
             directions.let {
-                Log.e("ConnorDebug", "toAddCardScreen:: actually navigate")
-
                 findNavController().navigate(it) }
         }
     }

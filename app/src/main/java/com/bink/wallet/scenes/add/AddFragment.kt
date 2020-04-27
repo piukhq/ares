@@ -39,7 +39,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        (activity as MainActivity).hideBar()
+        (activity as MainActivity).hideHomeViews()
         viewModel.getLocalMembershipCards()
         binding.cancelButton.setOnClickListener {
             findNavController().navigateIfAdded(
