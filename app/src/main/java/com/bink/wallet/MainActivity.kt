@@ -26,6 +26,8 @@ import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.bink.wallet.utils.navigateIfAdded
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,6 +50,14 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
 //        initBottomBarNavigation()
         setUpNavigation()
+
+        //todo clean
+        setActionBar(toolbar)
+        actionBar?.setDisplayShowTitleEnabled(false)
+
+        settings_button.setOnClickListener {
+            findNavController(R.id.main_fragment).navigate(R.id.settings_screen)
+        }
     }
 
     override fun onResume() {
@@ -122,10 +132,14 @@ class MainActivity : AppCompatActivity() {
 
     fun showBar() {
         bottom_navigation.visibility = View.VISIBLE
+        toolbar.visibility = View.VISIBLE
+        settings_button.visibility = View.VISIBLE
     }
 
     fun hideBar() {
         bottom_navigation.visibility = View.GONE
+        toolbar.visibility = View.GONE
+        settings_button.visibility = View.GONE
     }
 
     private fun getMembershipPlans() {

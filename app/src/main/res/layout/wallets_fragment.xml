@@ -12,25 +12,25 @@
             android:layout_height="match_parent"
             tools:context="com.bink.wallet.scenes.wallets.WalletsFragment">
 
-        <android.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--        <android.widget.Toolbar-->
+<!--                android:id="@+id/toolbar"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
-        <ImageButton
-                android:id="@+id/settings_button"
-                style="?actionButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_settings"
-                app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar"
-                app:layout_constraintTop_toTopOf="@+id/toolbar"
-                tools:ignore="ContentDescription" />
+<!--        <ImageButton-->
+<!--                android:id="@+id/settings_button"-->
+<!--                style="?actionButtonStyle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="?android:attr/selectableItemBackgroundBorderless"-->
+<!--                android:src="@drawable/ic_settings"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/toolbar"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/toolbar"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/toolbar"-->
+<!--                tools:ignore="ContentDescription" />-->
 
         <FrameLayout
                 android:id="@+id/wallet_content"

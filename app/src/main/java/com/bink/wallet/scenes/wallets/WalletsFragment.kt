@@ -69,10 +69,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         viewModel.fetchMembershipCards()
         viewModel.fetchPaymentCards()
 
-        requireActivity().apply {
-            setActionBar(binding.toolbar)
-            actionBar?.setDisplayShowTitleEnabled(false)
-        }
+//        requireActivity().apply {
+//            setActionBar(binding.toolbar)
+//            actionBar?.setDisplayShowTitleEnabled(false)
+//        }
 
         arguments?.let {
             with(WalletsFragmentArgs.fromBundle(it)) {
@@ -162,9 +162,9 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             }
         }
 
-        binding.settingsButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.settings_screen)
-        }
+//        binding.settingsButton.setOnClickListener {
+//            findNavController().navigateIfAdded(this, R.id.settings_screen)
+//        }
         initSharedMembershipPlanObserver()
     }
 
