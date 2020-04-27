@@ -34,7 +34,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         super.onActivityCreated(savedInstanceState)
         (activity as MainActivity).showHomeViews()
 
-
         viewModel.fetchStoredMembershipPlans()
         viewModel.fetchMembershipCards()
         viewModel.fetchPaymentCards()
@@ -53,14 +52,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         viewModel.paymentCards.observeNonNull(this) {
             SharedPreferenceManager.isPaymentEmpty = it.isNullOrEmpty()
-        }
-
-        viewModel.membershipPlanData.observeNonNull(this) { plans ->
-            viewModel.membershipCardData.observeNonNull(this) { cards ->
-                if (!SharedPreferenceManager.isLoyaltySelected) {
-//                    paymentCardWalletFragment.setData(cards, plans)
-                }
-            }
         }
 
         initSharedMembershipPlanObserver()

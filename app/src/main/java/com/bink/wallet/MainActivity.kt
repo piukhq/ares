@@ -176,24 +176,38 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {
-                    SharedPreferenceManager.isLoyaltySelected = true
-                    findNavController(R.id.main_fragment).navigate(R.id.global_to_loyalty_wallet)
+                    if (canNavigate()) {
+                        SharedPreferenceManager.isLoyaltySelected = true
+                        findNavController(R.id.main_fragment).navigate(R.id.global_to_loyalty_wallet)
+                    }
                 }
                 R.id.add_menu_item -> {
-                    findNavController(R.id.main_fragment).navigate(R.id.add_screen)
-                    hideHomeViews()
+                    if (canNavigate()) {
+                        findNavController(R.id.main_fragment).navigate(R.id.add_screen)
+                        hideHomeViews()
+                    }
                 }
                 R.id.payment_menu_item -> {
-                    findNavController(R.id.main_fragment).navigate(R.id.global_to_payment_wallet)
-                    SharedPreferenceManager.isLoyaltySelected = false
+                    if (canNavigate()) {
+                        findNavController(R.id.main_fragment).navigate(R.id.global_to_payment_wallet)
+                        SharedPreferenceManager.isLoyaltySelected = false
+                    }
                 }
 
             }
             true
+
         }
 
         bottomNavigationView.selectedItemId =
             if (SharedPreferenceManager.isLoyaltySelected) R.id.loyalty_menu_item else R.id.payment_menu_item
+    }
+
+    private fun canNavigate(): Boolean {
+        val currentId = findNavController(R.id.main_fragment).currentDestination?.id
+        return currentId == R.id.loyalty_card_wallet
+                || currentId == R.id.payment_card_wallet
+                || currentId == R.id.home_wallet
     }
 }
 
