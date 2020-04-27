@@ -19,7 +19,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
-import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
@@ -69,18 +68,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 it.id == card.membership_plan
                             }
 
-                        if (findNavController().currentDestination?.id == R.id.home_wallet) {
+                        if (findNavController().currentDestination?.id == R.id.loyalty_menu_item) {
                             if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
                             ) {
                                 displayNoBarcodeDialog(position)
                             } else {
                                 plan?.let {
                                     findNavController().navigate(
-                                        WalletsFragmentDirections.homeToBarcode(
+                                        LoyaltyWalletFragmentDirections.homeToBarcode(
                                             plan,
                                             card
                                         )
                                     )
+
+                                    //todo jumpy
+                                    (activity as MainActivity).hideBar()
                                 }
                                 this@LoyaltyWalletFragment.onDestroy()
                             }
@@ -273,7 +275,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
             is MembershipPlan -> {
                 findNavController().navigate(
-                    WalletsFragmentDirections.homeToAddJoin(
+                    LoyaltyWalletFragmentDirections.homeToAddJoin(
                         item,
                         null,
                         true,
@@ -284,9 +286,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             else ->
                 findNavController().navigateIfAdded(
                     this@LoyaltyWalletFragment,
-                    WalletsFragmentDirections.homeToPcd()
+                    LoyaltyWalletFragmentDirections.homeToPcd()
                 )
         }
+        (activity as MainActivity).hideBar()
     }
 
     private fun fetchData() {

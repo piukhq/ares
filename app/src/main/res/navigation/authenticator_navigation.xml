@@ -20,7 +20,21 @@
         <action
             android:id="@+id/action_payment_card_wallet"
             app:destination="@id/payment_menu_item" />
+
+        <action
+            android:id="@+id/home_to_pcd"
+            app:destination="@id/add_payment_card" />
+
+        <action
+            android:id="@+id/home_to_add_join"
+            app:destination="@id/add_join" />
+
+        <action
+            android:id="@+id/home_to_barcode"
+            app:destination="@+id/barcode_fragment" />
+
     </fragment>
+
     <fragment
         android:id="@+id/add_menu_item"
         android:name="com.bink.wallet.scenes.add.AddFragment"

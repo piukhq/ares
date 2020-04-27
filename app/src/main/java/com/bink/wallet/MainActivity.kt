@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         settings_button.setOnClickListener {
             findNavController(R.id.main_fragment).navigate(R.id.settings_screen)
+            hideBar()
         }
     }
 
@@ -110,6 +111,10 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
+            }
+            R.id.settings_screen -> {
+                findNavController(R.id.main_fragment).popBackStack()
+                showBar()
             }
             else -> super.onBackPressed()
         }
