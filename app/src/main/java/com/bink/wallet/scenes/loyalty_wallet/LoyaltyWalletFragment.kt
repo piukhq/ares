@@ -81,7 +81,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                         )
                                     )
 
-                                    //todo jumpy
                                     (activity as MainActivity).hideHomeViews()
                                 }
                                 this@LoyaltyWalletFragment.onDestroy()
