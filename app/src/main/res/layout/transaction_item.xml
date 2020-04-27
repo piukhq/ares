@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,8 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,9 @@
                 app:layout_constraintEnd_toStartOf="@+id/transaction_arrow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:transactionValue="@{transaction}" />
+                app:transactionValue="@{transaction}"
+                tools:text="+20 Points"
+                tools:textColor="@color/green_ok" />
 
             <TextView
                 android:id="@+id/transaction_time"
@@ -49,7 +51,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/transaction_arrow"
                 app:layout_constraintStart_toStartOf="@+id/points_text"
                 app:layout_constraintTop_toBottomOf="@+id/points_text"
-                app:transactionTime="@{transaction}" />
+                app:transactionTime="@{transaction}"
+                tools:text="01 Jan 2020, Transaction: 1 item" />
 
             <ImageView
                 android:id="@+id/transaction_arrow"
@@ -59,15 +62,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:transactionArrow="@{transaction}" />
+                app:transactionArrow="@{transaction}"
+                tools:ignore="ContentDescription" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/item_separator_line_height"
                 android:background="@color/separator_color"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintRight_toRightOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

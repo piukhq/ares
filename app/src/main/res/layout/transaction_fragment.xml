@@ -1,76 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.transactions_screen.TransactionViewModel" />
+            name="viewModel"
+            type="com.bink.wallet.scenes.transactions_screen.TransactionViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.bink.wallet.scenes.transactions_screen.TransactionsFragment">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.bink.wallet.scenes.transactions_screen.TransactionsFragment">
 
         <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.bink.wallet.ModalBrandHeader
-                android:id="@+id/loyaltyCardHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:membershipPlan="@{viewModel.membershipPlan}" />
+            android:id="@+id/loyaltyCardHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:membershipPlan="@{viewModel.membershipPlan}" />
 
         <TextView
-                android:id="@+id/points_history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:text="@string/points_history"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_headline"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/loyaltyCardHeader" />
+            android:id="@+id/points_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:text="@string/points_history"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_headline"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loyaltyCardHeader" />
 
         <TextView
-                android:id="@+id/points_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:text="@string/recent_history_text"
-                android:textColor="@color/black"
-                android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/points_history" />
+            android:id="@+id/points_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:text="@string/recent_history_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_sub_headline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/points_history" />
+
+        <TextView
+            android:id="@+id/no_transactions_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:text="@string/no_transaction_history_yet"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size_sub_headline"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/points_description" />
+
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/transactions_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/points_description" />
+            android:id="@+id/transactions_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/points_description"
+            tools:itemCount="3"
+            tools:listitem="@layout/transaction_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

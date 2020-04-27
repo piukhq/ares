@@ -97,7 +97,6 @@
                     android:text="@string/accept_button_text"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/size_sub_headline"
                     app:layout_constraintBottom_toTopOf="@id/second_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

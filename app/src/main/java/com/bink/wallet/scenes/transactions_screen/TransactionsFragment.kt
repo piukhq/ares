@@ -1,15 +1,18 @@
 package com.bink.wallet.scenes.transactions_screen
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.TransactionFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.utils.getElapsedTime
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Calendar
 
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -50,15 +53,24 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
             }
         }
 
-        viewModel.membershipCard.observeForever {
-            it.membership_transactions?.let { transactions ->
-                if (transactions.isEmpty()) {
-                    binding.pointsDescription.text = getString(R.string.no_transactions_text)
+        viewModel.membershipCard.observeForever { membershipCard ->
+            if (membershipCard.plan?.feature_set?.transactions_available == true) {
+                membershipCard.membership_transactions?.let { transactions ->
+                    if (transactions.isEmpty()) {
+                        binding.pointsDescription.text = getString(R.string.no_transactions_text)
+                        binding.transactionsList.visibility = View.GONE
+                    } else {
+                        binding.transactionsList.adapter = TransactionAdapter(transactions)
+                    }
                 }
-                binding.transactionsList.apply {
-                    layoutManager = GridLayoutManager(activity, 1)
-                    adapter = TransactionAdapter(transactions)
+            } else {
+                binding.pointsHistory.text = getString(R.string.points_history_not_available_title)
+                viewModel.membershipCard.value?.balances?.first()?.updated_at?.let { updateTime ->
+                    val currentTime = Calendar.getInstance().timeInMillis / 1000
+                    val timeSinceUpdate = currentTime - updateTime
+                    binding.pointsDescription.textAndShow(timeSinceUpdate.getElapsedTime(requireContext()))
                 }
+                binding.noTransactionsText.textAndShow(getString(R.string.no_transaction_history_yet))
             }
         }
     }

@@ -6,5 +6,6 @@ import com.squareup.moshi.JsonClass
 data class PlanFieldsRequest(
     var column: String?,
     var value: String?,
-    var disabled: Boolean? = null
+    var disabled: Boolean? = null,
+    @Transient var isSensitive: Boolean = false
 )

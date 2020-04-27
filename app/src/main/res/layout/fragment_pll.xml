@@ -53,7 +53,7 @@
         <View
             android:id="@+id/bg_pll_bottom_gradient"
             android:layout_width="0dp"
-            android:layout_height="@dimen/pll_screen_default_fade_view_height"
+            android:layout_height="@dimen/footer_default_fade_view_height"
             android:background="@drawable/bg_btn_gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"

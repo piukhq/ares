@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.InputType" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <CheckBox
+                android:id="@+id/content_add_auth_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:buttonTint="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/add_auth_checkbox_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium_large"
+                android:textColor="@color/cool_grey"
+                android:textColorLink="@color/blue_accent"
+                android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintBottom_toBottomOf="@+id/content_add_auth_checkbox"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/content_add_auth_checkbox"
+                app:layout_constraintTop_toTopOf="@+id/content_add_auth_checkbox"
+                tools:text="Add auth" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

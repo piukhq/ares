@@ -39,7 +39,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         )
     }
 
-    private lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
+    private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
         binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
@@ -109,23 +109,37 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun setupLayoutListener(container: View, onLayoutChange: (() -> Unit)) {
-        this.layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            val rec = Rect()
-            container.getWindowVisibleDisplayFrame(rec)
-            val screenHeight = container.rootView.height
-            val keypadHeight = screenHeight - rec.bottom
-            if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
-                onLayoutChange()
-            }
+    fun setupKeyboardHiddenListener(container: View, onLayoutChange: (() -> Unit)) {
+        this.keyboardHiddenListener = ViewTreeObserver.OnGlobalLayoutListener {
+            handleKeyboardHiddenListener(container, onLayoutChange)
         }
     }
 
-    fun registerLayoutListener(container: View) {
-        container.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+    fun handleKeyboardHiddenListener(container: View, onLayoutChange: (() -> Unit)) {
+        val rec = Rect()
+        container.getWindowVisibleDisplayFrame(rec)
+        val screenHeight = container.rootView.height
+        val keypadHeight = screenHeight - rec.bottom
+        if (keypadHeight <= screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
+            onLayoutChange()
+        }
     }
 
-    fun removeLayoutListener(container: View) {
-        container.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+    fun handleKeyboardVisibleListener(container: View, onLayoutChange: (() -> Unit)) {
+        val rec = Rect()
+        container.getWindowVisibleDisplayFrame(rec)
+        val screenHeight = container.rootView.height
+        val keypadHeight = screenHeight - rec.bottom
+        if (keypadHeight > screenHeight * KEYBOARD_TO_SCREEN_HEIGHT_RATIO) {
+            onLayoutChange()
+        }
+    }
+
+    fun registerKeyboardHiddenLayoutListener(container: View) {
+        container.viewTreeObserver.addOnGlobalLayoutListener(keyboardHiddenListener)
+    }
+
+    fun removeKeyboardHiddenLayoutListener(container: View) {
+        container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardHiddenListener)
     }
 }

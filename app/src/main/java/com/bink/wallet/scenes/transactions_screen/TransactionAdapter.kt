@@ -2,7 +2,9 @@ package com.bink.wallet.scenes.transactions_screen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.R
 import com.bink.wallet.databinding.TransactionItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
 
@@ -11,15 +13,18 @@ class TransactionAdapter(
 ) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = TransactionItemBinding.inflate(inflater)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder = TransactionViewHolder(
+        DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.transaction_item,
+            parent,
+            false
+        )
+    )
 
-        return TransactionViewHolder(binding)
-    }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        transactions[position].let { holder.bind(it) }
+        holder.bind(transactions[position])
     }
 
     override fun getItemCount(): Int {
@@ -31,7 +36,6 @@ class TransactionAdapter(
 
         fun bind(item: MembershipTransactions) {
             binding.transaction = item
-            binding.executePendingBindings()
         }
     }
 }
