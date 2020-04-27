@@ -30,31 +30,18 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 viewModel.membershipCard.value = membershipCard
                 viewModel.barcode.value = BarcodeWrapper(membershipCard)
 
-                viewModel.isBarcodeAvailable.value = !membershipCard.card?.barcode.isNullOrEmpty()
+                viewModel.isBarcodeAvailable.set(!membershipCard.card?.barcode.isNullOrEmpty())
+                viewModel.isCardNumberAvailable.set(!membershipCard.card?.membership_id.isNullOrEmpty())
 
                 membershipCard.card?.let { card ->
                     if (!card.membership_id.isNullOrEmpty()) {
                         viewModel.cardNumber.set(card.membership_id)
-                    } else if (viewModel.isBarcodeAvailable.value!!) {
-                        viewModel.cardNumber.set(card.barcode)
+                    } else if (viewModel.isBarcodeAvailable.get()) {
+                        viewModel.barcodeNumber.set(card.barcode)
                     }
                 }
             }
         }
         binding.viewModel = viewModel
-
-        binding.buttonMaximize.setOnClickListener {
-            val directions =
-                viewModel.barcode.value?.let { barcode ->
-                    viewModel.membershipPlan.value?.let { plan ->
-                        BarcodeFragmentDirections.barcodeToMaximised(
-                            plan,
-                            barcode
-                        )
-                    }
-                }
-
-            directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
-        }
     }
 }
