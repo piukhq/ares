@@ -34,9 +34,10 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 viewModel.isCardNumberAvailable.set(!membershipCard.card?.membership_id.isNullOrEmpty())
 
                 membershipCard.card?.let { card ->
-                    if (!card.membership_id.isNullOrEmpty()) {
+                    if (viewModel.isCardNumberAvailable.get()) {
                         viewModel.cardNumber.set(card.membership_id)
-                    } else if (viewModel.isBarcodeAvailable.get()) {
+                    }
+                    if (viewModel.isBarcodeAvailable.get()) {
                         viewModel.barcodeNumber.set(card.barcode)
                     }
                 }

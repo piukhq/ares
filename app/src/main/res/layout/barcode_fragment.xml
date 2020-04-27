@@ -73,7 +73,7 @@
                 android:layout_marginStart="16dp"
                 android:textSize="@dimen/size_sub_headline"
                 android:textStyle="bold"
-                android:text="@{viewModel.}"
+                android:text="@{viewModel.barcodeNumber}"
                 app:isVisible="@{viewModel.isBarcodeAvailable}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barcode_label"
