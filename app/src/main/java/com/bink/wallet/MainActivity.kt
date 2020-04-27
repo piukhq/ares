@@ -26,9 +26,6 @@ import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.navigateIfAdded
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
         initBottomBarNavigation()
-//        setUpNavigation()
 
         //todo clean
         setActionBar(toolbar)
@@ -201,15 +197,6 @@ class MainActivity : AppCompatActivity() {
 
     fun setListener(listener: WalletsFragment.Listener) {
         this.listener = listener
-    }
-
-    fun setUpNavigation() {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.main_fragment) as NavHostFragment?
-        NavigationUI.setupWithNavController(
-            bottom_navigation,
-            navHostFragment!!.navController
-        )
     }
 }
 
