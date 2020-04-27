@@ -10,9 +10,17 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
+import kotlin.Boolean
+import kotlin.Comparator
+import kotlin.Int
+import kotlin.String
+import kotlin.apply
+import kotlin.getValue
+import kotlin.let
 
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFragmentBinding>() {
 
@@ -118,13 +126,15 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
             splitPosition
         ).apply {
             setOnBrandItemClickListener { membershipPlan ->
-                findNavController().navigate(
+                findNavController().navigateIfAdded(
+                    this@BrowseBrandsFragment,
                     BrowseBrandsFragmentDirections.browseToAddJoin(
                         membershipPlan,
                         null,
                         isFromJoinCard = false,
                         isRetryJourney = false
-                    )
+                    ),
+                    R.id.browse_brands
                 )
             }
         }
