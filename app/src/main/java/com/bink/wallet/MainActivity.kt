@@ -24,6 +24,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.fragment.NavHostFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +46,8 @@ class MainActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
-        initBottomBarNavigation()
+//        initBottomBarNavigation()
+        setUpNavigation()
     }
 
     override fun onResume() {
@@ -154,6 +157,8 @@ class MainActivity : AppCompatActivity() {
                     listener.onOpenLoyalty()
                 }
                 R.id.add_menu_item -> {
+                    listener.onOpenAddScreen()
+                    hideBar()
 //                    viewModel.membershipPlanData.value?.let {
 //                        val directions =
 //                            it.toTypedArray().let { plans ->
@@ -185,6 +190,15 @@ class MainActivity : AppCompatActivity() {
 
 
         listener.onOpenLoyalty()
+    }
+
+    fun setUpNavigation() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.main_fragment) as NavHostFragment?
+        NavigationUI.setupWithNavController(
+            bottom_navigation,
+            navHostFragment!!.navController
+        )
     }
 }
 

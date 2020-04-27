@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
@@ -38,6 +39,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as MainActivity).hideBar()
         viewModel.getLocalMembershipCards()
         binding.cancelButton.setOnClickListener {
             findNavController().navigateIfAdded(

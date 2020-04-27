@@ -192,6 +192,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        (activity as MainActivity).showBar()
         mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards(false)
@@ -201,7 +202,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onPause() {
         disableIndicators()
-        (activity as MainActivity).hideBar()
+//        (activity as MainActivity).hideBar()
         super.onPause()
     }
 

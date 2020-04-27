@@ -96,7 +96,7 @@ class PaymentCardWalletFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        (activity as MainActivity).showBar()
         populateWallet()
 
         fetchPaymentCards(false)
@@ -157,7 +157,7 @@ class PaymentCardWalletFragment :
     }
 
     override fun onPause() {
-        (activity as MainActivity).hideBar()
+//        (activity as MainActivity).hideBar()
         super.onPause()
     }
 

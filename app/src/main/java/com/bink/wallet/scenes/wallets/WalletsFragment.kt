@@ -23,6 +23,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         companion object {
             val NULL = object : Listener {
+                override fun onOpenAddScreen() {
+                    //
+                }
+
                 override fun onOpenPaymentCards() {
                     //
                 }
@@ -34,6 +38,8 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
 
         fun onOpenLoyalty()
+
+        fun onOpenAddScreen()
 
         fun onOpenPaymentCards()
 
@@ -75,6 +81,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
 
         (activity as MainActivity).setListener(object : Listener {
+            override fun onOpenAddScreen() {
+                toAddCardScreen()
+            }
+
             override fun onOpenPaymentCards() {
                 toPaymentCardsScreen()
             }
@@ -197,6 +207,18 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             this@WalletsFragment,
             WalletsFragmentDirections.homeToLoyaltyWallet()
         )
+    }
+
+    private fun toAddCardScreen() {
+        viewModel.membershipPlanData.value?.let {
+            val directions =
+                it.toTypedArray().let { plans ->
+                    WalletsFragmentDirections.homeToAdd(
+                        plans
+                    )
+                }
+            directions.let { findNavController().navigateIfAdded(this, it) }
+        }
     }
 
     private fun toPaymentCardsScreen() {
