@@ -506,6 +506,9 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settings_screen_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
 
     </fragment>
 
@@ -815,6 +818,14 @@
         <action
                 android:id="@+id/authToLoyaltyDetails"
                 app:destination="@id/loyalty_card_detail_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/binkWebFragment"
+        android:name="com.bink.wallet.scenes.binkweb.BinkWebFragment"
+        android:label="BinkWebFragment">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 
 </navigation>

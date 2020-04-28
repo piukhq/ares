@@ -138,13 +138,19 @@ class SettingsFragment :
                     )
                 )
 
-            SettingsItemType.PRIVACY_POLICY ->
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(getString(R.string.privacy_policy_url))
+            SettingsItemType.PRIVACY_POLICY -> {
+                findNavController().navigate(
+                    SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(
+                        "https://bink.com/privacy-policy/"
                     )
                 )
+            }
+//                startActivity(
+//                    Intent(
+//                        Intent.ACTION_VIEW,
+//                        Uri.parse(getString(R.string.privacy_policy_url))
+//                    )
+//                )
 
             SettingsItemType.CONTACT_US -> {
                 val intent = Intent(Intent.ACTION_SEND)
