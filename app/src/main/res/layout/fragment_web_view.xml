@@ -57,10 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:clickable="false"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            android:src="@drawable/ic_right"
-            android:rotation="180"
+            android:src="@drawable/bg_web_view_navigation_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/button_next"
             tools:ignore="ContentDescription" />
@@ -72,7 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            android:src="@drawable/ic_right"
+            android:rotation="180"
+            android:src="@drawable/bg_web_view_navigation_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription" />

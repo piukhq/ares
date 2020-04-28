@@ -38,23 +38,21 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 binding.buttonNext.isEnabled = binding.webView.canGoForward()
             }
         }
-        binding.webView.loadUrl(args.url)
 
         binding.buttonRefresh.setOnClickListener {
             binding.webView.reload()
         }
-
         binding.buttonNext.setOnClickListener {
             binding.webView.goForward()
         }
-
         binding.buttonBack.setOnClickListener {
             binding.webView.goBack()
         }
-
         binding.buttonClose.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.webView.loadUrl(args.url)
     }
 
 }

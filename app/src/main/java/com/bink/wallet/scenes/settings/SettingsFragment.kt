@@ -55,7 +55,7 @@ class SettingsFragment :
             viewModel.itemsList.addItem(item)
         }
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
-        
+
         val settingsAdapter = SettingsAdapter(
             viewModel.itemsList,
             itemClickListener = { settingsItemClick(it) })
@@ -130,27 +130,21 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
-            SettingsItemType.TERMS_AND_CONDITIONS ->
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(getString(R.string.ts_and_cs_url))
+            SettingsItemType.TERMS_AND_CONDITIONS -> {
+                findNavController().navigate(
+                    SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(
+                        getString(R.string.ts_and_cs_url)
                     )
                 )
+            }
 
             SettingsItemType.PRIVACY_POLICY -> {
                 findNavController().navigate(
                     SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(
-                        "https://bink.com/privacy-policy/"
+                        getString(R.string.privacy_policy_url)
                     )
                 )
             }
-//                startActivity(
-//                    Intent(
-//                        Intent.ACTION_VIEW,
-//                        Uri.parse(getString(R.string.privacy_policy_url))
-//                    )
-//                )
 
             SettingsItemType.CONTACT_US -> {
                 val intent = Intent(Intent.ACTION_SEND)
