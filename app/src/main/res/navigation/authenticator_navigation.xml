@@ -299,6 +299,7 @@
 
     <fragment
             android:id="@+id/voucher_details_fragment"
+        tools:layout="@layout/voucher_details_fragment"
             android:name="com.bink.wallet.scenes.loyalty_details.VoucherDetailsFragment">
         <argument
                 android:name="membershipPlan"
@@ -306,6 +307,9 @@
         <argument
                 android:name="voucher"
                 app:argType="com.bink.wallet.model.response.membership_card.Voucher" />
+        <action
+            android:id="@+id/action_voucher_details_fragment_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
     </fragment>
 
     <fragment
@@ -821,6 +825,7 @@
     </fragment>
     <fragment
         android:id="@+id/binkWebFragment"
+        tools:layout="@layout/fragment_web_view"
         android:name="com.bink.wallet.scenes.binkweb.BinkWebFragment"
         android:label="BinkWebFragment">
         <argument
