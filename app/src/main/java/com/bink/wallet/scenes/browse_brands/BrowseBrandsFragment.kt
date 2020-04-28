@@ -68,7 +68,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             })
         }
 
-        binding.filtersList.layoutManager = GridLayoutManager(context, 2)
+        binding.filtersList.layoutManager = GridLayoutManager(context, FILTERS_COLUMNS_COUNT)
         binding.filtersList.adapter = filtersAdapter.apply {
             setOnFilterClickListener {
                 viewModel.updateFilters(it)
@@ -100,5 +100,9 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         viewModel.filteredBrandItems.observeNonNull(this) {
             adapter.submitList(it)
         }
+    }
+
+    companion object {
+        private const val FILTERS_COLUMNS_COUNT = 2
     }
 }

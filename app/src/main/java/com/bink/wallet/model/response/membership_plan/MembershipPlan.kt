@@ -47,23 +47,4 @@ class MembershipPlan(
                 feature_set.transactions_available
 
     fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
-
-    fun comparePlans(
-        membershipPlan2: MembershipPlan
-    ): Int {
-        this.getCardType()?.type?.let { type1 ->
-            membershipPlan2.getCardType()?.type?.let { type2 ->
-                return when {
-                    (this.isPlanPLL() ||
-                            membershipPlan2.isPlanPLL()) &&
-                            (type1 > type2) -> -1
-                    (this.isPlanPLL() ||
-                            membershipPlan2.isPlanPLL()) &&
-                            (type1 < type2) -> 1
-                    else -> 0
-                }
-            }
-        }
-        return 0
-    }
 }

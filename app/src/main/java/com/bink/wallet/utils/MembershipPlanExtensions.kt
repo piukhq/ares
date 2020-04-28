@@ -23,3 +23,22 @@ fun List<MembershipPlan>.getCategories(): List<String> {
     }
     return categories
 }
+
+fun MembershipPlan.comparePlans(
+    membershipPlan2: MembershipPlan
+): Int {
+    this.getCardType()?.type?.let { type1 ->
+        membershipPlan2.getCardType()?.type?.let { type2 ->
+            return when {
+                (this.isPlanPLL() ||
+                        membershipPlan2.isPlanPLL()) &&
+                        (type1 > type2) -> -1
+                (this.isPlanPLL() ||
+                        membershipPlan2.isPlanPLL()) &&
+                        (type1 < type2) -> 1
+                else -> 0
+            }
+        }
+    }
+    return 0
+}
