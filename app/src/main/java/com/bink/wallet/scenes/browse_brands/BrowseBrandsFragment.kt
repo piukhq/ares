@@ -14,20 +14,11 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
 import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.getOwnedMembershipCardsIds
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.setVisible
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
-import kotlin.Boolean
-import kotlin.Comparator
-import kotlin.Int
-import kotlin.String
-import kotlin.apply
-import kotlin.getValue
-import kotlin.let
 
 class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBinding>() {
 
