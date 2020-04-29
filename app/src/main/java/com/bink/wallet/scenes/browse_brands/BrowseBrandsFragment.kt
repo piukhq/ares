@@ -102,6 +102,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
         viewModel.filteredBrandItems.observeNonNull(this) {
             adapter.submitList(it)
+            binding.labelNoMatch.setVisible(it.isEmpty())
         }
     }
 
