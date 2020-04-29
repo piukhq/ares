@@ -5,8 +5,6 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
-import com.bink.wallet.network.ApiConstants
-import com.bink.wallet.utils.ENVIRONMENTS_TO_DEBUG
 import com.bink.wallet.utils.enums.BuildTypes
 import java.util.*
 import kotlin.collections.ArrayList

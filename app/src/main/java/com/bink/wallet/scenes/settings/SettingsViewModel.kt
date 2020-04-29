@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.settings
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
@@ -33,6 +34,12 @@ class SettingsViewModel constructor(
     val clearErrorResponse: LiveData<Exception>
         get() = _clearErrorResponse
 
+    fun populateItemList(resources: Resources) {
+        for (item in SettingsItemsPopulation.populateItems(resources)) {
+            itemsList.addItem(item)
+        }
+    }
+
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
         loyaltyWalletRepository.clearMembershipCards()
@@ -44,7 +51,7 @@ class SettingsViewModel constructor(
         loginRepository.clearData(_clearDataResponse, _clearErrorResponse)
     }
 
-    fun getSettingsTitle() : Int{
+    fun getSettingsTitle(): Int {
         return R.string.settings
     }
 }
