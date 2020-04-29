@@ -469,6 +469,9 @@
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+        <action
+            android:id="@+id/action_join_unavailable_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
     </fragment>
 
     <fragment
@@ -617,7 +620,11 @@
     <fragment
             android:id="@+id/sign_up_fragment"
             android:name="com.bink.wallet.scenes.sign_up.SignUpFragment"
-            tools:layout="@layout/sign_up_fragment" />
+        tools:layout="@layout/sign_up_fragment">
+        <action
+            android:id="@+id/action_sign_up_fragment_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
+    </fragment>
 
     <fragment
             android:id="@+id/ghost_registration_unavailable"
