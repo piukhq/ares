@@ -7,6 +7,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -31,12 +32,14 @@ class LoyaltyCardTest {
 
     lateinit var viewModel: LoyaltyViewModel
     private lateinit var loyaltyWalletRepository: LoyaltyWalletRepository
+    private lateinit var paymentWalletRepository: PaymentWalletRepository
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         this.loyaltyWalletRepository = mock(LoyaltyWalletRepository::class.java)
-        this.viewModel = LoyaltyViewModel(loyaltyWalletRepository)
+        this.paymentWalletRepository = mock(PaymentWalletRepository::class.java)
+        this.viewModel = LoyaltyViewModel(loyaltyWalletRepository, paymentWalletRepository)
     }
 
     @Test
@@ -125,7 +128,7 @@ class LoyaltyCardTest {
                     val observer = mock(Observer::class.java) as Observer<List<MembershipPlan>>
                     viewModel.membershipPlanData.observeForever(observer)
                     runBlocking {
-                        viewModel.fetchMembershipPlans()
+                        viewModel.fetchMembershipPlans(false)
                     }
                     assertNotNull(viewModel.membershipPlanData.value)
                 }

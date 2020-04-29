@@ -64,7 +64,7 @@ class MembershipCardTests {
                 null,
                 1,
                 null,
-                null
+                null, false
             ),
             null,
             null,

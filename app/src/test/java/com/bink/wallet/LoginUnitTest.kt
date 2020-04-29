@@ -9,6 +9,7 @@ import com.bink.wallet.scenes.login.LoginBody
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginResponse
 import com.bink.wallet.scenes.login.LoginViewModel
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,8 +29,9 @@ class LoginUnitTest : KoinTest {
     val rule = InstantTaskExecutorRule()
 
     var loginData = MutableLiveData<LoginBody>()
-    val authError = MutableLiveData<Throwable>()
+    val authError = MutableLiveData<Exception>()
     private val loginRepository: LoginRepository = mock()
+    private val loyaltyWalletRepository: LoyaltyWalletRepository = mock()
     var viewModel: LoginViewModel = mock()
 
     @ObsoleteCoroutinesApi
@@ -38,7 +40,7 @@ class LoginUnitTest : KoinTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        viewModel = LoginViewModel(loginRepository)
+        viewModel = LoginViewModel(loginRepository, loyaltyWalletRepository)
     }
 
     @ExperimentalCoroutinesApi

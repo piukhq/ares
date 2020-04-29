@@ -54,6 +54,7 @@ class SettingsFragment :
         for (item in SettingsItemsPopulation.populateItems(resources)) {
             viewModel.itemsList.addItem(item)
         }
+        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         
         val settingsAdapter = SettingsAdapter(
