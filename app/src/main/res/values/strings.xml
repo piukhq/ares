@@ -131,6 +131,7 @@
     <!-- 1.6 -->
     <string name="points_retry_login">Retry login</string>
     <string name="description_retry_login">To see history</string>
+    <string name="description_retry_login_placeholder">To see history smsakdbajhdbjahsbdhj </string>
     <!-- 1.7 -->
     <string name="points_pending">Pending</string>
     <string name="description_please_wait">Please wait</string>
