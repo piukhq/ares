@@ -23,7 +23,7 @@ import org.robolectric.annotation.Config
 class SettingsTest : AutoCloseKoinTest() {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
-    
+
     @Mock
     private lateinit var loginRepository: LoginRepository
     @Mock
