@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class=".ItemFilterBinding">
+
+        <variable
+            name="filter"
+            type="com.bink.wallet.scenes.browse_brands.BrandsFilter" />
+    </data>
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="@dimen/browse_brands_filter_width"
+        android:layout_height="@dimen/browse_brands_filter_height"
+        android:button="@drawable/bg_filter_check_box"
+        android:fontFamily="@font/nunitosans_light"
+        android:gravity="center_vertical"
+        android:text="@{filter.category}"
+        android:checked="@{filter.checked}"
+        android:textSize="@dimen/text_size_description_big"
+        tools:checked="true"
+        tools:text="Food n drink" />
+</layout>

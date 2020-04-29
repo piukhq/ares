@@ -3,16 +3,16 @@ package com.bink.wallet.scenes.browse_brands
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 
 typealias OnBrandItemClickListener = (MembershipPlan) -> Unit
 
-class BrowseBrandsAdapter(
-    private val brands: List<BrowseBrandsListItem>,
-    private val splitPosition: Int
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BrowseBrandsAdapter :
+    ListAdapter<BrowseBrandsListItem, RecyclerView.ViewHolder>(BrandItemsDiffUtil) {
+
     private var onBrandItemClickListener: OnBrandItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
@@ -41,22 +41,19 @@ class BrowseBrandsAdapter(
             }
         }
 
-    override fun getItemCount() = brands.size
-
-    override fun getItemViewType(position: Int): Int = brands[position].id
+    override fun getItemViewType(position: Int): Int = getItem(position).id
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            BRAND_ITEM -> (brands[position] as BrowseBrandsListItem.BrandItem).let {
+            BRAND_ITEM -> (getItem(position) as BrowseBrandsListItem.BrandItem).let {
                 (holder as BrandsViewHolder).bind(
                     it,
-                    position == itemCount - 1 || position == splitPosition,
                     onBrandItemClickListener
                 )
             }
             SECTION_TITLE_ITEM -> {
                 (holder as SectionTitleViewHolder).bind(
-                    (brands[position] as BrowseBrandsListItem.SectionTitleItem).sectionTitle
+                    (getItem(position) as BrowseBrandsListItem.SectionTitleItem).sectionTitle
                 )
             }
         }

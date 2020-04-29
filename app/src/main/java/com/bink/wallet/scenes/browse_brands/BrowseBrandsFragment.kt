@@ -1,30 +1,30 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.os.Bundle
+import android.view.View
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
-import com.bink.wallet.databinding.BrowseBrandsFragmentBinding
-import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
-import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.getCategories
+import com.bink.wallet.utils.getOwnedMembershipCardsIds
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
-import kotlin.Boolean
-import kotlin.Comparator
-import kotlin.Int
-import kotlin.String
-import kotlin.apply
-import kotlin.getValue
-import kotlin.let
 
-class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFragmentBinding>() {
+class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBinding>() {
 
     private val args by navArgs<BrowseBrandsFragmentArgs>()
+    private val adapter = BrowseBrandsAdapter()
+    private val filtersAdapter = BrandsFiltersAdapter()
     override val layoutRes = R.layout.browse_brands_fragment
     override val viewModel: BrowseBrandsViewModel by viewModel()
 
@@ -39,92 +39,15 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
         logScreenView(BROWSE_BRANDS_VIEW)
     }
 
-    private fun isPlanPLL(membershipPlan: MembershipPlan): Boolean {
-        return membershipPlan.getCardType() == CardType.PLL
-    }
-
-    private fun comparePlans(
-        membershipPlan1: MembershipPlan,
-        membershipPlan2: MembershipPlan
-    ): Int {
-        membershipPlan1.getCardType()?.type?.let { type1 ->
-            membershipPlan2.getCardType()?.type?.let { type2 ->
-                return when {
-                    (isPlanPLL(membershipPlan1) ||
-                            isPlanPLL(membershipPlan2)) &&
-                            (type1 > type2) -> -1
-                    (isPlanPLL(membershipPlan1) ||
-                            isPlanPLL(membershipPlan2)) &&
-                            (type1 < type2) -> 1
-                    else -> 0
-                }
-            }
-        }
-        return 0
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.lifecycleOwner = this
-        setupBrandsAdapter(
-            args.membershipCards.toList().getOwnedMembershipCardsIds(),
-            args.membershipPlans.toList()
-        )
-    }
-
-    private fun setupBrandsAdapter(
-        membershipCardIds: List<String>,
-        membershipPlans: List<MembershipPlan>
-    ) {
-        val browseBrandsItemsList = mutableListOf<BrowseBrandsListItem>()
-        var splitPosition = 0
-
-        val sortedMembershipPlans =
-            membershipPlans.sortedWith(
-                Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
-                    comparePlans(membershipPlan1, membershipPlan2)
-                }.thenBy {
-                    it.account?.company_name?.toLowerCase(Locale.ENGLISH)
-                }
-            ).toTypedArray()
-        browseBrandsItemsList.add(BrowseBrandsListItem.SectionTitleItem(getString(R.string.pll_title)))
-        browseBrandsItemsList.add(
-            BrowseBrandsListItem.BrandItem(
-                sortedMembershipPlans[0],
-                sortedMembershipPlans[0].id in membershipCardIds
-            )
+        binding.viewModel = viewModel
+        viewModel.setupBrandItems(
+            args.membershipPlans.toList(),
+            args.membershipCards.toList().getOwnedMembershipCardsIds()
         )
 
-
-        for (position in 1 until sortedMembershipPlans.size) {
-            if (sortedMembershipPlans[position - 1].getCardType() == CardType.PLL &&
-                sortedMembershipPlans[position].getCardType() != CardType.PLL
-            ) {
-                browseBrandsItemsList.add(
-                    BrowseBrandsListItem.SectionTitleItem(
-                        getString(R.string.all_text)
-                    )
-                )
-                browseBrandsItemsList.add(
-                    BrowseBrandsListItem.BrandItem(
-                        sortedMembershipPlans[position],
-                        sortedMembershipPlans[position].id in membershipCardIds
-                    )
-                )
-                splitPosition = position
-            } else {
-                browseBrandsItemsList.add(
-                    BrowseBrandsListItem.BrandItem(
-                        sortedMembershipPlans[position],
-                        sortedMembershipPlans[position].id in membershipCardIds
-                    )
-                )
-            }
-        }
-        binding.brandsRecyclerView.adapter = BrowseBrandsAdapter(
-            browseBrandsItemsList,
-            splitPosition
-        ).apply {
+        binding.brandsRecyclerView.adapter = adapter.apply {
             setOnBrandItemClickListener { membershipPlan ->
                 findNavController().navigateIfAdded(
                     this@BrowseBrandsFragment,
@@ -137,20 +60,53 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsFra
                     R.id.browse_brands
                 )
             }
+            registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    if (viewModel.activeFilters.value?.size ==
+                        args.membershipPlans.toList().getCategories().size
+                    ) {
+                        binding.brandsRecyclerView.scrollToPosition(0)
+                    }
+                }
+            })
+        }
+
+        binding.filtersList.layoutManager = GridLayoutManager(context, FILTERS_COLUMNS_COUNT)
+        binding.filtersList.adapter = filtersAdapter.apply {
+            setOnFilterClickListener {
+                viewModel.updateFilters(it)
+            }
+            setFilters(args.membershipPlans.toList().getCategories().map { BrandsFilter(it) })
+        }
+
+        binding.buttonClearSearch.setOnClickListener {
+            viewModel.searchText.value = EMPTY_STRING
+        }
+
+        binding.buttonFilters.setOnClickListener {
+            binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+
+        viewModel.searchText.observe(viewLifecycleOwner, Observer {
+            viewModel.filterBrandItems()
+        })
+
+        viewModel.activeFilters.observe(viewLifecycleOwner, Observer {
+            viewModel.filterBrandItems()
+        })
+
+        viewModel.filteredBrandItems.observeNonNull(this) {
+            adapter.submitList(it)
+            binding.labelNoMatch.setVisible(it.isEmpty())
         }
     }
 
     companion object {
-        private fun List<MembershipCard>.getOwnedMembershipCardsIds(): List<String> {
-            val membershipCardsIds = mutableListOf<String>()
-            this.forEach { membershipCard ->
-                membershipCard.membership_plan?.let { membership_planId ->
-                    if (membership_planId !in membershipCardsIds) {
-                        membershipCardsIds.add(membership_planId)
-                    }
-                }
-            }
-            return membershipCardsIds
-        }
+        private const val FILTERS_COLUMNS_COUNT = 2
     }
 }
