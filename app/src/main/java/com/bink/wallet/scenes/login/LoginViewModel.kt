@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.login
 
-import android.util.Patterns
 import androidx.lifecycle.*
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData

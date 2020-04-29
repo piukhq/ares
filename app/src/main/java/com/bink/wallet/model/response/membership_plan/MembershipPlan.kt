@@ -45,4 +45,6 @@ class MembershipPlan(
                 feature_set.has_points &&
                 feature_set.transactions_available != null &&
                 feature_set.transactions_available
+
+    fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
 }
