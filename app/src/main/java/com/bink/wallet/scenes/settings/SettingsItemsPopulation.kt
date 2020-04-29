@@ -16,91 +16,104 @@ object SettingsItemsPopulation {
             SettingsItem(
                 res.getString(R.string.settings_menu_account),
                 null,
-                SettingsItemType.HEADER
+                SettingsItemType.HEADER,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.preferences_text),
                 null,
-                SettingsItemType.PREFERENCES
+                SettingsItemType.PREFERENCES,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_log_out),
                 null,
-                SettingsItemType.LOGOUT
+                SettingsItemType.LOGOUT,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_support_and_feedback),
                 null,
-                SettingsItemType.HEADER
+                SettingsItemType.HEADER,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_faqs),
                 res.getString(R.string.settings_menu_faqs_subtitle),
-                SettingsItemType.FAQS
+                SettingsItemType.FAQS,
+                res.getString(R.string.faq_url)
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_contact_us),
                 res.getString(R.string.settings_menu_contact_us_subtitle),
-                SettingsItemType.CONTACT_US
+                SettingsItemType.CONTACT_US,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_rate_this_app),
                 null,
-                SettingsItemType.RATE_APP
+                SettingsItemType.RATE_APP,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_about),
                 null,
-                SettingsItemType.HEADER
+                SettingsItemType.HEADER,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_security_and_privacy),
                 res.getString(R.string.settings_menu_security_and_privacy_subtitle),
-                SettingsItemType.SECURITY_AND_PRIVACY
+                SettingsItemType.SECURITY_AND_PRIVACY,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_how_it_works),
                 res.getString(R.string.settings_menu_how_it_works_subtitle),
-                SettingsItemType.HOW_IT_WORKS
+                SettingsItemType.HOW_IT_WORKS,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_legal),
                 null,
-                SettingsItemType.HEADER
+                SettingsItemType.HEADER,
+                null
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_privacy_policy),
                 null,
-                SettingsItemType.PRIVACY_POLICY
+                SettingsItemType.PRIVACY_POLICY,
+                res.getString(R.string.privacy_policy_url)
             )
         )
         itemsList.add(
             SettingsItem(
                 res.getString(R.string.settings_menu_terms_and_conditions),
                 null,
-                SettingsItemType.TERMS_AND_CONDITIONS
+                SettingsItemType.TERMS_AND_CONDITIONS,
+                res.getString(R.string.ts_and_cs_url)
             )
         )
 
@@ -109,14 +122,16 @@ object SettingsItemsPopulation {
                 SettingsItem(
                     res.getString(R.string.settings_menu_debug),
                     null,
-                    SettingsItemType.HEADER
+                    SettingsItemType.HEADER,
+                    null
                 )
             )
             itemsList.add(
                 SettingsItem(
                     "Debug",
                     "Only accessible on debug builds",
-                    SettingsItemType.DEBUG_MENU
+                    SettingsItemType.DEBUG_MENU,
+                    null
                 )
             )
         }

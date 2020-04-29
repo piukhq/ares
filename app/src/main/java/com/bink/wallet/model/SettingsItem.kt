@@ -9,5 +9,6 @@ import kotlinx.android.parcel.Parcelize
 data class SettingsItem(
     val title: String,
     val value: String?,
-    val type: SettingsItemType
+    val type: SettingsItemType,
+    val url: String?
 ) : Parcelable

@@ -34,12 +34,6 @@ class SettingsViewModel constructor(
     val clearErrorResponse: LiveData<Exception>
         get() = _clearErrorResponse
 
-    fun populateItemList(resources: Resources) {
-        for (item in SettingsItemsPopulation.populateItems(resources)) {
-            itemsList.addItem(item)
-        }
-    }
-
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
         loyaltyWalletRepository.clearMembershipCards()
@@ -53,5 +47,13 @@ class SettingsViewModel constructor(
 
     fun getSettingsTitle(): Int {
         return R.string.settings
+    }
+
+    fun getPlayStoreAppUrl(): Int {
+        return R.string.play_store_market_url
+    }
+
+    fun getPlayStoreBrowserUrl(): Int {
+        return R.string.play_store_browser_url
     }
 }

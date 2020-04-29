@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.settings
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -21,7 +22,8 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.P])
 class SettingsTest : AutoCloseKoinTest() {
 
-    val context = ApplicationProvider.getApplicationContext<Context>()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
+    
     @Mock
     private lateinit var loginRepository: LoginRepository
     @Mock
@@ -43,19 +45,17 @@ class SettingsTest : AutoCloseKoinTest() {
         }
     }
 
-
-
     @Test
     fun test_settingsScreenTitle() {
         assertEquals("Settings", context.getString(settingsMockViewModel.getSettingsTitle()))
     }
 
-//    @After
-//    fun tearDown() {
-//        stopKoin()
-//    }
+    @Test
+    fun test_sizeOfSettingsItems() {
+        assertEquals(15, settingsItemList.size)
+    }
 
-
+    // Account Section Tests
 
     @Test
     fun test_accountHeaderTitle() {
@@ -72,6 +72,8 @@ class SettingsTest : AutoCloseKoinTest() {
         assertEquals("Log out", settingsItemList[2].title)
     }
 
+    // Support and Feedback Section Tests
+
     @Test
     fun test_supportAndFeedbackHeaderTitle() {
         assertEquals("Support and feedback", settingsItemList[3].title)
@@ -80,6 +82,14 @@ class SettingsTest : AutoCloseKoinTest() {
     @Test
     fun test_faqsTitleRow() {
         assertEquals("FAQs", settingsItemList[4].title)
+    }
+
+    @Test
+    fun test_binkFAQUrl() {
+        assertEquals(
+            "https://help.bink.com",
+            settingsItemList[4].url
+        )
     }
 
     @Test
@@ -100,5 +110,89 @@ class SettingsTest : AutoCloseKoinTest() {
     @Test
     fun test_rateTitleRow() {
         assertEquals("Rate this app", settingsItemList[6].title)
+    }
+
+    // About Section Tests
+
+    @Test
+    fun test_aboutHeaderTitle() {
+        assertEquals("About", settingsItemList[7].title)
+    }
+
+    @Test
+    fun test_securityAndPrivacyTitleRow() {
+        assertEquals("Security and privacy", settingsItemList[8].title)
+    }
+
+    @Test
+    fun test_securityAndPrivacyDescriptionRow() {
+        assertEquals("How we protect your data", settingsItemList[8].value)
+    }
+
+    @Test
+    fun test_howItWorksTitleRow() {
+        assertEquals("How it works", settingsItemList[9].title)
+    }
+
+    @Test
+    fun test_howItWorksDescriptionRow() {
+        assertEquals("Find out more about Bink", settingsItemList[9].value)
+    }
+
+    // Legal Section Tests
+
+    @Test
+    fun test_legalHeaderTitle() {
+        assertEquals("Legal", settingsItemList[10].title)
+    }
+
+    @Test
+    fun test_privacyPolicyTitleRow() {
+        assertEquals("Privacy policy", settingsItemList[11].title)
+    }
+
+    @Test
+    fun test_binkPrivacyPolicyUrl() {
+        assertEquals(
+            "https://bink.com/privacy-policy/",
+            settingsItemList[11].url
+        )
+    }
+
+    @Test
+    fun test_termsAndConditionsTitleRow() {
+        assertEquals("Terms and conditions", settingsItemList[12].title)
+    }
+
+    @Test
+    fun test_binkTermsAndConditionsUrl() {
+        assertEquals(
+            "https://bink.com/terms-and-conditions/",
+            settingsItemList[12].url
+        )
+    }
+
+    // App Url Tests
+
+    @Test
+    fun test_playStoreAppUrl() {
+        assertEquals(
+            "market://details?id=" + BuildConfig.APPLICATION_ID,
+            context.getString(
+                settingsMockViewModel.getPlayStoreAppUrl(),
+                BuildConfig.APPLICATION_ID
+            )
+        )
+    }
+
+    @Test
+    fun test_playStoreBrowserUrl() {
+        assertEquals(
+            "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID,
+            context.getString(
+                settingsMockViewModel.getPlayStoreBrowserUrl(),
+                BuildConfig.APPLICATION_ID
+            )
+        )
     }
 }
