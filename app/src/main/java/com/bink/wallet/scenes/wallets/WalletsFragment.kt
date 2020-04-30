@@ -79,7 +79,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
     private fun toLoyaltyWalletScreen() {
         findNavController().navigateIfAdded(
             this@WalletsFragment,
-            WalletsFragmentDirections.homeToLoyaltyWallet()
+            WalletsFragmentDirections.homeToLoyaltyWallet(), R.id.home_wallet
         )
     }
 
@@ -100,7 +100,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             WalletsFragmentDirections.homeToPaymentCardWallet(
                 membershipPlansArray,
                 membershipCardsArray
-            )
+            ), R.id.home_wallet
         )
     }
 }

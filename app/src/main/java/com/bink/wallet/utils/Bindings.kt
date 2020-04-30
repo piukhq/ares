@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
@@ -99,6 +100,7 @@ fun ImageView.setImage(url: String) {
 
 @BindingAdapter("isVisible")
 fun View.setVisible(isVisible: Boolean) {
+    Log.e("ConnorDebug", "is visible: " + isVisible)
     visibility = if (isVisible) {
         View.VISIBLE
     } else {

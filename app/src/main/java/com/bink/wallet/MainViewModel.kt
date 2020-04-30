@@ -17,6 +17,7 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
         MutableLiveData()
     private val membershipPlanError: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val shouldShowButtons: MutableLiveData<Boolean> = MutableLiveData()
 
     fun getMembershipPlans() {
         val wasAnHourAgo =
@@ -28,13 +29,6 @@ class MainViewModel constructor(val loyaltyWalletRepository: LoyaltyWalletReposi
                 membershipPlanDatabaseLiveData
             )
         }
-    }
-
-    fun getMembershipPlanData(): List<MembershipPlan> {
-        membershipPlanData.value?.let {
-            return it
-        }
-        return listOf()
     }
 
     fun startLoading() {

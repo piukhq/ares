@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.Toolbar
@@ -25,6 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
+import androidx.databinding.DataBindingUtil
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding =
+            DataBindingUtil.setContentView<MainScreenBinding>(this, R.layout.activity_main)
+        binding.viewModel = mainViewModel
+        binding.lifecycleOwner = this
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         logUserPropertiesAtStartUp()
 
@@ -45,10 +49,10 @@ class MainActivity : AppCompatActivity() {
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
-        setContentView(R.layout.activity_main)
-        bottomNavigationView = findViewById(R.id.bottom_navigation)
-        toolbar = findViewById(R.id.toolbar)
-        btnSettings = findViewById(R.id.settings_button)
+
+        bottomNavigationView = binding.bottomNavigation
+        toolbar = binding.toolbar
+        btnSettings = binding.settingsButton
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
         initBottomBarNavigation()
 
@@ -130,15 +134,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showHomeViews() {
-        bottomNavigationView.visibility = View.VISIBLE
-        toolbar.visibility = View.VISIBLE
-        btnSettings.visibility = View.VISIBLE
+        mainViewModel.shouldShowButtons.value = true
     }
 
     fun hideHomeViews() {
-        bottomNavigationView.visibility = View.GONE
-        toolbar.visibility = View.GONE
-        btnSettings.visibility = View.GONE
+        mainViewModel.shouldShowButtons.value = false
     }
 
     private fun initToolbar() {
