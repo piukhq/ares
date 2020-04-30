@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
@@ -11,8 +12,11 @@ class BarcodeViewModel : BaseViewModel() {
     var membershipPlan = MutableLiveData<MembershipPlan>()
     var membershipCard = MutableLiveData<MembershipCard>()
     var barcode = MutableLiveData<BarcodeWrapper>()
-    var isBarcodeAvailable = MutableLiveData<Boolean>()
 
     val cardNumber = ObservableField<String>()
+    val barcodeNumber = ObservableField<String>()
+
+    var isBarcodeAvailable = ObservableBoolean(false)
+    var isCardNumberAvailable = ObservableBoolean(false)
 
 }
