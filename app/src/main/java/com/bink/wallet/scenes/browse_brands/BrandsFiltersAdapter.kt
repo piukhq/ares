@@ -41,7 +41,6 @@ class BrandsFiltersAdapter : RecyclerView.Adapter<BrandsFiltersAdapter.FiltersVi
         position == filters.size - 1
     }
 
-
     fun setFilters(filters: List<BrandsFilter>) {
         this.filters = filters
         this.notifyDataSetChanged()
