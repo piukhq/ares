@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.browse_brands
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,8 +28,19 @@ class BrandsFiltersAdapter : RecyclerView.Adapter<BrandsFiltersAdapter.FiltersVi
     override fun getItemCount(): Int = filters.size
 
     override fun onBindViewHolder(holder: FiltersViewHolder, position: Int) {
-        holder.bind(filters[position], onFilterClickListener)
+        holder.bind(
+            filters[position],
+            isLastRow(position),
+            onFilterClickListener
+        )
     }
+
+    private fun isLastRow(position: Int) = if (filters.size % 2 == 0) {
+        position == filters.size - 1 || position == filters.size - 2
+    } else {
+        position == filters.size - 1
+    }
+
 
     fun setFilters(filters: List<BrandsFilter>) {
         this.filters = filters
@@ -44,9 +56,14 @@ class BrandsFiltersAdapter : RecyclerView.Adapter<BrandsFiltersAdapter.FiltersVi
 
         fun bind(
             filter: BrandsFilter,
+            isLastRow: Boolean,
             onFilterClickListener: OnFilterClickListener?
         ) {
             binding.filter = filter
+
+            if (isLastRow) {
+                binding.separator.visibility = View.GONE
+            }
 
             binding.checkbox.setOnClickListener {
                 filter.isChecked = binding.checkbox.isChecked
