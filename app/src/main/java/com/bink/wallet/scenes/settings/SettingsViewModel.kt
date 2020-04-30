@@ -1,8 +1,10 @@
 package com.bink.wallet.scenes.settings
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.R
 import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.SettingsItem
@@ -41,5 +43,17 @@ class SettingsViewModel constructor(
 
     fun clearData() {
         loginRepository.clearData(_clearDataResponse, _clearErrorResponse)
+    }
+
+    fun getSettingsTitle(): Int {
+        return R.string.settings
+    }
+
+    fun getPlayStoreAppUrl(): Int {
+        return R.string.play_store_market_url
+    }
+
+    fun getPlayStoreBrowserUrl(): Int {
+        return R.string.play_store_browser_url
     }
 }
