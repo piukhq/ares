@@ -48,9 +48,15 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private external fun paymentCardEncryptionPublicKeyDev(): String
     private external fun paymentCardEncryptionPublicKeyStaging(): String
     private external fun paymentCardEncryptionPublicKeyProd(): String
-    private external fun zendeskUrl(): String
-    private external fun zendeskAppId(): String
-    private external fun zendeskOAuthId(): String
+
+    // Zendesk Keys
+    private external fun zendeskSandboxUrl(): String
+
+    private external fun zendeskSandboxAppId(): String
+    private external fun zendeskSandboxOAuthId(): String
+    private external fun zendeskProdUrl(): String
+    private external fun zendeskProdAppId(): String
+    private external fun zendeskProdOAuthId(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -183,11 +189,13 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun configureZendesk() {
+        val isProduction =
+            BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type
         Zendesk.INSTANCE.init(
             requireActivity(),
-            zendeskUrl(),
-            zendeskAppId(),
-            zendeskOAuthId()
+            if (isProduction) zendeskProdUrl() else zendeskSandboxUrl(),
+            if (isProduction) zendeskProdAppId() else zendeskSandboxAppId(),
+            if (isProduction) zendeskProdOAuthId() else zendeskSandboxOAuthId()
         )
 
         Support.INSTANCE.init(Zendesk.INSTANCE)

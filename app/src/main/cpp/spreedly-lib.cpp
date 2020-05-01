@@ -93,10 +93,10 @@ Java_com_bink_wallet_scenes_splash_SplashFragment_paymentCardEncryptionPublicKey
     return env->NewStringUTF(key.c_str());
 }
 
-// ZENDESK KEYS
+// ZENDESK SANDBOX KEYS
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskUrl(
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskSandboxUrl(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "https://binkcx1573467900.zendesk.com";
@@ -104,7 +104,7 @@ Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskUrl(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskAppId(
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskSandboxAppId(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "9604542ca7d21d05137fbc8cb56366bedba80fb52daaa318";
@@ -112,9 +112,36 @@ Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskAppId(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskOAuthId(
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskSandboxOAuthId(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "mobile_sdk_client_13ad51f66e08c5466b42";
     return env->NewStringUTF(key.c_str());
 }
+
+// ZENDESK PRODUCTION KEYS
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdUrl(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string key = "https://binkcx1573467900.zendesk.com";
+    return env->NewStringUTF(key.c_str());
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdAppId(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string key = "9604542ca7d21d05137fbc8cb56366bedba80fb52daaa318";
+    return env->NewStringUTF(key.c_str());
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdOAuthId(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string key = "mobile_sdk_client_13ad51f66e08c5466b42";
+    return env->NewStringUTF(key.c_str());
+}
+
