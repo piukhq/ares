@@ -20,6 +20,11 @@ import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import zendesk.core.AnonymousIdentity
+import zendesk.core.Zendesk
+import zendesk.support.guide.HelpCenterActivity
+import zendesk.support.request.RequestActivity
+import zendesk.support.requestlist.RequestListActivity
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -66,6 +71,7 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
         viewModel.itemsList.observe(this, this)
+        setZendeskIdentity()
     }
 
     private fun settingsItemClick(item: SettingsItem) {
@@ -100,12 +106,8 @@ class SettingsFragment :
                 )
             }
             SettingsItemType.FAQS ->
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(item.url)
-                    )
-                )
+                HelpCenterActivity.builder()
+                    .show(requireActivity())
             SettingsItemType.SECURITY_AND_PRIVACY -> {
                 val action =
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
@@ -132,7 +134,7 @@ class SettingsFragment :
                 findNavController().navigateIfAdded(this, action)
             }
             SettingsItemType.TERMS_AND_CONDITIONS,
-            SettingsItemType.PRIVACY_POLICY->
+            SettingsItemType.PRIVACY_POLICY ->
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
@@ -141,39 +143,8 @@ class SettingsFragment :
                 )
 
             SettingsItemType.CONTACT_US -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "message/rfc882"
-                intent.putExtra(
-                    Intent.EXTRA_EMAIL,
-                    arrayOf(getString(R.string.contact_us_email_address))
-                )
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_us_email_subject))
-                intent.putExtra(
-                    Intent.EXTRA_TEXT, getString(
-                        R.string.contact_us_email_message,
-                        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-                            ?.let { localEmail ->
-                                localEmail
-                            },
-                        BuildConfig.VERSION_NAME,
-                        BuildConfig.VERSION_CODE.toString(),
-                        android.os.Build.VERSION.RELEASE,
-                        android.os.Build.VERSION.SDK_INT.toString()
-                    )
-                )
-                try {
-                    startActivity(
-                        Intent.createChooser(
-                            intent,
-                            getString(R.string.contact_us_select_email_client)
-                        )
-                    )
-                } catch (e: Exception) {
-                    requireContext().displayModalPopup(
-                        null,
-                        getString(R.string.contact_us_no_email_message)
-                    )
-                }
+                RequestListActivity.builder()
+                    .show(requireActivity())
             }
 
             SettingsItemType.LOGOUT -> {
@@ -233,6 +204,15 @@ class SettingsFragment :
             )
         } catch (e: Exception) {
             (requireActivity() as MainActivity).forceRunApp()
+        }
+    }
+
+    private fun setZendeskIdentity() {
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
+            val identity = AnonymousIdentity.Builder()
+                .withEmailIdentifier(safeEmail)
+                .build()
+            Zendesk.INSTANCE.setIdentity(identity)
         }
     }
 }
