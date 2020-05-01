@@ -1,7 +1,9 @@
 package com.bink.wallet.scenes.browse_brands
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -86,6 +88,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         binding.buttonFilters.setOnClickListener {
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
         }
+        initBrowseBrandsList()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,6 +107,22 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             adapter.submitList(it)
             binding.labelNoMatch.setVisible(it.isEmpty())
         }
+    }
+
+    private fun initBrowseBrandsList() {
+        binding.brandsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                hideKeyboard()
+            }
+        })
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
     companion object {
