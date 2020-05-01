@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.browse_brands
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -27,6 +28,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
     val isClearButtonVisible: LiveData<Boolean> = Transformations.map(searchText) {
         !searchText.value.isNullOrEmpty()
     }
+
+    val isFilterSelected = ObservableBoolean(false)
 
     fun setupBrandItems(
         membershipPlans: List<MembershipPlan>,
