@@ -51,7 +51,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     // Zendesk Keys
     private external fun zendeskSandboxUrl(): String
-
     private external fun zendeskSandboxAppId(): String
     private external fun zendeskSandboxOAuthId(): String
     private external fun zendeskProdUrl(): String
