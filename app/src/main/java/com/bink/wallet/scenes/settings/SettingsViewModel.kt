@@ -18,7 +18,7 @@ class SettingsViewModel constructor(
     var loginRepository: LoginRepository,
     var loyaltyWalletRepository: LoyaltyWalletRepository,
     var paymentWalletRepository: PaymentWalletRepository,
-    var settingsRepository: SettingsRepository
+    var userRepository: UserRepository
 ) :
     BaseViewModel() {
 
@@ -59,6 +59,6 @@ class SettingsViewModel constructor(
     }
 
     fun putUserDetails(user: User) {
-        settingsRepository.putUserDetails(user)
+        userRepository.putUserDetails(user)
     }
 }

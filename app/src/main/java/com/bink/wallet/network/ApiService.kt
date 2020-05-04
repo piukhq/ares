@@ -131,4 +131,7 @@ interface ApiService {
     fun putUserDetailsAsync(
         @Body userRequest: User
     ): Deferred<User>
+
+    @GET("/users/me")
+    fun getUserAsync(): Deferred<User>
 }
