@@ -18,7 +18,7 @@
         android:textSize="@dimen/size_medium" />
 
     <EditText
-        android:id="@+id/et_second_name"
+        android:id="@+id/et_last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_size_medium_large"

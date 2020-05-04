@@ -504,7 +504,7 @@
     <!-- Zendesk -->
     <string name="zendesk_user_details_prompt_title">Please enter your contact details</string>
     <string name="zendesk_user_details_prompt_first_name_hint">First Name</string>
-    <string name="zendesk_user_details_prompt_second_name_hint">Second Name</string>
+    <string name="zendesk_user_details_prompt_second_name_hint">Last Name</string>
     <string name="zendesk_user_details_prompt_cta">Save details</string>
 
 </resources>

@@ -40,6 +40,7 @@ import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
+import com.bink.wallet.scenes.settings.SettingsRepository
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
@@ -116,7 +117,8 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get()) }
+    single { provideSettingsRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    viewModel { SettingsViewModel(get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
 
@@ -181,6 +183,10 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao
 ): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
+
+fun provideSettingsRepository(
+    restApiService: ApiService
+): SettingsRepository = SettingsRepository(restApiService)
 
 fun provideAddPaymentCardRepository(
     restApiService: ApiService,

@@ -3,6 +3,7 @@ package com.bink.wallet.network
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
@@ -125,4 +126,9 @@ interface ApiService {
     fun putPreferencesAsync(
         @Body preferenceRequest: RequestBody
     ): Deferred<ResponseBody>
+
+    @PUT("/users/me")
+    fun putUserDetailsAsync(
+        @Body userRequest: User
+    ): Deferred<User>
 }

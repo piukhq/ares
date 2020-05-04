@@ -3,7 +3,7 @@ package com.bink.wallet.scenes.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +26,7 @@ import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.requestlist.RequestListActivity
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import com.bink.wallet.model.auth.User
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -234,14 +235,13 @@ class SettingsFragment :
             userSecondName = safeSecondName
         }
 
+        Log.e("ConnorDebug", "first: " + userFirstName)
+        Log.e("ConnorDebug", "second: " + userSecondName)
+
         if (userFirstName.isEmpty() || userSecondName.isEmpty()) {
             shouldShowDetailsRequiredPrompt = true
         } else {
-            val identity = AnonymousIdentity.Builder()
-                .withEmailIdentifier(userEmail)
-                .withNameIdentifier("$userFirstName $userSecondName")
-                .build()
-            Zendesk.INSTANCE.setIdentity(identity)
+            setZendeskIdentity(userEmail, userFirstName, userSecondName)
         }
     }
 
@@ -251,7 +251,7 @@ class SettingsFragment :
         builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
         val container = layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
         val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
-        val etSecondName = container.findViewById<EditText>(R.id.et_second_name)
+        val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
         builder.setView(container)
             .setPositiveButton(
                 getString(R.string.zendesk_user_details_prompt_cta)
@@ -265,7 +265,22 @@ class SettingsFragment :
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             .setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    //make a req
+                    //todo these fields need to come from the dialog
+                    var userEmail = ""
+                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
+                        userEmail = safeEmail
+                    }
+                    setZendeskIdentity(
+                        userEmail,
+                        etFirstName.text.toString(),
+                        etSecondName.text.toString()
+                    )
+                    viewModel.putUserDetails(
+                        User(
+                            etFirstName.text.toString(),
+                            etSecondName.text.toString()
+                        )
+                    )
                     if (isContactClick) {
                         RequestListActivity.builder()
                             .show(requireActivity())
@@ -273,7 +288,18 @@ class SettingsFragment :
                         HelpCenterActivity.builder()
                             .show(requireActivity())
                     }
+
+                    dialog.dismiss()
                 }
             }
+    }
+
+    private fun setZendeskIdentity(email: String, firstName: String, lastName: String) {
+        shouldShowDetailsRequiredPrompt = false
+        val identity = AnonymousIdentity.Builder()
+            .withEmailIdentifier(email)
+            .withNameIdentifier("$firstName $lastName")
+            .build()
+        Zendesk.INSTANCE.setIdentity(identity)
     }
 }
