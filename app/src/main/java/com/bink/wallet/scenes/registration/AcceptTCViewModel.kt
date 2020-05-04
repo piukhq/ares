@@ -11,11 +11,13 @@ import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.settings.UserRepository
 import okhttp3.ResponseBody
 
 class AcceptTCViewModel(
     val loginRepository: LoginRepository,
-    val loyaltyWalletRepository: LoyaltyWalletRepository
+    val loyaltyWalletRepository: LoyaltyWalletRepository,
+    val userRepository: UserRepository
 ) : BaseViewModel() {
 
     val shouldLoadingBeVisible = ObservableBoolean(false)
@@ -38,6 +40,10 @@ class AcceptTCViewModel(
     private val _postServiceErrorResponse = MutableLiveData<Exception>()
     val postServiceErrorResponse: LiveData<Exception>
         get() = _postServiceErrorResponse
+
+    private val _getUserResponse = MutableLiveData<Boolean>()
+    val getUserResponse: LiveData<Boolean>
+        get() = _getUserResponse
 
     init {
         shouldAcceptBeEnabled.value = false
@@ -65,5 +71,9 @@ class AcceptTCViewModel(
             _postServiceResponse,
             _postServiceErrorResponse
         )
+    }
+
+    fun getCurrentUser() {
+        userRepository.getUserDetails(_getUserResponse)
     }
 }

@@ -52,7 +52,8 @@ import org.koin.dsl.module
 val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
-    viewModel { LoginViewModel(get(), get()) }
+    single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    viewModel { LoginViewModel(get(), get(), get()) }
 
     single {
         provideLoyaltyCardRepository(
@@ -117,7 +118,6 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { PllViewModel(get()) }
 
-    single { provideSettingsRepository(get(NetworkQualifiers.BinkApiInterface)) }
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
@@ -133,7 +133,7 @@ val viewModelModules = module {
     }
     viewModel { CardTermsAndConditionsViewModel(get()) }
 
-    viewModel { AcceptTCViewModel(get(), get()) }
+    viewModel { AcceptTCViewModel(get(), get(), get()) }
 
     viewModel { AddEmailViewModel() }
 
@@ -184,7 +184,7 @@ fun providePllRepository(
     paymentCardDao: PaymentCardDao
 ): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
 
-fun provideSettingsRepository(
+fun provideUserRepository(
     restApiService: ApiService
 ): UserRepository = UserRepository(restApiService)
 

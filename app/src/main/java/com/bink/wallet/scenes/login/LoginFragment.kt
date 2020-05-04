@@ -108,7 +108,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 }
 
                 postServiceResponse.observeNonNull(this@LoginFragment) {
-                    getMembershipPlans()
+                    getCurrentUser()
                 }
             }
 
@@ -173,6 +173,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         }
 
         initMembershipPlansObserver()
+        initUserDetailsObserver()
     }
 
     private fun initMembershipPlansObserver() {
@@ -182,6 +183,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         viewModel.membershipPlanErrorLiveData.observeNonNull(this@LoginFragment) {
             finishLogInProcess()
+        }
+    }
+
+    private fun initUserDetailsObserver() {
+        viewModel.getUserResponse.observeNonNull(this@LoginFragment) {
+            viewModel.getMembershipPlans()
         }
     }
 
