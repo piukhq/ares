@@ -32,8 +32,6 @@ class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
     Observer<ListHolder<SettingsItem>> {
 
-    private var shouldShowDetailsRequiredPrompt = false
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar).shouldDisplayBack(requireActivity())
@@ -154,7 +152,7 @@ class SettingsFragment :
                 )
 
             SettingsItemType.CONTACT_US -> {
-                if (shouldShowDetailsRequiredPrompt) {
+                if (viewModel.shouldShowUserDetailsDialog()) {
                     buildAndShowUserDetailsDialog()
                 } else {
                     RequestListActivity.builder()
@@ -223,27 +221,11 @@ class SettingsFragment :
     }
 
     private fun initZendesk() {
-        var userEmail = ""
-        var userFirstName = ""
-        var userSecondName = ""
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
-            userEmail = safeEmail
-        }
-
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME)?.let { safeFirstName ->
-            userFirstName = safeFirstName
-        }
-
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME)?.let { safeSecondName ->
-            userSecondName = safeSecondName
-        }
-
-        if (userFirstName.isEmpty() || userSecondName.isEmpty()) {
-            shouldShowDetailsRequiredPrompt = true
-            setZendeskIdentity(userEmail, "", "")
-        } else {
-            setZendeskIdentity(userEmail, userFirstName, userSecondName)
-        }
+        setZendeskIdentity(
+            viewModel.getUserEmail(),
+            viewModel.getUsersFirstName(),
+            viewModel.getUsersLastName()
+        )
     }
 
     private fun buildAndShowUserDetailsDialog() {
@@ -265,14 +247,8 @@ class SettingsFragment :
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             .setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    var userEmail = ""
-                    LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
-                        userEmail = safeEmail
-                    }
-
-                    shouldShowDetailsRequiredPrompt = false
                     setZendeskIdentity(
-                        userEmail,
+                        viewModel.getUserEmail(),
                         etFirstName.text.toString(),
                         etSecondName.text.toString()
                     )
