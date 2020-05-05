@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +26,7 @@ import zendesk.support.requestlist.RequestListActivity
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.bink.wallet.model.auth.User
+import zendesk.support.guide.ViewArticleActivity
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -75,7 +75,7 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
         viewModel.itemsList.observe(this, this)
-        setZendeskIdentity()
+        initZendesk()
     }
 
     private fun settingsItemClick(item: SettingsItem) {
@@ -109,13 +109,16 @@ class SettingsFragment :
                     SettingsFragmentDirections.settingsToDebug()
                 )
             }
-            SettingsItemType.FAQS ->
-                if (shouldShowDetailsRequiredPrompt) {
-                    showDetailsDialog(false)
-                } else {
-                    HelpCenterActivity.builder()
-                        .show(requireActivity())
-                }
+            SettingsItemType.FAQS -> {
+                val articleConfig = ViewArticleActivity.builder()
+                    .withContactUsButtonVisible(false)
+                    .config()
+
+                HelpCenterActivity.builder()
+                    .withContactUsButtonVisible(false)
+                    .withShowConversationsMenuButton(false)
+                    .show(requireContext(), articleConfig)
+            }
             SettingsItemType.SECURITY_AND_PRIVACY -> {
                 val action =
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
@@ -152,7 +155,7 @@ class SettingsFragment :
 
             SettingsItemType.CONTACT_US -> {
                 if (shouldShowDetailsRequiredPrompt) {
-                    showDetailsDialog(true)
+                    buildAndShowUserDetailsDialog()
                 } else {
                     RequestListActivity.builder()
                         .show(requireActivity())
@@ -219,7 +222,7 @@ class SettingsFragment :
         }
     }
 
-    private fun setZendeskIdentity() {
+    private fun initZendesk() {
         var userEmail = ""
         var userFirstName = ""
         var userSecondName = ""
@@ -235,17 +238,15 @@ class SettingsFragment :
             userSecondName = safeSecondName
         }
 
-        Log.e("ConnorDebug", "first: " + userFirstName)
-        Log.e("ConnorDebug", "second: " + userSecondName)
-
         if (userFirstName.isEmpty() || userSecondName.isEmpty()) {
             shouldShowDetailsRequiredPrompt = true
+            setZendeskIdentity(userEmail, "", "")
         } else {
             setZendeskIdentity(userEmail, userFirstName, userSecondName)
         }
     }
 
-    private fun showDetailsDialog(isContactClick: Boolean) {
+    private fun buildAndShowUserDetailsDialog() {
         val dialog: AlertDialog
         val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
@@ -254,22 +255,22 @@ class SettingsFragment :
         val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
         builder.setView(container)
             .setPositiveButton(
-                getString(R.string.zendesk_user_details_prompt_cta)
-                , null
+                getString(R.string.zendesk_user_details_prompt_cta), null
             )
-            .setNegativeButton(getString(android.R.string.cancel), { dialog, id ->
+            .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
                 dialog.cancel()
-            })
+            }
         dialog = builder.create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             .setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    //todo these fields need to come from the dialog
                     var userEmail = ""
                     LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
                         userEmail = safeEmail
                     }
+
+                    shouldShowDetailsRequiredPrompt = false
                     setZendeskIdentity(
                         userEmail,
                         etFirstName.text.toString(),
@@ -281,13 +282,8 @@ class SettingsFragment :
                             etSecondName.text.toString()
                         )
                     )
-                    if (isContactClick) {
-                        RequestListActivity.builder()
-                            .show(requireActivity())
-                    } else {
-                        HelpCenterActivity.builder()
-                            .show(requireActivity())
-                    }
+                    RequestListActivity.builder()
+                        .show(requireActivity())
 
                     dialog.dismiss()
                 }
@@ -295,7 +291,6 @@ class SettingsFragment :
     }
 
     private fun setZendeskIdentity(email: String, firstName: String, lastName: String) {
-        shouldShowDetailsRequiredPrompt = false
         val identity = AnonymousIdentity.Builder()
             .withEmailIdentifier(email)
             .withNameIdentifier("$firstName $lastName")
