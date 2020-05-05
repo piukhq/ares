@@ -5,7 +5,8 @@ import android.net.ConnectivityManager
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
-import android.text.style.URLSpan
+import android.text.style.ClickableSpan
+import android.view.View
 import android.widget.TextView
 import com.bink.wallet.R
 import java.util.regex.Pattern
@@ -16,7 +17,7 @@ object UtilFunctions {
     @Throws(PatternSyntaxException::class)
     fun isValidField(regex: String?, fieldValue: String?): Boolean {
         if (regex != null && fieldValue != null)
-            return Pattern.compile(regex.let { it }).matcher(fieldValue.let { it }).matches()
+            return Pattern.compile(regex).matcher(fieldValue).matches()
         if (regex.isNullOrEmpty())
             return true
         return false
@@ -26,21 +27,24 @@ object UtilFunctions {
         stringToSpan: String,
         stringToHyperlink: String,
         url: String,
-        textView: TextView
+        textView: TextView,
+        onLinkClickListener: ((String) -> Unit)? = null
     ) {
         val spannableString = SpannableString(stringToSpan)
         if (spannableString.contains(stringToHyperlink)) {
             spannableString.setSpan(
-                URLSpan(url),
+               object : ClickableSpan() {
+                   override fun onClick(widget: View) {
+                       onLinkClickListener?.invoke(url)
+                   }
+               },
                 spannableString.indexOf(stringToHyperlink),
                 spannableString.indexOf(stringToHyperlink) + stringToHyperlink.length,
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             )
         }
-        textView.apply {
-            text = spannableString
-            movementMethod = LinkMovementMethod.getInstance()
-        }
+        textView.text = spannableString
+        textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
     @Suppress("DEPRECATION")

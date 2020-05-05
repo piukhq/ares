@@ -15,6 +15,10 @@
             app:destination="@id/onboarding_fragment"
             app:popUpTo="@id/onboarding_fragment" />
 
+    <action
+        android:id="@+id/global_to_web"
+        app:destination="@id/binkWebFragment" />
+
     <fragment
             android:id="@+id/splash"
             android:name="com.bink.wallet.scenes.splash.SplashFragment">
