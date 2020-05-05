@@ -1,9 +1,7 @@
 package com.bink.wallet.scenes.settings
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.model.auth.User
-import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import kotlinx.coroutines.CoroutineScope
@@ -23,8 +21,6 @@ class UserRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    Log.e("ConnorDebug", "success:: " + response.first_name)
-
                     LocalStoreUtils.setAppSharedPref(
                         LocalStoreUtils.KEY_FIRST_NAME,
                         response.first_name
@@ -36,8 +32,6 @@ class UserRepository(
                     )
                 } catch (e: Exception) {
                     // We don't care about any error
-                    Log.e("ConnorDebug", "error: " + e.localizedMessage)
-
                 }
             }
         }
@@ -51,8 +45,6 @@ class UserRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    Log.e("ConnorDebug", "success:: " + response.first_name)
-
                     LocalStoreUtils.setAppSharedPref(
                         LocalStoreUtils.KEY_FIRST_NAME,
                         response.first_name
@@ -66,8 +58,6 @@ class UserRepository(
                 } catch (e: Exception) {
                     getUserResponse.value = false
                     // We don't care about any error
-                    Log.e("ConnorDebug", "error: " + e.localizedMessage)
-
                 }
             }
         }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bink.sdk.BinkCore
 import com.bink.wallet.BaseFragment
@@ -84,13 +83,11 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun getDirections(): Int {
-//        val rootBeer = RootBeer(context)
-//        return when (rootBeer.isRooted) {
-//            true -> R.id.splash_to_rooted_device
-//            else -> getUnRootedDirections()
-//        }
-
-        return getUnRootedDirections()
+        val rootBeer = RootBeer(context)
+        return when (rootBeer.isRooted) {
+            true -> R.id.splash_to_rooted_device
+            else -> getUnRootedDirections()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
