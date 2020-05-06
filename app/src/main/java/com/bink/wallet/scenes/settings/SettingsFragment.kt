@@ -99,13 +99,6 @@ class SettingsFragment :
                     SettingsFragmentDirections.settingsToDebug()
                 )
             }
-            SettingsItemType.FAQS ->
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(item.url)
-                    )
-                )
             SettingsItemType.SECURITY_AND_PRIVACY -> {
                 val action =
                     SettingsFragmentDirections.settingsToSecurityAndPrivacy(
@@ -131,13 +124,15 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
+            SettingsItemType.FAQS,
             SettingsItemType.TERMS_AND_CONDITIONS,
-            SettingsItemType.PRIVACY_POLICY->
-                findNavController().navigate(
-                    SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(
-                        Uri.parse(item.url)
+            SettingsItemType.PRIVACY_POLICY -> {
+                item.url?.let { url ->
+                    findNavController().navigate(
+                        SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(url)
                     )
-                )
+                }
+            }
 
             SettingsItemType.CONTACT_US -> {
                 val intent = Intent(Intent.ACTION_SEND)
