@@ -196,10 +196,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding.signUpButton.text.toString()))
         }
         initMembershipPlansObserver()
-        setCheckBoxTextAndUrls(
+        binding.termsAndConditionsText.setTermsAndPrivacyUrls(
             getString(R.string.terms_and_conditions_message),
             getString(R.string.terms_and_conditions_title),
-            getString(R.string.privacy_policy_text)
+            getString(R.string.privacy_policy_text),
+            urlClickListener = { url ->
+                findNavController().navigate(
+                    SignUpFragmentDirections.globalToWeb(
+                        url
+                    )
+                )
+            }
         )
     }
 
@@ -263,49 +270,4 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             findNavController().navigate(SignUpFragmentDirections.globalToHome(true))
         }
     }
-
-    private fun setCheckBoxTextAndUrls(
-        checkBoxText: String,
-        termsAndConditions: String,
-        privacyPolicy: String
-    ) {
-        val checkBoxSpannable = SpannableString(checkBoxText)
-        checkBoxSpannable.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    findNavController().navigate(
-                        SignUpFragmentDirections.globalToWeb(
-                            TERMS_AND_CONDITIONS_URL
-                        )
-                    )
-                }
-            },
-            checkBoxText.indexOf(termsAndConditions, ignoreCase = true),
-            checkBoxText.indexOf(termsAndConditions, ignoreCase = true) + termsAndConditions.length,
-            Spannable.SPAN_INCLUSIVE_INCLUSIVE
-        )
-        checkBoxSpannable.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    findNavController().navigate(
-                        SignUpFragmentDirections.globalToWeb(
-                            PRIVACY_POLICY_URL
-                        )
-                    )
-                }
-            },
-            checkBoxText.indexOf(privacyPolicy, ignoreCase = true),
-            checkBoxText.indexOf(privacyPolicy, ignoreCase = true) + privacyPolicy.length,
-            Spannable.SPAN_INCLUSIVE_INCLUSIVE
-        )
-        binding.termsAndConditionsText.text = checkBoxSpannable
-        binding.termsAndConditionsText.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    companion object {
-        private const val TERMS_AND_CONDITIONS_URL =
-            "https://bink.com/terms-and-conditions/#privacy-policy"
-        private const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
-    }
-
 }

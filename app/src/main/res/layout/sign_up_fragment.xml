@@ -184,13 +184,14 @@
                     android:id="@+id/terms_and_conditions_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/nunito_sans_light"
                     android:textColor="@color/black"
                     android:textColorLink="@color/blue_accent"
                     android:textSize="@dimen/size_body"
-                    app:layout_constraintEnd_toEndOf="@id/password_description"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/checkbox_terms_conditions"
                     app:layout_constraintTop_toTopOf="@id/checkbox_terms_conditions"
                     tools:text="@string/terms_and_conditions_message" />
@@ -219,6 +220,7 @@
                     android:id="@+id/opt_in_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:clickable="true"
                     android:focusable="true"
                     android:fontFamily="@font/nunito_sans_light"
@@ -226,7 +228,7 @@
                     android:textColor="@color/black"
                     android:textColorLink="@color/blue_accent"
                     android:textSize="@dimen/size_body"
-                    app:layout_constraintEnd_toEndOf="@id/password_description"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/checkbox_terms_conditions"
                     app:layout_constraintTop_toTopOf="@id/checkbox_marketing_messages" />
 

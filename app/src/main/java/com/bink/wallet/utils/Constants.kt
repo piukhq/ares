@@ -61,3 +61,6 @@ val LETTER_REGEX = "[a-zA-Z]".toRegex()
 const val VOUCHER_EARN_TYPE_STAMPS = "stamps"
 
 const val DATE_FORMAT = "dd/MM/yyyy"
+
+const val TERMS_AND_CONDITIONS_URL = "https://bink.com/terms-and-conditions/#privacy-policy"
+const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
