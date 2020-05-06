@@ -51,6 +51,16 @@ data class MembershipCard(
         } else null
     }
 
+    fun getTierImage(): CardImages? {
+        return if (!images.isNullOrEmpty()) {
+            images?.firstOrNull { image -> image.type == 8 }
+        } else null
+    }
+
+    fun isAuthorised(): Boolean {
+        return status?.state == MembershipCardStatus.AUTHORISED.status
+    }
+
     fun getLinkStatus(): LoyaltyCardLinkStatus {
         if (plan?.feature_set?.card_type in 0..1) {
             return LoyaltyCardLinkStatus.NONE
