@@ -20,34 +20,28 @@ import androidx.core.content.res.ResourcesCompat
 class AutoResizeTextView : TextView {
 
     private val textRect = RectF()
-
     private var availableSpaceRect: RectF? = null
-
     private var textCachedSizes: SparseIntArray? = null
-
     private var textPaint: TextPaint? = null
-
     private var maxTextSize: Float = 0.toFloat()
-
     private var spacingMult = 1.0f
-
     private var spacingAdd = 0.0f
-
     private var minTextSize = 20f
-
     private var widthLimit: Int = 0
     private var maxLines: Int = 0
-
     private var enableSizeCache = true
-    private var initiallized: Boolean = false
+    private var initialised: Boolean = false
 
     private val mSizeTester = object : SizeTester {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         override fun onTestSize(suggestedSize: Int, availableSpace: RectF): Int {
             textPaint?.textSize = suggestedSize.toFloat()
             val text = text.toString()
-            val singleline = maxLines == 1
-            if (singleline) {
+            val singleLine = maxLines == 1
+            val maxTextSize = 1
+            val minTextSize = -1
+
+            if (singleLine) {
                 textPaint?.let {
                     textRect.bottom = it.fontSpacing
                     textRect.right = it.measureText(text)
@@ -74,11 +68,9 @@ class AutoResizeTextView : TextView {
 
             textRect.offsetTo(0f, 0f)
             return if (availableSpace.contains(textRect)) {
-                // may be too small, don't worry we will find the best match
-                -1
+                minTextSize
             } else {
-                // too big
-                1
+                maxTextSize
             }
         }
     }
@@ -123,7 +115,7 @@ class AutoResizeTextView : TextView {
             // no value was assigned during construction
             maxLines = NO_LINE_LIMIT
         }
-        initiallized = true
+        initialised = true
     }
 
     override fun setText(text: CharSequence, type: BufferType) {
@@ -197,7 +189,7 @@ class AutoResizeTextView : TextView {
     }
 
     private fun adjustTextSize() {
-        if (!initiallized) {
+        if (!initialised) {
             return
         }
         val startSize = minTextSize.toInt()
