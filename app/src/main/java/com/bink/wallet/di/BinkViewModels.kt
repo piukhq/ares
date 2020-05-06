@@ -40,6 +40,7 @@ import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
+import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
@@ -51,7 +52,8 @@ import org.koin.dsl.module
 val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
-    viewModel { LoginViewModel(get(), get()) }
+    single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+    viewModel { LoginViewModel(get(), get(), get()) }
 
     single {
         provideLoyaltyCardRepository(
@@ -116,7 +118,7 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
 
@@ -131,7 +133,7 @@ val viewModelModules = module {
     }
     viewModel { CardTermsAndConditionsViewModel(get()) }
 
-    viewModel { AcceptTCViewModel(get(), get()) }
+    viewModel { AcceptTCViewModel(get(), get(), get()) }
 
     viewModel { AddEmailViewModel() }
 
@@ -143,7 +145,7 @@ val viewModelModules = module {
 
     viewModel { MainViewModel(get()) }
 
-    viewModel { SplashViewModel(get()) }
+    viewModel { SplashViewModel(get(), get()) }
 }
 
 fun provideLoginRepository(
@@ -181,6 +183,10 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao
 ): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
+
+fun provideUserRepository(
+    restApiService: ApiService
+): UserRepository = UserRepository(restApiService)
 
 fun provideAddPaymentCardRepository(
     restApiService: ApiService,

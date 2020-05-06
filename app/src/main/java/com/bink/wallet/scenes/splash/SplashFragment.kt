@@ -51,6 +51,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     // Zendesk Keys
     private external fun zendeskSandboxUrl(): String
+
     private external fun zendeskSandboxAppId(): String
     private external fun zendeskSandboxOAuthId(): String
     private external fun zendeskProdUrl(): String
@@ -73,7 +74,11 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         persistPaymentCardHashSecret()
         configureZendesk()
         if (findNavController().currentDestination?.id == R.id.splash) {
-            findNavController().navigateIfAdded(this, getDirections())
+            if (getDirections() == R.id.global_to_home) {
+                goToDashboard()
+            } else {
+                findNavController().navigateIfAdded(this, getDirections())
+            }
         }
     }
 
@@ -198,5 +203,12 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         )
 
         Support.INSTANCE.init(Zendesk.INSTANCE)
+    }
+
+    private fun goToDashboard() {
+        viewModel.getUserResponse.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+        viewModel.getCurrentUser()
     }
 }
