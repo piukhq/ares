@@ -27,6 +27,10 @@ android {
         lintConfig file("lint.xml")
     }
 
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
     compileSdkVersion 29
     signingConfigs {
         binkSigningConfig {
@@ -255,4 +259,7 @@ dependencies {
 
     /** ZENDESK **/
     implementation group: 'com.zendesk', name: 'support', version: '3.0.2'
+
+    /** TESTING **/
+    testImplementation "org.robolectric:robolectric:4.3.1"
 }

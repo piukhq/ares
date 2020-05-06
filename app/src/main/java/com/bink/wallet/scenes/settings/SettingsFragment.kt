@@ -54,6 +54,7 @@ class SettingsFragment :
         for (item in SettingsItemsPopulation.populateItems(resources)) {
             viewModel.itemsList.addItem(item)
         }
+        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
 
         val settingsAdapter = SettingsAdapter(
@@ -79,14 +80,14 @@ class SettingsFragment :
                     startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(getString(R.string.play_store_market_url, appPackageName))
+                            Uri.parse(getString(viewModel.getPlayStoreAppUrl(), appPackageName))
                         )
                     )
                 } catch (_: android.content.ActivityNotFoundException) {
                     startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(getString(R.string.play_store_browser_url, appPackageName))
+                            Uri.parse(getString(viewModel.getPlayStoreBrowserUrl(), appPackageName))
                         )
                     )
                 }
@@ -102,7 +103,7 @@ class SettingsFragment :
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(getString(R.string.faq_url))
+                        Uri.parse(item.url)
                     )
                 )
             SettingsItemType.SECURITY_AND_PRIVACY -> {
@@ -130,21 +131,13 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
-            SettingsItemType.TERMS_AND_CONDITIONS -> {
+            SettingsItemType.TERMS_AND_CONDITIONS,
+            SettingsItemType.PRIVACY_POLICY->
                 findNavController().navigate(
                     SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(
-                        getString(R.string.ts_and_cs_url)
+                        Uri.parse(item.url)
                     )
                 )
-            }
-
-            SettingsItemType.PRIVACY_POLICY -> {
-                findNavController().navigate(
-                    SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(
-                        getString(R.string.privacy_policy_url)
-                    )
-                )
-            }
 
             SettingsItemType.CONTACT_US -> {
                 val intent = Intent(Intent.ACTION_SEND)
