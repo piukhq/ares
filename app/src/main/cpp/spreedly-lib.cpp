@@ -125,7 +125,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdUrl(
         JNIEnv *env,
         jobject /* this */) {
-    std::string key = "https://binkcx1573467900.zendesk.com";
+    std::string key = "https://binkcx.zendesk.com";
     return env->NewStringUTF(key.c_str());
 }
 
@@ -133,7 +133,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdAppId(
         JNIEnv *env,
         jobject /* this */) {
-    std::string key = "9604542ca7d21d05137fbc8cb56366bedba80fb52daaa318";
+    std::string key = "52fd669e427c2f4710fc53d980d928b0da009da8f6942b82";
     return env->NewStringUTF(key.c_str());
 }
 
@@ -141,7 +141,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdOAuthId(
         JNIEnv *env,
         jobject /* this */) {
-    std::string key = "mobile_sdk_client_13ad51f66e08c5466b42";
+    std::string key = "mobile_sdk_client_4e5138822a3a80bb44fd";
     return env->NewStringUTF(key.c_str());
 }
 
