@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -193,6 +196,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding.signUpButton.text.toString()))
         }
         initMembershipPlansObserver()
+        setCheckBoxTextAndUrls(
+            getString(R.string.terms_and_conditions_message),
+            getString(R.string.terms_and_conditions_title),
+            getString(R.string.privacy_policy_text)
+        )
     }
 
     override fun onPause() {
@@ -254,6 +262,50 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         if (SharedPreferenceManager.isUserLoggedIn) {
             findNavController().navigate(SignUpFragmentDirections.globalToHome(true))
         }
+    }
+
+    private fun setCheckBoxTextAndUrls(
+        checkBoxText: String,
+        termsAndConditions: String,
+        privacyPolicy: String
+    ) {
+        val checkBoxSpannable = SpannableString(checkBoxText)
+        checkBoxSpannable.setSpan(
+            object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    findNavController().navigate(
+                        SignUpFragmentDirections.globalToWeb(
+                            TERMS_AND_CONDITIONS_URL
+                        )
+                    )
+                }
+            },
+            checkBoxText.indexOf(termsAndConditions, ignoreCase = true),
+            checkBoxText.indexOf(termsAndConditions, ignoreCase = true) + termsAndConditions.length,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+        )
+        checkBoxSpannable.setSpan(
+            object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    findNavController().navigate(
+                        SignUpFragmentDirections.globalToWeb(
+                            PRIVACY_POLICY_URL
+                        )
+                    )
+                }
+            },
+            checkBoxText.indexOf(privacyPolicy, ignoreCase = true),
+            checkBoxText.indexOf(privacyPolicy, ignoreCase = true) + privacyPolicy.length,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+        )
+        binding.termsAndConditionsText.text = checkBoxSpannable
+        binding.termsAndConditionsText.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    companion object {
+        private const val TERMS_AND_CONDITIONS_URL =
+            "https://bink.com/terms-and-conditions/#privacy-policy"
+        private const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
     }
 
 }
