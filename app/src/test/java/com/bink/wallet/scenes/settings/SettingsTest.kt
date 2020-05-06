@@ -30,6 +30,8 @@ class SettingsTest : AutoCloseKoinTest() {
     private lateinit var loyaltyWalletRepository: LoyaltyWalletRepository
     @Mock
     private lateinit var paymentWalletRepository: PaymentWalletRepository
+    @Mock
+    private lateinit var userRepository: UserRepository
 
     private lateinit var settingsMockViewModel: SettingsViewModel
     private var settingsItemList = mutableListOf<SettingsItem>()
@@ -38,7 +40,12 @@ class SettingsTest : AutoCloseKoinTest() {
     fun setupTest() {
         MockitoAnnotations.initMocks(this)
         settingsMockViewModel =
-            SettingsViewModel(loginRepository, loyaltyWalletRepository, paymentWalletRepository)
+            SettingsViewModel(
+                loginRepository,
+                loyaltyWalletRepository,
+                paymentWalletRepository,
+                userRepository
+            )
 
         for (item in SettingsItemsPopulation.populateItems(context.resources)) {
             settingsItemList.add(item)

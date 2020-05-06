@@ -114,7 +114,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         viewModel.postServiceResponse.observeNonNull(this) {
-            viewModel.getMembershipPlans()
+            viewModel.getCurrentUser()
         }
 
 
@@ -152,6 +152,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
         initMembershipPlansObserver()
+        initUserDetailsObserver()
     }
 
     private fun initMembershipPlansObserver() {
@@ -161,6 +162,12 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
         viewModel.membershipPlanErrorLiveData.observeNonNull(this@AcceptTCFragment) {
             finishLogInProcess()
+        }
+    }
+
+    private fun initUserDetailsObserver() {
+        viewModel.getUserResponse.observeNonNull(this@AcceptTCFragment) {
+            viewModel.getMembershipPlans()
         }
     }
 
