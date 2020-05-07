@@ -507,4 +507,13 @@
     <string name="zendesk_user_details_prompt_second_name_hint">Last Name</string>
     <string name="zendesk_user_details_prompt_cta">Save details</string>
 
+    <!-- Add Loyalty card -->
+    <string name="capture_window">Capture window</string>
+    <string name="camera_preview_subtitle">Hold card here. It will scan automatically</string>
+    <string name="camera_no_permission">Tap the camera preview to allow camera permission</string>
+    <string name="enter_manually">Enter manually</string>
+    <string name="enter_manually_subtitle">You can also type in the card details yourself.</string>
+    <string name="enter_manually_cant_scan">Cannot scan card. Please enter the card details manually.</string>
+    <string name="unrecognized_barcode_title">Unrecognized barcode</string>
+    <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
 </resources>

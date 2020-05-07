@@ -49,6 +49,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private var originalMode: Int? = null
     var membershipCardId: String? = null
     var isRetryJourney = false
+    private var barcode: String? = null
     var currentMembershipPlan: MembershipPlan? = null
     var navigationHandler: AuthNavigationHandler? = null
     var animationHelper: AuthAnimationHelper? = null
@@ -59,6 +60,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             currentMembershipPlan = membershipPlan
             this@BaseAddAuthFragment.isRetryJourney = isRetryJourney
             this@BaseAddAuthFragment.membershipCardId = membershipCardId
+            this@BaseAddAuthFragment.barcode = barcode
         }
         SharedPreferenceManager.isLoyaltySelected = true
 
@@ -79,6 +81,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         binding.buttonCancel.setOnClickListener {
             handleToolbarAction()
             findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome())
+        }
+
+        barcode?.let {
+            viewModel.setBarcode(it)
         }
 
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {

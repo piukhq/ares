@@ -123,6 +123,10 @@
                 android:id="@+id/add_to_pcd"
                 app:destination="@id/add_payment_card" />
 
+        <action
+                android:id="@+id/add_to_add_loyalty"
+                app:destination="@id/add_loyalty_card" />
+
         <argument
                 android:name="membershipPlans"
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
@@ -134,6 +138,27 @@
         <action
                 android:id="@+id/debug_to_onboarding"
                 app:destination="@+id/onboarding_fragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/add_loyalty_card"
+            android:name="com.bink.wallet.scenes.add_loyalty_card.AddLoyaltyCardFragment">
+
+        <action
+                android:id="@+id/addLoyaltyToAddCardFragment"
+                app:destination="@+id/addCardFragment" />
+
+        <action
+                android:id="@+id/add_loyalty_to_browse"
+                app:destination="@id/browse_brands" />
+
+        <argument
+                android:name="membershipPlans"
+                app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+
+        <argument
+                android:name="membershipCards"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
     </fragment>
 
     <fragment
@@ -149,8 +174,8 @@
                 app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
 
         <argument
-            android:name="membershipCards"
-            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]"/>
+                android:name="membershipCards"
+                app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
 
     </fragment>
 
@@ -705,6 +730,11 @@
         <argument
                 android:name="isRetryJourney"
                 app:argType="boolean" />
+        <argument
+                android:name="barcode"
+                android:defaultValue="@null"
+                app:argType="string"
+                app:nullable="true" />
 
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
@@ -733,7 +763,6 @@
                 android:name="isRetryJourney"
                 android:defaultValue="false"
                 app:argType="boolean" />
-
         <argument
                 android:name="isFromNoReasonCodes"
                 android:defaultValue="false"
