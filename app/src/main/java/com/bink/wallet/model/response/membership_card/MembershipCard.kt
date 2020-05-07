@@ -47,13 +47,13 @@ data class MembershipCard(
 
     fun getHeroImage(): CardImages? {
         return if (!images.isNullOrEmpty()) {
-            images?.firstOrNull { image -> image.type == 0 }
+            images?.firstOrNull { image -> image.type == ImageType.HERO_IMAGE.value }
         } else null
     }
 
     fun getTierImage(): CardImages? {
         return if (!images.isNullOrEmpty()) {
-            images?.firstOrNull { image -> image.type == 8 }
+            images?.firstOrNull { image -> image.type == ImageType.TIER_IMAGE.value }
         } else null
     }
 
