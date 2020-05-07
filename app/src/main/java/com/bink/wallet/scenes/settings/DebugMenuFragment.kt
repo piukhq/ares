@@ -47,9 +47,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             recycler.layoutManager = LinearLayoutManager(requireContext())
         }
 
-        viewModel.logOutResponse.observeNonNull(this) {
+        viewModel.logOutResponse.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             viewModel.clearData()
-        }
+        })
 
         viewModel.logOutErrorResponse.observeNetworkDrivenErrorNonNull(
             requireContext(),
@@ -59,6 +59,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             true
         ) {
             viewModel.clearData()
+
         }
 
         viewModel.clearResponse.observeNonNull(this) {
