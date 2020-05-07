@@ -175,6 +175,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     super.onPageSelected(position)
                     scrollPagesAutomatically(this@with)
                     timer.cancel()
+                    timer.purge()
                     timer = Timer()
                     scrollPagesAutomatically(this@with)
                 }
@@ -190,8 +191,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
 
     private fun resetTimer() {
         timer.apply {
-            purge()
             cancel()
+            purge()
         }
         timer = Timer()
     }
