@@ -206,8 +206,16 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         plan?.account?.company_name
     )
 
+    var brandImage: String? = card?.getHeroImage()?.url
+    card?.isAuthorised()?.let { safeAuthorised ->
+        if (safeAuthorised) {
+            card.getTierImage()?.let { safeTierImage ->
+                brandImage = safeTierImage.url
+            }
+        }
+    }
     Glide.with(context)
-        .load(card?.getHeroImage()?.url)
+        .load(brandImage)
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(
                 e: GlideException?,
