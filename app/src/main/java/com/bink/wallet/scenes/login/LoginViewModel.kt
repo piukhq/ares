@@ -9,13 +9,15 @@ import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.utils.*
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 
 class LoginViewModel constructor(
     var loginRepository: LoginRepository,
-    val loyaltyWalletRepository: LoyaltyWalletRepository
+    val loyaltyWalletRepository: LoyaltyWalletRepository,
+    val userRepository: UserRepository
 ) : BaseViewModel() {
 
     val loginBody = MutableLiveData<LoginBody>()
@@ -40,6 +42,10 @@ class LoginViewModel constructor(
     val postServiceErrorResponse: LiveData<Exception>
         get() = _postServiceErrorResponse
 
+    private val _getUserResponse = MutableLiveData<Boolean>()
+    val getUserResponse: LiveData<Boolean>
+        get() = _getUserResponse
+
     private val passwordValidator = Transformations.map(password) {
         UtilFunctions.isValidField(PASSWORD_REGEX, it)
     }
@@ -60,7 +66,7 @@ class LoginViewModel constructor(
         emailValidator: Boolean,
         passwordValidator: Boolean
     ): Boolean = emailValidator && passwordValidator
-    
+
 
     fun logIn(loginRequest: SignUpRequest) {
         loginRepository.logIn(loginRequest, logInResponse, _logInErrorResponse)
@@ -89,5 +95,9 @@ class LoginViewModel constructor(
             _postServiceResponse,
             _postServiceErrorResponse
         )
+    }
+
+    fun getCurrentUser() {
+        userRepository.getUserDetails(_getUserResponse)
     }
 }
