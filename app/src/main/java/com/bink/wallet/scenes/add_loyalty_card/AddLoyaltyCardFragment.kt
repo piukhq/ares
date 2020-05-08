@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.add_loyalty_card
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +8,7 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.view.animation.AnimationUtils
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -227,22 +227,14 @@ class AddLoyaltyCardFragment :
     }
 
     private fun showUnsupportedBarcodePopup() {
-        val builder = AlertDialog.Builder(context)
-        val dialog: AlertDialog
-        builder.setTitle(getString(R.string.unrecognized_barcode_title))
-        builder.setMessage(getString(R.string.unrecognized_barcode_body))
-        builder.setNegativeButton(getString(R.string.cancel_text)) { _, _ ->
-            findNavController().popBackStack()
-        }
-        builder.setPositiveButton(getString(R.string.enter_manually)) { _, _ ->
-            goToBrowseBrands()
-        }
-        dialog = builder.create()
-        dialog.show()
+        performHaptic(R.string.unrecognized_barcode_title, R.string.unrecognized_barcode_body)
     }
 
 
-    private fun performHaptic() {
+    private fun performHaptic(
+        @StringRes titleId: Int = R.string.enter_manually,
+        @StringRes textId: Int = R.string.enter_manually_cant_scan
+    ) {
         val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
         if (Build.VERSION.SDK_INT >= 26) {
             vibrator?.vibrate(
@@ -255,7 +247,8 @@ class AddLoyaltyCardFragment :
             vibrator?.vibrate(VIBRATION_DURATION)
         }
 
-        binding.bottomView.enterSubtext.text = getString(R.string.enter_manually_cant_scan)
+        binding.bottomView.enterText.text = getString(titleId)
+        binding.bottomView.enterSubtext.text = getString(textId)
         val colorResource = resources.getColor(R.color.red_attention, null)
         binding.bottomView.enterText.setTextColor(colorResource)
 

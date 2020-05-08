@@ -509,7 +509,7 @@
 
     <!-- Add Loyalty card -->
     <string name="capture_window">Capture window</string>
-    <string name="camera_preview_subtitle">Hold card here. It will scan automatically</string>
+    <string name="camera_preview_subtitle">Hold card here. It will scan automatically.</string>
     <string name="camera_no_permission">Tap the camera preview to allow camera permission</string>
     <string name="enter_manually">Enter manually</string>
     <string name="enter_manually_subtitle">You can also type in the card details yourself.</string>
