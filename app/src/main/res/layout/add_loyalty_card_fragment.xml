@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".scenes.add_loyalty_card.AddLoyaltyCardFragment">
+
+        <Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TitleTextView"
+            android:layout_marginStart="@dimen/title_margin"
+            android:layout_marginTop="@dimen/title_margin"
+            android:layout_marginEnd="@dimen/title_margin"
+            android:text="@string/capture_window"
+            android:textColor="@color/red_attention"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
+        <me.dm7.barcodescanner.zxing.ZXingScannerView
+            android:id="@+id/scanner_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:borderColor="@color/white"
+            app:borderLength="@dimen/border_length"
+            app:borderOffset="@dimen/border_offset"
+            app:cornerRadius="@dimen/corner_radius"
+            app:laserEnabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:maskColor="@color/camera_view_mask"
+            app:outerBorderColor="@color/red_attention"
+            app:outerBorderWidth="@dimen/outer_border_size"
+            app:outerCornerRadius="@dimen/outer_border_radius"
+            app:topOffset="@dimen/camera_top_offset"
+            app:viewfinderSideMargin="@dimen/margin_padding_size_small_medium" />
+
+        <include
+            android:id="@+id/bottom_view"
+            layout="@layout/add_loyalty_card_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

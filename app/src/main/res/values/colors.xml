@@ -44,4 +44,7 @@
     <color name="white_50_alpha">#B3FFFFFF</color>
     <color name="voucher_redeemed_background">#4371fe</color>
     <color name="browse_brands_filters_text_color">#4371fe</color>
+
+    <color name="camera_view_mask">#99F5F5F5</color>
+    <color name="camera_view_foreground">#99000000</color>
 </resources>
