@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.add_auth_enrol.adapter
 
-import CheckboxViewHolder
 import DisplayViewHolder
 import SpinnerViewHolder
 import TextFieldViewHolder
@@ -27,7 +26,8 @@ class AddAuthAdapter(
     private val headerTitle: String?,
     private val headerDescription: String?,
     val checkValidation: () -> Unit = {},
-    val navigateToHeader: () -> Unit = {}
+    val navigateToHeader: () -> Unit = {},
+    val onLinkClickListener: ((String) -> Unit) = {}
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
 
@@ -102,7 +102,7 @@ class AddAuthAdapter(
                 }
             }
             else -> {
-                CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater))
+                CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater), onLinkClickListener = onLinkClickListener)
             }
         }
     }

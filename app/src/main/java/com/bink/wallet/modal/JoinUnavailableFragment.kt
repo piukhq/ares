@@ -1,8 +1,7 @@
 package com.bink.wallet.modal
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.modal.generic.GenericModalFragment
 
 /**
@@ -22,7 +21,9 @@ class JoinUnavailableFragment : GenericModalFragment() {
 
     override fun onFirstButtonClicked() {
         if (link.isNotEmpty()) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+            findNavController().navigate(
+                JoinUnavailableFragmentDirections.actionJoinUnavailableToBinkWebFragment(link)
+            )
         }
     }
 }

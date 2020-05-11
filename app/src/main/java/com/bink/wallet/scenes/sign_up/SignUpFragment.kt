@@ -1,7 +1,10 @@
 package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -193,6 +196,18 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding.signUpButton.text.toString()))
         }
         initMembershipPlansObserver()
+        binding.termsAndConditionsText.setTermsAndPrivacyUrls(
+            getString(R.string.terms_and_conditions_message),
+            getString(R.string.terms_and_conditions_title),
+            getString(R.string.privacy_policy_text),
+            urlClickListener = { url ->
+                findNavController().navigate(
+                    SignUpFragmentDirections.globalToWeb(
+                        url
+                    )
+                )
+            }
+        )
     }
 
     override fun onPause() {
@@ -255,5 +270,4 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             findNavController().navigate(SignUpFragmentDirections.globalToHome(true))
         }
     }
-
 }

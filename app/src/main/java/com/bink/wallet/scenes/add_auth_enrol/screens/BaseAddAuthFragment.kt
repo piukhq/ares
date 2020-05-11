@@ -4,6 +4,9 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
+import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -148,6 +151,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 },
                 navigateToHeader = {
                     navigationHandler?.navigateToBrandHeader()
+                },
+                onLinkClickListener = { url ->
+                    findNavController().navigate(BaseAddAuthFragmentDirections.globalToWeb(url))
                 }
             )
 

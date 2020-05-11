@@ -64,7 +64,18 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
         }
 
-        binding.acceptTc.movementMethod = LinkMovementMethod.getInstance()
+        binding.termsAndConditionsText.setTermsAndPrivacyUrls(
+            getString(R.string.terms_and_conditions_message),
+            getString(R.string.terms_and_conditions_title),
+            getString(R.string.privacy_policy_text),
+            urlClickListener = { url ->
+                findNavController().navigate(
+                    AcceptTCFragmentDirections.globalToWeb(
+                        url
+                    )
+                )
+            }
+        )
 
         viewModel.facebookAuthError.observeNetworkDrivenErrorNonNull(
             requireContext(),

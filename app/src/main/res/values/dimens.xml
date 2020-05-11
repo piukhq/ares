@@ -175,4 +175,7 @@
     <dimen name="browse_brands_filter_height">40dp</dimen>
     <dimen name="footer_default_fade_view_height">1dp</dimen>
 
+    <!-- BinkWebView -->
+    <dimen name="web_view_back_button_margin_horizontal">4dp</dimen>
+
 </resources>

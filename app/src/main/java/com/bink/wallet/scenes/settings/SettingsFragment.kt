@@ -143,13 +143,13 @@ class SettingsFragment :
                 findNavController().navigateIfAdded(this, action)
             }
             SettingsItemType.TERMS_AND_CONDITIONS,
-            SettingsItemType.PRIVACY_POLICY ->
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(item.url)
+            SettingsItemType.PRIVACY_POLICY -> {
+                item.url?.let { url ->
+                    findNavController().navigate(
+                        SettingsFragmentDirections.actionSettingsScreenToBinkWebFragment(url)
                     )
-                )
+                }
+            }
 
             SettingsItemType.CONTACT_US -> {
                 if (viewModel.shouldShowUserDetailsDialog()) {

@@ -3,12 +3,17 @@ package com.bink.wallet.utils
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.annotation.IntegerRes
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +24,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
@@ -153,7 +159,7 @@ fun LiveData<Exception>.observeErrorNonNull(
     context: Context,
     isUserDriven: Boolean,
     owner: LifecycleOwner
-) = observeErrorNonNull(context, owner,  EMPTY_STRING, EMPTY_STRING, isUserDriven, null)
+) = observeErrorNonNull(context, owner, EMPTY_STRING, EMPTY_STRING, isUserDriven, null)
 
 fun LiveData<Exception>.observeNetworkDrivenErrorNonNull(
     context: Context,
@@ -308,4 +314,35 @@ fun logDebug(tag: String?, message: String?) {
             Log.d(tag, it)
         }
     }
+}
+
+fun TextView.setTermsAndPrivacyUrls(
+    checkBoxText: String,
+    termsAndConditions: String,
+    privacyPolicy: String,
+    urlClickListener: (String) -> Unit
+) {
+    val checkBoxSpannable = SpannableString(checkBoxText)
+    checkBoxSpannable.setSpan(
+        object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                urlClickListener(TERMS_AND_CONDITIONS_URL)
+            }
+        },
+        checkBoxText.indexOf(termsAndConditions, ignoreCase = true),
+        checkBoxText.indexOf(termsAndConditions, ignoreCase = true) + termsAndConditions.length,
+        Spannable.SPAN_INCLUSIVE_INCLUSIVE
+    )
+    checkBoxSpannable.setSpan(
+        object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                urlClickListener(PRIVACY_POLICY_URL)
+            }
+        },
+        checkBoxText.indexOf(privacyPolicy, ignoreCase = true),
+        checkBoxText.indexOf(privacyPolicy, ignoreCase = true) + privacyPolicy.length,
+        Spannable.SPAN_INCLUSIVE_INCLUSIVE
+    )
+    text = checkBoxSpannable
+    movementMethod = LinkMovementMethod.getInstance()
 }
