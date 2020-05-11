@@ -131,9 +131,7 @@ class AddLoyaltyCardFragment :
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-
         if (requestCode == CAMERA_REQUEST_CODE) {
-
             with(binding) {
                 if (permissions[0] == Manifest.permission.CAMERA
                     && grantResults[0] != PackageManager.PERMISSION_GRANTED
@@ -153,7 +151,6 @@ class AddLoyaltyCardFragment :
     }
 
     override fun handleResult(rawResult: Result?) {
-
         cancelHaptic = true
 
         val membershipPlan: MembershipPlan? = findMembershipPlan(rawResult)
