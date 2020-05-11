@@ -32,7 +32,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
 
     override val layoutRes: Int
@@ -83,12 +82,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome())
         }
 
-        barcode?.let {
-            viewModel.setBarcode(it)
-        }
-
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
             populateRecycler(it)
+
+            barcode?.let {
+                viewModel.setBarcode(it)
+            }
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->

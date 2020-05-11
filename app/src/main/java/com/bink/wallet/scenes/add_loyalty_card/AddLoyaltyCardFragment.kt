@@ -11,6 +11,7 @@ import android.os.CountDownTimer
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
+import android.util.Log
 import android.view.animation.AnimationUtils
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -159,9 +160,11 @@ class AddLoyaltyCardFragment :
 
             val membershipCardId = ""
 
+            Log.e("ConnorDebug", "rawResult: " +  rawResult.toString())
             val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
                 membershipPlan = it,
-                membershipCardId = membershipCardId
+                membershipCardId = membershipCardId,
+                barcode = rawResult.toString()
             )
 
             findNavController().navigateIfAdded(this, action)

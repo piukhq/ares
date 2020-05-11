@@ -770,6 +770,13 @@
         <argument
                 android:name="membershipCardId"
                 app:argType="string" />
+
+        <argument
+            android:name="barcode"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+
         <action
                 android:id="@+id/baseAddAuthToBrandHeader"
                 app:destination="@id/brand_header" />

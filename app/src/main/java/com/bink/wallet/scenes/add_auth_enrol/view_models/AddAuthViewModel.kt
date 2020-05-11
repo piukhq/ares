@@ -180,11 +180,22 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     }
 
     fun setBarcode(barcode: String) {
+        var itemToRemove: AddAuthItemWrapper? = null
         addAuthItemsList.forEach { addAuthItem ->
-            if ((addAuthItem.fieldType as PlanField).common_name == SignUpFieldTypes.BARCODE.common_name) {
-                addAuthItem.fieldsRequest?.value = barcode
-                addAuthItem.fieldsRequest?.disabled = true
+            if (addAuthItem.fieldType is PlanField) {
+                if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.BARCODE.common_name) {
+                    addAuthItem.fieldsRequest?.value = barcode
+                    addAuthItem.fieldsRequest?.disabled = true
+                }
+
+                if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.CARD_NUMBER.common_name) {
+                    itemToRemove = addAuthItem
+                }
             }
+        }
+
+        itemToRemove?.let { safeWrapper ->
+            addAuthItemsList.remove(safeWrapper)
         }
     }
 }
