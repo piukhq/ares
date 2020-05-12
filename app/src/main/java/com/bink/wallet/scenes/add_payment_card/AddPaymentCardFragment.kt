@@ -151,6 +151,7 @@ class AddPaymentCardFragment :
                     BankCard.fingerprintGenerator(cardNo, cardExp[0], cardExp[1]), EMPTY_STRING
                 )
 
+                //todo i dont need all these argments
                 findNavController().navigate(
                     AddPaymentCardFragmentDirections.addPaymentToTerms(
                         GenericModalParameters(
@@ -160,7 +161,7 @@ class AddPaymentCardFragment :
                             getString(R.string.terms_and_conditions_text),
                             getString(R.string.accept_button_text),
                             getString(R.string.decline_button_text),
-                            description2 = getString(R.string.terms_and_conditions_second_paragraph)
+                            description2 = getString(R.string.terms_and_conditions_second_paragraph_prefix)
                         ),
                         bankCard,
                         cardNo
