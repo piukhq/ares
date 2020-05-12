@@ -15,7 +15,6 @@ import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.text.method.LinkMovementMethod
 import android.text.Spanned
-import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.text.SpannableString
 import com.bink.wallet.R
@@ -130,11 +129,6 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
                         "https://bink.com/privacy-policy/"
                     ), R.id.card_terms_and_conditions
                 )
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
             }
         }
         ss.setSpan(
