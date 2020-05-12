@@ -159,8 +159,7 @@ class AddPaymentCardFragment :
                             getString(R.string.terms_and_conditions_title),
                             getString(R.string.terms_and_conditions_text),
                             getString(R.string.accept_button_text),
-                            getString(R.string.decline_button_text),
-                            description2 = getString(R.string.terms_and_conditions_second_paragraph)
+                            getString(R.string.decline_button_text)
                         ),
                         bankCard,
                         cardNo
