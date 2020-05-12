@@ -511,4 +511,8 @@
     <string name="zendesk_user_details_prompt_second_name_hint">Last Name</string>
     <string name="zendesk_user_details_prompt_cta">Save details</string>
 
+    <!-- WebView -->
+    <string name="webview_error_title">Error</string>
+    <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
+
 </resources>

@@ -10,6 +10,8 @@ import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BinkWebViewBinding
 import com.bink.wallet.R
+import com.bink.wallet.utils.NetworkUtils
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,7 +54,16 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             findNavController().navigateUp()
         }
 
-        binding.webView.loadUrl(args.url)
+        if (NetworkUtils.isConnected(requireContext())) {
+            binding.webView.loadUrl(args.url)
+        } else {
+            requireContext().displayModalPopup(
+                getString(R.string.webview_error_title),
+                getString(R.string.webview_error_message),
+                {
+                    findNavController().navigateUp()
+                })
+        }
     }
 
 }
