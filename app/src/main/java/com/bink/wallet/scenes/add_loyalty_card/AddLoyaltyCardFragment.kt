@@ -11,7 +11,6 @@ import android.os.CountDownTimer
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
-import android.util.Log
 import android.view.animation.AnimationUtils
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -94,7 +93,6 @@ class AddLoyaltyCardFragment :
                     foundInAddFields = true
                 }
             }
-            //TODO find out if searching for a validation regex in authorize_fields is needed if we didn't find one in add_fields
             if (!foundInAddFields) {
                 plan.account?.authorise_fields?.map { field ->
                     if (field.common_name == SignUpFieldTypes.BARCODE.common_name) {
@@ -160,7 +158,6 @@ class AddLoyaltyCardFragment :
 
             val membershipCardId = ""
 
-            Log.e("ConnorDebug", "rawResult: " +  rawResult.toString())
             val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
                 membershipPlan = it,
                 membershipCardId = membershipCardId,
