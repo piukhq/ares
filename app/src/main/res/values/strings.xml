@@ -517,7 +517,7 @@
     <string name="camera_no_permission">Tap the camera preview to allow camera permission</string>
     <string name="enter_manually">Enter manually</string>
     <string name="enter_manually_subtitle">You can also type in the card details yourself.</string>
-    <string name="enter_manually_cant_scan">Cannot scan card. Please enter the card details manually.</string>
+    <string name="enter_manually_cant_scan">Please try adding the card manually.</string>
     <string name="unrecognized_barcode_title">Unrecognized barcode</string>
     <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
 
