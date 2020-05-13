@@ -54,6 +54,7 @@
                                 android:layout_height="@dimen/add_custom_image_size"
                                 android:layout_marginStart="@dimen/custom_margin_add_fragment"
                                 android:layout_marginTop="@dimen/add_card_margin"
+                                android:layout_marginBottom="@dimen/margin_padding_size_small"
                                 android:src="@drawable/ic_card_add_icon_loyalty"
                                 app:layout_constraintBottom_toTopOf="@+id/loyalty_card_title"
                                 app:layout_constraintStart_toStartOf="parent"
