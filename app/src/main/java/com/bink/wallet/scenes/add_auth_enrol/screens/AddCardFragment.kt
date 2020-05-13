@@ -33,12 +33,12 @@ class AddCardFragment : BaseAddAuthFragment() {
         }
 
         binding.footerComposed.addAuthCta.setOnClickListener {
-            logCTAClick(it);
+            logCTAClick(it)
             handleAuthCtaRequest()
         }
 
         binding.footerSimple.addAuthCta.setOnClickListener {
-            logCTAClick(it);
+            logCTAClick(it)
             handleAuthCtaRequest()
         }
 

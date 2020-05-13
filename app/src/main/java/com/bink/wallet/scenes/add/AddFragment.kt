@@ -57,6 +57,15 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         binding.paymentCardContainer.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.add_to_pcd)
         }
+        binding.loyaltyCardContainer.setOnClickListener {
+            viewModel.membershipCards.value?.let {
+                val directions = AddFragmentDirections.addToAddLoyalty(
+                    args.membershipPlans,
+                    it.toTypedArray()
+                )
+                findNavController().navigateIfAdded(this, directions)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

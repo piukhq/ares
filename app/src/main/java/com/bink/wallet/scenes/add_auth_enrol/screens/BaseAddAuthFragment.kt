@@ -35,7 +35,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-
 open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragmentBinding>() {
 
     override val layoutRes: Int
@@ -52,6 +51,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private var originalMode: Int? = null
     var membershipCardId: String? = null
     var isRetryJourney = false
+    private var barcode: String? = null
     var currentMembershipPlan: MembershipPlan? = null
     var navigationHandler: AuthNavigationHandler? = null
     var animationHelper: AuthAnimationHelper? = null
@@ -62,6 +62,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             currentMembershipPlan = membershipPlan
             this@BaseAddAuthFragment.isRetryJourney = isRetryJourney
             this@BaseAddAuthFragment.membershipCardId = membershipCardId
+            this@BaseAddAuthFragment.barcode = barcode
         }
         SharedPreferenceManager.isLoyaltySelected = true
 
@@ -86,6 +87,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
             populateRecycler(it)
+
+            barcode?.let {
+                viewModel.setBarcode(it)
+            }
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->

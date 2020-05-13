@@ -18,6 +18,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
+import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
 
 open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
@@ -41,7 +42,6 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     private val _createCardError = MutableLiveData<Exception>()
     val createCardError: LiveData<Exception>
         get() = _createCardError
-
 
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
@@ -177,5 +177,25 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             _newMembershipCard,
             _createCardError
         )
+    }
+
+    fun setBarcode(barcode: String) {
+        var itemToRemove: AddAuthItemWrapper? = null
+        addAuthItemsList.forEach { addAuthItem ->
+            if (addAuthItem.fieldType is PlanField) {
+                if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.BARCODE.common_name) {
+                    addAuthItem.fieldsRequest?.value = barcode
+                    addAuthItem.fieldsRequest?.disabled = true
+                }
+
+                if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.CARD_NUMBER.common_name) {
+                    itemToRemove = addAuthItem
+                }
+            }
+        }
+
+        itemToRemove?.let { safeWrapper ->
+            addAuthItemsList.remove(safeWrapper)
+        }
     }
 }
