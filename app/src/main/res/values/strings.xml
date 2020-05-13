@@ -251,8 +251,10 @@
     <string name="pll_last_digits">Card ending in %1$s</string>
 
     <!-- T&C Screen -->
-    <string name="terms_and_conditions_text"><![CDATA[ I authorise Mastercard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction, and for Mastercard, Visa and American Express to share such transaction details with Bink to enable my card-linked offer(s) and target offers that may be of interest to me.]]></string>
-    <string name="terms_and_conditions_second_paragraph"><![CDATA[For information about Bink’s privacy practices please see Bink’s <a href=\"https://bink.com/privacy-policy/\">Privacy Policy</a>. You may opt-out of transaction monitoring on the payment card(s) you entered at any time by deleting your payment card from your Bink wallet.]]></string>
+    <string name="terms_and_conditions_text">I authorise Mastercard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction, and for Mastercard, Visa and American Express to share such transaction details with Bink to enable my card-linked offer(s) and target offers that may be of interest to me.</string>
+    <string name="terms_and_conditions_second_paragraph_prefix">For information about Bink’s privacy practices please see Bink’s&#160;</string>
+    <string name="terms_and_conditions_second_paragraph_privacy_policy">Privacy Policy</string>
+    <string name="terms_and_conditions_second_paragraph_suffix">.&#160;You may opt-out of transaction monitoring on the payment card(s) you entered at any time by deleting your payment card from your Bink wallet.</string>
     <string name="terms_and_conditions_title">Terms and conditions</string>
     <string name="accept_button_text">I accept</string>
     <string name="decline_button_text">I decline</string>
@@ -392,6 +394,7 @@
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
     <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>
+    <string name="terms_and_conditions_message">I agree to Bink\'s Terms and Conditions\nPlease read the Bink Privacy Policy for further details of how your data will be processed</string>
     <string name="marketing_message_text">Opt in to receive marketing messages\nMake sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates</b>!\nYou can opt out at any time.</string>
     <string name="token_api_v1">Token %1$s</string>
     <string name="facebook_unavailable">Facebook is currently unavailable.</string>
@@ -517,4 +520,9 @@
     <string name="enter_manually_cant_scan">Cannot scan card. Please enter the card details manually.</string>
     <string name="unrecognized_barcode_title">Unrecognized barcode</string>
     <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
+
+    <!-- WebView -->
+    <string name="webview_error_title">Error</string>
+    <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
+
 </resources>

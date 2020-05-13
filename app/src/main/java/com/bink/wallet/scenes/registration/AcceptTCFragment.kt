@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.registration
 
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -64,7 +63,19 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
         }
 
-        binding.acceptTc.movementMethod = LinkMovementMethod.getInstance()
+        binding.termsAndConditionsText.setTermsAndPrivacyUrls(
+            getString(R.string.terms_and_conditions_message),
+            getString(R.string.terms_and_conditions_title),
+            getString(R.string.privacy_policy_text),
+            urlClickListener = { url ->
+                findNavController().navigateIfAdded(
+                    this@AcceptTCFragment,
+                    AcceptTCFragmentDirections.globalToWeb(
+                        url
+                    ), R.id.accept_tcs_fragment
+                )
+            }
+        )
 
         viewModel.facebookAuthError.observeNetworkDrivenErrorNonNull(
             requireContext(),
@@ -173,7 +184,11 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
     private fun finishLogInProcess() {
         stopLoading()
-        findNavController().navigateIfAdded(this, AcceptTCFragmentDirections.acceptToLcd(true))
+        findNavController().navigateIfAdded(
+            this,
+            AcceptTCFragmentDirections.acceptToLcd(true),
+            R.id.accept_tcs_fragment
+        )
     }
 
     private fun stopLoading() {

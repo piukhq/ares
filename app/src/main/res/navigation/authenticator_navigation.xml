@@ -15,6 +15,10 @@
             app:destination="@id/onboarding_fragment"
             app:popUpTo="@id/onboarding_fragment" />
 
+    <action
+        android:id="@+id/global_to_web"
+        app:destination="@id/binkWebFragment" />
+
     <fragment
             android:id="@+id/splash"
             android:name="com.bink.wallet.scenes.splash.SplashFragment">
@@ -324,6 +328,7 @@
 
     <fragment
             android:id="@+id/voucher_details_fragment"
+        tools:layout="@layout/voucher_details_fragment"
             android:name="com.bink.wallet.scenes.loyalty_details.VoucherDetailsFragment">
         <argument
                 android:name="membershipPlan"
@@ -331,6 +336,9 @@
         <argument
                 android:name="voucher"
                 app:argType="com.bink.wallet.model.response.membership_card.Voucher" />
+        <action
+            android:id="@+id/action_voucher_details_fragment_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
     </fragment>
 
     <fragment
@@ -490,6 +498,9 @@
         <argument
                 android:name="genericModalParameters"
                 app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+        <action
+            android:id="@+id/action_join_unavailable_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
     </fragment>
 
     <fragment
@@ -531,6 +542,9 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_settings_screen_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
 
     </fragment>
 
@@ -635,7 +649,11 @@
     <fragment
             android:id="@+id/sign_up_fragment"
             android:name="com.bink.wallet.scenes.sign_up.SignUpFragment"
-            tools:layout="@layout/sign_up_fragment" />
+        tools:layout="@layout/sign_up_fragment">
+        <action
+            android:id="@+id/action_sign_up_fragment_to_binkWebFragment"
+            app:destination="@id/binkWebFragment" />
+    </fragment>
 
     <fragment
             android:id="@+id/ghost_registration_unavailable"
@@ -851,6 +869,15 @@
         <action
                 android:id="@+id/authToLoyaltyDetails"
                 app:destination="@id/loyalty_card_detail_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/binkWebFragment"
+        tools:layout="@layout/fragment_web_view"
+        android:name="com.bink.wallet.scenes.binkweb.BinkWebFragment"
+        android:label="BinkWebFragment">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 
 </navigation>

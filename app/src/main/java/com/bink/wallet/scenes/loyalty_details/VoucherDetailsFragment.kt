@@ -7,6 +7,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -126,7 +127,13 @@ class VoucherDetailsFragment :
                     if (it.contains(DocumentTypes.VOUCHER.type)) {
                         binding.linkText.apply {
                             setOnClickListener {
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(document.url)))
+                                document.url?.let { url ->
+                                    findNavController().navigate(
+                                        VoucherDetailsFragmentDirections.actionVoucherDetailsFragmentToBinkWebFragment(
+                                            url
+                                        )
+                                    )
+                                }
                             }
                             text = SpannableString(document.name).apply {
                                 setSpan(
