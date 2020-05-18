@@ -136,20 +136,6 @@ class AddLoyaltyCardFragment :
         }
     }
 
-//    private fun setCameraPreviewListener() {
-//        binding.scannerView.setOnClickListener {
-//            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-//                makeCameraRequest()
-//            } else {
-//                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                val uri: Uri = Uri.fromParts("package", activity?.packageName, null)
-//                intent.data = uri
-//                startActivity(intent)
-//            }
-//        }
-//    }
-
     private fun findMembershipPlan(rawResult: Result?): MembershipPlan? {
         var foundPlan: MembershipPlan? = null
 

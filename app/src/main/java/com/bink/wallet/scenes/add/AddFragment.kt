@@ -51,13 +51,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             )
         }
         binding.browseBrandsContainer.setOnClickListener {
-            viewModel.membershipCards.value?.let {
-                val directions = AddFragmentDirections.addToBrowse(
-                    args.membershipPlans,
-                    it.toTypedArray()
-                )
-                findNavController().navigateIfAdded(this, directions)
-            }
+            navigateToBrowseBrands()
         }
         binding.paymentCardContainer.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.add_to_pcd)
@@ -90,7 +84,9 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                     )
 
                 if (shouldShowPermissionExplanation && !hasViewedPermissionDialog) {
-                    DialogFactory.showPermissionsSettingsDialog(requireActivity())
+                    DialogFactory.showPermissionsSettingsDialog(requireActivity(), {
+                        navigateToBrowseBrands()
+                    })
                 }
             }
         }
@@ -153,6 +149,16 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     private fun navigateToScanLoyaltyCard() {
         viewModel.membershipCards.value?.let {
             val directions = AddFragmentDirections.addToAddLoyalty(
+                args.membershipPlans,
+                it.toTypedArray()
+            )
+            findNavController().navigateIfAdded(this, directions)
+        }
+    }
+
+    private fun navigateToBrowseBrands() {
+        viewModel.membershipCards.value?.let {
+            val directions = AddFragmentDirections.addToBrowse(
                 args.membershipPlans,
                 it.toTypedArray()
             )
