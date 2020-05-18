@@ -1,19 +1,13 @@
 package com.bink.wallet.scenes.add_loyalty_card
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.provider.Settings
 import android.view.animation.AnimationUtils
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -56,11 +50,9 @@ class AddLoyaltyCardFragment :
         super.onActivityCreated(savedInstanceState)
         cancelHaptic = false
         setBottomLayout()
-        setupPermissions()
         getValidators()
         requireContext().resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
             ?.let { scheduleHapticWithPause(it) }
-
     }
 
     override fun onResume() {
@@ -104,51 +96,6 @@ class AddLoyaltyCardFragment :
         }
     }
 
-
-    private fun setupPermissions() {
-        val permission = activity?.let {
-            ContextCompat.checkSelfPermission(
-                it,
-                Manifest.permission.CAMERA
-            )
-        }
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            makeCameraRequest()
-        }
-    }
-
-    private fun makeCameraRequest() {
-        requestPermissions(
-            arrayOf(Manifest.permission.CAMERA),
-            CAMERA_REQUEST_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            with(binding) {
-                if (permissions[0] == Manifest.permission.CAMERA
-                    && grantResults[0] != PackageManager.PERMISSION_GRANTED
-                ) {
-                    bottomView.cameraPreviewSubtitle.text =
-                        getString(R.string.camera_no_permission)
-                    setCameraPreviewListener()
-                } else {
-                    bottomView.cameraPreviewSubtitle.text =
-                        getString(R.string.camera_preview_subtitle)
-                    scannerView.setOnClickListener(null)
-                }
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     override fun handleResult(rawResult: Result?) {
         cancelHaptic = true
 
@@ -189,19 +136,19 @@ class AddLoyaltyCardFragment :
         }
     }
 
-    private fun setCameraPreviewListener() {
-        binding.scannerView.setOnClickListener {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                makeCameraRequest()
-            } else {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                val uri: Uri = Uri.fromParts("package", activity?.packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }
-        }
-    }
+//    private fun setCameraPreviewListener() {
+//        binding.scannerView.setOnClickListener {
+//            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+//                makeCameraRequest()
+//            } else {
+//                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                val uri: Uri = Uri.fromParts("package", activity?.packageName, null)
+//                intent.data = uri
+//                startActivity(intent)
+//            }
+//        }
+//    }
 
     private fun findMembershipPlan(rawResult: Result?): MembershipPlan? {
         var foundPlan: MembershipPlan? = null
@@ -296,7 +243,6 @@ class AddLoyaltyCardFragment :
     }
 
     companion object {
-        private const val CAMERA_REQUEST_CODE = 101
         private const val VIBRATION_DURATION = 600L
     }
 }

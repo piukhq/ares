@@ -520,6 +520,9 @@
     <string name="enter_manually_cant_scan">Please try adding the card manually.</string>
     <string name="unrecognized_barcode_title">Unrecognized barcode</string>
     <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
+    <string name="add_loyalty_card_permissions_denied_title">Please allow camera access</string>
+    <string name="add_loyalty_card_permissions_denied_message">To scan your cards, you’ll need to allow Bink access to your device’s camera.</string>
+    <string name="add_loyalty_card_permissions_denied_cta">Enter Manually</string>
 
     <!-- WebView -->
     <string name="webview_error_title">Error</string>
