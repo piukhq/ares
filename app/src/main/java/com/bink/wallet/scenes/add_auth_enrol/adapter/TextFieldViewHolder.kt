@@ -131,6 +131,14 @@ class TextFieldViewHolder(
             }
         }
 
+        planRequest?.let { safePlan ->
+            if (safePlan.shouldIgnore) {
+                binding.titleAddAuthText.visibility = View.GONE
+                binding.separator.visibility = View.GONE
+                binding.contentAddAuthText.visibility = View.GONE
+            }
+        }
+
         binding.executePendingBindings()
     }
 
