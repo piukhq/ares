@@ -149,19 +149,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     }
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
-        membershipCardRequest.account?.add_fields?.let { list ->
-            var planToRemove: PlanFieldsRequest? = null
-            for (planField: PlanFieldsRequest in list) {
-                if (planField.shouldIgnore) {
-                    planToRemove = planField
-                }
-            }
-
-            planToRemove?.let {
-                list.remove(it)
-            }
-        }
-
+        clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.createMembershipCard(
             membershipCardRequest,
             _newMembershipCard,
@@ -185,6 +173,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         membershipCardId: String,
         membershipCardRequest: MembershipCardRequest
     ) {
+        clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.ghostMembershipCard(
             membershipCardId,
             membershipCardRequest,
@@ -204,6 +193,21 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                 if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.CARD_NUMBER.common_name) {
                     addAuthItem.fieldsRequest?.shouldIgnore = true
                 }
+            }
+        }
+    }
+
+    private fun clearIgnoredFields(cardRequest: MembershipCardRequest) {
+        cardRequest.account?.add_fields?.let { list ->
+            var planToRemove: PlanFieldsRequest? = null
+            for (planField: PlanFieldsRequest in list) {
+                if (planField.shouldIgnore) {
+                    planToRemove = planField
+                }
+            }
+
+            planToRemove?.let {
+                list.remove(it)
             }
         }
     }
