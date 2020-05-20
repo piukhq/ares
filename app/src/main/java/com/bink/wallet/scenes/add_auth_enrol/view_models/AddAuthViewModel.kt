@@ -132,15 +132,16 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             .map { addAuthItem ->
                 val item = addAuthItem.fieldType as PlanField
                 if (item.type != FieldType.BOOLEAN_OPTIONAL.type) {
-                    if (addAuthItem.fieldsRequest?.value.isNullOrEmpty()) {
-                        return false
-                    } else if (!UtilFunctions.isValidField(
-                            item.validation,
-                            addAuthItem.fieldsRequest?.value
-                        )
-                    ) {
-
-                        return false
+                    addAuthItem.fieldsRequest?.let { safeFieldsRequest ->
+                        if (safeFieldsRequest.value.isNullOrEmpty() && !safeFieldsRequest.shouldIgnore) {
+                            return false
+                        } else if (!UtilFunctions.isValidField(
+                                item.validation,
+                                safeFieldsRequest.value
+                            ) && !safeFieldsRequest.shouldIgnore
+                        ) {
+                            return false
+                        }
                     }
                 }
             }
@@ -148,6 +149,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     }
 
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
+        clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.createMembershipCard(
             membershipCardRequest,
             _newMembershipCard,
@@ -171,6 +173,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         membershipCardId: String,
         membershipCardRequest: MembershipCardRequest
     ) {
+        clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.ghostMembershipCard(
             membershipCardId,
             membershipCardRequest,
@@ -180,7 +183,6 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     }
 
     fun setBarcode(barcode: String) {
-        var itemToRemove: AddAuthItemWrapper? = null
         addAuthItemsList.forEach { addAuthItem ->
             if (addAuthItem.fieldType is PlanField) {
                 if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.BARCODE.common_name) {
@@ -189,13 +191,24 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                 }
 
                 if ((addAuthItem.fieldType).common_name == SignUpFieldTypes.CARD_NUMBER.common_name) {
-                    itemToRemove = addAuthItem
+                    addAuthItem.fieldsRequest?.shouldIgnore = true
                 }
             }
         }
+    }
 
-        itemToRemove?.let { safeWrapper ->
-            addAuthItemsList.remove(safeWrapper)
+    private fun clearIgnoredFields(cardRequest: MembershipCardRequest) {
+        cardRequest.account?.add_fields?.let { list ->
+            var planToRemove: PlanFieldsRequest? = null
+            for (planField: PlanFieldsRequest in list) {
+                if (planField.shouldIgnore) {
+                    planToRemove = planField
+                }
+            }
+
+            planToRemove?.let {
+                list.remove(it)
+            }
         }
     }
 }
