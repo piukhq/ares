@@ -1,8 +1,10 @@
 package com.bink.wallet.scenes.add
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
@@ -18,6 +20,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.INT_ONE_HUNDRED
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.getbouncer.cardscan.ScanActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
@@ -35,6 +38,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private val marginPercent = 75
     private var hasViewedPermissionDialog = false
+    private var didAttemptToAddPaymentCard = false
 
     override fun onResume() {
         super.onResume()
@@ -54,16 +58,41 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             navigateToBrowseBrands()
         }
         binding.paymentCardContainer.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
+            //            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
+
+            requestCameraPermissionAndNavigate(false)
         }
         binding.loyaltyCardContainer.setOnClickListener {
-            requestCameraPermissionAndNavigate()
+            requestCameraPermissionAndNavigate(true)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.paymentCardContainer.waitForLayout { setCardMarginRelativeToButton() }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("ConnorDebug", "onActivityResult")
+
+        if (ScanActivity.isScanResult(requestCode)) {
+            if (resultCode == ScanActivity.RESULT_OK && data != null) {
+                val scanResult = ScanActivity.creditCardFromResult(data)
+                Log.e("ConnorDebug", "scanResult: " + scanResult?.number)
+                scanResult?.number?.let { safeCardNumber ->
+                    navigateToAddPaymentCard(safeCardNumber)
+                }
+            } else if (resultCode == ScanActivity.RESULT_CANCELED) {
+                data?.let { safeIntent ->
+                    if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
+                        // TODO: handle a fatal error with cardscan
+                    } else {
+                        // TODO: the user pressed the back button
+                    }
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -75,7 +104,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             if (permissions[0] == Manifest.permission.CAMERA
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
-                navigateToScanLoyaltyCard()
+                if (didAttemptToAddPaymentCard) {
+                    openScanPaymentCard()
+                } else {
+                    navigateToScanLoyaltyCard()
+                }
             } else {
                 val shouldShowPermissionExplanation =
                     !ActivityCompat.shouldShowRequestPermissionRationale(
@@ -117,7 +150,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         })
     }
 
-    private fun requestCameraPermissionAndNavigate() {
+    private fun requestCameraPermissionAndNavigate(navigateToScanLoyaltyCard: Boolean) {
+        didAttemptToAddPaymentCard = !navigateToScanLoyaltyCard
         val permission = activity?.let {
             ContextCompat.checkSelfPermission(
                 it,
@@ -142,7 +176,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 CAMERA_REQUEST_CODE
             )
         } else {
-            navigateToScanLoyaltyCard()
+            if (navigateToScanLoyaltyCard) {
+                navigateToScanLoyaltyCard()
+            } else {
+                openScanPaymentCard()
+            }
         }
     }
 
@@ -164,6 +202,37 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             )
             findNavController().navigateIfAdded(this, directions)
         }
+    }
+
+    private fun navigateToAddPaymentCard(barcode: String) {
+        val directions = AddFragmentDirections.addToPcd(
+            barcode
+        )
+        findNavController().navigateIfAdded(this, directions)
+    }
+
+    private fun openScanPaymentCard() {
+//        findNavController().navigateIfAdded(this, R.id.add_to_pcd)
+        //todo native SDK
+        ScanActivity.start(this, "Voz9sedU6rx8iDeCAZB9M_htNkpBizd5", false, true)
+        /*
+                allowSkip = true // Enables enter manually button
+cornerColor = White // Bink theming
+torchButtonImage = SUPPLIED_IMAGE
+positionCardFont = Nunito Sans Light 14.0
+skipButtonFont = Nunito Sans Bold 18.0
+                 */
+
+        /*
+        public static void start(
+            @NotNull Fragment fragment,
+            @NotNull String apiKey,
+            String scanCardText,
+            String positionCardText,
+            boolean delayShowingExpiration,
+            boolean showEnterCardNumberManually
+    ) {
+         */
     }
 
     companion object {

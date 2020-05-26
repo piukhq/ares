@@ -265,4 +265,8 @@ dependencies {
 
     /** BARCODE SCANNING **/
     implementation 'com.github.greptastic:zxingscannerview:1.9.13.j'
+
+    /** PAYMENT CARD SCANNING **/
+    implementation 'com.getbouncer:cardscan-base:1.0.5151'
+    implementation 'com.getbouncer:cardscan:1.0.5151'
 }

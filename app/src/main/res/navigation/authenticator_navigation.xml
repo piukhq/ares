@@ -508,6 +508,12 @@
             android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardFragment"
             tools:layout="@layout/add_payment_card_fragment">
 
+        <argument
+            android:name="cardNumber"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+
         <action
                 android:id="@+id/add_payment_to_terms"
                 app:destination="@+id/card_terms_and_conditions" />

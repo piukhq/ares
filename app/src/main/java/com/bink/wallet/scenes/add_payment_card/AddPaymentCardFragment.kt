@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
@@ -33,6 +34,9 @@ class AddPaymentCardFragment :
     companion object {
         const val YEAR_BASE_ADDITION = 2000
     }
+
+    private val addPaymentCardArgs: AddPaymentCardFragmentArgs by navArgs()
+    private var cardNumber: String = ""
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -72,6 +76,10 @@ class AddPaymentCardFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.lifecycleOwner = this
+        addPaymentCardArgs.cardNumber?.let { safeCardNumber ->
+            cardNumber = safeCardNumber
+            viewModel.cardNumber.value = cardNumber
+        }
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
 
@@ -173,6 +181,8 @@ class AddPaymentCardFragment :
                 )
             )
         }
+
+        bindScannedCardNumber()
     }
 
     override fun onStart() {
@@ -300,5 +310,14 @@ class AddPaymentCardFragment :
     private fun cardInfoDisplay() {
         binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
         binding.displayCardName.text = binding.cardName.text.toString()
+    }
+
+    private fun bindScannedCardNumber() {
+        cardNumber?.let { safeCardNumber ->
+            binding.cardNumber.hint = ""
+            binding.cardNumber.setText(safeCardNumber)
+            binding.cardNumber.isEnabled = false
+        }
+
     }
 }
