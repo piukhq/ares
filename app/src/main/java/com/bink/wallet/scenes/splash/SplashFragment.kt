@@ -88,8 +88,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
             true -> R.id.splash_to_rooted_device
             else -> getUnRootedDirections()
         }
-
-        return getUnRootedDirections()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
