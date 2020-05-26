@@ -43,11 +43,7 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>
     ) {
 
-        val cachedBackendVersion = SharedPreferenceManager.storedBackendVersion
-        if (cachedBackendVersion != null
-            && cachedBackendVersion == BackendVersion.VERSION_2.version) {
-            encryptCardDetails(card, cardNumber)
-        }
+        encryptCardDetails(card, cardNumber)
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
         // This can only happen on release, so we have to guard it with the following condition.
@@ -90,11 +86,7 @@ class AddPaymentCardRepository(
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
 
-                        if (cachedBackendVersion != null
-                            && cachedBackendVersion == BackendVersion.VERSION_2.version
-                        ) {
-                            encryptCardDetails(card, cardNumber)
-                        }
+                        encryptCardDetails(card, cardNumber)
 
                         doAddPaymentCard(
                             card,

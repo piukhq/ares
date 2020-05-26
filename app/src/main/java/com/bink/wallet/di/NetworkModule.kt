@@ -55,14 +55,9 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         }
         val request = chain.request().url().newBuilder().build()
 
-        val header = if (SharedPreferenceManager.storedBackendVersion != null) {
-            SharedPreferenceManager.storedBackendVersion
-        } else {
-            BackendVersion.VERSION_2.version
-        }
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
-            .header("Accept", header.toString())
+            .header("Accept", BackendVersion.VERSION_2.version)
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .url(request)
             .build()

@@ -186,13 +186,8 @@ class LoyaltyWalletRepository(
         createError: MutableLiveData<Exception>
     ) {
 
-        val cachedBackendVersion = SharedPreferenceManager.storedBackendVersion
-        if (cachedBackendVersion != null
-            && cachedBackendVersion == BackendVersion.VERSION_2.version
-        ) {
-            membershipCardRequest.account?.let { safeAccount ->
-                encryptMembershipCardFields(safeAccount)
-            }
+        membershipCardRequest.account?.let { safeAccount ->
+            encryptMembershipCardFields(safeAccount)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
