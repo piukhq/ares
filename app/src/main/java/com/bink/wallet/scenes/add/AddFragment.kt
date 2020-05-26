@@ -22,6 +22,7 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.getbouncer.cardscan.ScanActivity
+import com.getbouncer.cardscan.base.ScanBaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
@@ -86,7 +87,13 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 }
             } else if (resultCode == ScanActivity.RESULT_CANCELED) {
                 data?.let { safeIntent ->
-                    if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
+                    if (safeIntent.getBooleanExtra(
+                            ScanBaseActivity.RESULT_ENTER_CARD_MANUALLY_REASON,
+                            false
+                        )
+                    ) {
+                        navigateToAddPaymentCard("")
+                    } else if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
                         // TODO: handle a fatal error with cardscan
                     } else {
                         // TODO: the user pressed the back button
