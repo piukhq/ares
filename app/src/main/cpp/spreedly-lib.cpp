@@ -145,3 +145,13 @@ Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdOAuthId(
     return env->NewStringUTF(key.c_str());
 }
 
+// BOUNCER KEYS
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_scenes_splash_SplashFragment_bouncerDevKey(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string key = "Voz9sedU6rx8iDeCAZB9M_htNkpBizd5";
+    return env->NewStringUTF(key.c_str());
+}
+

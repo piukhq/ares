@@ -313,11 +313,9 @@ class AddPaymentCardFragment :
     }
 
     private fun bindScannedCardNumber() {
-        cardNumber?.let { safeCardNumber ->
-            binding.cardNumber.hint = ""
-            binding.cardNumber.setText(safeCardNumber)
+        if (cardNumber.isNotEmpty()) {
+            binding.cardNumber.setText(cardNumber)
             binding.cardNumber.isEnabled = false
         }
-
     }
 }

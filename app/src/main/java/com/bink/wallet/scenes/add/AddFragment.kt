@@ -18,6 +18,7 @@ import com.bink.wallet.databinding.AddFragmentBinding
 import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.INT_ONE_HUNDRED
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.getbouncer.cardscan.ScanActivity
@@ -212,9 +213,10 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     }
 
     private fun openScanPaymentCard() {
-//        findNavController().navigateIfAdded(this, R.id.add_to_pcd)
-        //todo native SDK
-        ScanActivity.start(this, "Voz9sedU6rx8iDeCAZB9M_htNkpBizd5", false, true)
+        val bouncerKey = LocalStoreUtils.getAppSharedPref(
+            LocalStoreUtils.KEY_BOUNCER_KEY
+        ) as String
+        ScanActivity.start(this, bouncerKey, false, true)
         /*
                 allowSkip = true // Enables enter manually button
 cornerColor = White // Bink theming
