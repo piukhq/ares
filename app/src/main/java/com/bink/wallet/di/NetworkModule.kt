@@ -58,7 +58,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
         val header = if (SharedPreferenceManager.storedBackendVersion != null) {
             SharedPreferenceManager.storedBackendVersion
         } else {
-            BackendVersion.VERSION_1.version
+            BackendVersion.VERSION_2.version
         }
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
