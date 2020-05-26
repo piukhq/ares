@@ -27,10 +27,12 @@ class AddCardFragment : BaseAddAuthFragment() {
 
         setViewsContent()
 
-        binding.footerComposed.noAccount.setOnClickListener {
-            navigationHandler?.navigateToGhostRegistrationUnavailableScreen()
-            logNoAccountClick()
-        }
+        //todo We've removed this functionality as we currently can't support positive ghost card journeys
+        //todo https://hellobink.atlassian.net/browse/AB20-739
+//        binding.footerComposed.noAccount.setOnClickListener {
+//            navigationHandler?.navigateToGhostRegistrationUnavailableScreen()
+//            logNoAccountClick()
+//        }
 
         binding.footerComposed.addAuthCta.setOnClickListener {
             logCTAClick(it)
@@ -74,13 +76,15 @@ class AddCardFragment : BaseAddAuthFragment() {
 
     private fun isFooterSimple() = isRetryJourney && !isFromNoReasonCodes
 
+    //todo We've removed this functionality as we currently can't support positive ghost card journeys
+    //todo https://hellobink.atlassian.net/browse/AB20-739
     private fun logNoAccountClick() {
-        logEvent(
-            FirebaseEvents.getFirebaseIdentifier(
-                ADD_AUTH_FORM_VIEW,
-                binding.footerComposed.noAccount.text.toString()
-            )
-        )
+//        logEvent(
+//            FirebaseEvents.getFirebaseIdentifier(
+//                ADD_AUTH_FORM_VIEW,
+//                binding.footerComposed.noAccount.text.toString()
+//            )
+//        )
     }
 
     private fun logCTAClick(button: View) {

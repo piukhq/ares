@@ -34,7 +34,7 @@ class AuthAnimationHelper(
                 quotientFooterSimple
             )
             recyclerViewHelper.handleFooterFadeEffect(
-                mutableListOf(binding.footerComposed.noAccount, binding.footerComposed.addAuthCta),
+                mutableListOf(binding.footerComposed.addAuthCta),
                 binding.authFields,
                 binding.footerComposed.footerBottomGradient,
                 true,

@@ -79,6 +79,7 @@
     <dimen name="active_icon_margin_start">24dp</dimen>
     <dimen name="footer_margin_bottom">24dp</dimen>
     <dimen name="tile_dimension">328dp</dimen>
+    <dimen name="cta_margin_bottom">40dp</dimen>
 
     <!-- Maximised Barcode -->
     <dimen name="barcode_side_margin">98dp</dimen>
