@@ -59,8 +59,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             navigateToBrowseBrands()
         }
         binding.paymentCardContainer.setOnClickListener {
-            //            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
-
             requestCameraPermissionAndNavigate(false)
         }
         binding.loyaltyCardContainer.setOnClickListener {
@@ -90,7 +88,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                     ) {
                         navigateToAddPaymentCard("")
                     } else if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
-                        // TODO: handle a fatal error with cardscan
+                        DialogFactory.showTryAgainGenericError(requireActivity())
                     } else {
                         // User closed the scan screen
                     }
