@@ -528,4 +528,9 @@
     <string name="webview_error_title">Error</string>
     <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
 
+    <!-- Payment Card Scanning - The following strings are overriding bouncer's library -->
+    <string name="card_scan_scan_card"></string>
+    <string name="card_scan_position_card">Hold card here. It will scan automatically.</string>
+    <string name="card_scan_enter_card_manually">Enter Manually</string>
+
 </resources>
