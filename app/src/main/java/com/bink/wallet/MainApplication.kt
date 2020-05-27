@@ -24,7 +24,7 @@ class MainApplication : Application() {
                 ApiConstants.BASE_URL = SharedPreferenceManager.storedApiUrl.toString()
             }
             if (SharedPreferenceManager.storedBackendVersion.isNullOrEmpty()) {
-                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
+                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
             }
             modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
         }
