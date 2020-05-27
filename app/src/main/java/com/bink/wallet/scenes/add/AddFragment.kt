@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
@@ -76,12 +75,9 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.e("ConnorDebug", "onActivityResult")
-
         if (ScanActivity.isScanResult(requestCode)) {
             if (resultCode == ScanActivity.RESULT_OK && data != null) {
                 val scanResult = ScanActivity.creditCardFromResult(data)
-                Log.e("ConnorDebug", "scanResult: " + scanResult?.number)
                 scanResult?.number?.let { safeCardNumber ->
                     navigateToAddPaymentCard(safeCardNumber)
                 }
@@ -96,7 +92,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                     } else if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
                         // TODO: handle a fatal error with cardscan
                     } else {
-                        // TODO: the user pressed the back button
+                        // User closed the scan screen
                     }
                 }
             }
