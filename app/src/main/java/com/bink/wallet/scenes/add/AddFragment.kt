@@ -122,7 +122,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
                 if (shouldShowPermissionExplanation && !hasViewedPermissionDialog) {
                     DialogFactory.showPermissionsSettingsDialog(requireActivity(), {
-                        navigateToBrowseBrands()
+                        if (didAttemptToAddPaymentCard) {
+                            navigateToAddPaymentCard("")
+                        } else {
+                            navigateToBrowseBrands()
+                        }
                     })
                 }
             }
