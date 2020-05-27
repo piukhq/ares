@@ -534,7 +534,5 @@
     <string name="card_scan_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
-    <string name="payment_card_scanning_scan_failed_try_again_cta">Try Again</string>
-    <string name="payment_card_scanning_scan_failed_enter_manually_cta">Enter Manually</string>
 
 </resources>
