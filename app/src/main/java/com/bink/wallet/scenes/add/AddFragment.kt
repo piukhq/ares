@@ -223,25 +223,15 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         val bouncerKey = LocalStoreUtils.getAppSharedPref(
             LocalStoreUtils.KEY_BOUNCER_KEY
         ) as String
-        ScanActivity.start(this, bouncerKey, false, true)
-        /*
-                allowSkip = true // Enables enter manually button
-cornerColor = White // Bink theming
-torchButtonImage = SUPPLIED_IMAGE
-positionCardFont = Nunito Sans Light 14.0
-skipButtonFont = Nunito Sans Bold 18.0
-                 */
 
-        /*
-        public static void start(
-            @NotNull Fragment fragment,
-            @NotNull String apiKey,
-            String scanCardText,
-            String positionCardText,
-            boolean delayShowingExpiration,
-            boolean showEnterCardNumberManually
-    ) {
-         */
+        ScanActivity.start(
+            this,
+            bouncerKey,
+            "",
+            requireContext().getString(R.string.payment_card_scanning_position),
+            false,
+            true
+        )
     }
 
     companion object {
