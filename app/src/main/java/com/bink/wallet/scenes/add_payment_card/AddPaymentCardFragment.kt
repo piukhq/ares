@@ -315,7 +315,6 @@ class AddPaymentCardFragment :
     private fun bindScannedCardNumber() {
         if (cardNumber.isNotEmpty()) {
             binding.cardNumber.setText(cardNumber)
-            binding.cardNumber.isEnabled = false
         }
     }
 }
