@@ -103,15 +103,19 @@ object MembershipPlanUtils {
                     }
                     FAILED.status -> {
                         var isGhostCard = false
+                        var isFailedSignUp = false
 
                         membershipCard.status?.reason_codes?.forEach { reasonCode ->
                             isGhostCard = reasonCode == CardCodes.X105.name
+                            isFailedSignUp = reasonCode == CardCodes.X201.name
                         }
 
                         return if (membershipCard.status?.reason_codes.isNullOrEmpty()) {
                             LinkStatus.STATUS_NO_REASON_CODES
                         } else if (isGhostCard) {
                             LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD
+                        } else if (isFailedSignUp) {
+                            LinkStatus.STATUS_LINKABLE_SIGN_UP_FAILED
                         } else {
                             LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_PENDING_FAILED
                         }
