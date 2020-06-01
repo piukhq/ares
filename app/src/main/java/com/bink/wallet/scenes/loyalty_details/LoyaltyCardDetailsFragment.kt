@@ -817,6 +817,20 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+                LoginStatus.STATUS_SIGN_UP_FAILED -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.ENROL,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
+                }
                 else -> {
                 }
             }
