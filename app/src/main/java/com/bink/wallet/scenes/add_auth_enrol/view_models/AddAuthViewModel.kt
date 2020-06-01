@@ -62,7 +62,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         addAuthItemsList.add(AddAuthItemWrapper(FieldType.HEADER))
     }
 
-    open fun addItems(membershipPlan: MembershipPlan) {
+    open fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean = true) {
         addHeader()
     }
 
