@@ -37,7 +37,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     companion object {
         init {
-            System.loadLibrary("spreedly-lib")
+            System.loadLibrary("api_keys-lib")
         }
     }
 
@@ -51,12 +51,14 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     // Zendesk Keys
     private external fun zendeskSandboxUrl(): String
-
     private external fun zendeskSandboxAppId(): String
     private external fun zendeskSandboxOAuthId(): String
     private external fun zendeskProdUrl(): String
     private external fun zendeskProdAppId(): String
     private external fun zendeskProdOAuthId(): String
+
+    // Bouncer
+    private external fun bouncerDevKey(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,6 +75,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         setAppPrefs()
         persistPaymentCardHashSecret()
         configureZendesk()
+        persistBouncerKeys()
         if (findNavController().currentDestination?.id == R.id.splash) {
             if (getDirections() == R.id.global_to_home) {
                 goToDashboard()
@@ -203,6 +206,13 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         )
 
         Support.INSTANCE.init(Zendesk.INSTANCE)
+    }
+
+    private fun persistBouncerKeys() {
+        LocalStoreUtils.setAppSharedPref(
+            LocalStoreUtils.KEY_BOUNCER_KEY,
+            bouncerDevKey()
+        )
     }
 
     private fun goToDashboard() {

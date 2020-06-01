@@ -34,6 +34,19 @@ class DialogFactory {
             builder.create().show()
         }
 
+        fun showTryAgainGenericError(
+            activity: Activity
+        ) {
+            val builder = AlertDialog.Builder(activity)
+            builder.setTitle(activity.getString(R.string.payment_card_scanning_scan_failed_title))
+            builder.setMessage(activity.getString(R.string.payment_card_scanning_scan_failed))
+            builder.setPositiveButton(activity.getString(android.R.string.ok)) { dialogInterface, _ ->
+                dialogInterface.cancel()
+            }
+
+            builder.create().show()
+        }
+
     }
 
 }

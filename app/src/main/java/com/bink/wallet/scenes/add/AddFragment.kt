@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -16,8 +17,11 @@ import com.bink.wallet.databinding.AddFragmentBinding
 import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.INT_ONE_HUNDRED
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.getbouncer.cardscan.ScanActivity
+import com.getbouncer.cardscan.base.ScanBaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
@@ -35,6 +39,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private val marginPercent = 75
     private var hasViewedPermissionDialog = false
+    private var didAttemptToAddPaymentCard = false
 
     override fun onResume() {
         super.onResume()
@@ -54,16 +59,44 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             navigateToBrowseBrands()
         }
         binding.paymentCardContainer.setOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.add_to_pcd)
+            requestCameraPermissionAndNavigate(false)
         }
         binding.loyaltyCardContainer.setOnClickListener {
-            requestCameraPermissionAndNavigate()
+            requestCameraPermissionAndNavigate(true)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.paymentCardContainer.waitForLayout { setCardMarginRelativeToButton() }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (ScanActivity.isScanResult(requestCode)) {
+            if (resultCode == ScanActivity.RESULT_OK && data != null) {
+                val scanResult = ScanActivity.creditCardFromResult(data)
+                scanResult?.number?.let { safeCardNumber ->
+                    navigateToAddPaymentCard(safeCardNumber)
+                }
+            } else if (resultCode == ScanActivity.RESULT_CANCELED) {
+                data?.let { safeIntent ->
+                    if (safeIntent.getBooleanExtra(
+                            ScanBaseActivity.RESULT_ENTER_CARD_MANUALLY_REASON,
+                            false
+                        )
+                    ) {
+                        navigateToAddPaymentCard()
+                    } else if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
+                        DialogFactory.showTryAgainGenericError(requireActivity())
+                    } else {
+                        // We don't need to do anything here as this condition is when the user
+                        // has closed the scan screen. In this case, we'll end up back at the
+                        // 'AddFragment' (where we currently are) which is expected behaviour.
+                    }
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -75,7 +108,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             if (permissions[0] == Manifest.permission.CAMERA
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
-                navigateToScanLoyaltyCard()
+                if (didAttemptToAddPaymentCard) {
+                    openScanPaymentCard()
+                } else {
+                    navigateToScanLoyaltyCard()
+                }
             } else {
                 val shouldShowPermissionExplanation =
                     !ActivityCompat.shouldShowRequestPermissionRationale(
@@ -85,7 +122,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
                 if (shouldShowPermissionExplanation && !hasViewedPermissionDialog) {
                     DialogFactory.showPermissionsSettingsDialog(requireActivity(), {
-                        navigateToBrowseBrands()
+                        if (didAttemptToAddPaymentCard) {
+                            navigateToAddPaymentCard()
+                        } else {
+                            navigateToBrowseBrands()
+                        }
                     })
                 }
             }
@@ -117,7 +158,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         })
     }
 
-    private fun requestCameraPermissionAndNavigate() {
+    private fun requestCameraPermissionAndNavigate(navigateToScanLoyaltyCard: Boolean) {
+        didAttemptToAddPaymentCard = !navigateToScanLoyaltyCard
         val permission = activity?.let {
             ContextCompat.checkSelfPermission(
                 it,
@@ -142,7 +184,11 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 CAMERA_REQUEST_CODE
             )
         } else {
-            navigateToScanLoyaltyCard()
+            if (navigateToScanLoyaltyCard) {
+                navigateToScanLoyaltyCard()
+            } else {
+                openScanPaymentCard()
+            }
         }
     }
 
@@ -164,6 +210,28 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             )
             findNavController().navigateIfAdded(this, directions)
         }
+    }
+
+    private fun navigateToAddPaymentCard(cardNumber: String = "") {
+        val directions = AddFragmentDirections.addToPcd(
+            cardNumber
+        )
+        findNavController().navigateIfAdded(this, directions)
+    }
+
+    private fun openScanPaymentCard() {
+        val bouncerKey = LocalStoreUtils.getAppSharedPref(
+            LocalStoreUtils.KEY_BOUNCER_KEY
+        ) as String
+
+        ScanActivity.start(
+            this,
+            bouncerKey,
+            "",
+            requireContext().getString(R.string.payment_card_scanning_position),
+            false,
+            true
+        )
     }
 
     companion object {

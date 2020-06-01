@@ -1,4 +1,4 @@
-#include "spreedly-lib.h"
+#include "api_keys-lib.h"
 #include <jni.h>
 #include <string>
 
@@ -142,6 +142,16 @@ Java_com_bink_wallet_scenes_splash_SplashFragment_zendeskProdOAuthId(
         JNIEnv *env,
         jobject /* this */) {
     std::string key = "mobile_sdk_client_4e5138822a3a80bb44fd";
+    return env->NewStringUTF(key.c_str());
+}
+
+// BOUNCER KEYS
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_scenes_splash_SplashFragment_bouncerDevKey(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string key = "Voz9sedU6rx8iDeCAZB9M_htNkpBizd5";
     return env->NewStringUTF(key.c_str());
 }
 

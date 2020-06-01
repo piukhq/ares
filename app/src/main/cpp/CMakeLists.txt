@@ -11,10 +11,10 @@ cmake_minimum_required(VERSION 3.6.0-rc2)
 # automatically packages shared libraries with your APK.
 
 add_library( # Specifies the name of the library.
-             spreedly-lib
+             api_keys-lib
 
              # Sets the library as a shared library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             spreedly-lib.cpp )
+        api_keys-lib.cpp)

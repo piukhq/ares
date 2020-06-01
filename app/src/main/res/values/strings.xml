@@ -76,7 +76,7 @@
     <string name="scan_a_card_you_already_have">Scan a card you already have</string>
     <string name="add_loyalty_card">Add loyalty card</string>
     <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
-    <string name="add_payment_card_button_description">Fill in your card details and link your payment card</string>
+    <string name="add_payment_card_button_description">Scan and link your payment card</string>
     <string name="error_scheme_already_exists">Scheme Account already exists in another wallet.</string>
 
     <!-- Brand Header -->
@@ -527,5 +527,12 @@
     <!-- WebView -->
     <string name="webview_error_title">Error</string>
     <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
+
+    <!-- Payment Card Scanning - The following strings are overriding bouncer's library -->
+    <string name="card_scan_scan_card"></string>
+    <string name="payment_card_scanning_position">Hold card here. It will scan automatically.</string>
+    <string name="card_scan_enter_card_manually">Enter Manually</string>
+    <string name="payment_card_scanning_scan_failed_title">Error</string>
+    <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
 
 </resources>

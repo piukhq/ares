@@ -17,6 +17,7 @@ object LocalStoreUtils {
     const val KEY_SPREEDLY = "encrypted_spreedly_token"
     const val KEY_PAYMENT_HASH_SECRET = "payment_hash_secret"
     const val KEY_ENCRYPT_PAYMENT_PUBLIC_KEY = "payment_encryption_public_key"
+    const val KEY_BOUNCER_KEY = "bouncer_key"
 
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
