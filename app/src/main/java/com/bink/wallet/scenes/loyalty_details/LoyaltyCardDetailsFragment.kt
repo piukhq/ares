@@ -633,6 +633,21 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+
+                LinkStatus.STATUS_LINKABLE_SIGN_UP_FAILED -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.ENROL,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
+                }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
@@ -794,6 +809,20 @@ class LoyaltyCardDetailsFragment :
                             val directions =
                                 LoyaltyCardDetailsFragmentDirections.detailToAuth(
                                     SignUpFormType.GHOST,
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
+                }
+                LoginStatus.STATUS_SIGN_UP_FAILED -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.detailToAuth(
+                                    SignUpFormType.ENROL,
                                     plan,
                                     isRetryJourney = true,
                                     membershipCardId = card.id

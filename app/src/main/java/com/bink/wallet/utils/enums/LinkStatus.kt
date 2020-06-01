@@ -68,6 +68,12 @@ enum class LinkStatus(
         R.drawable.ic_lcd_module_icons_points_login,
         R.string.loyalty_card_details_register,
         R.string.description_please_try_again
-    )
+    ),
+    STATUS_LINKABLE_SIGN_UP_FAILED(
+        3.1f,
+        R.drawable.ic_lcd_module_icons_points_login,
+        R.string.points_sign_up_failed,
+        R.string.description_please_try_again
+    ),
 
 }
