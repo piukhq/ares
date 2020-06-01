@@ -86,11 +86,13 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                             false
                         )
                     ) {
-                        navigateToAddPaymentCard("")
+                        navigateToAddPaymentCard()
                     } else if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
                         DialogFactory.showTryAgainGenericError(requireActivity())
                     } else {
-                        // User closed the scan screen
+                        // We don't need to do anything here as this condition is when the user
+                        // has closed the scan screen. In this case, we'll end up back at the
+                        // 'AddFragment' (where we currently are) which is expected behaviour.
                     }
                 }
             }
@@ -121,7 +123,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 if (shouldShowPermissionExplanation && !hasViewedPermissionDialog) {
                     DialogFactory.showPermissionsSettingsDialog(requireActivity(), {
                         if (didAttemptToAddPaymentCard) {
-                            navigateToAddPaymentCard("")
+                            navigateToAddPaymentCard()
                         } else {
                             navigateToBrowseBrands()
                         }
@@ -210,9 +212,9 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         }
     }
 
-    private fun navigateToAddPaymentCard(barcode: String) {
+    private fun navigateToAddPaymentCard(cardNumber: String = "") {
         val directions = AddFragmentDirections.addToPcd(
-            barcode
+            cardNumber
         )
         findNavController().navigateIfAdded(this, directions)
     }

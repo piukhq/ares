@@ -37,7 +37,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     companion object {
         init {
-            System.loadLibrary("spreedly-lib")
+            System.loadLibrary("api_keys-lib")
         }
     }
 
