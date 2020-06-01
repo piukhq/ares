@@ -526,8 +526,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                             null,
                                             null,
                                             null,
-                                            addRegisterFieldsRequest.registration_fields,
-                                            null
+                                            addRegisterFieldsRequest.registration_fields
                                         ),
                                         membershipPlan.id
                                     )
@@ -538,7 +537,6 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                                     currentRequest = MembershipCardRequest(
                                         Account(
                                             addRegisterFieldsRequest.add_fields,
-                                            null,
                                             null,
                                             null,
                                             null
@@ -596,8 +594,7 @@ class AddAuthFragment : BaseFragment<AddAuthViewModel, AddAuthFragmentBinding>()
                         null,
                         null,
                         null,
-                        addRegisterFieldsRequest.registration_fields,
-                        null
+                        addRegisterFieldsRequest.registration_fields
                     ),
                     viewModel.currentMembershipPlan.value?.id
                 )
