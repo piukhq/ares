@@ -51,7 +51,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     private var originalMode: Int? = null
     var membershipCardId: String? = null
     var isRetryJourney = false
-     var barcode: String? = null
+    var barcode: String? = null
     var currentMembershipPlan: MembershipPlan? = null
     var navigationHandler: AuthNavigationHandler? = null
     var animationHelper: AuthAnimationHelper? = null
