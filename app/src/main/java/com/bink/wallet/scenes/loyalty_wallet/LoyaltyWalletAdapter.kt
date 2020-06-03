@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
+import com.bink.wallet.utils.ColorUtil
 import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
@@ -175,7 +177,11 @@ class LoyaltyWalletAdapter(
                 bindVouchersToDisplay(cardBinding, currentMembershipPlan, item)
             }
             with(cardBinding.cardView) {
-                setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                //todo move to membership plan
+
+                //todo naming is a bit weird. We want to say "primary", "secondary"
+                Log.e("ConnorDebug: ", "color " + item.card?.getSecondaryColor())
+                setFirstColor(Color.parseColor(item.card?.getSecondaryColor()))
                 setSecondColor(Color.parseColor(item.card?.colour))
             }
         }
