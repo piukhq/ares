@@ -324,6 +324,10 @@
         <action
                 android:id="@+id/detail_to_brand_header"
                 app:destination="@+id/brand_header" />
+
+        <action
+            android:id="@+id/addJoinToGetNewCardFragment"
+            app:destination="@+id/getNewCardFragment" />
     </fragment>
 
     <fragment

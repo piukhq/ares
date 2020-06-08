@@ -666,6 +666,20 @@ class LoyaltyCardDetailsFragment :
                         }
                     }
                 }
+
+                LinkStatus.STATUS_LINKABLE_SIGN_UP_FAILED -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.addJoinToGetNewCardFragment(
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
+                        }
+                    }
+                }
                 LinkStatus.STATUS_LINKABLE_REQUIRES_AUTH_GHOST_CARD -> {
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
@@ -856,6 +870,19 @@ class LoyaltyCardDetailsFragment :
                                 currentDestination
                             )
 
+                        }
+                    }
+                }
+                LoginStatus.STATUS_SIGN_UP_FAILED -> {
+                    viewModel.membershipCard.value?.let { card ->
+                        viewModel.membershipPlan.value?.let { plan ->
+                            val directions =
+                                LoyaltyCardDetailsFragmentDirections.addJoinToGetNewCardFragment(
+                                    plan,
+                                    isRetryJourney = true,
+                                    membershipCardId = card.id
+                                )
+                            findNavController().navigateIfAdded(this, directions)
                         }
                     }
                 }

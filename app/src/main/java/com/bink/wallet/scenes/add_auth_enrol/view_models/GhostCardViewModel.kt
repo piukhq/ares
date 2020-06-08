@@ -50,8 +50,7 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
                 null,
                 null,
                 null,
-                addRegisterFieldsRequest.value?.registration_fields,
-                null
+                addRegisterFieldsRequest.value?.registration_fields
             ),
             membershipPlan.id
         )
@@ -64,7 +63,6 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
         val currentRequest = MembershipCardRequest(
             Account(
                 addRegisterFieldsRequest.value?.add_fields,
-                null,
                 null,
                 null,
                 null

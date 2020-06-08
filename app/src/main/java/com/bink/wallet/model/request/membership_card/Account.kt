@@ -8,7 +8,7 @@ data class Account(
     var authorise_fields: MutableList<PlanFieldsRequest>?,
     var enrol_fields: MutableList<PlanFieldsRequest>?,
     var registration_fields: MutableList<PlanFieldsRequest>?,
-    var plan_documents: MutableList<PlanFieldsRequest>?
+    @Transient var plan_documents: MutableList<PlanFieldsRequest> = mutableListOf()
 ) {
     constructor() : this(
         ArrayList(),
