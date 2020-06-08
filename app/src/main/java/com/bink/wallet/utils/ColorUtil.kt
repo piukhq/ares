@@ -8,8 +8,6 @@ class ColorUtil {
 
     companion object {
 
-        const val BLACK = "#000000"
-        const val SECONDARY_COLOR_BLACK = "#a9a9a9"
         const val LIGHT_THRESHOLD_TEXT = 0.8f
         const val LIGHT_THRESHOLD = 0.5f
         const val COLOR_CHANGE_PERCENTAGE = 30.0f
@@ -37,33 +35,48 @@ class ColorUtil {
         }
 
         private fun adjustColor(color: Int, percentage: Float, isDark: Boolean): String {
-            val percentageOfRed = Color.red(color) * percentage / 100
-            val percentageOfGreen = Color.green(color) * percentage / 100
-            val percentageOfBlue = Color.blue(color) * percentage / 100
+            val red = Color.red(color)
+            val green = Color.green(color)
+            val blue = Color.blue(color)
 
+            val percentageRed: Float
+            val percentageGreen: Float
+            val percentageBlue: Float
+
+            // If the colour is black, we need to take a % of the total RGB range. This
+            // allows us to calculate how much to lighten the colour by.
+            if (red == 0 && green == 0 && blue == 0) {
+                percentageRed = 255 * percentage / 100
+                percentageGreen = 255 * percentage / 100
+                percentageBlue = 255 * percentage / 100
+            } else {
+                percentageRed = red * percentage / 100
+                percentageGreen = green * percentage / 100
+                percentageBlue = blue * percentage / 100
+            }
+
+            // Lighten or darken the colour
             val updatedRed =
-                if (isDark) Color.red(color).minus(percentageOfRed) else Color.red(color).plus(
-                    percentageOfRed
+                if (isDark) red.minus(percentageRed) else red.plus(
+                    percentageRed
                 )
             val updatedGreen =
-                if (isDark) Color.green(color).minus(percentageOfGreen) else Color.green(color).plus(
-                    percentageOfGreen
+                if (isDark) green.minus(percentageGreen) else green.plus(
+                    percentageGreen
                 )
             val updatedBlue =
-                if (isDark) Color.blue(color).minus(percentageOfBlue) else Color.blue(color).plus(
-                    percentageOfBlue
+                if (isDark) blue.minus(percentageBlue) else blue.plus(
+                    percentageBlue
                 )
 
+            // Workout the new colour, we want to avoid negatives and colours greater than
+            // the RGB scale
             val newRed = min(max(0f, updatedRed), 255f)
             val newGreen = min(max(0f, updatedGreen), 255f)
             val newBlue = min(max(0f, updatedBlue), 255f)
 
             val newHex =
                 String.format(HEX_FORMAT, newRed.toInt(), newGreen.toInt(), newBlue.toInt())
-
-            if (newHex == BLACK) {
-                return SECONDARY_COLOR_BLACK
-            }
 
             return newHex
         }
