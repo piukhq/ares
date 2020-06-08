@@ -39,6 +39,7 @@ import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
 import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
+import com.bink.wallet.scenes.settings.DebugColorSwatchesViewModel
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.settings.SettingsViewModel
@@ -101,6 +102,8 @@ val viewModelModules = module {
     viewModel { TransactionViewModel() }
 
     viewModel { DebugMenuViewModel(get()) }
+
+    viewModel { DebugColorSwatchesViewModel(get()) }
 
     single { provideTermsAndConditionsRepository(get(NetworkQualifiers.BinkApiInterface)) }
     viewModel { TermsAndConditionsViewModel(get()) }

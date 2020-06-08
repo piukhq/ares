@@ -142,6 +142,11 @@
         <action
                 android:id="@+id/debug_to_onboarding"
                 app:destination="@+id/onboarding_fragment" />
+
+        <action
+            android:id="@+id/debug_to_color_swatches"
+            app:destination="@+id/debug_color_swatches" />
+
     </fragment>
 
     <fragment
@@ -885,5 +890,9 @@
             android:name="url"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/debug_color_swatches"
+        android:name="com.bink.wallet.scenes.settings.DebugColorSwatchesFragment"/>
 
 </navigation>

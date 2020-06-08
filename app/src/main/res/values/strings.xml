@@ -279,6 +279,7 @@
     <string name="settings_menu_privacy_policy">Privacy policy</string>
     <string name="settings_menu_terms_and_conditions">Terms and conditions</string>
     <string name="settings_menu_debug">Debug menu</string>
+    <string name="settings_menu_debug_colour_swatches">Wallet Colour Swatches</string>
     <string name="edit_email_address">Edit Email Address</string>
     <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
     <string name="please_enter_valid_email">Please enter a valid email address</string>
@@ -301,6 +302,7 @@
     <string name="debug_environment_base_url_title">Environment Base URL</string>
     <string name="debug_backend_version">Backend Version</string>
     <string name="debug_environment_open_zendesk_title">Launch Zendesk</string>
+    <string name="debug_backend_colour_swatches">Loyalty card secondary colour swatches</string>
     <string name="debug_current_email_address">Current email address</string>
     <string name="apply_changes">Apply changes</string>
     <string name="no_changes_to_apply">No changes to apply</string>

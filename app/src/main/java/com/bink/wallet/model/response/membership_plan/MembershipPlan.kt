@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.bink.wallet.model.response.membership_card.Card
 import com.bink.wallet.utils.enums.CardType
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
@@ -18,11 +19,13 @@ class MembershipPlan(
     @ColumnInfo(name = "account") val account: Account?,
     @ColumnInfo(name = "images") val images: List<Images>?,
     @ColumnInfo(name = "balances") val balances: List<Balances>?,
-    @ColumnInfo(name = "has_vouchers") val has_vouchers: Boolean? = null
+    @ColumnInfo(name = "has_vouchers") val has_vouchers: Boolean? = null,
+    @ColumnInfo(name = "card") val card: Card?
 ) : Parcelable {
 
     constructor(id: String) : this(
         id,
+        null,
         null,
         null,
         null,
