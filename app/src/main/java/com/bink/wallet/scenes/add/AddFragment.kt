@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
@@ -205,7 +204,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private fun navigateToBrowseBrands() {
         viewModel.membershipCards.value?.let {
-            Log.e("ConnorDebug", "membershipCards: " + it.size + " plans: " + args.membershipPlans.size)
             val directions = AddFragmentDirections.addToBrowse(
                 args.membershipPlans,
                 it.toTypedArray()

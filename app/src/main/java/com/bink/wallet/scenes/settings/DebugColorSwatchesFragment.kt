@@ -37,6 +37,4 @@ class DebugColorSwatchesFragment :
         }
         viewModel.getLocalMembershipCards()
     }
-
-
 }
