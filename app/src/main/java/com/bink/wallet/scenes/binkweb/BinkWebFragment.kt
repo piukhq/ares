@@ -10,10 +10,11 @@ import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BinkWebViewBinding
 import com.bink.wallet.R
-import com.bink.wallet.utils.NetworkUtils
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 
 class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     private val args by navArgs<BinkWebFragmentArgs>()
@@ -39,6 +40,22 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 binding.buttonBack.isEnabled = binding.webView.canGoBack()
                 binding.buttonNext.isEnabled = binding.webView.canGoForward()
             }
+
+            override fun onReceivedError(
+                view: WebView,
+                request: WebResourceRequest,
+                error: WebResourceError
+            ) {
+                binding.webView.visibility = View.INVISIBLE
+                requireContext().displayModalPopup(
+                    getString(R.string.webview_error_title),
+                    getString(R.string.webview_error_message),
+                    {
+                        findNavController().navigateUp()
+                    },
+                    isCancellable = false
+                )
+            }
         }
 
         binding.buttonRefresh.setOnClickListener {
@@ -54,16 +71,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             findNavController().navigateUp()
         }
 
-        if (NetworkUtils.isConnected(requireContext())) {
-            binding.webView.loadUrl(args.url)
-        } else {
-            requireContext().displayModalPopup(
-                getString(R.string.webview_error_title),
-                getString(R.string.webview_error_message),
-                {
-                    findNavController().navigateUp()
-                })
-        }
+        binding.webView.loadUrl(args.url)
     }
 
 }
