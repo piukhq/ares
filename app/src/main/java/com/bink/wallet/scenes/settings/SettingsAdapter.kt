@@ -61,8 +61,9 @@ class SettingsAdapter(
             } else {
                 var separator = false
                 if (position < itemsList.size - 1) {
-                    if (itemsList[position + 1]?.type != SettingsItemType.HEADER &&
-                        itemsList[position + 1]?.type != SettingsItemType.FOOTER
+                    val nextItemType = itemsList[position + 1]?.type
+                    if (nextItemType != SettingsItemType.HEADER &&
+                        nextItemType != SettingsItemType.FOOTER
                     ) {
                         separator = true
                     }
