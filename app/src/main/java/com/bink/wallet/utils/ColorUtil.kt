@@ -38,7 +38,7 @@ class ColorUtil {
             return adjustColor(color, percentage, false)
         }
 
-        private fun adjustColor(color: Int, percentage: Float, isDark: Boolean): String {
+        private fun adjustColor(color: Int, percentage: Float, shouldDarkenColour: Boolean): String {
             val red = Color.red(color)
             val green = Color.green(color)
             val blue = Color.blue(color)
@@ -61,15 +61,15 @@ class ColorUtil {
 
             // Lighten or darken the colour
             val updatedRed =
-                if (isDark) red.minus(percentageRed) else red.plus(
+                if (shouldDarkenColour) red.minus(percentageRed) else red.plus(
                     percentageRed
                 )
             val updatedGreen =
-                if (isDark) green.minus(percentageGreen) else green.plus(
+                if (shouldDarkenColour) green.minus(percentageGreen) else green.plus(
                     percentageGreen
                 )
             val updatedBlue =
-                if (isDark) blue.minus(percentageBlue) else blue.plus(
+                if (shouldDarkenColour) blue.minus(percentageBlue) else blue.plus(
                     percentageBlue
                 )
 
@@ -81,11 +81,12 @@ class ColorUtil {
 
             val newHex: String
 
-            if (isDark) {
+            if (shouldDarkenColour) {
                 newHex =
                     String.format(HEX_FORMAT, newRed.toInt(), newGreen.toInt(), newBlue.toInt())
             } else {
-                // If the colour is determined light,
+                // If the colour is deemed dark therefore meaning we need to lighten the secondary
+                // color, we'll also add an opacity to the hex. 
                 val alpha = (MAX_RGB_SCALE * ALPHA_PERCENT / 100).toInt()
                 newHex = String.format(
                     HEX_ALPHA_FORMAT,
