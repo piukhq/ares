@@ -53,7 +53,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                     {
                         findNavController().navigateUp()
                     },
-                    isCancellable = false
+                    isCancelable = false
                 )
             }
         }
