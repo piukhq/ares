@@ -52,7 +52,8 @@ class AddCardFragment : BaseAddAuthFragment() {
     override fun onResume() {
         super.onResume()
         currentMembershipPlan?.let {
-            viewModel.addItems(it)
+            val shouldExcludeBarcode = barcode.isNullOrEmpty()
+            viewModel.addItems(it, shouldExcludeBarcode)
         }
         logScreenView(ADD_AUTH_FORM_VIEW)
     }

@@ -4,19 +4,25 @@ import com.bink.wallet.R
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.BARCODE
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 
 class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletRepository) :
     AddAuthViewModel(loyaltyWalletRepository) {
 
-    override fun addItems(membershipPlan: MembershipPlan) {
-        super.addItems(membershipPlan)
+    override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
+        super.addItems(membershipPlan, shouldExcludeBarcode)
         membershipPlan.let {
             it.account?.let { account ->
                 account.add_fields?.forEach { planField ->
-                    planField.typeOfField = TypeOfField.ADD
-                    addPlanField(planField)
+                    if (shouldExcludeBarcode && !planField.column.equals(BARCODE)) {
+                        planField.typeOfField = TypeOfField.ADD
+                        addPlanField(planField)
+                    } else if (!shouldExcludeBarcode) {
+                        planField.typeOfField = TypeOfField.ADD
+                        addPlanField(planField)
+                    }
                 }
                 account.authorise_fields?.forEach { planField ->
                     planField.typeOfField = TypeOfField.AUTH

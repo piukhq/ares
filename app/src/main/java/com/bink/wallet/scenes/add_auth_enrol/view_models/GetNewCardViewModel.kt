@@ -9,8 +9,8 @@ import com.bink.wallet.utils.enums.TypeOfField
 class GetNewCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
     AddAuthViewModel(loyaltyWalletRepository) {
 
-    override fun addItems(membershipPlan: MembershipPlan) {
-        super.addItems(membershipPlan)
+    override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
+        super.addItems(membershipPlan, shouldExcludeBarcode)
         membershipPlan.account?.enrol_fields?.map {
             it.typeOfField = TypeOfField.ENROL
             addPlanField(it)
