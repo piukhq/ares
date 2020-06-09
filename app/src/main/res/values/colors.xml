@@ -51,4 +51,7 @@
     <!-- Payment Card Scanning - The following colors are overriding bouncer's library -->
     <color name="card_scan_corner_color">#FFF</color>
 
+    <!-- Settings -->
+    <color name="setings_thirty_pct_black">#4D000000</color>
+
 </resources>
