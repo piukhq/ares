@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
+import android.util.Log
 import kotlin.math.max
 import kotlin.math.min
 
@@ -12,6 +13,9 @@ class ColorUtil {
         const val LIGHT_THRESHOLD = 0.5f
         const val COLOR_CHANGE_PERCENTAGE = 30.0f
         const val HEX_FORMAT = "#%02x%02x%02x"
+        const val HEX_ALPHA_FORMAT = "#%02x%02x%02x%02x"
+        const val ALPHA_PERCENT = 70.0f
+        const val MAX_RGB_SCALE = 255
 
         // The algorithm used here is from http://www.w3.org/WAI/ER/WD-AERT/#color-contrast
         fun isColorLight(color: Int, threshold: Float = LIGHT_THRESHOLD): Boolean {
@@ -19,7 +23,7 @@ class ColorUtil {
             val green = Color.green(color)
             val blue = Color.blue(color)
 
-            val maximumBrightness = (((255 * 299.0) + (255 * 587.0) + (255 * 114.0)) / 1000.0)
+            val maximumBrightness = (((MAX_RGB_SCALE * 299.0) + (MAX_RGB_SCALE * 587.0) + (MAX_RGB_SCALE * 114.0)) / 1000.0)
             val brightness = (((red * 299.0) + (green * 587.0) + (blue * 114.0)) / 1000.0)
             val actualBrightness = brightness / maximumBrightness
 
@@ -46,9 +50,9 @@ class ColorUtil {
             // If the colour is black, we need to take a % of the total RGB range. This
             // allows us to calculate how much to lighten the colour by.
             if (red == 0 && green == 0 && blue == 0) {
-                percentageRed = 255 * percentage / 100
-                percentageGreen = 255 * percentage / 100
-                percentageBlue = 255 * percentage / 100
+                percentageRed = MAX_RGB_SCALE * percentage / 100
+                percentageGreen = MAX_RGB_SCALE * percentage / 100
+                percentageBlue = MAX_RGB_SCALE * percentage / 100
             } else {
                 percentageRed = red * percentage / 100
                 percentageGreen = green * percentage / 100
@@ -71,12 +75,28 @@ class ColorUtil {
 
             // Workout the new colour, we want to avoid negatives and colours greater than
             // the RGB scale
-            val newRed = min(max(0f, updatedRed), 255f)
-            val newGreen = min(max(0f, updatedGreen), 255f)
-            val newBlue = min(max(0f, updatedBlue), 255f)
+            val newRed = min(max(0f, updatedRed), MAX_RGB_SCALE.toFloat())
+            val newGreen = min(max(0f, updatedGreen), MAX_RGB_SCALE.toFloat())
+            val newBlue = min(max(0f, updatedBlue), MAX_RGB_SCALE.toFloat())
 
-            val newHex =
-                String.format(HEX_FORMAT, newRed.toInt(), newGreen.toInt(), newBlue.toInt())
+            Log.e("ConnorDebug", "255 * ALPHA_PERCENT / 100: " + MAX_RGB_SCALE * ALPHA_PERCENT / 100)
+
+            val newHex: String
+
+            if (isDark) {
+                newHex =
+                    String.format(HEX_FORMAT, newRed.toInt(), newGreen.toInt(), newBlue.toInt())
+            } else {
+                // If the colour is determined light,
+                val alpha = (MAX_RGB_SCALE * ALPHA_PERCENT / 100).toInt()
+                newHex = String.format(
+                    HEX_ALPHA_FORMAT,
+                    alpha,
+                    newRed.toInt(),
+                    newGreen.toInt(),
+                    newBlue.toInt()
+                )
+            }
 
             return newHex
         }
