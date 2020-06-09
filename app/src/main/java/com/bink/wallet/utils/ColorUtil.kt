@@ -1,7 +1,6 @@
 package com.bink.wallet.utils
 
 import android.graphics.Color
-import android.util.Log
 import kotlin.math.max
 import kotlin.math.min
 
@@ -23,7 +22,8 @@ class ColorUtil {
             val green = Color.green(color)
             val blue = Color.blue(color)
 
-            val maximumBrightness = (((MAX_RGB_SCALE * 299.0) + (MAX_RGB_SCALE * 587.0) + (MAX_RGB_SCALE * 114.0)) / 1000.0)
+            val maximumBrightness =
+                (((MAX_RGB_SCALE * 299.0) + (MAX_RGB_SCALE * 587.0) + (MAX_RGB_SCALE * 114.0)) / 1000.0)
             val brightness = (((red * 299.0) + (green * 587.0) + (blue * 114.0)) / 1000.0)
             val actualBrightness = brightness / maximumBrightness
 
@@ -78,8 +78,6 @@ class ColorUtil {
             val newRed = min(max(0f, updatedRed), MAX_RGB_SCALE.toFloat())
             val newGreen = min(max(0f, updatedGreen), MAX_RGB_SCALE.toFloat())
             val newBlue = min(max(0f, updatedBlue), MAX_RGB_SCALE.toFloat())
-
-            Log.e("ConnorDebug", "255 * ALPHA_PERCENT / 100: " + MAX_RGB_SCALE * ALPHA_PERCENT / 100)
 
             val newHex: String
 
