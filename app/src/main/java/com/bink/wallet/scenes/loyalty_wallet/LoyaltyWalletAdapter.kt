@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
@@ -17,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
+import com.bink.wallet.utils.ColorUtil
 import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
@@ -175,9 +177,11 @@ class LoyaltyWalletAdapter(
                 bindVouchersToDisplay(cardBinding, currentMembershipPlan, item)
             }
             with(cardBinding.cardView) {
-                setFirstColor(Color.parseColor(context.getString(R.string.default_card_second_color)))
+                setFirstColor(Color.parseColor(item.card?.getSecondaryColor()))
                 setSecondColor(Color.parseColor(item.card?.colour))
             }
+
+            bindSecondaryColorChanges(cardBinding, Color.parseColor(item.card?.colour))
         }
 
         private fun LoyaltyWalletAdapter.bindVouchersToDisplay(
@@ -257,6 +261,30 @@ class LoyaltyWalletAdapter(
                     }
                 }
             }
+        }
+
+        private fun bindSecondaryColorChanges(binding: CardItemBinding, primaryColor: Int) {
+            val textColor: Int
+            if (ColorUtil.isColorLight(
+                    primaryColor,
+                    ColorUtil.LIGHT_THRESHOLD_TEXT
+                )
+            ) {
+                textColor = android.R.color.black
+            } else {
+                textColor = android.R.color.white
+            }
+
+            binding.companyName.setTextColor(binding.root.context.getColor(textColor))
+            binding.loyaltyValue.setTextColor(binding.root.context.getColor(textColor))
+            binding.loyaltyValueExtra.setTextColor(binding.root.context.getColor(textColor))
+            binding.linkStatusText.setTextColor(binding.root.context.getColor(textColor))
+            binding.linkStatusImg.setColorFilter(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    textColor
+                ), android.graphics.PorterDuff.Mode.MULTIPLY
+            )
         }
     }
 

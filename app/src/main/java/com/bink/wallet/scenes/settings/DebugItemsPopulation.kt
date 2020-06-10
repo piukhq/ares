@@ -41,6 +41,13 @@ object DebugItemsPopulation {
                 )
             )
         }
+        itemsList.add(
+            DebugItem(
+                res.getString(R.string.debug_backend_colour_swatches),
+                "",
+                DebugItemType.COLOR_SWATCHES
+            )
+        )
         return itemsList
     }
 
