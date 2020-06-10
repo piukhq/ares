@@ -117,7 +117,7 @@ object SettingsItemsPopulation {
             )
         )
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
             itemsList.add(
                 SettingsItem(
                     res.getString(R.string.settings_menu_debug),
