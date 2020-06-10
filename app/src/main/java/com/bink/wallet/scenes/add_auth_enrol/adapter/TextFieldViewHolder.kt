@@ -1,8 +1,6 @@
 import android.app.DatePickerDialog
 import android.graphics.Color
-import android.text.InputFilter
 import android.text.InputType
-import android.text.Spanned
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.bink.wallet.R
@@ -89,18 +87,6 @@ class TextFieldViewHolder(
             }
 
             if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
-                binding.contentAddAuthText.filters = arrayOf(object : InputFilter.AllCaps() {
-                    override fun filter(
-                        source: CharSequence?,
-                        start: Int,
-                        end: Int,
-                        dest: Spanned?,
-                        dstart: Int,
-                        dend: Int
-                    ): CharSequence {
-                        return source.toString().toLowerCase(Locale.ROOT)
-                    }
-                })
                 addTextChangedListener(emailTextWatcher)
             } else {
                 addTextChangedListener(textWatcher)
