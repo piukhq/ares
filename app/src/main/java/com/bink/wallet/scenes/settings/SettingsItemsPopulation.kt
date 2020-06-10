@@ -135,6 +135,15 @@ object SettingsItemsPopulation {
                 )
             )
         }
+
+        itemsList.add(
+            SettingsItem(
+                null,
+                null,
+                SettingsItemType.FOOTER,
+                null
+            )
+        )
         return itemsList
     }
 }

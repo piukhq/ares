@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "settings_item")
 data class SettingsItem(
-    val title: String,
+    val title: String?,
     val value: String?,
     val type: SettingsItemType,
     val url: String?

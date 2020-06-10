@@ -64,9 +64,17 @@ class SettingsFragment :
         binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
 
+        var email = ""
+
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
+            email = it
+        }
+
         val settingsAdapter = SettingsAdapter(
             viewModel.itemsList,
-            itemClickListener = { settingsItemClick(it) })
+            itemClickListener = { settingsItemClick(it) },
+            usersEmail = email
+        )
 
         binding.settingsContainer.apply {
             layoutManager = LinearLayoutManager(activity)

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.databinding.SettingsFooterBinding
 import com.bink.wallet.databinding.SettingsHeaderBinding
 import com.bink.wallet.databinding.SettingsItemBinding
 import com.bink.wallet.model.ListLiveData
@@ -14,13 +15,15 @@ import com.bink.wallet.utils.setSafeOnClickListener
 
 class SettingsAdapter(
     private val itemsList: ListLiveData<SettingsItem>,
-    val itemClickListener: (SettingsItem) -> Unit = {}
+    val itemClickListener: (SettingsItem) -> Unit = {},
+    val usersEmail: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), LifecycleObserver {
 
     companion object {
         const val HEADER = 0
         const val ITEM = 1
+        const val FOOTER = 2
     }
 
     override fun onCreateViewHolder(
@@ -30,6 +33,8 @@ class SettingsAdapter(
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == HEADER) {
             SettingsHeaderViewHolder(SettingsHeaderBinding.inflate(inflater))
+        } else if (viewType == FOOTER) {
+            SettingsFooterViewHolder(SettingsFooterBinding.inflate(inflater, parent, false))
         } else {
             SettingsViewHolder(SettingsItemBinding.inflate(inflater), itemClickListener)
         }
@@ -40,6 +45,8 @@ class SettingsAdapter(
     override fun getItemViewType(position: Int): Int {
         return if (itemsList[position]?.type == SettingsItemType.HEADER) {
             HEADER
+        } else if (itemsList[position]?.type == SettingsItemType.FOOTER) {
+            FOOTER
         } else {
             ITEM
         }
@@ -49,10 +56,15 @@ class SettingsAdapter(
         itemsList[position]?.let {
             if (it.type == SettingsItemType.HEADER) {
                 (holder as SettingsHeaderViewHolder).bind(it)
+            } else if (it.type == SettingsItemType.FOOTER) {
+                (holder as SettingsFooterViewHolder).bind(usersEmail)
             } else {
                 var separator = false
                 if (position < itemsList.size - 1) {
-                    if (itemsList[position + 1]?.type != SettingsItemType.HEADER) {
+                    val nextItemType = itemsList[position + 1]?.type
+                    if (nextItemType != SettingsItemType.HEADER &&
+                        nextItemType != SettingsItemType.FOOTER
+                    ) {
                         separator = true
                     }
                 }
