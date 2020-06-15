@@ -79,7 +79,8 @@ fun Context.displayModalPopup(
     message: String?,
     okAction: () -> Unit = {},
     buttonText: Int = R.string.ok,
-    hasNegativeButton: Boolean = false
+    hasNegativeButton: Boolean = false,
+    isCancelable: Boolean = true
 ) {
     val builder = AlertDialog.Builder(this)
 
@@ -94,6 +95,8 @@ fun Context.displayModalPopup(
     builder.setNeutralButton(buttonText) { _, _ ->
         okAction()
     }
+
+    builder.setCancelable(isCancelable)
 
     if (hasNegativeButton) {
         builder.setNegativeButton(R.string.cancel_text) { dialogInterface, _ ->
