@@ -83,7 +83,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/loyalty_voucher_margin"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
-                    android:layout_marginEnd="@dimen/margin_padding_size_small"
                     app:currentProgress="@{voucher.earn.value.intValue()}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

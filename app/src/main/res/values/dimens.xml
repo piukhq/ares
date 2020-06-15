@@ -153,7 +153,8 @@
     <dimen name="voucher_details_code_padding_bottom">32dp</dimen>
     <dimen name="voucher_details_first_date_margin_top">12dp</dimen>
     <dimen name="voucher_stamp_size">24dp</dimen>
-    <dimen name="voucher_stamp_margin_horizontal">12dp</dimen>
+    <dimen name="voucher_stamp_margin_horizontal">13dp</dimen>
+    <dimen name="voucher_stamp_margin_bottom_horizontal">13dp</dimen>
     <dimen name="voucher_stamp_width">7dp</dimen>
 
     <!-- LCD -->
