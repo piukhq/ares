@@ -27,6 +27,8 @@ object FirebaseEvents {
     const val PREFERENCES_VIEW = "Preferences"
     const val SPLASH_VIEW = "SplashScreen"
     const val ADD_LOYALTY_CARD_VIEW = "AddLoyaltyCard"
+    const val PAYMENT_CARD_SCAN = "payment_scan"
+    const val PAYMENT_CARD_SCAN_SUCCESS = "success"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

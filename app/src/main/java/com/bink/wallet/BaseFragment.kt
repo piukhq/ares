@@ -88,6 +88,18 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         logFirebaseEvent(identifierValue)
     }
 
+    protected fun logEvent(name: String, parameters: Map<String, String>) {
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+            val bundle = Bundle()
+
+            for (entry: Map.Entry<String, String> in parameters) {
+                bundle.putString(entry.key, entry.value)
+            }
+
+            (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
+        }
+    }
+
     protected fun logScreenView(screenName: String) {
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             (requireActivity() as MainActivity).firebaseAnalytics.setCurrentScreen(
