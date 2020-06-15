@@ -16,6 +16,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
 import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
+import com.bink.wallet.utils.FirebaseEvents.PAYMENT_CARD_SCAN
+import com.bink.wallet.utils.FirebaseEvents.PAYMENT_CARD_SCAN_SUCCESS
 import com.bink.wallet.utils.INT_ONE_HUNDRED
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.navigateIfAdded
@@ -77,6 +79,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             if (resultCode == ScanActivity.RESULT_OK && data != null) {
                 val scanResult = ScanActivity.creditCardFromResult(data)
                 scanResult?.number?.let { safeCardNumber ->
+                    logPaymentCardSuccess(true)
                     navigateToAddPaymentCard(safeCardNumber)
                 }
             } else if (resultCode == ScanActivity.RESULT_CANCELED) {
@@ -88,6 +91,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                     ) {
                         navigateToAddPaymentCard()
                     } else if (safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false)) {
+                        logPaymentCardSuccess(false)
                         DialogFactory.showTryAgainGenericError(requireActivity())
                     } else {
                         // We don't need to do anything here as this condition is when the user
@@ -232,6 +236,12 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             false,
             true
         )
+    }
+
+    private fun logPaymentCardSuccess(wasSuccess: Boolean) {
+        val map = HashMap<String, String>()
+        map[PAYMENT_CARD_SCAN_SUCCESS] = if (wasSuccess) "1" else "0"
+        logEvent(PAYMENT_CARD_SCAN, map)
     }
 
     companion object {
