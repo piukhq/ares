@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.databinding.DebugMenuEditTextBinding
 import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
@@ -135,6 +136,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             )
 
         val editTextView = layoutInflater.inflate(R.layout.debug_menu_edit_text, null)
+        val adbBinding = DebugMenuEditTextBinding.bind(editTextView)
         adb.setView(editTextView)
 
         var selection = -1
@@ -149,8 +151,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
                 2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
-                else -> if (editTextView.et_custom_base_url.text.toString().trim().isNotEmpty()) {
-                    SharedPreferenceManager.storedApiUrl = editTextView.et_custom_base_url.text.toString()
+                else -> if (adbBinding.etCustomBaseUrl.text.toString().trim().isNotEmpty()) {
+                    SharedPreferenceManager.storedApiUrl =
+                        adbBinding.etCustomBaseUrl.text.toString()
                 }
             }
             shouldApplyChanges = true
