@@ -71,7 +71,10 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         addAuthItemsList.forEach { addAuthItem ->
             addAuthItem.fieldsRequest?.let {
                 if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-                    when ((addAuthItem.fieldType as PlanField).typeOfField) {
+                    (addAuthItem.fieldType as PlanField)
+                    it.isSensitive = addAuthItem.fieldType.type == FieldType.SENSITIVE.type
+
+                    when (addAuthItem.fieldType.typeOfField) {
                         TypeOfField.ADD -> addRegisterFieldsRequest.add_fields?.add(addAuthItem.fieldsRequest)
                         TypeOfField.AUTH -> addRegisterFieldsRequest.authorise_fields?.add(
                             addAuthItem.fieldsRequest
