@@ -3,8 +3,6 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -19,6 +17,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.android.synthetic.main.debug_menu_edit_text.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
@@ -135,15 +134,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 ApiVersion.DAEDALUS.name
             )
 
-        val customBaseUrl = EditText(requireContext())
-        customBaseUrl.hint = requireContext().getString(R.string.custom_base_url_hint)
-        val editTextLayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        customBaseUrl.layoutParams = editTextLayoutParams
-
-        adb.setView(customBaseUrl)
+        val editTextView = layoutInflater.inflate(R.layout.debug_menu_edit_text, null)
+        adb.setView(editTextView)
 
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
@@ -157,8 +149,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
                 2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
-                else -> if (customBaseUrl.text.toString().trim().isNotEmpty()) {
-                    SharedPreferenceManager.storedApiUrl = customBaseUrl.text.toString()
+                else -> if (editTextView.et_custom_base_url.text.toString().trim().isNotEmpty()) {
+                    SharedPreferenceManager.storedApiUrl = editTextView.et_custom_base_url.text.toString()
                 }
             }
             shouldApplyChanges = true
