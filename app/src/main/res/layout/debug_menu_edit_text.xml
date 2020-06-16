@@ -7,10 +7,10 @@
     <EditText
         android:id="@+id/et_custom_base_url"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/custom_margin_add_fragment"
         android:layout_marginEnd="@dimen/custom_margin_add_fragment"
-        android:hint="@string/custom_base_url_hint"
-        android:layout_height="wrap_content" />
+        android:hint="@string/custom_base_url_hint" />
 
 
 </LinearLayout>
