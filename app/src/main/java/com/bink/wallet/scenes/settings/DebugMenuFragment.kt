@@ -3,6 +3,8 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -132,6 +134,17 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 ApiVersion.STAGING.name,
                 ApiVersion.DAEDALUS.name
             )
+
+        val customBaseUrl = EditText(requireContext())
+        customBaseUrl.hint = requireContext().getString(R.string.custom_base_url_hint)
+        val editTextLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        customBaseUrl.layoutParams = editTextLayoutParams
+
+        adb.setView(customBaseUrl)
+
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
             selection = n
@@ -144,6 +157,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
                 2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
+                else -> if (customBaseUrl.text.toString().trim().isNotEmpty()) {
+                    SharedPreferenceManager.storedApiUrl = customBaseUrl.text.toString()
+                }
             }
             shouldApplyChanges = true
         }

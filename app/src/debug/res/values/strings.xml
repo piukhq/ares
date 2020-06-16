@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Bink α</string>
+    //Debug menu
+    <string name="custom_base_url_hint">Enter base url</string>
 </resources>
