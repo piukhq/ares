@@ -56,8 +56,12 @@ class VoucherDetailsFragment :
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
-                    if (voucher.state != VoucherStates.EXPIRED.state) {
+                    if (voucher.state == VoucherStates.EXPIRED.state || voucher.state == VoucherStates.REDEEMED.state) {
+                        binding.code.visibility = View.GONE
+
+                    } else {
                         binding.code.textAndShow(voucher.code)
+
                     }
                     when (voucher.state) {
                         VoucherStates.IN_PROGRESS.state -> {
