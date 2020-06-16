@@ -56,7 +56,9 @@ class VoucherDetailsFragment :
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
-                    binding.code.textAndShow(voucher.code)
+                    if (voucher.state != VoucherStates.EXPIRED.state) {
+                        binding.code.textAndShow(voucher.code)
+                    }
                     when (voucher.state) {
                         VoucherStates.IN_PROGRESS.state -> {
                             setInProgressVoucher(earn, burn)
