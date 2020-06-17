@@ -51,6 +51,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     // Zendesk Keys
     private external fun zendeskSandboxUrl(): String
+
     private external fun zendeskSandboxAppId(): String
     private external fun zendeskSandboxOAuthId(): String
     private external fun zendeskProdUrl(): String
@@ -59,6 +60,8 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     // Bouncer
     private external fun bouncerDevKey(): String
+
+    private external fun bouncerProdKey(): String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -209,9 +212,15 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun persistBouncerKeys() {
+        var bouncerKey = bouncerDevKey()
+
+        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH)) {
+            bouncerKey = bouncerProdKey()
+        }
+
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_BOUNCER_KEY,
-            bouncerDevKey()
+            bouncerKey
         )
     }
 

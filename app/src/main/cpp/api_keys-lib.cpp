@@ -151,7 +151,15 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_bink_wallet_scenes_splash_SplashFragment_bouncerDevKey(
         JNIEnv *env,
         jobject /* this */) {
-    std::string key = "Voz9sedU6rx8iDeCAZB9M_htNkpBizd5";
+    std::string key = "H0lUg0d0dtg9whJr5JN_oz1WgzaKHDGE";
+    return env->NewStringUTF(key.c_str());
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_bink_wallet_scenes_splash_SplashFragment_bouncerProdKey(
+        JNIEnv *env,
+        jobject /* this */) {
+    std::string key = "cWSWCwxWzjaMCnSdGfgU9syEqRQeGP7E";
     return env->NewStringUTF(key.c_str());
 }
 
