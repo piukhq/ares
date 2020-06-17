@@ -9,6 +9,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.databinding.DebugMenuEditTextBinding
 import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
@@ -17,6 +18,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.android.synthetic.main.debug_menu_edit_text.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
@@ -132,6 +134,11 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 ApiVersion.STAGING.name,
                 ApiVersion.DAEDALUS.name
             )
+
+        val editTextView = layoutInflater.inflate(R.layout.debug_menu_edit_text, null)
+        val adbBinding = DebugMenuEditTextBinding.bind(editTextView)
+        adb.setView(editTextView)
+
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
             selection = n
@@ -144,6 +151,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 0 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DEV.url
                 1 -> SharedPreferenceManager.storedApiUrl = ApiVersion.STAGING.url
                 2 -> SharedPreferenceManager.storedApiUrl = ApiVersion.DAEDALUS.url
+                else -> if (adbBinding.etCustomBaseUrl.text.toString().trim().isNotEmpty()) {
+                    SharedPreferenceManager.storedApiUrl =
+                        adbBinding.etCustomBaseUrl.text.toString()
+                }
             }
             shouldApplyChanges = true
         }
