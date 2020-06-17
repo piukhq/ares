@@ -12,7 +12,6 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SecurityUtils
-import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
@@ -210,6 +209,10 @@ class LoyaltyWalletRepository(
         membershipCardData: MutableLiveData<MembershipCard>,
         createCardError: MutableLiveData<Exception>
     ) {
+        membershipCardRequest.account?.let { safeAccount ->
+            encryptMembershipCardFields(safeAccount)
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
             withContext(Dispatchers.Main) {

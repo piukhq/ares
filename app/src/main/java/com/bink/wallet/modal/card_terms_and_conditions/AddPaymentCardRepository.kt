@@ -43,7 +43,6 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>
     ) {
 
-        encryptCardDetails(card, cardNumber)
 
         // Here we send the users payment card to SpreedlyRetrofit before making a request to Binks API.
         // This can only happen on release, so we have to guard it with the following condition.
@@ -99,6 +98,7 @@ class AddPaymentCardRepository(
                 }
             }
         } else {
+            encryptCardDetails(card, cardNumber)
             doAddPaymentCard(card, mutableAddCard, error)
         }
     }
