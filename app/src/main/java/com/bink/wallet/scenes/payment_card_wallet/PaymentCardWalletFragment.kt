@@ -153,6 +153,9 @@ class PaymentCardWalletFragment :
             binding.swipeRefresh.isRefreshing = false
             viewModel.fetchLocalData()
         }
+        binding.settingsButton.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.settings_screen)
+        }
     }
 
     private fun populateWallet() {

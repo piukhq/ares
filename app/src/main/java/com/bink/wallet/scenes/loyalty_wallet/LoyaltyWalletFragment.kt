@@ -197,6 +197,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
         })
+
+        binding.settingsButton.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.settings_screen)
+        }
     }
 
     override fun onPause() {
