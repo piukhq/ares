@@ -50,6 +50,13 @@ class PaymentCardWalletFragment :
         viewModel.getPeriodicPaymentCards()
 
         logScreenView(PAYMENT_WALLET_VIEW)
+
+        if (ZendeskUtils.responseHasBeenReceived()) {
+            binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
+        } else {
+            binding.settingsButton.setImageResource(R.drawable.ic_settings)
+
+        }
     }
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :

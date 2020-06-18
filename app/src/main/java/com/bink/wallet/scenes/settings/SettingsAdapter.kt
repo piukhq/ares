@@ -24,6 +24,7 @@ class SettingsAdapter(
         const val HEADER = 0
         const val ITEM = 1
         const val FOOTER = 2
+        const val CONTACT_US = "Contact us"
     }
 
     override fun onCreateViewHolder(
@@ -80,6 +81,13 @@ class SettingsAdapter(
         fun bind(item: SettingsItem, separator: Boolean) {
             with(binding) {
                 this.item = item
+
+                if (item.title.equals(CONTACT_US, true)) {
+                    binding.notificationOval.visibility = View.VISIBLE
+                } else {
+                    binding.notificationOval.visibility = View.GONE
+                }
+
                 value.visibility =
                     if (item.value.isNullOrEmpty()) {
                         View.GONE
