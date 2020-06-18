@@ -19,14 +19,8 @@ import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
-import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -103,6 +97,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         logScreenView(LOYALTY_WALLET_VIEW)
+
+        if (ZendeskUtils.responseHasBeenReceived()) {
+            binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
+        } else {
+            binding.settingsButton.setImageResource(R.drawable.ic_settings)
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
