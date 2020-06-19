@@ -187,7 +187,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
             binding.swipeLayout.isEnabled = true
         }
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
