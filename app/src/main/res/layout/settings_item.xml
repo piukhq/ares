@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_small"
-            android:paddingTop="20dp"
+            android:paddingTop="@dimen/notification_oval_padding"
             android:src="@drawable/ic_notified_oval"
             app:layout_constraintBottom_toBottomOf="@+id/title"
             app:layout_constraintStart_toEndOf="@id/title"

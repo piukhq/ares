@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SettingsFooterBinding
 import com.bink.wallet.databinding.SettingsHeaderBinding
 import com.bink.wallet.databinding.SettingsItemBinding
@@ -74,7 +75,7 @@ class SettingsAdapter(
         }
     }
 
-    class SettingsViewHolder(
+    inner class SettingsViewHolder(
         val binding: SettingsItemBinding,
         val itemClickListener: (SettingsItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -82,7 +83,11 @@ class SettingsAdapter(
             with(binding) {
                 this.item = item
 
-                if (item.title.equals(CONTACT_US, true)) {
+                if (item.title.equals(
+                        CONTACT_US,
+                        true
+                    ) && SharedPreferenceManager.isResponseAvailable && !SharedPreferenceManager.hasContactUsBeenClicked
+                ) {
                     binding.notificationOval.visibility = View.VISIBLE
                 } else {
                     binding.notificationOval.visibility = View.GONE
@@ -100,7 +105,15 @@ class SettingsAdapter(
                     } else {
                         View.INVISIBLE
                     }
-                root.setSafeOnClickListener { itemClickListener(item) }
+                root.setSafeOnClickListener {
+                    if (item.title.equals(CONTACT_US, true)) {
+                        binding.notificationOval.visibility = View.GONE
+                        notifyItemChanged(adapterPosition)
+                        SharedPreferenceManager.hasContactUsBeenClicked = true
+
+                    }
+                    itemClickListener(item)
+                }
                 executePendingBindings()
             }
         }

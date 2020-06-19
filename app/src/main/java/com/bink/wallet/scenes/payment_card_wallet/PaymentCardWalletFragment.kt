@@ -51,7 +51,7 @@ class PaymentCardWalletFragment :
 
         logScreenView(PAYMENT_WALLET_VIEW)
 
-        if (ZendeskUtils.responseHasBeenReceived()) {
+        if (ZendeskUtils.hasResponseBeenReceived()) {
             binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
         } else {
             binding.settingsButton.setImageResource(R.drawable.ic_settings)
