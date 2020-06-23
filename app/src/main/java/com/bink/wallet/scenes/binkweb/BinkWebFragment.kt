@@ -27,6 +27,8 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
         return FragmentToolbar.Builder().build()
     }
 
+    private var hasOpenedEmail = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.webView.webViewClient = object : WebViewClient() {
@@ -49,6 +51,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             ) {
                 binding.webView.visibility = View.INVISIBLE
                 if (request.url.toString().startsWith("mailto:")) {
+                    hasOpenedEmail = true
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "message/rfc882"
                     intent.putExtra(
@@ -85,6 +88,13 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
         }
 
         binding.webView.loadUrl(args.url)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (hasOpenedEmail) {
+            findNavController().navigateUp()
+        }
     }
 
     private fun showWebViewError() {
