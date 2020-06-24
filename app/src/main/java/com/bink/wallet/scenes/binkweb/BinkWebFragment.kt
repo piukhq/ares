@@ -15,6 +15,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.content.Intent
 
 class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     private val args by navArgs<BinkWebFragmentArgs>()
@@ -25,6 +26,8 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder().build()
     }
+
+    private var hasOpenedEmail = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,14 +50,27 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 error: WebResourceError
             ) {
                 binding.webView.visibility = View.INVISIBLE
-                requireContext().displayModalPopup(
-                    getString(R.string.webview_error_title),
-                    getString(R.string.webview_error_message),
-                    {
-                        findNavController().navigateUp()
-                    },
-                    isCancelable = false
-                )
+                if (request.url.toString().startsWith("mailto:")) {
+                    hasOpenedEmail = true
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.type = "message/rfc882"
+                    intent.putExtra(
+                        Intent.EXTRA_EMAIL,
+                        arrayOf(request.url.toString().split(":")[1])
+                    )
+                    try {
+                        startActivity(
+                            Intent.createChooser(
+                                intent,
+                                getString(R.string.contact_us_select_email_client)
+                            )
+                        )
+                    } catch (e: Exception) {
+                        showWebViewError()
+                    }
+                } else {
+                    showWebViewError()
+                }
             }
         }
 
@@ -72,6 +88,24 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
         }
 
         binding.webView.loadUrl(args.url)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (hasOpenedEmail) {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun showWebViewError() {
+        requireContext().displayModalPopup(
+            getString(R.string.webview_error_title),
+            getString(R.string.webview_error_message),
+            {
+                findNavController().navigateUp()
+            },
+            isCancelable = false
+        )
     }
 
 }
