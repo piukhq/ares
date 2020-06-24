@@ -45,7 +45,7 @@ class StampsProgressIndicator @JvmOverloads constructor(
                             0,
                             0,
                             resources.getDimension(R.dimen.voucher_stamp_margin_horizontal).toInt(),
-                            0
+                            resources.getDimension(R.dimen.voucher_stamp_margin_bottom_horizontal).toInt()
                         )
                     }
                 }
