@@ -22,6 +22,7 @@ import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.ZendeskUtils
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.navigateIfAdded
@@ -103,6 +104,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         logScreenView(LOYALTY_WALLET_VIEW)
+
+        if (ZendeskUtils.hasResponseBeenReceived()) {
+            binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
+        } else {
+            binding.settingsButton.setImageResource(R.drawable.ic_settings)
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -196,6 +204,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
         })
+
+        binding.settingsButton.setOnClickListener {
+            findNavController().navigateIfAdded(this, R.id.settings_screen)
+        }
     }
 
     override fun onPause() {

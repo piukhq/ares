@@ -22,6 +22,8 @@ object SharedPreferenceManager {
     private const val BACKEND_VERSION = "backendVersion"
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
+    private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
+    private const val CONTACT_US_CLICKED = "contactUsClicked"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -99,6 +101,18 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(IS_USER_LOGGED_IN_KEY, false)
         set(value) = preferences.edit {
             it.putBoolean(IS_USER_LOGGED_IN_KEY, value)
+        }
+
+    var isResponseAvailable: Boolean
+        get() = preferences.getBoolean(ZENDESK_REQUEST_UPDATE, false)
+        set(value) = preferences.edit {
+            it.putBoolean(ZENDESK_REQUEST_UPDATE, value)
+        }
+
+    var hasContactUsBeenClicked:Boolean
+        get() = preferences.getBoolean(CONTACT_US_CLICKED,false)
+        set(value) = preferences.edit{
+            it.putBoolean(CONTACT_US_CLICKED,value)
         }
 
     fun clear() {

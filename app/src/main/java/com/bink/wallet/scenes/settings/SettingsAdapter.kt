@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.SettingsFooterBinding
 import com.bink.wallet.databinding.SettingsHeaderBinding
 import com.bink.wallet.databinding.SettingsItemBinding
@@ -24,6 +25,7 @@ class SettingsAdapter(
         const val HEADER = 0
         const val ITEM = 1
         const val FOOTER = 2
+        const val CONTACT_US = "Contact us"
     }
 
     override fun onCreateViewHolder(
@@ -73,13 +75,24 @@ class SettingsAdapter(
         }
     }
 
-    class SettingsViewHolder(
+    inner class SettingsViewHolder(
         val binding: SettingsItemBinding,
         val itemClickListener: (SettingsItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SettingsItem, separator: Boolean) {
             with(binding) {
                 this.item = item
+
+                if (item.title.equals(
+                        CONTACT_US,
+                        true
+                    ) && SharedPreferenceManager.isResponseAvailable && !SharedPreferenceManager.hasContactUsBeenClicked
+                ) {
+                    binding.notificationOval.visibility = View.VISIBLE
+                } else {
+                    binding.notificationOval.visibility = View.GONE
+                }
+
                 value.visibility =
                     if (item.value.isNullOrEmpty()) {
                         View.GONE
@@ -92,7 +105,15 @@ class SettingsAdapter(
                     } else {
                         View.INVISIBLE
                     }
-                root.setSafeOnClickListener { itemClickListener(item) }
+                root.setSafeOnClickListener {
+                    if (item.title.equals(CONTACT_US, true)) {
+                        binding.notificationOval.visibility = View.GONE
+                        notifyItemChanged(adapterPosition)
+                        SharedPreferenceManager.hasContactUsBeenClicked = true
+
+                    }
+                    itemClickListener(item)
+                }
                 executePendingBindings()
             }
         }

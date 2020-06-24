@@ -15,6 +15,7 @@
     <dimen name="button_horizontal_margin">50dp</dimen>
     <dimen name="button_vertical_margin_size_large">68dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="notification_oval_padding">20dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
