@@ -22,7 +22,11 @@ class StampVouchersViewHolder(
             voucher.state == VoucherStates.EXPIRED.state ||
             voucher.state == VoucherStates.NONE.state
         ) {
-            voucher.expiry_date?.let {
+            val dateToDisplay =
+                if (voucher.state == VoucherStates.REDEEMED.state) voucher.date_redeemed else voucher.expiry_date
+
+
+            dateToDisplay?.let {
                 binding.collectedTitle.visibility = View.GONE
                 binding.collectedAmount.visibility = View.GONE
                 displayDate(it)
