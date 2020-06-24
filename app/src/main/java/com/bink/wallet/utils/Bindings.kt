@@ -266,8 +266,8 @@ fun TextView.textBalance(card: MembershipCard?) {
         val voucher = vouchers.first()
         text = context.displayVoucherEarnAndTarget(voucher)
     } else {
-        val balance = card?.balances?.first()
         if (!card?.balances.isNullOrEmpty()) {
+            val balance = card?.balances?.first()
             text = when (balance?.prefix != null) {
                 true -> balance?.prefix?.plus(balance.value)
                 else -> {
