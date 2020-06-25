@@ -206,7 +206,12 @@ class LoyaltyWalletAdapter(
                                     root.context.displayVoucherEarnAndTarget(voucher)
                             }
                             loyaltyValueExtra.text =
-                                root.context.getString(R.string.until_next_reward)
+                                if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) root.context.getString(
+                                    R.string.earned
+                                ) else root.context.getString(
+                                    R.string.spent
+                                )
+
                         }
                     } else if (!item.balances.isNullOrEmpty()) {
                         val balance = item.balances?.first()
