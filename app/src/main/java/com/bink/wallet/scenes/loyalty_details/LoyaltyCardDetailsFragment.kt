@@ -462,7 +462,9 @@ class LoyaltyCardDetailsFragment :
                 pointsDescription.text = getString(R.string.description_see_history)
             }
             pointsText.text = loginStatus.pointsText?.let { getString(it) }
-            pointsDescription.text = loginStatus.pointsDescription?.let { getString(it) }
+            if (loginStatus.pointsDescription != null){
+                pointsDescription.text = getString(loginStatus.pointsDescription)
+            }
         }
 
         when (loginStatus) {
