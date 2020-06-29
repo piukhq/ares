@@ -30,7 +30,7 @@ class VoucherDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.voucher_details_fragment
     override val viewModel: VoucherDetailsViewModel by viewModel()
-    private val contentMap = mutableMapOf<String,String>()
+    private val contentMap = mutableMapOf<String, String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -175,7 +175,7 @@ class VoucherDetailsFragment :
     }
 
     private fun setInProgressVoucher(earn: Earn, burn: Burn) {
-        if (earn.type == STAMP_VOUCHER_EARN_TYPE ) {
+        if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_in_progress_title),
                 contentMap[DynamicContentColumn.VOUCHER_IN_PROGRESS_DETAIL.column]
@@ -282,7 +282,7 @@ class VoucherDetailsFragment :
     private fun setColumnAndValue(content: List<Content>?) {
 
         content?.let {
-            for (column in it){
+            for (column in it) {
                 contentMap[column.column] = column.value
             }
         }
