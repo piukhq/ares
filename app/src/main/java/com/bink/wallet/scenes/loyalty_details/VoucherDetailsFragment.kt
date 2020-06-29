@@ -178,7 +178,7 @@ class VoucherDetailsFragment :
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_in_progress_title),
-                contentMap[DynamicContentColumn.VOUCHER_IN_PROGRESS_DETAIL.column]
+                contentMap[DynamicContentColumn.VOUCHER_IN_PROGRESS_DETAIL.type]
             )
         } else {
             setVoucherTitleAndBody(
@@ -279,11 +279,11 @@ class VoucherDetailsFragment :
         }
     }
 
-    private fun setColumnAndValue(content: List<Content>?) {
+    private fun setColumnAndValue(contentList: List<Content>?) {
 
-        content?.let {
-            for (column in it) {
-                contentMap[column.column] = column.value
+        contentList?.let {
+            for (content in it) {
+                contentMap[content.column] = content.value
             }
         }
     }
