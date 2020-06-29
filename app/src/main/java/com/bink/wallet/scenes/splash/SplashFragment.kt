@@ -13,10 +13,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentSplashBinding
 import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
+import com.bink.wallet.network.ApiConfig
 import com.bink.wallet.network.ApiConstants
-import com.bink.wallet.network.ApiConstants.Companion.DEV_URL
-import com.bink.wallet.network.ApiConstants.Companion.PROD_URL
-import com.bink.wallet.network.ApiConstants.Companion.STAGING_URL
 import java.util.Locale
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.observeNonNull
@@ -134,7 +132,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private fun persistPaymentCardHashSecret() {
         when {
             BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH) ||
-            ApiConstants.BASE_URL == PROD_URL -> {
+            ApiConstants.BASE_URL == ApiConfig.PROD_URL -> {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
                 )
@@ -145,7 +143,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                 )
             }
             BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH) ||
-            ApiConstants.BASE_URL == STAGING_URL -> {
+            ApiConstants.BASE_URL == ApiConfig.STAGING_URL -> {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
                 )
@@ -156,7 +154,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                 )
             }
             BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH) ||
-            ApiConstants.BASE_URL == DEV_URL -> {
+            ApiConstants.BASE_URL == ApiConfig.DEV_URL -> {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
                 )
