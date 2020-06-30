@@ -131,7 +131,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     private fun persistPaymentCardHashSecret() {
         when {
-            BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH) ||
             ApiConstants.BASE_URL == ApiConfig.PROD_URL -> {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingProdKey()
@@ -142,7 +141,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                     paymentCardEncryptionPublicKeyProd()
                 )
             }
-            BuildConfig.BUILD_TYPE == BuildTypes.BETA.toString().toLowerCase(Locale.ENGLISH) ||
             ApiConstants.BASE_URL == ApiConfig.STAGING_URL -> {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingStagingKey()
@@ -153,7 +151,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                     paymentCardEncryptionPublicKeyStaging()
                 )
             }
-            BuildConfig.BUILD_TYPE == BuildTypes.DEBUG.toString().toLowerCase(Locale.ENGLISH) ||
             ApiConstants.BASE_URL == ApiConfig.DEV_URL -> {
                 LocalStoreUtils.setAppSharedPref(
                     LocalStoreUtils.KEY_PAYMENT_HASH_SECRET, paymentCardHashingDevKey()
