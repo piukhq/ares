@@ -1,7 +1,5 @@
 package com.bink.wallet.scenes.loyalty_details
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -15,9 +13,11 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.VoucherDetailsFragmentBinding
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
+import com.bink.wallet.model.response.membership_plan.Content
 import com.bink.wallet.utils.DateTimeUtils.Companion.dateTimeFormatTransactionTime
 import com.bink.wallet.utils.ValueDisplayUtils.displayValue
 import com.bink.wallet.utils.enums.DocumentTypes
+import com.bink.wallet.utils.enums.DynamicContentColumn
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -30,6 +30,7 @@ class VoucherDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.voucher_details_fragment
     override val viewModel: VoucherDetailsViewModel by viewModel()
+    private val contentMap = mutableMapOf<String, String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +49,7 @@ class VoucherDetailsFragment :
 
         binding.membershipPlan = args.membershipPlan
 
+        setColumnAndValue(args.membershipPlan.content)
         args.voucher.let { voucher ->
             with(binding.recycler) {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -176,7 +178,7 @@ class VoucherDetailsFragment :
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_in_progress_title),
-                getString(R.string.voucher_stamp_in_progress_body)
+                contentMap[DynamicContentColumn.VOUCHER_IN_PROGRESS_DETAIL.type]
             )
         } else {
             setVoucherTitleAndBody(
@@ -274,6 +276,15 @@ class VoucherDetailsFragment :
                     )
                 )
             )
+        }
+    }
+
+    private fun setColumnAndValue(contentList: List<Content>?) {
+
+        contentList?.let {
+            for (content in it) {
+                contentMap[content.column] = content.value
+            }
         }
     }
 
