@@ -14,9 +14,9 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.INT_ONE_HUNDRED
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.onActivityResultCallback
+import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionCallback
+import com.bink.wallet.utils.requestPermissionsResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -73,7 +73,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        onActivityResultCallback(
+        scanResult(
             requestCode,
             resultCode,
             data,
@@ -87,7 +87,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         grantResults: IntArray
     ) {
 
-        requestPermissionCallback(
+        requestPermissionsResult(
             requestCode,
             permissions,
             grantResults,

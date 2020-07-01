@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.payment_card_wallet
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -165,6 +166,7 @@ class PaymentCardWalletFragment :
         }
     }
 
+
     private fun populateWallet() {
         viewModel.fetchLocalData()
     }
@@ -191,12 +193,42 @@ class PaymentCardWalletFragment :
                 )
             }
             else -> {
-                findNavController().navigateIfAdded(
-                    this@PaymentCardWalletFragment,
-                    WalletsFragmentDirections.homeToPcd()
-                )
+                requestCameraPermissionAndNavigate(false, null)
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        scanResult(
+            requestCode,
+            resultCode,
+            data,
+            { navigateToPaymentAddPaymentCard(it) },
+            { logPaymentCardSuccess(it) })
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        requestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            null,
+            { navigateToPaymentAddPaymentCard() },
+            null
+        )
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun navigateToPaymentAddPaymentCard(cardNumber: String = "") {
+        val directions = WalletsFragmentDirections.homeToPcd(
+            cardNumber
+        )
+        findNavController().navigateIfAdded(this, directions)
     }
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {
@@ -251,4 +283,6 @@ class PaymentCardWalletFragment :
 
         walletAdapter.notifyDataSetChanged()
     }
+
+
 }

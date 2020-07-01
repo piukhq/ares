@@ -19,10 +19,10 @@ import java.util.*
 import kotlin.collections.HashMap
 
 fun Fragment.requestCameraPermissionAndNavigate(
-    navigateToScanLoyaltyCard: Boolean,
-    navigateToScan: (() -> Unit)?
+    shouldNavigateToScanLoyaltyCard: Boolean,
+    navigateToScanLoyaltyCard: (() -> Unit)?
 ) {
-    SharedPreferenceManager.didAttemptToAddPaymentCard = !navigateToScanLoyaltyCard
+    SharedPreferenceManager.didAttemptToAddPaymentCard = !shouldNavigateToScanLoyaltyCard
     val permission = activity?.let {
         ContextCompat.checkSelfPermission(
             it,
@@ -47,15 +47,15 @@ fun Fragment.requestCameraPermissionAndNavigate(
             CAMERA_REQUEST_CODE
         )
     } else {
-        if (navigateToScanLoyaltyCard) {
-            navigateToScan?.invoke()
+        if (shouldNavigateToScanLoyaltyCard) {
+            navigateToScanLoyaltyCard?.invoke()
         } else {
             openScanPaymentCard()
         }
     }
 }
 
-fun Fragment.requestPermissionCallback(
+fun Fragment.requestPermissionsResult(
     requestCode: Int,
     permissions: Array<out String>,
     grantResults: IntArray,
@@ -94,7 +94,7 @@ fun Fragment.requestPermissionCallback(
 
 }
 
-fun Fragment.onActivityResultCallback(
+fun Fragment.scanResult(
     requestCode: Int,
     resultCode: Int,
     data: Intent?,
@@ -123,8 +123,8 @@ fun Fragment.onActivityResultCallback(
                     }
                     else -> {
                         // We don't need to do anything here as this condition is when the user
-                        // has closed the scan screen. In this case, we'll end up back at the
-                        // 'AddFragment' (where we currently are) which is expected behaviour.
+                        // has closed the scan screen. In this case, we'll end up back at
+                        // where we currently are which is expected behaviour.
                     }
                 }
             }
