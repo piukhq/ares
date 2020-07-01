@@ -24,6 +24,8 @@ object SharedPreferenceManager {
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
     private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
     private const val CONTACT_US_CLICKED = "contactUsClicked"
+    private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
+    private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -109,10 +111,21 @@ object SharedPreferenceManager {
             it.putBoolean(ZENDESK_REQUEST_UPDATE, value)
         }
 
-    var hasContactUsBeenClicked:Boolean
-        get() = preferences.getBoolean(CONTACT_US_CLICKED,false)
-        set(value) = preferences.edit{
-            it.putBoolean(CONTACT_US_CLICKED,value)
+    var hasContactUsBeenClicked: Boolean
+        get() = preferences.getBoolean(CONTACT_US_CLICKED, false)
+        set(value) = preferences.edit {
+            it.putBoolean(CONTACT_US_CLICKED, value)
+        }
+    var didAttemptToAddPaymentCard: Boolean
+        get() = preferences.getBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, false)
+        set(value) = preferences.edit {
+            it.putBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, value)
+        }
+
+    var hasViewDialogPermission: Boolean
+        get() = preferences.getBoolean(HAS_VIEW_DIALOG_PERMISSION, false)
+        set(value) = preferences.edit {
+            it.putBoolean(HAS_VIEW_DIALOG_PERMISSION, value)
         }
 
     fun clear() {

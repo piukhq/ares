@@ -24,14 +24,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.Locale
+import java.util.*
 
 
 fun Context.toPixelFromDip(value: Float) =
@@ -349,3 +348,11 @@ fun TextView.setTermsAndPrivacyUrls(
     text = checkBoxSpannable
     movementMethod = LinkMovementMethod.getInstance()
 }
+
+
+
+
+
+
+
+
