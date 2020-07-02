@@ -283,6 +283,4 @@ class PaymentCardWalletFragment :
 
         walletAdapter.notifyDataSetChanged()
     }
-
-
 }

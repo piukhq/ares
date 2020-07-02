@@ -348,11 +348,3 @@ fun TextView.setTermsAndPrivacyUrls(
     text = checkBoxSpannable
     movementMethod = LinkMovementMethod.getInstance()
 }
-
-
-
-
-
-
-
-
