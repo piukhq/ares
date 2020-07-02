@@ -137,7 +137,7 @@ class LoyaltyCardDetailsFragment :
                     }
                 }
                 if (!voucherTitle) {
-                    viewModel.membershipCard.value?.balances?.first().let { balance ->
+                    viewModel.membershipCard.value?.balances?.firstOrNull().let { balance ->
                         binding.toolbarSubtitle.text =
                             ValueDisplayUtils.displayValue(
                                 balance?.value?.toFloat(),
