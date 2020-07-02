@@ -261,7 +261,7 @@ class VoucherDetailsFragment :
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_expired_title),
-                getString(R.string.voucher_stamp_expired_body)
+                contentMap[DynamicContentColumn.VOUCHER_EXPIRED_DETAIL.type]
             )
         } else {
             setVoucherTitleAndBody(
