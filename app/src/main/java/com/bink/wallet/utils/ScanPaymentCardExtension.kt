@@ -69,23 +69,23 @@ fun Fragment.requestPermissionsResult(
         ) {
             if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
                 openScanPaymentCard()
+            } else {
+                navigateToScanLoyaltyCard?.invoke()
             }
         } else {
-            navigateToScanLoyaltyCard?.invoke()
-        }
-    } else {
-        val shouldShowPermissionExplanation =
-            !ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                Manifest.permission.CAMERA
-            )
+            val shouldShowPermissionExplanation =
+                !ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                )
 
-        if (shouldShowPermissionExplanation && !SharedPreferenceManager.hasViewDialogPermission) {
-            DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
-                if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
-                    navigateToAddPaymentCard?.invoke()
-                } else {
-                    navigateToBrowseBrands?.invoke()
+            if (shouldShowPermissionExplanation && !SharedPreferenceManager.hasViewDialogPermission) {
+                DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
+                    if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
+                        navigateToAddPaymentCard?.invoke()
+                    } else {
+                        navigateToBrowseBrands?.invoke()
+                    }
                 }
             }
         }
