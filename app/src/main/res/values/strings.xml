@@ -127,6 +127,7 @@
     <string name="points_login">Log in</string>
     <string name="points_login_account_exists">Account exists</string>
     <string name="description_see_history">To see history</string>
+    <string name="points_login_description">Log in</string>
     <!-- 1.5 -->
     <string name="points_history">Points history</string>
     <string name="history_text">History</string>
