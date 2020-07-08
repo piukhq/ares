@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol.adapter
 
 import androidx.databinding.ViewDataBinding
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 
@@ -12,6 +13,8 @@ abstract class BaseAddAuthViewHolder<T>(
     var checkValidation: () -> Unit = {}
 
     var setFieldRequestValue: (item: AddAuthItemWrapper, value: String) -> Unit = { _, _ ->  }
+
+    var addFields : List<PlanField>? = null
 
     override fun bind(item: T) {}
 

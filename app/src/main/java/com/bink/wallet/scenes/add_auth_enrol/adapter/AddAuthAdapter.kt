@@ -42,6 +42,7 @@ class AddAuthAdapter(
                     is TextFieldViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
                         holder.isLastEditText = isLastEditText(addAuthItem)
+                        holder.addFields = membershipPlan?.account?.add_fields
                         holder.bind(addAuthItem)
                     }
                     is SpinnerViewHolder -> {

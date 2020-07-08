@@ -1,5 +1,6 @@
 import android.app.DatePickerDialog
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -21,6 +22,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import android.text.method.PasswordTransformationMethod
+import android.view.MotionEvent
+import android.widget.Toast
+import com.bink.wallet.utils.BARCODE
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -115,6 +119,37 @@ class TextFieldViewHolder(
                 }
                 false
             }
+
+            if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
+                    .isEmpty() && hasBarcodeAlternative()
+            ) {
+                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                //context.getDrawable(R.drawable.ic_camera)
+                //AC1 COMPLETED
+                onTouchListener(false)
+
+                addTextChangedListener(object : SimplifiedTextWatcher {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        if (s.toString().trim().isNotEmpty()) {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                            onTouchListener(true)
+                        } else {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            onTouchListener(false)
+                        }
+                    }
+
+                })
+            } else {
+                setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+            }
+
+
         }
 
         planRequest?.let { safePlan ->
@@ -127,6 +162,68 @@ class TextFieldViewHolder(
 
         binding.executePendingBindings()
     }
+
+    private fun TextInputEditText.setEndDrawable(drawable: Drawable?) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(
+            null,
+            null,
+            drawable,
+            null
+        )
+    }
+
+    private fun TextInputEditText.clearField() {
+        this.text?.clear()
+    }
+
+    private fun TextInputEditText.onTouchListener(shouldClearText: Boolean) {
+        setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                if (event?.action == MotionEvent.ACTION_UP) {
+                    if (event.rawX >= (binding.contentAddAuthText.right - binding.contentAddAuthText.compoundDrawables[DRAWABLE_END].bounds.width())) {
+                        if (shouldClearText) {
+                            Toast.makeText(context, "Clear", Toast.LENGTH_SHORT).show()
+                            clearField()
+
+                        } else {
+                            Toast.makeText(context, "Barcode scanner", Toast.LENGTH_SHORT).show()
+
+                        }
+                        return true
+                    }
+                }
+                return false
+            }
+
+        })
+    }
+
+    private fun hasBarcodeAlternative(): Boolean {
+        //Loop through plan fields alternatives
+        val alternativeValues = mutableListOf<String>()
+
+        //Get all the alternatives
+        addFields?.forEach { planField ->
+            (planField.alternatives?.forEach { alternative ->
+                alternativeValues.add(alternative)
+            })
+        }
+
+        //Check if any of the alternatives have "barcode" as column name
+        alternativeValues.forEach { alternative ->
+
+            addFields?.let { addFields ->
+                addFields.forEach { planField ->
+                    if (planField.column.equals(alternative) && planField.common_name.equals(BARCODE)) {
+                        return true
+                    }
+                }
+            }
+        }
+
+        return false
+    }
+
 
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
@@ -217,5 +314,11 @@ class TextFieldViewHolder(
             binding.contentAddAuthText.visibility = View.VISIBLE
             binding.tvDatePicker.visibility = View.GONE
         }
+    }
+
+    companion object {
+        private const val BARCODE = "barcode"
+        private const val CARD_NUMBER = "card_number"
+        private const val DRAWABLE_END = 2
     }
 }
