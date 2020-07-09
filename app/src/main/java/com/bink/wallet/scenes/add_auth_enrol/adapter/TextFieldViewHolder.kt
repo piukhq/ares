@@ -2,8 +2,11 @@ import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.InputType
+import android.text.method.PasswordTransformationMethod
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -18,12 +21,8 @@ import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import android.text.method.PasswordTransformationMethod
-import android.view.MotionEvent
-import android.widget.Toast
+import java.util.*
+
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -32,6 +31,7 @@ class TextFieldViewHolder(
 
     var isLastEditText: Boolean = false
     var item: AddAuthItemWrapper? = null
+    private var columnNameForBarcode : String? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -134,10 +134,8 @@ class TextFieldViewHolder(
                         count: Int
                     ) {
                         if (s.toString().trim().isNotEmpty()) {
-                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
                             onTouchListener(true, planField)
                         } else {
-                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                             onTouchListener(false, planField)
                         }
                     }
@@ -160,12 +158,16 @@ class TextFieldViewHolder(
     }
 
     private fun TextInputEditText.setEndDrawable(drawable: Drawable?) {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(
-            null,
-            null,
-            drawable,
-            null
-        )
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0)
+        drawable?.let {
+            setCompoundDrawablesRelativeWithIntrinsicBounds(
+                null,
+                null,
+                it,
+                null
+            )
+        }
+
     }
 
     private fun TextInputEditText.clearField() {
@@ -178,20 +180,22 @@ class TextFieldViewHolder(
                 if (event?.action == MotionEvent.ACTION_UP) {
                     if (event.rawX >= (binding.contentAddAuthText.right - binding.contentAddAuthText.compoundDrawables[DRAWABLE_END].bounds.width())) {
                         if (shouldClearText) {
-                            Toast.makeText(context, "Clear", Toast.LENGTH_SHORT).show()
-                            this@onTouchListener.isEnabled = true
                             binding.titleAddAuthText.text = planField.column
-
+                            binding.titleAddAuthText.setTextColor(Color.BLACK)
                             clearField()
+                            editTextState(true)
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
 
                         } else {
-                            Toast.makeText(context, "Barcode scanner", Toast.LENGTH_SHORT).show()
                             binding.titleAddAuthText.setTextColor(Color.GRAY)
-                            this@onTouchListener.setText("ABC")
-                            this@onTouchListener.isFocusable = false
-                            this@onTouchListener.isCursorVisible = false
-                            this@onTouchListener.setTextColor(Color.GRAY)
-                            binding.titleAddAuthText.text = "Barcode"
+                            //Temporary solution to simulate barcode scanning
+                            this@onTouchListener.setText("6332040081234567")
+                            columnNameForBarcode?.let {
+                                binding.titleAddAuthText.text = it
+
+                            }
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                            editTextState(false)
 
 
                         }
@@ -206,15 +210,23 @@ class TextFieldViewHolder(
 
     private fun TextInputEditText.editTextState(isEnabled: Boolean) {
         if (isEnabled) {
-
+            this.isFocusable = true
+            this.isFocusableInTouchMode = true
+            if (this.hasFocusable()){
+                this.requestFocus()
+                this.isCursorVisible = true
+            }
+            this.setTextColor(Color.BLACK)
         } else {
-
+            this.isFocusable = false
+            this.isCursorVisible = false
+            this.setTextColor(Color.GRAY)
         }
 
     }
 
+
     private fun hasBarcodeCommonName(): Boolean {
-        //Loop through plan fields alternatives
         val alternativeValues = mutableListOf<String>()
 
         //Get all the alternatives
@@ -230,6 +242,7 @@ class TextFieldViewHolder(
             addFields?.let { addFields ->
                 addFields.forEach { planField ->
                     if (planField.column.equals(alternative) && planField.common_name.equals(BARCODE)) {
+                        columnNameForBarcode = planField.column
                         return true
                     }
                 }
