@@ -124,7 +124,7 @@ class TextFieldViewHolder(
             ) {
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
 
-                onTouchListener(false)
+                onTouchListener(false, planField)
 
                 addTextChangedListener(object : SimplifiedTextWatcher {
                     override fun onTextChanged(
@@ -135,16 +135,14 @@ class TextFieldViewHolder(
                     ) {
                         if (s.toString().trim().isNotEmpty()) {
                             setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-                            onTouchListener(true)
+                            onTouchListener(true, planField)
                         } else {
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-                            onTouchListener(false)
+                            onTouchListener(false, planField)
                         }
                     }
 
                 })
-            } else {
-                setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
             }
 
 
@@ -174,18 +172,27 @@ class TextFieldViewHolder(
         this.text?.clear()
     }
 
-    private fun TextInputEditText.onTouchListener(shouldClearText: Boolean) {
+    private fun TextInputEditText.onTouchListener(shouldClearText: Boolean, planField: PlanField) {
         setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 if (event?.action == MotionEvent.ACTION_UP) {
                     if (event.rawX >= (binding.contentAddAuthText.right - binding.contentAddAuthText.compoundDrawables[DRAWABLE_END].bounds.width())) {
                         if (shouldClearText) {
                             Toast.makeText(context, "Clear", Toast.LENGTH_SHORT).show()
+                            this@onTouchListener.isEnabled = true
+                            binding.titleAddAuthText.text = planField.column
+
                             clearField()
 
                         } else {
                             Toast.makeText(context, "Barcode scanner", Toast.LENGTH_SHORT).show()
                             binding.titleAddAuthText.setTextColor(Color.GRAY)
+                            this@onTouchListener.setText("ABC")
+                            this@onTouchListener.isFocusable = false
+                            this@onTouchListener.isCursorVisible = false
+                            this@onTouchListener.setTextColor(Color.GRAY)
+                            binding.titleAddAuthText.text = "Barcode"
+
 
                         }
                         return true
@@ -195,6 +202,15 @@ class TextFieldViewHolder(
             }
 
         })
+    }
+
+    private fun TextInputEditText.editTextState(isEnabled: Boolean) {
+        if (isEnabled) {
+
+        } else {
+
+        }
+
     }
 
     private fun hasBarcodeCommonName(): Boolean {
