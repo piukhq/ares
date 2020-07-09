@@ -46,6 +46,7 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/nunito_sans"
             android:textSize="@dimen/size_sub_headline"
+            android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"

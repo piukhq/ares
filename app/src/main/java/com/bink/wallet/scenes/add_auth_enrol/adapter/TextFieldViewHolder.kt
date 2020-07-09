@@ -24,7 +24,6 @@ import java.util.Locale
 import android.text.method.PasswordTransformationMethod
 import android.view.MotionEvent
 import android.widget.Toast
-import com.bink.wallet.utils.BARCODE
 
 class TextFieldViewHolder(
     val binding: AddAuthTextItemBinding
@@ -121,11 +120,10 @@ class TextFieldViewHolder(
             }
 
             if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
-                    .isEmpty() && hasBarcodeAlternative()
+                    .isEmpty() && hasBarcodeCommonName()
             ) {
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-                //context.getDrawable(R.drawable.ic_camera)
-                //AC1 COMPLETED
+
                 onTouchListener(false)
 
                 addTextChangedListener(object : SimplifiedTextWatcher {
@@ -187,6 +185,7 @@ class TextFieldViewHolder(
 
                         } else {
                             Toast.makeText(context, "Barcode scanner", Toast.LENGTH_SHORT).show()
+                            binding.titleAddAuthText.setTextColor(Color.GRAY)
 
                         }
                         return true
@@ -198,7 +197,7 @@ class TextFieldViewHolder(
         })
     }
 
-    private fun hasBarcodeAlternative(): Boolean {
+    private fun hasBarcodeCommonName(): Boolean {
         //Loop through plan fields alternatives
         val alternativeValues = mutableListOf<String>()
 
