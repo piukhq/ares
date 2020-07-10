@@ -6,7 +6,6 @@ import android.text.method.PasswordTransformationMethod
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -31,7 +30,7 @@ class TextFieldViewHolder(
 
     var isLastEditText: Boolean = false
     var item: AddAuthItemWrapper? = null
-    private var columnNameForBarcode : String? = null
+    private var columnNameForBarcode: String? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -158,7 +157,7 @@ class TextFieldViewHolder(
     }
 
     private fun TextInputEditText.setEndDrawable(drawable: Drawable?) {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,0,0)
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
         drawable?.let {
             setCompoundDrawablesRelativeWithIntrinsicBounds(
                 null,
@@ -212,7 +211,7 @@ class TextFieldViewHolder(
         if (isEnabled) {
             this.isFocusable = true
             this.isFocusableInTouchMode = true
-            if (this.hasFocusable()){
+            if (this.hasFocusable()) {
                 this.requestFocus()
                 this.isCursorVisible = true
             }
