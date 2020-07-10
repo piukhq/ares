@@ -4,9 +4,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
-import androidx.navigation.Navigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -55,6 +52,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     var navigationHandler: AuthNavigationHandler? = null
     var animationHelper: AuthAnimationHelper? = null
     protected var barcode: String? = null
+    private lateinit var addAuthAdapter: AddAuthAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -138,7 +136,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                     return false
                 }
             }
-            adapter = AddAuthAdapter(
+            addAuthAdapter = AddAuthAdapter(
                 viewModel.addAuthItemsList,
                 currentMembershipPlan,
                 viewModel.titleText.get(),
@@ -159,8 +157,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 },
                 onLinkClickListener = { url ->
                     findNavController().navigate(BaseAddAuthFragmentDirections.globalToWeb(url))
+                },
+                onNavigateToBarcodeScanListener = { position ->
+                    onScannerActivated(position)
                 }
             )
+
+            adapter = addAuthAdapter
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -223,5 +226,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         activity?.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
+    }
+
+    private fun onScannerActivated(position: Int) {
+        addAuthAdapter.notifyItemChanged(position, "Hankombo")
+
     }
 }

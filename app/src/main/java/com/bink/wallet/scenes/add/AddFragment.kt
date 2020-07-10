@@ -26,7 +26,7 @@ import com.getbouncer.cardscan.ScanActivity
 import com.getbouncer.cardscan.base.ScanBaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
+class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     private val args by navArgs<AddFragmentArgs>()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()

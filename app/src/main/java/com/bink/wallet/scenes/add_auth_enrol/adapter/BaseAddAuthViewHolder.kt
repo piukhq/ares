@@ -18,4 +18,6 @@ abstract class BaseAddAuthViewHolder<T>(
 
     override fun bind(item: T) {}
 
+    open fun onBarcodeScanSuccess(barcode:String){}
+
 }

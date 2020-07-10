@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.add_auth_enrol.screens
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
@@ -35,13 +36,15 @@ class AddCardFragment : BaseAddAuthFragment() {
 //        }
 
         binding.footerComposed.addAuthCta.setOnClickListener {
-            logCTAClick(it)
-            handleAuthCtaRequest()
+            Toast.makeText(context,"Composed",Toast.LENGTH_SHORT).show()
+//            logCTAClick(it)
+//            handleAuthCtaRequest()
         }
 
         binding.footerSimple.addAuthCta.setOnClickListener {
-            logCTAClick(it)
-            handleAuthCtaRequest()
+            Toast.makeText(context,"Composed simple",Toast.LENGTH_SHORT).show()
+//            logCTAClick(it)
+//            handleAuthCtaRequest()
         }
 
         viewModel.newMembershipCard.observeNonNull(this) {

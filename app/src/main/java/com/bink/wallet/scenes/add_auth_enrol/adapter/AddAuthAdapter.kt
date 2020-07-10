@@ -27,11 +27,12 @@ class AddAuthAdapter(
     private val headerDescription: String?,
     val checkValidation: () -> Unit = {},
     val navigateToHeader: () -> Unit = {},
-    val onLinkClickListener: ((String) -> Unit) = {}
+    val onLinkClickListener: ((String) -> Unit) = {},
+    val onNavigateToBarcodeScanListener: ((Int) -> Unit)
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
 
-
+    private var tfViewHolder: BaseAddAuthViewHolder<*>? = null
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
 
         holder.checkValidation = checkValidation
@@ -44,6 +45,7 @@ class AddAuthAdapter(
                         holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.bind(addAuthItem)
+                        tfViewHolder = holder
                     }
                     is SpinnerViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
@@ -81,7 +83,7 @@ class AddAuthAdapter(
         return when (viewType) {
             FieldType.TEXT.type,
             FieldType.SENSITIVE.type -> {
-                TextFieldViewHolder((AddAuthTextItemBinding.inflate(inflater)))
+                TextFieldViewHolder(onNavigateToBarcodeScanListener, (AddAuthTextItemBinding.inflate(inflater)))
             }
             FieldType.SPINNER.type -> {
                 SpinnerViewHolder(
@@ -103,7 +105,10 @@ class AddAuthAdapter(
                 }
             }
             else -> {
-                CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater), onLinkClickListener = onLinkClickListener)
+                CheckboxViewHolder(
+                    AddAuthCheckboxItemBinding.inflate(inflater),
+                    onLinkClickListener = onLinkClickListener
+                )
             }
         }
     }
@@ -140,4 +145,18 @@ class AddAuthAdapter(
     private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
         itemWrapper.fieldsRequest?.value = value
     }
+
+    override fun onBindViewHolder(
+        holder: BaseAddAuthViewHolder<*>,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        super.onBindViewHolder(holder, position, payloads)
+        if (payloads.isNotEmpty()) {
+            tfViewHolder?.onBarcodeScanSuccess(payloads[0].toString())
+
+        }
+
+    }
+
 }

@@ -3,9 +3,11 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -24,6 +26,7 @@ import java.util.*
 
 
 class TextFieldViewHolder(
+    val onNavigateToBarcodeScan: ((Int) -> Unit),
     val binding: AddAuthTextItemBinding
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
@@ -156,6 +159,26 @@ class TextFieldViewHolder(
         binding.executePendingBindings()
     }
 
+
+    override fun onBarcodeScanSuccess(barcode: String) {
+        super.onBarcodeScanSuccess(barcode)
+        Log.d("TVH",barcode)
+        updateOnSuccess(binding.contentAddAuthText,barcode)
+
+    }
+
+    private fun updateOnSuccess(et: TextInputEditText, bc:String) {
+        binding.titleAddAuthText.setTextColor(Color.GRAY)
+        //Temporary solution to simulate barcode scanning
+        et.setText(bc)
+        columnNameForBarcode?.let {
+            binding.titleAddAuthText.text = it
+
+        }
+        et.setEndDrawable(et.context.getDrawable(R.drawable.ic_clear_search))
+        et.editTextState(false)
+    }
+
     private fun TextInputEditText.setEndDrawable(drawable: Drawable?) {
         setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
         drawable?.let {
@@ -186,16 +209,17 @@ class TextFieldViewHolder(
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
 
                         } else {
-                            binding.titleAddAuthText.setTextColor(Color.GRAY)
-                            //Temporary solution to simulate barcode scanning
-                            this@onTouchListener.setText("6332040081234567")
-                            columnNameForBarcode?.let {
-                                binding.titleAddAuthText.text = it
-
-                            }
-                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-                            editTextState(false)
-
+                            onNavigateToBarcodeScan(adapterPosition)
+                            Toast.makeText(context,"Scanning...",Toast.LENGTH_SHORT).show()
+//                            binding.titleAddAuthText.setTextColor(Color.GRAY)
+//                            //Temporary solution to simulate barcode scanning
+//                            this@onTouchListener.setText("6332040081234567")
+//                            columnNameForBarcode?.let {
+//                                binding.titleAddAuthText.text = it
+//
+//                            }
+//                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+//                            editTextState(false)
 
                         }
                         return true
