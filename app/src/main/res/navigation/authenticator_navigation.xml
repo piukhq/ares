@@ -845,7 +845,7 @@
             android:id="@+id/authToLoyaltyDetails"
             app:destination="@id/loyalty_card_detail_fragment" />
         <action
-            android:id="@+id/addToAddLoyaltyCardFragment"
+            android:id="@+id/baseAddToAddLoyaltyFragment"
             app:destination="@+id/add_loyalty_card" />
     </fragment>
 

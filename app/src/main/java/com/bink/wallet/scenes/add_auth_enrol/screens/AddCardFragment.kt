@@ -36,15 +36,13 @@ class AddCardFragment : BaseAddAuthFragment() {
 //        }
 
         binding.footerComposed.addAuthCta.setOnClickListener {
-            Toast.makeText(context,"Composed",Toast.LENGTH_SHORT).show()
-//            logCTAClick(it)
-//            handleAuthCtaRequest()
+            logCTAClick(it)
+            handleAuthCtaRequest()
         }
 
         binding.footerSimple.addAuthCta.setOnClickListener {
-            Toast.makeText(context,"Composed simple",Toast.LENGTH_SHORT).show()
-//            logCTAClick(it)
-//            handleAuthCtaRequest()
+            logCTAClick(it)
+            handleAuthCtaRequest()
         }
 
         viewModel.newMembershipCard.observeNonNull(this) {

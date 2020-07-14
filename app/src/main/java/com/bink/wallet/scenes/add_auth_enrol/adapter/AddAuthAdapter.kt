@@ -44,6 +44,7 @@ class AddAuthAdapter(
                         holder.setFieldRequestValue = ::setFieldRequest
                         holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.addFields = membershipPlan?.account?.add_fields
+                        holder.account = membershipPlan?.account
                         holder.bind(addAuthItem)
                         holder.onBarcodeScanSuccess()
                     }

@@ -30,6 +30,8 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.requestCameraPermissionAndNavigate
+import com.bink.wallet.utils.requestPermissionsResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -223,6 +225,15 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onDestroy()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        requestPermissionsResult(requestCode,permissions,grantResults,{navigateToScanLoyaltyCard()},null,null)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
     }
@@ -239,9 +250,21 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun onScannerActivated(account: com.bink.wallet.model.response.membership_plan.Account) {
-        //Launch camera
+        this.account = account
+        requestCameraPermissionAndNavigate(true
+        ) { navigateToScanLoyaltyCard() }
     }
 
+    private fun navigateToScanLoyaltyCard() {
+        findNavController().navigate(
+            BaseAddAuthFragmentDirections.baseAddToAddLoyaltyFragment(
+                null,
+                null,
+                account,
+                true
+            )
+        )
+    }
     private fun onResult(result: String) {
         SharedPreferenceManager.scannedLoyaltyBarCode = result
     }
