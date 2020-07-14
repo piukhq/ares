@@ -117,7 +117,8 @@
 
     <fragment
         android:id="@+id/add_fragment"
-        android:name="com.bink.wallet.scenes.add.AddFragment">
+        android:name="com.bink.wallet.scenes.add.AddFragment"
+        tools:layout="@layout/add_fragment">
 
         <action
             android:id="@+id/add_to_browse"

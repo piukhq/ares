@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -25,9 +26,13 @@ import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.ZendeskUtils
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.requestCameraPermissionAndNavigate
+import com.bink.wallet.utils.requestPermissionsResult
+import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -215,6 +220,32 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onPause()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        scanResult(
+            requestCode,
+            resultCode,
+            data,
+            { navigateToAddPaymentCard(it) },
+            { logPaymentCardSuccess(it) })
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        requestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            null,
+            { navigateToAddPaymentCard() },
+            null
+        )
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -291,11 +322,16 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 )
             }
             else ->
-                findNavController().navigateIfAdded(
-                    this@LoyaltyWalletFragment,
-                    WalletsFragmentDirections.homeToPcd()
-                )
+                requestCameraPermissionAndNavigate(false, null)
+
         }
+    }
+
+    private fun navigateToAddPaymentCard(cardNumber: String = "") {
+        val directions = WalletsFragmentDirections.homeToPcd(
+            cardNumber
+        )
+        findNavController().navigateIfAdded(this, directions)
     }
 
     private fun fetchData() {
