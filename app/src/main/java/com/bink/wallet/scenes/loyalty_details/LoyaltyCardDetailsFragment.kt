@@ -756,14 +756,11 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
                     viewModel.membershipCard.value?.let { membershipCard ->
-                        val hasCorrectCardType = membershipCard.plan?.feature_set?.card_type == 2
-                        val hasTransactions =
-                            membershipCard.plan?.feature_set?.transactions_available!!
-                        val hasVouchers = membershipCard.plan?.feature_set?.has_vouchers!!
-
-                        if ((hasCorrectCardType && hasTransactions)
-                            || (hasCorrectCardType && hasTransactions && hasVouchers)
+                        if (!membershipCard.vouchers.isNullOrEmpty() &&
+                            membershipCard.status?.state == MembershipCardStatus.AUTHORISED.status
                         ) {
+                            viewAboutInformation()
+                        } else {
                             val action =
                                 LoyaltyCardDetailsFragmentDirections.detailToTransactions(
                                     viewModel.membershipCard.value!!,
@@ -771,8 +768,7 @@ class LoyaltyCardDetailsFragment :
                                 )
 
                             findNavController().navigateIfAdded(this, action, currentDestination)
-                        } else {
-                            viewAboutInformation()
+
                         }
                     }
                 }
