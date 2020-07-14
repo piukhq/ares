@@ -207,7 +207,7 @@ class VoucherDetailsFragment :
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_issued_title),
-                getString(R.string.voucher_stamp_issued_body)
+                contentMap[DynamicContentColumn.VOUCHER_ISSUED_DETAIL.type]
             )
         } else {
             setVoucherTitleAndBody(
@@ -239,7 +239,7 @@ class VoucherDetailsFragment :
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_redeemed_title),
-                getString(R.string.voucher_stamp_redeemed_body)
+                contentMap[DynamicContentColumn.VOUCHER_REDEEMED_DETAIL.type]
             )
         } else {
             setVoucherTitleAndBody(
@@ -261,7 +261,7 @@ class VoucherDetailsFragment :
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
                 getString(R.string.voucher_stamp_expired_title),
-                getString(R.string.voucher_stamp_expired_body)
+                contentMap[DynamicContentColumn.VOUCHER_EXPIRED_DETAIL.type]
             )
         } else {
             setVoucherTitleAndBody(
