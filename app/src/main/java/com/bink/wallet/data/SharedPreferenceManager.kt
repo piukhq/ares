@@ -24,6 +24,7 @@ object SharedPreferenceManager {
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
     private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
     private const val CONTACT_US_CLICKED = "contactUsClicked"
+    private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -113,6 +114,12 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(CONTACT_US_CLICKED,false)
         set(value) = preferences.edit{
             it.putBoolean(CONTACT_US_CLICKED,value)
+        }
+
+    var scannedLoyaltyBarCode: String?
+        get() = preferences.getString(SCANNED_LOYALTY_BARCODE, null)
+        set(value) = preferences.edit {
+            it.putString(SCANNED_LOYALTY_BARCODE, value)
         }
 
     fun clear() {

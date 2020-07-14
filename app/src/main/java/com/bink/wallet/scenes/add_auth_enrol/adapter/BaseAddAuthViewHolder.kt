@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol.adapter
 
 import androidx.databinding.ViewDataBinding
+import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -16,8 +17,10 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var addFields : List<PlanField>? = null
 
+    var account: Account? = null
+
     override fun bind(item: T) {}
 
-    open fun onBarcodeScanSuccess(barcode:String){}
+    open fun onBarcodeScanSuccess(){}
 
 }

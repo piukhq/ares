@@ -11,6 +11,7 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthDisplayItemBinding
 import com.bink.wallet.databinding.AddAuthHeaderItemBinding
 import com.bink.wallet.databinding.AddAuthCheckboxItemBinding
+import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -28,11 +29,10 @@ class AddAuthAdapter(
     val checkValidation: () -> Unit = {},
     val navigateToHeader: () -> Unit = {},
     val onLinkClickListener: ((String) -> Unit) = {},
-    val onNavigateToBarcodeScanListener: ((Int) -> Unit)
+    val onNavigateToBarcodeScanListener: ((Account) -> Unit)
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
 
-    private var tfViewHolder: BaseAddAuthViewHolder<*>? = null
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
 
         holder.checkValidation = checkValidation
@@ -45,7 +45,7 @@ class AddAuthAdapter(
                         holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.bind(addAuthItem)
-                        tfViewHolder = holder
+                        holder.onBarcodeScanSuccess()
                     }
                     is SpinnerViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
@@ -144,19 +144,6 @@ class AddAuthAdapter(
 
     private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
         itemWrapper.fieldsRequest?.value = value
-    }
-
-    override fun onBindViewHolder(
-        holder: BaseAddAuthViewHolder<*>,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        super.onBindViewHolder(holder, position, payloads)
-        if (payloads.isNotEmpty()) {
-            tfViewHolder?.onBarcodeScanSuccess(payloads[0].toString())
-
-        }
-
     }
 
 }

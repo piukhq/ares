@@ -200,7 +200,8 @@ class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         viewModel.membershipCards.value?.let {
             val directions = AddFragmentDirections.addToAddLoyalty(
                 args.membershipPlans,
-                it.toTypedArray()
+                it.toTypedArray(),
+                null
             )
             findNavController().navigateIfAdded(this, directions)
         }

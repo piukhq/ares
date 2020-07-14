@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.add_loyalty_card
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Build
@@ -8,12 +9,16 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.animation.AnimationUtils
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
+import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.ADD_AUTH_BARCODE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_VIEW
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.SignUpFieldTypes
@@ -34,6 +39,8 @@ class AddLoyaltyCardFragment :
     var isPaused = false
     var hapticTimerWithPause = true
     var cancelHaptic = false
+    private var isFromAddAuth = false
+    private var account: Account? = null
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -53,6 +60,8 @@ class AddLoyaltyCardFragment :
         getValidators()
         requireContext().resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
             ?.let { scheduleHapticWithPause(it) }
+        isFromAddAuth = args.isFromAddAuth
+        account = args.account
     }
 
     override fun onResume() {
@@ -76,46 +85,67 @@ class AddLoyaltyCardFragment :
     }
 
     private fun getValidators() {
-        brands = args.membershipPlans
-        for (plan in brands) {
-            var foundInAddFields = false
-            plan.account?.add_fields?.map { field ->
-                if (field.common_name == SignUpFieldTypes.BARCODE.common_name && !field.validation.isNullOrEmpty()) {
-                    validators[plan.id] = field.validation
-                    foundInAddFields = true
-                }
-            }
-            if (!foundInAddFields) {
-                plan.account?.authorise_fields?.map { field ->
-                    if (field.common_name == SignUpFieldTypes.BARCODE.common_name) {
+        args.membershipPlans?.let {
+            brands = it
+            for (plan in brands) {
+                var foundInAddFields = false
+                plan.account?.add_fields?.map { field ->
+                    if (field.common_name == SignUpFieldTypes.BARCODE.common_name && !field.validation.isNullOrEmpty()) {
                         validators[plan.id] = field.validation
                         foundInAddFields = true
                     }
                 }
+                if (!foundInAddFields) {
+                    plan.account?.authorise_fields?.map { field ->
+                        if (field.common_name == SignUpFieldTypes.BARCODE.common_name) {
+                            validators[plan.id] = field.validation
+                            foundInAddFields = true
+                        }
+                    }
+                }
             }
         }
+
     }
 
     override fun handleResult(rawResult: Result?) {
         cancelHaptic = true
+        val savedInstanceState = findNavController().previousBackStackEntry?.savedStateHandle
+        savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
+        SharedPreferenceManager.scannedLoyaltyBarCode = null
 
-        val membershipPlan: MembershipPlan? = findMembershipPlan(rawResult)
+        if (isFromAddAuth && account != null && rawResult != null) {
+            if (isValidRegex(rawResult.text)) {
+                savedInstanceState?.set(ADD_AUTH_BARCODE, rawResult.text)
+                if (rawResult.text != null) {
+                    findNavController().popBackStack()
 
-        membershipPlan?.also {
+                }
+            } else {
+                showUnsupportedBarcodePopup(account!!.company_name!!)
 
-            val membershipCardId = ""
+            }
 
-            val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
-                membershipPlan = it,
-                membershipCardId = membershipCardId,
-                barcode = rawResult.toString()
-            )
+        } else {
+            val membershipPlan: MembershipPlan? = findMembershipPlan(rawResult)
 
-            findNavController().navigateIfAdded(this, action)
+            membershipPlan?.also {
 
-        } ?: run {
-            showUnsupportedBarcodePopup()
+                val membershipCardId = ""
+
+                val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
+                    membershipPlan = it,
+                    membershipCardId = membershipCardId,
+                    barcode = rawResult.toString()
+                )
+
+                findNavController().navigateIfAdded(this, action)
+
+            } ?: run {
+                showUnsupportedBarcodePopup()
+            }
         }
+
     }
 
     private fun setBottomLayout() {
@@ -132,7 +162,12 @@ class AddLoyaltyCardFragment :
         binding.bottomView.enterManuallyContainer.setOnClickListener()
         {
             cancelHaptic = true
-            goToBrowseBrands()
+            if (isFromAddAuth) {
+                findNavController().popBackStack()
+            } else {
+                goToBrowseBrands()
+
+            }
         }
     }
 
@@ -153,21 +188,35 @@ class AddLoyaltyCardFragment :
     }
 
     private fun goToBrowseBrands() {
-        val directions = AddLoyaltyCardFragmentDirections.addLoyaltyToBrowse(
-            args.membershipPlans,
-            args.membershipCards
-        )
-        findNavController().navigateIfAdded(this, directions)
+        val directions = args.membershipPlans?.let { plans ->
+            args.membershipCards?.let { cards ->
+                AddLoyaltyCardFragmentDirections.addLoyaltyToBrowse(
+                    plans,
+                    cards
+                )
+            }
+        }
+        if (directions != null) {
+            findNavController().navigateIfAdded(this, directions)
+        }
     }
 
-    private fun showUnsupportedBarcodePopup() {
-        performHaptic(R.string.unrecognized_barcode_title, R.string.unrecognized_barcode_body)
+    private fun showUnsupportedBarcodePopup(companyName: String = "") {
+        if (isFromAddAuth) {
+            showTryAgainGenericError(
+                requireActivity(), getString(R.string.scan_failure_body, companyName)
+            )
+        }
+        performHaptic(
+            getString(R.string.unrecognized_barcode_title),
+            getString(R.string.unrecognized_barcode_body)
+        )
     }
 
 
     private fun performHaptic(
-        @StringRes titleId: Int = R.string.enter_manually,
-        @StringRes textId: Int = R.string.enter_manually_cant_scan
+        title: String = getString(R.string.enter_manually),
+        text: String = getString(R.string.enter_manually_cant_scan)
     ) {
         val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
         if (Build.VERSION.SDK_INT >= 26) {
@@ -181,8 +230,8 @@ class AddLoyaltyCardFragment :
             vibrator?.vibrate(VIBRATION_DURATION)
         }
 
-        binding.bottomView.enterText.text = getString(titleId)
-        binding.bottomView.enterSubtext.text = getString(textId)
+        binding.bottomView.enterText.text = title
+        binding.bottomView.enterSubtext.text = text
         val colorResource = resources.getColor(R.color.red_attention, null)
         binding.bottomView.enterText.setTextColor(colorResource)
 
@@ -228,7 +277,43 @@ class AddLoyaltyCardFragment :
         binding.scannerView.startCamera()
     }
 
+    private fun isValidRegex(barcode: String): Boolean {
+        var validationPattern: String? = ""
+
+        account?.let {
+            it.add_fields?.forEach { planField ->
+                if (planField.common_name.equals(BARCODE)) {
+                    validationPattern = planField.validation
+                }
+            }
+        }
+
+        if (UtilFunctions.isValidField(validationPattern, barcode)) {
+            return true
+        }
+        return false
+
+    }
+
+    private fun showTryAgainGenericError(
+        activity: Activity,
+        message: String
+
+    ) {
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle(activity.getString(R.string.payment_card_scanning_scan_failed_title))
+        builder.setMessage(message)
+        builder.setPositiveButton(activity.getString(android.R.string.ok)) { dialogInterface, _ ->
+            dialogInterface.cancel()
+            startScanning()
+        }
+
+        builder.create().show()
+    }
+
     companion object {
         private const val VIBRATION_DURATION = 600L
+        private const val BARCODE = "barcode"
+
     }
 }

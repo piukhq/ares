@@ -9,7 +9,9 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthTextItemBinding
+import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
@@ -26,7 +28,7 @@ import java.util.*
 
 
 class TextFieldViewHolder(
-    val onNavigateToBarcodeScan: ((Int) -> Unit),
+    val onNavigateToBarcodeScan: ((Account) -> Unit),
     val binding: AddAuthTextItemBinding
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
@@ -34,6 +36,7 @@ class TextFieldViewHolder(
     var isLastEditText: Boolean = false
     var item: AddAuthItemWrapper? = null
     private var columnNameForBarcode: String? = null
+    private var isCardNumberField = false
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -71,6 +74,7 @@ class TextFieldViewHolder(
 
         val planField = item.fieldType as PlanField
         val planRequest = item.fieldsRequest
+        isCardNumberField = false
 
         binding.planField = planField
 
@@ -124,8 +128,8 @@ class TextFieldViewHolder(
             if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
                     .isEmpty() && hasBarcodeCommonName()
             ) {
+                isCardNumberField = true
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-
                 onTouchListener(false, planField)
 
                 addTextChangedListener(object : SimplifiedTextWatcher {
@@ -136,15 +140,16 @@ class TextFieldViewHolder(
                         count: Int
                     ) {
                         if (s.toString().trim().isNotEmpty()) {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
                             onTouchListener(true, planField)
                         } else {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                             onTouchListener(false, planField)
                         }
                     }
 
                 })
             }
-
 
         }
 
@@ -160,16 +165,18 @@ class TextFieldViewHolder(
     }
 
 
-    override fun onBarcodeScanSuccess(barcode: String) {
-        super.onBarcodeScanSuccess(barcode)
-        Log.d("TVH",barcode)
-        updateOnSuccess(binding.contentAddAuthText,barcode)
+    override fun onBarcodeScanSuccess() {
 
+        if (isCardNumberField) {
+            SharedPreferenceManager.scannedLoyaltyBarCode?.let {
+                updateOnSuccess(binding.contentAddAuthText, it)
+            }
+            SharedPreferenceManager.scannedLoyaltyBarCode = null
+        }
     }
 
-    private fun updateOnSuccess(et: TextInputEditText, bc:String) {
+    private fun updateOnSuccess(et: TextInputEditText, bc: String) {
         binding.titleAddAuthText.setTextColor(Color.GRAY)
-        //Temporary solution to simulate barcode scanning
         et.setText(bc)
         columnNameForBarcode?.let {
             binding.titleAddAuthText.text = it
@@ -209,17 +216,7 @@ class TextFieldViewHolder(
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
 
                         } else {
-                            onNavigateToBarcodeScan(adapterPosition)
-                            Toast.makeText(context,"Scanning...",Toast.LENGTH_SHORT).show()
-//                            binding.titleAddAuthText.setTextColor(Color.GRAY)
-//                            //Temporary solution to simulate barcode scanning
-//                            this@onTouchListener.setText("6332040081234567")
-//                            columnNameForBarcode?.let {
-//                                binding.titleAddAuthText.text = it
-//
-//                            }
-//                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-//                            editTextState(false)
+                            account?.let { onNavigateToBarcodeScan(it) }
 
                         }
                         return true
