@@ -95,7 +95,7 @@ class SettingsAdapter(
 
                 value.visibility =
                     if (item.value.isNullOrEmpty()) {
-                        View.GONE
+                        View.INVISIBLE
                     } else {
                         View.VISIBLE
                     }
