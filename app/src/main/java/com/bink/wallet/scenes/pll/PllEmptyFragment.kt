@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.pll
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -8,7 +9,11 @@ import com.bink.wallet.databinding.FragmentPllEmptyBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.requestCameraPermissionAndNavigate
+import com.bink.wallet.utils.requestPermissionsResult
+import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -72,7 +77,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
         binding.buttonAddPaymentCardNonModal.setOnClickListener {
-            navigateToAddPaymentCards()
+            requestCameraPermissionAndNavigate(false, null)
         }
 
         binding.addPaymentCardModal.setOnClickListener {
@@ -80,8 +85,36 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
     }
 
-    private fun navigateToAddPaymentCards() {
-        val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        scanResult(
+            requestCode,
+            resultCode,
+            data,
+            { navigateToAddPaymentCards(it) },
+            { logPaymentCardSuccess(it) })
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        requestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            null,
+            { navigateToAddPaymentCards() },
+            null
+        )
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun navigateToAddPaymentCards(cardNumber: String = "") {
+        val directions = PllEmptyFragmentDirections.pllEmptyToNewPaymentCard(
+            cardNumber
+        )
         findNavController().navigateIfAdded(this, directions)
     }
 
