@@ -8,14 +8,12 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.model.request.PreferencesRequestBody
 import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragmentBinding>() {
@@ -42,16 +40,14 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         viewModel.savePreferenceError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.preferences.observeNonNull(this) { preferences ->
+            binding.preferenceError.visibility = View.GONE
             binding.progressSpinner.visibility = View.GONE
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
                     onClickListener = { preference: Preference, state: Int, _ ->
                         viewModel.savePreference(
-                            json = JSONObject().put(
-                                preference.slug!!,
-                                state
-                            ).toString()
+                            PreferencesRequestBody(state)
                         )
                     })
                 layoutManager = GridLayoutManager(requireContext(), 1)
@@ -60,12 +56,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
         viewModel.preferenceErrorResponse.observeNonNull(this) {
             if (isNetworkAvailable(requireContext(), true)) {
-                requireContext().displayModalPopup(
-                    EMPTY_STRING,
-                    getString(
-                        R.string.preferences_error
-                    )
-                )
+                binding.preferenceError.visibility = View.VISIBLE
             }
             binding.progressSpinner.visibility = View.GONE
         }
