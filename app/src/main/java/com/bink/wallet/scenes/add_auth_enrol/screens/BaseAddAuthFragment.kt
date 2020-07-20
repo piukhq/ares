@@ -138,6 +138,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                     return false
                 }
             }
+            viewModel.haveValidationsPassed.set(false)
             adapter = AddAuthAdapter(
                 viewModel.addAuthItemsList,
                 currentMembershipPlan,
