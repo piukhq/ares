@@ -31,6 +31,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.ApiErrorUtils
+import kotlinx.android.synthetic.main.base_add_auth_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -94,6 +95,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->
+            binding.loadingIndicator.visibility = View.GONE
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
                     requireContext().displayModalPopup(
