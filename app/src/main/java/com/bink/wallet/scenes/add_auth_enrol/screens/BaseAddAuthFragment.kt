@@ -94,6 +94,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->
+            binding.loadingIndicator.visibility = View.GONE
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
                     requireContext().displayModalPopup(
