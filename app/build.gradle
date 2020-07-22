@@ -16,7 +16,7 @@ repositories {
 def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20000007"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
-
+ 
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
