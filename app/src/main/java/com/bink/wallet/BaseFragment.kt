@@ -2,6 +2,7 @@ package com.bink.wallet
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
+import com.crashlytics.android.Crashlytics
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
@@ -86,6 +88,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun setFirebaseUserId(uid: String) {
         (requireActivity() as MainActivity).firebaseAnalytics.setUserId(uid)
+
+
+
+        Handler().postDelayed(
+            { Crashlytics.getInstance().crash() },2000
+        )
+
     }
 
     protected fun logEvent(identifierValue: String) {
