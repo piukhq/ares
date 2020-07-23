@@ -45,7 +45,8 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
-                    onClickListener = { preference: Preference, state: Int, _ ->
+                    onClickListener = { _: Preference, isChecked: Boolean, _ ->
+                        val state = if (isChecked) 1 else 0
                         viewModel.savePreference(
                             PreferencesRequestBody(state)
                         )
