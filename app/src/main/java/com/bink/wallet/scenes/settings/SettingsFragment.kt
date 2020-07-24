@@ -81,6 +81,9 @@ class SettingsFragment :
             adapter = settingsAdapter
         }
         viewModel.itemsList.observe(this, this)
+        viewModel.userResponse.observeNonNull(this) {
+            setFirebaseUserId(it.uid)
+        }
         initZendesk()
     }
 

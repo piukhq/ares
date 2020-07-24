@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.PostServiceRequest
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -33,7 +34,9 @@ class LoginViewModel constructor(
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
-
+    private val _userResponse = MutableLiveData<User>()
+    val userResponse: LiveData<User>
+        get() = _userResponse
     private val _postServiceResponse = MutableLiveData<ResponseBody>()
     val postServiceResponse: LiveData<ResponseBody>
         get() = _postServiceResponse
@@ -98,6 +101,6 @@ class LoginViewModel constructor(
     }
 
     fun getCurrentUser() {
-        userRepository.getUserDetails(_getUserResponse)
+        userRepository.getUserDetails(_getUserResponse,_userResponse)
     }
 }

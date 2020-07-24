@@ -110,6 +110,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 postServiceResponse.observeNonNull(this@LoginFragment) {
                     getCurrentUser()
                 }
+
+                it.uid?.let { uid -> setFirebaseUserId(uid) }
             }
 
             logInErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -141,6 +143,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
                     logInButton.isEnabled = !it
                 }
+            }
+
+            userResponse.observeNonNull(this@LoginFragment) {
+                setFirebaseUserId(it.uid)
             }
         }
 

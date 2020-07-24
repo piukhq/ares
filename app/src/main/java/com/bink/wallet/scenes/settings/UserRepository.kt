@@ -14,7 +14,8 @@ class UserRepository(
 ) {
 
     fun putUserDetails(
-        user: User
+        user: User,
+        userResponse: MutableLiveData<User>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.putUserDetailsAsync(user)
@@ -30,6 +31,7 @@ class UserRepository(
                         LocalStoreUtils.KEY_SECOND_NAME,
                         response.last_name
                     )
+                    userResponse.value = response
                 } catch (e: Exception) {
                     // We don't care about any error
                 }
@@ -38,7 +40,8 @@ class UserRepository(
     }
 
     fun getUserDetails(
-        getUserResponse: MutableLiveData<Boolean>
+        getUserResponse: MutableLiveData<Boolean>,
+        userResponse: MutableLiveData<User> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getUserAsync()
@@ -55,6 +58,7 @@ class UserRepository(
                         response.last_name
                     )
                     getUserResponse.value = true
+                    userResponse.value = response
                 } catch (e: Exception) {
                     getUserResponse.value = false
                     // We don't care about any error
