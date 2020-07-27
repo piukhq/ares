@@ -36,6 +36,10 @@ class SettingsViewModel constructor(
     val clearErrorResponse: LiveData<Exception>
         get() = _clearErrorResponse
 
+    private val _userResponse = MutableLiveData<User>()
+    val userResponse: LiveData<User>
+        get() = _userResponse
+
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
         loyaltyWalletRepository.clearMembershipCards()
@@ -60,7 +64,7 @@ class SettingsViewModel constructor(
     }
 
     fun putUserDetails(user: User) {
-        userRepository.putUserDetails(user)
+        userRepository.putUserDetails(user,_userResponse)
     }
 
     fun shouldShowUserDetailsDialog(): Boolean {

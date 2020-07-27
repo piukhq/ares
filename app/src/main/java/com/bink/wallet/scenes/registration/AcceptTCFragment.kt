@@ -122,6 +122,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                     )
                 )
             }
+
+            setFirebaseUserId(it.uid)
         }
 
         viewModel.postServiceResponse.observeNonNull(this) {
