@@ -6,7 +6,6 @@ import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
-import com.bink.wallet.model.request.PreferencesRequestBody
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -17,6 +16,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.scenes.login.LoginResponse
 import kotlinx.coroutines.Deferred
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
@@ -124,7 +124,7 @@ interface ApiService {
 
     @PUT("/users/me/settings")
     fun putPreferencesAsync(
-        @Body preferenceRequest: PreferencesRequestBody
+        @Body preferenceRequest: RequestBody
     ): Deferred<ResponseBody>
 
     @PUT("/users/me")

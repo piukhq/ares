@@ -8,12 +8,12 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
-import com.bink.wallet.model.request.PreferencesRequestBody
 import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragmentBinding>() {
@@ -45,10 +45,13 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             binding.preferencesRecycler.apply {
                 adapter = PreferenceAdapter(
                     preferences,
-                    onClickListener = { _: Preference, isChecked: Boolean, _ ->
+                    onClickListener = { preference: Preference, isChecked: Boolean, _ ->
                         val state = if (isChecked) 1 else 0
                         viewModel.savePreference(
-                            PreferencesRequestBody(state)
+                           requestBody = JSONObject().put(
+                               preference.slug!!,
+                               state
+                           ).toString()
                         )
                     })
                 layoutManager = GridLayoutManager(requireContext(), 1)

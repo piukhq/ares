@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.preference
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.request.Preference
-import com.bink.wallet.model.request.PreferencesRequestBody
 import com.bink.wallet.scenes.login.LoginRepository
 import okhttp3.ResponseBody
 
@@ -18,7 +17,7 @@ class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseV
         loginRepository.getPreferences(preferences, preferenceErrorResponse)
     }
 
-    fun savePreference(requestBody: PreferencesRequestBody) {
+    fun savePreference(requestBody: String) {
         loginRepository.setPreference(requestBody, savePreference, savePreferenceError)
     }
 
