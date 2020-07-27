@@ -11,7 +11,7 @@ import com.bink.wallet.utils.toInt
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,
-    var onClickListener: (Preference, Int, CheckBox) -> Unit = { _, _, _ -> }
+    var onClickListener: (Preference, Boolean, CheckBox) -> Unit = { _, _, _ -> }
 ) : RecyclerView.Adapter<PreferenceAdapter.PreferenceItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreferenceItemHolder {
@@ -34,13 +34,11 @@ class PreferenceAdapter(
                 preference = item
                 preferenceItem.setOnClickListener {
                     if (UtilFunctions.isNetworkAvailable(it.context, true)) {
-                        preferenceItem.setOnCheckedChangeListener { _, isChecked ->
                             onClickListener(
                                 item,
-                                isChecked.toInt(),
+                                preferenceItem.isChecked,
                                 preferenceItem
                             )
-                        }
                     }
                 }
                 executePendingBindings()
