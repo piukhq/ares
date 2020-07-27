@@ -88,7 +88,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun setFirebaseUserId(uid: String) {
         Crashlytics.setUserIdentifier(uid)
-
     }
 
     protected fun logEvent(identifierValue: String) {
