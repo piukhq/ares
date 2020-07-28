@@ -269,7 +269,9 @@ class TextFieldViewHolder(
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
             checkIfError(this, currentItem)
-            checkValidation(null)
+            if (text.toString().trim().isNotEmpty()){
+                checkValidation(null)
+            }
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
             error = context?.getString(

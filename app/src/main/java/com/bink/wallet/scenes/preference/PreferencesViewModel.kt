@@ -17,8 +17,8 @@ class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseV
         loginRepository.getPreferences(preferences, preferenceErrorResponse)
     }
 
-    fun savePreference(json: String) {
-        loginRepository.setPreference(json, savePreference, savePreferenceError)
+    fun savePreference(requestBody: String) {
+        loginRepository.setPreference(requestBody, savePreference, savePreferenceError)
     }
 
 }

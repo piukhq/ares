@@ -133,6 +133,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         )
                     )
                 }
+
+                it.uid?.let { uid -> setFirebaseUserId(uid) }
             }
 
             postServiceResponse.observeNonNull(this@SignUpFragment) {
