@@ -37,7 +37,7 @@ class CheckboxViewHolder(
 
     private fun handleCheckBoxChange(item: AddAuthItemWrapper, isChecked: Boolean) {
         setFieldRequestValue(item, isChecked.toString())
-        checkValidation()
+        checkValidation(null)
     }
 
     private fun setDescriptionText(

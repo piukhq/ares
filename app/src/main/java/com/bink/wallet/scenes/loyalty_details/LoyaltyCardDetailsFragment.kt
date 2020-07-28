@@ -768,7 +768,6 @@ class LoyaltyCardDetailsFragment :
                                 )
 
                             findNavController().navigateIfAdded(this, action, currentDestination)
-
                         }
                     }
                 }

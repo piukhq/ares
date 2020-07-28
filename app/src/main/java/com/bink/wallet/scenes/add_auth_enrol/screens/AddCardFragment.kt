@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.add_auth_enrol.screens
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel

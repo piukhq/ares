@@ -11,7 +11,7 @@ abstract class BaseAddAuthViewHolder<T>(
 ) :
     BaseViewHolder<T>(viewDataBinding) {
 
-    var checkValidation: () -> Unit = {}
+    var checkValidation: (String?) -> Unit = {}
 
     var setFieldRequestValue: (item: AddAuthItemWrapper, value: String) -> Unit = { _, _ ->  }
 

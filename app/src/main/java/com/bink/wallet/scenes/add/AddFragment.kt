@@ -57,7 +57,6 @@ class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 false,
                 null
             )
-
         }
         binding.loyaltyCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(

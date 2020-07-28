@@ -3,11 +3,9 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthTextItemBinding
@@ -37,6 +35,7 @@ class TextFieldViewHolder(
     var item: AddAuthItemWrapper? = null
     private var columnNameForBarcode: String? = null
     private var isCardNumberField = false
+    private var barcodeValidation: String? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -48,7 +47,7 @@ class TextFieldViewHolder(
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
             }
-            checkValidation()
+            checkValidation(barcodeValidation)
         }
     }
 
@@ -65,7 +64,7 @@ class TextFieldViewHolder(
                     currentText.toString().toLowerCase(Locale.ROOT)
                 )
             }
-            checkValidation()
+            checkValidation(null)
         }
     }
 
@@ -147,10 +146,8 @@ class TextFieldViewHolder(
                             onTouchListener(false, planField)
                         }
                     }
-
                 })
             }
-
         }
 
         planRequest?.let { safePlan ->
@@ -171,7 +168,9 @@ class TextFieldViewHolder(
             SharedPreferenceManager.scannedLoyaltyBarCode?.let {
                 updateOnSuccess(binding.contentAddAuthText, it)
             }
+            SharedPreferenceManager.isNowBarcode = true
             SharedPreferenceManager.scannedLoyaltyBarCode = null
+
         }
     }
 
@@ -180,7 +179,6 @@ class TextFieldViewHolder(
         et.setText(bc)
         columnNameForBarcode?.let {
             binding.titleAddAuthText.text = it
-
         }
         et.setEndDrawable(et.context.getDrawable(R.drawable.ic_clear_search))
         et.editTextState(false)
@@ -196,7 +194,6 @@ class TextFieldViewHolder(
                 null
             )
         }
-
     }
 
     private fun TextInputEditText.clearField() {
@@ -214,17 +211,16 @@ class TextFieldViewHolder(
                             clearField()
                             editTextState(true)
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            SharedPreferenceManager.isNowBarcode = false
 
                         } else {
                             account?.let { onNavigateToBarcodeScan(it) }
-
                         }
                         return true
                     }
                 }
                 return false
             }
-
         })
     }
 
@@ -242,7 +238,6 @@ class TextFieldViewHolder(
             this.isCursorVisible = false
             this.setTextColor(Color.GRAY)
         }
-
     }
 
 
@@ -258,25 +253,23 @@ class TextFieldViewHolder(
 
         //Check if any of the alternatives have "barcode" as column name
         alternativeValues.forEach { alternative ->
-
             addFields?.let { addFields ->
                 addFields.forEach { planField ->
                     if (planField.column.equals(alternative) && planField.common_name.equals(BARCODE)) {
                         columnNameForBarcode = planField.column
+                        barcodeValidation = planField.validation
                         return true
                     }
                 }
             }
         }
-
         return false
     }
-
 
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
             checkIfError(this, currentItem)
-            checkValidation()
+            checkValidation(null)
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
             error = context?.getString(
@@ -342,7 +335,7 @@ class TextFieldViewHolder(
                     item?.let {
                         setFieldRequestValue(it, strDate.toString())
                     }
-                    checkValidation()
+                    checkValidation(null)
                 },
                 Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),

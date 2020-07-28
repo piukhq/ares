@@ -26,7 +26,7 @@ class AddAuthAdapter(
     val membershipPlan: MembershipPlan?,
     private val headerTitle: String?,
     private val headerDescription: String?,
-    val checkValidation: () -> Unit = {},
+    val checkValidation: (String?) -> Unit = {},
     val navigateToHeader: () -> Unit = {},
     val onLinkClickListener: ((String) -> Unit) = {},
     val onNavigateToBarcodeScanListener: ((Account) -> Unit)
@@ -146,5 +146,4 @@ class AddAuthAdapter(
     private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
         itemWrapper.fieldsRequest?.value = value
     }
-
 }

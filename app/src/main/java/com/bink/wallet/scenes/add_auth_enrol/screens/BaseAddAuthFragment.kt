@@ -129,7 +129,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 Observer { result ->
                     onResult(result)
                 })
-
     }
 
     override fun onResume() {
@@ -159,7 +158,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                         viewModel.haveValidationsPassed.set(false)
                         return@AddAuthAdapter
                     }
-                    if (!viewModel.didPlanFieldsPassValidations()) {
+                    if (!viewModel.didPlanFieldsPassValidations(it)) {
                         viewModel.haveValidationsPassed.set(false)
                         return@AddAuthAdapter
                     }

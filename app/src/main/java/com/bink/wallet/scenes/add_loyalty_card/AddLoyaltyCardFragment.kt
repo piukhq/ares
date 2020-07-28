@@ -105,7 +105,6 @@ class AddLoyaltyCardFragment :
                 }
             }
         }
-
     }
 
     override fun handleResult(rawResult: Result?) {
@@ -132,13 +131,11 @@ class AddLoyaltyCardFragment :
             membershipPlan?.also {
 
                 val membershipCardId = ""
-
                 val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
                     membershipPlan = it,
                     membershipCardId = membershipCardId,
                     barcode = rawResult.toString()
                 )
-
                 findNavController().navigateIfAdded(this, action)
 
             } ?: run {

@@ -27,6 +27,7 @@ object SharedPreferenceManager {
     private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
+    private const val BARCODE = "barcode"
 
 
     //----- PAIRS ----
@@ -134,6 +135,11 @@ object SharedPreferenceManager {
         get() = preferences.getString(SCANNED_LOYALTY_BARCODE, null)
         set(value) = preferences.edit {
             it.putString(SCANNED_LOYALTY_BARCODE, value)
+        }
+    var isNowBarcode: Boolean
+        get() = preferences.getBoolean(BARCODE, false)
+        set(value) = preferences.edit {
+            it.putBoolean(BARCODE, value)
         }
 
     fun clear() {
