@@ -143,7 +143,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                         when (SharedPreferenceManager.isNowBarcode) {
                             true -> if (!hasPassedBarcodeValidation(
                                     barcodeValidation,
-                                    item.validation
+                                    safeFieldsRequest.value
                                 )
                             ) {
                                 return false
