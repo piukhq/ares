@@ -5,6 +5,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
@@ -130,7 +131,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         return true
     }
 
-    fun didPlanFieldsPassValidations(): Boolean {
+    fun didPlanFieldsPassValidations(barcodeValidation: String?): Boolean {
         addAuthItemsList.filter { item -> item.getFieldType() == AddAuthItemType.PLAN_FIELD }
             .map { addAuthItem ->
                 val item = addAuthItem.fieldType as PlanField
@@ -138,12 +139,22 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                     addAuthItem.fieldsRequest?.let { safeFieldsRequest ->
                         if (safeFieldsRequest.value.isNullOrEmpty() && !safeFieldsRequest.shouldIgnore) {
                             return false
-                        } else if (!UtilFunctions.isValidField(
-                                item.validation,
-                                safeFieldsRequest.value
-                            ) && !safeFieldsRequest.shouldIgnore
-                        ) {
-                            return false
+                        }
+                        when (SharedPreferenceManager.isNowBarcode) {
+                            true -> if (!hasPassedBarcodeValidation(
+                                    barcodeValidation,
+                                    safeFieldsRequest.value
+                                )
+                            ) {
+                                return false
+                            }
+                            else -> if (!UtilFunctions.isValidField(
+                                    item.validation,
+                                    safeFieldsRequest.value
+                                ) && !safeFieldsRequest.shouldIgnore
+                            ) {
+                                return false
+                            }
                         }
                     }
                 }
@@ -213,5 +224,9 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                 list.remove(it)
             }
         }
+    }
+
+    private fun hasPassedBarcodeValidation(regex: String?, barcode: String?): Boolean {
+        return UtilFunctions.isValidField(regex, barcode)
     }
 }

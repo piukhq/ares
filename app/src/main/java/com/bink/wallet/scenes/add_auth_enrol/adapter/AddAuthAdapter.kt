@@ -11,6 +11,7 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 import com.bink.wallet.databinding.AddAuthDisplayItemBinding
 import com.bink.wallet.databinding.AddAuthHeaderItemBinding
 import com.bink.wallet.databinding.AddAuthCheckboxItemBinding
+import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -25,12 +26,12 @@ class AddAuthAdapter(
     val membershipPlan: MembershipPlan?,
     private val headerTitle: String?,
     private val headerDescription: String?,
-    val checkValidation: () -> Unit = {},
+    val checkValidation: (String?) -> Unit = {},
     val navigateToHeader: () -> Unit = {},
-    val onLinkClickListener: ((String) -> Unit) = {}
+    val onLinkClickListener: ((String) -> Unit) = {},
+    val onNavigateToBarcodeScanListener: ((Account) -> Unit)
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
-
 
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
 
@@ -42,7 +43,10 @@ class AddAuthAdapter(
                     is TextFieldViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
                         holder.isLastEditText = isLastEditText(addAuthItem)
+                        holder.addFields = membershipPlan?.account?.add_fields
+                        holder.account = membershipPlan?.account
                         holder.bind(addAuthItem)
+                        holder.onBarcodeScanSuccess()
                     }
                     is SpinnerViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
@@ -80,7 +84,7 @@ class AddAuthAdapter(
         return when (viewType) {
             FieldType.TEXT.type,
             FieldType.SENSITIVE.type -> {
-                TextFieldViewHolder((AddAuthTextItemBinding.inflate(inflater)))
+                TextFieldViewHolder(onNavigateToBarcodeScanListener, (AddAuthTextItemBinding.inflate(inflater)))
             }
             FieldType.SPINNER.type -> {
                 SpinnerViewHolder(
@@ -102,7 +106,10 @@ class AddAuthAdapter(
                 }
             }
             else -> {
-                CheckboxViewHolder(AddAuthCheckboxItemBinding.inflate(inflater), onLinkClickListener = onLinkClickListener)
+                CheckboxViewHolder(
+                    AddAuthCheckboxItemBinding.inflate(inflater),
+                    onLinkClickListener = onLinkClickListener
+                )
             }
         }
     }

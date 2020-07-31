@@ -24,8 +24,11 @@ object SharedPreferenceManager {
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
     private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
     private const val CONTACT_US_CLICKED = "contactUsClicked"
+    private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
+    private const val BARCODE = "barcode"
+
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -126,6 +129,17 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(HAS_VIEW_DIALOG_PERMISSION, false)
         set(value) = preferences.edit {
             it.putBoolean(HAS_VIEW_DIALOG_PERMISSION, value)
+        }
+
+    var scannedLoyaltyBarCode: String?
+        get() = preferences.getString(SCANNED_LOYALTY_BARCODE, null)
+        set(value) = preferences.edit {
+            it.putString(SCANNED_LOYALTY_BARCODE, value)
+        }
+    var isNowBarcode: Boolean
+        get() = preferences.getBoolean(BARCODE, false)
+        set(value) = preferences.edit {
+            it.putBoolean(BARCODE, value)
         }
 
     fun clear() {

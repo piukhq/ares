@@ -20,7 +20,7 @@ import com.bink.wallet.utils.requestPermissionsResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
+class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     private val args by navArgs<AddFragmentArgs>()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -57,7 +57,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 false,
                 null
             )
-
         }
         binding.loyaltyCardContainer.setOnClickListener {
             requestCameraPermissionAndNavigate(
@@ -125,7 +124,8 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
         viewModel.membershipCards.value?.let {
             val directions = AddFragmentDirections.addToAddLoyalty(
                 args.membershipPlans,
-                it.toTypedArray()
+                it.toTypedArray(),
+                null
             )
             findNavController().navigateIfAdded(this, directions)
         }

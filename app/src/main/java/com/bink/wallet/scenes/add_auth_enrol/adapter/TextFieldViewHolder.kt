@@ -1,10 +1,15 @@
 import android.app.DatePickerDialog
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.text.InputType
+import android.text.method.PasswordTransformationMethod
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthTextItemBinding
+import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
@@ -17,18 +22,20 @@ import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import android.text.method.PasswordTransformationMethod
+import java.util.*
+
 
 class TextFieldViewHolder(
+    val onNavigateToBarcodeScan: ((Account) -> Unit),
     val binding: AddAuthTextItemBinding
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
     var isLastEditText: Boolean = false
     var item: AddAuthItemWrapper? = null
+    private var columnNameForBarcode: String? = null
+    private var isCardNumberField = false
+    private var barcodeValidation: String? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -40,7 +47,7 @@ class TextFieldViewHolder(
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
             }
-            checkValidation()
+            checkValidation(barcodeValidation)
         }
     }
 
@@ -57,7 +64,7 @@ class TextFieldViewHolder(
                     currentText.toString().toLowerCase(Locale.ROOT)
                 )
             }
-            checkValidation()
+            checkValidation(null)
         }
     }
 
@@ -66,6 +73,7 @@ class TextFieldViewHolder(
 
         val planField = item.fieldType as PlanField
         val planRequest = item.fieldsRequest
+        isCardNumberField = false
 
         binding.planField = planField
 
@@ -115,6 +123,31 @@ class TextFieldViewHolder(
                 }
                 false
             }
+
+            if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
+                    .isEmpty() && hasBarcodeCommonName()
+            ) {
+                isCardNumberField = true
+                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                onTouchListener(false, planField)
+
+                addTextChangedListener(object : SimplifiedTextWatcher {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        if (s.toString().trim().isNotEmpty()) {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                            onTouchListener(true, planField)
+                        } else {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            onTouchListener(false, planField)
+                        }
+                    }
+                })
+            }
         }
 
         planRequest?.let { safePlan ->
@@ -128,11 +161,116 @@ class TextFieldViewHolder(
         binding.executePendingBindings()
     }
 
+
+    override fun onBarcodeScanSuccess() {
+
+        if (isCardNumberField) {
+            SharedPreferenceManager.scannedLoyaltyBarCode?.let {
+                updateOnSuccess(binding.contentAddAuthText, it)
+            }
+            SharedPreferenceManager.isNowBarcode = true
+            SharedPreferenceManager.scannedLoyaltyBarCode = null
+
+        }
+    }
+
+    private fun updateOnSuccess(et: TextInputEditText, bc: String) {
+        binding.titleAddAuthText.setTextColor(Color.GRAY)
+        et.setText(bc)
+        columnNameForBarcode?.let {
+            binding.titleAddAuthText.text = it
+        }
+        et.setEndDrawable(et.context.getDrawable(R.drawable.ic_clear_search))
+        et.editTextState(false)
+    }
+
+    private fun TextInputEditText.setEndDrawable(drawable: Drawable?) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+        drawable?.let {
+            setCompoundDrawablesRelativeWithIntrinsicBounds(
+                null,
+                null,
+                it,
+                null
+            )
+        }
+    }
+
+    private fun TextInputEditText.clearField() {
+        this.text?.clear()
+    }
+
+    private fun TextInputEditText.onTouchListener(shouldClearText: Boolean, planField: PlanField) {
+        setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                if (event?.action == MotionEvent.ACTION_UP) {
+                    if (event.rawX >= (binding.contentAddAuthText.right - binding.contentAddAuthText.compoundDrawables[DRAWABLE_END].bounds.width())) {
+                        if (shouldClearText) {
+                            binding.titleAddAuthText.text = planField.column
+                            binding.titleAddAuthText.setTextColor(Color.BLACK)
+                            clearField()
+                            editTextState(true)
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            SharedPreferenceManager.isNowBarcode = false
+
+                        } else {
+                            account?.let { onNavigateToBarcodeScan(it) }
+                        }
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+    }
+
+    private fun TextInputEditText.editTextState(isEnabled: Boolean) {
+        if (isEnabled) {
+            this.isFocusable = true
+            this.isFocusableInTouchMode = true
+            if (this.hasFocusable()) {
+                this.requestFocus()
+                this.isCursorVisible = true
+            }
+            this.setTextColor(Color.BLACK)
+        } else {
+            this.isFocusable = false
+            this.isCursorVisible = false
+            this.setTextColor(Color.GRAY)
+        }
+    }
+
+
+    private fun hasBarcodeCommonName(): Boolean {
+        val alternativeValues = mutableListOf<String>()
+
+        //Get all the alternatives
+        addFields?.forEach { planField ->
+            (planField.alternatives?.forEach { alternative ->
+                alternativeValues.add(alternative)
+            })
+        }
+
+        //Check if any of the alternatives have "barcode" as column name
+        alternativeValues.forEach { alternative ->
+            addFields?.let { addFields ->
+                addFields.forEach { planField ->
+                    if (planField.column.equals(alternative) && planField.common_name.equals(BARCODE)) {
+                        columnNameForBarcode = planField.column
+                        barcodeValidation = planField.validation
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
             checkIfError(this, currentItem)
             if (text.toString().trim().isNotEmpty()){
-                checkValidation()
+                checkValidation(null)
             }
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
@@ -199,7 +337,7 @@ class TextFieldViewHolder(
                     item?.let {
                         setFieldRequestValue(it, strDate.toString())
                     }
-                    checkValidation()
+                    checkValidation(null)
                 },
                 Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),
@@ -219,5 +357,11 @@ class TextFieldViewHolder(
             binding.contentAddAuthText.visibility = View.VISIBLE
             binding.tvDatePicker.visibility = View.GONE
         }
+    }
+
+    companion object {
+        private const val BARCODE = "barcode"
+        private const val CARD_NUMBER = "card_number"
+        private const val DRAWABLE_END = 2
     }
 }

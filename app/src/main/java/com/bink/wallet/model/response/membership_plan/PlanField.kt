@@ -15,7 +15,8 @@ data class PlanField(
     val type: Int?,
     val choice: List<String>?,
     val description: String?,
-    var typeOfField: TypeOfField?
+    var typeOfField: TypeOfField?,
+    val alternatives: List<String>?
 ) : Parcelable {
 
     fun isBooleanType(): Boolean =

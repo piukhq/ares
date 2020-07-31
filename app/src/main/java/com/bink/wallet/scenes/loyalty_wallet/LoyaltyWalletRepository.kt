@@ -38,7 +38,6 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    runBlocking {
                         membershipCardDao.deleteAllCards()
                         membershipCardDao.storeAll(response)
 
@@ -46,7 +45,6 @@ class LoyaltyWalletRepository(
                             System.currentTimeMillis()
 
                         mutableMembershipCards.value = response.toMutableList()
-                    }
                 } catch (e: Exception) {
                     loadCardsError.value = e
                 }

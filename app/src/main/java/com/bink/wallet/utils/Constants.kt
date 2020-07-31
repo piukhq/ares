@@ -67,4 +67,6 @@ const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
 
 const val BARCODE = "Barcode"
 
+const val ADD_AUTH_BARCODE = "ADD_AUTH_BARCODE"
+
 const val CAMERA_REQUEST_CODE = 101

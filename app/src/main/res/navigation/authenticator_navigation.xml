@@ -166,11 +166,24 @@
 
         <argument
             android:name="membershipPlans"
-            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
+            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]"
+            app:nullable="true" />
 
         <argument
             android:name="membershipCards"
-            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]" />
+            app:argType="com.bink.wallet.model.response.membership_card.MembershipCard[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="account"
+            app:argType="com.bink.wallet.model.response.membership_plan.Account"
+            app:nullable="true" />
+
+        <argument
+            android:name="isFromAddAuth"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
     </fragment>
 
     <fragment
@@ -784,6 +797,9 @@
         <action
             android:id="@+id/authToLoyaltyDetails"
             app:destination="@id/loyalty_card_detail_fragment" />
+        <action
+            android:id="@+id/baseAddToAddLoyaltyFragment"
+            app:destination="@+id/add_loyalty_card" />
 
     </fragment>
 
@@ -828,6 +844,9 @@
         <action
             android:id="@+id/authToLoyaltyDetails"
             app:destination="@id/loyalty_card_detail_fragment" />
+        <action
+            android:id="@+id/baseAddToAddLoyaltyFragment"
+            app:destination="@+id/add_loyalty_card" />
     </fragment>
 
     <fragment

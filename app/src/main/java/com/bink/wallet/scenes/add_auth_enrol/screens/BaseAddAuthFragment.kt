@@ -4,9 +4,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
-import androidx.navigation.Navigator
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +20,7 @@ import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
+import com.bink.wallet.utils.ADD_AUTH_BARCODE
 import com.bink.wallet.utils.ExceptionHandlingUtils
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.RecyclerViewHelper
@@ -31,6 +30,8 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.requestCameraPermissionAndNavigate
+import com.bink.wallet.utils.requestPermissionsResult
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -55,6 +56,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     var navigationHandler: AuthNavigationHandler? = null
     var animationHelper: AuthAnimationHelper? = null
     protected var barcode: String? = null
+    private var addAuthAdapter: AddAuthAdapter? = null
+    private lateinit var account: com.bink.wallet.model.response.membership_plan.Account
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -120,6 +123,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 }
             }
         }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>(
+            ADD_AUTH_BARCODE
+        )
+            ?.observe(viewLifecycleOwner,
+                Observer { result ->
+                    onResult(result)
+                })
     }
 
     override fun onResume() {
@@ -140,7 +150,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 }
             }
             viewModel.haveValidationsPassed.set(false)
-            adapter = AddAuthAdapter(
+            addAuthAdapter = AddAuthAdapter(
                 viewModel.addAuthItemsList,
                 currentMembershipPlan,
                 viewModel.titleText.get(),
@@ -150,7 +160,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                         viewModel.haveValidationsPassed.set(false)
                         return@AddAuthAdapter
                     }
-                    if (!viewModel.didPlanFieldsPassValidations()) {
+                    if (!viewModel.didPlanFieldsPassValidations(it)) {
                         viewModel.haveValidationsPassed.set(false)
                         return@AddAuthAdapter
                     }
@@ -161,8 +171,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 },
                 onLinkClickListener = { url ->
                     findNavController().navigate(BaseAddAuthFragmentDirections.globalToWeb(url))
+                },
+                onNavigateToBarcodeScanListener = { account ->
+                    onScannerActivated(account)
                 }
             )
+            adapter = addAuthAdapter
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -212,6 +226,15 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         super.onDestroy()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        requestPermissionsResult(requestCode,permissions,grantResults,{navigateToScanLoyaltyCard()},null,null)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
     }
@@ -225,5 +248,25 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         activity?.window?.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
+    }
+
+    private fun onScannerActivated(account: com.bink.wallet.model.response.membership_plan.Account) {
+        this.account = account
+        requestCameraPermissionAndNavigate(true
+        ) { navigateToScanLoyaltyCard() }
+    }
+
+    private fun navigateToScanLoyaltyCard() {
+        findNavController().navigate(
+            BaseAddAuthFragmentDirections.baseAddToAddLoyaltyFragment(
+                null,
+                null,
+                account,
+                true
+            )
+        )
+    }
+    private fun onResult(result: String) {
+        SharedPreferenceManager.scannedLoyaltyBarCode = result
     }
 }
