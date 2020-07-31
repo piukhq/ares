@@ -1,9 +1,14 @@
 package com.bink.wallet.scenes.settings
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.webkit.ValueCallback
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +21,13 @@ import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.scenes.points_scrapping.TescoPointsScrapping
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.debug_menu_edit_text.view.*
+import kotlinx.android.synthetic.main.fragment_debug_menu.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
@@ -29,6 +36,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     override val viewModel: DebugMenuViewModel by viewModel()
 
     private var shouldApplyChanges = false
+    private lateinit var client: WebViewClient
+    private var isSignedIn = true
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -84,7 +93,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         }
 
         binding.tvClubcardPoints.setOnClickListener {
-
+            displayDialog()
         }
     }
 
@@ -180,20 +189,54 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         (requireActivity() as MainActivity).forceRunApp()
     }
 
-    private fun displayDialog(){
+    private fun displayDialog() {
         val dialog: androidx.appcompat.app.AlertDialog
         val builder = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
-        builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
+        builder.setTitle(getString(R.string.points_scrapping_message))
         val container = layoutInflater.inflate(R.layout.points_scrapping_credentails, null)
         val etEmail = container.findViewById<EditText>(R.id.et_email)
         val etPassword = container.findViewById<EditText>(R.id.et_password)
 
+        client = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                view?.loadUrl(TescoPointsScrapping.tescoLogin(etEmail, etPassword))
+
+                Log.d("DebugMenu","Page loaded")
+
+                view?.evaluateJavascript(TescoPointsScrapping.getClubCardPoints(),
+                    object : ValueCallback<String> {
+                        override fun onReceiveValue(value: String?) {
+                            Log.d("DebugMenu","Points received is $value")
+                            if (value != null) {
+                                //Saved to preferences
+                                val point = value.replace("\""," ").trim()
+                                showPointsValue(point)
+                            }
+                        }
+
+                    })
+            }
+
+
+
+
+        }
+
+        web_view.apply {
+            webViewClient = client
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
+        }
+
         builder.setView(container)
             .setPositiveButton(
-                getString(R.string.points_scrapping_ok), object : DialogInterface.OnClickListener{
+                getString(R.string.points_scrapping_ok), object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
-                        if (etEmail.text.toString().trim().isNotEmpty() && etPassword.text.toString().trim().isNotEmpty()){
-                            //Go to tesco
+                        if ((etEmail.text.toString().trim()
+                                .isNotEmpty() && etPassword.text.toString().trim().isNotEmpty()) || isSignedIn
+                        ) {
+                            web_view.loadUrl(TESCO_CLUBCARD_URL)
+
                         }
                     }
                 }
@@ -204,5 +247,21 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
         dialog = builder.create()
         dialog.show()
+    }
+
+    private fun showPointsValue(points: String) {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle(getString(R.string.points_scrapping_result_message))
+        builder.setMessage("You currently have $points")
+        builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
+            dialogInterface.cancel()
+        }
+
+        builder.create().show()
+    }
+
+    companion object {
+        const val TESCO_CLUBCARD_URL =
+            "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home"
     }
 }

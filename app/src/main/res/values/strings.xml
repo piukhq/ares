@@ -546,7 +546,10 @@
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
 
    <!-- Points scrapping-->
+    <string name="points_scrapping_message">Please enter your credentials</string>
     <string name="points_scrapping_ok">OK</string>
     <string name="points_scrapping_cancel">Cancel</string>
+    <string name="tap_to_see_points">Tap to see points</string>
+    <string name="points_scrapping_result_message">Here are your points</string>
 
 </resources>
