@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="membershipPlan"
             type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
