@@ -27,7 +27,9 @@ class DebugItemAdapter(
         debugItems[position]?.let {
             (holder as DebugItemViewHolder).bind(
                 it,
-                position != debugItems.size - 1
+                //Temporary change to give better UI
+//                position != debugItems.size - 1
+            true
             )
         }
     }

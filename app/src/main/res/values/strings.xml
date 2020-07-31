@@ -545,4 +545,8 @@
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
 
+   <!-- Points scrapping-->
+    <string name="points_scrapping_ok">OK</string>
+    <string name="points_scrapping_cancel">Cancel</string>
+
 </resources>

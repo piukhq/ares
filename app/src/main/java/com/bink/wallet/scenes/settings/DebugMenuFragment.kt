@@ -1,8 +1,10 @@
 package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -79,6 +81,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                     getString(R.string.select_something_message)
                 )
             }
+        }
+
+        binding.tvClubcardPoints.setOnClickListener {
+
         }
     }
 
@@ -172,5 +178,31 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
     private fun restartApplication() {
         (requireActivity() as MainActivity).forceRunApp()
+    }
+
+    private fun displayDialog(){
+        val dialog: androidx.appcompat.app.AlertDialog
+        val builder = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
+        builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
+        val container = layoutInflater.inflate(R.layout.points_scrapping_credentails, null)
+        val etEmail = container.findViewById<EditText>(R.id.et_email)
+        val etPassword = container.findViewById<EditText>(R.id.et_password)
+
+        builder.setView(container)
+            .setPositiveButton(
+                getString(R.string.points_scrapping_ok), object : DialogInterface.OnClickListener{
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        if (etEmail.text.toString().trim().isNotEmpty() && etPassword.text.toString().trim().isNotEmpty()){
+                            //Go to tesco
+                        }
+                    }
+                }
+            )
+            .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
+                dialog.cancel()
+            }
+
+        dialog = builder.create()
+        dialog.show()
     }
 }
