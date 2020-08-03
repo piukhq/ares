@@ -28,6 +28,7 @@ object SharedPreferenceManager {
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
     private const val BARCODE = "barcode"
+    private const val TESCO_POINTS_BALANCE = "tescoPointsBalance"
 
 
     //----- PAIRS ----
@@ -140,6 +141,11 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(BARCODE, false)
         set(value) = preferences.edit {
             it.putBoolean(BARCODE, value)
+        }
+    var tescoPointsBalance: String?
+        get() = preferences.getString(TESCO_POINTS_BALANCE, null)
+        set(value) = preferences.edit {
+            it.putString(TESCO_POINTS_BALANCE, value)
         }
 
     fun clear() {

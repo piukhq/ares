@@ -37,7 +37,6 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
     private var shouldApplyChanges = false
     private lateinit var client: WebViewClient
-    private var isSignedIn = true
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -201,39 +200,36 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             override fun onPageFinished(view: WebView?, url: String?) {
                 view?.loadUrl(TescoPointsScrapping.tescoLogin(etEmail, etPassword))
 
-                Log.d("DebugMenu","Page loaded")
+                Log.d("DebugMenu", "Page loaded")
 
                 view?.evaluateJavascript(TescoPointsScrapping.getClubCardPoints(),
                     object : ValueCallback<String> {
                         override fun onReceiveValue(value: String?) {
-                            Log.d("DebugMenu","Points received is $value")
-                            if (value != null) {
-                                //Saved to preferences
-                                val point = value.replace("\""," ").trim()
-                                showPointsValue(point)
+                            Log.d("DebugMenu", "Points received is $value")
+                            //We get everything back as a string,even null comes back as "null"
+                            if (!value.equals("null")) {
+                                val point = value?.replace("\"", " ")?.trim()
+                                SharedPreferenceManager.tescoPointsBalance = point
+                                point?.let { showPointsValue(it) }
                             }
                         }
 
                     })
             }
-
-
-
-
         }
 
         web_view.apply {
             webViewClient = client
             settings.javaScriptEnabled = true
-            settings.domStorageEnabled = true
         }
 
         builder.setView(container)
             .setPositiveButton(
                 getString(R.string.points_scrapping_ok), object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
-                        if ((etEmail.text.toString().trim()
-                                .isNotEmpty() && etPassword.text.toString().trim().isNotEmpty()) || isSignedIn
+                        if (etEmail.text.toString().trim()
+                                .isNotEmpty() && etPassword.text.toString().trim()
+                                .isNotEmpty()
                         ) {
                             web_view.loadUrl(TESCO_CLUBCARD_URL)
 
@@ -251,8 +247,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
     private fun showPointsValue(points: String) {
         val builder = AlertDialog.Builder(requireActivity())
-        builder.setTitle(getString(R.string.points_scrapping_result_message))
-        builder.setMessage("You currently have $points")
+        builder.setMessage("You currently have $points clubcard points")
         builder.setPositiveButton(getString(android.R.string.ok)) { dialogInterface, _ ->
             dialogInterface.cancel()
         }
