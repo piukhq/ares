@@ -1,10 +1,7 @@
 package com.bink.wallet.scenes.sign_up
 
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -134,7 +131,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     )
                 }
 
-                it.uid?.let { uid -> setFirebaseUserId(uid) }
+                it.uid?.let { uid ->
+                    setCrashlyticsUserId(uid)
+                    setFirebaseAnalyticsUserId(uid)
+                }
             }
 
             postServiceResponse.observeNonNull(this@SignUpFragment) {

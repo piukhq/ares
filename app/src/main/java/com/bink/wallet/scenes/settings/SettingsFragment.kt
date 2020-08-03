@@ -80,9 +80,10 @@ class SettingsFragment :
             layoutManager = LinearLayoutManager(activity)
             adapter = settingsAdapter
         }
-        viewModel.itemsList.observe(this, this)
+        viewModel.itemsList.observe(viewLifecycleOwner, this)
         viewModel.userResponse.observeNonNull(this) {
-            setFirebaseUserId(it.uid)
+            setCrashlyticsUserId(it.uid)
+            setFirebaseAnalyticsUserId(it.uid)
         }
         initZendesk()
     }

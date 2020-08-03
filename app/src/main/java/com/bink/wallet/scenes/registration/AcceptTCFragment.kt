@@ -123,7 +123,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
             }
 
-            setFirebaseUserId(it.uid)
+            setCrashlyticsUserId(it.uid)
+            setFirebaseAnalyticsUserId(it.uid)
         }
 
         viewModel.postServiceResponse.observeNonNull(this) {

@@ -111,7 +111,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     getCurrentUser()
                 }
 
-                it.uid?.let { uid -> setFirebaseUserId(uid) }
+                it.uid?.let { uid ->
+                    setCrashlyticsUserId(uid)
+                    setFirebaseAnalyticsUserId(uid)
+                }
             }
 
             logInErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -146,7 +149,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             userResponse.observeNonNull(this@LoginFragment) {
-                setFirebaseUserId(it.uid)
+                setCrashlyticsUserId(it.uid)
+                setFirebaseAnalyticsUserId(it.uid)
             }
         }
 
