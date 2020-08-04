@@ -38,7 +38,6 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                        membershipCardDao.deleteAllCards()
                         membershipCardDao.storeAll(response)
 
                         SharedPreferenceManager.membershipCardsLastRequestTime =

@@ -6,6 +6,7 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.generateUuid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -101,10 +102,10 @@ class LoyaltyCardDetailsRepository(
         storeError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            generateUuid(cards, paymentCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
-                        paymentCardDao.deleteAll()
                         paymentCardDao.storeAll(cards)
                     }
                 } catch (e: Exception) {
