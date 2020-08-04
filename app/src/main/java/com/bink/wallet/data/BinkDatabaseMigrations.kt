@@ -12,11 +12,18 @@ class BinkDatabaseMigrations {
             }
         }
 
-        val MIGRATION_18_19 : Migration = object : Migration(18,19){
+        val MIGRATION_18_19: Migration = object : Migration(18, 19) {
             override fun migrate(database: SupportSQLiteDatabase) {
-               database.execSQL("ALTER TABLE membership_plan ADD COLUMN content TEXT ")
+                database.execSQL("ALTER TABLE membership_plan ADD COLUMN content TEXT ")
             }
 
+        }
+
+        val MIGRATION_19_20: Migration = object : Migration(19, 20) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE payment_card ADD COLUMN uuid TEXT")
+                database.execSQL("ALTER TABLE membership_card ADD COLUMN uuid TEXT")
+            }
         }
     }
 
