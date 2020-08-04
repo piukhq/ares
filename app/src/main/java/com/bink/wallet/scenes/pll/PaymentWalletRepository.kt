@@ -6,6 +6,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.assignUuidFromCardLinkageState
 import com.bink.wallet.utils.generateUuid
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
@@ -64,6 +65,7 @@ class PaymentWalletRepository(
 
     fun storePaymentCard(card: PaymentCard) {
         CoroutineScope(Dispatchers.IO).launch {
+            assignUuidFromCardLinkageState(card, paymentCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {

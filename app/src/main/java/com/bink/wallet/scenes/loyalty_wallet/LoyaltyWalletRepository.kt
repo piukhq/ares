@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.async
+import java.util.*
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
@@ -188,9 +189,11 @@ class LoyaltyWalletRepository(
 
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {

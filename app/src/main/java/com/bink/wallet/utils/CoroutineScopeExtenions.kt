@@ -5,7 +5,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
-suspend fun CoroutineScope.generateUuid(cards: List<PaymentCard>, paymentCardDao:PaymentCardDao){
+suspend fun CoroutineScope.generateUuid(cards: List<PaymentCard>, paymentCardDao: PaymentCardDao) {
     val oldCards = paymentCardDao.getAllAsync()
     //Loop through each card we get from Api
     cards.forEach { cardFromApi ->
@@ -28,4 +28,22 @@ suspend fun CoroutineScope.generateUuid(cards: List<PaymentCard>, paymentCardDao
     cardsWithoutUuid.forEach { card ->
         card.uuid = UUID.randomUUID().toString()
     }
+}
+
+suspend fun CoroutineScope.assignUuidFromCardLinkageState(
+    card: PaymentCard,
+    paymentCardDao: PaymentCardDao
+) {
+    val oldCards = paymentCardDao.getAllAsync()
+
+    for (cardInDb in oldCards) {
+        if (card.id == cardInDb.id) {
+            if (cardInDb.uuid == null) {
+                card.uuid == UUID.randomUUID().toString()
+            } else {
+                card.uuid = cardInDb.uuid
+            }
+        }
+    }
+
 }
