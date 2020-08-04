@@ -1,11 +1,13 @@
 package com.bink.wallet.utils
 
+import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
-suspend fun CoroutineScope.generateUuid(cards: List<PaymentCard>, paymentCardDao: PaymentCardDao) {
+suspend fun CoroutineScope.generateUuidForPaymentCards(cards: List<PaymentCard>, paymentCardDao: PaymentCardDao) {
     val oldCards = paymentCardDao.getAllAsync()
     //Loop through each card we get from Api
     cards.forEach { cardFromApi ->
@@ -23,14 +25,14 @@ suspend fun CoroutineScope.generateUuid(cards: List<PaymentCard>, paymentCardDao
             }
         }
     }
-    //To cover all other cases in which Uuid is still be null
+    //To cover all other cases in which Uuid is still null
     val cardsWithoutUuid = cards.filter { it.uuid == null }
     cardsWithoutUuid.forEach { card ->
         card.uuid = UUID.randomUUID().toString()
     }
 }
 
-suspend fun CoroutineScope.assignUuidFromCardLinkageState(
+suspend fun CoroutineScope.generateUuidFromCardLinkageState(
     card: PaymentCard,
     paymentCardDao: PaymentCardDao
 ) {
@@ -44,6 +46,50 @@ suspend fun CoroutineScope.assignUuidFromCardLinkageState(
                 card.uuid = cardInDb.uuid
             }
         }
+    }
+
+}
+
+suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
+    card: MembershipCard,
+    membershipCardDao: MembershipCardDao
+) {
+    val oldMembershipCards = membershipCardDao.getAllAsync()
+
+    for (membershipCardInDb in oldMembershipCards) {
+        if (membershipCardInDb.id == card.id) {
+            if (membershipCardInDb.uuid == null) {
+                card.uuid = UUID.randomUUID().toString()
+            } else {
+                card.uuid = membershipCardInDb.uuid
+            }
+        }
+    }
+
+}
+
+suspend fun CoroutineScope.generateUuidForMembershipCards(
+    cards: List<MembershipCard>,
+    membershipCardDao: MembershipCardDao
+) {
+    val oldMembershipCards = membershipCardDao.getAllAsync()
+
+    cards.forEach { card ->
+        for (membershipCardInDb in oldMembershipCards) {
+            if (membershipCardInDb.id == card.id) {
+                if (membershipCardInDb.uuid == null) {
+                    card.uuid = UUID.randomUUID().toString()
+                } else {
+                    card.uuid = membershipCardInDb.uuid
+                }
+            }
+        }
+
+    }
+    //To cover all other cases in which Uuid is still null
+    val cardsWithoutUuid = cards.filter { it.uuid == null }
+    cardsWithoutUuid.forEach { card ->
+        card.uuid = UUID.randomUUID().toString()
     }
 
 }

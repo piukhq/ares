@@ -12,12 +12,12 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.generateUuidForMembershipCards
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.async
 import java.util.*
 
@@ -39,12 +39,13 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                        membershipCardDao.storeAll(response)
+                    generateUuidForMembershipCards(response, membershipCardDao)
+                    membershipCardDao.storeAll(response)
 
-                        SharedPreferenceManager.membershipCardsLastRequestTime =
-                            System.currentTimeMillis()
+                    SharedPreferenceManager.membershipCardsLastRequestTime =
+                        System.currentTimeMillis()
 
-                        mutableMembershipCards.value = response.toMutableList()
+                    mutableMembershipCards.value = response.toMutableList()
                 } catch (e: Exception) {
                     loadCardsError.value = e
                 }

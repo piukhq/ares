@@ -6,7 +6,8 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.generateUuid
+import com.bink.wallet.utils.generateUuidForMembershipCardPullToRefresh
+import com.bink.wallet.utils.generateUuidForPaymentCards
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +54,7 @@ class LoyaltyCardDetailsRepository(
                     val response = request.await()
                     membershipCard.value = response.first { card -> card.id == cardId }
                         .also {
+                            generateUuidForMembershipCardPullToRefresh(it,membershipCardDao)
                             membershipCardDao.storeMembershipCard(it)
                         }
                 } catch (e: Exception) {
@@ -102,7 +104,7 @@ class LoyaltyCardDetailsRepository(
         storeError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            generateUuid(cards, paymentCardDao)
+            generateUuidForPaymentCards(cards, paymentCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {

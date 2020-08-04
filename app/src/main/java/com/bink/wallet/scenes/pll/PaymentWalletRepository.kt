@@ -6,8 +6,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.utils.assignUuidFromCardLinkageState
-import com.bink.wallet.utils.generateUuid
+import com.bink.wallet.utils.generateUuidFromCardLinkageState
+import com.bink.wallet.utils.generateUuidForPaymentCards
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -50,7 +50,7 @@ class PaymentWalletRepository(
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-           generateUuid(cards, paymentCardDao)
+           generateUuidForPaymentCards(cards, paymentCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
@@ -65,7 +65,7 @@ class PaymentWalletRepository(
 
     fun storePaymentCard(card: PaymentCard) {
         CoroutineScope(Dispatchers.IO).launch {
-            assignUuidFromCardLinkageState(card, paymentCardDao)
+            generateUuidFromCardLinkageState(card, paymentCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
