@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class AddPaymentCardRepository(
     private val apiService: ApiService,
@@ -134,10 +135,12 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            val uuid = UUID.randomUUID().toString()
             val request = apiService.addPaymentCardAsync(card)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
                 } catch (e: Exception) {
