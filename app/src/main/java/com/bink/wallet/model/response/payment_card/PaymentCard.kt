@@ -16,7 +16,8 @@ data class PaymentCard(
     @ColumnInfo(name = "status") val status: String?,
     @ColumnInfo(name = "card") val card: BankCard?,
     @ColumnInfo(name = "image") val images: List<Image>?,
-    @ColumnInfo(name = "account") val account: Account?
+    @ColumnInfo(name = "account") val account: Account?,
+    @ColumnInfo(name = "uuid") val uuid: String?
 ) : Parcelable {
     fun addPaymentCard(cardId: String) {
         (membership_cards as ArrayList<PaymentMembershipCard>).add(

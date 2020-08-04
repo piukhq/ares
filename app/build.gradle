@@ -154,6 +154,7 @@ android {
     dataBinding {
         enabled = true
     }
+    ndkVersion '21.3.6528147'
 
     androidExtensions {
         experimental = true
