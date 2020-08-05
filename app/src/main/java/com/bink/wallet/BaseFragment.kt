@@ -13,8 +13,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
@@ -25,6 +28,7 @@ import com.crashlytics.android.Crashlytics
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
+import kotlin.collections.HashMap
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
@@ -95,7 +99,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected fun logEvent(name: String, parameters: Map<String, String>) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             val bundle = Bundle()
 
             for (entry: Map.Entry<String, String> in parameters) {
@@ -103,7 +106,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             }
 
             (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
-        }
     }
 
     protected fun logScreenView(screenName: String) {
@@ -125,6 +127,27 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 bundle
             )
         }
+    }
+
+    protected fun getOnboardingStartMap(onBoardingJourneyValue:String):Map<String,String>{
+        SharedPreferenceManager.firebaseEventUuid = UUID.randomUUID().toString()
+        val map = HashMap<String,String>()
+        map[FirebaseEvents.ONBOARDING_JOURNEY_KEY] = onBoardingJourneyValue
+        map[FirebaseEvents.ONBOARDING_ID_KEY] = SharedPreferenceManager.firebaseEventUuid.toString()
+        return map
+    }
+
+    protected fun getOnboardingEndMap(onBoardingSuccessValue:String):Map<String,String>{
+        val map = HashMap<String,String>()
+        map[FirebaseEvents.ONBOARDING_ID_KEY] = SharedPreferenceManager.firebaseEventUuid.toString()
+        map[ONBOARDING_SUCCESS_KEY] = onBoardingSuccessValue
+        return map
+    }
+
+    protected fun getOnboardingGenericMap():Map<String,String>{
+        val map = HashMap<String,String>()
+        map[FirebaseEvents.ONBOARDING_ID_KEY] = SharedPreferenceManager.firebaseEventUuid.toString()
+        return map
     }
 
     fun setupKeyboardHiddenListener(container: View, onLayoutChange: (() -> Unit)) {

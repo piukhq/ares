@@ -28,6 +28,7 @@ object SharedPreferenceManager {
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
     private const val BARCODE = "barcode"
+    private const val FIREBASE_UUID = "firebase_uuid"
 
 
     //----- PAIRS ----
@@ -140,6 +141,11 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(BARCODE, false)
         set(value) = preferences.edit {
             it.putBoolean(BARCODE, value)
+        }
+    var firebaseEventUuid: String?
+        get() = preferences.getString(FIREBASE_UUID, null)
+        set(value) = preferences.edit {
+            it.putString(FIREBASE_UUID, value)
         }
 
     fun clear() {

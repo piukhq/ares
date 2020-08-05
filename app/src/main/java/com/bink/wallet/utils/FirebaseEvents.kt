@@ -29,6 +29,16 @@ object FirebaseEvents {
     const val ADD_LOYALTY_CARD_VIEW = "AddLoyaltyCard"
     const val PAYMENT_CARD_SCAN = "payment_scan"
     const val PAYMENT_CARD_SCAN_SUCCESS = "success"
+    const val ONBOARDING_START = "onboarding_start"
+    const val ONBOARDING_USER_COMPLETE = "onboarding_user_complete"
+    const val ONBOARDING_SERVICE_COMPLETE = "onboarding_service_complete"
+    const val ONBOARDING_END = "onboarding_end"
+    const val ONBOARDING_JOURNEY_FACEBOOK= "FACEBOOK"
+    const val ONBOARDING_JOURNEY_REGISTER = "REGISTER"
+    const val ONBOARDING_JOURNEY_LOGIN = "LOGIN"
+    const val ONBOARDING_JOURNEY_KEY = "onboarding_journey"
+    const val ONBOARDING_ID_KEY = "onboarding_id"
+    const val ONBOARDING_SUCCESS_KEY = "onboarding_success"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)
