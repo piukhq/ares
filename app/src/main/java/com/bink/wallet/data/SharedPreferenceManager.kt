@@ -28,6 +28,8 @@ object SharedPreferenceManager {
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
     private const val BARCODE = "barcode"
+    private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
+    private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
 
 
     //----- PAIRS ----
@@ -140,6 +142,16 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(BARCODE, false)
         set(value) = preferences.edit {
             it.putBoolean(BARCODE, value)
+        }
+    var addPaymentCardRequestUuid: String?
+        get() = preferences.getString(ADD_PAYMENT_CARD_REQUEST_UUID, null)
+        set(value) = preferences.edit {
+            it.putString(ADD_PAYMENT_CARD_REQUEST_UUID, value)
+        }
+    var addPaymentCardSuccessHttpCode: Int
+        get() = preferences.getInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, 0)
+        set(value) = preferences.edit {
+            it.putInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, value)
         }
 
     fun clear() {

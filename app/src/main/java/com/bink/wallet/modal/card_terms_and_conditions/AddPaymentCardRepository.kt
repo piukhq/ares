@@ -20,7 +20,6 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.SecurityUtils
-import com.bink.wallet.utils.enums.BackendVersion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +40,8 @@ class AddPaymentCardRepository(
         card: PaymentCardAdd,
         cardNumber: String,
         mutableAddCard: MutableLiveData<PaymentCard>,
-        error: MutableLiveData<Exception>
+        error: MutableLiveData<Exception>,
+        addCardRequestMade: MutableLiveData<Boolean>
     ) {
 
 
@@ -91,7 +91,8 @@ class AddPaymentCardRepository(
                         doAddPaymentCard(
                             card,
                             mutableAddCard,
-                            error
+                            error,
+                            addCardRequestMade
                         )
                     } catch (e: Exception) {
                         error.value = e
@@ -100,7 +101,7 @@ class AddPaymentCardRepository(
             }
         } else {
             encryptCardDetails(card, cardNumber)
-            doAddPaymentCard(card, mutableAddCard, error)
+            doAddPaymentCard(card, mutableAddCard, error,addCardRequestMade)
         }
     }
 
@@ -132,11 +133,14 @@ class AddPaymentCardRepository(
     private fun doAddPaymentCard(
         card: PaymentCardAdd,
         mutableAddCard: MutableLiveData<PaymentCard>,
-        error: MutableLiveData<Exception>
+        error: MutableLiveData<Exception>,
+        addCardRequestMade: MutableLiveData<Boolean>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val uuid = UUID.randomUUID().toString()
             val request = apiService.addPaymentCardAsync(card)
+            SharedPreferenceManager.addPaymentCardRequestUuid = uuid
+            addCardRequestMade.postValue(true)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()

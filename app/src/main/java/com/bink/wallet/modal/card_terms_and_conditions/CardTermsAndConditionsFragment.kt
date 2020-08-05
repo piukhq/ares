@@ -19,6 +19,7 @@ import android.text.style.ClickableSpan
 import android.text.SpannableString
 import com.bink.wallet.R
 import com.bink.wallet.scenes.registration.AcceptTCFragmentDirections
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_REQUEST
 
 class CardTermsAndConditionsFragment : GenericModalFragment() {
     override val viewModel: CardTermsAndConditionsViewModel by viewModel()
@@ -74,6 +75,13 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         ) {
             binding.progressSpinner.visibility = View.GONE
             binding.firstButton.isEnabled = true
+        }
+
+        viewModel.addCardRequestMade.observeNonNull(this){
+            //add-loyalty-card-request
+            userBankCard?.provider?.let {
+                logEvent(ADD_PAYMENT_CARD_REQUEST,getAddPaymentCardGenericMap(it))
+            }
         }
     }
 

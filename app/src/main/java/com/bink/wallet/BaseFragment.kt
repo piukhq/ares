@@ -13,6 +13,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
@@ -25,6 +30,7 @@ import com.crashlytics.android.Crashlytics
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
+import kotlin.collections.HashMap
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
@@ -95,7 +101,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected fun logEvent(name: String, parameters: Map<String, String>) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
             val bundle = Bundle()
 
             for (entry: Map.Entry<String, String> in parameters) {
@@ -103,7 +108,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             }
 
             (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
-        }
     }
 
     protected fun logScreenView(screenName: String) {
@@ -159,5 +163,37 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     fun removeKeyboardHiddenLayoutListener(container: View) {
         container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardHiddenListener)
+    }
+    //This will handle both request and response failure
+    protected fun getAddPaymentCardGenericMap(paymentSchemeValue: String): Map<String, String> {
+        val map = HashMap<String, String>()
+        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
+        map[ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
+        return map
+    }
+
+    protected fun getAddPaymentCardResponseSuccessMap(
+        paymentSchemeValue: String,
+        isAccountNew: String,
+        paymentStatus: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+        map[ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
+        map[ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY] = isAccountNew
+        map[ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY] = paymentStatus
+
+        return map
+    }
+
+    private fun getPaymentSchemeType(paymentScheme: String): Int {
+        return when (paymentScheme) {
+            "Visa" -> 0
+            "MasterCard" -> 1
+            //amex
+            else -> 2
+        }
     }
 }
