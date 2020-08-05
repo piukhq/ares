@@ -36,6 +36,8 @@ object FirebaseEvents {
     const val ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY = "client_account_id"
     const val ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY = "account_is_new"
     const val ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY = "payment_status"
+    const val FIREBASE_TRUE = "true"
+    const val FIREBASE_FALSE = "false"
 
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {

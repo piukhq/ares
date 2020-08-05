@@ -177,9 +177,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         paymentSchemeValue: String,
         isAccountNew: String,
         paymentStatus: String
-    ): Map<String, Any> {
-        val map = HashMap<String, Any>()
-        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+    ): Map<String, String> {
+        val map = HashMap<String, String>()
+        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
         map[ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY] =
             SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         map[ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY] = isAccountNew

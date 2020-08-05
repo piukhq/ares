@@ -62,6 +62,15 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             .url(request)
             .build()
         val response = chain.proceed(newRequest)
+        response.networkResponse()?.request()?.url()?.let {
+            if (it.toString() == ADD_PAYMENT_CARD_URL){
+                if (response.code() == 200 || response.code() == 201){
+                    SharedPreferenceManager.addPaymentCardSuccessHttpCode = response.code()
+                }
+            }
+        }
+
+
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
             LoginManager.getInstance().logOut()
@@ -142,4 +151,5 @@ fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiServi
 fun provideSpreedlyApiService(retrofit: Retrofit): ApiSpreedly =
     retrofit.create(ApiSpreedly::class.java)
 
-
+var BASE_URL = SharedPreferenceManager.storedApiUrl.toString()
+var ADD_PAYMENT_CARD_URL = "$BASE_URL/ubiquity/payment_cards"
