@@ -11,6 +11,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_FACEBOOK
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_LOGIN
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_START
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
@@ -156,6 +157,8 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     )
                 )
             }
+            //ONBOARDING JOUNRNEY STAR FOR FACEBOOK
+            logEvent(ONBOARDING_START,getOnboardingStartMap(ONBOARDING_JOURNEY_FACEBOOK))
         }
         binding.signUpWithEmail.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {

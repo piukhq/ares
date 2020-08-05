@@ -18,6 +18,8 @@ import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_FALSE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_TRUE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
@@ -116,7 +118,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     //onboarding-service-complete for LOGIN
                     logEvent(ONBOARDING_SERVICE_COMPLETE, getOnboardingGenericMap())
                     //onboarding-end with true
-                    logEvent(ONBOARDING_END, getOnboardingEndMap("true"))
+                    logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCESS_TRUE))
                 }
 
                 it.uid?.let { uid -> setFirebaseUserId(uid) }
@@ -145,8 +147,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 handleErrorResponse()
                 //onboarding-service-complete for LOGIN
                 logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
-                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingEndMap("false"))
                 //onboarding-end with false
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
             }
 
             isLoading.observeNonNull(this@LoginFragment) {
