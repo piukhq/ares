@@ -42,6 +42,8 @@ object FirebaseEvents {
     const val ADD_LOYALTY_CARD_ENROL_JOURNEY = "ENROL"
     const val ADD_LOYALTY_CARD_REGISTER_JOURNEY = "REGISTER"
     const val ADD_LOYALTY_CARD_REQUEST = "add_loyalty_card_request"
+    const val ADD_LOYALTY_CARD_RESPONSE_SUCCESS = "add_loyalty_card_response_success"
+    const val ADD_LOYALTY_CARD_RESPONSE_FAILURE = "add_loyalty_card_response_fail"
     const val ADD_LOYALTY_CARD_JOURNEY_KEY = "loyalty_card_journey"
     const val ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY = "loyalty_plan"
     const val ADD_LOYALTY_CARD_SCANNED_CARD_KEY = "scanned_card"

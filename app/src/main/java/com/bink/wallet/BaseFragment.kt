@@ -16,6 +16,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_SCANNED_CARD_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
@@ -104,13 +106,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     protected fun logEvent(name: String, parameters: Map<String, String>) {
-            val bundle = Bundle()
+        val bundle = Bundle()
 
-            for (entry: Map.Entry<String, String> in parameters) {
-                bundle.putString(entry.key, entry.value)
-            }
+        for (entry: Map.Entry<String, String> in parameters) {
+            bundle.putString(entry.key, entry.value)
+        }
 
-            (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
+        (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
     }
 
     protected fun logScreenView(screenName: String) {
@@ -167,10 +169,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     fun removeKeyboardHiddenLayoutListener(container: View) {
         container.viewTreeObserver.removeOnGlobalLayoutListener(keyboardHiddenListener)
     }
+
     //This will handle both request and response failure
     protected fun getAddPaymentCardGenericMap(paymentSchemeValue: String): Map<String, String> {
         val map = HashMap<String, String>()
-        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
+        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] =
+            getPaymentSchemeType(paymentSchemeValue).toString()
         map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
             SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         return map
@@ -182,7 +186,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         paymentStatus: String
     ): Map<String, String> {
         val map = HashMap<String, String>()
-        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
+        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] =
+            getPaymentSchemeType(paymentSchemeValue).toString()
         map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
             SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         map[FIREBASE_ACCOUNT_IS_NEW_KEY] = isAccountNew
@@ -200,14 +205,51 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    protected fun getAddLoyaltyCardRequestMap(journeyValue:String,membershipPlanId:String,isAScannedCard:String):Map<String,String>{
+    protected fun getAddLoyaltyCardRequestMap(
+        journeyValue: String,
+        membershipPlanId: String,
+        isAScannedCard: String
+    ): Map<String, String> {
         val map = HashMap<String, String>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId
         map[ADD_LOYALTY_CARD_SCANNED_CARD_KEY] = isAScannedCard
 
         return map
 
+    }
+
+    protected fun getAddLoyaltyResponseSuccessMap(
+        journeyValue: String,
+        loyaltyStatus: String,
+        reasonCode: String,
+        membershipPlanId: String,
+        isAccountNew: String
+    ): Map<String, String> {
+        val map = HashMap<String, String>()
+        map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[FIREBASE_ACCOUNT_IS_NEW_KEY] = isAccountNew
+        map[ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY] = loyaltyStatus
+        map[ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY] = reasonCode
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId
+
+        return map
+    }
+
+    protected fun getAddLoyaltyResponseFailureMap(
+        journeyValue: String,
+        membershipPlanId: String
+    ): Map<String, String> {
+        val map = HashMap<String, String>()
+        map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId
+
+        return map
     }
 }

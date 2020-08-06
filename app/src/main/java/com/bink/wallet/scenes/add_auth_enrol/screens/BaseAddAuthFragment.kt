@@ -30,6 +30,8 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_ADD_JOURNEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
 import org.koin.androidx.viewmodel.ext.android.viewModel

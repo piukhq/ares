@@ -68,6 +68,11 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
                     SharedPreferenceManager.addPaymentCardSuccessHttpCode = response.code()
                 }
             }
+            if (it.toString() == ADD_LOYALTY_CARD_URL){
+                if (response.code() == 200 || response.code() == 201){
+                    SharedPreferenceManager.addLoyaltyCardSuccessHttpCode = response.code()
+                }
+            }
         }
 
 
@@ -153,3 +158,4 @@ fun provideSpreedlyApiService(retrofit: Retrofit): ApiSpreedly =
 
 var BASE_URL = SharedPreferenceManager.storedApiUrl.toString()
 var ADD_PAYMENT_CARD_URL = "$BASE_URL/ubiquity/payment_cards"
+var ADD_LOYALTY_CARD_URL = "$BASE_URL/ubiquity/membership_cards"
