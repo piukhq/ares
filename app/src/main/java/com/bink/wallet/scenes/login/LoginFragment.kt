@@ -135,6 +135,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //SHOULD WE COUNT THIS AS END OF JOURNEY?
+                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -148,7 +149,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 //onboarding-service-complete for LOGIN
                 logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
                 //onboarding-end with false
-                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
             }
 
             isLoading.observeNonNull(this@LoginFragment) {

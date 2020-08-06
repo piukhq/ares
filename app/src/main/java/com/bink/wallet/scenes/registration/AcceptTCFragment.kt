@@ -91,6 +91,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         ) {
             handleAuthError()
             //FAILURE
+            logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
+
         }
 
         viewModel.postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
