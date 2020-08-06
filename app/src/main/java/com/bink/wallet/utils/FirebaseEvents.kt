@@ -33,11 +33,19 @@ object FirebaseEvents {
     const val ADD_PAYMENT_CARD_RESPONSE_SUCCESS = "add_payment_card_response_success"
     const val ADD_PAYMENT_CARD_RESPONSE_FAILURE = "add_payment_card_response_failure"
     const val ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY = "payment_scheme"
-    const val ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY = "client_account_id"
-    const val ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY = "account_is_new"
+    const val FIREBASE_CLIENT_ACCOUNT_ID_KEY = "client_account_id"
+    const val FIREBASE_ACCOUNT_IS_NEW_KEY = "account_is_new"
     const val ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY = "payment_status"
     const val FIREBASE_TRUE = "true"
     const val FIREBASE_FALSE = "false"
+    const val ADD_LOYALTY_CARD_REQUEST = "add_loyalty_card_request"
+    const val ADD_LOYALTY_CARD_JOURNEY_KEY = "loyalty_card_journey"
+    const val ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY = "loyalty_plan"
+    const val ADD_LOYALTY_CARD_SCANNED_CARD_KEY = "scanned_card"
+    const val ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY = "loyalty_status"
+    const val ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY = "loyalty_reason_code"
+
+
 
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
