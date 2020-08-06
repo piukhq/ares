@@ -2,6 +2,7 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 
 object SharedPreferenceManager {
 
@@ -30,6 +31,10 @@ object SharedPreferenceManager {
     private const val BARCODE = "barcode"
     private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
     private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
+    private const val ADD_LOYALTY_CARD_REQUEST_UUID = "add_loyalty_card_request_uuid"
+    private const val ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE = "add_loyalty_card_success_http_code"
+    private const val ADD_LOYALTY_CARD_JOURNEY_TYPE = "add_loyalty_card_journey_type"
+    private const val IS_SCANNED_CARD = "is_scanned_card"
 
 
     //----- PAIRS ----
@@ -152,6 +157,27 @@ object SharedPreferenceManager {
         get() = preferences.getInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, 0)
         set(value) = preferences.edit {
             it.putInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, value)
+        }
+
+    var addLoyaltyCardRequestUuid: String?
+        get() = preferences.getString(ADD_LOYALTY_CARD_REQUEST_UUID, null)
+        set(value) = preferences.edit {
+            it.putString(ADD_LOYALTY_CARD_REQUEST_UUID, value)
+        }
+    var addLoyaltyCardSuccessHttpCode: Int
+        get() = preferences.getInt(ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE, 0)
+        set(value) = preferences.edit {
+            it.putInt(ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE, value)
+        }
+    var addLoyaltyCardJourneyType: String?
+        get() = preferences.getString(ADD_LOYALTY_CARD_JOURNEY_TYPE, null)
+        set(value) = preferences.edit {
+            it.putString(ADD_LOYALTY_CARD_JOURNEY_TYPE, value)
+        }
+    var isScannedCard: Boolean
+        get() = preferences.getBoolean(IS_SCANNED_CARD, false)
+        set(value) = preferences.edit {
+            it.putBoolean(IS_SCANNED_CARD, value)
         }
 
     fun clear() {

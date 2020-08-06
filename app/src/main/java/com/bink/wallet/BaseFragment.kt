@@ -13,6 +13,10 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_SCANNED_CARD_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY
@@ -194,5 +198,16 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             //amex
             else -> 2
         }
+    }
+
+    protected fun getAddLoyaltyCardRequestMap(journeyValue:String,membershipPlanId:String,isAScannedCard:String):Map<String,String>{
+        val map = HashMap<String, String>()
+        map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId
+        map[ADD_LOYALTY_CARD_SCANNED_CARD_KEY] = isAScannedCard
+
+        return map
+
     }
 }

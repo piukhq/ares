@@ -132,6 +132,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 })
     }
 
+    override fun onStart() {
+        super.onStart()
+        SharedPreferenceManager.isScannedCard = false
+    }
+
     override fun onResume() {
         super.onResume()
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)

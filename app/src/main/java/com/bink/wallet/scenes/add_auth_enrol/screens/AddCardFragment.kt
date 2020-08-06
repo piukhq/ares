@@ -5,9 +5,14 @@ import android.view.View
 import android.widget.Button
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_ADD_JOURNEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_REQUEST
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -19,11 +24,14 @@ class AddCardFragment : BaseAddAuthFragment() {
 
     private val addCardArgs: AddCardFragmentArgs by navArgs()
 
+    private var membershipPlanId = "no_plan_id_found"
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isRetryJourney = addCardArgs.isRetryJourney
         isFromNoReasonCodes = addCardArgs.isFromNoReasonCodes
         currentMembershipPlan = addCardArgs.membershipPlan
+        membershipPlanId = addCardArgs.membershipPlan.id
 
         setViewsContent()
 
@@ -46,6 +54,16 @@ class AddCardFragment : BaseAddAuthFragment() {
 
         viewModel.newMembershipCard.observeNonNull(this) {
             handleNavigationAfterCardCreation(it, false)
+        }
+
+        viewModel.addLoyaltyCardRequestMade.observeNonNull(this) {
+            val isScanned = if(SharedPreferenceManager.isScannedCard) FIREBASE_TRUE else FIREBASE_FALSE
+
+            logEvent(
+                ADD_LOYALTY_CARD_REQUEST, getAddLoyaltyCardRequestMap(
+                    ADD_LOYALTY_CARD_ADD_JOURNEY,membershipPlanId,isScanned
+                )
+            )
         }
     }
 

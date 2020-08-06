@@ -181,7 +181,8 @@ class LoyaltyWalletRepository(
     fun createMembershipCard(
         membershipCardRequest: MembershipCardRequest,
         mutableMembershipCard: MutableLiveData<MembershipCard>,
-        createError: MutableLiveData<Exception>
+        createError: MutableLiveData<Exception>,
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
     ) {
 
         membershipCardRequest.account?.let { safeAccount ->
@@ -191,6 +192,8 @@ class LoyaltyWalletRepository(
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
             val uuid = UUID.randomUUID().toString()
+            addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
