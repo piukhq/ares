@@ -22,7 +22,6 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
