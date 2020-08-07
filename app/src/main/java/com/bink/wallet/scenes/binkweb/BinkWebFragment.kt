@@ -1,8 +1,11 @@
 package com.bink.wallet.scenes.binkweb
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.navigation.fragment.findNavController
@@ -13,9 +16,6 @@ import com.bink.wallet.R
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.content.Intent
 
 class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     private val args by navArgs<BinkWebFragmentArgs>()

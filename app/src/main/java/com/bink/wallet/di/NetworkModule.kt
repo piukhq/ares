@@ -7,8 +7,12 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.enums.BackendVersion
+import com.bink.wallet.utils.logError
+import com.bink.wallet.utils.putSessionHandlerNavigationDestination
 import com.facebook.login.LoginManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
@@ -62,6 +66,20 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             .url(request)
             .build()
         val response = chain.proceed(newRequest)
+        response.networkResponse()?.request()?.url()?.let {
+            if (it.toString() == ADD_PAYMENT_CARD_URL){
+                if (response.code() == 200 || response.code() == 201){
+                    SharedPreferenceManager.addPaymentCardSuccessHttpCode = response.code()
+                }
+            }
+            if (it.toString() == ADD_LOYALTY_CARD_URL){
+                if (response.code() == 200 || response.code() == 201){
+                    SharedPreferenceManager.addLoyaltyCardSuccessHttpCode = response.code()
+                }
+            }
+        }
+
+
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
             LoginManager.getInstance().logOut()
@@ -142,4 +160,6 @@ fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiServi
 fun provideSpreedlyApiService(retrofit: Retrofit): ApiSpreedly =
     retrofit.create(ApiSpreedly::class.java)
 
-
+var BASE_URL = SharedPreferenceManager.storedApiUrl.toString()
+var ADD_PAYMENT_CARD_URL = "$BASE_URL/ubiquity/payment_cards"
+var ADD_LOYALTY_CARD_URL = "$BASE_URL/ubiquity/membership_cards"

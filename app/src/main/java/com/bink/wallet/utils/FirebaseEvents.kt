@@ -1,11 +1,10 @@
 package com.bink.wallet.utils
 
-import java.util.Locale
+import java.util.*
 
 object FirebaseEvents {
     const val ANALYTICS_IDENTIFIER = "identifier"
     const val ANALYTICS_CALL_TO_ACTION_TYPE = "call_to_action_pressed"
-
     const val ONBOARDING_VIEW = "Onboarding"
     const val LOGIN_VIEW = "Login"
     const val REGISTER_VIEW = "Register"
@@ -29,6 +28,43 @@ object FirebaseEvents {
     const val ADD_LOYALTY_CARD_VIEW = "AddLoyaltyCard"
     const val PAYMENT_CARD_SCAN = "payment_scan"
     const val PAYMENT_CARD_SCAN_SUCCESS = "success"
+    const val ADD_PAYMENT_CARD_REQUEST = "add_payment_card_request"
+    const val ADD_PAYMENT_CARD_RESPONSE_SUCCESS = "add_payment_card_response_success"
+    const val ADD_PAYMENT_CARD_RESPONSE_FAILURE = "add_payment_card_response_failure"
+    const val FIREBASE_CLIENT_ACCOUNT_ID_KEY = "client_account_id"
+    const val FIREBASE_ACCOUNT_IS_NEW_KEY = "account_is_new"
+    const val FIREBASE_PAYMENT_SCHEME_KEY = "payment_scheme"
+    const val ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY = "payment_status"
+    const val DELETE_PAYMENT_CARD_REQUEST = "delete_payment_card"
+    const val DELETE_PAYMENT_CARD_RESPONSE_SUCCESS = "delete_payment_card_response_success"
+    const val DELETE_PAYMENT_CARD_RESPONSE_FAILURE = "delete_payment_card_response_fail"
+    const val FIREBASE_TRUE = "true"
+    const val FIREBASE_FALSE = "false"
+    const val ADD_LOYALTY_CARD_ADD_JOURNEY = "ADD"
+    const val ADD_LOYALTY_CARD_ENROL_JOURNEY = "ENROL"
+    const val ADD_LOYALTY_CARD_REGISTER_JOURNEY = "REGISTER"
+    const val ADD_LOYALTY_CARD_REQUEST = "add_loyalty_card_request"
+    const val ADD_LOYALTY_CARD_RESPONSE_SUCCESS = "add_loyalty_card_response_success"
+    const val ADD_LOYALTY_CARD_RESPONSE_FAILURE = "add_loyalty_card_response_fail"
+    const val ADD_LOYALTY_CARD_JOURNEY_KEY = "loyalty_card_journey"
+    const val ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY = "loyalty_plan"
+    const val ADD_LOYALTY_CARD_SCANNED_CARD_KEY = "scanned_card"
+    const val ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY = "loyalty_status"
+    const val ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY = "loyalty_reason_code"
+    const val ONBOARDING_START = "onboarding_start"
+    const val ONBOARDING_USER_COMPLETE = "onboarding_user_complete"
+    const val ONBOARDING_SERVICE_COMPLETE = "onboarding_service_complete"
+    const val ONBOARDING_END = "onboarding_end"
+    const val ONBOARDING_JOURNEY_FACEBOOK= "FACEBOOK"
+    const val ONBOARDING_JOURNEY_REGISTER = "REGISTER"
+    const val ONBOARDING_JOURNEY_LOGIN = "LOGIN"
+    const val ONBOARDING_JOURNEY_KEY = "onboarding_journey"
+    const val ONBOARDING_ID_KEY = "onboarding_id"
+    const val ONBOARDING_SUCCESS_KEY = "onboarding_success"
+    const val ONBOARDING_SUCCESS_TRUE = "true"
+    const val ONBOARDING_SUCCESS_FALSE = "false"
+    const val ATTEMPTED_EVENT_KEY  = "attempted_event"
+    const val FAILED_EVENT_NO_DATA = "failed_event_no_data"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

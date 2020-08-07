@@ -37,7 +37,7 @@ import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.parcel.Parcelize
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 import kotlin.math.absoluteValue
 
 

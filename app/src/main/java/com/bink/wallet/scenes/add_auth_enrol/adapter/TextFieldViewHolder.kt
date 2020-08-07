@@ -182,6 +182,7 @@ class TextFieldViewHolder(
         }
         et.setEndDrawable(et.context.getDrawable(R.drawable.ic_clear_search))
         et.editTextState(false)
+        SharedPreferenceManager.isScannedCard = true
     }
 
     private fun TextInputEditText.setEndDrawable(drawable: Drawable?) {
@@ -198,6 +199,7 @@ class TextFieldViewHolder(
 
     private fun TextInputEditText.clearField() {
         this.text?.clear()
+        SharedPreferenceManager.isScannedCard = false
     }
 
     private fun TextInputEditText.onTouchListener(shouldClearText: Boolean, planField: PlanField) {

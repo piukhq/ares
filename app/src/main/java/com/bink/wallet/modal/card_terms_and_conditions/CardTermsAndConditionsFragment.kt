@@ -1,24 +1,30 @@
 package com.bink.wallet.modal.card_terms_and_conditions
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.modal.generic.GenericModalFragment
 import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
+import com.bink.wallet.scenes.registration.AcceptTCFragmentDirections
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_REQUEST
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_FAILURE
+import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_SUCCESS
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import android.text.method.LinkMovementMethod
-import android.text.Spanned
-import android.text.style.ClickableSpan
-import android.text.SpannableString
-import com.bink.wallet.R
-import com.bink.wallet.scenes.registration.AcceptTCFragmentDirections
 
 class CardTermsAndConditionsFragment : GenericModalFragment() {
     override val viewModel: CardTermsAndConditionsViewModel by viewModel()
@@ -63,6 +69,11 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
                     )
                 }
             }
+            //add-payment-card-response-success
+            val accountIsNew = if (SharedPreferenceManager.addPaymentCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
+            if (paymentCard.card?.provider != null && paymentCard.status != null){
+                logEvent(ADD_PAYMENT_CARD_RESPONSE_SUCCESS,getAddPaymentCardResponseSuccessMap(paymentCard.card.provider,accountIsNew,paymentCard.status))
+            }
         }
 
         viewModel.error.observeNetworkDrivenErrorNonNull(
@@ -74,6 +85,17 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
         ) {
             binding.progressSpinner.visibility = View.GONE
             binding.firstButton.isEnabled = true
+            //add-payment-card-response-fail
+            userBankCard?.provider?.let {
+                logEvent(ADD_PAYMENT_CARD_RESPONSE_FAILURE,getAddPaymentCardGenericMap(it))
+            }
+        }
+
+        viewModel.addCardRequestMade.observeNonNull(this){
+            //add-loyalty-card-request
+            userBankCard?.provider?.let {
+                logEvent(ADD_PAYMENT_CARD_REQUEST,getAddPaymentCardGenericMap(it))
+            }
         }
     }
 
