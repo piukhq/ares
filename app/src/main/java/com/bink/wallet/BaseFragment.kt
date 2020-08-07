@@ -2,7 +2,6 @@ package com.bink.wallet
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,11 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY
-import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
@@ -167,7 +167,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     //This will handle both request and response failure
     protected fun getAddPaymentCardGenericMap(paymentSchemeValue: String): Map<String, String> {
         val map = HashMap<String, String>()
-        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
         map[ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY] =
             SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         return map
@@ -179,7 +179,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         paymentStatus: String
     ): Map<String, String> {
         val map = HashMap<String, String>()
-        map[ADD_PAYMENT_CARD_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
         map[ADD_PAYMENT_CARD_CLIENT_ACCOUNT_ID_KEY] =
             SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         map[ADD_PAYMENT_CARD_ACCOUNT_IS_NEW_KEY] = isAccountNew
@@ -196,4 +196,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             else -> 2
         }
     }
+
+    protected fun getDeletePaymentCardGenericMap(paymentSchemeValue: String,uuid:String):Map<String,String>{
+        val map = HashMap<String, String>()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue).toString()
+        map[FIREBASE_CLIENT_ACCOUNT_ID] = uuid
+
+        return map
+    }
+
 }
