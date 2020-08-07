@@ -19,6 +19,7 @@ import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
@@ -40,6 +41,10 @@ class PaymentCardsDetailsFragment :
 
     private var scrollY = 0
 
+    private var paymentScheme = ""
+
+    private var uuid = ""
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(binding.toolbar) {
@@ -55,6 +60,8 @@ class PaymentCardsDetailsFragment :
                 paymentCard.value = currentBundle.paymentCard
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
+                paymentScheme = currentBundle.paymentCard.card?.provider ?: "provider_not_available"
+                uuid = currentBundle.paymentCard.uuid ?:"no_uuid_found"
             }
         }
 
@@ -86,6 +93,8 @@ class PaymentCardsDetailsFragment :
                 if (isNetworkAvailable(requireActivity(), true)) {
                     runBlocking {
                         viewModel.deletePaymentCard(viewModel.paymentCard.value?.id.toString())
+                        logEvent(FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+
                     }
                 }
             }
@@ -182,6 +191,15 @@ class PaymentCardsDetailsFragment :
         viewModel.linkError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
+
+        viewModel.deleteRequest.observeNonNull(this) {
+            logEvent(FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+        }
+
+        viewModel.deleteError.observeNonNull(this){
+            logEvent(FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+
+        }
     }
 
     override fun onPause() {
