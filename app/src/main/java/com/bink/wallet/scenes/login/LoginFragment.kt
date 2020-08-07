@@ -14,19 +14,19 @@ import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {

@@ -6,8 +6,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.generateUuidForPaymentCards
+import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -18,7 +18,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import java.util.concurrent.LinkedBlockingQueue
-import kotlin.collections.ArrayList
 
 class PaymentWalletRepository(
     private val apiService: ApiService,

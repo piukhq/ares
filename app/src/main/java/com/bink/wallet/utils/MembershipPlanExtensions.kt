@@ -2,6 +2,7 @@ package com.bink.wallet.utils
 
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import java.util.Locale
+import kotlin.Comparator
 
 fun List<MembershipPlan>.sortedByCardTypeAndCompany(): List<MembershipPlan> =
     this.sortedWith(

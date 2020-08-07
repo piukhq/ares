@@ -1,6 +1,6 @@
 package com.bink.wallet.utils
 
-import java.util.Locale
+import java.util.*
 
 object FirebaseEvents {
     const val ANALYTICS_IDENTIFIER = "identifier"

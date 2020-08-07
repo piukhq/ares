@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
-import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.scenes.login.LoginRepository

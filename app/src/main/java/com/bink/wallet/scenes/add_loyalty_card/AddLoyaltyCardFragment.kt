@@ -2,13 +2,12 @@ package com.bink.wallet.scenes.add_loyalty_card
 
 import android.app.Activity
 import android.content.Context
-import android.os.Bundle
 import android.os.Build
+import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.animation.AnimationUtils
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs

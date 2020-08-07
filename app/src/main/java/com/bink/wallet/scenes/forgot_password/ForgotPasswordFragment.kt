@@ -6,9 +6,14 @@ import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ForgotPasswordFragmentBinding
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMAIL_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.observeErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.bink.wallet.utils.validateEmail
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

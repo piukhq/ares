@@ -8,7 +8,7 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GetNewCardViewModel
 import com.bink.wallet.utils.FirebaseEvents
-import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY
+import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_ENROL_JOURNEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
@@ -45,7 +45,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
                 if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
             logEvent(
                 ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                    ADD_LOYALTY_CARD_REGISTER_JOURNEY, status, reasonCode, mPlanId, isAccountNew
+                    ADD_LOYALTY_CARD_ENROL_JOURNEY, status, reasonCode, mPlanId, isAccountNew
                 )
             )
 
@@ -61,7 +61,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
             logEvent(
                 ADD_LOYALTY_CARD_REQUEST, getAddLoyaltyCardRequestMap(
-                    ADD_LOYALTY_CARD_REGISTER_JOURNEY, membershipPlanId, isScanned
+                    ADD_LOYALTY_CARD_ENROL_JOURNEY, membershipPlanId, isScanned
                 )
             )
         }
@@ -69,7 +69,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         viewModel.createCardError.observeNonNull(this) {
             logEvent(
                 ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                    ADD_LOYALTY_CARD_REGISTER_JOURNEY, membershipPlanId
+                    ADD_LOYALTY_CARD_ENROL_JOURNEY, membershipPlanId
                 )
             )
         }
