@@ -23,6 +23,8 @@ import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.FirebaseEvents.ATTEMPTED_EVENT_KEY
+import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
@@ -119,6 +121,14 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
+    }
+
+    protected fun failedEvent(eventName:String){
+        val bundle = Bundle()
+
+        bundle.putString(ATTEMPTED_EVENT_KEY,eventName)
+        (requireActivity() as MainActivity).firebaseAnalytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
+
     }
 
     protected fun logScreenView(screenName: String) {

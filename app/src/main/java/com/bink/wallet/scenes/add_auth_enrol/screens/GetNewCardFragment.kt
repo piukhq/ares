@@ -24,7 +24,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
     private val getCardArgs: GetNewCardFragmentArgs by navArgs()
 
-    private var membershipPlanId = "no_plan_available"
+    private var membershipPlanId: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,17 +37,22 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
         viewModel.newMembershipCard.observeNonNull(this) {
             handleNavigationAfterCardCreation(it, false)
-            val status = it.status?.state ?: "no_status_available"
+            val status = it.status?.state
             //Is it always going to be just one?
-            val reasonCode = it.status?.reason_codes?.get(0) ?: "no_reason_code_found"
+            val reasonCode = it.status?.reason_codes?.get(0)
             val mPlanId = membershipPlanId
-            val isAccountNew =
-                if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
-            logEvent(
-                ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                    ADD_LOYALTY_CARD_ENROL_JOURNEY, status, reasonCode, mPlanId, isAccountNew
+            if (status == null || reasonCode == null || mPlanId == null) {
+                failedEvent(ADD_LOYALTY_CARD_RESPONSE_SUCCESS)
+            } else {
+                val isAccountNew =
+                    if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
+                logEvent(
+                    ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
+                        ADD_LOYALTY_CARD_ENROL_JOURNEY, status, reasonCode, mPlanId, isAccountNew
+                    )
                 )
-            )
+            }
+
 
         }
         binding.footerSimple.addAuthCta.setOnClickListener {
@@ -56,22 +61,36 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.addLoyaltyCardRequestMade.observeNonNull(this) {
-            val isScanned =
-                if (SharedPreferenceManager.isScannedCard) FIREBASE_TRUE else FIREBASE_FALSE
+            val mPlanId = membershipPlanId
 
-            logEvent(
-                ADD_LOYALTY_CARD_REQUEST, getAddLoyaltyCardRequestMap(
-                    ADD_LOYALTY_CARD_ENROL_JOURNEY, membershipPlanId, isScanned
+            if (mPlanId == null) {
+                failedEvent(ADD_LOYALTY_CARD_REQUEST)
+            } else {
+                val isScanned =
+                    if (SharedPreferenceManager.isScannedCard) FIREBASE_TRUE else FIREBASE_FALSE
+
+                logEvent(
+                    ADD_LOYALTY_CARD_REQUEST, getAddLoyaltyCardRequestMap(
+                        ADD_LOYALTY_CARD_ENROL_JOURNEY, mPlanId, isScanned
+                    )
                 )
-            )
+            }
+
         }
 
         viewModel.createCardError.observeNonNull(this) {
-            logEvent(
-                ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                    ADD_LOYALTY_CARD_ENROL_JOURNEY, membershipPlanId
+            val mPlanId = membershipPlanId
+
+            if (mPlanId == null) {
+                failedEvent(ADD_LOYALTY_CARD_RESPONSE_FAILURE)
+            } else {
+                logEvent(
+                    ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
+                        ADD_LOYALTY_CARD_ENROL_JOURNEY, mPlanId
+                    )
                 )
-            )
+            }
+
         }
     }
 

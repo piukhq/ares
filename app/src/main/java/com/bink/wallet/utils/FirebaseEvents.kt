@@ -63,6 +63,8 @@ object FirebaseEvents {
     const val ONBOARDING_SUCCESS_KEY = "onboarding_success"
     const val ONBOARDING_SUCCESS_TRUE = "true"
     const val ONBOARDING_SUCCESS_FALSE = "false"
+    const val ATTEMPTED_EVENT_KEY  = "attempted_event"
+    const val FAILED_EVENT_NO_DATA = "failed_event_no_data"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

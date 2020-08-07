@@ -49,9 +49,9 @@ class PaymentCardWalletFragment :
 
     private val walletAdapter = PaymentCardWalletAdapter()
 
-    private var paymentScheme = ""
+    private var paymentScheme: String? = null
 
-    private var uuid = ""
+    private var uuid: String? = null
 
     override val layoutRes: Int
         get() = R.layout.payment_card_wallet_fragment
@@ -103,9 +103,18 @@ class PaymentCardWalletFragment :
                     if (isNetworkAvailable(requireActivity(), true)) {
                         viewModel.deletePaymentCard(paymentCard.id.toString())
                         binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
-                         paymentScheme = paymentCard.card?.provider ?: "provider_not_available"
-                         uuid = paymentCard.uuid ?: "no_uuid_found"
-                        logEvent(DELETE_PAYMENT_CARD_REQUEST,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+                        val paymentScheme = paymentCard.card?.provider
+                        val uuid = paymentCard.uuid
+
+                        if (paymentScheme == null || uuid == null) {
+                            failedEvent(DELETE_PAYMENT_CARD_REQUEST)
+                        } else {
+                            logEvent(
+                                DELETE_PAYMENT_CARD_REQUEST,
+                                getDeletePaymentCardGenericMap(paymentScheme, uuid)
+                            )
+                        }
+
                     }
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
@@ -137,11 +146,31 @@ class PaymentCardWalletFragment :
 
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchLocalData()
-            logEvent(DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+            val pScheme = paymentScheme
+            val uuid = this.uuid
+            if (pScheme == null || uuid == null) {
+                failedEvent(DELETE_PAYMENT_CARD_RESPONSE_SUCCESS)
+            } else {
+                logEvent(
+                    DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,
+                    getDeletePaymentCardGenericMap(pScheme, uuid)
+                )
+            }
+
         }
 
-        viewModel.deleteError.observeNonNull(this){
-            logEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+        viewModel.deleteError.observeNonNull(this) {
+            val pScheme = paymentScheme
+            val uuid = this.uuid
+            if (pScheme == null || uuid == null){
+                failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
+            } else{
+                logEvent(
+                    DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                    getDeletePaymentCardGenericMap(pScheme, uuid)
+                )
+            }
+
 
         }
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
