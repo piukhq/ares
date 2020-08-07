@@ -30,6 +30,7 @@ object SharedPreferenceManager {
     private const val BARCODE = "barcode"
     private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
     private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
+    private const val FIREBASE_UUID = "firebase_uuid"
 
 
     //----- PAIRS ----
@@ -143,6 +144,7 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putBoolean(BARCODE, value)
         }
+
     var addPaymentCardRequestUuid: String?
         get() = preferences.getString(ADD_PAYMENT_CARD_REQUEST_UUID, null)
         set(value) = preferences.edit {
@@ -152,6 +154,12 @@ object SharedPreferenceManager {
         get() = preferences.getInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, 0)
         set(value) = preferences.edit {
             it.putInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, value)
+        }
+
+    var firebaseEventUuid: String?
+        get() = preferences.getString(FIREBASE_UUID, null)
+        set(value) = preferences.edit {
+            it.putString(FIREBASE_UUID, value)
         }
 
     fun clear() {

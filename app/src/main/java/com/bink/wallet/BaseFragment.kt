@@ -20,6 +20,8 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID
+import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
@@ -129,6 +131,27 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 bundle
             )
         }
+    }
+
+    protected fun getOnboardingStartMap(onBoardingJourneyValue:String):Map<String,String>{
+        SharedPreferenceManager.firebaseEventUuid = UUID.randomUUID().toString()
+        val map = HashMap<String,String>()
+        map[FirebaseEvents.ONBOARDING_JOURNEY_KEY] = onBoardingJourneyValue
+        map[FirebaseEvents.ONBOARDING_ID_KEY] = SharedPreferenceManager.firebaseEventUuid.toString()
+        return map
+    }
+
+    protected fun getOnboardingEndMap(onBoardingSuccessValue:String):Map<String,String>{
+        val map = HashMap<String,String>()
+        map[FirebaseEvents.ONBOARDING_ID_KEY] = SharedPreferenceManager.firebaseEventUuid.toString()
+        map[ONBOARDING_SUCCESS_KEY] = onBoardingSuccessValue
+        return map
+    }
+
+    protected fun getOnboardingGenericMap():Map<String,String>{
+        val map = HashMap<String,String>()
+        map[FirebaseEvents.ONBOARDING_ID_KEY] = SharedPreferenceManager.firebaseEventUuid.toString()
+        return map
     }
 
     fun setupKeyboardHiddenListener(container: View, onLayoutChange: (() -> Unit)) {

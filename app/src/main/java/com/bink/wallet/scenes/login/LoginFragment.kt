@@ -16,6 +16,11 @@ import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_FALSE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_TRUE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.navigateIfAdded
@@ -28,6 +33,7 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -109,9 +115,15 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
                 postServiceResponse.observeNonNull(this@LoginFragment) {
                     getCurrentUser()
+                    //onboarding-service-complete for LOGIN
+                    logEvent(ONBOARDING_SERVICE_COMPLETE, getOnboardingGenericMap())
+                    //onboarding-end with true
+                    logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCESS_TRUE))
                 }
 
                 it.uid?.let { uid -> setFirebaseUserId(uid) }
+                //onboarding-user-complete for LOGIN
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
             }
 
             logInErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -122,6 +134,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 true
             ) {
                 handleErrorResponse()
+                //SHOULD WE COUNT THIS AS END OF JOURNEY?
+                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -132,6 +146,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 true
             ) {
                 handleErrorResponse()
+                //onboarding-service-complete for LOGIN
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
+                //onboarding-end with false
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
             }
 
             isLoading.observeNonNull(this@LoginFragment) {

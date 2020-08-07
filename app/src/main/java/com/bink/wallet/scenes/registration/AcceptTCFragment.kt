@@ -11,6 +11,11 @@ import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_FALSE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_TRUE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.TERMS_AND_CONDITIONS_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
@@ -85,6 +90,9 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             true
         ) {
             handleAuthError()
+            //FAILURE
+            logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
+
         }
 
         viewModel.postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -93,6 +101,10 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             true
         ) {
             handleAuthError()
+            //FAILURE
+            logEvent(ONBOARDING_SERVICE_COMPLETE,getOnboardingGenericMap())
+            logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
+
         }
 
         viewModel.facebookAuthResult.observeNonNull(this) {
@@ -124,10 +136,15 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
 
             setFirebaseUserId(it.uid)
+            //ONBOARDING USER COMPLETE
+            logEvent(ONBOARDING_USER_COMPLETE,getOnboardingGenericMap())
         }
 
         viewModel.postServiceResponse.observeNonNull(this) {
             viewModel.getCurrentUser()
+            //ONBOARDING SERVICE COMPLETE
+            logEvent(ONBOARDING_SERVICE_COMPLETE,getOnboardingGenericMap())
+            logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_TRUE))
         }
 
 
