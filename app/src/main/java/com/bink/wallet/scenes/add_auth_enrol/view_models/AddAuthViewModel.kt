@@ -183,7 +183,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             membershipCardId,
             membershipCardRequest,
             _newMembershipCard,
-            _createCardError
+            _createCardError,
+            _addLoyaltyCardRequestMade
         )
     }
 
