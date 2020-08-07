@@ -266,7 +266,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID] = uuid
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
 
         return map
     }

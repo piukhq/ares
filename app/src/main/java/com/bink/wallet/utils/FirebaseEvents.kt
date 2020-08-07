@@ -34,7 +34,6 @@ object FirebaseEvents {
     const val FIREBASE_CLIENT_ACCOUNT_ID_KEY = "client_account_id"
     const val FIREBASE_ACCOUNT_IS_NEW_KEY = "account_is_new"
     const val FIREBASE_PAYMENT_SCHEME_KEY = "payment_scheme"
-    const val FIREBASE_CLIENT_ACCOUNT_ID = "client_account_id"
     const val ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY = "payment_status"
     const val DELETE_PAYMENT_CARD_REQUEST = "delete_payment_card"
     const val DELETE_PAYMENT_CARD_RESPONSE_SUCCESS = "delete_payment_card_response_success"
@@ -62,8 +61,8 @@ object FirebaseEvents {
     const val ONBOARDING_JOURNEY_KEY = "onboarding_journey"
     const val ONBOARDING_ID_KEY = "onboarding_id"
     const val ONBOARDING_SUCCESS_KEY = "onboarding_success"
-    const val ONBOARDING_SUCESS_TRUE = "true"
-    const val ONBOARDING_SUCESS_FALSE = "false"
+    const val ONBOARDING_SUCCESS_TRUE = "true"
+    const val ONBOARDING_SUCCESS_FALSE = "false"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

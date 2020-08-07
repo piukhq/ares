@@ -17,8 +17,8 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
-import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_FALSE
-import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCESS_TRUE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_FALSE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_TRUE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.LocalStoreUtils
@@ -118,7 +118,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     //onboarding-service-complete for LOGIN
                     logEvent(ONBOARDING_SERVICE_COMPLETE, getOnboardingGenericMap())
                     //onboarding-end with true
-                    logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCESS_TRUE))
+                    logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
                 }
 
                 it.uid?.let { uid -> setFirebaseUserId(uid) }
@@ -135,7 +135,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //SHOULD WE COUNT THIS AS END OF JOURNEY?
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
+                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -149,7 +149,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 //onboarding-service-complete for LOGIN
                 logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
                 //onboarding-end with false
-                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             isLoading.observeNonNull(this@LoginFragment) {
