@@ -19,6 +19,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
+import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
+import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
+import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
@@ -45,6 +48,10 @@ class PaymentCardWalletFragment :
     private val walletItems = ArrayList<Any>()
 
     private val walletAdapter = PaymentCardWalletAdapter()
+
+    private var paymentScheme = ""
+
+    private var uuid = ""
 
     override val layoutRes: Int
         get() = R.layout.payment_card_wallet_fragment
@@ -96,6 +103,9 @@ class PaymentCardWalletFragment :
                     if (isNetworkAvailable(requireActivity(), true)) {
                         viewModel.deletePaymentCard(paymentCard.id.toString())
                         binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+                         paymentScheme = paymentCard.card?.provider ?: "provider_not_available"
+                         uuid = paymentCard.uuid ?: "no_uuid_found"
+                        logEvent(DELETE_PAYMENT_CARD_REQUEST,getDeletePaymentCardGenericMap(paymentScheme,uuid))
                     }
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
@@ -127,8 +137,13 @@ class PaymentCardWalletFragment :
 
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchLocalData()
+            logEvent(DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,getDeletePaymentCardGenericMap(paymentScheme,uuid))
         }
 
+        viewModel.deleteError.observeNonNull(this){
+            logEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE,getDeletePaymentCardGenericMap(paymentScheme,uuid))
+
+        }
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.deleteError.observeErrorNonNull(requireContext(), true, this)
