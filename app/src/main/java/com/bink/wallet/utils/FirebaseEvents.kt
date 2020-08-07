@@ -5,7 +5,6 @@ import java.util.*
 object FirebaseEvents {
     const val ANALYTICS_IDENTIFIER = "identifier"
     const val ANALYTICS_CALL_TO_ACTION_TYPE = "call_to_action_pressed"
-
     const val ONBOARDING_VIEW = "Onboarding"
     const val LOGIN_VIEW = "Login"
     const val REGISTER_VIEW = "Register"
@@ -29,7 +28,6 @@ object FirebaseEvents {
     const val ADD_LOYALTY_CARD_VIEW = "AddLoyaltyCard"
     const val PAYMENT_CARD_SCAN = "payment_scan"
     const val PAYMENT_CARD_SCAN_SUCCESS = "success"
-<<<<<<< HEAD
     const val ADD_PAYMENT_CARD_REQUEST = "add_payment_card_request"
     const val ADD_PAYMENT_CARD_RESPONSE_SUCCESS = "add_payment_card_response_success"
     const val ADD_PAYMENT_CARD_RESPONSE_FAILURE = "add_payment_card_response_failure"
@@ -54,10 +52,6 @@ object FirebaseEvents {
     const val ADD_LOYALTY_CARD_SCANNED_CARD_KEY = "scanned_card"
     const val ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY = "loyalty_status"
     const val ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY = "loyalty_reason_code"
-
-
-
-=======
     const val ONBOARDING_START = "onboarding_start"
     const val ONBOARDING_USER_COMPLETE = "onboarding_user_complete"
     const val ONBOARDING_SERVICE_COMPLETE = "onboarding_service_complete"
@@ -70,7 +64,6 @@ object FirebaseEvents {
     const val ONBOARDING_SUCCESS_KEY = "onboarding_success"
     const val ONBOARDING_SUCESS_TRUE = "true"
     const val ONBOARDING_SUCESS_FALSE = "false"
->>>>>>> feature/AB20-818_onboarding_analytics
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)
