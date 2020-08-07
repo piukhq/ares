@@ -21,17 +21,17 @@ import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.utils.ADD_AUTH_BARCODE
+import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.utils.ExceptionHandlingUtils
-import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -130,6 +130,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 Observer { result ->
                     onResult(result)
                 })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        SharedPreferenceManager.isScannedCard = false
     }
 
     override fun onResume() {

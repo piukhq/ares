@@ -5,8 +5,8 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.FeatureSet
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentMembershipCard
-import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.LoyaltyCardLinkStatus
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

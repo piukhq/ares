@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PreferenceItemLayoutBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.toInt
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,

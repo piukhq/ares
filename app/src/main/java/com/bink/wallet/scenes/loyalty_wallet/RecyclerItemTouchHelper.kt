@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.graphics.Canvas
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletAdapter
