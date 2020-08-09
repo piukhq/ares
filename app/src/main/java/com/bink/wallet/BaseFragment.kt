@@ -28,6 +28,7 @@ import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
@@ -123,10 +124,10 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
     }
 
-    protected fun failedEvent(eventName:String){
+    protected fun failedEvent(eventName: String) {
         val bundle = Bundle()
 
-        bundle.putString(ATTEMPTED_EVENT_KEY,eventName)
+        bundle.putString(ATTEMPTED_EVENT_KEY, eventName)
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
 
     }
@@ -293,13 +294,30 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
-    private fun getPaymentSchemeType(paymentScheme: String): Int {
-        return when (paymentScheme) {
-            "Visa" -> 0
-            "MasterCard" -> 1
-            //amex
-            else -> 2
+    companion object {
+        fun getPaymentSchemeType(paymentScheme: String): Int {
+            return when (paymentScheme) {
+                "Visa" -> 0
+                "MasterCard" -> 1
+                //amex
+                else -> 2
+            }
         }
+
+        fun getPaymentCardStatusMap(
+            paymentSchemeValue: String,
+            uuid: String,
+            status: String
+        ): Map<String, Any> {
+            val map = HashMap<String, Any>()
+            map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+            map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+            map[FIREBASE_STATUS] = status
+
+            return map
+        }
+
     }
+
 
 }

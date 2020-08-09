@@ -65,6 +65,10 @@ object FirebaseEvents {
     const val ONBOARDING_SUCCESS_FALSE = "false"
     const val ATTEMPTED_EVENT_KEY  = "attempted_event"
     const val FAILED_EVENT_NO_DATA = "failed_event_no_data"
+    const val PAYMENT_CARD_STATUS = "payment_card_status"
+    const val FIREBASE_STATUS = "status"
+    const val FIREBASE_STATUS_ACTIVE = "active"
+    const val FIREBASE_STATUS_PENDING = "pending"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)
