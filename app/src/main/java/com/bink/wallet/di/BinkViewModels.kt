@@ -1,7 +1,11 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.MainViewModel
-import com.bink.wallet.data.*
+import com.bink.wallet.data.BannersDisplayDao
+import com.bink.wallet.data.BinkDatabase
+import com.bink.wallet.data.MembershipCardDao
+import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
@@ -41,8 +45,8 @@ import com.bink.wallet.scenes.registration.AcceptTCViewModel
 import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.DebugColorSwatchesViewModel
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
-import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.settings.SettingsViewModel
+import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel

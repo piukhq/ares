@@ -14,9 +14,9 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.INT_ONE_HUNDRED
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
+import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

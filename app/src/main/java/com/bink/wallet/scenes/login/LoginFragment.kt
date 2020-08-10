@@ -14,20 +14,26 @@ import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.FirebaseEvents.LOGIN_VIEW
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_FALSE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_TRUE
+import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.PASSWORD_REGEX
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
+import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -109,11 +115,18 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
                 postServiceResponse.observeNonNull(this@LoginFragment) {
                     getCurrentUser()
+                    //onboarding-service-complete for LOGIN
+                    logEvent(ONBOARDING_SERVICE_COMPLETE, getOnboardingGenericMap())
+                    //onboarding-end with true
+                    logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
                 }
 
                 it.uid?.let { uid ->
                     setAnalyticsUserId(uid)
                 }
+
+                //onboarding-user-complete for LOGIN
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
             }
 
             logInErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -124,6 +137,8 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 true
             ) {
                 handleErrorResponse()
+                //SHOULD WE COUNT THIS AS END OF JOURNEY?
+                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -134,6 +149,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 true
             ) {
                 handleErrorResponse()
+                //onboarding-service-complete for LOGIN
+                logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
+                //onboarding-end with false
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             isLoading.observeNonNull(this@LoginFragment) {

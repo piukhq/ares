@@ -9,7 +9,11 @@ import org.koin.dsl.module
 val dataModule = module {
     single {
         Room.databaseBuilder(androidApplication(), BinkDatabase::class.java, "bink-db")
-            .addMigrations(BinkDatabaseMigrations.MIGRATION_17_18,BinkDatabaseMigrations.MIGRATION_18_19)
+            .addMigrations(
+                BinkDatabaseMigrations.MIGRATION_17_18,
+                BinkDatabaseMigrations.MIGRATION_18_19,
+                BinkDatabaseMigrations.MIGRATION_19_20
+            )
             .fallbackToDestructiveMigration()
             .build()
 

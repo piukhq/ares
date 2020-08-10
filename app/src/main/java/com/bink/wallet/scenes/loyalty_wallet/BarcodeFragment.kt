@@ -1,12 +1,10 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.os.Bundle
-import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.utils.BarcodeWrapper
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

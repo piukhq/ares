@@ -10,7 +10,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
-import java.util.Locale
+import java.util.*
 
 class BrowseBrandsViewModel : BaseViewModel() {
     private val membershipPlans = MutableLiveData<List<MembershipPlan>>()

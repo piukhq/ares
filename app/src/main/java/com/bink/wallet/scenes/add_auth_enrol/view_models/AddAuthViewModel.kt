@@ -43,6 +43,9 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     private val _createCardError = MutableLiveData<Exception>()
     val createCardError: LiveData<Exception>
         get() = _createCardError
+    private val _addLoyaltyCardRequestMade = MutableLiveData<Boolean>()
+    val addLoyaltyCardRequestMade: LiveData<Boolean>
+        get() = _addLoyaltyCardRequestMade
 
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
@@ -167,7 +170,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         loyaltyWalletRepository.createMembershipCard(
             membershipCardRequest,
             _newMembershipCard,
-            _createCardError
+            _createCardError,
+            _addLoyaltyCardRequestMade
         )
     }
 
@@ -179,7 +183,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             membershipCardId,
             membershipCardRequest,
             _newMembershipCard,
-            _createCardError
+            _createCardError,
+            _addLoyaltyCardRequestMade
         )
     }
 
@@ -192,7 +197,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             membershipCardId,
             membershipCardRequest,
             _newMembershipCard,
-            _createCardError
+            _createCardError,
+            _addLoyaltyCardRequestMade
         )
     }
 

@@ -1,7 +1,11 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import androidx.lifecycle.MutableLiveData
-import com.bink.wallet.data.*
+import com.bink.wallet.data.BannersDisplayDao
+import com.bink.wallet.data.MembershipCardDao
+import com.bink.wallet.data.MembershipPlanDao
+import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -12,13 +16,14 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.generateUuidForMembershipCards
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
@@ -38,13 +43,13 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                        membershipCardDao.deleteAllCards()
-                        membershipCardDao.storeAll(response)
+                    generateUuidForMembershipCards(response, membershipCardDao)
+                    membershipCardDao.storeAll(response)
 
-                        SharedPreferenceManager.membershipCardsLastRequestTime =
-                            System.currentTimeMillis()
+                    SharedPreferenceManager.membershipCardsLastRequestTime =
+                        System.currentTimeMillis()
 
-                        mutableMembershipCards.value = response.toMutableList()
+                    mutableMembershipCards.value = response.toMutableList()
                 } catch (e: Exception) {
                     loadCardsError.value = e
                 }
@@ -180,7 +185,8 @@ class LoyaltyWalletRepository(
     fun createMembershipCard(
         membershipCardRequest: MembershipCardRequest,
         mutableMembershipCard: MutableLiveData<MembershipCard>,
-        createError: MutableLiveData<Exception>
+        createError: MutableLiveData<Exception>,
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
     ) {
 
         membershipCardRequest.account?.let { safeAccount ->
@@ -189,9 +195,13 @@ class LoyaltyWalletRepository(
 
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
+            addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
@@ -205,7 +215,8 @@ class LoyaltyWalletRepository(
         cardId: String,
         membershipCardRequest: MembershipCardRequest,
         membershipCardData: MutableLiveData<MembershipCard>,
-        createCardError: MutableLiveData<Exception>
+        createCardError: MutableLiveData<Exception>,
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
     ) {
         membershipCardRequest.account?.let { safeAccount ->
             encryptMembershipCardFields(safeAccount)
@@ -213,9 +224,13 @@ class LoyaltyWalletRepository(
 
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
+            addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
@@ -228,13 +243,18 @@ class LoyaltyWalletRepository(
         cardId: String,
         membershipCardRequest: MembershipCardRequest,
         membershipCardData: MutableLiveData<MembershipCard>,
-        createCardError: MutableLiveData<Exception>
+        createCardError: MutableLiveData<Exception>,
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.ghostMembershipCardAsync(cardId, membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
+            addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
