@@ -37,7 +37,8 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 if ((cardInDb.status.equals(FIREBASE_STATUS_PENDING) && cardFromApi.status.equals(
                         FIREBASE_STATUS_ACTIVE
                     )) || (cardInDb.status.equals(FIREBASE_STATUS_ACTIVE) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_PENDING))
+                        FIREBASE_STATUS_PENDING
+                    ))
                 ) {
                     coroutineScope {
                         logStatusChange(
