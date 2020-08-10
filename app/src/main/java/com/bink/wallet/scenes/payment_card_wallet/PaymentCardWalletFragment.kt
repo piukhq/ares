@@ -108,7 +108,7 @@ class PaymentCardWalletFragment :
                         paymentScheme = paymentSchemeValue
                         this.uuid = uuidValue
 
-                            if (paymentSchemeValue == null || uuidValue == null) {
+                        if (paymentSchemeValue == null || uuidValue == null) {
                             failedEvent(DELETE_PAYMENT_CARD_REQUEST)
                         } else {
                             logEvent(
@@ -164,9 +164,9 @@ class PaymentCardWalletFragment :
         viewModel.deleteError.observeNonNull(this) {
             val pScheme = paymentScheme
             val uuid = this.uuid
-            if (pScheme == null || uuid == null){
+            if (pScheme == null || uuid == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
-            } else{
+            } else {
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
                     getDeletePaymentCardGenericMap(pScheme, uuid)
