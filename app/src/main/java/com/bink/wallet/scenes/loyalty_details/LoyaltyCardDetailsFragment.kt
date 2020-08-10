@@ -18,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.SCROLL_DELAY
@@ -223,6 +224,17 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deletedCard.observeNonNull(this@LoyaltyCardDetailsFragment) {
             findNavController().navigateIfAdded(this, R.id.global_to_home, currentDestination)
+            val planId = viewModel.membershipCard.value?.membership_plan
+            val uuid = viewModel.membershipCard.value?.uuid
+            if (planId == null || uuid == null) {
+                failedEvent(FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS)
+            } else {
+                logEvent(
+                    FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,
+                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                )
+
+            }
 
         }
 
@@ -231,6 +243,20 @@ class LoyaltyCardDetailsFragment :
             true,
             this@LoyaltyCardDetailsFragment
         )
+
+        viewModel.deleteError.observeNonNull(this){
+            val planId = viewModel.membershipCard.value?.membership_plan
+            val uuid = viewModel.membershipCard.value?.uuid
+            if (planId == null || uuid == null) {
+                failedEvent(FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
+            } else {
+                logEvent(
+                    FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                )
+
+            }
+        }
     }
 
     private fun setUpScrollView(colorDrawable: ColorDrawable) {
@@ -438,6 +464,18 @@ class LoyaltyCardDetailsFragment :
                     if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
                             viewModel.deleteCard(viewModel.membershipCard.value?.id)
+                            val planId = viewModel.membershipCard.value?.membership_plan
+                            val uuid = viewModel.membershipCard.value?.uuid
+                            if (planId == null || uuid == null) {
+                                failedEvent(FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST)
+                            } else {
+                                logEvent(
+                                    FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST,
+                                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                                )
+
+                            }
+
                         }
                     }
                     dialog.dismiss()

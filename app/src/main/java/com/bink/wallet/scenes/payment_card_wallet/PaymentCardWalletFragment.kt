@@ -103,15 +103,17 @@ class PaymentCardWalletFragment :
                     if (isNetworkAvailable(requireActivity(), true)) {
                         viewModel.deletePaymentCard(paymentCard.id.toString())
                         binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
-                        val paymentScheme = paymentCard.card?.provider
-                        val uuid = paymentCard.uuid
+                        val paymentSchemeValue = paymentCard.card?.provider
+                        val uuidValue = paymentCard.uuid
+                        paymentScheme = paymentSchemeValue
+                        this.uuid = uuidValue
 
-                        if (paymentScheme == null || uuid == null) {
+                        if (paymentSchemeValue == null || uuidValue == null) {
                             failedEvent(DELETE_PAYMENT_CARD_REQUEST)
                         } else {
                             logEvent(
                                 DELETE_PAYMENT_CARD_REQUEST,
-                                getDeletePaymentCardGenericMap(paymentScheme, uuid)
+                                getDeletePaymentCardGenericMap(paymentSchemeValue, uuidValue)
                             )
                         }
 
@@ -162,9 +164,9 @@ class PaymentCardWalletFragment :
         viewModel.deleteError.observeNonNull(this) {
             val pScheme = paymentScheme
             val uuid = this.uuid
-            if (pScheme == null || uuid == null){
+            if (pScheme == null || uuid == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
-            } else{
+            } else {
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
                     getDeletePaymentCardGenericMap(pScheme, uuid)

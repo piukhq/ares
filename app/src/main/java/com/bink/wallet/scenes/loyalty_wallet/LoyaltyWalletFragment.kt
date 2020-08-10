@@ -21,6 +21,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
+import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
+import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.ZendeskUtils
@@ -59,6 +62,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var walletItems = ArrayList<Any>()
     private var isRefresh = false
     private var isErrorShowing = false
+    private var deletedCard: MembershipCard? = null
 
     private val listener = object :
         RecyclerItemTouchHelperListener {
@@ -164,6 +168,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.deleteCard.observeNonNull(this) {
             fetchData()
+            val planId = deletedCard?.membership_plan
+            val uuid = deletedCard?.uuid
+            if (planId == null || uuid == null) {
+                failedEvent(DELETE_LOYALTY_CARD_RESPONSE_SUCCESS)
+            } else {
+                logEvent(
+                    DELETE_LOYALTY_CARD_RESPONSE_SUCCESS,
+                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                )
+
+            }
+
         }
 
         manageRecyclerView()
@@ -199,12 +215,26 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
             binding.swipeLayout.isEnabled = true
         }
+
+        viewModel.deleteCardError.observeNonNull(this) {
+            val planId = deletedCard?.membership_plan
+            val uuid = deletedCard?.uuid
+            if (planId == null || uuid == null) {
+                failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
+            } else {
+                logEvent(
+                    DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                )
+
+            }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mainViewModel.membershipPlanDatabaseLiveData.observe(this, Observer {
+        mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner, Observer {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards(false)
             viewModel.fetchDismissedCards()
@@ -363,6 +393,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                             viewModel.deleteCard(membershipCard.id)
+                            deletedCard = membershipCard
+                            val planId = membershipCard.membership_plan
+                            val uuid = membershipCard.uuid
+                            if (planId == null || uuid == null) {
+                                failedEvent(DELETE_LOYALTY_CARD_REQUEST)
+                            } else {
+                                logEvent(
+                                    DELETE_LOYALTY_CARD_REQUEST,
+                                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                                )
+
+                            }
                         } else {
                             disableIndicators()
                         }

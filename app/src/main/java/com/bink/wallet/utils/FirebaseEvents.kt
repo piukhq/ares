@@ -69,6 +69,9 @@ object FirebaseEvents {
     const val FIREBASE_STATUS = "status"
     const val FIREBASE_STATUS_ACTIVE = "active"
     const val FIREBASE_STATUS_PENDING = "pending"
+    const val DELETE_LOYALTY_CARD_REQUEST = "delete_loyalty_card"
+    const val DELETE_LOYALTY_CARD_RESPONSE_SUCCESS = "delete_loyalty_card_response_success"
+    const val DELETE_LOYALTY_CARD_RESPONSE_FAILURE = "delete_loyalty_card_response_fail"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

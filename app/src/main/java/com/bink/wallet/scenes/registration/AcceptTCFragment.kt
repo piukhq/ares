@@ -10,12 +10,12 @@ import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.request.MarketingOption
+import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_END
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SERVICE_COMPLETE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_FALSE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_TRUE
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_USER_COMPLETE
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.TERMS_AND_CONDITIONS_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.LocalStoreUtils
@@ -140,7 +140,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
             }
 
-            setFirebaseUserId(it.uid)
+            setAnalyticsUserId(it.uid)
+
             //ONBOARDING USER COMPLETE
             logEvent(ONBOARDING_USER_COMPLETE,getOnboardingGenericMap())
         }
