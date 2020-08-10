@@ -72,6 +72,7 @@ object FirebaseEvents {
     const val DELETE_LOYALTY_CARD_REQUEST = "delete_loyalty_card"
     const val DELETE_LOYALTY_CARD_RESPONSE_SUCCESS = "delete_loyalty_card_response_success"
     const val DELETE_LOYALTY_CARD_RESPONSE_FAILURE = "delete_loyalty_card_response_fail"
+    const val LOYALTY_CARD_STATUS = "loyalty_card_sttus"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)
