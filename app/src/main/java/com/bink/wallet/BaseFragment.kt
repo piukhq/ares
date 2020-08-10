@@ -124,10 +124,10 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
     }
 
-    protected fun failedEvent(eventName:String){
+    protected fun failedEvent(eventName: String) {
         val bundle = Bundle()
 
-        bundle.putString(ATTEMPTED_EVENT_KEY,eventName)
+        bundle.putString(ATTEMPTED_EVENT_KEY, eventName)
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
 
     }
@@ -290,6 +290,17 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
             SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
+
+        return map
+    }
+
+    protected fun getDeleteLoyaltyCardGenericMap(
+        loyaltyPlan: String,
+        uuid: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
 
         return map
     }
