@@ -82,8 +82,7 @@ class SettingsFragment :
         }
         viewModel.itemsList.observe(viewLifecycleOwner, this)
         viewModel.userResponse.observeNonNull(this) {
-            setCrashlyticsUserId(it.uid)
-            setFirebaseAnalyticsUserId(it.uid)
+            setAnalyticsUserId(it.uid)
         }
         initZendesk()
     }

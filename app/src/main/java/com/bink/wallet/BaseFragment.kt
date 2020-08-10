@@ -86,11 +86,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected abstract fun builder(): FragmentToolbar
 
-    protected fun setCrashlyticsUserId(uid: String) {
+    protected fun setAnalyticsUserId(uid: String) {
         Crashlytics.setUserIdentifier(uid)
-    }
-
-    protected fun setFirebaseAnalyticsUserId(uid: String){
         (requireActivity() as MainActivity).firebaseAnalytics.setUserId(uid)
     }
 

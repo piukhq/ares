@@ -112,8 +112,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 }
 
                 it.uid?.let { uid ->
-                    setCrashlyticsUserId(uid)
-                    setFirebaseAnalyticsUserId(uid)
+                    setAnalyticsUserId(uid)
                 }
             }
 
@@ -149,8 +148,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             userResponse.observeNonNull(this@LoginFragment) {
-                setCrashlyticsUserId(it.uid)
-                setFirebaseAnalyticsUserId(it.uid)
+                setAnalyticsUserId(it.uid)
             }
         }
 

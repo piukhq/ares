@@ -132,8 +132,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 }
 
                 it.uid?.let { uid ->
-                    setCrashlyticsUserId(uid)
-                    setFirebaseAnalyticsUserId(uid)
+                    setAnalyticsUserId(uid)
                 }
             }
 
