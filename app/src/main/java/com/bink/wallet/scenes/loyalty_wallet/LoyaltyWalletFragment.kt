@@ -21,6 +21,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
+import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
+import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
@@ -171,10 +174,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val planId = deletedCard?.membership_plan
             val uuid = deletedCard?.uuid
             if (planId == null || uuid == null) {
-                failedEvent(DELETE_PAYMENT_CARD_RESPONSE_SUCCESS)
+                failedEvent(DELETE_LOYALTY_CARD_RESPONSE_SUCCESS)
             } else {
                 logEvent(
-                    DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,
+                    DELETE_LOYALTY_CARD_RESPONSE_SUCCESS,
                     getDeleteLoyaltyCardGenericMap(planId, uuid)
                 )
 
@@ -220,10 +223,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val planId = deletedCard?.membership_plan
             val uuid = deletedCard?.uuid
             if (planId == null || uuid == null) {
-                failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
+                failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
                 logEvent(
-                    DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                    DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
                     getDeleteLoyaltyCardGenericMap(planId, uuid)
                 )
 
@@ -397,10 +400,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                             val planId = membershipCard.membership_plan
                             val uuid = membershipCard.uuid
                             if (planId == null || uuid == null) {
-                                failedEvent(DELETE_PAYMENT_CARD_REQUEST)
+                                failedEvent(DELETE_LOYALTY_CARD_REQUEST)
                             } else {
                                 logEvent(
-                                    DELETE_PAYMENT_CARD_REQUEST,
+                                    DELETE_LOYALTY_CARD_REQUEST,
                                     getDeleteLoyaltyCardGenericMap(planId, uuid)
                                 )
 
