@@ -152,7 +152,9 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     )
                 }
 
-                it.uid?.let { uid -> setFirebaseUserId(uid) }
+                it.uid?.let { uid ->
+                    setAnalyticsUserId(uid)
+                }
                 //ONBOARDING USER COMPLETE
                 logEvent(ONBOARDING_USER_COMPLETE,getOnboardingGenericMap())
             }

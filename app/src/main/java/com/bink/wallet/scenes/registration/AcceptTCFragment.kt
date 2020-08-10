@@ -140,7 +140,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
             }
 
-            setFirebaseUserId(it.uid)
+            setAnalyticsUserId(it.uid)
+
             //ONBOARDING USER COMPLETE
             logEvent(ONBOARDING_USER_COMPLETE,getOnboardingGenericMap())
         }
