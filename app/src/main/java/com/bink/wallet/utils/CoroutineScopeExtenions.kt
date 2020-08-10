@@ -65,11 +65,8 @@ suspend fun CoroutineScope.generateUuidFromCardLinkageState(
 
     for (cardInDb in oldCards) {
         if (card.id == cardInDb.id) {
-            if (cardInDb.uuid == null) {
-                card.uuid = UUID.randomUUID().toString()
-            } else {
-                card.uuid = cardInDb.uuid
-            }
+            if (cardInDb.uuid == null) card.uuid = UUID.randomUUID().toString() else card.uuid =
+                cardInDb.uuid
         }
     }
 
