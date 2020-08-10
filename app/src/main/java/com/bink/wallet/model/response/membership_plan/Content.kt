@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class Content(
     @Json(name = "column")
-    val column: String,
+    val column: String?,
     @Json(name = "value")
-    val value: String
+    val value: String?
 ):Parcelable
