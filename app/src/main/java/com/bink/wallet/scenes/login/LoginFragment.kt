@@ -121,7 +121,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_TRUE))
                 }
 
-                it.uid?.let { uid -> setFirebaseUserId(uid) }
+                it.uid?.let { uid ->
+                    setAnalyticsUserId(uid)
+                }
+
                 //onboarding-user-complete for LOGIN
                 logEvent(ONBOARDING_USER_COMPLETE, getOnboardingGenericMap())
             }
@@ -164,7 +167,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             }
 
             userResponse.observeNonNull(this@LoginFragment) {
-                setFirebaseUserId(it.uid)
+                setAnalyticsUserId(it.uid)
             }
         }
 
