@@ -82,8 +82,8 @@ suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
 
     for (membershipCardInDb in oldMembershipCards) {
         if (membershipCardInDb.id == card.id) {
-            if (membershipCardInDb.uuid == null) card.uuid == UUID.randomUUID()
-                .toString() else card.uuid == membershipCardInDb.uuid
+            if (membershipCardInDb.uuid == null) card.uuid = UUID.randomUUID()
+                .toString() else card.uuid = membershipCardInDb.uuid
             if ((membershipCardInDb.status?.state.equals(FIREBASE_STATUS_PENDING) && card.status?.state.equals(
                     FIREBASE_STATUS_ACTIVE
                 )) || (membershipCardInDb.status?.state.equals(
