@@ -25,7 +25,6 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
     paymentCardDao: PaymentCardDao
 ) {
     val oldCards = paymentCardDao.getAllAsync()
-//    val firebaseAnalytics = Firebase.analytics
     //Loop through each card we get from Api
     cards.forEach { cardFromApi ->
         for (cardInDb in oldCards) {
