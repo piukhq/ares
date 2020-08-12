@@ -70,7 +70,7 @@ object FirebaseEvents {
     const val DELETE_LOYALTY_CARD_RESPONSE_FAILURE = "delete_loyalty_card_response_fail"
     const val PLL_PATCH = "pll_patch"
     const val PLL_DELETE = "pll_delete"
-    const val PPL_PAYMENT_ID_KEY = "payment_id"
+    const val PLL_PAYMENT_ID_KEY = "payment_id"
     const val PLL_LOYALTY_ID_KEY = "loyalty_id"
     const val PLL_LINK_ID_KEY = "link_id"
     const val PLL_STATE_KEY = "state"

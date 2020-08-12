@@ -28,6 +28,10 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
+import com.bink.wallet.utils.FirebaseEvents.PLL_LINK_ID_KEY
+import com.bink.wallet.utils.FirebaseEvents.PLL_LOYALTY_ID_KEY
+import com.bink.wallet.utils.FirebaseEvents.PLL_PAYMENT_ID_KEY
+import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_KEY
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
@@ -35,6 +39,8 @@ import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
@@ -305,13 +311,41 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
-    private fun getPaymentSchemeType(paymentScheme: String): Int {
-        return when (paymentScheme) {
-            "Visa" -> 0
-            "MasterCard" -> 1
-            //amex
-            else -> 2
+    companion object {
+         fun getPaymentSchemeType(paymentScheme: String): Int {
+            return when (paymentScheme) {
+                "Visa" -> 0
+                "MasterCard" -> 1
+                //amex
+                else -> 2
+            }
+        }
+
+        fun getPllPatchMap(paymentUuid:String,loyaltyUuid:String,state:String):Map<String,Any>{
+            val map = HashMap<String, Any>()
+            map[PLL_PAYMENT_ID_KEY] = paymentUuid
+            map[PLL_LOYALTY_ID_KEY] = loyaltyUuid
+            map[PLL_LINK_ID_KEY] = "$loyaltyUuid/$paymentUuid"
+            map[PLL_STATE_KEY] = state
+
+            return map
+        }
+
+        fun logPllEvent(name: String, parameters: Map<String, Any>){
+            val bundle = Bundle()
+
+            for (entry: Map.Entry<String, Any> in parameters) {
+                if (entry.value is Int) {
+                    bundle.putInt(entry.key, entry.value as Int)
+                } else {
+                    bundle.putString(entry.key, entry.value.toString())
+
+                }
+            }
+
+            Firebase.analytics.logEvent(name,bundle)
         }
     }
+
 
 }
