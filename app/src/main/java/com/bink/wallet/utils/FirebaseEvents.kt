@@ -30,7 +30,7 @@ object FirebaseEvents {
     const val PAYMENT_CARD_SCAN_SUCCESS = "success"
     const val ADD_PAYMENT_CARD_REQUEST = "add_payment_card_request"
     const val ADD_PAYMENT_CARD_RESPONSE_SUCCESS = "add_payment_card_response_success"
-    const val ADD_PAYMENT_CARD_RESPONSE_FAILURE = "add_payment_card_response_failure"
+    const val ADD_PAYMENT_CARD_RESPONSE_FAILURE = "add_payment_card_response_fail"
     const val FIREBASE_CLIENT_ACCOUNT_ID_KEY = "client_account_id"
     const val FIREBASE_ACCOUNT_IS_NEW_KEY = "account_is_new"
     const val FIREBASE_PAYMENT_SCHEME_KEY = "payment_scheme"

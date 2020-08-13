@@ -41,8 +41,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     private var directions: NavDirections? = null
     private var isAddJourney = false
     private val footerQuotient = 3
-    val unselectedCards = mutableListOf<String>()
-    val selectedCards = mutableListOf<String>()
+    val unselectedCards = mutableListOf<PaymentCard>()
+    val selectedCards = mutableListOf<PaymentCard>()
     private val recyclerViewHelper: RecyclerViewHelper = RecyclerViewHelper()
 
     override fun onResume() {
@@ -172,18 +172,18 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                                 if (pllItem.isSelected &&
                                     !pllItem.paymentCard.isLinkedToMembershipCard(it)
                                 ) {
-                                    selectedCards.add(pllItem.paymentCard.id.toString())
+                                    selectedCards.add(pllItem.paymentCard)
                                 } else if (viewModel.membershipCard.value != null &&
                                     !pllItem.isSelected &&
                                     pllItem.paymentCard.isLinkedToMembershipCard(it)
                                 ) {
-                                    unselectedCards.add(pllItem.paymentCard.id.toString())
+                                    unselectedCards.add(pllItem.paymentCard)
                                 }
                             }
                         }
                     }
 
-                    viewModel.membershipCard.value?.id?.let {
+                    viewModel.membershipCard.value?.let {
                         if (unselectedCards.isNotEmpty()) {
                             viewModel.unlinkPaymentCards(
                                 unselectedCards,

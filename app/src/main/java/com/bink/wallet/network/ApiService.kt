@@ -53,10 +53,10 @@ interface ApiService {
     ): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
-    fun linkToPaymentCardAsync(
+    suspend fun linkToPaymentCardAsync(
         @Path("membershipCardId") membershipCardId: String,
         @Path("paymentCardId") paymentCardId: String
-    ): Deferred<PaymentCard>
+    ): PaymentCard
 
     @DELETE("/ubiquity/payment_card/{paymentCardId}/membership_card/{membershipCardId}")
     fun unlinkFromPaymentCardAsync(

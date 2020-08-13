@@ -3,6 +3,8 @@ package com.bink.wallet.scenes.pll
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.response.cardlinking.CardLinkageResponse
+import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
@@ -102,8 +104,8 @@ class PaymentWalletRepository(
             val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    paymentCardMutableValue.value = response
+//                    val response = request.await()
+                    paymentCardMutableValue.value = request
                 } catch (e: Exception) {
                     linkError.value = e
                 }
@@ -139,65 +141,74 @@ class PaymentWalletRepository(
     }
 
     fun unlinkPaymentCards(
-        paymentCardIds: List<String>,
-        membershipCardId: String,
+        paymentCards: List<PaymentCard>,
+        membershipCard: MembershipCard,
         unlinkSuccesses: MutableLiveData<ArrayList<Any>>,
         unlinkErrors: MutableLiveData<ArrayList<Exception>>
     ) {
         val jobs = LinkedBlockingQueue<Deferred<*>>()
-        paymentCardIds.forEach { id ->
+        val localSuccesses = ArrayList<Any>()
+        val localErrors = ArrayList<Exception>()
+        paymentCards.forEach { card ->
             CoroutineScope(Dispatchers.IO).launch {
-                jobs.add(async { apiService.unlinkFromPaymentCardAsync(id, membershipCardId) })
+                val result = async { apiService.unlinkFromPaymentCardAsync(card.id.toString(), membershipCard.id) }
                 withContext(Dispatchers.Main) {
-                    val localSuccesses = ArrayList<Any>()
-                    val localErrors = ArrayList<Exception>()
-                    runBlocking {
-                        for (it in jobs) {
+
+//                    runBlocking {
+//                        for (it in jobs) {
                             try {
-                                val response = it.await()
-                                response?.let {
+                                val response = result.await()
+                                response.let {
                                     localSuccesses.add(response)
+                                    unlinkSuccesses.value = localSuccesses
+
                                 }
                             } catch (e: Exception) {
                                 localErrors.add(e)
+                                unlinkErrors.value = localErrors
+
                             }
-                        }
-                    }
-                    unlinkSuccesses.value = localSuccesses
-                    unlinkErrors.value = localErrors
+//                        }
+//                    }
+
                 }
             }
         }
+//        unlinkSuccesses.value = localSuccesses
+//        unlinkErrors.value = localErrors
     }
 
     fun linkPaymentCards(
-        paymentCardIds: List<String>,
-        membershipCardId: String,
+        paymentCards: List<PaymentCard>,
+        membershipCard: MembershipCard,
         linkSuccesses: MutableLiveData<ArrayList<Any>>,
         linkErrors: MutableLiveData<MutableList<Exception>>
     ) {
         val jobs = LinkedBlockingQueue<Deferred<*>>()
-        paymentCardIds.forEach { id ->
+        paymentCards.forEach { card ->
             CoroutineScope(Dispatchers.IO).launch {
-                jobs.add(async { apiService.linkToPaymentCardAsync(membershipCardId, id) })
+                val request = async { apiService.linkToPaymentCardAsync(membershipCard.id, card.id.toString()) }
                 withContext(Dispatchers.Main) {
                     val localSuccesses = ArrayList<Any>()
                     val localErrors = ArrayList<Exception>()
-                    runBlocking {
-                        for (it in jobs) {
+//                    runBlocking {
+//                        for (it in jobs) {
                             try {
-                                val response = it.await()
-                                response?.let {
-                                    localSuccesses.add(response)
+                                val response = request.await()
+                                response.let {
+//                                    localSuccesses.add(response)
+                                    linkSuccesses.value = localSuccesses
+
+                                    logEvent(card,membershipCard)
 
                                 }
                             } catch (e: Exception) {
-                                localErrors.add(e)
+//                                localErrors.add(e)
+                                linkErrors.value = localErrors
+
                             }
-                        }
-                    }
-                    linkSuccesses.value = localSuccesses
-                    linkErrors.value = localErrors
+//                        }
+//                    }
                 }
             }
         }
@@ -254,5 +265,11 @@ class PaymentWalletRepository(
                 }
             }
         }
+    }
+    private fun logEvent(
+        response: Any,
+        membershipCard: MembershipCard
+    ) {
+
     }
 }
