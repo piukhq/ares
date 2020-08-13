@@ -8,6 +8,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.utils.FirebaseEvents.PLL_DELETE
 import com.bink.wallet.utils.FirebaseEvents.PLL_PATCH
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_ACTIVE
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_FAILED
@@ -16,13 +17,11 @@ import com.bink.wallet.utils.generateUuidForPaymentCards
 import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
-import java.util.concurrent.LinkedBlockingQueue
 
 class PaymentWalletRepository(
     private val apiService: ApiService,
@@ -98,46 +97,53 @@ class PaymentWalletRepository(
     }
 
     fun linkPaymentCard(
-        membershipCardId: String,
-        paymentCardId: String,
+        membershipCard: MembershipCard,
+        paymentCard: PaymentCard,
         linkError: MutableLiveData<Exception>,
-        paymentCardMutableValue: MutableLiveData<PaymentCard> = MutableLiveData()
+        paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.linkToPaymentCardAsync(membershipCardId, paymentCardId)
+            val paymentCardResponse =
+                apiService.linkToPaymentCardAsync(membershipCard.id, paymentCard.id.toString())
             withContext(Dispatchers.Main) {
                 try {
-//                    val response = request.await()
-                    paymentCardMutableValue.value = request
+                    paymentCardMutableLiveData.value = paymentCardResponse
+                    logPatchEvent(paymentCard, membershipCard, paymentCardResponse)
+
+
                 } catch (e: Exception) {
                     linkError.value = e
+                    logPllFailure(paymentCard, membershipCard,true)
                 }
             }
         }
     }
 
     fun unlinkPaymentCard(
-        paymentCardId: String,
-        membershipCardId: String,
+        paymentCard: PaymentCard,
+        membershipCard: MembershipCard,
         unlinkError: MutableLiveData<Exception>?,
         unlinkedBody: MutableLiveData<ResponseBody>?,
-        paymentCard: MutableLiveData<PaymentCard>
+        paymentCardMutableLiveData: MutableLiveData<PaymentCard>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.unlinkFromPaymentCardAsync(paymentCardId, membershipCardId)
+            val request =
+                apiService.unlinkFromPaymentCardAsync(paymentCard.id.toString(), membershipCard.id)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
                     unlinkedBody?.value = response
-                    val paymentCardValue = paymentCard.value
+                    val paymentCardValue = paymentCardMutableLiveData.value
                     paymentCardValue?.membership_cards?.forEach {
-                        if (it.id == membershipCardId) {
+                        if (it.id == membershipCard.id) {
                             it.active_link = false
                         }
                     }
-                    paymentCard.value = paymentCardValue
+                    paymentCardMutableLiveData.value = paymentCardValue
+                    logDeleteEvent(paymentCard, membershipCard)
                 } catch (e: Exception) {
                     unlinkError?.value = e
+                    logPllFailure(paymentCard, membershipCard,false)
                 }
             }
         }
@@ -165,11 +171,13 @@ class PaymentWalletRepository(
                         response.let {
                             localSuccesses.add(response)
                             unlinkSuccesses.value = localSuccesses
+                            logDeleteEvent(card, membershipCard)
 
                         }
                     } catch (e: Exception) {
                         localErrors.add(e)
                         unlinkErrors.value = localErrors
+                        logPllFailure(card, membershipCard,false)
 
                     }
 
@@ -202,13 +210,13 @@ class PaymentWalletRepository(
                             localSuccesses.add(response)
                             linkSuccesses.value = localSuccesses
 
-                            logEvent(card, membershipCard, it)
+                            logPatchEvent(card, membershipCard, it)
 
                         }
                     } catch (e: Exception) {
                         localErrors.add(e)
                         linkErrors.value = localErrors
-                        logPllFailure(card, membershipCard)
+                        logPllFailure(card, membershipCard,true)
 
                     }
                 }
@@ -269,7 +277,7 @@ class PaymentWalletRepository(
         }
     }
 
-    private fun logEvent(
+    private fun logPatchEvent(
         paymentCard: PaymentCard,
         membershipCard: MembershipCard,
         paymentCardResponse: PaymentCard
@@ -290,16 +298,32 @@ class PaymentWalletRepository(
         }
     }
 
+    private fun logDeleteEvent(paymentCard: PaymentCard, membershipCard: MembershipCard) {
+        val paymentCardUuid = paymentCard.uuid
+        val membershipCardUuid = membershipCard.uuid
+        if (membershipCardUuid == null || paymentCardUuid == null) {
+            BaseFragment.logFailedEvent(PLL_DELETE)
+        } else {
+            BaseFragment.logPllEvent(
+                PLL_DELETE,
+                BaseFragment.getPllDeleteMap(paymentCardUuid, membershipCardUuid)
+            )
+        }
+
+    }
+
     //This will be called whenever we get an error while trying to link or unlink
     private fun logPllFailure(
         paymentCard: PaymentCard,
-        membershipCard: MembershipCard
+        membershipCard: MembershipCard,
+        isPatch: Boolean
     ) {
 
+        val eventName = if (isPatch) PLL_PATCH else PLL_DELETE
         paymentCard.uuid?.let { paymentCardUuid ->
             membershipCard.uuid?.let { membershipUuid ->
                 BaseFragment.logPllEvent(
-                    PLL_PATCH, BaseFragment.getPllPatchMap(
+                    eventName, BaseFragment.getPllPatchMap(
                         paymentCardUuid,
                         membershipUuid, PLL_STATE_FAILED
                     )

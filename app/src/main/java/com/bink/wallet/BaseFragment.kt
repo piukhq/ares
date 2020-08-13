@@ -331,6 +331,15 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             return map
         }
 
+        fun getPllDeleteMap(paymentUuid:String,loyaltyUuid:String) : Map<String,Any>{
+            val map = HashMap<String, Any>()
+            map[PLL_PAYMENT_ID_KEY] = paymentUuid
+            map[PLL_LOYALTY_ID_KEY] = loyaltyUuid
+            map[PLL_LINK_ID_KEY] = "$loyaltyUuid/$paymentUuid"
+
+            return map
+        }
+
         fun logPllEvent(name: String, parameters: Map<String, Any>){
             val bundle = Bundle()
 
