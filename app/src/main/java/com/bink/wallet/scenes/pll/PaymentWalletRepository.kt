@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.pll
 
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
@@ -25,7 +26,8 @@ import okhttp3.ResponseBody
 
 class PaymentWalletRepository(
     private val apiService: ApiService,
-    private val paymentCardDao: PaymentCardDao
+    private val paymentCardDao: PaymentCardDao,
+    private val membershipCardDao: MembershipCardDao
 ) {
     fun getPaymentCards(
         paymentCards: MutableLiveData<List<PaymentCard>>,
@@ -53,7 +55,7 @@ class PaymentWalletRepository(
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            generateUuidForPaymentCards(cards, paymentCardDao)
+            generateUuidForPaymentCards(cards, paymentCardDao,membershipCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {

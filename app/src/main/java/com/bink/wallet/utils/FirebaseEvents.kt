@@ -65,11 +65,16 @@ object FirebaseEvents {
     const val ONBOARDING_SUCCESS_FALSE = "false"
     const val ATTEMPTED_EVENT_KEY  = "attempted_event"
     const val FAILED_EVENT_NO_DATA = "failed_event_no_data"
+    const val PAYMENT_CARD_STATUS = "payment_card_status"
+    const val FIREBASE_STATUS = "status"
+    const val FIREBASE_STATUS_ACTIVE = "active"
+    const val FIREBASE_STATUS_PENDING = "pending"
     const val DELETE_LOYALTY_CARD_REQUEST = "delete_loyalty_card"
     const val DELETE_LOYALTY_CARD_RESPONSE_SUCCESS = "delete_loyalty_card_response_success"
     const val DELETE_LOYALTY_CARD_RESPONSE_FAILURE = "delete_loyalty_card_response_fail"
     const val PLL_PATCH = "pll_patch"
     const val PLL_DELETE = "pll_delete"
+    const val PLL_ACTIVE = "pll_active"
     const val PLL_PAYMENT_ID_KEY = "payment_id"
     const val PLL_LOYALTY_ID_KEY = "loyalty_id"
     const val PLL_LINK_ID_KEY = "link_id"
@@ -77,7 +82,7 @@ object FirebaseEvents {
     const val PLL_STATE_ACTIVE = "ACTIVE"
     const val PLL_STATE_SOFT_LINK = "SOFT_LINK"
     const val PLL_STATE_FAILED = "FAILED"
-
+    const val LOYALTY_CARD_STATUS = "loyalty_card_status"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

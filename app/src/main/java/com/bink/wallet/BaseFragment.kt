@@ -27,6 +27,7 @@ import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_LINK_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_LOYALTY_ID_KEY
@@ -312,13 +313,39 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     companion object {
-         fun getPaymentSchemeType(paymentScheme: String): Int {
+        fun getPaymentSchemeType(paymentScheme: String): Int {
             return when (paymentScheme) {
                 "Visa" -> 0
                 "MasterCard" -> 1
                 //amex
                 else -> 2
             }
+        }
+
+        fun getPaymentCardStatusMap(
+            paymentSchemeValue: String,
+            uuid: String,
+            status: String
+        ): Map<String, Any> {
+            val map = HashMap<String, Any>()
+            map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+            map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+            map[FIREBASE_STATUS] = status
+
+            return map
+        }
+
+        fun getLoyaltyCardStatusMap(
+            uuid: String,
+            status: String,
+            planId: String
+        ): Map<String, Any> {
+            val map = HashMap<String, Any>()
+            map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+            map[FIREBASE_STATUS] = status
+            map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = planId.toInt()
+
+            return map
         }
 
         fun getPllPatchMap(paymentUuid:String,loyaltyUuid:String,state:String):Map<String,Any>{
@@ -336,6 +363,15 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             map[PLL_PAYMENT_ID_KEY] = paymentUuid
             map[PLL_LOYALTY_ID_KEY] = loyaltyUuid
             map[PLL_LINK_ID_KEY] = "$loyaltyUuid/$paymentUuid"
+
+            return map
+        }
+
+        fun getPllActiveMap(paymentUuid:String,loyaltyUuid:String):Map<String,Any>{
+            val map = HashMap<String, Any>()
+            map[PLL_LINK_ID_KEY] = "$loyaltyUuid/$paymentUuid"
+            map[PLL_PAYMENT_ID_KEY] = paymentUuid
+            map[PLL_LOYALTY_ID_KEY] = loyaltyUuid
 
             return map
         }
@@ -362,7 +398,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             Firebase.analytics.logEvent(FAILED_EVENT_NO_DATA,bundle)
 
         }
+
     }
-
-
 }
