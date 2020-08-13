@@ -74,6 +74,9 @@ object FirebaseEvents {
     const val PLL_LOYALTY_ID_KEY = "loyalty_id"
     const val PLL_LINK_ID_KEY = "link_id"
     const val PLL_STATE_KEY = "state"
+    const val PLL_STATE_ACTIVE = "ACTIVE"
+    const val PLL_STATE_SOFT_LINK = "SOFT_LINK"
+    const val PLL_STATE_FAILED = "FAILED"
 
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {

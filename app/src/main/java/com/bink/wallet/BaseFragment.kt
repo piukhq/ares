@@ -345,6 +345,14 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
             Firebase.analytics.logEvent(name,bundle)
         }
+
+        fun logFailedEvent(eventName: String){
+            val bundle = Bundle()
+
+            bundle.putString(ATTEMPTED_EVENT_KEY, eventName)
+            Firebase.analytics.logEvent(FAILED_EVENT_NO_DATA,bundle)
+
+        }
     }
 
 
