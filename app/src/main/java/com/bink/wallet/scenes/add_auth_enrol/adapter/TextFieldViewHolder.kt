@@ -132,7 +132,6 @@ class TextFieldViewHolder(
                 onTouchListener(false, planField)
                 SharedPreferenceManager.isNowBarcode = false
 
-
                 addTextChangedListener(object : SimplifiedTextWatcher {
                     override fun onTextChanged(
                         s: CharSequence?,

@@ -53,7 +53,6 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         membershipCardId: String,
         membershipPlan: MembershipPlan
     ) {
-
         val account = if (SharedPreferenceManager.isNowBarcode) getBarcodeFieldRequestAccount(
             addRegisterFieldsRequest.value
         ) else addRegisterFieldsRequest.value
