@@ -67,14 +67,14 @@ class MembershipPlanConverters {
     }
 
     @TypeConverter
-    fun fromContentList(value: List<Content>): String? {
+    fun fromContentList(value: List<Content>?): String? {
         val gson = Gson()
         val type = object : TypeToken<List<Content>>() {}.type
         return gson.toJson(value, type)
     }
 
     @TypeConverter
-    fun toContentList(value: String): List<Content> {
+    fun toContentList(value: String?): List<Content>?{
         val gson = Gson()
         val type = object : TypeToken<List<Content>>() {}.type
         return gson.fromJson(value, type)
