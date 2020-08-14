@@ -1,11 +1,15 @@
 package com.bink.wallet.scenes.add_auth_enrol.view_models
 
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.BARCODE
+import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
 
@@ -49,8 +53,13 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         membershipCardId: String,
         membershipPlan: MembershipPlan
     ) {
+
+        val account = if (SharedPreferenceManager.isNowBarcode) getBarcodeFieldRequestAccount(
+            addRegisterFieldsRequest.value
+        ) else addRegisterFieldsRequest.value
+
         val currentRequest = MembershipCardRequest(
-            addRegisterFieldsRequest.value,
+            account,
             membershipPlan.id
         )
         if (isRetryJourney) {
@@ -93,5 +102,33 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
             }
         }
         return null
+    }
+
+    private fun getBarcodeFieldRequestAccount(acc: Account?): Account {
+
+        val addFields = mutableListOf<PlanFieldsRequest>()
+
+        val authorizeFields = acc?.authorise_fields
+        val enrolFields = acc?.enrol_fields
+        val registerFields = acc?.registration_fields
+
+        val barCodePlanField = allAddPlans.value?.firstOrNull { planField ->
+            planField.common_name.equals(
+                BARCODE
+            )
+        }
+
+        val barCodeValue = SharedPreferenceManager.barcodeValue
+
+        val planFieldRequestForBarcode = PlanFieldsRequest(
+            barCodePlanField?.column,
+            barCodeValue,
+            isSensitive = barCodePlanField?.type == FieldType.SENSITIVE.type
+        )
+        addFields.add(planFieldRequestForBarcode)
+
+        return Account(addFields, authorizeFields, enrolFields, registerFields)
+
+
     }
 }
