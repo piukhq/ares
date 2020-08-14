@@ -47,6 +47,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     val addLoyaltyCardRequestMade: LiveData<Boolean>
         get() = _addLoyaltyCardRequestMade
 
+    val allAddPlans = MutableLiveData<List<PlanField>>()
+
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
             AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, EMPTY_STRING))

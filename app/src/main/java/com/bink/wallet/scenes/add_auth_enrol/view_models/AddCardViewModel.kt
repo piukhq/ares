@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.add_auth_enrol.view_models
 import com.bink.wallet.R
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.BARCODE
 import com.bink.wallet.utils.enums.SignUpFormType
@@ -13,10 +14,12 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
 
     override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
         super.addItems(membershipPlan, shouldExcludeBarcode)
+        val addPlans = mutableListOf<PlanField>()
         membershipPlan.let {
             it.account?.let { account ->
                 account.add_fields?.forEach { planField ->
-                    if (shouldExcludeBarcode && !planField.column.equals(BARCODE)) {
+                    addPlans.add(planField)
+                    if (shouldExcludeBarcode && !planField.common_name.equals(BARCODE)) {
                         planField.typeOfField = TypeOfField.ADD
                         addPlanField(planField)
                     } else if (!shouldExcludeBarcode) {
@@ -38,6 +41,7 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
             }
         }
         mapItems()
+        allAddPlans.value = addPlans
     }
 
     fun handleRequest(
