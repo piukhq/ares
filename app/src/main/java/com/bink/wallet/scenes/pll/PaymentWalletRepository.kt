@@ -161,7 +161,7 @@ class PaymentWalletRepository(
         val localErrors = ArrayList<Exception>()
         paymentCards.forEach { card ->
             CoroutineScope(Dispatchers.IO).launch {
-                val result = async {
+                val request = async {
                     apiService.unlinkFromPaymentCardAsync(
                         card.id.toString(),
                         membershipCard.id
@@ -169,7 +169,7 @@ class PaymentWalletRepository(
                 }
                 withContext(Dispatchers.Main) {
                     try {
-                        val response = result.await()
+                        val response = request.await()
                         response.let {
                             localSuccesses.add(response)
                             unlinkSuccesses.value = localSuccesses
