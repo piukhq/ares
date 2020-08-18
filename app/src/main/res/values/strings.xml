@@ -148,6 +148,9 @@
     <string name="points_registration_failed">Registration fail</string>
     <!-- 1.11 -->
     <string name="points_registering_card">Registering card</string>
+    <!--1.14-->
+    <string name="points_earning">Earning</string>
+    <string name="points_view_history">View history</string>
 
     <!-- 2.1 -->
     <string name="link_status_linked">Linked</string>
