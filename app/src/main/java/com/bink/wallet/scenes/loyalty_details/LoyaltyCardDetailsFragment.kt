@@ -227,10 +227,10 @@ class LoyaltyCardDetailsFragment :
             val planId = viewModel.membershipCard.value?.membership_plan
             val uuid = viewModel.membershipCard.value?.uuid
             if (planId == null || uuid == null) {
-                failedEvent(FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS)
+                failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS)
             } else {
                 logEvent(
-                    FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,
+                    FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS,
                     getDeleteLoyaltyCardGenericMap(planId, uuid)
                 )
 
@@ -248,10 +248,10 @@ class LoyaltyCardDetailsFragment :
             val planId = viewModel.membershipCard.value?.membership_plan
             val uuid = viewModel.membershipCard.value?.uuid
             if (planId == null || uuid == null) {
-                failedEvent(FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
+                failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
                 logEvent(
-                    FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                    FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
                     getDeleteLoyaltyCardGenericMap(planId, uuid)
                 )
 
@@ -467,10 +467,10 @@ class LoyaltyCardDetailsFragment :
                             val planId = viewModel.membershipCard.value?.membership_plan
                             val uuid = viewModel.membershipCard.value?.uuid
                             if (planId == null || uuid == null) {
-                                failedEvent(FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST)
+                                failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST)
                             } else {
                                 logEvent(
-                                    FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST,
+                                    FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST,
                                     getDeleteLoyaltyCardGenericMap(planId, uuid)
                                 )
 
