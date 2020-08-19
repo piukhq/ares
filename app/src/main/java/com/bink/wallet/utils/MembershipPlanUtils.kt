@@ -23,10 +23,10 @@ object MembershipPlanUtils {
                     return if (membershipCard.balances.isNullOrEmpty()) {
                         LoginStatus.STATUS_PENDING
                     } else {
-                        if (membershipPlan.feature_set.transactions_available == true) {
-                            LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE
-                        } else if (membershipPlan.feature_set.transactions_available == true && membershipPlan.feature_set.has_vouchers == true) {
+                        if (membershipPlan.feature_set.transactions_available == true && membershipPlan.feature_set.has_vouchers == true) {
                             LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE
+                        } else if (membershipPlan.feature_set.transactions_available == true ) {
+                            LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE
                         } else {
                             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE
                         }

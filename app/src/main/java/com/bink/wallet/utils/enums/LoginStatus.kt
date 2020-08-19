@@ -71,8 +71,8 @@ enum class LoginStatus(
     STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE(
         1.15,
         R.drawable.ic_active,
-        R.string.points_earning,
-        R.string.points_view_history
+        R.string.points_view_history,
+        R.string.points_earning
     ),
 }
 
