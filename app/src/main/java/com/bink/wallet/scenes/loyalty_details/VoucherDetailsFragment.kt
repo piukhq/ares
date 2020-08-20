@@ -30,7 +30,7 @@ class VoucherDetailsFragment :
     override val layoutRes: Int
         get() = R.layout.voucher_details_fragment
     override val viewModel: VoucherDetailsViewModel by viewModel()
-    private val contentMap = mutableMapOf<String, String>()
+    private val contentMap = mutableMapOf<String?, String?>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

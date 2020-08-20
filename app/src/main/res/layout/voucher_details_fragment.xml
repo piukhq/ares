@@ -9,153 +9,167 @@
             type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="@{membershipPlan.account.company_name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_description_big"
+            app:layout_constraintBottom_toBottomOf="@id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
+            tools:text="FatFace" />
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-            <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:text="@{membershipPlan.account.company_name}"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintBottom_toBottomOf="@id/toolbar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/toolbar"
-                tools:text="FatFace" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:overScrollMode="never"
+                    android:paddingBottom="@dimen/voucher_details_card_padding_bottom"
+                    android:scrollIndicators="none"
+                    app:layout_constraintBottom_toTopOf="@id/code"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/detail_voucher_item" />
 
+                <TextView
+                    android:id="@+id/code"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:paddingBottom="@dimen/voucher_details_code_padding_bottom"
+                    android:textColor="@color/grey_50"
+                    android:textSize="@dimen/text_size_title_big"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/main_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recycler"
+                    tools:text="RCC0001999"
+                    tools:visibility="visible" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:overScrollMode="never"
-                android:paddingBottom="@dimen/voucher_details_card_padding_bottom"
-                android:scrollIndicators="none"
-                app:layout_constraintBottom_toTopOf="@id/code"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
-                tools:itemCount="1"
-                tools:listitem="@layout/detail_voucher_item" />
+                <TextView
+                    android:id="@+id/main_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_title_big"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/code"
+                    tools:text="Your voucher is ready!"
+                    tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/code"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:paddingBottom="@dimen/voucher_details_code_padding_bottom"
-                android:textColor="@color/grey_50"
-                android:textSize="@dimen/text_size_title_big"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@id/main_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recycler"
-                tools:text="RCC0001999"
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/main_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/main_title"
+                    tools:text="Spend £100 with us and you’ll get a £5 voucher."
+                    tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/main_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_title_big"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/code"
-                tools:text="Your voucher is ready!"
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/date_one"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/voucher_details_first_date_margin_top"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_smaller"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/main_text"
+                    tools:text="Added 15 Jun 2019 16:39:17"
+                    tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/main_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_big"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_title"
-                tools:text="Spend £100 with us and you’ll get a £5 voucher."
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/date_two"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_smaller"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_one"
+                    tools:text="Expires 15 Jul 2019 16:39:17"
+                    tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/date_one"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/voucher_details_first_date_margin_top"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_smaller"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_text"
-                tools:text="Added 15 Jun 2019 16:39:17"
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/link_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_large"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_semibold"
+                    android:text="@string/terms_amp_conditions"
+                    android:textColor="@color/blue_accent"
+                    android:textSize="@dimen/text_size_description_big"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_two"
+                    tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/date_two"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_description_smaller"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_one"
-                tools:text="Expires 15 Jul 2019 16:39:17"
-                tools:visibility="visible" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/link_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_large"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_semibold"
-                android:text="@string/terms_amp_conditions"
-                android:textColor="@color/blue_accent"
-                android:textSize="@dimen/text_size_description_big"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_two"
-                tools:visibility="visible" />
+        </androidx.core.widget.NestedScrollView>
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

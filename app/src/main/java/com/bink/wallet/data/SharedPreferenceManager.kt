@@ -35,6 +35,7 @@ object SharedPreferenceManager {
     private const val ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE = "add_loyalty_card_success_http_code"
     private const val ADD_LOYALTY_CARD_JOURNEY_TYPE = "add_loyalty_card_journey_type"
     private const val IS_SCANNED_CARD = "is_scanned_card"
+    private const val BARCODE_VALUE = "barcode_value"
 
 
     //----- PAIRS ----
@@ -185,6 +186,11 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(IS_SCANNED_CARD, false)
         set(value) = preferences.edit {
             it.putBoolean(IS_SCANNED_CARD, value)
+        }
+    var barcodeValue: String?
+        get() = preferences.getString(BARCODE_VALUE, null)
+        set(value) = preferences.edit {
+            it.putString(BARCODE_VALUE, value)
         }
 
     fun clear() {
