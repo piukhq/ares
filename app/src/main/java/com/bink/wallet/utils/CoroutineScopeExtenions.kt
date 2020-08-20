@@ -7,8 +7,6 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_ACTIVE
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_PENDING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_CARD_STATUS
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
