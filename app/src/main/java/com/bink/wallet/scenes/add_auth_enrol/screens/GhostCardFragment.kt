@@ -128,12 +128,6 @@ class GhostCardFragment : BaseAddAuthFragment() {
     }
 
     private fun handleCtaRequest() {
-        if (viewModel.addRegisterFieldsRequest.value?.add_fields.isNullOrEmpty()) {
-            context?.displayModalPopup(
-                null,
-                getString(R.string.cannot_complete_registration)
-            )
-        }
         membershipCardId?.let {
             currentMembershipPlan?.let { plan ->
                 viewModel.handleRequest(isRetryJourney, it, plan)
