@@ -34,12 +34,7 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 if (cardInDb.uuid == null) cardFromApi.uuid =
                     UUID.randomUUID().toString() else cardFromApi.uuid = cardInDb.uuid
 
-                if ((cardInDb.status.equals(FIREBASE_STATUS_PENDING) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_ACTIVE
-                    )) || (cardInDb.status.equals(FIREBASE_STATUS_ACTIVE) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_PENDING
-                    ))
-                ) {
+                if (!cardInDb.status.equals(cardFromApi.status)) {
                     coroutineScope {
                         logStatusChange(
                             cardFromApi,
