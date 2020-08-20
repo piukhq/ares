@@ -44,11 +44,11 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 }
             }
         }
-        //To cover all other cases in which Uuid is still null
-        val cardsWithoutUuid = cards.filter { it.uuid == null }
-        cardsWithoutUuid.forEach { card ->
-            card.uuid = UUID.randomUUID().toString()
-        }
+    }
+    //To cover all other cases in which Uuid is still null
+    val cardsWithoutUuid = cards.filter { it.uuid == null }
+    cardsWithoutUuid.forEach { card ->
+        card.uuid = UUID.randomUUID().toString()
     }
 }
 
