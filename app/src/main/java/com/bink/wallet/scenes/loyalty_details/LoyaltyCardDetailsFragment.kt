@@ -792,7 +792,8 @@ class LoyaltyCardDetailsFragment :
             val genericModalParameters: GenericModalParameters?
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
-                LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE -> {
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE,
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE-> {
                     viewModel.membershipCard.value?.let { membershipCard ->
                         val hasCorrectCardType = membershipCard.plan?.feature_set?.card_type == 2
                         val hasTransactions =
