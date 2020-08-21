@@ -264,7 +264,7 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:2.0.0'
 
     /** ZENDESK **/
-    implementation group: 'com.zendesk', name: 'support', version: '3.0.2'
+    implementation group: 'com.zendesk', name: 'support', version: '5.0.0'
 
     /** TESTING **/
     testImplementation "org.robolectric:robolectric:4.3.1"
