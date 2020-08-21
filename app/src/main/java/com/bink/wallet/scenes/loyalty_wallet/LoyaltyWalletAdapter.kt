@@ -23,6 +23,7 @@ import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.enums.VoucherStates
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -32,6 +33,7 @@ class LoyaltyWalletAdapter(
 
     companion object {
         private const val MEMBERSHIP_CARD = 0
+
         // used for join loyalty card
         private const val JOIN_PLAN = 1
         private const val JOIN_PAYMENT = 2
@@ -198,21 +200,22 @@ class LoyaltyWalletAdapter(
                     cardLogin.visibility = View.GONE
                     valueWrapper.visibility = View.VISIBLE
                     if (!item.vouchers.isNullOrEmpty()) {
-                        item.vouchers?.first()?.let { voucher ->
-                            if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
-                                loyaltyValue.setVoucherCollectedProgress(voucher.earn)
-                            } else {
-                                loyaltyValue.text =
-                                    root.context.displayVoucherEarnAndTarget(voucher)
-                            }
-                            loyaltyValueExtra.text =
-                                if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) root.context.getString(
-                                    R.string.earned
-                                ) else root.context.getString(
-                                    R.string.spent
-                                )
+                        item.vouchers?.firstOrNull { it.state == VoucherStates.IN_PROGRESS.state }
+                            ?.let { voucher ->
+                                if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) {
+                                    loyaltyValue.setVoucherCollectedProgress(voucher.earn)
+                                } else {
+                                    loyaltyValue.text =
+                                        root.context.displayVoucherEarnAndTarget(voucher)
+                                }
+                                loyaltyValueExtra.text =
+                                    if (voucher.earn?.type == VOUCHER_EARN_TYPE_STAMPS) root.context.getString(
+                                        R.string.earned
+                                    ) else root.context.getString(
+                                        R.string.spent
+                                    )
 
-                        }
+                            }
                     } else if (!item.balances.isNullOrEmpty()) {
                         val balance = item.balances?.first()
                         when (balance?.prefix != null) {
