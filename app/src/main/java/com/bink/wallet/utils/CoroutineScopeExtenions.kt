@@ -7,10 +7,8 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_ACTIVE
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_PENDING
-import com.bink.wallet.utils.FirebaseEvents.LOYALTY_CARD_STATUS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_CARD_STATUS
+import com.bink.wallet.utils.FirebaseEvents.LOYALTY_CARD_STATUS
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -36,12 +34,7 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 if (cardInDb.uuid == null) cardFromApi.uuid =
                     UUID.randomUUID().toString() else cardFromApi.uuid = cardInDb.uuid
 
-                if ((cardInDb.status.equals(FIREBASE_STATUS_PENDING) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_ACTIVE
-                    )) || (cardInDb.status.equals(FIREBASE_STATUS_ACTIVE) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_PENDING
-                    ))
-                ) {
+                if (!cardInDb.status.equals(cardFromApi.status)) {
                     coroutineScope {
                         logStatusChange(
                             cardFromApi,
@@ -51,11 +44,11 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 }
             }
         }
-        //To cover all other cases in which Uuid is still null
-        val cardsWithoutUuid = cards.filter { it.uuid == null }
-        cardsWithoutUuid.forEach { card ->
-            card.uuid = UUID.randomUUID().toString()
-        }
+    }
+    //To cover all other cases in which Uuid is still null
+    val cardsWithoutUuid = cards.filter { it.uuid == null }
+    cardsWithoutUuid.forEach { card ->
+        card.uuid = UUID.randomUUID().toString()
     }
 }
 

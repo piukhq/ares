@@ -130,6 +130,7 @@ class TextFieldViewHolder(
                 isCardNumberField = true
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                 onTouchListener(false, planField)
+                SharedPreferenceManager.isNowBarcode = false
 
                 addTextChangedListener(object : SimplifiedTextWatcher {
                     override fun onTextChanged(
@@ -167,8 +168,8 @@ class TextFieldViewHolder(
         if (isCardNumberField) {
             SharedPreferenceManager.scannedLoyaltyBarCode?.let {
                 updateOnSuccess(binding.contentAddAuthText, it)
+                SharedPreferenceManager.isNowBarcode = true
             }
-            SharedPreferenceManager.isNowBarcode = true
             SharedPreferenceManager.scannedLoyaltyBarCode = null
 
         }
@@ -177,6 +178,7 @@ class TextFieldViewHolder(
     private fun updateOnSuccess(et: TextInputEditText, bc: String) {
         binding.titleAddAuthText.setTextColor(Color.GRAY)
         et.setText(bc)
+        SharedPreferenceManager.barcodeValue = bc
         columnNameForBarcode?.let {
             binding.titleAddAuthText.text = it
         }
