@@ -16,13 +16,13 @@ fun Context.displayVoucherEarnAndTarget(voucher: Voucher): String {
                 return  getString(
                     R.string.loyalty_wallet_plr_value,
                     ValueDisplayUtils.displayValue(
-                        earn.value,
+                        earn_value,
                         earn.prefix,
                         null,
                         earn.currency
                     ),
                     ValueDisplayUtils.displayValue(
-                        earn.target_value,
+                        target_value,
                         earn.prefix,
                         earn.suffix,
                         earn.currency
