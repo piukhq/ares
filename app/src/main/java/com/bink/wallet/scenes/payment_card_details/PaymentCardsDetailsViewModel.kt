@@ -40,7 +40,7 @@ class PaymentCardsDetailsViewModel(
         get() = _deleteError
 
     fun linkPaymentCard(cardId: String, paymentCardId: String) {
-        val membershipCard = membershipCardData.value?.first { card -> card.id == cardId }
+        val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
         updatePaymentCard(cardId)
         membershipCard?.let { mCard ->
             paymentCard.value?.let { pCard ->
@@ -56,7 +56,7 @@ class PaymentCardsDetailsViewModel(
     }
 
     fun unlinkPaymentCard(cardId: String, paymentCardId: String) {
-        val membershipCard = membershipCardData.value?.first { card -> card.id == cardId }
+        val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
         membershipCard?.let { mCard ->
             paymentCard.value?.let { pCard ->
                 paymentWalletRepository.unlinkPaymentCard(
