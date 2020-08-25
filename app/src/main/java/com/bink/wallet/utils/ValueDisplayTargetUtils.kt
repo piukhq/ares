@@ -11,7 +11,6 @@ fun Context.displayVoucherEarnAndTarget(voucher: Voucher): String {
     voucher.earn?.target_value?.let { target_value ->
         if (target_value != FLOAT_ZERO) {
             val earn = voucher.earn
-            val burn = voucher.burn
             earn.value?.let { earn_value ->
                 return  getString(
                     R.string.loyalty_wallet_plr_value,
