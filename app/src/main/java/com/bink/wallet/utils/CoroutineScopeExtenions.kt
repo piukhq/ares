@@ -7,11 +7,9 @@ import com.bink.wallet.data.PaymentCardDao
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_ACTIVE
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_PENDING
-import com.bink.wallet.utils.FirebaseEvents.LOYALTY_CARD_STATUS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_CARD_STATUS
 import com.bink.wallet.utils.FirebaseEvents.PLL_ACTIVE
+import com.bink.wallet.utils.FirebaseEvents.LOYALTY_CARD_STATUS
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -38,12 +36,7 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 if (cardInDb.uuid == null) cardFromApi.uuid =
                     UUID.randomUUID().toString() else cardFromApi.uuid = cardInDb.uuid
 
-                if ((cardInDb.status.equals(FIREBASE_STATUS_PENDING) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_ACTIVE
-                    )) || (cardInDb.status.equals(FIREBASE_STATUS_ACTIVE) && cardFromApi.status.equals(
-                        FIREBASE_STATUS_PENDING
-                    ))
-                ) {
+                if (!cardInDb.status.equals(cardFromApi.status)) {
                     coroutineScope {
                         logStatusChange(
                             cardFromApi,
@@ -54,11 +47,11 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                 }
             }
         }
-        //To cover all other cases in which Uuid is still null
-        val cardsWithoutUuid = cards.filter { it.uuid == null }
-        cardsWithoutUuid.forEach { card ->
-            card.uuid = UUID.randomUUID().toString()
-        }
+    }
+    //To cover all other cases in which Uuid is still null
+    val cardsWithoutUuid = cards.filter { it.uuid == null }
+    cardsWithoutUuid.forEach { card ->
+        card.uuid = UUID.randomUUID().toString()
     }
 }
 
@@ -78,34 +71,29 @@ suspend fun CoroutineScope.generateUuidFromCardLinkageState(
 }
 
 suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
-    card: MembershipCard,
+    membershipCardFromApi: MembershipCard,
     membershipCardDao: MembershipCardDao,
     paymentCardDao: PaymentCardDao
 ) {
     val oldMembershipCards = membershipCardDao.getAllAsync()
 
     for (membershipCardInDb in oldMembershipCards) {
-        if (membershipCardInDb.id == card.id) {
-            if (membershipCardInDb.uuid == null) card.uuid = UUID.randomUUID()
-                .toString() else card.uuid = membershipCardInDb.uuid
-            if ((membershipCardInDb.status?.state.equals(FIREBASE_STATUS_PENDING) && card.status?.state.equals(
-                    FIREBASE_STATUS_ACTIVE
-                )) || (membershipCardInDb.status?.state.equals(
-                    FIREBASE_STATUS_ACTIVE
-                ) && card.status?.state.equals(FIREBASE_STATUS_PENDING))
-            ) {
+        if (membershipCardInDb.id == membershipCardFromApi.id) {
+            if (membershipCardInDb.uuid == null) membershipCardFromApi.uuid = UUID.randomUUID()
+                .toString() else membershipCardFromApi.uuid = membershipCardInDb.uuid
+
+            if (!membershipCardInDb.status?.state.equals(membershipCardFromApi.status?.state)) {
                 coroutineScope {
                     logLoyaltyCardStatusChange(
-                        card,
+                        membershipCardFromApi,
                         firebaseAnalytics
                     )
-                    logPllActive(membershipCardInDb, card, paymentCardDao)
+                    logPllActive(membershipCardInDb, membershipCardFromApi, paymentCardDao)
 
                 }
             }
         }
     }
-
 }
 
 suspend fun CoroutineScope.generateUuidForMembershipCards(
@@ -115,23 +103,22 @@ suspend fun CoroutineScope.generateUuidForMembershipCards(
 ) {
     val oldMembershipCards = membershipCardDao.getAllAsync()
 
-    cards.forEach { card ->
+    cards.forEach { membershipCardFromApi ->
         for (membershipCardInDb in oldMembershipCards) {
-            if (membershipCardInDb.id == card.id) {
-                if (membershipCardInDb.uuid == null) card.uuid =
-                    UUID.randomUUID().toString() else card.uuid = membershipCardInDb.uuid
+            if (membershipCardInDb.id == membershipCardFromApi.id) {
+                if (membershipCardInDb.uuid == null) membershipCardFromApi.uuid =
+                    UUID.randomUUID().toString() else membershipCardFromApi.uuid =
+                    membershipCardInDb.uuid
 
-                if ((membershipCardInDb.status?.state.equals(FIREBASE_STATUS_PENDING) && card.status?.state.equals(
-                        FIREBASE_STATUS_ACTIVE
-                    )) || (membershipCardInDb.status?.state.equals(
-                        FIREBASE_STATUS_ACTIVE
-                    ) && card.status?.state.equals(FIREBASE_STATUS_PENDING))
-                ) {
+                if (!membershipCardInDb.status?.state.equals(membershipCardFromApi.status?.state)) {
                     coroutineScope {
-                        logLoyaltyCardStatusChange(card, firebaseAnalytics)
-                        logPllActive(membershipCardInDb, card, paymentCardDao)
-                    }
+                        logLoyaltyCardStatusChange(
+                            membershipCardFromApi,
+                            firebaseAnalytics
+                        )
+                        logPllActive(membershipCardInDb, membershipCardFromApi, paymentCardDao)
 
+                    }
                 }
             }
         }
