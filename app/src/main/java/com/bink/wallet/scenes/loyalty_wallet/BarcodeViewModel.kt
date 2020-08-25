@@ -18,5 +18,6 @@ class BarcodeViewModel : BaseViewModel() {
 
     var isBarcodeAvailable = ObservableBoolean(false)
     var isCardNumberAvailable = ObservableBoolean(false)
+    var shouldShowLabel = ObservableBoolean(false)
 
 }

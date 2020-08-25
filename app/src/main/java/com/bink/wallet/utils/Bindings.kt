@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
@@ -14,6 +15,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.bink.wallet.BaseViewModel
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
@@ -23,6 +25,7 @@ import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
@@ -151,20 +154,30 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         }
 
         if (shouldShowBarcodeImage) {
-            val bitMatrix: BitMatrix =
-                multiFormatWriter.encode(
-                    membershipCard?.membershipCard?.card?.barcode,
-                    format,
-                    widthPx.toInt(),
-                    heightPx.toInt()
-                )
-            val barcodeEncoder = BarcodeEncoder()
-            val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-            setImageBitmap(bitmap)
+            try {
+                val bitMatrix: BitMatrix =
+                    multiFormatWriter.encode(
+                        membershipCard?.membershipCard?.card?.barcode,
+                        format,
+                        widthPx.toInt(),
+                        heightPx.toInt()
+                    )
+                val barcodeEncoder = BarcodeEncoder()
+                val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+                setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                visibility = View.GONE
+            }
+
         } else {
             visibility = View.GONE
         }
     }
+}
+
+@BindingAdapter("visibilityNotifier")
+fun ImageView.setLabelVisible(viewModel: BarcodeViewModel){
+    viewModel.shouldShowLabel.set(true)
 }
 
 @BindingAdapter("membershipPlan")

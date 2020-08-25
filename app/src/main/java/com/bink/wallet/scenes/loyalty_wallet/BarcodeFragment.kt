@@ -1,6 +1,9 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.core.view.isVisible
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
@@ -42,5 +45,12 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             }
         }
         binding.viewModel = viewModel
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (binding.barcodeImage.visibility == View.GONE){
+            Toast.makeText(requireContext(),"Show display message",Toast.LENGTH_SHORT).show()
+        }
     }
 }
