@@ -53,7 +53,6 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
 
             }
         }
-
         binding.viewModel = viewModel
     }
 

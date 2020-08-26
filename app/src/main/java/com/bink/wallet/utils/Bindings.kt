@@ -173,7 +173,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
         } else {
             visibility = View.GONE
             shouldShowMessage(viewModel, true)
-
         }
     }
 }
