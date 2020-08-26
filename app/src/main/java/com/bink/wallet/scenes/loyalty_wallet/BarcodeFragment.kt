@@ -8,6 +8,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.utils.BarcodeWrapper
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,13 +45,17 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 }
             }
         }
+        viewModel.shouldShowLabel.observeNonNull(this) {
+            if (it){
+                Toast.makeText(requireContext(), "Show display message", Toast.LENGTH_SHORT).show()
+
+            }else{
+                Toast.makeText(requireContext(), "DONT display message", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+
         binding.viewModel = viewModel
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (binding.barcodeImage.visibility == View.GONE){
-            Toast.makeText(requireContext(),"Show display message",Toast.LENGTH_SHORT).show()
-        }
-    }
 }

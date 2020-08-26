@@ -50,6 +50,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:membershipCard="@{viewModel.barcode}"
+                app:viewModel="@{viewModel}"
                 tools:ignore="ContentDescription"
                 tools:src="@android:drawable/bottom_bar" />
 
