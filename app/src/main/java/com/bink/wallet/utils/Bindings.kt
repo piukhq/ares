@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
@@ -15,7 +14,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import com.bink.wallet.BaseViewModel
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
@@ -112,7 +110,7 @@ fun View.setVisible(isVisible: Boolean) {
 @Parcelize
 data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
-@BindingAdapter(value = ["membershipCard", "viewModel"], requireAll = false)
+@BindingAdapter("membershipCard", "viewModel", requireAll = false)
 fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?) {
     if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
@@ -416,57 +414,6 @@ fun ImageView.setArrow(membershipTransactions: MembershipTransactions) {
         }
     }
 }
-
-//Needed?
-//// TODO replace logic
-//@BindingAdapter("cardTimestamp", "loginStatus")
-//fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
-//    when (loginStatus) {
-//        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-//            card?.let { membershipCard ->
-//                if (membershipCard.balances.isNullOrEmpty()) {
-//                    membershipCard.balances?.first()?.updated_at?.let {
-//                        var elapsed =
-//                            (System.currentTimeMillis() / 1000 - it) / NUMBER_SECONDS_IN_MINUTE
-//                        var suffix = MINUTES
-//                        if (elapsed >= NUMBER_MINUTES_IN_HOUR) {
-//                            elapsed /= NUMBER_MINUTES_IN_HOUR
-//                            suffix = HOURS
-//                            if (elapsed >= NUMBER_HOURS_IN_DAY) {
-//                                elapsed /= NUMBER_HOURS_IN_DAY
-//                                suffix = DAYS
-//                                if (elapsed >= NUMBER_DAYS_IN_WEEK) {
-//                                    elapsed /= NUMBER_DAYS_IN_WEEK
-//                                    suffix = WEEKS
-//                                    if (elapsed >= NUMBER_WEEKS_IN_MONTH) {
-//                                        elapsed /= NUMBER_WEEKS_IN_MONTH
-//                                        suffix = MONTHS
-//                                        if (elapsed >= NUMBER_MONTHS_IN_YEAR) {
-//                                            elapsed /= NUMBER_MONTHS_IN_YEAR
-//                                            suffix = YEARS
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        text = this.context.getString(
-//                            R.string.transaction_not_supported_description,
-//                            elapsed.toInt().toString(),
-//                            suffix
-//                        )
-//                    }
-//
-//                }
-//            }
-//        }
-//        LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
-//            text =
-//                this.context.getString(R.string.description_login_unavailable)
-//        LoginStatus.STATUS_PENDING ->
-//            text = this.context.getString(R.string.description_text)
-//        else -> text = this.context.getString(R.string.empty_string)
-//    }
-//}
 
 fun TextView.textAndShow(string: String?) {
     string?.let {
