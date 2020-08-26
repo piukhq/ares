@@ -182,8 +182,6 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
 
 fun View.shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
     viewModel?.shouldShowLabel?.value = showMessage
-    Log.d("Binding",Thread.currentThread().name)
-
 }
 
 @BindingAdapter("membershipPlan")

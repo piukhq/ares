@@ -46,11 +46,12 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
             }
         }
         viewModel.shouldShowLabel.observeNonNull(this) {
-            if (it){
-                Toast.makeText(requireContext(), "Show display message", Toast.LENGTH_SHORT).show()
+            if (it) {
+                binding.barcodeNotDisplayed.visibility = View.VISIBLE
+                binding.barcodeImage.visibility = View.INVISIBLE
 
-            }else{
-                Toast.makeText(requireContext(), "DONT display message", Toast.LENGTH_SHORT).show()
+            } else {
+                binding.barcodeNotDisplayed.visibility = View.GONE
 
             }
         }
