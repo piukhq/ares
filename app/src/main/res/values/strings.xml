@@ -25,7 +25,7 @@
     <string name="delete">Delete</string>
     <string name="error">Error</string>
     <string name="card_number_description">Show this card number in-store just like you would a physical loyalty card.</string>
-    <string name="tap_card_to_show_barcode">Tap to show barcode</string>
+    <string name="tap_card_to_show_barcode">Tap card to show barcode</string>
 
     <!-- Error -->
     <string name="error_title">@string/error</string>
