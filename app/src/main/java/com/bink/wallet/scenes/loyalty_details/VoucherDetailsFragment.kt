@@ -206,7 +206,10 @@ class VoucherDetailsFragment :
     private fun setIssuedVoucher(earn: Earn, burn: Burn) {
         if (earn.type == STAMP_VOUCHER_EARN_TYPE) {
             setVoucherTitleAndBody(
-                getString(R.string.voucher_stamp_issued_title),
+                getString(
+                    R.string.voucher_detail_title_issued,
+                    displayValue(burn.value, burn.prefix, burn.suffix, burn.currency)
+                ),
                 contentMap[DynamicContentColumn.VOUCHER_ISSUED_DETAIL.type]
             )
         } else {

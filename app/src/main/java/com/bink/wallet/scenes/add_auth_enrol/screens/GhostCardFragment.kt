@@ -15,7 +15,6 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
-import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -128,12 +127,6 @@ class GhostCardFragment : BaseAddAuthFragment() {
     }
 
     private fun handleCtaRequest() {
-        if (viewModel.addRegisterFieldsRequest.value?.add_fields.isNullOrEmpty()) {
-            context?.displayModalPopup(
-                null,
-                getString(R.string.cannot_complete_registration)
-            )
-        }
         membershipCardId?.let {
             currentMembershipPlan?.let { plan ->
                 viewModel.handleRequest(isRetryJourney, it, plan)

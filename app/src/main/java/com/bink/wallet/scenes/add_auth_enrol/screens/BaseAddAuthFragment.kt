@@ -203,8 +203,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 navigationHandler?.navigateToLCD(membershipCard)
             }
             CardType.PLL -> {
-                if ((isGhost && membershipCard.membership_transactions.isNullOrEmpty())
-                    || SharedPreferenceManager.isPaymentEmpty
+                if (SharedPreferenceManager.isPaymentEmpty
                 ) {
                     navigationHandler?.navigateToPllEmpty(membershipCard)
                 } else {
@@ -236,7 +235,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        requestPermissionsResult(requestCode,permissions,grantResults,{navigateToScanLoyaltyCard()},null,null)
+        requestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            { navigateToScanLoyaltyCard() },
+            null,
+            null
+        )
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -257,7 +263,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun onScannerActivated(account: com.bink.wallet.model.response.membership_plan.Account) {
         this.account = account
-        requestCameraPermissionAndNavigate(true
+        requestCameraPermissionAndNavigate(
+            true
         ) { navigateToScanLoyaltyCard() }
     }
 
@@ -271,6 +278,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             )
         )
     }
+
     private fun onResult(result: String) {
         SharedPreferenceManager.scannedLoyaltyBarCode = result
     }

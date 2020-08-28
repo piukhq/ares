@@ -67,7 +67,13 @@ enum class LoginStatus(
         R.drawable.ic_lcd_module_icons_points_login,
         R.string.description_see_history,
         R.string.loyalty_card_details_register
-    )
+    ),
+    STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE(
+        1.15,
+        R.drawable.ic_active,
+        R.string.points_view_history,
+        R.string.points_earning
+    ),
 }
 
 
