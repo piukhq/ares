@@ -23,6 +23,7 @@ import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
@@ -109,8 +110,8 @@ fun View.setVisible(isVisible: Boolean) {
 @Parcelize
 data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
-@BindingAdapter("membershipCard")
-fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
+@BindingAdapter("membershipCard", "viewModel", requireAll = false)
+fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?) {
     if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
         val heightPx = context.toPixelFromDip(80f)
@@ -151,20 +152,33 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?) {
         }
 
         if (shouldShowBarcodeImage) {
-            val bitMatrix: BitMatrix =
-                multiFormatWriter.encode(
-                    membershipCard?.membershipCard?.card?.barcode,
-                    format,
-                    widthPx.toInt(),
-                    heightPx.toInt()
-                )
-            val barcodeEncoder = BarcodeEncoder()
-            val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-            setImageBitmap(bitmap)
+            try {
+                val bitMatrix: BitMatrix =
+                    multiFormatWriter.encode(
+                        membershipCard?.membershipCard?.card?.barcode,
+                        format,
+                        widthPx.toInt(),
+                        heightPx.toInt()
+                    )
+                val barcodeEncoder = BarcodeEncoder()
+                val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+                setImageBitmap(bitmap)
+                shouldShowMessage(viewModel, false)
+            } catch (e: Exception) {
+                visibility = View.GONE
+                shouldShowMessage(viewModel, true)
+
+            }
+
         } else {
             visibility = View.GONE
+            shouldShowMessage(viewModel, true)
         }
     }
+}
+
+fun View.shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
+    viewModel?.shouldShowLabel?.value = showMessage
 }
 
 @BindingAdapter("membershipPlan")
@@ -397,56 +411,6 @@ fun ImageView.setArrow(membershipTransactions: MembershipTransactions) {
                 )
             }
         }
-    }
-}
-
-// TODO replace logic
-@BindingAdapter("cardTimestamp", "loginStatus")
-fun TextView.timeElapsed(card: MembershipCard?, loginStatus: LoginStatus?) {
-    when (loginStatus) {
-        LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE -> {
-            card?.let { membershipCard ->
-                if (membershipCard.balances.isNullOrEmpty()) {
-                    membershipCard.balances?.first()?.updated_at?.let {
-                        var elapsed =
-                            (System.currentTimeMillis() / 1000 - it) / NUMBER_SECONDS_IN_MINUTE
-                        var suffix = MINUTES
-                        if (elapsed >= NUMBER_MINUTES_IN_HOUR) {
-                            elapsed /= NUMBER_MINUTES_IN_HOUR
-                            suffix = HOURS
-                            if (elapsed >= NUMBER_HOURS_IN_DAY) {
-                                elapsed /= NUMBER_HOURS_IN_DAY
-                                suffix = DAYS
-                                if (elapsed >= NUMBER_DAYS_IN_WEEK) {
-                                    elapsed /= NUMBER_DAYS_IN_WEEK
-                                    suffix = WEEKS
-                                    if (elapsed >= NUMBER_WEEKS_IN_MONTH) {
-                                        elapsed /= NUMBER_WEEKS_IN_MONTH
-                                        suffix = MONTHS
-                                        if (elapsed >= NUMBER_MONTHS_IN_YEAR) {
-                                            elapsed /= NUMBER_MONTHS_IN_YEAR
-                                            suffix = YEARS
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        text = this.context.getString(
-                            R.string.transaction_not_supported_description,
-                            elapsed.toInt().toString(),
-                            suffix
-                        )
-                    }
-
-                }
-            }
-        }
-        LoginStatus.STATUS_LOGIN_UNAVAILABLE ->
-            text =
-                this.context.getString(R.string.description_login_unavailable)
-        LoginStatus.STATUS_PENDING ->
-            text = this.context.getString(R.string.description_text)
-        else -> text = this.context.getString(R.string.empty_string)
     }
 }
 

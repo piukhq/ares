@@ -1,10 +1,12 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.os.Bundle
+import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
 import com.bink.wallet.utils.BarcodeWrapper
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,6 +43,17 @@ class BarcodeFragment : BaseFragment<BarcodeViewModel, BarcodeFragmentBinding>()
                 }
             }
         }
+        viewModel.shouldShowLabel.observeNonNull(this) {
+            if (it) {
+                binding.barcodeNotDisplayed.visibility = View.VISIBLE
+                binding.barcodeImage.visibility = View.INVISIBLE
+
+            } else {
+                binding.barcodeNotDisplayed.visibility = View.GONE
+
+            }
+        }
         binding.viewModel = viewModel
     }
+
 }
