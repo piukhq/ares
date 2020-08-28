@@ -342,7 +342,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         ): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
-            map[FIREBASE_STATUS] = status
+            map[FIREBASE_STATUS_KEY] = status
             map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = planId.toInt()
 
             return map
