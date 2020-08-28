@@ -122,7 +122,7 @@ val viewModelModules = module {
 
     viewModel { WalletsViewModel(get(), get()) }
 
-    single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
+    single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { PllViewModel(get()) }
 
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
@@ -188,8 +188,9 @@ fun provideTermsAndConditionsRepository(restApiService: ApiService): TermsAndCon
 
 fun providePllRepository(
     restApiService: ApiService,
-    paymentCardDao: PaymentCardDao
-): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao)
+    paymentCardDao: PaymentCardDao,
+    membershipCardDao: MembershipCardDao
+): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao,membershipCardDao)
 
 fun provideUserRepository(
     restApiService: ApiService
