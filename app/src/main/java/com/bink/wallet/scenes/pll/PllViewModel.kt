@@ -80,19 +80,19 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
         )
     }
 
-    fun unlinkPaymentCards(paymentCardIds: List<String>, membershipCardId: String) {
+    fun unlinkPaymentCards(paymentCards: List<PaymentCard>, membershipCard: MembershipCard) {
         paymentWalletRepository.unlinkPaymentCards(
-            paymentCardIds,
-            membershipCardId,
+            paymentCards,
+            membershipCard,
             _unlinkSuccesses,
             _unlinkErrors
         )
     }
 
-    fun linkPaymentCards(paymentCardIds: List<String>, membershipCardId: String) {
+    fun linkPaymentCards(paymentCards: List<PaymentCard>, membershipCard: MembershipCard) {
         paymentWalletRepository.linkPaymentCards(
-            paymentCardIds,
-            membershipCardId,
+            paymentCards,
+            membershipCard,
             _linkSuccesses,
             _linkErrors
         )

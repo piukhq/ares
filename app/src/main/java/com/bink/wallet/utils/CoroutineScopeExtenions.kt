@@ -8,6 +8,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_CARD_STATUS
+import com.bink.wallet.utils.FirebaseEvents.PLL_ACTIVE
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_CARD_STATUS
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -20,7 +21,8 @@ val firebaseAnalytics = Firebase.analytics
 
 suspend fun CoroutineScope.generateUuidForPaymentCards(
     cards: List<PaymentCard>,
-    paymentCardDao: PaymentCardDao
+    paymentCardDao: PaymentCardDao,
+    membershipCardDao: MembershipCardDao
 ) {
     val oldCards = paymentCardDao.getAllAsync()
     //Loop through each card we get from Api
@@ -40,6 +42,7 @@ suspend fun CoroutineScope.generateUuidForPaymentCards(
                             cardFromApi,
                             firebaseAnalytics
                         )
+                        logPllActivePaymentCard(cardInDb, cardFromApi, membershipCardDao)
                     }
                 }
             }
@@ -69,7 +72,8 @@ suspend fun CoroutineScope.generateUuidFromCardLinkageState(
 
 suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
     membershipCardFromApi: MembershipCard,
-    membershipCardDao: MembershipCardDao
+    membershipCardDao: MembershipCardDao,
+    paymentCardDao: PaymentCardDao
 ) {
     val oldMembershipCards = membershipCardDao.getAllAsync()
 
@@ -84,6 +88,8 @@ suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
                         membershipCardFromApi,
                         firebaseAnalytics
                     )
+                    logPllActive(membershipCardInDb, membershipCardFromApi, paymentCardDao)
+
                 }
             }
         }
@@ -92,7 +98,8 @@ suspend fun CoroutineScope.generateUuidForMembershipCardPullToRefresh(
 
 suspend fun CoroutineScope.generateUuidForMembershipCards(
     cards: List<MembershipCard>,
-    membershipCardDao: MembershipCardDao
+    membershipCardDao: MembershipCardDao,
+    paymentCardDao: PaymentCardDao
 ) {
     val oldMembershipCards = membershipCardDao.getAllAsync()
 
@@ -109,6 +116,8 @@ suspend fun CoroutineScope.generateUuidForMembershipCards(
                             membershipCardFromApi,
                             firebaseAnalytics
                         )
+                        logPllActive(membershipCardInDb, membershipCardFromApi, paymentCardDao)
+
                     }
                 }
             }
@@ -200,4 +209,59 @@ suspend fun CoroutineScope.logLoyaltyCardStatusChange(
     }
 }
 
+suspend fun CoroutineScope.logPllActive(
+    membershipCardInDb: MembershipCard,
+    membershipFromApi: MembershipCard,
+    paymentCardDao: PaymentCardDao
+) {
+
+    //Loop through the payment cards from api
+    membershipFromApi.payment_cards?.forEach { pCard ->
+        //Get it's id
+        val paymentCardId = pCard.id
+        //Use the id to get that payment card's uuid
+        val paymentCardUuid = paymentCardDao.getAllAsync()
+            .firstOrNull { card -> card.id.toString() == paymentCardId }?.uuid
+        val loyaltyUuid = membershipCardInDb.uuid
+
+        if (paymentCardUuid == null || loyaltyUuid == null) {
+            BaseFragment.logFailedEvent(PLL_ACTIVE)
+        } else {
+            BaseFragment.logPllEvent(
+                PLL_ACTIVE,
+                BaseFragment.getPllActiveMap(paymentCardUuid, loyaltyUuid)
+            )
+        }
+
+
+    }
+}
+
+suspend fun CoroutineScope.logPllActivePaymentCard(
+    paymentCardInDb: PaymentCard,
+    paymentCardFromApi: PaymentCard,
+    membershipCardDao: MembershipCardDao
+) {
+
+    //Loop through the payment cards from api
+    paymentCardFromApi.membership_cards.forEach { loyaltyCard ->
+        //Get it's id
+        val loyaltyCardId = loyaltyCard.id
+        //Use the id to get that payment card's uuid
+        val loyaltyCardUuid = membershipCardDao.getAllAsync()
+            .firstOrNull { card -> card.id.toString() == loyaltyCardId }?.uuid
+        val paymentCardUuid = paymentCardInDb.uuid
+
+        if (paymentCardUuid == null || loyaltyCardUuid == null) {
+            BaseFragment.logFailedEvent(PLL_ACTIVE)
+        } else {
+            BaseFragment.logPllEvent(
+                PLL_ACTIVE,
+                BaseFragment.getPllActiveMap(paymentCardUuid, loyaltyCardUuid)
+            )
+        }
+
+
+    }
+}
 

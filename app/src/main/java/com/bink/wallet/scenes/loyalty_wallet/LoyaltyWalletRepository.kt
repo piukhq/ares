@@ -43,7 +43,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    generateUuidForMembershipCards(response, membershipCardDao)
+                    generateUuidForMembershipCards(response, membershipCardDao,paymentCardDao)
                     membershipCardDao.storeAll(response)
 
                     SharedPreferenceManager.membershipCardsLastRequestTime =
