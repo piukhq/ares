@@ -26,6 +26,7 @@
     <string name="error">Error</string>
     <string name="card_number_description">Show this card number in-store just like you would a physical loyalty card.</string>
     <string name="tap_card_to_show_barcode">Tap card to show barcode</string>
+    <string name="no_barcode_displayed">This barcode cannot be displayed</string>
 
     <!-- Error -->
     <string name="error_title">@string/error</string>
@@ -474,7 +475,7 @@
     <string name="voucher_goal">Goal:</string>
     <string name="voucher_entry_date">on %s</string>
     <string name="voucher_detail_text_in_progress">Spend %s with us and you\'ll get a %s.</string>
-    <string name="voucher_detail_title_issued">Your %s is ready!</string>
+    <string name="voucher_detail_title_issued">Your %s voucher is ready!</string>
     <string name="voucher_detail_text_issued">Use the code above to redeem your reward. You will get %s off your purchase.</string>
     <string name="voucher_detail_date_issued">Added %s</string>
     <string name="voucher_detail_title_redeemed">Your %s was redeemed</string>
