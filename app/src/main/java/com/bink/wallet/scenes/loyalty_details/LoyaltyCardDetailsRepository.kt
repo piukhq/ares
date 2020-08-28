@@ -54,7 +54,7 @@ class LoyaltyCardDetailsRepository(
                     val response = request.await()
                     membershipCard.value = response.first { card -> card.id == cardId }
                         .also {
-                            generateUuidForMembershipCardPullToRefresh(it,membershipCardDao)
+                            generateUuidForMembershipCardPullToRefresh(it,membershipCardDao,paymentCardDao)
                             membershipCardDao.storeMembershipCard(it)
                         }
                 } catch (e: Exception) {
@@ -104,7 +104,7 @@ class LoyaltyCardDetailsRepository(
         storeError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            generateUuidForPaymentCards(cards, paymentCardDao)
+            generateUuidForPaymentCards(cards, paymentCardDao,membershipCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
