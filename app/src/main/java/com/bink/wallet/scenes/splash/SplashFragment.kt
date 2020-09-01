@@ -228,6 +228,8 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private fun goToDashboard() {
         viewModel.getUserResponse.observeNonNull(this) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+            setAnalyticsUserId(it.uid)
+
         }
         viewModel.getCurrentUser()
     }

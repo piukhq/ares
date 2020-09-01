@@ -43,9 +43,6 @@ class LoginViewModel constructor(
         MutableLiveData()
     val membershipPlanErrorLiveData: MutableLiveData<Exception> = MutableLiveData()
     val membershipPlanDatabaseLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val _userResponse = MutableLiveData<User>()
-    val userResponse: LiveData<User>
-        get() = _userResponse
     private val _postServiceResponse = MutableLiveData<ResponseBody>()
     val postServiceResponse: LiveData<ResponseBody>
         get() = _postServiceResponse
@@ -54,8 +51,8 @@ class LoginViewModel constructor(
     val postServiceErrorResponse: LiveData<Exception>
         get() = _postServiceErrorResponse
 
-    private val _getUserResponse = MutableLiveData<Boolean>()
-    val getUserResponse: LiveData<Boolean>
+    private val _getUserResponse = MutableLiveData<User>()
+    val getUserResponse: LiveData<User>
         get() = _getUserResponse
 
     private val passwordValidator = Transformations.map(password) {
@@ -110,6 +107,6 @@ class LoginViewModel constructor(
     }
 
     fun getCurrentUser() {
-        userRepository.getUserDetails(_getUserResponse,_userResponse)
+        userRepository.getUserDetails(_getUserResponse)
     }
 }

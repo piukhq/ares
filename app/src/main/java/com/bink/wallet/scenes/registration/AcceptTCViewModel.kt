@@ -7,6 +7,7 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
 import com.bink.wallet.model.auth.FacebookAuthResponse
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
@@ -41,8 +42,8 @@ class AcceptTCViewModel(
     val postServiceErrorResponse: LiveData<Exception>
         get() = _postServiceErrorResponse
 
-    private val _getUserResponse = MutableLiveData<Boolean>()
-    val getUserResponse: LiveData<Boolean>
+    private val _getUserResponse = MutableLiveData<User>()
+    val getUserResponse: LiveData<User>
         get() = _getUserResponse
 
     init {
