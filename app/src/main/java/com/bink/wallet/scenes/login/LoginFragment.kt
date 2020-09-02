@@ -212,6 +212,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     private fun initUserDetailsObserver() {
         viewModel.getUserResponse.observeNonNull(this@LoginFragment) {
             viewModel.getMembershipPlans()
+            setAnalyticsUserId(it.uid)
         }
     }
 
