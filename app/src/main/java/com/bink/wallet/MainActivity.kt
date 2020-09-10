@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         SentryAndroid.init(
             this
         ) { options: SentryAndroidOptions ->
-            options.environment = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "live" else "beta"
+            options.environment = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
             options.isDebug = BuildConfig.DEBUG
         }
 
