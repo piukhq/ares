@@ -204,6 +204,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     private fun initUserDetailsObserver() {
         viewModel.getUserResponse.observeNonNull(this@AcceptTCFragment) {
             viewModel.getMembershipPlans()
+            setAnalyticsUserId(it.uid)
         }
     }
 

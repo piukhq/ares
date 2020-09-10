@@ -40,8 +40,7 @@ class UserRepository(
     }
 
     fun getUserDetails(
-        hasUserResponse: MutableLiveData<Boolean>,
-        userResponse: MutableLiveData<User> = MutableLiveData()
+        hasUserResponse: MutableLiveData<User>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getUserAsync()
@@ -57,10 +56,8 @@ class UserRepository(
                         LocalStoreUtils.KEY_SECOND_NAME,
                         response.last_name
                     )
-                    hasUserResponse.value = true
-                    userResponse.value = response
+                    hasUserResponse.value = response
                 } catch (e: Exception) {
-                    hasUserResponse.value = false
                     // We don't care about any error
                 }
             }

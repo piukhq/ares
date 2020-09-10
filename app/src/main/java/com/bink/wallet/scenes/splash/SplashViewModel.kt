@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.PostServiceRequest
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import okhttp3.ResponseBody
@@ -18,8 +19,8 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
     val postServiceErrorResponse: LiveData<Exception>
         get() = _postServiceErrorResponse
 
-    private val _getUserResponse = MutableLiveData<Boolean>()
-    val getUserResponse: LiveData<Boolean>
+    private val _getUserResponse = MutableLiveData<User>()
+    val getUserResponse: LiveData<User>
         get() = _getUserResponse
 
     fun postService(postServiceRequest: PostServiceRequest) {

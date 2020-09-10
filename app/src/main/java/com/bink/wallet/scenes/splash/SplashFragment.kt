@@ -22,6 +22,7 @@ import com.bink.wallet.utils.getSessionHandlerNavigationDestination
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.crashlytics.android.Crashlytics
 import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
@@ -228,6 +229,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private fun goToDashboard() {
         viewModel.getUserResponse.observeNonNull(this) {
             findNavController().navigateIfAdded(this, R.id.global_to_home)
+            setAnalyticsUserId(it.uid)
         }
         viewModel.getCurrentUser()
     }
