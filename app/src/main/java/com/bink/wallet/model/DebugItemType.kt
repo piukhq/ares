@@ -9,5 +9,6 @@ enum class DebugItemType : Parcelable {
     ENVIRONMENT,
     EMAIL,
     BACKEND_VERSION,
-    COLOR_SWATCHES
+    COLOR_SWATCHES,
+    FORCE_CRASH
 }
