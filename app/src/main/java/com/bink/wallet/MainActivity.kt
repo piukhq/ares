@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         logUserPropertiesAtStartUp()
-        val options = SentryAndroidOptions()
 
         SentryAndroid.init(
             this
