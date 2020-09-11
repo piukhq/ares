@@ -48,6 +48,13 @@ object DebugItemsPopulation {
                 DebugItemType.COLOR_SWATCHES
             )
         )
+        itemsList.add(
+            DebugItem(
+                "Force Crash",
+                "This will immediately crash the application",
+                DebugItemType.FORCE_CRASH
+            )
+        )
         return itemsList
     }
 

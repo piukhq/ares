@@ -39,13 +39,14 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
-import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
 import kotlin.collections.HashMap
+import io.sentry.core.protocol.User as SentryUser
 
 abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment() {
 
@@ -108,7 +109,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected abstract fun builder(): FragmentToolbar
 
     protected fun setAnalyticsUserId(uid: String) {
-        Crashlytics.setUserIdentifier(uid)
+        val user = SentryUser()
+        user.id = uid
+        Sentry.setUser(user)
         (requireActivity() as MainActivity).firebaseAnalytics.setUserId(uid)
     }
 

@@ -6,6 +6,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("io.fabric")
     id("com.google.gms.google-services")
+    id("io.sentry.android.gradle")
 }
 
 repositories {
@@ -228,7 +229,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    implementation 'com.scottyab:rootbeer-lib:0.0.7'
+    implementation 'com.scottyab:rootbeer-lib:0.0.8'
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
     api "org.bouncycastle:bcprov-jdk15on:$bouncyCastleVersion"
@@ -280,4 +281,7 @@ dependencies {
 
     /** FLEXBOX LAYOUT **/
     implementation 'com.google.android:flexbox:2.0.1'
+
+    /** SENTRY **/
+    implementation 'io.sentry:sentry-android:2.3.1'
 }
