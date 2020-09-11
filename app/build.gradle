@@ -14,7 +14,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20020106"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20020107"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
     externalNativeBuild {
@@ -51,7 +51,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode buildNumber
-        versionName "2.1.4"
+        versionName "2.1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
