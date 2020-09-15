@@ -66,6 +66,7 @@ const val TERMS_AND_CONDITIONS_URL = "https://bink.com/terms-and-conditions/#pri
 const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
 
 const val BARCODE = "barcode"
+const val CARD_NUMBER = "card_number"
 
 const val ADD_AUTH_BARCODE = "ADD_AUTH_BARCODE"
 

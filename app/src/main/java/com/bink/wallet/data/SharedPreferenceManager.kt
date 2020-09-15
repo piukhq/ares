@@ -28,6 +28,7 @@ object SharedPreferenceManager {
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
     private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
     private const val BARCODE = "barcode"
+    private const val CARD_NUMBER = "cardNumber"
     private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
     private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
     private const val FIREBASE_UUID = "firebase_uuid"
@@ -36,6 +37,7 @@ object SharedPreferenceManager {
     private const val ADD_LOYALTY_CARD_JOURNEY_TYPE = "add_loyalty_card_journey_type"
     private const val IS_SCANNED_CARD = "is_scanned_card"
     private const val BARCODE_VALUE = "barcode_value"
+    private const val CARD_NUMBER_VALUE = "cardNumber_value"
 
 
     //----- PAIRS ----
@@ -149,6 +151,12 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putBoolean(BARCODE, value)
         }
+    var isNowCardNumber: Boolean
+        get() = preferences.getBoolean(CARD_NUMBER, false)
+        set(value) = preferences.edit {
+            it.putBoolean(CARD_NUMBER, value)
+        }
+
 
     var addPaymentCardRequestUuid: String?
         get() = preferences.getString(ADD_PAYMENT_CARD_REQUEST_UUID, null)
@@ -191,6 +199,11 @@ object SharedPreferenceManager {
         get() = preferences.getString(BARCODE_VALUE, null)
         set(value) = preferences.edit {
             it.putString(BARCODE_VALUE, value)
+        }
+    var cardNumberValue: String?
+        get() = preferences.getString(CARD_NUMBER_VALUE, null)
+        set(value) = preferences.edit {
+            it.putString(CARD_NUMBER_VALUE, value)
         }
 
     fun clear() {
