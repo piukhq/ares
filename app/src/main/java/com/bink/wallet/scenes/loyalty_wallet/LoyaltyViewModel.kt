@@ -16,7 +16,9 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoyaltyViewModel constructor(
     private val loyaltyWalletRepository: LoyaltyWalletRepository,
@@ -29,6 +31,10 @@ class LoyaltyViewModel constructor(
     val membershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
 
     private val _localPaymentCards = MutableLiveData<List<PaymentCard>>()
     val localPaymentCards: LiveData<List<PaymentCard>>
@@ -55,6 +61,7 @@ class LoyaltyViewModel constructor(
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
+
     //todo Remove the localCardsDataMerger. Use cardsDataMerger instead.
     private val _localCardsDataMerger = MediatorLiveData<UserDataResult>()
     val localCardsDataMerger: LiveData<UserDataResult>
@@ -172,6 +179,27 @@ class LoyaltyViewModel constructor(
             loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
         } else {
             loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
+        }
+    }
+
+    fun fetchMembershipCardsAndPlansForRefresh() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val membershipCardsAndPlans = withContext(Dispatchers.IO) {
+                    loyaltyWalletRepository.retrieveMembershipCardsAndPlans()
+                }
+
+                membershipPlanData.value = membershipCardsAndPlans.membershipPlans
+                membershipCardData.value = membershipCardsAndPlans.membershipCards
+
+                _isLoading.value = false
+
+            } catch (e: Exception) {
+                _isLoading.value = false
+                _loadPlansError.value = e
+                _loadCardsError.value = e
+            }
         }
     }
 
