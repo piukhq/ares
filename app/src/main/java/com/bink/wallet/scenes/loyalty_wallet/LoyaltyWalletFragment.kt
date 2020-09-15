@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_wallet
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -120,6 +121,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.settingsButton.setImageResource(R.drawable.ic_settings)
 
         }
+        Log.d("LoyaltyWalletFragment",findNavController().currentDestination.toString())
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

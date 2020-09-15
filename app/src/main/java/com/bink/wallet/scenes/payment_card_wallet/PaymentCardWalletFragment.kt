@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.payment_card_wallet
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
@@ -73,6 +74,8 @@ class PaymentCardWalletFragment :
             binding.settingsButton.setImageResource(R.drawable.ic_settings)
 
         }
+        Log.d("paymentWalletFragment",findNavController().currentDestination.toString())
+
     }
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :

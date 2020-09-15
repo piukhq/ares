@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -49,6 +50,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
     override fun onResume() {
         super.onResume()
         logScreenView(STORE_LINK_VIEW)
+        Log.d("AddJoin",findNavController().currentDestination.toString())
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
