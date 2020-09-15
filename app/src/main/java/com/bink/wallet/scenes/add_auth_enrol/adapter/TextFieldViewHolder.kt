@@ -34,8 +34,10 @@ class TextFieldViewHolder(
     var isLastEditText: Boolean = false
     var item: AddAuthItemWrapper? = null
     private var columnNameForBarcode: String? = null
+    private var columnNameForCardNumber: String? = null
     private var isCardNumberField = false
-    private var barcodeValidation: String? = null
+    private var isBarcodeField = false
+    private var fieldValidation: String? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -46,8 +48,9 @@ class TextFieldViewHolder(
         ) {
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
+                SharedPreferenceManager.cardNumberValue = currentText.toString()
             }
-            checkValidation(barcodeValidation)
+            checkValidation(fieldValidation)
         }
     }
 
@@ -74,6 +77,8 @@ class TextFieldViewHolder(
         val planField = item.fieldType as PlanField
         val planRequest = item.fieldsRequest
         isCardNumberField = false
+        isBarcodeField = false
+
 
         binding.planField = planField
 
@@ -88,11 +93,6 @@ class TextFieldViewHolder(
 
             setText(planRequest?.value)
 
-            planRequest?.disabled?.let {
-                if (it) {
-                    isEnabled = false
-                }
-            }
 
             if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
                 addTextChangedListener(emailTextWatcher)
@@ -131,6 +131,7 @@ class TextFieldViewHolder(
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                 onTouchListener(false, planField)
                 SharedPreferenceManager.isNowBarcode = false
+                SharedPreferenceManager.isScannedCard = true
 
                 addTextChangedListener(object : SimplifiedTextWatcher {
                     override fun onTextChanged(
@@ -145,6 +146,35 @@ class TextFieldViewHolder(
                         } else {
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                             onTouchListener(false, planField)
+                        }
+                    }
+                })
+            }
+
+            if (planField.common_name.equals(BARCODE) && text.toString().trim()
+                    .isNotEmpty() && hasCardNumberCommonName()
+            ) {
+                isBarcodeField = true
+                editTextState(false)
+                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                onTouchListener(true, planField)
+                SharedPreferenceManager.isNowBarcode = true
+                SharedPreferenceManager.scannedLoyaltyBarCode = planRequest?.value
+
+                addTextChangedListener(object : SimplifiedTextWatcher {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        if (s.toString().trim().isNotEmpty()) {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                            onTouchListener(true, planField)
+                        } else {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            onTouchListener(false, planField)
+                            binding.titleAddAuthText.text = columnNameForCardNumber
                         }
                     }
                 })
@@ -165,10 +195,11 @@ class TextFieldViewHolder(
 
     override fun onBarcodeScanSuccess() {
 
-        if (isCardNumberField) {
+        if (isCardNumberField || isBarcodeField) {
             SharedPreferenceManager.scannedLoyaltyBarCode?.let {
                 updateOnSuccess(binding.contentAddAuthText, it)
                 SharedPreferenceManager.isNowBarcode = true
+                SharedPreferenceManager.isNowCardNumber = false
             }
             SharedPreferenceManager.scannedLoyaltyBarCode = null
 
@@ -176,7 +207,6 @@ class TextFieldViewHolder(
     }
 
     private fun updateOnSuccess(et: TextInputEditText, bc: String) {
-        binding.titleAddAuthText.setTextColor(Color.GRAY)
         et.setText(bc)
         SharedPreferenceManager.barcodeValue = bc
         columnNameForBarcode?.let {
@@ -216,6 +246,8 @@ class TextFieldViewHolder(
                             editTextState(true)
                             setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                             SharedPreferenceManager.isNowBarcode = false
+                            SharedPreferenceManager.isNowCardNumber = true
+
 
                         } else {
                             account?.let { onNavigateToBarcodeScan(it) }
@@ -241,6 +273,8 @@ class TextFieldViewHolder(
             this.isFocusable = false
             this.isCursorVisible = false
             this.setTextColor(Color.GRAY)
+            binding.titleAddAuthText.setTextColor(Color.GRAY)
+
         }
     }
 
@@ -261,7 +295,7 @@ class TextFieldViewHolder(
                 addFields.forEach { planField ->
                     if (planField.column.equals(alternative) && planField.common_name.equals(BARCODE)) {
                         columnNameForBarcode = planField.column
-                        barcodeValidation = planField.validation
+                        fieldValidation = planField.validation
                         return true
                     }
                 }
@@ -270,10 +304,37 @@ class TextFieldViewHolder(
         return false
     }
 
+    private fun hasCardNumberCommonName(): Boolean {
+        val alternativeValues = mutableListOf<String>()
+
+        addFields?.forEach { planField ->
+            (planField.alternatives?.forEach { alternative ->
+                alternativeValues.add(alternative)
+            })
+        }
+
+        alternativeValues.forEach { alternative ->
+            addFields?.let { addFields ->
+                addFields.forEach { planField ->
+                    if (planField.column.equals(alternative) && planField.common_name.equals(
+                            CARD_NUMBER
+                        )
+                    ) {
+                        columnNameForCardNumber = planField.column
+                        fieldValidation = planField.validation
+                        return true
+                    }
+                }
+            }
+        }
+
+        return true
+    }
+
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
             checkIfError(this, currentItem)
-            if (text.toString().trim().isNotEmpty()){
+            if (text.toString().trim().isNotEmpty()) {
                 checkValidation(null)
             }
         } catch (ex: Exception) {
