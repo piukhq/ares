@@ -111,20 +111,22 @@ class LoyaltyCardTest {
             )
                 .then {
                     (viewModel.membershipPlanData.apply {
-                                postValue(
-                                    asList(
-                                        MembershipPlan(
-                                            "1234",
-                                            "plan",
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null
-                                        )
-                                    )
+                        postValue(
+                            asList(
+                                MembershipPlan(
+                                    "1234",
+                                    "plan",
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
                                 )
-                            })
+                            )
+                        )
+                    })
                     val observer = mock(Observer::class.java) as Observer<List<MembershipPlan>>
                     viewModel.membershipPlanData.observeForever(observer)
                     runBlocking {

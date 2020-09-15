@@ -10,6 +10,7 @@ import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+import com.bink.wallet.model.response.membershipCardAndPlan.MembershipCardAndPlan
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -21,6 +22,7 @@ import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -38,21 +40,15 @@ class LoyaltyWalletRepository(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
         loadCardsError: MutableLiveData<Exception>
     ) {
-        val request = apiService.getMembershipCardsAsync()
         CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    generateUuidForMembershipCards(response, membershipCardDao,paymentCardDao)
-                    membershipCardDao.storeAll(response)
-
-                    SharedPreferenceManager.membershipCardsLastRequestTime =
-                        System.currentTimeMillis()
-
-                    mutableMembershipCards.value = response.toMutableList()
-                } catch (e: Exception) {
-                    loadCardsError.value = e
+            try {
+                val membershipCards = apiService.getMembershipCardsAsync()
+                withContext(Dispatchers.Main) {
+                    processMembershipCardsResult(membershipCards)
+                    mutableMembershipCards.value = membershipCards
                 }
+            } catch (e: Exception) {
+                loadCardsError.postValue(e)
             }
         }
     }
@@ -97,23 +93,42 @@ class LoyaltyWalletRepository(
         fromPersistence: Boolean = false
     ) {
         if (!fromPersistence) {
-            val request = apiService.getMembershipPlansAsync()
             CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        val response = request.await()
-                        storeMembershipPlans(response, loadPlansError, databaseUpdated)
+                try {
+                    val membershipPlans = apiService.getMembershipPlansAsync()
+                    withContext(Dispatchers.Main) {
+                        storeMembershipPlans(membershipPlans, loadPlansError, databaseUpdated)
                         SharedPreferenceManager.membershipPlansLastRequestTime =
                             System.currentTimeMillis()
-                        mutableMembershipPlans.value = response.toMutableList()
-                    } catch (e: Exception) {
-                        loadPlansError.value = e
+                        mutableMembershipPlans.value = membershipPlans
                     }
+                } catch (e: Exception) {
+                    loadPlansError.postValue(e)
                 }
             }
+
         } else {
             retrieveStoredMembershipPlans(mutableMembershipPlans)
         }
+    }
+
+    suspend fun retrieveMembershipCardsAndPlans(): MembershipCardAndPlan {
+        //Wrap it in a coroutine Scope for the following reasons:
+        //To ensure that when the calling scope of this method is cancelled this will also be canceled
+        //If any one of the api calls fails,the other one will also fail
+        return coroutineScope {
+            val membershipPlansRequest = async { apiService.getMembershipPlansAsync() }
+            val membershipCardsRequest = async { apiService.getMembershipCardsAsync() }
+
+            val membershipPlansResult = membershipPlansRequest.await()
+            val membershipCardsResult = membershipCardsRequest.await()
+
+            processMembershipCardsResult(membershipCardsResult)
+            processMembershipPlansResult(membershipPlansResult)
+
+            MembershipCardAndPlan(membershipCardsResult, membershipPlansResult)
+        }
+
     }
 
     fun retrieveStoredMembershipPlans(localMembershipPlans: MutableLiveData<List<MembershipPlan>>) {
@@ -152,8 +167,8 @@ class LoyaltyWalletRepository(
 
     private fun storeMembershipPlans(
         plans: List<MembershipPlan>,
-        loadPlansError: MutableLiveData<Exception>,
-        databaseUpdated: MutableLiveData<Boolean>?
+        loadPlansError: MutableLiveData<Exception> = MutableLiveData(),
+        databaseUpdated: MutableLiveData<Boolean>? = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -383,4 +398,27 @@ class LoyaltyWalletRepository(
             }
         }
     }
+
+    private fun processMembershipCardsResult(membershipCards: List<MembershipCard>?) {
+        CoroutineScope(Dispatchers.Default).launch {
+            membershipCards?.let {
+                generateUuidForMembershipCards(
+                    it,
+                    membershipCardDao,
+                    paymentCardDao
+                )
+            }
+            membershipCardDao.storeAll(membershipCards)
+
+            SharedPreferenceManager.membershipCardsLastRequestTime =
+                System.currentTimeMillis()
+        }
+    }
+
+    private fun processMembershipPlansResult(membershipPlans: List<MembershipPlan>?) {
+        membershipPlans?.let { storeMembershipPlans(it) }
+        SharedPreferenceManager.membershipPlansLastRequestTime =
+            System.currentTimeMillis()
+    }
+
 }

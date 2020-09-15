@@ -42,7 +42,7 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @GET("/ubiquity/membership_cards")
-    fun getMembershipCardsAsync(): Deferred<List<MembershipCard>>
+    suspend fun getMembershipCardsAsync(): List<MembershipCard>
 
     @GET("/ubiquity/payment_cards")
     fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
@@ -70,7 +70,7 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @GET("/ubiquity/membership_plans")
-    fun getMembershipPlansAsync(): Deferred<List<MembershipPlan>>
+    suspend fun getMembershipPlansAsync(): List<MembershipPlan>
 
     @POST("/ubiquity/membership_cards")
     fun createMembershipCardAsync(

@@ -145,7 +145,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             walletAdapter.paymentCards = it.toMutableList()
         }
 
-        mainViewModel.isLoading.observeNonNull(this) {
+
+        viewModel.isLoading.observeNonNull(this){
             binding.swipeLayout.isRefreshing = it
         }
 
@@ -189,9 +190,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                mainViewModel.startLoading()
-                viewModel.fetchMembershipPlans(false)
-                viewModel.fetchMembershipCards()
+                viewModel.fetchMembershipCardsAndPlansForRefresh()
             } else {
                 isRefresh = false
                 disableIndicators()
