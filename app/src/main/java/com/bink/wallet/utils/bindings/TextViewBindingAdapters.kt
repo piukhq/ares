@@ -5,6 +5,8 @@ import androidx.databinding.BindingAdapter
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
+import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.ValueDisplayUtils
 
 @BindingAdapter("showNumberOrBarcodeDescription")
 fun TextView.setNumberOrBarcodeDescription(isBarcodeAvailable: Boolean) {
@@ -28,7 +30,12 @@ fun TextView.setVoucherSubText(voucherEarn: Earn) {
 fun TextView.setVoucherTitle(voucherBurn: Burn?) {
     text = context.getString(
         R.string.voucher_stamp_title,
-        voucherBurn?.prefix, voucherBurn?.suffix
+        ValueDisplayUtils.displayValue(
+            voucherBurn?.value,
+            voucherBurn?.prefix,
+            voucherBurn?.suffix,
+            null
+        )
     )
 }
 
