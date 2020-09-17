@@ -132,9 +132,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.swipeLayout.isRefreshing = true
             }
         }
-        viewModel.localCardsDataMerger.observeNonNull(this) { localUserDataResult ->
-            setCardsData(localUserDataResult)
-        }
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()

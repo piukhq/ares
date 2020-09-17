@@ -151,12 +151,12 @@ class LoyaltyWalletRepository(
         deleteCardError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            membershipCardDao.deleteCard(id.toString())
             val request = id?.let { apiService.deleteCardAsync(it) }
             withContext(Dispatchers.Main) {
                 try {
                     request?.await()
                     mutableDeleteCard.value = id
-                    membershipCardDao.deleteCard(id.toString())
                 } catch (e: Exception) {
                     deleteCardError.value = e
                 }

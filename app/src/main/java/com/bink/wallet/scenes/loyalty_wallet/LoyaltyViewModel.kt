@@ -62,11 +62,6 @@ class LoyaltyViewModel constructor(
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
 
-    //todo Remove the localCardsDataMerger. Use cardsDataMerger instead.
-    private val _localCardsDataMerger = MediatorLiveData<UserDataResult>()
-    val localCardsDataMerger: LiveData<UserDataResult>
-        get() = _localCardsDataMerger
-
     init {
         _cardsDataMerger.addSource(membershipCardData) {
             _cardsDataMerger.value =
@@ -81,24 +76,6 @@ class LoyaltyViewModel constructor(
         _cardsDataMerger.addSource(dismissedCardData) {
             _cardsDataMerger.value =
                 combineCardsData(membershipCardData, membershipPlanData, dismissedCardData)
-        }
-
-        _localCardsDataMerger.addSource(localMembershipCardData) {
-            _localCardsDataMerger.value =
-                combineCardsData(
-                    localMembershipCardData,
-                    localMembershipPlanData,
-                    dismissedCardData
-                )
-        }
-
-        _localCardsDataMerger.addSource(localMembershipPlanData) {
-            _localCardsDataMerger.value =
-                combineCardsData(
-                    localMembershipCardData,
-                    localMembershipPlanData,
-                    dismissedCardData
-                )
         }
     }
 
