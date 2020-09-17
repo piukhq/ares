@@ -244,7 +244,7 @@ class LoyaltyCardDetailsFragment :
             this@LoyaltyCardDetailsFragment
         )
 
-        viewModel.deleteError.observeNonNull(this){
+        viewModel.deleteError.observeNonNull(this) {
             val planId = viewModel.membershipCard.value?.membership_plan
             val uuid = viewModel.membershipCard.value?.uuid
             if (planId == null || uuid == null) {
@@ -793,12 +793,12 @@ class LoyaltyCardDetailsFragment :
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE,
-                LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE-> {
-                    viewModel.membershipCard.value?.let { membershipCard ->
-                        val hasCorrectCardType = membershipCard.plan?.feature_set?.card_type == 2
+                LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE -> {
+                    viewModel.membershipPlan.value?.let { membershipPlan ->
+                        val hasCorrectCardType = membershipPlan.feature_set?.card_type == 2
                         val hasTransactions =
-                            membershipCard.plan?.feature_set?.transactions_available!!
-                        val hasVouchers = membershipCard.plan?.feature_set?.has_vouchers!!
+                            membershipPlan.feature_set?.transactions_available ?: false
+                        val hasVouchers = membershipPlan.feature_set?.has_vouchers ?: false
 
                         if ((hasCorrectCardType && hasTransactions)
                             || (hasCorrectCardType && hasTransactions && hasVouchers)
