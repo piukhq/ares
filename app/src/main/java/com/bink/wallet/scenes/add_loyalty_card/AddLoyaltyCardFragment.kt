@@ -57,7 +57,7 @@ class AddLoyaltyCardFragment :
         cancelHaptic = false
         setBottomLayout()
         getValidators()
-        requireContext().resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
+        context?.resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
             ?.let { scheduleHapticWithPause(it) }
         isFromAddAuth = args.isFromAddAuth
         account = args.account
