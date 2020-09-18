@@ -147,6 +147,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.swipeLayout.isRefreshing = it
         }
 
+        mainViewModel.isLoading.observeNonNull(this) {
+            binding.swipeLayout.isRefreshing = it
+        }
+
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
