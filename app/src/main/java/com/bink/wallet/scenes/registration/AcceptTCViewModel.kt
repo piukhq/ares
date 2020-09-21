@@ -45,6 +45,9 @@ class AcceptTCViewModel(
     private val _getUserResponse = MutableLiveData<User>()
     val getUserResponse: LiveData<User>
         get() = _getUserResponse
+    private val _userReturned = MutableLiveData<Boolean>()
+    val userReturned: LiveData<Boolean>
+        get() = _userReturned
 
     init {
         shouldAcceptBeEnabled.value = false
@@ -75,6 +78,6 @@ class AcceptTCViewModel(
     }
 
     fun getCurrentUser() {
-        userRepository.getUserDetails(_getUserResponse)
+        userRepository.getUserDetails(_getUserResponse,_userReturned)
     }
 }
