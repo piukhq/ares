@@ -22,15 +22,19 @@ class UserRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_FIRST_NAME,
-                        response.first_name
-                    )
+                    response.first_name?.let {
+                        LocalStoreUtils.setAppSharedPref(
+                            LocalStoreUtils.KEY_FIRST_NAME,
+                            it
+                        )
+                    }
 
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_SECOND_NAME,
-                        response.last_name
-                    )
+                    response.last_name?.let {
+                        LocalStoreUtils.setAppSharedPref(
+                            LocalStoreUtils.KEY_SECOND_NAME,
+                            it
+                        )
+                    }
                     userResponse.value = response
                 } catch (e: Exception) {
                     // We don't care about any error
@@ -40,25 +44,32 @@ class UserRepository(
     }
 
     fun getUserDetails(
-        hasUserResponse: MutableLiveData<User>
+        user: MutableLiveData<User>,
+        userReturned: MutableLiveData<Boolean> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.getUserAsync()
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_FIRST_NAME,
-                        response.first_name
-                    )
+                    response.first_name?.let {
+                        LocalStoreUtils.setAppSharedPref(
+                            LocalStoreUtils.KEY_FIRST_NAME,
+                            it
+                        )
+                    }
 
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_SECOND_NAME,
-                        response.last_name
-                    )
-                    hasUserResponse.value = response
+                    response.last_name?.let {
+                        LocalStoreUtils.setAppSharedPref(
+                            LocalStoreUtils.KEY_SECOND_NAME,
+                            it
+                        )
+                    }
+                    user.value = response
+                    userReturned.value = true
                 } catch (e: Exception) {
                     // We don't care about any error
+                    userReturned.value = false
                 }
             }
         }
