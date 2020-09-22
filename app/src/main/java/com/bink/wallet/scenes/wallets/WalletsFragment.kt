@@ -50,11 +50,11 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         if (SharedPreferenceManager.isLoyaltySelected) {
             binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
             fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
-                ?.commit()
+                ?.commitAllowingStateLoss()
         } else {
             binding.bottomNavigation.selectedItemId = R.id.payment_menu_item
             fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
-                ?.commit()
+                ?.commitAllowingStateLoss()
         }
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
@@ -120,11 +120,11 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
     private fun replaceFragment(removedFragment: Fragment, addedFragment: Fragment) {
         fragmentManager?.beginTransaction()?.remove(removedFragment)
-            ?.commit()
+            ?.commitAllowingStateLoss()
         fragmentManager?.beginTransaction()?.replace(
             R.id.wallet_content,
             addedFragment
-        )?.commit()
+        )?.commitAllowingStateLoss()
     }
 
     private fun handleLoading(shouldRefresh: Boolean) {
