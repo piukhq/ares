@@ -16,7 +16,10 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -61,6 +64,8 @@ class LoyaltyViewModel constructor(
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
 
     init {
         _cardsDataMerger.addSource(membershipCardData) {
@@ -160,7 +165,19 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchMembershipCardsAndPlansForRefresh() {
-        viewModelScope.launch {
+        val handler = CoroutineExceptionHandler {
+                _, _ -> _isLoading.value = false
+
+        }
+        /**
+         * Ideally viewModelScope should be used here as it cancels itself automatically when onCleared() is called.
+         * Current Koin viewModel injection implementation doesn't reinitialise the viewModel even after onCleared(),
+         * meaning that the coroutineScope would be cancelled an unable to do any work. There currently isn't a fix for this,
+         * https://github.com/InsertKoinIO/koin/issues/506.
+         * ViewModel initialisation in the LoyaltyWalletFragment might need to be changed from using by viewModel,to using getViewModel which will
+         * always return a new instance.
+         **/
+        scope.launch(handler) {
             _isLoading.value = true
             try {
                 val membershipCardsAndPlans = withContext(Dispatchers.IO) {
