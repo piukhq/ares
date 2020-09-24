@@ -17,6 +17,7 @@ import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_SOFT_LINK
 import com.bink.wallet.utils.generateUuidForPaymentCards
 import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.logDebug
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -197,8 +198,11 @@ class PaymentWalletRepository(
     ) {
         val localSuccesses = ArrayList<Any>()
         val localErrors = ArrayList<Exception>()
+        val handler = CoroutineExceptionHandler {
+                _, exception -> logDebug("paymentWalletRepository","Caught $exception")
+        }
         paymentCards.forEach { card ->
-            CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch(handler) {
                 val request = async {
                     apiService.linkToPaymentCardAsync(
                         membershipCard.id,

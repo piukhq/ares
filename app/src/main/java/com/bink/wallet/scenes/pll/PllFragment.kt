@@ -155,8 +155,13 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         viewModel.linkSuccesses.observeNonNull(this) {
+            val linkFailureCards = viewModel.linkErrors.value?.size ?: 0
+            val totalCards = linkFailureCards + it.size
+
             if (it.size == selectedCards.size) {
                 navigateToLCD()
+            } else if (linkFailureCards > 0 && totalCards == selectedCards.size) {
+                showLinkErrorMessage()
             }
         }
 
@@ -254,6 +259,29 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     .show()
             }
         }
+
+        viewModel.linkErrors.observeNonNull(this) {
+            val linkSuccessCards = viewModel.linkSuccesses.value?.size ?: 0
+            val totalCards = linkSuccessCards + it.size
+
+            if (totalCards == selectedCards.size) {
+                showLinkErrorMessage()
+            }
+        }
+    }
+
+    private fun showLinkErrorMessage() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.pll_error_title))
+            .setMessage(getString(R.string.pll_error_message))
+            .setPositiveButton(
+                getString(R.string.ok)
+            ) { dialog, _ ->
+                dialog.dismiss()
+                navigateToLCD()
+
+            }
+            .show()
     }
 
     private fun navigateToLCD() {

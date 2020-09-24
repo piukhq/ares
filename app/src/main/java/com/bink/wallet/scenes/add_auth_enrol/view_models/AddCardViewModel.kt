@@ -128,12 +128,15 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
 
         val barCodeValue = SharedPreferenceManager.barcodeValue
 
-        val planFieldRequestForBarcode = PlanFieldsRequest(
-            barCodePlanField?.column,
-            barCodeValue,
-            isSensitive = barCodePlanField?.type == FieldType.SENSITIVE.type
-        )
-        addFields.add(planFieldRequestForBarcode)
+        if (barCodePlanField != null) {
+            val planFieldRequestForBarcode = PlanFieldsRequest(
+                barCodePlanField.column,
+                barCodeValue,
+                isSensitive = barCodePlanField.type == FieldType.SENSITIVE.type
+            )
+            addFields.add(planFieldRequestForBarcode)
+        }
+
 
         return Account(addFields, authorizeFields, enrolFields, registerFields)
 
@@ -155,13 +158,16 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
 
         val cardNumberValue = SharedPreferenceManager.cardNumberValue
 
-        val planFieldRequestForCardNumber = PlanFieldsRequest(
-            cardNumberPlanField?.column,
-            cardNumberValue,
-            isSensitive = cardNumberPlanField?.type == FieldType.SENSITIVE.type
-        )
+        if (cardNumberPlanField != null) {
+            val planFieldRequestForCardNumber = PlanFieldsRequest(
+                cardNumberPlanField.column,
+                cardNumberValue,
+                isSensitive = cardNumberPlanField.type == FieldType.SENSITIVE.type
+            )
 
-        addFields.add(planFieldRequestForCardNumber)
+            addFields.add(planFieldRequestForCardNumber)
+        }
+
 
         return Account(addFields, authorizeFields, enrolFields, registerFields)
 

@@ -199,6 +199,8 @@
     <string name="description_text"> "  Text explaining to the user that it sometimes takes a while to log in with the merchant.\n   In the meantime they should not attempt to log in again, but they can use their card and receive their benefits as usual.\n   After the log in they will be able to see their points balance." </string>
     <string name="no_internet_connection_dialog_message">You are currently offline. This action cannot be performed whilst offline. Please check your internet connection and try again.</string>
     <string name="delete_and_update_card_internet_connection_error_message">You are currently offline. This action cannot be performed whilst offline.\nPlease check your internet connection and try again.</string>
+    <string name="pll_error_title">Error</string>
+    <string name="pll_error_message">Unfortunately some of your cards failed to link, please try again later.</string>
 
     <string name="add_card_error_title">Cannot add card</string>
     <string name="add_card_error_message">Please try again!</string>
