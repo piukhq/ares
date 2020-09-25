@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
