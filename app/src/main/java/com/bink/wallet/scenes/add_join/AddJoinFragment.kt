@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.add_join
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
