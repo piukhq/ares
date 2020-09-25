@@ -135,10 +135,4 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             mainViewModel.stopLoading()
         }
     }
-
-    override fun onResume() {
-        Log.d("WalletsFragment",findNavController().currentDestination.toString())
-
-        super.onResume()
-    }
 }

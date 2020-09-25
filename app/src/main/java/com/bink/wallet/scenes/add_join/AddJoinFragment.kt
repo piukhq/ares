@@ -50,7 +50,6 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
     override fun onResume() {
         super.onResume()
         logScreenView(STORE_LINK_VIEW)
-        Log.d("AddJoin",findNavController().currentDestination.toString())
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

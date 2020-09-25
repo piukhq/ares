@@ -74,8 +74,6 @@ class PaymentCardWalletFragment :
             binding.settingsButton.setImageResource(R.drawable.ic_settings)
 
         }
-        Log.d("paymentWalletFragment",findNavController().currentDestination.toString())
-
     }
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
