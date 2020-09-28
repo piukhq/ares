@@ -120,6 +120,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.settingsButton.setImageResource(R.drawable.ic_settings)
 
         }
+        logDebug("WalletFragmentLoyalty",findNavController().currentDestination.toString())
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

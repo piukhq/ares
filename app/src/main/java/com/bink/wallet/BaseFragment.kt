@@ -39,6 +39,7 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import io.sentry.core.Sentry
@@ -56,6 +57,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     abstract val viewModel: VM
 
     open lateinit var binding: DB
+
+    open lateinit var bottomNavigation : BottomNavigationView
 
     open val windowFullscreenHandler: WindowFullscreenHandler by inject {
         parametersOf(
@@ -99,6 +102,19 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     }
                 }
             })
+
+       if (activity != null){
+           bottomNavigation = requireActivity().findViewById(R.id.bottom_navigation)
+
+       }
+
+        findNavController().addOnDestinationChangedListener { controller, destination, arguments ->
+            when(destination.id){
+                R.id.loyalty_wallet_fragment,R.id.payment_card_wallet -> bottomNavigation.visibility = View.VISIBLE
+                else -> bottomNavigation.visibility = View.GONE
+            }
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -403,4 +419,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
     }
+
+
+
 }

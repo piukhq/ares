@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -10,6 +11,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.WalletsFragmentBinding
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -48,16 +50,19 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
-            binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
-            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
-                ?.commitAllowingStateLoss()
+            bottomNavigation.selectedItemId = R.id.loyalty_menu_item
+            Toast.makeText(activity,"LoyaltyWallet",Toast.LENGTH_SHORT).show()
+//            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
+//                ?.commitAllowingStateLoss()
         } else {
-            binding.bottomNavigation.selectedItemId = R.id.payment_menu_item
-            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
-                ?.commitAllowingStateLoss()
+           bottomNavigation.selectedItemId = R.id.payment_menu_item
+            Toast.makeText(activity,"PaymentWallet",Toast.LENGTH_SHORT).show()
+
+//            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
+//                ?.commitAllowingStateLoss()
         }
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+        bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
@@ -133,5 +138,10 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         } else {
             mainViewModel.stopLoading()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        logDebug("WalletFragment",findNavController().currentDestination.toString())
     }
 }
