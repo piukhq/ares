@@ -110,7 +110,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
         findNavController().addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id){
-                R.id.loyalty_wallet_fragment,R.id.payment_card_wallet -> bottomNavigation.visibility = View.VISIBLE
+                R.id.loyalty_fragment,R.id.payment_card_wallet -> bottomNavigation.visibility = View.VISIBLE
                 else -> bottomNavigation.visibility = View.GONE
             }
         }

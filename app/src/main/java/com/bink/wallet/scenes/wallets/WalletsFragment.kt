@@ -51,22 +51,17 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
             bottomNavigation.selectedItemId = R.id.loyalty_menu_item
-            Toast.makeText(activity,"LoyaltyWallet",Toast.LENGTH_SHORT).show()
-//            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
-//                ?.commitAllowingStateLoss()
+            navigateToLoyaltyWallet()
         } else {
-           bottomNavigation.selectedItemId = R.id.payment_menu_item
-            Toast.makeText(activity,"PaymentWallet",Toast.LENGTH_SHORT).show()
-
-//            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
-//                ?.commitAllowingStateLoss()
+            bottomNavigation.selectedItemId = R.id.payment_menu_item
+            navigateToPaymentCardWalletWallet()
         }
 
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
-                    replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
+                    navigateToLoyaltyWallet()
                 }
                 R.id.add_menu_item -> {
                     viewModel.membershipPlanData.value?.let {
@@ -81,7 +76,7 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
                 }
                 R.id.payment_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = false
-                    replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
+                    navigateToPaymentCardWalletWallet()
                     if (viewModel.membershipCardData.value != null &&
                         viewModel.membershipPlanData.value != null
                     ) {
@@ -123,13 +118,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
     }
 
-    private fun replaceFragment(removedFragment: Fragment, addedFragment: Fragment) {
-        fragmentManager?.beginTransaction()?.remove(removedFragment)
-            ?.commitAllowingStateLoss()
-        fragmentManager?.beginTransaction()?.replace(
-            R.id.wallet_content,
-            addedFragment
-        )?.commitAllowingStateLoss()
+    private fun navigateToLoyaltyWallet() {
+        findNavController().navigateIfAdded(this, WalletsFragmentDirections.homeToLoyaltyWallet())
+    }
+
+    private fun navigateToPaymentCardWalletWallet() {
+        findNavController().navigateIfAdded(this, WalletsFragmentDirections.homeToPaymentWallet())
     }
 
     private fun handleLoading(shouldRefresh: Boolean) {
@@ -142,6 +136,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
 
     override fun onResume() {
         super.onResume()
-        logDebug("WalletFragment",findNavController().currentDestination.toString())
+        logDebug("WalletFragment", findNavController().currentDestination.toString())
     }
 }

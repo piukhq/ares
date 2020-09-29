@@ -50,7 +50,7 @@
             app:destination="@+id/loyalty_fragment" />
 
         <action
-            android:id="@+id/homt_to_payment_wallet"
+            android:id="@+id/home_to_payment_wallet"
             app:destination="@+id/payment_card_wallet"/>
 
         <action
@@ -111,7 +111,29 @@
     <fragment
         android:id="@+id/loyalty_fragment"
         android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment"
-        android:label="@string/root" />
+        android:label="@string/root" >
+
+        <action
+            android:id="@+id/loyalty_to_add"
+            app:destination="@id/add_fragment" />
+
+        <action
+            android:id="@+id/loyalty_to_add_join"
+            app:destination="@id/add_join" />
+
+        <action
+            android:id="@+id/loyalty_to_barcode"
+            app:destination="@+id/barcode_fragment" />
+
+        <action
+            android:id="@+id/loyalty_to_detail"
+            app:destination="@+id/loyalty_card_detail_fragment" />
+
+        <action
+            android:id="@+id/loyalty_to_payment_wallet"
+            app:destination="@+id/payment_card_wallet"/>
+
+    </fragment>
 
     <fragment
         android:id="@+id/payment_card_wallet"
