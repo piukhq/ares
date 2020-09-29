@@ -133,6 +133,14 @@
             android:id="@+id/loyalty_to_payment_wallet"
             app:destination="@+id/payment_card_wallet"/>
 
+        <action
+            android:id="@+id/loyalty_to_settings_screen"
+            app:destination="@+id/settings_screen"/>
+
+        <action
+            android:id="@+id/loyalty_to_add_payment_card"
+            app:destination="@id/add_payment_card" />
+
     </fragment>
 
     <fragment
