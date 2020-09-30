@@ -236,7 +236,7 @@ class PaymentCardWalletFragment :
         when (it) {
             is PaymentCard -> {
                 val action =
-                    WalletsFragmentDirections.paymentWalletToDetails(
+                    PaymentCardWalletFragmentDirections.paymentWalletToDetails(
                         it,
                         plans.toTypedArray(),
                         cards.toTypedArray()
@@ -279,7 +279,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun navigateToPaymentAddPaymentCard(cardNumber: String = "") {
-        val directions = WalletsFragmentDirections.homeToPcd(
+        val directions = PaymentCardWalletFragmentDirections.paymentWalletToAddPaymentCard(
             cardNumber
         )
         findNavController().navigateIfAdded(this, directions)
