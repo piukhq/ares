@@ -18,7 +18,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
-import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
