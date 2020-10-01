@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding

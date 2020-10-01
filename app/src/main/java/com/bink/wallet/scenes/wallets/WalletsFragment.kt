@@ -1,8 +1,6 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
@@ -11,7 +9,6 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.WalletsFragmentBinding
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragment
-import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -48,7 +45,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             }
         }
 
-        //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
             bottomNavigation.selectedItemId = R.id.loyalty_menu_item
             navigateToLoyaltyWallet()
@@ -98,10 +94,5 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         } else {
             mainViewModel.stopLoading()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        logDebug("WalletFragment", findNavController().currentDestination.toString())
     }
 }
