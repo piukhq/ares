@@ -21,7 +21,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
-    private val args by navArgs<AddFragmentArgs>()
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -123,7 +122,7 @@ class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     private fun navigateToScanLoyaltyCard() {
         viewModel.membershipCards.value?.let {
             val directions = AddFragmentDirections.addToAddLoyalty(
-                args.membershipPlans,
+                viewModel.membershipPlans.value?.toTypedArray(),
                 it.toTypedArray(),
                 null
             )
@@ -133,11 +132,13 @@ class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private fun navigateToBrowseBrands() {
         viewModel.membershipCards.value?.let {
-            val directions = AddFragmentDirections.addToBrowse(
-                args.membershipPlans,
-                it.toTypedArray()
-            )
-            findNavController().navigateIfAdded(this, directions)
+            val directions = viewModel.membershipPlans.value?.toTypedArray()?.let { it1 ->
+                AddFragmentDirections.addToBrowse(
+                    it1,
+                    it.toTypedArray()
+                )
+            }
+            directions?.let { it1 -> findNavController().navigateIfAdded(this, it1) }
         }
     }
 

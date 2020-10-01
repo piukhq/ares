@@ -57,39 +57,39 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             navigateToPaymentCardWalletWallet()
         }
 
-        bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.loyalty_menu_item -> {
-                    SharedPreferenceManager.isLoyaltySelected = true
-                    navigateToLoyaltyWallet()
-                }
-                R.id.add_menu_item -> {
-                    viewModel.membershipPlanData.value?.let {
-                        val directions =
-                            it.toTypedArray().let { plans ->
-                                WalletsFragmentDirections.homeToAdd(
-                                    plans
-                                )
-                            }
-                        directions.let { findNavController().navigateIfAdded(this, it) }
-                    }
-                }
-                R.id.payment_menu_item -> {
-                    SharedPreferenceManager.isLoyaltySelected = false
-                    navigateToPaymentCardWalletWallet()
-                    if (viewModel.membershipCardData.value != null &&
-                        viewModel.membershipPlanData.value != null
-                    ) {
-                        paymentCardWalletFragment.setData(
-                            viewModel.membershipCardData.value!!,
-                            viewModel.membershipPlanData.value!!
-                        )
-                    }
-                }
-
-            }
-            true
-        }
+//        bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.loyalty_menu_item -> {
+//                    SharedPreferenceManager.isLoyaltySelected = true
+//                    navigateToLoyaltyWallet()
+//                }
+//                R.id.add_menu_item -> {
+//                    viewModel.membershipPlanData.value?.let {
+//                        val directions =
+//                            it.toTypedArray().let { plans ->
+//                                WalletsFragmentDirections.homeToAdd(
+//                                    plans
+//                                )
+//                            }
+//                        directions.let { findNavController().navigateIfAdded(this, it) }
+//                    }
+//                }
+//                R.id.payment_menu_item -> {
+//                    SharedPreferenceManager.isLoyaltySelected = false
+//                    navigateToPaymentCardWalletWallet()
+//                    if (viewModel.membershipCardData.value != null &&
+//                        viewModel.membershipPlanData.value != null
+//                    ) {
+//                        paymentCardWalletFragment.setData(
+//                            viewModel.membershipCardData.value!!,
+//                            viewModel.membershipPlanData.value!!
+//                        )
+//                    }
+//                }
+//
+//            }
+//            true
+//        }
 
         viewModel.paymentCards.observeNonNull(this) {
             SharedPreferenceManager.isPaymentEmpty = it.isNullOrEmpty()
