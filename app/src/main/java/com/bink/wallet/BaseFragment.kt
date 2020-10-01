@@ -11,7 +11,6 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
@@ -64,9 +63,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     open lateinit var bottomNavigation: BottomNavigationView
 
-    open lateinit var paymentToLoyaltyWallet: NavDirections
-    open lateinit var loyaltyToPayment: NavDirections
-
     open val windowFullscreenHandler: WindowFullscreenHandler by inject {
         parametersOf(
             requireActivity()
@@ -114,8 +110,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             bottomNavigation = requireActivity().findViewById(R.id.bottom_navigation)
 
         }
-        paymentToLoyaltyWallet = PaymentCardWalletFragmentDirections.paymentToLoyaltyWallet()
-        loyaltyToPayment = LoyaltyWalletFragmentDirections.loyaltyToPaymentWallet()
 
         findNavController().addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -128,9 +122,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             }
         }
 
-        //FIX THIS,SET ON NAV NOT WORKING DUE TO IF CLAUSE
-
-
     }
 
     private fun setUpBottomNavListener() {
@@ -138,7 +129,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             when (menuItem.itemId) {
                 R.id.loyalty_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = true
-                    navigateToLoyaltyWallet2()
+                    navigateToLoyaltyWallet()
                 }
                 R.id.add_menu_item -> {
                     val directions =
@@ -152,7 +143,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
                 R.id.payment_menu_item -> {
                     SharedPreferenceManager.isLoyaltySelected = false
-                    navigateToPaymentCardWalletWallet2()
+                    navigateToPaymentCardWalletWallet()
                 }
 
             }
@@ -467,14 +458,14 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     }
 
-    private fun navigateToLoyaltyWallet2() {
+    private fun navigateToLoyaltyWallet() {
        if (findNavController().currentDestination?.id == R.id.payment_card_wallet) {
            findNavController().navigateIfAdded(this, PaymentCardWalletFragmentDirections.paymentToLoyaltyWallet())
        }
 
     }
 
-    private fun navigateToPaymentCardWalletWallet2() {
+    private fun navigateToPaymentCardWalletWallet() {
 
         if (findNavController().currentDestination?.id == R.id.loyalty_fragment){
             findNavController().navigateIfAdded(this, LoyaltyWalletFragmentDirections.loyaltyToPaymentWallet())

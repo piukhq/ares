@@ -77,7 +77,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 it.id == card.membership_plan
                             }
 
-                        if (findNavController().currentDestination?.id == R.id.loyalty_wallet_fragment) {
+                        if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
                             if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
                             ) {
                                 displayNoBarcodeDialog(position)

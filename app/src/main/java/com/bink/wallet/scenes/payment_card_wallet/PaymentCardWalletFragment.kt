@@ -291,6 +291,7 @@ class PaymentCardWalletFragment :
         }
     }
 
+    //TODO Refactor: Why are we setting the data for payment here? Should be done in PaymentWalletFragment
     fun setData(
         membershipCards: List<MembershipCard>,
         membershipPlans: List<MembershipPlan>
