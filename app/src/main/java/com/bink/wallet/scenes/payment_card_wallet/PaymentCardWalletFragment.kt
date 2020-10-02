@@ -162,6 +162,7 @@ class PaymentCardWalletFragment :
         }
 
         viewModel.deleteError.observeNonNull(this) {
+            viewModel.fetchLocalData()
             val pScheme = paymentScheme
             val uuid = this.uuid
             if (pScheme == null || uuid == null) {
