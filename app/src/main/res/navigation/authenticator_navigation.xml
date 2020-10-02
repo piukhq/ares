@@ -53,30 +53,6 @@
             android:id="@+id/home_to_payment_wallet"
             app:destination="@+id/payment_card_wallet"/>
 
-        <action
-            android:id="@+id/home_to_add"
-            app:destination="@id/add_fragment" />
-
-        <action
-            android:id="@+id/home_to_add_join"
-            app:destination="@id/add_join" />
-
-        <action
-            android:id="@+id/home_to_barcode"
-            app:destination="@+id/barcode_fragment" />
-
-        <action
-            android:id="@+id/home_to_detail"
-            app:destination="@+id/loyalty_card_detail_fragment" />
-
-        <action
-            android:id="@+id/payment_wallet_to_details"
-            app:destination="@+id/payment_card_detail"
-            app:popUpTo="@id/home_wallet" />
-
-        <action
-            android:id="@+id/home_to_pcd"
-            app:destination="@id/add_payment_card" />
     </fragment>
 
     <fragment
