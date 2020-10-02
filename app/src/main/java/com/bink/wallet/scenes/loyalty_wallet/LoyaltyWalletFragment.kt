@@ -200,7 +200,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.loadCardsError.observeNonNull(this) {
             handleServerDownError(it)
-            viewModel.fetchLocalMembershipCards(false)
+            viewModel.fetchLocalMembershipCards()
         }
 
         viewModel.loadPlansError.observeNonNull(this) {
@@ -217,6 +217,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         viewModel.deleteCardError.observeNonNull(this) {
+            fetchData()
             val planId = deletedCard?.membership_plan
             val uuid = deletedCard?.uuid
             if (planId == null || uuid == null) {
@@ -236,7 +237,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         mainViewModel.membershipPlanDatabaseLiveData.observe(viewLifecycleOwner, Observer {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards(false)
+            viewModel.fetchLocalMembershipCards()
             viewModel.fetchDismissedCards()
         })
 
@@ -371,7 +372,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchPeriodicMembershipCards()
         } else {
             viewModel.fetchLocalMembershipPlans()
-            viewModel.fetchLocalMembershipCards(false)
+            viewModel.fetchLocalMembershipCards()
         }
     }
 

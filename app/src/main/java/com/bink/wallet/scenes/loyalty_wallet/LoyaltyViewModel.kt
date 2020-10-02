@@ -33,7 +33,6 @@ class LoyaltyViewModel constructor(
     val deleteCard = MutableLiveData<String>()
     val membershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
-    val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -142,12 +141,16 @@ class LoyaltyViewModel constructor(
         if (shouldMakePeriodicCall) {
             fetchMembershipCards()
         } else {
-            fetchLocalMembershipCards(true)
+            fetchLocalMembershipCards()
         }
     }
 
     fun fetchMembershipPlans(fromPersistence: Boolean) {
-        viewModelScope.launch {
+        val handler = CoroutineExceptionHandler {
+                _, _ -> //Exception handler to prevent app crash
+
+        }
+        scope.launch(handler) {
             loyaltyWalletRepository.retrieveMembershipPlans(
                 membershipPlanData,
                 loadPlansError,
@@ -156,12 +159,9 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun fetchLocalMembershipCards(isFromPeriodicCall: Boolean) {
-        if (isFromPeriodicCall) {
+    fun fetchLocalMembershipCards() {
             loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
-        } else {
-            loyaltyWalletRepository.retrieveStoredMembershipCards(localMembershipCardData)
-        }
+
     }
 
     fun fetchMembershipCardsAndPlansForRefresh() {

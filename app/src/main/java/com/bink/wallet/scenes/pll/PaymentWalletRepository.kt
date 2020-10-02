@@ -237,11 +237,11 @@ class PaymentWalletRepository(
         deleteError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            paymentCardDao.deletePaymentCardById(id.toString())
             val request = id?.let { apiService.deletePaymentCardAsync(it) }
             withContext(Dispatchers.Main) {
                 try {
                     val response = request?.await()
-                    paymentCardDao.deletePaymentCardById(id.toString())
                     mutableDeleteCard.value = response
                 } catch (e: Exception) {
                     deleteError.value = e
