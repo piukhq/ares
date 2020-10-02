@@ -176,9 +176,6 @@
             android:id="@+id/add_to_add_loyalty"
             app:destination="@id/add_loyalty_card" />
 
-<!--        <argument-->
-<!--            android:name="membershipPlans"-->
-<!--            app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />-->
     </fragment>
 
     <fragment

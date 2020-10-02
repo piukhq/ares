@@ -119,13 +119,15 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     }
 
     private fun navigateToScanLoyaltyCard() {
-        viewModel.membershipCards.value?.let {
+        viewModel.membershipCards.value?.let { membershipCards ->
+            viewModel.membershipPlans.value?.let { membershipPlans ->
             val directions = AddFragmentDirections.addToAddLoyalty(
-                viewModel.membershipPlans.value?.toTypedArray(),
-                it.toTypedArray(),
+                membershipPlans.toTypedArray(),
+                membershipCards.toTypedArray(),
                 null
             )
             findNavController().navigateIfAdded(this, directions)
+        }
         }
     }
 

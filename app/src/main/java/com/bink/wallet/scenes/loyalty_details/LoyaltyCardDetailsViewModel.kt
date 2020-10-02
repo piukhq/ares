@@ -46,7 +46,6 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         get() = _paymentCardsMerger
 
     init {
-        logDebug("LCD","init called")
 
         _paymentCardsMerger.addSource(paymentCards) {
             paymentCards.value?.let {
@@ -104,12 +103,6 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
                 }
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        logDebug("LCD","onCleared called")
-
     }
 }
 

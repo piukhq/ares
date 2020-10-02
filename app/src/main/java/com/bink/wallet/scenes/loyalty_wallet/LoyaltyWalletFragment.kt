@@ -119,8 +119,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.settingsButton.setImageResource(R.drawable.ic_settings)
 
         }
-        logDebug("WalletFragmentLoyalty",findNavController().currentDestination.toString())
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -144,7 +142,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
 
-        viewModel.isLoading.observeNonNull(this){
+        viewModel.isLoading.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = it
         }
 
@@ -242,7 +240,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         })
 
         binding.settingsButton.setOnClickListener {
-            findNavController().navigateIfAdded(this, LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen())
+            findNavController().navigateIfAdded(
+                this,
+                LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
+            )
         }
     }
 
