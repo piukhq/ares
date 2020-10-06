@@ -10,6 +10,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.logDebug
 
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
@@ -45,6 +46,7 @@ class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepo
         get() = _paymentCardsMerger
 
     init {
+
         _paymentCardsMerger.addSource(paymentCards) {
             paymentCards.value?.let {
                 _paymentCardsMerger.value = paymentCards.value

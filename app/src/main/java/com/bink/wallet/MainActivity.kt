@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity() {
         SentryAndroid.init(
             this
         ) { options: SentryAndroidOptions ->
-            options.environment = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+            options.environment =
+                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
             options.isDebug = BuildConfig.DEBUG
         }
 
@@ -85,6 +86,8 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.home_wallet,
             R.id.onboarding_fragment,
+            R.id.payment_card_wallet,
+            R.id.loyalty_fragment,
             R.id.rooted_screen -> {
                 finish()
             }

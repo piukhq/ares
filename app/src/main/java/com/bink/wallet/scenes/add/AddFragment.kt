@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
@@ -20,8 +19,7 @@ import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
-    private val args by navArgs<AddFragmentArgs>()
+class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -121,23 +119,35 @@ class  AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     }
 
     private fun navigateToScanLoyaltyCard() {
-        viewModel.membershipCards.value?.let {
+        viewModel.membershipCards.value?.let { membershipCards ->
+            viewModel.membershipPlans.value?.let { membershipPlans ->
             val directions = AddFragmentDirections.addToAddLoyalty(
-                args.membershipPlans,
-                it.toTypedArray(),
+                membershipPlans.toTypedArray(),
+                membershipCards.toTypedArray(),
                 null
             )
             findNavController().navigateIfAdded(this, directions)
         }
+        }
     }
 
     private fun navigateToBrowseBrands() {
-        viewModel.membershipCards.value?.let {
-            val directions = AddFragmentDirections.addToBrowse(
-                args.membershipPlans,
-                it.toTypedArray()
-            )
-            findNavController().navigateIfAdded(this, directions)
+        viewModel.membershipCards.value?.let { membershipCards ->
+            viewModel.membershipPlans.value?.let { membershipPlans ->
+
+                val directions =
+                    AddFragmentDirections.addToBrowse(
+                        membershipPlans.toTypedArray(),
+                        membershipCards.toTypedArray()
+                    )
+
+                directions.let { navDirections ->
+                    findNavController().navigateIfAdded(
+                        this,
+                        navDirections
+                    )
+                }
+            }
         }
     }
 
