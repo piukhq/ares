@@ -18,7 +18,6 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
-import com.bink.wallet.scenes.wallets.WalletsFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
@@ -237,7 +236,7 @@ class PaymentCardWalletFragment :
         when (it) {
             is PaymentCard -> {
                 val action =
-                    WalletsFragmentDirections.paymentWalletToDetails(
+                    PaymentCardWalletFragmentDirections.paymentWalletToDetails(
                         it,
                         plans.toTypedArray(),
                         cards.toTypedArray()
@@ -280,7 +279,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun navigateToPaymentAddPaymentCard(cardNumber: String = "") {
-        val directions = WalletsFragmentDirections.homeToPcd(
+        val directions = PaymentCardWalletFragmentDirections.paymentWalletToAddPaymentCard(
             cardNumber
         )
         findNavController().navigateIfAdded(this, directions)
@@ -293,6 +292,7 @@ class PaymentCardWalletFragment :
         }
     }
 
+    //TODO Refactor: Why are we setting the data for payment here? Should be done in PaymentWalletFragment
     fun setData(
         membershipCards: List<MembershipCard>,
         membershipPlans: List<MembershipPlan>

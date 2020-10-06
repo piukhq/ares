@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.wallets
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
@@ -46,49 +45,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             }
         }
 
-        //TODO: Replace fragmentManager with navigation to keep consistency of the application. (AB20-186)
         if (SharedPreferenceManager.isLoyaltySelected) {
-            binding.bottomNavigation.selectedItemId = R.id.loyalty_menu_item
-            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, loyaltyWalletsFragment)
-                ?.commitAllowingStateLoss()
+            bottomNavigation.selectedItemId = R.id.loyalty_menu_item
+            navigateToLoyaltyWallet()
         } else {
-            binding.bottomNavigation.selectedItemId = R.id.payment_menu_item
-            fragmentManager?.beginTransaction()?.add(R.id.wallet_content, paymentCardWalletFragment)
-                ?.commitAllowingStateLoss()
-        }
-
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.loyalty_menu_item -> {
-                    SharedPreferenceManager.isLoyaltySelected = true
-                    replaceFragment(paymentCardWalletFragment, loyaltyWalletsFragment)
-                }
-                R.id.add_menu_item -> {
-                    viewModel.membershipPlanData.value?.let {
-                        val directions =
-                            it.toTypedArray().let { plans ->
-                                WalletsFragmentDirections.homeToAdd(
-                                    plans
-                                )
-                            }
-                        directions.let { findNavController().navigateIfAdded(this, it) }
-                    }
-                }
-                R.id.payment_menu_item -> {
-                    SharedPreferenceManager.isLoyaltySelected = false
-                    replaceFragment(loyaltyWalletsFragment, paymentCardWalletFragment)
-                    if (viewModel.membershipCardData.value != null &&
-                        viewModel.membershipPlanData.value != null
-                    ) {
-                        paymentCardWalletFragment.setData(
-                            viewModel.membershipCardData.value!!,
-                            viewModel.membershipPlanData.value!!
-                        )
-                    }
-                }
-
-            }
-            true
+            bottomNavigation.selectedItemId = R.id.payment_menu_item
+            navigateToPaymentCardWalletWallet()
         }
 
         viewModel.paymentCards.observeNonNull(this) {
@@ -118,13 +80,12 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
         }
     }
 
-    private fun replaceFragment(removedFragment: Fragment, addedFragment: Fragment) {
-        fragmentManager?.beginTransaction()?.remove(removedFragment)
-            ?.commitAllowingStateLoss()
-        fragmentManager?.beginTransaction()?.replace(
-            R.id.wallet_content,
-            addedFragment
-        )?.commitAllowingStateLoss()
+    private fun navigateToLoyaltyWallet() {
+        findNavController().navigateIfAdded(this, WalletsFragmentDirections.homeToLoyaltyWallet())
+    }
+
+    private fun navigateToPaymentCardWalletWallet() {
+        findNavController().navigateIfAdded(this, WalletsFragmentDirections.homeToPaymentWallet())
     }
 
     private fun handleLoading(shouldRefresh: Boolean) {

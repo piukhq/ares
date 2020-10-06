@@ -13,6 +13,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
+import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
@@ -37,8 +39,10 @@ import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import io.sentry.core.Sentry
@@ -56,6 +60,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     abstract val viewModel: VM
 
     open lateinit var binding: DB
+
+    open lateinit var bottomNavigation: BottomNavigationView
 
     open val windowFullscreenHandler: WindowFullscreenHandler by inject {
         parametersOf(
@@ -99,6 +105,50 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     }
                 }
             })
+
+        if (activity != null) {
+            bottomNavigation = requireActivity().findViewById(R.id.bottom_navigation)
+
+        }
+
+        findNavController().addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loyalty_fragment, R.id.payment_card_wallet ->{
+                    bottomNavigation.visibility =
+                        View.VISIBLE
+                    setUpBottomNavListener()
+                }
+                else -> bottomNavigation.visibility = View.GONE
+            }
+        }
+
+    }
+
+    private fun setUpBottomNavListener() {
+        bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.loyalty_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = true
+                    navigateToLoyaltyWallet()
+                }
+                R.id.add_menu_item -> {
+                    val directions =
+                        when (findNavController().currentDestination?.id) {
+                            R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToAdd()
+                            R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentWalletToAdd()
+                            else -> null
+                        }
+                    directions?.let { findNavController().navigateIfAdded(this, directions) }
+                }
+
+                R.id.payment_menu_item -> {
+                    SharedPreferenceManager.isLoyaltySelected = false
+                    navigateToPaymentCardWalletWallet()
+                }
+
+            }
+            true
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -351,7 +401,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             return map
         }
 
-        fun getPllPatchMap(paymentUuid:String,loyaltyUuid:String,state:String):Map<String,Any>{
+        fun getPllPatchMap(
+            paymentUuid: String,
+            loyaltyUuid: String,
+            state: String
+        ): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[PLL_PAYMENT_ID_KEY] = paymentUuid
             map[PLL_LOYALTY_ID_KEY] = loyaltyUuid
@@ -361,7 +415,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             return map
         }
 
-        fun getPllDeleteMap(paymentUuid:String,loyaltyUuid:String) : Map<String,Any>{
+        fun getPllDeleteMap(paymentUuid: String, loyaltyUuid: String): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[PLL_PAYMENT_ID_KEY] = paymentUuid
             map[PLL_LOYALTY_ID_KEY] = loyaltyUuid
@@ -370,7 +424,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             return map
         }
 
-        fun getPllActiveMap(paymentUuid:String,loyaltyUuid:String):Map<String,Any>{
+        fun getPllActiveMap(paymentUuid: String, loyaltyUuid: String): Map<String, Any> {
             val map = HashMap<String, Any>()
             map[PLL_LINK_ID_KEY] = "$loyaltyUuid/$paymentUuid"
             map[PLL_PAYMENT_ID_KEY] = paymentUuid
@@ -379,7 +433,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             return map
         }
 
-        fun logPllEvent(name: String, parameters: Map<String, Any>){
+        fun logPllEvent(name: String, parameters: Map<String, Any>) {
             val bundle = Bundle()
 
             for (entry: Map.Entry<String, Any> in parameters) {
@@ -391,16 +445,31 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             }
 
-            Firebase.analytics.logEvent(name,bundle)
+            Firebase.analytics.logEvent(name, bundle)
         }
 
-        fun logFailedEvent(eventName: String){
+        fun logFailedEvent(eventName: String) {
             val bundle = Bundle()
 
             bundle.putString(ATTEMPTED_EVENT_KEY, eventName)
-            Firebase.analytics.logEvent(FAILED_EVENT_NO_DATA,bundle)
+            Firebase.analytics.logEvent(FAILED_EVENT_NO_DATA, bundle)
 
         }
 
     }
+
+    private fun navigateToLoyaltyWallet() {
+       if (findNavController().currentDestination?.id == R.id.payment_card_wallet) {
+           findNavController().navigateIfAdded(this, PaymentCardWalletFragmentDirections.paymentToLoyaltyWallet())
+       }
+
+    }
+
+    private fun navigateToPaymentCardWalletWallet() {
+
+        if (findNavController().currentDestination?.id == R.id.loyalty_fragment){
+            findNavController().navigateIfAdded(this, LoyaltyWalletFragmentDirections.loyaltyToPaymentWallet())
+        }
+    }
+
 }
