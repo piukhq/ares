@@ -6,6 +6,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -26,5 +28,9 @@ data class PaymentCard(
                 false
             )
         )
+    }
+
+    fun isCardActive(): Boolean {
+        return status?.toLowerCase(Locale.getDefault()) == "active"
     }
 }

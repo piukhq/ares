@@ -433,41 +433,52 @@ fun ImageView.setLinkedStatus(
     paymentCard: PaymentCard,
     membershipCards: MembershipCardListWrapper
 ) {
-    setImageResource(
-        if (PaymentCardUtils.existLinkedMembershipCards(
-                paymentCard,
-                membershipCards.membershipCards
-            )
-        ) {
-            R.drawable.ic_linked
-        } else {
-            R.drawable.ic_unlinked
-        }
-    )
+    if (paymentCard.isCardActive()) {
+        visibility = View.VISIBLE
+        setImageResource(
+            if (PaymentCardUtils.existLinkedMembershipCards(
+                    paymentCard,
+                    membershipCards.membershipCards
+                )
+            ) {
+                R.drawable.ic_linked
+            } else {
+                R.drawable.ic_unlinked
+            }
+        )
+    } else {
+        visibility = View.GONE
+    }
+
 }
 
 @BindingAdapter("linkedStatusPaymentCard", "linkStatusMembershipCards", requireAll = true)
 fun TextView.setLinkedStatus(paymentCard: PaymentCard, membershipCards: MembershipCardListWrapper) {
-    val linkedCardsNumber = PaymentCardUtils.countLinkedPaymentCards(
-        paymentCard,
-        membershipCards.membershipCards
-    )
-
-    text = if (PaymentCardUtils.existLinkedMembershipCards(
+    if (paymentCard.isCardActive()) {
+        val linkedCardsNumber = PaymentCardUtils.countLinkedPaymentCards(
             paymentCard,
             membershipCards.membershipCards
         )
-    ) {
-        context.getString(
-            when (linkedCardsNumber) {
-                1 -> R.string.payment_card_linked_status
-                else -> R.string.payment_cards_linked_status
-            },
-            linkedCardsNumber
-        )
+
+        text = if (PaymentCardUtils.existLinkedMembershipCards(
+                paymentCard,
+                membershipCards.membershipCards
+            )
+        ) {
+            context.getString(
+                when (linkedCardsNumber) {
+                    1 -> R.string.payment_card_linked_status
+                    else -> R.string.payment_cards_linked_status
+                },
+                linkedCardsNumber
+            )
+        } else {
+            context.getString(R.string.payment_card_not_linked)
+        }
     } else {
-        context.getString(R.string.payment_card_not_linked)
+        text = PaymentCardUtils.cardStatus(paymentCard.status ?: "")
     }
+
 }
 
 @BindingAdapter("paymentCardLogo")
