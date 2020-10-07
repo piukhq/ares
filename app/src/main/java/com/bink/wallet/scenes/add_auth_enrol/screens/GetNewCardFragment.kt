@@ -107,7 +107,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         viewModel.ctaText.set(getString(R.string.sign_up_text))
         currentMembershipPlan?.let {
             viewModel.descriptionText.set(
-                getString(
+                it.account?.plan_summary ?: getString(
                     R.string.enrol_description,
                     it.account?.plan_name_card
                 )
