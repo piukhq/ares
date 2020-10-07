@@ -326,12 +326,17 @@ class LoyaltyCardDetailsFragment :
     private fun viewAboutInformation() {
         var aboutText = getString(R.string.about_membership)
         var description = getString(R.string.no_plan_description_available)
+        var summary = ""
 
         viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
             aboutText = getString(R.string.about_membership_title_template, plan_name)
         }
         viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
             description = plan_description
+        }
+        viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
+            summary = planSummary
+
         }
 
         findNavController().navigateIfAdded(
@@ -341,7 +346,8 @@ class LoyaltyCardDetailsFragment :
                     R.drawable.ic_close,
                     true,
                     aboutText,
-                    description
+                    summary,
+                    description2 = description
                 )
             ),
             currentDestination
@@ -417,6 +423,7 @@ class LoyaltyCardDetailsFragment :
     private fun handleFootersListeners() {
         binding.footerAbout.setOnClickListener {
             var aboutText = getString(R.string.about_membership)
+            var summary = ""
             var description = getString(R.string.no_plan_description_available)
 
             viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
@@ -424,6 +431,9 @@ class LoyaltyCardDetailsFragment :
             }
             viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
                 description = plan_description
+            }
+            viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
+                summary = planSummary
             }
 
             findNavController().navigateIfAdded(
@@ -433,7 +443,8 @@ class LoyaltyCardDetailsFragment :
                         R.drawable.ic_close,
                         true,
                         aboutText,
-                        description
+                        summary,
+                        description2 = description
                     )
                 ),
                 currentDestination
