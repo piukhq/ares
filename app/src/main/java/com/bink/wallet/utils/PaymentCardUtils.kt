@@ -261,4 +261,13 @@ object PaymentCardUtils {
             membershipCardIds.contains(card.id) && card.active_link == true
         }
     }
+
+    fun cardStatus(status:String):String{
+        return when(status.toLowerCase(Locale.getDefault())) {
+            "pending" -> "Pending"
+            "failed" -> "Failed"
+            else -> "Pending"
+
+        }
+    }
 }
