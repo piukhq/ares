@@ -184,9 +184,9 @@ fun View.shouldShowMessage(viewModel: BarcodeViewModel?, showMessage: Boolean) {
 @BindingAdapter("membershipPlan")
 fun ModalBrandHeader.linkPlan(plan: MembershipPlan?) {
     binding.brandImage.loadImage(plan)
-    plan?.account?.plan_name_card?.let {
+    plan?.account?.plan_name?.let {
         binding.loyaltyScheme.text =
-            resources.getString(R.string.loyalty_info, plan.account.plan_name_card)
+            resources.getString(R.string.loyalty_info, plan.account.plan_name)
     }
 }
 
