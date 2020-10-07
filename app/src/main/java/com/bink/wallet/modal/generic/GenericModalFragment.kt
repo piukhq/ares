@@ -117,6 +117,11 @@ open class GenericModalFragment :
                 }
             }
             title.text = parameters.title
+
+            if (parameters.description2.trim().isNotEmpty() && parameters.description.trim().isEmpty()){
+                description.visibility = View.GONE
+            }
+
             description.text =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)

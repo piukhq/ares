@@ -117,7 +117,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         binding.addJoinReward.setOnClickListener {
+            var summary: String
             currentMembershipPlan?.let {
+                summary = it.account?.plan_summary ?: ""
                 if (it.account?.plan_description != null) {
                     findNavController().navigateIfAdded(
                         this,
@@ -127,7 +129,8 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                 true,
                                 it.account.plan_name
                                     ?: getString(R.string.plan_description),
-                                it.account.plan_description
+                                summary,
+                                description2 = it.account.plan_description
                             )
                         )
                     )
