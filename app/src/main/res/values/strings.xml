@@ -205,6 +205,7 @@
     <string name="add_card_error_title">Cannot add card</string>
     <string name="add_card_error_message">Please try again!</string>
     <string name="sign_up_text">Sign up</string>
+    <string name="sign_up_new_card_text">a new card</string>
     <string name="log_in_text">Log in</string>
     <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance and transaction history. This is optional.</string>
     <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your points balance. This is optional.</string>
@@ -242,7 +243,7 @@
     <!-- Transaction Screen -->
     <string name="transactions_prefix">%1$s %2$s%3$s</string>
     <string name="transactions_suffix">%1$s%2$s %3$s</string>
-    <string name="sign_up_enrol">Sign up for a new card</string>
+    <string name="sign_up_enrol">Sign up for %s</string>
     <string name="register_ghost_card_title">Register your card</string>
     <string name="register_ghost_card_button">Register card</string>
     <string name="enrol_description">Fill out the form below to get a new %1$s, and start collecting rewards.</string>

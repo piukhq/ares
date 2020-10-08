@@ -103,14 +103,12 @@ class GetNewCardFragment : BaseAddAuthFragment() {
     }
 
     private fun setViewsContent() {
-        viewModel.titleText.set(getString(R.string.sign_up_enrol))
-        viewModel.ctaText.set(getString(R.string.sign_up_text))
         currentMembershipPlan?.let {
+            val titleText = it.account?.plan_name ?: getString(R.string.sign_up_new_card_text)
+            viewModel.titleText.set(getString(R.string.sign_up_enrol, titleText))
+            viewModel.ctaText.set(getString(R.string.sign_up_text))
             viewModel.descriptionText.set(
-                it.account?.plan_summary ?: getString(
-                    R.string.enrol_description,
-                    it.account?.plan_name_card
-                )
+                it.account?.plan_summary
             )
         }
         viewModel.isNoAccountFooter.set(false)
