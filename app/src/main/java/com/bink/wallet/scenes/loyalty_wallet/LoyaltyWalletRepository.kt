@@ -401,6 +401,18 @@ class LoyaltyWalletRepository(
 
     private fun processMembershipCardsResult(membershipCards: List<MembershipCard>?) {
         CoroutineScope(Dispatchers.Default).launch {
+            val cardIdInDb =
+                withContext(Dispatchers.IO) { membershipCardDao.getAllAsync() }.map { card -> card.id }
+            val idFromApi = membershipCards?.map { card -> card.id }
+
+            //list of Id's which are available in database but not in return api
+            val difference = idFromApi?.let { cardIdInDb.minus(it) }
+            difference?.let {
+                if (it.isNotEmpty()) {
+                    deleteFromDb(it)
+                }
+            }
+
             membershipCards?.let {
                 generateUuidForMembershipCards(
                     it,
@@ -413,6 +425,16 @@ class LoyaltyWalletRepository(
             SharedPreferenceManager.membershipCardsLastRequestTime =
                 System.currentTimeMillis()
         }
+    }
+
+    private suspend fun deleteFromDb(cardsToDelete: List<String>) {
+
+        cardsToDelete.forEach { cardIdToDelete ->
+            withContext(Dispatchers.IO){
+                membershipCardDao.deleteCard(cardIdToDelete)
+            }
+        }
+
     }
 
     private fun processMembershipPlansResult(membershipPlans: List<MembershipPlan>?) {
