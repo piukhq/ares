@@ -93,7 +93,8 @@ class AddAuthAdapter(
             }
             FieldType.DISPLAY.type -> {
                 DisplayViewHolder(
-                    AddAuthDisplayItemBinding.inflate(inflater)
+                    AddAuthDisplayItemBinding.inflate(inflater),
+                    onLinkClickListener = onLinkClickListener
                 )
             }
             FieldType.HEADER.type -> {
