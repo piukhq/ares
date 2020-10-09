@@ -315,7 +315,6 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun fetchData() {
-        setLoadingState(true)
         if (isNetworkAvailable(requireActivity(), false)) {
             viewModel.fetchPaymentCards()
         } else {
