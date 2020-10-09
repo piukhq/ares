@@ -6,7 +6,9 @@ import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 
-class DisplayViewHolder(val binding: AddAuthDisplayItemBinding) :
+class DisplayViewHolder(
+    val binding: AddAuthDisplayItemBinding, val onLinkClickListener: ((String) -> Unit)
+) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
     override fun bind(item: AddAuthItemWrapper) {
@@ -26,7 +28,8 @@ class DisplayViewHolder(val binding: AddAuthDisplayItemBinding) :
                                     ),
                                     name,
                                     url,
-                                    this
+                                    this,
+                                    onLinkClickListener
                                 )
                             }
                         }
