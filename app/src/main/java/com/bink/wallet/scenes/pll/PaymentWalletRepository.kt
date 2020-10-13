@@ -51,6 +51,11 @@ class PaymentWalletRepository(
         }
     }
 
+    suspend fun getPaymentCard(id:String):PaymentCard{
+        return apiService.getPaymentCardAsync(id)
+    }
+
+
     private fun storePaymentsCards(
         cards: List<PaymentCard>,
         fetchError: MutableLiveData<Exception>
