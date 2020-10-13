@@ -12,6 +12,8 @@ const val REGEX_DECIMAL_ONLY = "[^\\d]"
 const val REGEX_DECIMAL_OR_SLASH = "[^\\d/]"
 const val DIGITS_VISA_MASTERCARD = 16
 const val DIGITS_AMERICAN_EXPRESS = 15
+const val PENDING_CARD = "Pending"
+const val FAILED_CARD = "Failed"
 
 fun PaymentCard.isLinkedToMembershipCard(membershipCard: MembershipCard): Boolean {
     membership_cards.forEach { paymentMembershipCard ->
@@ -264,9 +266,9 @@ object PaymentCardUtils {
 
     fun cardStatus(status:String):String{
         return when(status.toLowerCase(Locale.getDefault())) {
-            "pending" -> "Pending"
-            "failed" -> "Failed"
-            else -> "Pending"
+            "pending" -> PENDING_CARD
+            "failed" -> FAILED_CARD
+            else -> PENDING_CARD
 
         }
     }

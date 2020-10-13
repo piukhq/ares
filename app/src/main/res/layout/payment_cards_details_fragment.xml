@@ -67,6 +67,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/payment_header"
                         app:paymentCardDetailsTitle="@{hasAddedPllCards}"
+                    app:paymentCard="@{paymentCardDetail}"
                         tools:text="@string/payment_card_details_title_text" />
 
                 <TextView
@@ -81,6 +82,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title"
                         app:paymentCardDetailsSubtitle="@{hasAddedPllCards}"
+                        app:paymentCard="@{paymentCardDetail}"
                         tools:text="@string/payment_card_details_description_text" />
 
                 <androidx.recyclerview.widget.RecyclerView
