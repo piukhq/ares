@@ -179,7 +179,9 @@ class PaymentCardsDetailsFragment :
             viewModel.getMembershipCards()
         }
 
-        viewModel.linkError.observeErrorNonNull(requireContext(), true, this)
+        viewModel.linkError.observeNonNull(this){
+            showLinkErrorMessage()
+        }
 
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
     }
@@ -231,5 +233,18 @@ class PaymentCardsDetailsFragment :
             membershipCard
         )
         directions.let { findNavController().navigateIfAdded(this, directions) }
+    }
+
+    private fun showLinkErrorMessage() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.payment_card_link_already_exists_title))
+            .setMessage(getString(R.string.payment_card_link_already_exists_message))
+            .setPositiveButton(
+                getString(R.string.ok)
+            ) { dialog, _ ->
+                dialog.dismiss()
+
+            }
+            .show()
     }
 }
