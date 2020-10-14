@@ -103,8 +103,9 @@ class PaymentWalletRepository(
     fun linkPaymentCard(
         membershipCard: MembershipCard,
         paymentCard: PaymentCard,
-        linkError: MutableLiveData<HttpException>,
-        paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData()
+        linkError: MutableLiveData<Pair<HttpException, String>>,
+        paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData(),
+        membershipPlanId: String
     ) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
@@ -120,7 +121,7 @@ class PaymentWalletRepository(
 
 
             } catch (e: Exception) {
-                linkError.value = (e as HttpException)
+                linkError.value = Pair((e as HttpException),membershipPlanId)
                 logPllFailure(paymentCard, membershipCard, true)
             }
 

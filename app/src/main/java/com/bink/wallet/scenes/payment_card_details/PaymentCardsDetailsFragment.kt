@@ -42,8 +42,7 @@ class PaymentCardsDetailsFragment :
 
     private lateinit var availablePllAdapter: AvailablePllAdapter
 
-    private var membershipPlan: MembershipPlan? = null
-    private var itemPosition: Int? = null
+    private var planAndPositionPair = mutableListOf<Pair<MembershipPlan?,Int?>>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -187,9 +186,9 @@ class PaymentCardsDetailsFragment :
         }
 
         viewModel.linkError.observeNonNull(this) {
-            it.response()?.errorBody()?.string()?.let { responseString ->
+            it.first.response()?.errorBody()?.string()?.let { responseString ->
                 if (responseString.contains(PLAN_EXISTS)) {
-                    showLinkErrorMessage()
+                    showLinkErrorMessage(it.second)
                 }
             }
 
@@ -225,21 +224,20 @@ class PaymentCardsDetailsFragment :
         currentItem: Triple<String?, Boolean, MembershipPlan?>,
         position: Int?
     ) {
-        itemPosition = position
+        planAndPositionPair.add(Pair(currentItem.third,position))
+
         currentItem.first?.let {
-            runBlocking {
-                membershipPlan = if (currentItem.second) {
+            currentItem.third?.let { plan ->
+                if (currentItem.second) {
                     viewModel.linkPaymentCard(
                         it,
-                        viewModel.paymentCard.value?.id.toString()
+                        plan.id
                     )
-                    currentItem.third
                 } else {
                     viewModel.unlinkPaymentCard(
                         it,
                         viewModel.paymentCard.value?.id.toString()
                     )
-                    null
                 }
             }
         }
@@ -253,9 +251,11 @@ class PaymentCardsDetailsFragment :
         directions.let { findNavController().navigateIfAdded(this, directions) }
     }
 
-    private fun showLinkErrorMessage() {
-        val planName = membershipPlan?.account?.plan_name ?: ""
-        val planNameCard = membershipPlan?.account?.plan_name_card ?: ""
+    private fun showLinkErrorMessage(planId: String) {
+        val membershipPlan = planAndPositionPair.firstOrNull { pair -> pair.first?.id == planId }
+        val planName = membershipPlan?.first?.account?.plan_name ?: ""
+        val planNameCard = membershipPlan?.first?.account?.plan_name_card ?: ""
+        val position = membershipPlan?.second
 
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.payment_card_link_already_exists_title))
@@ -271,7 +271,7 @@ class PaymentCardsDetailsFragment :
             .setPositiveButton(
                 getString(R.string.ok)
             ) { dialog, _ ->
-                itemPosition?.let { availablePllAdapter.notifyItemChanged(it) }
+                position?.let { availablePllAdapter.notifyItemChanged(it) }
                 dialog.dismiss()
             }
             .setCancelable(false)
