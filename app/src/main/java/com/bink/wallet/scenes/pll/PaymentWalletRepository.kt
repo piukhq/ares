@@ -24,6 +24,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
+import retrofit2.HttpException
 
 class PaymentWalletRepository(
     private val apiService: ApiService,
@@ -102,7 +103,7 @@ class PaymentWalletRepository(
     fun linkPaymentCard(
         membershipCard: MembershipCard,
         paymentCard: PaymentCard,
-        linkError: MutableLiveData<Exception>,
+        linkError: MutableLiveData<HttpException>,
         paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -119,7 +120,7 @@ class PaymentWalletRepository(
 
 
             } catch (e: Exception) {
-                linkError.value = e
+                linkError.value = (e as HttpException)
                 logPllFailure(paymentCard, membershipCard, true)
             }
 
