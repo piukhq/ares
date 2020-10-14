@@ -14,6 +14,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
+import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
@@ -187,7 +188,7 @@ class PaymentCardsDetailsFragment :
 
         viewModel.linkError.observeNonNull(this) {
             it.first.response()?.errorBody()?.string()?.let { responseString ->
-                if (responseString.contains(PLAN_EXISTS)) {
+                if (responseString.contains(PLAN_ALREADY_EXISTS)) {
                     showLinkErrorMessage(it.second)
                 }
             }
@@ -278,7 +279,4 @@ class PaymentCardsDetailsFragment :
             .show()
     }
 
-    companion object {
-        const val PLAN_EXISTS = "PLAN_ALREADY_LINKED"
-    }
 }
