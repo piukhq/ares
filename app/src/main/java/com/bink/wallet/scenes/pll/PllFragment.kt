@@ -267,25 +267,25 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             val totalCards = linkSuccessCards + it.size
 
             if (totalCards == selectedCards.size) {
-                val errorToShow =
+                val shouldShowPlanAlreadyExists =
                     isPlanAlreadyExistsError(it)
 
-                showLinkErrorMessage(errorToShow)
+                showLinkErrorMessage(shouldShowPlanAlreadyExists)
             }
         }
     }
 
-    private fun showLinkErrorMessage(errorToShow: Boolean?) {
+    private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {
         val membershipPlan = viewModel.membershipPlan.value
         val planName = membershipPlan?.account?.plan_name ?: ""
         val planNameCard = membershipPlan?.account?.plan_name_card ?: ""
 
         val title =
-            if (errorToShow!!) getString(R.string.payment_card_link_already_exists_title) else getString(
+            if (shouldShowPlanAlreadyExists!!) getString(R.string.payment_card_link_already_exists_title) else getString(
                 R.string.pll_error_title
             )
         val message =
-            if (errorToShow) getString(
+            if (shouldShowPlanAlreadyExists) getString(
                 R.string.payment_card_link_already_exists_message,
                 planName,
                 planNameCard,
