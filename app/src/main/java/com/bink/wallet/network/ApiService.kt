@@ -98,9 +98,9 @@ interface ApiService {
     fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
 
     @GET("/ubiquity/payment_card/{payment_id}")
-    fun getPaymentCardAsync(
+    suspend fun getPaymentCardAsync(
         @Path("payment_id") cardId: String
-    ): Deferred<PaymentCard>
+    ): PaymentCard
 
     @POST("/users/auth/facebook")
     fun authWithFacebookAsync(

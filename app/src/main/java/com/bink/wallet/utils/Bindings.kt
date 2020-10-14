@@ -505,22 +505,43 @@ fun TextView.setTitleLoginStatus(loginStatus: LoginStatus?) {
     }
 }
 
-@BindingAdapter("paymentCardDetailsTitle")
-fun TextView.setPcdTitle(hasAddedPlls: Boolean) {
-    text = if (hasAddedPlls) {
-        context.getString(R.string.payment_card_details_title_text)
+@BindingAdapter("paymentCardDetailsTitle", "paymentCard", requireAll = false)
+fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
+    text = if (paymentCard.isCardActive()) {
+        if (hasAddedPlls) {
+            context.getString(R.string.payment_card_details_title_text)
+        } else {
+            context.getString(R.string.payment_card_details_title_text_empty)
+        }
     } else {
-        context.getString(R.string.payment_card_details_title_text_empty)
+        if (PaymentCardUtils.cardStatus(
+                paymentCard.status ?: ""
+            ) == PENDING_CARD
+        ) context.getString(R.string.payment_card_pending_title_text) else context.getString(R.string.payment_card_inactive_title_text)
     }
+
 }
 
-@BindingAdapter("paymentCardDetailsSubtitle")
-fun TextView.setPcdSubtitle(hasAddedPlls: Boolean) {
-    text = if (hasAddedPlls) {
-        context.getString(R.string.payment_card_details_description_text)
+@BindingAdapter("paymentCardDetailsSubtitle", "paymentCard", requireAll = true)
+fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
+    text = if (paymentCard.isCardActive()) {
+        if (hasAddedPlls) {
+            context.getString(R.string.payment_card_details_description_text)
+        } else {
+            context.getString(R.string.payment_card_details_description_text_empty)
+        }
     } else {
-        context.getString(R.string.payment_card_details_description_text_empty)
+        if (PaymentCardUtils.cardStatus(
+                paymentCard.status ?: ""
+            ) == PENDING_CARD
+        ) context.getString(
+            R.string.payment_card_pending_description_text,
+            paymentCard.account?.consents?.get(0)?.timestamp?.let {
+                "Card added: ${DateTimeUtils.dateFormatTimeStamp(it)}"
+            } ?: ""
+        ) else context.getString(R.string.payment_card_inactive_description_text)
     }
+
 }
 
 @BindingAdapter("pllDescription")

@@ -2,7 +2,9 @@ package com.bink.wallet.scenes.payment_card_details
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -15,6 +17,8 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
 import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
+import com.bink.wallet.utils.PENDING_CARD
+import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
@@ -45,6 +49,10 @@ class PaymentCardsDetailsFragment :
     private lateinit var availablePllAdapter: AvailablePllAdapter
 
     private var planAndPositionPair = mutableListOf<Pair<MembershipPlan?,Int?>>()
+
+    private var countDownTimer: CountDownTimer? = null
+
+    private var hasRefreshedAtLeastOnce = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -113,6 +121,88 @@ class PaymentCardsDetailsFragment :
             }
         }
 
+
+        viewModel.deleteRequest.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this,
+            EMPTY_STRING,
+            getString(R.string.card_error_dialog),
+            true,
+            null
+        )
+
+        viewModel.paymentCard.observeNonNull(this) {
+            binding.paymentCardDetail = it
+            when (it.isCardActive()) {
+                true -> setActivePcdScreen()
+                else -> setInactivePcdScreen()
+            }
+            if (hasRefreshedAtLeastOnce) {
+                countDownTimer?.start()
+            }
+            viewModel.storePaymentCard(it)
+
+            viewModel.getMembershipCards()
+        }
+
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
+
+        viewModel.getCardError.observeErrorNonNull(requireContext(),false,this)
+
+    }
+
+    private fun setInactivePcdScreen() {
+        setViewState(false)
+        if (viewModel.paymentCard.value?.status?.let { PaymentCardUtils.cardStatus(it) } == PENDING_CARD){
+            countDownTimer = object : CountDownTimer(30000, 1000) {
+                override fun onFinish() {
+                    viewModel.paymentCard.value?.id?.let { viewModel.getPaymentCard(it) }
+                    hasRefreshedAtLeastOnce = true
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+
+                }
+
+            }
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        logScreenView(PAYMENT_DETAIL_VIEW)
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
+        if (isNetworkAvailable(requireActivity())) {
+            viewModel.getMembershipCards()
+        }
+        countDownTimer?.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scrollY = binding.scrollView.scrollY
+
+        countDownTimer?.cancel()
+    }
+
+
+    private fun goHome() {
+        findNavController().navigateIfAdded(
+            this,
+            R.id.global_to_home
+        )
+    }
+
+    private fun setActivePcdScreen() {
+        setViewState(true)
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             val pllPlansIds = mutableListOf<String>()
             plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
@@ -199,27 +289,15 @@ class PaymentCardsDetailsFragment :
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
     }
 
-    override fun onPause() {
-        super.onPause()
-        scrollY = binding.scrollView.scrollY
-    }
-
-    override fun onResume() {
-        super.onResume()
-        logScreenView(PAYMENT_DETAIL_VIEW)
-        binding.scrollView.postDelayed({
-            binding.scrollView.scrollTo(0, scrollY)
-        }, SCROLL_DELAY)
-        if (isNetworkAvailable(requireActivity())) {
-            viewModel.getMembershipCards()
+    private fun setViewState(shouldShowViews: Boolean) {
+        val visibility = if (shouldShowViews) View.VISIBLE else View.GONE
+        with(binding) {
+            availablePllList.visibility = visibility
+            otherCardsTitle.visibility = visibility
+            otherCardsDescription.visibility = visibility
+            otherCardsList.visibility = visibility
         }
-    }
 
-    private fun goHome() {
-        findNavController().navigateIfAdded(
-            this,
-            R.id.global_to_home
-        )
     }
 
     private fun onLinkStatusChange(
