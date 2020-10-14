@@ -103,7 +103,7 @@ class PaymentWalletRepository(
     fun linkPaymentCard(
         membershipCard: MembershipCard,
         paymentCard: PaymentCard,
-        linkError: MutableLiveData<Pair<HttpException, String>>,
+        linkError: MutableLiveData<Pair<Exception, String>>,
         paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData(),
         membershipPlanId: String
     ) {
@@ -121,7 +121,7 @@ class PaymentWalletRepository(
 
 
             } catch (e: Exception) {
-                linkError.value = Pair((e as HttpException),membershipPlanId)
+                linkError.value = Pair(e,membershipPlanId)
                 logPllFailure(paymentCard, membershipCard, true)
             }
 

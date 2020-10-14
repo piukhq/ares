@@ -9,7 +9,6 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
-import retrofit2.HttpException
 
 class PaymentCardsDetailsViewModel(
     private var paymentWalletRepository: PaymentWalletRepository,
@@ -28,8 +27,8 @@ class PaymentCardsDetailsViewModel(
     val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
 
-    private val _linkError = MutableLiveData<Pair<HttpException,String>>()
-    val linkError: LiveData<Pair<HttpException,String>>
+    private val _linkError = MutableLiveData<Pair<Exception,String>>()
+    val linkError: LiveData<Pair<Exception,String>>
         get() = _linkError
 
     private val _unlinkError = MutableLiveData<Exception>()

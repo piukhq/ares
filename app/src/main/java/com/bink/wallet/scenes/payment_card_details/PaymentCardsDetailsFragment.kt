@@ -24,6 +24,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -187,7 +188,7 @@ class PaymentCardsDetailsFragment :
         }
 
         viewModel.linkError.observeNonNull(this) {
-            it.first.response()?.errorBody()?.string()?.let { responseString ->
+            (it.first as HttpException).response()?.errorBody()?.string()?.let { responseString ->
                 if (responseString.contains(PLAN_ALREADY_EXISTS)) {
                     showLinkErrorMessage(it.second)
                 }
