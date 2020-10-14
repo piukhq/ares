@@ -43,7 +43,7 @@ class PaymentCardsDetailsFragment :
     private lateinit var availablePllAdapter: AvailablePllAdapter
 
     private var membershipPlan: MembershipPlan? = null
-    private var position: Int? = null
+    private var itemPosition: Int? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -225,6 +225,7 @@ class PaymentCardsDetailsFragment :
         currentItem: Triple<String?, Boolean, MembershipPlan?>,
         position: Int?
     ) {
+        itemPosition = position
         currentItem.first?.let {
             runBlocking {
                 membershipPlan = if (currentItem.second) {
@@ -270,8 +271,10 @@ class PaymentCardsDetailsFragment :
             .setPositiveButton(
                 getString(R.string.ok)
             ) { dialog, _ ->
+                itemPosition?.let { availablePllAdapter.notifyItemChanged(it) }
                 dialog.dismiss()
             }
+            .setCancelable(false)
             .show()
     }
 
