@@ -111,14 +111,16 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
         }
 
-        findNavController().addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.loyalty_fragment, R.id.payment_card_wallet ->{
-                    bottomNavigation.visibility =
-                        View.VISIBLE
-                    setUpBottomNavListener()
+        if (this.isAdded){
+            findNavController().addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.loyalty_fragment, R.id.payment_card_wallet ->{
+                        bottomNavigation.visibility =
+                            View.VISIBLE
+                        setUpBottomNavListener()
+                    }
+                    else -> bottomNavigation.visibility = View.GONE
                 }
-                else -> bottomNavigation.visibility = View.GONE
             }
         }
 
@@ -459,17 +461,23 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     private fun navigateToLoyaltyWallet() {
-       if (findNavController().currentDestination?.id == R.id.payment_card_wallet) {
-           findNavController().navigateIfAdded(this, PaymentCardWalletFragmentDirections.paymentToLoyaltyWallet())
-       }
+        if (this.isAdded){
+            if (findNavController().currentDestination?.id == R.id.payment_card_wallet) {
+                findNavController().navigateIfAdded(this, PaymentCardWalletFragmentDirections.paymentToLoyaltyWallet())
+            }
+        }
+
 
     }
 
     private fun navigateToPaymentCardWalletWallet() {
 
-        if (findNavController().currentDestination?.id == R.id.loyalty_fragment){
-            findNavController().navigateIfAdded(this, LoyaltyWalletFragmentDirections.loyaltyToPaymentWallet())
+        if (this.isAdded){
+            if (findNavController().currentDestination?.id == R.id.loyalty_fragment){
+                findNavController().navigateIfAdded(this, LoyaltyWalletFragmentDirections.loyaltyToPaymentWallet())
+            }
         }
+
     }
 
 }

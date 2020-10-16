@@ -390,6 +390,10 @@
         <action
             android:id="@+id/addJoinToGetNewCardFragment"
             app:destination="@+id/getNewCardFragment" />
+
+        <action
+            android:id="@+id/detail_to_home"
+            app:destination="@+id/home_wallet"/>
     </fragment>
 
     <fragment
