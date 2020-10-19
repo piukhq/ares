@@ -71,3 +71,6 @@ const val CARD_NUMBER = "card_number"
 const val ADD_AUTH_BARCODE = "ADD_AUTH_BARCODE"
 
 const val CAMERA_REQUEST_CODE = 101
+
+const val PLAN_ALREADY_EXISTS = "PLAN_ALREADY_LINKED"
+

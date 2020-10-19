@@ -16,6 +16,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
+import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.PENDING_CARD
 import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.SCROLL_DELAY
@@ -27,6 +28,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -43,6 +45,10 @@ class PaymentCardsDetailsFragment :
         get() = R.layout.payment_cards_details_fragment
 
     private var scrollY = 0
+
+    private lateinit var availablePllAdapter: AvailablePllAdapter
+
+    private var planAndPositionPair = mutableListOf<Pair<MembershipPlan?,Int?>>()
 
     private var countDownTimer: CountDownTimer? = null
 
@@ -143,8 +149,6 @@ class PaymentCardsDetailsFragment :
             viewModel.getMembershipCards()
         }
 
-        viewModel.linkError.observeErrorNonNull(requireContext(), true, this)
-
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.getCardError.observeErrorNonNull(requireContext(),false,this)
@@ -209,7 +213,7 @@ class PaymentCardsDetailsFragment :
                     availablePllList.apply {
                         layoutManager = GridLayoutManager(context, 1)
                         viewModel.paymentCard.value?.let {
-                            adapter = AvailablePllAdapter(
+                            availablePllAdapter = AvailablePllAdapter(
                                 it,
                                 plans,
                                 pllCards,
@@ -217,6 +221,8 @@ class PaymentCardsDetailsFragment :
                                 onItemSelected = ::onItemSelected
                             )
                         }
+
+                        adapter = availablePllAdapter
                     }
                     val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
                     for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
@@ -249,6 +255,38 @@ class PaymentCardsDetailsFragment :
                 }
             }
         }
+
+        viewModel.deleteRequest.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this,
+            EMPTY_STRING,
+            getString(R.string.card_error_dialog),
+            true,
+            null
+        )
+
+        viewModel.paymentCard.observeNonNull(this) {
+            binding.paymentCardDetail = it
+
+            viewModel.storePaymentCard(it)
+
+            viewModel.getMembershipCards()
+        }
+
+        viewModel.linkError.observeNonNull(this) {
+            (it.first as HttpException).response()?.errorBody()?.string()?.let { responseString ->
+                if (responseString.contains(PLAN_ALREADY_EXISTS)) {
+                    showLinkErrorMessage(it.second)
+                }
+            }
+
+        }
+
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
     }
 
     private fun setViewState(shouldShowViews: Boolean) {
@@ -262,13 +300,18 @@ class PaymentCardsDetailsFragment :
 
     }
 
-    private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
+    private fun onLinkStatusChange(
+        currentItem: Triple<String?, Boolean, MembershipPlan?>,
+        position: Int?
+    ) {
+        planAndPositionPair.add(Pair(currentItem.third,position))
+
         currentItem.first?.let {
-            runBlocking {
+            currentItem.third?.let { plan ->
                 if (currentItem.second) {
                     viewModel.linkPaymentCard(
                         it,
-                        viewModel.paymentCard.value?.id.toString()
+                        plan.id
                     )
                 } else {
                     viewModel.unlinkPaymentCard(
@@ -287,4 +330,32 @@ class PaymentCardsDetailsFragment :
         )
         directions.let { findNavController().navigateIfAdded(this, directions) }
     }
+
+    private fun showLinkErrorMessage(planId: String) {
+        val membershipPlan = planAndPositionPair.firstOrNull { pair -> pair.first?.id == planId }
+        val planName = membershipPlan?.first?.account?.plan_name ?: ""
+        val planNameCard = membershipPlan?.first?.account?.plan_name_card ?: ""
+        val position = membershipPlan?.second
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.payment_card_link_already_exists_title))
+            .setMessage(
+                getString(
+                    R.string.payment_card_link_already_exists_message,
+                    planName,
+                    planNameCard,
+                    planName,
+                    planNameCard
+                )
+            )
+            .setPositiveButton(
+                getString(R.string.ok)
+            ) { dialog, _ ->
+                position?.let { availablePllAdapter.notifyItemChanged(it) }
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
 }

@@ -15,6 +15,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.NetworkUtils
+import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.isLinkedToMembershipCard
@@ -24,6 +25,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     override val layoutRes: Int
@@ -161,7 +163,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             if (it.size == selectedCards.size) {
                 navigateToLCD()
             } else if (linkFailureCards > 0 && totalCards == selectedCards.size) {
-                showLinkErrorMessage()
+                showLinkErrorMessage(isPlanAlreadyExistsError(viewModel.linkErrors.value))
             }
         }
 
@@ -265,15 +267,36 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             val totalCards = linkSuccessCards + it.size
 
             if (totalCards == selectedCards.size) {
-                showLinkErrorMessage()
+                val shouldShowPlanAlreadyExists =
+                    isPlanAlreadyExistsError(it)
+
+                showLinkErrorMessage(shouldShowPlanAlreadyExists)
             }
         }
     }
 
-    private fun showLinkErrorMessage() {
+    private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {
+        val membershipPlan = viewModel.membershipPlan.value
+        val planName = membershipPlan?.account?.plan_name ?: ""
+        val planNameCard = membershipPlan?.account?.plan_name_card ?: ""
+
+        val title =
+            if (shouldShowPlanAlreadyExists!!) getString(R.string.payment_card_link_already_exists_title) else getString(
+                R.string.pll_error_title
+            )
+        val message =
+            if (shouldShowPlanAlreadyExists) getString(
+                R.string.payment_card_link_already_exists_message,
+                planName,
+                planNameCard,
+                planName,
+                planNameCard
+            ) else getString(
+                R.string.pll_error_message
+            )
         AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.pll_error_title))
-            .setMessage(getString(R.string.pll_error_message))
+            .setTitle(title)
+            .setMessage(message)
             .setPositiveButton(
                 getString(R.string.ok)
             ) { dialog, _ ->
@@ -281,7 +304,14 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 navigateToLCD()
 
             }
+            .setCancelable(false)
             .show()
+    }
+
+    private fun isPlanAlreadyExistsError(it: MutableList<Exception>?): Boolean {
+        val firstException = it?.firstOrNull()
+        return (firstException as HttpException).response()?.errorBody()?.string()
+            ?.contains(PLAN_ALREADY_EXISTS) ?: false
     }
 
     private fun navigateToLCD() {
