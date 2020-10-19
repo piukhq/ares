@@ -53,8 +53,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             navigateToPaymentCardWalletWallet()
         }
 
-        viewModel.paymentCards.observeNonNull(this) {
-        }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->
