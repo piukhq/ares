@@ -61,7 +61,7 @@ class PaymentWalletRepository(
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            generateUuidForPaymentCards(cards, paymentCardDao,membershipCardDao)
+            generateUuidForPaymentCards(cards, paymentCardDao, membershipCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
@@ -110,20 +110,24 @@ class PaymentWalletRepository(
         linkError: MutableLiveData<Exception>,
         paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData()
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val paymentCardResponse =
-                apiService.linkToPaymentCardAsync(membershipCard.id, paymentCard.id.toString())
-            withContext(Dispatchers.Main) {
-                try {
-                    paymentCardMutableLiveData.value = paymentCardResponse
-                    logPatchEvent(paymentCard, membershipCard, paymentCardResponse)
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val paymentCardResponse =
+                    withContext(Dispatchers.IO) {
+                        apiService.linkToPaymentCardAsync(
+                            membershipCard.id,
+                            paymentCard.id.toString()
+                        )
+                    }
+                paymentCardMutableLiveData.value = paymentCardResponse
+                logPatchEvent(paymentCard, membershipCard, paymentCardResponse)
 
 
-                } catch (e: Exception) {
-                    linkError.value = e
-                    logPllFailure(paymentCard, membershipCard,true)
-                }
+            } catch (e: Exception) {
+                linkError.value = e
+                logPllFailure(paymentCard, membershipCard, true)
             }
+
         }
     }
 
@@ -151,7 +155,7 @@ class PaymentWalletRepository(
                     logDeleteEvent(paymentCard, membershipCard)
                 } catch (e: Exception) {
                     unlinkError?.value = e
-                    logPllFailure(paymentCard, membershipCard,false)
+                    logPllFailure(paymentCard, membershipCard, false)
                 }
             }
         }
@@ -185,7 +189,7 @@ class PaymentWalletRepository(
                     } catch (e: Exception) {
                         localErrors.add(e)
                         unlinkErrors.value = localErrors
-                        logPllFailure(card, membershipCard,false)
+                        logPllFailure(card, membershipCard, false)
 
                     }
 
@@ -203,8 +207,8 @@ class PaymentWalletRepository(
     ) {
         val localSuccesses = ArrayList<Any>()
         val localErrors = ArrayList<Exception>()
-        val handler = CoroutineExceptionHandler {
-                _, exception -> logDebug("paymentWalletRepository","Caught $exception")
+        val handler = CoroutineExceptionHandler { _, exception ->
+            logDebug("paymentWalletRepository", "Caught $exception")
         }
         paymentCards.forEach { card ->
             CoroutineScope(Dispatchers.IO).launch(handler) {
@@ -227,7 +231,7 @@ class PaymentWalletRepository(
                     } catch (e: Exception) {
                         localErrors.add(e)
                         linkErrors.value = localErrors
-                        logPllFailure(card, membershipCard,true)
+                        logPllFailure(card, membershipCard, true)
 
                     }
                 }
