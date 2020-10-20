@@ -37,6 +37,13 @@ enum class VoucherStates(
         true,
         R.string.voucher_detail_date_redeemed
     ),
+    CANCELLED(
+        "cancelled",
+        R.string.voucher_stamp_cancelled_title,
+        null,
+        false,
+        null
+    ),
     NONE(
         "none",
         null,

@@ -493,6 +493,7 @@
     <string name="voucher_detail_date_redeemed">Redeemed %s</string>
     <string name="voucher_detail_title_expired">Your %s has expired</string>
     <string name="voucher_detail_text_expired">""</string>
+    <string name="voucher_detail_headline_cancelled">Cancelled</string>
     <string name="voucher_detail_date_expired">Expired %s</string>
     <string name="voucher_detail_date_expires">Expires %s</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
@@ -521,6 +522,7 @@
     <string name="voucher_stamp_redeemed_body">You have redeemed your FREE Whopper</string>
     <string name="voucher_stamp_expired_title">Your voucher has expired</string>
     <string name="voucher_stamp_expired_body">Your FREE Whopper voucher has expired</string>
+    <string name="voucher_stamp_cancelled_title">Your voucher has been cancelled </string>
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>

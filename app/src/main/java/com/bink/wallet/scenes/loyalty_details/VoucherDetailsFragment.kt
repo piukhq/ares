@@ -58,7 +58,7 @@ class VoucherDetailsFragment :
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
-                    if (voucher.state == VoucherStates.EXPIRED.state || voucher.state == VoucherStates.REDEEMED.state) {
+                    if (voucher.state == VoucherStates.EXPIRED.state || voucher.state == VoucherStates.REDEEMED.state || voucher.state == VoucherStates.CANCELLED.state) {
                         binding.code.visibility = View.GONE
 
                     } else {
@@ -126,6 +126,24 @@ class VoucherDetailsFragment :
                                 }
                             )
                         }
+
+                        VoucherStates.CANCELLED.state -> {
+                            setCancelledVoucher(earn, burn)
+                            setVoucherDates(
+                                voucher.date_issued?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_issued,
+                                        dateTimeFormatTransactionTime(it)
+                                    )
+                                },
+                                voucher.expiry_date?.let {
+                                    getString(
+                                        R.string.voucher_detail_date_expired,
+                                        dateTimeFormatTransactionTime(it)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -159,6 +177,7 @@ class VoucherDetailsFragment :
             }
         }
     }
+
 
     private fun setVoucherTitleAndBody(
         title: String? = null,
@@ -280,6 +299,15 @@ class VoucherDetailsFragment :
                 )
             )
         }
+    }
+
+    private fun setCancelledVoucher(earn: Earn, burn: Burn) {
+            if (earn.type == STAMP_VOUCHER_EARN_TYPE){
+                setVoucherTitleAndBody(
+                    getString(R.string.voucher_stamp_cancelled_title),
+                    contentMap[DynamicContentColumn.VOUCHER_CANCELLED_DETAIL.type]
+                )
+            }
     }
 
     private fun setColumnAndValue(contentList: List<Content>?) {
