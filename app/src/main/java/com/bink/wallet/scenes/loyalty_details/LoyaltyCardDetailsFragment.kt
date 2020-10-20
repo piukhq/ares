@@ -72,7 +72,7 @@ class LoyaltyCardDetailsFragment :
         binding.lifecycleOwner = this
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateIfAdded(this, R.id.global_to_home, currentDestination)
+            findNavController().navigateIfAdded(this, LoyaltyCardDetailsFragmentDirections.detailToHome(), currentDestination)
 
         }
 
