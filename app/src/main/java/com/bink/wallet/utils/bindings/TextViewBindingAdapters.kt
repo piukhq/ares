@@ -5,6 +5,7 @@ import androidx.databinding.BindingAdapter
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
+import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.ValueDisplayUtils
 
@@ -47,4 +48,9 @@ fun TextView.setVoucherCollectedProgress(voucherEarn: Earn) {
         voucherEarn.target_value?.toInt(),
         voucherEarn.suffix
     )
+}
+
+@BindingAdapter("voucherHeadline")
+fun TextView.setVoucherHeadline(voucher:Voucher){
+    text = voucher.headline ?: context.getString(R.string.voucher_detail_headline_cancelled)
 }
