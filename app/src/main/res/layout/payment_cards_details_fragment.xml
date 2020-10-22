@@ -1,197 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="paymentCardDetail"
-                type="com.bink.wallet.model.response.payment_card.PaymentCard" />
+            name="paymentCardDetail"
+            type="com.bink.wallet.model.response.payment_card.PaymentCard" />
 
         <variable
-                name="hasAddedPllCards"
-                type="Boolean" />
+            name="hasAddedPllCards"
+            type="Boolean" />
 
         <variable
-                name="shouldDisplayOtherCardsTitleAndDescription"
-                type="Boolean" />
+            name="shouldDisplayOtherCardsTitleAndDescription"
+            type="Boolean" />
 
         <variable
-                name="hasOtherCardsToAdd"
-                type="Boolean" />
+            name="hasOtherCardsToAdd"
+            type="Boolean" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsFragment">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsFragment">
 
         <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
-                android:id="@+id/scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <include
-                        android:id="@+id/payment_header"
-                        layout="@layout/payment_card_wallet_item"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:paymentCard="@{paymentCardDetail}" />
+                    android:id="@+id/payment_header"
+                    layout="@layout/payment_card_wallet_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:paymentCard="@{paymentCardDetail}" />
 
                 <TextView
-                        android:id="@+id/payment_card_details_title"
-                        style="@style/HeaderTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:textColor="@color/black"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/payment_header"
-                        app:paymentCardDetailsTitle="@{hasAddedPllCards}"
+                    android:id="@+id/payment_card_details_title"
+                    style="@style/HeaderTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:textColor="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payment_header"
                     app:paymentCard="@{paymentCardDetail}"
-                        tools:text="@string/payment_card_details_title_text" />
+                    app:paymentCardDetailsTitle="@{hasAddedPllCards}"
+                    tools:text="@string/payment_card_details_title_text" />
 
                 <TextView
-                        android:id="@+id/payment_card_details_description"
-                        style="@style/CustomTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title"
-                        app:paymentCardDetailsSubtitle="@{hasAddedPllCards}"
-                        app:paymentCard="@{paymentCardDetail}"
-                        tools:text="@string/payment_card_details_description_text" />
+                    android:id="@+id/payment_card_details_description"
+                    style="@style/CustomTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title"
+                    app:paymentCard="@{paymentCardDetail}"
+                    app:paymentCardDetailsSubtitle="@{hasAddedPllCards}"
+                    tools:text="@string/payment_card_details_description_text" />
+
+                <TextView
+                    android:id="@+id/payment_card_details_date_added"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:textSize="@dimen/size_body"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/payment_card_details_description"
+                    app:paymentCardAddedDate="@{paymentCardDetail}"
+                    tools:text="Card added: 01 Jan 2020" />
+
+                <View
+                    android:id="@+id/separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_separator_line_height"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
+                    android:background="@color/separator_color"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/footer_security"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payment_card_details_date_added" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/available_pll_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:isVisible="@{hasAddedPllCards}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/payment_card_details_description" />
+                    android:id="@+id/available_pll_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:isVisible="@{hasAddedPllCards}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payment_card_details_description" />
 
                 <com.bink.wallet.FooterItem
-                        android:id="@+id/footer_security"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/other_cards_list"
-                        app:type="security"
-                        tools:layout_editor_absoluteY="409dp">
+                    android:id="@+id/footer_security"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/other_cards_list"
+                    app:layout_goneMarginTop="@dimen/margin_gone_size_large"
+                    app:type="security"
+                    tools:layout_editor_absoluteY="409dp">
 
                 </com.bink.wallet.FooterItem>
 
                 <View
-                        android:id="@+id/security_separator"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_separator_line_height"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                        android:background="@color/separator_color"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toTopOf="@+id/footer_rename"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                    android:id="@+id/security_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_separator_line_height"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    android:background="@color/separator_color"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/footer_rename"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <com.bink.wallet.FooterItem
-                        android:id="@+id/footer_rename"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/footer_security"
-                        app:type="rename" />
+                    android:id="@+id/footer_rename"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_security"
+                    app:type="rename" />
 
                 <View
-                        android:id="@+id/rename_separator"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_separator_line_height"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                        android:background="@color/separator_color"
-                        app:layout_constraintBottom_toTopOf="@+id/footer_delete"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/footer_security" />
+                    android:id="@+id/rename_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_separator_line_height"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    android:background="@color/separator_color"
+                    app:layout_constraintBottom_toTopOf="@+id/footer_delete"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_security" />
 
                 <com.bink.wallet.FooterItem
-                        android:id="@+id/footer_delete"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/footer_rename"
-                        app:type="delete_payment" />
+                    android:id="@+id/footer_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_rename"
+                    app:type="delete_payment" />
 
                 <TextView
-                        android:id="@+id/other_cards_title"
-                        style="@style/HeaderTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        android:text="@string/other_cards_you_can_add_title"
-                        app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/available_pll_list" />
+                    android:id="@+id/other_cards_title"
+                    style="@style/HeaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:text="@string/other_cards_you_can_add_title"
+                    app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/available_pll_list" />
 
                 <TextView
-                        android:id="@+id/other_cards_description"
-                        style="@style/CustomTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_padding_size_medium"
-                        android:layout_marginTop="@dimen/margin_padding_size_small"
-                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                        android:text="@string/other_cards_you_can_add_description"
-                        app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/other_cards_title" />
+                    android:id="@+id/other_cards_description"
+                    style="@style/CustomTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:text="@string/other_cards_you_can_add_description"
+                    android:visibility="gone"
+                    app:isVisible="@{shouldDisplayOtherCardsTitleAndDescription}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/other_cards_title" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/other_cards_list"
-                        isVisible="@{hasOtherCardsToAdd}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_padding_size_medium"
-                        app:layout_constraintEnd_toStartOf="@+id/footer_delete"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/other_cards_description" />
+                    android:id="@+id/other_cards_list"
+                    isVisible="@{hasOtherCardsToAdd}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toStartOf="@+id/footer_delete"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/other_cards_description" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

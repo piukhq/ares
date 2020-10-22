@@ -535,11 +535,27 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
                 paymentCard.status ?: ""
             ) == PENDING_CARD
         ) context.getString(
-            R.string.payment_card_pending_description_text,
-            paymentCard.account?.consents?.get(0)?.timestamp?.let {
-                "Card added: ${DateTimeUtils.dateFormatTimeStamp(it)}"
-            } ?: ""
+            R.string.payment_card_pending_description_text
         ) else context.getString(R.string.payment_card_inactive_description_text)
+    }
+
+}
+
+@BindingAdapter("paymentCardAddedDate")
+fun TextView.setPaymentCardAddedDate(paymentCard: PaymentCard) {
+    if (paymentCard.isCardActive()) {
+        visibility =View.GONE
+    } else {
+        if (PaymentCardUtils.cardStatus(paymentCard.status ?: "") == PENDING_CARD) {
+            visibility = View.VISIBLE
+            text = context.getString(
+                R.string.payment_card_added_date,
+                paymentCard.account?.consents?.get(0)?.timestamp?.let {
+                    DateTimeUtils.dateFormatTimeStamp(it)
+                })
+        } else {
+            visibility = View.GONE
+        }
     }
 
 }
