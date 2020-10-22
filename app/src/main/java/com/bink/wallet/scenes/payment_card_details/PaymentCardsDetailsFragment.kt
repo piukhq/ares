@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -296,6 +295,7 @@ class PaymentCardsDetailsFragment :
             otherCardsTitle.visibility = visibility
             otherCardsDescription.visibility = visibility
             otherCardsList.visibility = visibility
+            separator.visibility = if (shouldShowViews) View.GONE else View.VISIBLE
         }
 
     }
