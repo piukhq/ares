@@ -526,6 +526,9 @@
     <string name="voucher_stamp_expired_title">Your voucher has expired</string>
     <string name="voucher_stamp_expired_body">Your FREE Whopper voucher has expired</string>
     <string name="voucher_stamp_cancelled_title">Your voucher has been cancelled </string>
+    <string name="voucher_stamp_in_progress_headline">%s to go!</string>
+    <string name="voucher_accumulator_in_progress_headline">%s left to go!</string>
+
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>
