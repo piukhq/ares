@@ -52,7 +52,7 @@ class PaymentWalletRepository(
         }
     }
 
-    suspend fun getPaymentCard(id:String):PaymentCard{
+    suspend fun getPaymentCard(id: String): PaymentCard {
         return apiService.getPaymentCardAsync(id)
     }
 
@@ -62,6 +62,21 @@ class PaymentWalletRepository(
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+
+            val cardIdsInDb = paymentCardDao.getAllAsync().map { card -> card.id }
+            val idsFromApi = cards.map { cardsFromApi -> cardsFromApi.id }
+
+            // List if id's which are in the database but not in the api data.
+            val difference = idsFromApi?.let { cardIdsInDb.minus(it) }
+            difference?.let {
+                if (it.isNotEmpty()) {
+                    it.forEach { cardId ->
+                        withContext(Dispatchers.IO) {
+                            paymentCardDao.deletePaymentCardById(cardId.toString())
+                        }
+                    }
+                }
+            }
             generateUuidForPaymentCards(cards, paymentCardDao, membershipCardDao)
             withContext(Dispatchers.Main) {
                 try {
@@ -126,7 +141,7 @@ class PaymentWalletRepository(
 
 
             } catch (e: Exception) {
-                linkError.value = Pair(e,membershipPlanId)
+                linkError.value = Pair(e, membershipPlanId)
                 logPllFailure(paymentCard, membershipCard, true)
             }
 
