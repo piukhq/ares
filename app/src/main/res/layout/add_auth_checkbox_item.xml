@@ -33,7 +33,6 @@
                 android:textColor="@color/cool_grey"
                 android:textColorLink="@color/blue_accent"
                 android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintBottom_toBottomOf="@+id/content_add_auth_checkbox"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/content_add_auth_checkbox"
                 app:layout_constraintTop_toTopOf="@+id/content_add_auth_checkbox"

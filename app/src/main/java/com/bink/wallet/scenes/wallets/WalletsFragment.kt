@@ -53,9 +53,6 @@ class WalletsFragment : BaseFragment<WalletsViewModel, WalletsFragmentBinding>()
             navigateToPaymentCardWalletWallet()
         }
 
-        viewModel.paymentCards.observeNonNull(this) {
-            SharedPreferenceManager.isPaymentEmpty = it.isNullOrEmpty()
-        }
 
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             viewModel.membershipCardData.observeNonNull(this) { cards ->

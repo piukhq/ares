@@ -43,6 +43,7 @@ class PaymentWalletRepository(
                     storePaymentsCards(response, fetchError)
 
                     SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
+                    SharedPreferenceManager.isPaymentEmpty = response.isNullOrEmpty()
 
                     paymentCards.value = response.toMutableList()
                 } catch (e: Exception) {
