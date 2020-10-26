@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="plan"
+            type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/main_layout"
+        style="@style/ShadowedCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:cardBackgroundColor="@color/white"
+        app:cardUseCompatPadding="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_height"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/company_logo"
+                android:layout_width="@dimen/margin_padding_size_extra_large"
+                android:layout_height="@dimen/margin_padding_size_extra_large"
+                android:layout_marginStart="@dimen/loyalty_value_margin_end"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                app:imageUrl="@{plan}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"
+                tools:src="@tools:sample/avatars" />
+
+            <com.bink.wallet.CardView
+                android:id="@+id/card_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_padding_size_triple_small"
+                app:cardCornerRadius="@dimen/margin_padding_size_triple_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/company_logo"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@color/black" />
+
+            <TextView
+                android:id="@+id/company_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/add_button_size"
+                android:fontFamily="@font/nunito_sans_extrabold"
+                android:text="@{plan.account.company_name}"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/size_medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/card_view"
+                app:layout_constraintTop_toTopOf="@+id/card_view"
+                tools:text="Harvey Nichols" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/value_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/loyalty_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/size_medium"
+                    app:layout_constraintBottom_toTopOf="@+id/loyalty_value_extra"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/loyalty_value_extra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/size_body"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/loyalty_value"
+                    tools:text="Points" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/card_login"
+                android:layout_width="@dimen/card_login_width"
+                android:layout_height="@dimen/card_login_height"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:layout_marginEnd="@dimen/margin_padding_size_small"
+                android:src="@drawable/ic_login"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/link_status_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/link_status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_semibold"
+                    android:gravity="end"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="@dimen/size_body_medium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/link_status_linked" />
+
+                <ImageView
+                    android:id="@+id/link_status_img"
+                    android:layout_width="@dimen/margin_padding_size_medium"
+                    android:layout_height="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_extra_small"
+                    app:layout_constraintStart_toEndOf="@id/link_status_text"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/ic_linked" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

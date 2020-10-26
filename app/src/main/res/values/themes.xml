@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
+        <item name="actionOverflowButtonStyle">@style/ActionButtonOverflow</item>
+        <item name="android:statusBarColor" tools:targetApi="m">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="colorControlNormal">@color/grey_10</item>
+        <item name="colorControlActivated">@color/grey_10</item>
+        <item name="colorControlHighlight">@color/grey_10</item>
+        <item name="android:fontFamily">@font/nunitosans</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="TextViewStyle" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textAppearance">@style/DefaultTextAppearance</item>
+    </style>
+
+    <style name="DefaultTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textStyle">normal</item>
+        <item name="fontFamily">@font/nunitosans</item>
+    </style>
+
+    <style name="BinkZendeskTheme" parent="Theme.MaterialComponents.Light">
+        <!-- todo; In the future when we implement Zendesk as a real feature, we can modify the colours here -->
+        <item name="colorPrimary">#000</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">#000</item>
+    </style>
+
+</resources>

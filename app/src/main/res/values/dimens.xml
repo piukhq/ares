@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Margins & Padding -->
+    <dimen name="margin_padding_size_really_small">2dp</dimen>
+    <dimen name="margin_padding_size_extra_small">4dp</dimen>
+    <dimen name="margin_padding_size_small">8dp</dimen>
+    <dimen name="margin_padding_size_small_medium">14dp</dimen>
+    <dimen name="margin_padding_size_medium">16dp</dimen>
+    <dimen name="margin_padding_size_medium_large">24dp</dimen>
+    <dimen name="margin_padding_size_triple_small">24dp</dimen>
+    <dimen name="margin_padding_size_large">32dp</dimen>
+    <dimen name="margin_padding_size_extra_large">64dp</dimen>
+    <dimen name="item_separator_line_height">1dp</dimen>
+    <dimen name="button_horizontal_margin">50dp</dimen>
+    <dimen name="button_vertical_margin_size_large">68dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="notification_oval_padding">20dp</dimen>
+
+    <!-- Card Item -->
+    <dimen name="card_height">112dp</dimen>
+    <dimen name="loyalty_value_margin_end">18dp</dimen>
+    <dimen name="loyalty_voucher_margin">20dp</dimen>
+    <dimen name="loyalty_voucher_progress_height">14dp</dimen>
+    <dimen name="card_login_width">80dp</dimen>
+    <dimen name="card_login_height">28dp</dimen>
+    <dimen name="card_login_margin_end">12dp</dimen>
+    <dimen name="link_status_wrapper_margin_end">18dp</dimen>
+    <dimen name="delete_icon_size">36dp</dimen>
+    <dimen name="delete_icon_padding">7dp</dimen>
+    <dimen name="card_item_linear_layout_margin">36dp</dimen>
+    <dimen name="loyalty_card_corner_radius">10dp</dimen>
+    <dimen name="voucher_card_bar_bottom_margin">10dp</dimen>
+    <dimen name="voucher_card_margin_bottom">24dp</dimen>
+    <dimen name="voucher_code_margin_top">12dp</dimen>
+
+    <!-- Barcode Screen -->
+    <dimen name="button_margin_start">48dp</dimen>
+    <dimen name="button_margin_end">@dimen/button_margin_start</dimen>
+    <dimen name="button_margin_bottom">68dp</dimen>
+    <dimen name="barcode_height">82dp</dimen>
+    <dimen name="barcode_margin_top">36dp</dimen>
+    <dimen name="label_margin_top">68dp</dimen>
+    <dimen name="number_margin_top">4dp</dimen>
+    <dimen name="description_margin_top">24dp</dimen>
+    <dimen name="date_margin_top">12dp</dimen>
+    <dimen name="title_margin">8dp</dimen>
+
+    <!-- Browse Brands Screen -->
+    <dimen name="browse_brands_search_bar_height">42dp</dimen>
+    <dimen name="browse_brands_list_item_height">88dp</dimen>
+    <dimen name="browse_brands_in_wallet_icon_padding">8dp</dimen>
+    <dimen name="browse_brands_search_input_padding_end">42dp</dimen>
+    <dimen name="browse_brands_search_bar_elevation">4dp</dimen>
+
+    <!-- Add Screen -->
+    <dimen name="add_card_margin">20dp</dimen>
+    <dimen name="add_card_margin_end">12dp</dimen>
+    <dimen name="shadowed_card_elevation">6dp</dimen>
+
+    <!-- Add Join Screen -->
+    <dimen name="logo_height">98dp</dimen>
+    <dimen name="title_image_size">32dp</dimen>
+    <dimen name="button_margin">48dp</dimen>
+    <dimen name="add_card_corner_radius">12dp</dimen>
+    <dimen name="add_card_elevation">2dp</dimen>
+
+    <!-- Brand Header -->
+    <dimen name="brand_image_height">98dp</dimen>
+
+    <dimen name="bottom_navigation_icon_size" tools:override="true">30dp</dimen>
+    <dimen name="add_button_size">42dp</dimen>
+    <dimen name="centered_title_margin_top" tools:ignore="PxUsage">24.0px</dimen>
+
+    <!-- Loyalty BankCard Details Screen -->
+    <dimen name="loyalty_details_brand_image_height">204dp</dimen>
+    <dimen name="background_height">164dp</dimen>
+    <dimen name="loyalty_details_margin_top">32dp</dimen>
+    <dimen name="linked_icon_margin_end">@dimen/card_height</dimen>
+    <dimen name="active_icon_margin_start">24dp</dimen>
+    <dimen name="footer_margin_bottom">24dp</dimen>
+    <dimen name="tile_dimension">328dp</dimen>
+    <dimen name="cta_margin_bottom">40dp</dimen>
+
+    <!-- Maximised Barcode -->
+    <dimen name="barcode_side_margin">98dp</dimen>
+    <dimen name="barcode_top_margin">24dp</dimen>
+    <dimen name="maximized_barcode_height">124dp</dimen>
+    <dimen name="text_size_title_large">21.7sp</dimen>
+    <dimen name="text_size_title_big">25sp</dimen>
+    <dimen name="text_size_description_big">18sp</dimen>
+    <dimen name="custom_margin_add_fragment">24dp</dimen>
+    <dimen name="add_custom_image_size">44dp</dimen>
+    <dimen name="text_size_description_smaller">14sp</dimen>
+    <dimen name="text_size_description_medium">15sp</dimen>
+    <dimen name="text_size_description_medium_bigger">16.2sp</dimen>
+    <dimen name="text_size_description_biggest">25sp</dimen>
+    <dimen name="custom_add_fragment_image_size">31dp</dimen>
+    <dimen name="add_card_size">150dp</dimen>
+    <dimen name="cancel_button_size">54dp</dimen>
+    <dimen name="brand_logo_size">50dp</dimen>
+    <dimen name="custom_text_card_margin">30dp</dimen>
+    <dimen name="custom_login_image_size">89dp</dimen>
+
+    <!--Add Auth Screen -->
+    <dimen name="margin_large">64dp</dimen>
+    <dimen name="auth_add_button_margin_bottom">8dp</dimen>
+
+    <!--Pll Screen -->
+    <dimen name="title_margin_top">@dimen/margin_padding_size_medium_large</dimen>
+    <dimen name="toggle_width">42dp</dimen>
+    <dimen name="pll_done_button_margin_horizontal">48dp</dimen>
+
+    <!--T&C Screen -->
+    <dimen name="bottom_layout_height">160dp</dimen>
+    <dimen name="horizontal_button_padding">100dp</dimen>
+
+    <!-- PCD Screen -->
+    <dimen name="payment_card_height">120dp</dimen>
+    <dimen name="payment_card_logo_image_margin">20dp</dimen>
+    <dimen name="payment_card_number_top_margin">54dp</dimen>
+    <dimen name="payment_card_spacing_margin">16dp</dimen>
+    <dimen name="add_card_button_width">82dp</dimen>
+    <dimen name="add_card_button_height">28dp</dimen>
+    <dimen name="link_icon_size">14.4dp</dimen>
+    <dimen name="loyalty_margins_vertical">30dp</dimen>
+    <dimen name="page_height">320dp</dimen>
+
+    <!-- Onboarding -->
+    <dimen name="buttons_margin">48dp</dimen>
+    <dimen name="image_suggested_pll_size">60dp</dimen>
+    <dimen name="page_image_height">200dp</dimen>
+    <dimen name="separator_height">1dp</dimen>
+    <dimen name="facebook_button_elevation">4dp</dimen>
+
+    <!-- Login Screen -->
+    <dimen name="gradient_button_margin">52dp</dimen>
+    <dimen name="loyalty_card_margin_horizontal">8dp</dimen>
+    <dimen name="add_card_margin_horizontal">8dp</dimen>
+    <dimen name="continue_button_margin">52dp</dimen>
+    <dimen name="login_button_margin_bottom">64dp</dimen>
+    <dimen name="login_button_width">260dp</dimen>
+    <dimen name="list_margin">64dp</dimen>
+
+    <!-- PLR -->
+    <dimen name="voucher_padding_top">12dp</dimen>
+    <dimen name="voucher_padding_bottom">12dp</dimen>
+    <dimen name="voucher_subtitle_top">-2dp</dimen>
+    <dimen name="voucher_subtitle_bottom">10dp</dimen>
+    <dimen name="voucher_date_top">18dp</dimen>
+    <dimen name="voucher_code_bottom">24dp</dimen>
+    <dimen name="voucher_corner_radius">8dp</dimen>
+    <dimen name="voucher_details_card_padding_bottom">40dp</dimen>
+    <dimen name="voucher_details_code_padding_bottom">32dp</dimen>
+    <dimen name="voucher_details_first_date_margin_top">12dp</dimen>
+    <dimen name="voucher_stamp_size">24dp</dimen>
+    <dimen name="voucher_stamp_margin_horizontal">13dp</dimen>
+    <dimen name="voucher_stamp_margin_bottom_horizontal">13dp</dimen>
+    <dimen name="voucher_stamp_width">7dp</dimen>
+
+    <!-- LCD -->
+    <dimen name="layout_elevation">5dp</dimen>
+    <dimen name="loyalty_card_details_header_min_height">236dp</dimen>
+    <dimen name="loyalty_card_header_placeholder_text_margin_horizontal">16dp</dimen>
+    <dimen name="loyalty_card_header_placeholder_text_margin_vertical">16dp</dimen>
+    <dimen name="loyalty_card_header_corner_radius">12dp</dimen>
+    <dimen name="burger_king_stamp_size">24dp</dimen>
+    <dimen name="burger_king_stamp_margin_horizontal">12dp</dimen>
+    <dimen name="loyalty_card_details_module_radius">4dp</dimen>
+
+    <!-- Generic Views -->
+    <dimen name="generic_view_button_height">48dp</dimen>
+    <dimen name="toolbar_title_text_size">18sp</dimen>
+
+    <!-- PLL Screen -->
+    <dimen name="pll_screen_default_fade_view_height">1dp</dimen>
+    <dimen name="browse_brands_filter_width">164dp</dimen>
+    <dimen name="browse_brands_filter_height">40dp</dimen>
+    <dimen name="footer_default_fade_view_height">1dp</dimen>
+
+    <!--Add card screen-->
+    <dimen name="border_length">10dp</dimen>
+    <dimen name="outer_border_size">10dp</dimen>
+    <dimen name="outer_border_radius">10dp</dimen>
+    <dimen name="camera_top_offset">20dp</dimen>
+    <dimen name="border_offset">12dp</dimen>
+    <dimen name="corner_radius">0dp</dimen>
+
+    <!-- BinkWebView -->
+    <dimen name="web_view_back_button_margin_horizontal">4dp</dimen>
+
+</resources>

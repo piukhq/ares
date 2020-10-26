@@ -1,3 +1,555 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">binkapp</string>
+    <string name="ok">OK</string>
+
+    <string name="add_button_description">Add button</string>
+
+    <string name="missing_destination_dialog_title">Missing destination</string>
+    <string name="not_implemented_yet_text">Not implemented yet</string>
+
+    <string name="bink_version">Version: \(%1$s), build: \(%2$s)</string>
+
+    <string name="delete_text">Delete</string>
+    <string name="barcode_text">Barcode</string>
+    <string name="barcode_label">Barcode:</string>
+    <string name="loyalty_wallet_dialog_title">Are you sure you want to delete this card?</string>
+    <string name="loyalty_wallet_dialog_description">Delete card was canceled</string>
+    <string name="loyalty_wallet_no_barcode_title">No Barcode</string>
+    <string name="loyalty_wallet_no_barcode_message">No barcode or card number to display. Please check the status of this card.</string>
+    <string name="yes_text">YES</string>
+    <string name="no_text">NO</string>
+    <string name="cancel_text_upper">CANCEL</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="root">root</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="error">Error</string>
+    <string name="card_number_description">Show this card number in-store just like you would a physical loyalty card.</string>
+    <string name="tap_card_to_show_barcode">Tap card to show barcode</string>
+    <string name="no_barcode_displayed">This barcode cannot be displayed</string>
+
+    <!-- Error -->
+    <string name="error_title">@string/error</string>
+    <string name="error_data_retrieval">Could not retrieve server error. Please try again.</string>
+    <string name="error_server_down_title">Error</string>
+    <string name="error_server_down_message">There was a problem communicating with the server. Please try again later.</string>
+
+    <!-- Barcode Screen -->
+    <string name="barcode_maximize">Maximise barcode</string>
+    <string name="barcode_description">Scan this barcode at the store, just like you would a physical loyalty card. Bear in mind that some scanners cannot read from screens.</string>
+    <string name="barcode_mock_date">Added 15 Jun 2019 16:39:17</string>
+    <string name="barcode_card_number">Card number:</string>
+    <string name="barcode_unavailable">There is no barcode available for the current Membership Card.</string>
+    <string name="card_status_pending">Pending</string>
+    <string name="card_status_retry">Retry</string>
+    <string name="link_status_cannot_link">Cannot link</string>
+    <string name="plan_name_card_extra"><![CDATA[info >]]></string>
+
+    <!--Browse Brands -->
+    <string name="browse_brands">Browse Brands</string>
+    <string name="filter">Filters</string>
+    <string name="search">Search</string>
+    <string name="browse_brands_no_match_label_text">No matches</string>
+
+    <!-- Add Join -->
+    <string name="add_join_screen_reward_info">Rewards info ></string>
+    <string name="add_join_inactive_view_description">You cannot see your live points balance and transaction history
+        for this card in Bink.
+    </string>
+    <string name="add_join_inactive_link_description">You cannot link this card to your payment cards yet.</string>
+    <string name="add_join_active_link_description">You can link this card to your bank cards and automatically collect
+        points when you pay.
+    </string>
+    <string name="add_join_link_title">Link</string>
+    <string name="add_join__inactive_view_description">You can see your live points balance and transactions history for
+        this card in Bink.
+    </string>
+    <string name="add_join_view_title">View</string>
+    <string name="add_join_store_description">You can add this card to Bink and show the onscreen barcode at the till to
+        collect points.
+    </string>
+    <string name="add_join_store_title">Store</string>
+    <string name="add_join_add_card">Add my card</string>
+    <string name="add_join_get_new_card">Get a new card</string>
+    <string name="add_payment_card">Add payment card</string>
+    <string name="scan_and_link_your_payment_card">Scan and link your payment card</string>
+    <string name="browse_brands_text">Browse brands</string>
+    <string name="scan_a_card_you_already_have">Scan a card you already have</string>
+    <string name="add_loyalty_card">Add loyalty card</string>
+    <string name="find_and_join_loyalty_schemes">Find and join loyalty schemes</string>
+    <string name="add_payment_card_button_description">Scan and link your payment card</string>
+    <string name="error_scheme_already_exists">Scheme Account already exists in another wallet.</string>
+
+    <!-- Brand Header -->
+    <string name="loyalty_info"> %1$s info &gt;</string>
+    <string name="plan_description">Plan Description</string>
+    <string name="button_text_log_in">Log in</string>
+
+    <!-- Loyalty Card Details -->
+    <string name="view_history">View history</string>
+    <string name="about_membership">About membership</string>
+    <string name="about_membership_title_template">About %s</string>
+    <string name="about_membership_plan_name">About %1$s</string>
+    <string name="about_membership_plan">About %1$s</string>
+    <string name="learn_more">Learn more about how it works</string>
+    <string name="chevron">&gt;</string>
+    <string name="security_privacy">Security and privacy</string>
+    <string name="how_we_protect">How we protect your data</string>
+    <string name="delete_card">Delete this card</string>
+    <string name="delete_card_plan">Delete %1$s</string>
+    <string name="delete_card_ending"> this card</string>
+    <string name="remove_card">Remove this card from Bink</string>
+    <string name="tap_card">Tap card to show barcode</string>
+    <string name="tap_card_to_show_card_number">Tap to show card number</string>
+    <string name="security_modal_title">Is my Data Secure?</string>
+    <string name="security_modal_body_1">We take security very seriously and keeping your personal details safe is very important to us.\n</string>
+    <string name="security_modal_body_2">We are a PCI certified service provider which means that we meet the highest level of security standards set by the payment card industry. This certification requires us to employ a wide range of measures designed to protect the security of your information. We recommend that you secure your app with Touch ID and/or a passcode for an extra layer of security.\n</string>
+    <string name="security_modal_body_3">We carefully check all the parties who we share your personal information with. To find out more you can see our Privacy Policy here.</string>
+    <string name="hyperlink_text">here</string>
+    <string name="security_modal_body">%1$s%2$s</string>
+    <string name="delete_card_modal_body">Are you sure you want to delete this card?</string>
+    <string name="no_plan_description_available">No plan description available</string>
+    <string name="loyalty_card_linked">Linked</string>
+    <string name="loyalty_card_unlinked">Not linked</string>
+    <string name="loyalty_card_pll_linked">Linked</string>
+    <string name="loyalty_card_pll_link_now">Link now</string>
+    <string name="loyalty_card_pll_retry">Retry</string>
+    <string name="loyalty_card_pll_pending">Pending</string>
+    <string name="loyalty_card_delete_error_message">We encountered an error. Please try again later.</string>
+    <string name="loyalty_card_details_register">Register</string>
+    <string name="loyalty_card_details_header_placeholder_text">%s Membership Card</string>
+
+    <!-- 1.1 -->
+    <string name="points_prefix_or_suffix">%1$s %2$s</string>
+    <string name="points_prefix_and_suffix">%1$s%2$s%3$s</string>
+    <!-- 1.2 -->
+    <string name="description_last_checked">Last checked %1$s %2$s ago</string>
+    <!-- 1.3 -->
+    <string name="points_login">Log in</string>
+    <string name="points_login_account_exists">Account exists</string>
+    <string name="description_see_history">To see history</string>
+    <string name="points_login_description">Log in</string>
+    <!-- 1.5 -->
+    <string name="points_history">Points history</string>
+    <string name="history_text">History</string>
+    <string name="description_not_available">Not available</string>
+    <!-- 1.6 -->
+    <string name="points_retry_login">Retry login</string>
+    <string name="description_retry_login">To see history</string>
+
+    <!-- 1.7 -->
+    <string name="points_pending">Pending</string>
+    <string name="description_please_wait">Please wait</string>
+    <!-- 1.8 -->
+    <string name="points_sign_up_failed">Sign up failed</string>
+    <string name="description_please_try_again">Please try again</string>
+    <!-- 1.9 -->
+    <string name="points_signing_up">Signing up</string>
+    <!-- 1.10 -->
+    <string name="points_registration_failed">Registration fail</string>
+    <!-- 1.11 -->
+    <string name="points_registering_card">Registering card</string>
+    <!--1.15-->
+    <string name="points_earning">Earning</string>
+    <string name="points_view_history">View history</string>
+
+    <!-- 2.1 -->
+    <string name="link_status_linked">Linked</string>
+    <plurals name="description_linked">
+        <item quantity="one">To %1$d of %2$d card</item>
+        <item quantity="other">To %1$d of %2$d cards</item>
+    </plurals>
+    <!-- 2.2 -->
+    <string name="link_status_linkable_no_cards">Link</string>
+    <string name="description_no_cards">To payment cards</string>
+    <!-- 2.4 -->
+    <string name="link_status_link_error">Link error</string>
+    <string name="description_error">Error</string>
+    <!-- 2.5 -->
+    <string name="link_status_requires_auth">Log in</string>
+    <string name="description_requires_auth">To link to cards</string>
+    <!-- 2.6 -->
+    <string name="link_status_requires_auth_pending">Pending</string>
+    <string name="description_requires_auth_pending">Please wait</string>
+    <!-- 2.7 -->
+    <string name="link_status_auth_failed">@string/error</string>
+    <string name="description_auth_failed">Please try again</string>
+    <!-- 2.8 -->
+    <string name="link_status_unlinkable">Linking</string>
+    <string name="description_unlinkable">Not available</string>
+
+    <!-- PLL empty -->
+    <string name="link_payment_cards">Link to payment cards</string>
+    <string name="link_payment_card_description_part_1">You have not added any payment cards yet.</string>
+    <string name="link_payment_card_description_part_2">Add them to link to this card and others.</string>
+    <string name="done_button">Done</string>
+    <string name="add_payment_cards">Add payment cards</string>
+    <string name="arrow_left">&#9664;</string>
+    <string name="up_arrow">&#9650;</string>
+    <string name="arrow_down">▼</string>
+    <string name="recent_history_text">Your recent transaction history.</string>
+    <string name="right_arrow">></string>
+    <string name="transaction_not_supported_title">Transaction history not supported.</string>
+    <string name="transaction_not_supported_description"> %1$s does not support displaying your transaction history in the Bink app.\nYou can view your history and balance on the merchant’s website.</string>
+    <string name="log_in_pending">Log in pending</string>
+    <string name="transaction_history_not_supported">Transaction history not supported.</string>
+    <string name="sign_up_pending">Sign up pending</string>
+    <string name="register_gc_pending">Register GC pending</string>
+    <string name="description_login_unavailable"> Text explaining to the user: \n - that points are not supported for this brand yet \n - that history is not supported for this brand yet</string>
+    <string name="description_text"> "  Text explaining to the user that it sometimes takes a while to log in with the merchant.\n   In the meantime they should not attempt to log in again, but they can use their card and receive their benefits as usual.\n   After the log in they will be able to see their points balance." </string>
+    <string name="no_internet_connection_dialog_message">You are currently offline. This action cannot be performed whilst offline. Please check your internet connection and try again.</string>
+    <string name="delete_and_update_card_internet_connection_error_message">You are currently offline. This action cannot be performed whilst offline.\nPlease check your internet connection and try again.</string>
+    <string name="pll_error_title">Error</string>
+    <string name="pll_error_message">Unfortunately some of your cards failed to link, please try again later.</string>
+
+    <string name="add_card_error_title">Cannot add card</string>
+    <string name="add_card_error_message">Please try again!</string>
+    <string name="sign_up_text">Sign up</string>
+    <string name="sign_up_new_card_text">a new card</string>
+    <string name="log_in_text">Log in</string>
+    <string name="log_in_transaction_available">You can log in to your %1$s account to see your points balance and transaction history. This is optional.</string>
+    <string name="log_in_transaction_unavailable">You can log in to your %1$s account to see your points balance. This is optional.</string>
+    <string name="temporary_log_in_screen_title">Welcome to splash page</string>
+    <string name="login_screen_temporary_text">Login screen</string>
+    <string name="brand_list_item_description">Can be linked to your payment cards</string>
+    <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
+    <string name="add_auth_error_message">Invalid %1$s</string>
+    <string name="pll_text">PLL</string>
+    <string name="pll_title">Payment Linked Loyalty</string>
+    <string name="all_text">All</string>
+
+    <!-- LCD Error Screen -->
+    <!-- 1.2 -->
+    <string name="title_1_2">Transaction history unavailable</string>
+    <string name="description_1_2">We are unable to currently show the transaction history for this loyalty scheme yet\n Your %1$s history is not available yet.</string>
+    <!-- 1.7, 1.9, 1.11 replacement -->
+    <string name="title_lcd_pending">Request pending</string>
+    <string name="description_lcd_pending">Please wait while we work with the merchant to set up your card. This shouldn\'t take long.</string>
+    <!-- 1.5 -->
+    <string name="title_1_5">Transaction history not supported</string>
+    <string name="description_1_5_part_1">%1$s does not support displaying your transaction history in the Bink app.</string>
+    <string name="description_1_5_part_2"> You can view your history and balance on the merchant’s website.</string>
+
+    <!-- 2.4 -->
+    <string name="title_2_4">Error</string>
+    <string name="description_2_4">Status: %1$s\nError codes: %2$s</string>
+    <!-- 2.7 -->
+    <string name="title_2_7">Log in failed</string>
+    <!-- 2.8 -->
+    <string name="title_2_8">Payment Linked Loyalty unavailable</string>
+    <string name="description_2_8_1">Payment Linked Loyalty (PLL) allows customers\' payment cards to be securely linked to loyalty programmes, enabling every customer to be identified and rewarded every time they shop.</string>
+    <string name="description_2_8_2">This is currently not available for this merchant.</string>
+
+    <!-- Transaction Screen -->
+    <string name="transactions_prefix">%1$s %2$s%3$s</string>
+    <string name="transactions_suffix">%1$s%2$s %3$s</string>
+    <string name="sign_up_enrol">Sign up for %s</string>
+    <string name="register_ghost_card_title">Register your card</string>
+    <string name="register_ghost_card_button">Register card</string>
+    <string name="enrol_description">Fill out the form below to get a new %1$s, and start collecting rewards.</string>
+    <string name="add_auth_description">Please enter your %1$s details below to add this card to your wallet.</string>
+    <string name="login_description">You can log in to your %1$s account to view your %2$s details.</string>
+    <string name="points_history_not_available_title">Transaction history not supported</string>
+    <string name="points_history_not_available_description">Your %s history is not available yet</string>
+    <string name="no_transaction_history_yet">We are unable to currently show the transaction history for this loyalty scheme yet</string>
+
+    <!-- Pll Screen -->
+    <string name="pll_description">The payment cards below will be linked to your %s. Simply pay with them to collect points.</string>
+    <string name="pll_linked_title">Link to payment cards</string>
+    <string name="pll_unlinked_title">Add card</string>
+    <string name="pll_last_digits">Card ending in %1$s</string>
+
+    <!-- T&C Screen -->
+    <string name="terms_and_conditions_text">I authorise Mastercard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction, and for Mastercard, Visa and American Express to share such transaction details with Bink to enable my card-linked offer(s) and target offers that may be of interest to me.</string>
+    <string name="terms_and_conditions_second_paragraph_prefix">For information about Bink’s privacy practices please see Bink’s&#160;</string>
+    <string name="terms_and_conditions_second_paragraph_privacy_policy">Privacy Policy</string>
+    <string name="terms_and_conditions_second_paragraph_suffix">.&#160;You may opt-out of transaction monitoring on the payment card(s) you entered at any time by deleting your payment card from your Bink wallet.</string>
+    <string name="terms_and_conditions_title">Terms and conditions</string>
+    <string name="accept_button_text">I accept</string>
+    <string name="decline_button_text">I decline</string>
+    <string name="popular_text">Popular</string>
+
+    <!-- Settings screen -->
+    <string name="settings">Settings</string>
+    <string name="settings_menu_account">Account</string>
+    <string name="settings_menu_log_out">Log out</string>
+    <string name="settings_menu_support_and_feedback">Support and feedback</string>
+    <string name="settings_menu_faqs">FAQs</string>
+    <string name="settings_menu_faqs_subtitle">Frequently asked questions</string>
+    <string name="settings_menu_contact_us">Contact us</string>
+    <string name="settings_menu_contact_us_subtitle">Get in touch with Bink</string>
+    <string name="settings_menu_rate_this_app">Rate this app</string>
+    <string name="settings_menu_about">About</string>
+    <string name="settings_menu_security_and_privacy">Security and privacy</string>
+    <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
+    <string name="settings_menu_how_it_works">How it works</string>
+    <string name="settings_menu_how_it_works_subtitle">Find out more about Bink</string>
+    <string name="settings_menu_legal">Legal</string>
+    <string name="settings_menu_privacy_policy">Privacy policy</string>
+    <string name="settings_menu_terms_and_conditions">Terms and conditions</string>
+    <string name="settings_menu_debug">Debug menu</string>
+    <string name="settings_menu_debug_colour_swatches">Wallet Colour Swatches</string>
+    <string name="edit_email_address">Edit Email Address</string>
+    <string name="edit_email_description">This will overwrite the current logged\nin email address and reboot the app.</string>
+    <string name="please_enter_valid_email">Please enter a valid email address</string>
+    <string name="play_store_market_url">market://details?id=%1$s</string>
+    <string name="play_store_browser_url">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="faq_url">"https://help.bink.com"</string>
+    <string name="ts_and_cs_url">https://bink.com/terms-and-conditions/</string>
+    <string name="privacy_policy_url">https://bink.com/privacy-policy/</string>
+    <string name="contact_us_mailto">mailto:</string>
+    <string name="contact_us_email_address">support@bink.com</string>
+    <string name="contact_us_email_subject">Bink App Support</string>
+    <string name="contact_us_email_message">\n\n\n\nThe below information will help us with your query, please don\'t change it.\nBink ID: %1$s\nVersion: %2$s (%3$s)\nAndroid OS Version: %4$s (%5$s)</string>
+    <string name="contact_us_no_email_title">No email app installed</string>
+    <string name="contact_us_no_email_message">No Mail accounts set up, please email us directly: support@bink.com.</string>
+    <string name="contact_us_select_email_client" tools:ignore="TypographyEllipsis">Choose Email Client...</string>
+    <string name="settings_build_version">Bink v%1$s %2$d</string>
+
+    <!-- Debug Menu -->
+    <string name="debug_current_version_title">Current version</string>
+    <string name="debug_current_version_content">%s build %d</string>
+    <string name="debug_environment_base_url_title">Environment Base URL</string>
+    <string name="debug_backend_version">Backend Version</string>
+    <string name="debug_environment_open_zendesk_title">Launch Zendesk</string>
+    <string name="debug_backend_colour_swatches">Loyalty card secondary colour swatches</string>
+    <string name="debug_current_email_address">Current email address</string>
+    <string name="apply_changes">Apply changes</string>
+    <string name="no_changes_to_apply">No changes to apply</string>
+    <string name="select_something_message">Select something in order to restart</string>
+    <string name="custom_base_url_hint">Enter base url</string>
+
+    <string name="security_and_privacy_title">Security and privacy</string>
+    <string name="security_and_privacy_copy">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.</string>
+    <string name="security_and_privacy_copy_2">Bink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
+    <string name="how_it_works_title">How it works</string>
+    <string name="how_it_works_copy">Bink is the only app where you can store and view all your loyalty programmes on your mobile, and link your everyday payment cards to automatically collect points and rewards.\nThrough our unique technology platform, Payment Linked Loyalty, you can use your everyday payment cards to automatically collect rewards. Using Bink, you will never miss rewards opportunities from your favourite brands again.</string>
+
+    <!-- Native Join Unavailable-->
+    <string name="native_join_unavailable_title">Sign up not supported</string>
+    <string name="native_join_unavailable_text_part_1">%1$s does not support signing up for a new loyalty account via the Bink app.</string>
+    <string name="native_join_unavailable_text_part_2">Please go to the merchant’s website to sign up for a card, then return to the Bink app and add your new card details.</string>
+    <string name="native_join_unavailable_button_text">Go to merchant site</string>
+    <string name="all_fields_must_be_valid">All fields must have passed validation</string>
+    <string name="cannot_complete_registration">Cannot complete the registration</string>
+
+    <!-- Payment card wallet-->
+    <string name="payment_card_linked_status">Linked to %1$d loyalty card</string>
+    <string name="payment_cards_linked_status">Linked to %1$d loyalty cards</string>
+    <string name="payment_card_not_linked">Not linked</string>
+    <string name="payment_card_number">"••••  ••••  ••••  %1$s"</string>
+    <string name="payment_card_details_title_text">Linked cards</string>
+    <string name="payment_card_details_description_text">The active loyalty cards below are linked to this payment card. Simply pay as usual to collect points.</string>
+    <string name="payment_card_details_title_text_empty">No linked cards</string>
+    <string name="payment_card_details_description_text_empty">You do not have any linked loyalty cards. Add some cards to collect points.</string>
+    <string name="other_cards_you_can_add_title">Other cards you can add</string>
+    <string name="other_cards_you_can_add_description">You can also add the cards below and link them to your payment cards.</string>
+    <string name="rename_card">Rename this card</string>
+    <string name="rename_card_description">Change this card\'s \"nickname\"</string>
+    <string name="card_suggestion_description">You can link this card</string>
+    <string name="add_card_text">Add card</string>
+    <string name="card_error_dialog">The card couldn\'t be deleted</string>
+    <string name="enter_your_details_below_to_add_your_payment_card_into_bink">Enter your details below to add your payment card into Bink.</string>
+    <string name="default_card_second_color">#888888</string>
+    <string name="payment_card_pending">Pending</string>
+    <string name="payment_card_retry">Retry</string>
+
+    <!-- Payment Card entry -->
+    <string name="empty_string" />
+    <string name="card_number">Card number</string>
+    <string name="card_number_hint">@string/card_number</string>
+    <string name="name_on_card">Name on card</string>
+    <string name="expiry">Expiry</string>
+    <string name="expiry_format">MM/YY</string>
+    <string name="incorrect_card_error">Please enter a valid card number</string>
+    <string name="incorrect_card_expiry">Please enter a valid expiry date</string>
+    <string name="incorrect_card_name">Please enter the name on the card</string>
+    <string name="privacy_and_security"><u>Security and privacy</u></string>
+    <string name="more_information"><u>More information</u></string>
+    <string name="country_code_gb">GB</string>
+    <string name="currency_code_gbp">GBP</string>
+    <string name="privacy_and_security_description">Bink takes the security of your information extremely seriously and uses a range of best in class methods to protect your information.\nBink is a registered PCI Level 1 Service Provider for the protection of sensitive first party data and personally identifiable information.</string>
+    <string name="payment_card_error_title">Error Adding Card</string>
+    <string name="payment_card_error_message">There was a problem adding your payment card. Please try again.</string>
+
+    <!-- Native Ghost Card Registration N/A -->
+    <string name="title_ghost_card_not_available">Registration unavailable</string>
+    <string name="description_ghost_card_not_available">Please go to the merchant\'s website to join this scheme. You can then come back and add your card.</string>
+
+    <!-- Onboarding -->
+    <string name="skip">Skip</string>
+    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="log_in_with_email">Log in with email</string>
+    <string name="page_1_title">Payment linked loyalty. Magic!</string>
+    <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
+    <string name="page_2_title">All you cards in one place</string>
+    <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
+    <string name="page_3_title">Never miss out</string>
+    <string name="page_3_description">Show your loyalty cards\' barcodes on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>
+
+    <!-- Authentication -->
+    <string name="add_your_payment_cards">Add your payment cards</string>
+    <string name="join_card_description">Link this card to your payment cards to automatically collect rewards.</string>
+    <string name="payment_join_title">Add your payment cards</string>
+    <string name="payment_join_description">Collect rewards automatically for select loyalty cards by linking them to your payment cards.</string>
+    <string name="expired">Expired</string>
+    <string name="no_transactions_text">No transactions to display since adding your card to Bink.\nIn some cases transactions take longer to update.</string>
+    <string name="rooted_device_text">Your phone appears to be Rooted, and so for security reasons Bink cannot be loaded</string>
+    <string name="card_name">Card name</string>
+    <string name="_mock_card_ending">•••• •••• •••• 1234</string>
+    <string name="preference_description"><![CDATA[Make sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates!</b>]]></string>
+    <string name="password_not_match">Passwords do not match</string>
+    <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
+    <string name="incorrect_email_text">Incorrect email format</string>
+    <string name="sign_up_description">All it takes is an email and password</string>
+    <string name="password_text">Password</string>
+    <string name="confirm_password_text">Confirm password</string>
+    <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>
+    <string name="terms_and_conditions_message">I agree to Bink\'s Terms and Conditions\nPlease read the Bink Privacy Policy for further details of how your data will be processed</string>
+    <string name="marketing_message_text">Opt in to receive marketing messages\nMake sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates</b>!\nYou can opt out at any time.</string>
+    <string name="token_api_v1">Token %1$s</string>
+    <string name="facebook_unavailable">Facebook is currently unavailable.</string>
+    <string name="facebook_cancelled">Facebook login was cancelled.</string>
+    <string name="enter_credentials">Enter credentials</string>
+    <string name="add_card">Add card</string>
+    <string name="please_enter_credentials">Please enter your %1$s credentials below to add this card to your wallet.</string>
+
+    <!-- Accept T&Cs -->
+    <string name="one_last_step">One last step...</string>
+    <string name="facebook_failed">Continue with Facebook failed</string>
+
+    <!-- Add email -->
+    <string name="add_email">Add email</string>
+    <string name="add_email_subtitle">Please add your email address below</string>
+    <string name="continue_button">Continue</string>
+    <string name="email_label">Email</string>
+
+    <!-- Facebook -->
+    <string name="facebook_app_id">736124376499729</string>
+    <string name="fb_login_protocol_scheme">fb736124376499729</string>
+
+    <string name="enter_email_text">Enter email address</string>
+    <string name="enter_password">Enter password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="registration_failed_text">Registration failed</string>
+    <string name="invalid_email_format">Incorrect email format</string>
+    <string name="log_in_email_text">Log in with email</string>
+    <string name="log_in_screen_description">Welcome back!</string>
+    <string name="incorrect_credentials">Incorrect email/password. Please try again</string>
+    <string name="accept_tc_pp">Please accept %1$s</string>
+    <string name="terms_conditions_text">Terms and Conditions</string>
+    <string name="privacy_policy_text">Privacy Policy</string>
+    <string name="forgot_password_text"><u>Forgot password</u></string>
+    <string-array name="terms_bold_text_array">
+        <item>rewards</item>
+        <item>offers</item>
+        <item>updates</item>
+    </string-array>
+
+    <!--  Forgot password screen  -->
+    <string name="forgot_password_title">Forgot password</string>
+    <string name="forgot_password_description">Please enter your email address and if it is associated with a Bink account, then a password reset email will be sent.</string>
+    <string name="continue_text">Continue</string>
+    <string name="email_text">Email</string>
+    <string name="forgot_password_dialog_description">If the email address you entered is associated with a Bink account, then a password reset email will be sent.</string>
+    <string name="invalid_email_text">Invalid email</string>
+    <string name="error_description">Something went wrong</string>
+    <string name="log_out_confirmation">Are you sure you want to log out?</string>
+    <string name="only_letters_space">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="preferences_text">Preferences</string>
+    <string name="preferences_error">Cannot retrieve your preferences at the moment. Please try again later.</string>
+    <string name="preference_update_error">We can\'t update your preferences at the moment. Please try again later.</string>
+    <string name="required_fields">Please check all the required fields</string>
+
+    <!-- PLR -->
+    <string name="rewards_history">Rewards history</string>
+    <string name="see_your_past_rewards">See your past rewards</string>
+    <string name="payment_card_needed">Payment card needed</string>
+    <string name="you_currently_don_t_have_any_linked_payment_cards">You currently don\'t have any linked payment cards.\n\nYou can only earn rewards by shopping with a linked payment card.\n\nPlease add a card so you can start earning rewards.</string>
+    <string name="loyalty_wallet_plr_value">%s/%s</string>
+    <string name="until_next_reward">Until next reward</string>
+    <string name="spent">spent</string>
+    <string name="earned">earned</string>
+    <string name="your_past_rewards">Your past rewards</string>
+    <string name="collecting">Collecting</string>
+    <string name="towards_rewards">Towards rewards</string>
+    <string name="voucher_spent">Spent:</string>
+    <string name="voucher_goal">Goal:</string>
+    <string name="voucher_entry_date">on %s</string>
+    <string name="voucher_detail_text_in_progress">Spend %s with us and you\'ll get a %s.</string>
+    <string name="voucher_detail_title_issued">Your %s voucher is ready!</string>
+    <string name="voucher_detail_text_issued">Use the code above to redeem your reward. You will get %s off your purchase.</string>
+    <string name="voucher_detail_date_issued">Added %s</string>
+    <string name="voucher_detail_title_redeemed">Your %s was redeemed</string>
+    <string name="voucher_detail_text_redeemed">""</string>
+    <string name="voucher_detail_date_redeemed">Redeemed %s</string>
+    <string name="voucher_detail_title_expired">Your %s has expired</string>
+    <string name="voucher_detail_text_expired">""</string>
+    <string name="voucher_detail_date_expired">Expired %s</string>
+    <string name="voucher_detail_date_expires">Expires %s</string>
+    <string name="preference_marketing_bink">Receive marketing messages</string>
+    <string name="plr_redeem_instructions">Use the code above to redeem your reward. You will get %s off your purchase.</string>
+    <string name="terms_amp_conditions">Terms &amp; conditions</string>
+    <string name="native_join_no_payment_cards_title">Payment card needed</string>
+    <string name="native_join_no_payment_cards_description">
+        <![CDATA[
+            <p>
+                You currently don’t have any linked payment cards.<br>
+                You can only earn rewards by shopping with a linked payment card.<br>
+                Please add a card so you can start earning rewards.<br>
+            </p>
+        ]]>
+    </string>
+    <string name="payment_card_needed_button_text">Add card</string>
+    <string name="voucher_stamp_title">%s </string>
+    <string name="voucher_stamp_subtext">for collecting %1$d %2$s</string>
+    <string name="voucher_stamp_collected">%1$d/%2$d %3$s</string>
+    <string name="voucher_collected">Collected:</string>
+    <string name="voucher_stamp_in_progress_title">About this voucher</string>
+    <string name="voucher_stamp_in_progress_body">Spend £5 or more to get a stamp. Collect 5 Stamps and get a FREE Whopper.</string>
+    <string name="voucher_stamp_issued_title">Your voucher is ready!</string>
+    <string name="voucher_stamp_issued_body">Use the code above to redeem your reward. You will get a FREE Whopper off your next purchase in one of our participating Burger King restaurants.</string>
+    <string name="voucher_stamp_redeemed_title">Your voucher was redeemed</string>
+    <string name="voucher_stamp_redeemed_body">You have redeemed your FREE Whopper</string>
+    <string name="voucher_stamp_expired_title">Your voucher has expired</string>
+    <string name="voucher_stamp_expired_body">Your FREE Whopper voucher has expired</string>
+
+    <!-- Certificate Pinning -->
+    <string name="ssl_pinning_failure_title">Error</string>
+    <string name="ssl_pinning_failure_text">Connection error. Please try again.</string>
+
+    <!-- Zendesk -->
+    <string name="zendesk_user_details_prompt_title">Please enter your contact details</string>
+    <string name="zendesk_user_details_prompt_first_name_hint">First Name</string>
+    <string name="zendesk_user_details_prompt_second_name_hint">Last Name</string>
+    <string name="zendesk_user_details_prompt_cta">Save details</string>
+
+    <!-- Add Loyalty card -->
+    <string name="capture_window">Capture window</string>
+    <string name="camera_preview_subtitle">Hold card here. It will scan automatically.</string>
+    <string name="camera_no_permission">Tap the camera preview to allow camera permission</string>
+    <string name="enter_manually">Enter manually</string>
+    <string name="enter_manually_subtitle">You can also type in the card details yourself.</string>
+    <string name="enter_manually_cant_scan">Please try adding the card manually.</string>
+    <string name="unrecognized_barcode_title">Unrecognized barcode</string>
+    <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
+    <string name="scan_failure_title">Error</string>
+    <string name="scan_failure_body">The card you scanned was not correct, please scan your %1$s card </string>
+    <string name="add_loyalty_card_permissions_denied_title">Please allow camera access</string>
+    <string name="add_loyalty_card_permissions_denied_message">To scan your cards, you’ll need to allow Bink access to your device’s camera.</string>
+    <string name="add_loyalty_card_permissions_denied_cta_allow">Allow Access</string>
+    <string name="add_loyalty_card_permissions_denied_cta_enter">Enter Manually</string>
+
+    <!-- WebView -->
+    <string name="webview_error_title">Error</string>
+    <string name="webview_error_message">There was a problem loading the page, please try again later.</string>
+
+    <!-- Payment Card Scanning - The following strings are overriding bouncer's library -->
+    <string name="card_scan_scan_card"></string>
+    <string name="payment_card_scanning_position">Tap the screen to focus the camera on the card. It will scan automatically.</string>
+    <string name="card_scan_enter_card_manually">Enter Manually</string>
+    <string name="payment_card_scanning_scan_failed_title">Error</string>
+    <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+
 </resources>

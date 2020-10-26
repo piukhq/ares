@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/page_height"
+                android:layout_marginTop="@dimen/margin_padding_size_triple_small"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toTopOf="@+id/pager_indicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <com.rd.PageIndicatorView
+                android:id="@+id/pager_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pager"
+                app:piv_animationType="scale"
+                app:piv_count="3"
+                app:piv_interactiveAnimation="true"
+                app:piv_radius="@dimen/margin_padding_size_extra_small"
+                app:piv_selectedColor="@color/black"
+                app:piv_unselectedColor="@color/gray_inactive"
+                app:piv_viewPager="@id/pager" />
+
+        <com.bink.wallet.FacebookButton
+                android:id="@+id/continue_with_facebook"
+                style="@style/RoundedFacebookButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/buttons_margin"
+                android:layout_marginEnd="@dimen/buttons_margin"
+                android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
+                android:elevation="@dimen/facebook_button_elevation"
+                android:fontFamily="@font/nunito_sans_bold"
+                android:text="@string/continue_with_facebook"
+                android:textAllCaps="false"
+                app:barrierAllowsGoneWidgets="true"
+                app:layout_constraintBottom_toTopOf="@+id/sign_up_with_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/sign_up_with_email"
+                style="@style/TextAppearance.AppCompat.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/buttons_margin"
+                android:layout_marginEnd="@dimen/buttons_margin"
+                android:layout_marginBottom="@dimen/margin_padding_size_triple_small"
+                android:background="@drawable/rounded_corners_gradient_button"
+                android:fontFamily="@font/nunito_sans_bold"
+                android:text="@string/sign_up_with_email"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toTopOf="@+id/log_in_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/log_in_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/buttons_margin"
+                android:layout_marginEnd="@dimen/buttons_margin"
+                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/nunito_sans_bold"
+                android:text="@string/log_in_with_email"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class=".StampVoucherBinding">
+
+        <variable
+            name="voucher"
+            type="com.bink.wallet.model.response.membership_card.Voucher" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
+        android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
+        android:background="@drawable/bg_card_shadow">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            style="@style/ShadowedCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:cardCornerRadius="@dimen/voucher_corner_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/voucher_padding_top"
+                android:paddingBottom="@dimen/voucher_padding_bottom">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:fontFamily="@font/nunito_sans_bold"
+                    android:textColor="@color/blue_accent"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:voucherBurn="@{voucher.burn}"
+                    tools:text="£5 voucer" />
+
+                <TextView
+                    android:id="@+id/subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:layout_marginTop="@dimen/voucher_subtitle_top"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_smaller"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:voucherEarnSubtitle="@{voucher.earn}"
+                    tools:text="for collecting 5" />
+
+                <TextView
+                    android:id="@+id/remaining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:layout_marginTop="@dimen/voucher_subtitle_bottom"
+                    android:layout_marginEnd="@dimen/loyalty_voucher_margin"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@{voucher.headline}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_title_big"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/subtitle"
+                    tools:text="2 stamps to go!" />
+
+                <com.bink.wallet.stampsprogressindicator.StampsProgressIndicator
+                    android:id="@+id/stamps"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    app:currentProgress="@{voucher.earn.value.intValue()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/remaining"
+                    app:maxProgress="@{voucher.earn.target_value.intValue()}"
+                    app:status="@{voucher.state}"
+                    tools:layout_height="24dp"
+                    tools:layout_width="128dp" />
+
+                <TextView
+                    android:id="@+id/collected_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:text="@string/voucher_collected"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_smaller"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stamps" />
+
+                <TextView
+                    android:id="@+id/collected_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:fontFamily="@font/nunito_sans_black"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_smaller"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/collected_title"
+                    app:voucherEarn="@{voucher.earn}"
+                    tools:text="3/5 stamps" />
+
+                <TextView
+                    android:id="@+id/voucher_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/loyalty_voucher_margin"
+                    android:layout_marginTop="@dimen/date_margin_top"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_smaller"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stamps" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

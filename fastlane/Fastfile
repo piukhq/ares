@@ -1,0 +1,306 @@
+# Customize this file, documentation can be found here:
+# https://docs.fastlane.tools/actions/
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.7.0"
+
+default_platform :android
+
+platform :android do
+  before_all do
+    ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
+    ENV["CRASHLYTICS_API_TOKEN"] = "40cef155d89af567c87c555814e62cfe337bbd7e"
+    ENV["CRASHLYTICS_BUILD_SECRET"] = "b72403c35bb540ca189ec017811929fb7c8b513c3ec50f53f8922e62459eeed1"
+  end
+
+  error do |lane, exception|
+    slack(
+     message: ":boom: Fastlane Failed: #{exception.message}",
+     success: false,
+     channel: "android-jenkins"
+    )
+  end
+
+  desc "Build Bink MR"
+  lane :buildMr do |parameters|
+    buildNumber = ENV["BITRISE_BUILD_NUMBER"]
+    flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
+    build_name = "MR"
+
+    notify_options = {
+      build_name: build_name,
+      mergeId: parameters[:mergeId],
+      source: parameters[:source],
+      target: parameters[:target],
+      requestTitle: parameters[:requestTitle]
+    }
+
+    build_options = {
+      build_name: build_name,
+      crashlytics_groups: ["dev_team"],
+      buildType: "mr",
+      flags: "#{flags}",
+      clean: true,
+      check: true,
+      test: true,
+      deviceTest: true
+    }
+
+    slack_options = {
+      build_name: build_name
+    }
+
+    notifyBuild(notify_options)
+    build(build_options)
+    slackSuccess(slack_options)
+  end
+
+  desc "Build Bink Beta"
+  lane :buildBeta do |parameters|
+    buildNumber = ENV["BITRISE_BUILD_NUMBER"]
+    flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
+    build_name = "Beta"
+
+    notify_options = {
+      build_name: build_name,
+      mergeId: parameters[:mergeId],
+      source: parameters[:source],
+      target: parameters[:target],
+      requestTitle: parameters[:requestTitle]
+    }
+
+    build_options = {
+      build_name: build_name,
+      crashlytics_groups: ["dev_team", "Design", "Marketing"],
+      buildType: "beta",
+      flags: "#{flags}",
+      clean: true,
+      test: true,
+      deviceTest: true
+    }
+
+    slack_options = {
+      build_name: build_name
+    }
+
+    notifyBuild(notify_options)
+    build(build_options)
+    slackSuccess(slack_options)
+  end
+
+  desc "Build Bink Gamma"
+  lane :buildGamma do |parameters|
+
+    buildNumber = ENV["BITRISE_BUILD_NUMBER"]
+    flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
+    build_name = "Gamma"
+
+    notify_options = {
+      build_name: build_name,
+      mergeId: parameters[:mergeId],
+      source: parameters[:source],
+      target: parameters[:target],
+      requestTitle: parameters[:requestTitle]
+    }
+
+    build_options = {
+      build_name: build_name,
+      crashlytics_groups: ["dev_team", "Design"],
+      buildType: "gamma",
+      flags: "#{flags}",
+      clean: true,
+      test: true,
+      deviceTest: true
+    }
+
+    slack_options = {
+      build_name: build_name
+    }
+
+    notifyBuild(notify_options)
+    build(build_options)
+    slackSuccess(slack_options)
+  end
+
+  desc "Build Bink External UAT"
+  lane :buildExternal do |parameters|
+
+    buildNumber = ENV["BITRISE_BUILD_NUMBER"]
+    flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
+    build_name = "External"
+
+    notify_options = {
+      build_name: build_name,
+      mergeId: parameters[:mergeId],
+      source: parameters[:source],
+      target: parameters[:target],
+      requestTitle: parameters[:requestTitle]
+    }
+
+    build_options = {
+      build_name: build_name,
+      crashlytics_groups: ["dev_team",],
+      buildType: "External",
+      flags: "#{flags}",
+      clean: true,
+      test: true,
+      deviceTest: true
+    }
+
+    slack_options = {
+      build_name: build_name
+    }
+
+    notifyBuild(notify_options)
+    build(build_options)
+    slackSuccess(slack_options)
+  end
+
+  desc "Build Bink Release"
+  lane :buildRelease do
+    slack(
+        message: "Building Bink Release :open_mouth: :sunglasses:",
+        default_payloads: [],
+        channel: "android-jenkins"
+    )
+
+    gradle(task: "clean")
+    gradle(task: 'assemble', build_type: 'release')
+    gradle(task: "crashlyticsUploadDistributionRelease")
+
+    slack(
+        message: "Bink Release Successful :otter-dance:",
+        default_payloads: [],
+        channel: "android-jenkins"
+    )
+  end
+
+  desc "Build Bink Nightly"
+  lane :buildNightly do |parameters|
+    buildNumber = ENV["BITRISE_BUILD_NUMBER"]
+    flags = "-PbuildNumber=#{buildNumber} -PoverrideVersionCode=true"
+    build_name = "Nightly"
+
+    notify_options = {
+      build_name: build_name,
+      mergeId: parameters[:mergeId],
+      source: parameters[:source],
+      target: parameters[:target],
+      requestTitle: parameters[:requestTitle]
+    }
+
+    build_options = {
+      build_name: build_name,
+      crashlytics_groups: ["dev_team"],
+      clean: true,
+      buildType: "nightly",
+      flags: "#{flags}",
+      check: true,
+      test: true,
+      deviceTest: true
+    }
+
+    slack_options = {
+      build_name: build_name
+    }
+
+    notifyBuild(notify_options)
+    build(build_options)
+    slackSuccess(slack_options)
+  end
+
+  private_lane :notifyBuild do |options|
+    build_name = options[:build_name]
+    merge_id = options[:mergeId]
+    source_branch = options[:source]
+    target_branch = options[:target]
+    title = options[:requestTitle]
+
+    message = ":fidget_spinner: Starting to build Bink #{build_name}"
+    if merge_id
+       message += " merge request (#{merge_id})"
+    end
+
+    slack(
+      default_payloads: [],
+      channel: "android-jenkins",
+      attachment_properties: {
+        title: message,
+        title_link: "https://git.bink.com/Pantheon/Android/ares/binkapp/merge_requests/#{merge_id}",
+        author_name: last_git_commit[:author],
+        fields: [
+          {title: "Source", value: source_branch, short: true},
+          {title: "Target", value: target_branch, short: true},
+          {title: "Title", value: title, short: false}
+        ],
+      }
+    )
+  end
+
+  private_lane :slackSuccess do |options|
+    build_name = options[:build_name]
+    slack(
+      message: "Bink #{build_name} Successful :otter-dance:",
+      default_payloads: [],
+      channel: "android-jenkins"
+    )
+  end
+
+  private_lane :build do |options|
+    if options[:clean]
+      gradle(task: "clean")
+    end
+
+    gradle(task: 'assemble', build_type: options[:buildType], flags: options[:flags])
+
+### Disable tests check
+    if options[:check]
+      gradle(task: "check -x test")
+    end
+
+### Disabled as there are no Espresso tests in the project, so this will ALWAYS fail at the moment
+#    if options[:deviceTest]
+#      gradle(task: "connectedAndroidTest")
+#    end
+
+    if options[:crashlytics_groups]
+      crashlytics(
+        api_token: ENV["CRASHLYTICS_API_TOKEN"],
+        build_secret: ENV["CRASHLYTICS_BUILD_SECRET"],
+        notes: buildMessage,
+        groups: options[:crashlytics_groups]
+      )
+
+    slack(
+        channel: "android-jenkins",
+        default_payloads: [],
+        attachment_properties: {
+        title: "New build available on Fabric for #{options[:build_name]}",
+        fields: [
+          {title: "Message", value: buildMessage, short: false}
+          ],
+        }
+    )
+    end
+  end
+
+  # Helpers
+
+  def buildMessage()
+    commit = last_git_commit
+    return "[" + commit[:abbreviated_commit_hash] + "] " + commit[:message]
+  end
+
+  after_all do |lane|
+    # After stuff.
+  end
+end

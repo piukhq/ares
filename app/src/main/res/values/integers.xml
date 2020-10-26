@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="facebook_button_height_dp">48</integer>
+    <integer name="button_disabled_delay">3000</integer>
+    <integer name="add_loyalty_haptic_delay">5000</integer>
+</resources>

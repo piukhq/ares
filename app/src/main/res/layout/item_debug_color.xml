@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_debug_color"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/secondary"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <View
+        android:id="@+id/primary"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toRightOf="@+id/secondary"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_plan_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toTopOf="@+id/primary"
+        app:layout_constraintBottom_toBottomOf="@+id/primary"
+        app:layout_constraintRight_toRightOf="@+id/primary"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

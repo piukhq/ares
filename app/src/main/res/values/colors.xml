@@ -3,4 +3,55 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="slate_grey">#656b79</color>
+    <color name="pale_grey">#e9ecf6</color>
+    <color name="cool_grey">#99a7ae</color>
+    <color name="green_blue">#00c176</color>
+    <color name="light_purple">#b46fea</color>
+    <color name="light_purple_inactive">#4Db46fea</color>
+    <color name="blue_accent">#4371fe</color>
+    <color name="blue_accent_inactive">#4D4371fe</color>
+    <color name="blue_inactive">#b1c2cb</color>
+    <color name="grey_50">#7f7f7f</color>
+    <color name="red_attention">#eb001b</color>
+    <color name="grey_30">#b2b2b2</color>
+    <color name="amber_pending">#f5a623</color>
+    <color name="grey_20">#cccccc</color>
+    <color name="grey_10">#e5e5e5</color>
+    <color name="green_ok">#00c176</color>
+    <color name="black">#000000</color>
+    <color name="gray_inactive">#d3d3d3</color>
+    <color name="white_transparent">#00ffffff</color>
+    <color name="white_transparent_80">#ddffffff</color>
+    <color name="white_transparent_90">#f2ffffff</color>
+    <color name="white">#ffffffff</color>
+    <color name="expired_background">#ccffff</color>
+    <color name="voucher_background">#26000000</color>
+    <color name="voucher_progress">#f5a623</color>
+
+    <color name="separator_color">#e5e5e5</color>
+
+    <!-- Payment card colors -->
+    <color name="visa_right">#13288d</color>
+    <color name="visa_left">#181c51</color>
+    <color name="mastercard_right">#f79e1b</color>
+    <color name="mastercard_left">#eb001b</color>
+    <color name="amex_right">#57c4ff</color>
+    <color name="amex_left">#006bcd</color>
+    <color name="unknown_right">#b46fea</color>
+    <color name="unknown_left">#4371fe</color>
+    <color name="white_50_alpha">#B3FFFFFF</color>
+    <color name="voucher_redeemed_background">#4371fe</color>
+    <color name="browse_brands_filters_text_color">#4371fe</color>
+
+    <color name="camera_view_mask">#99F5F5F5</color>
+    <color name="camera_view_foreground">#99000000</color>
+
+    <!-- Payment Card Scanning - The following colors are overriding bouncer's library -->
+    <color name="card_scan_corner_color">#FFF</color>
+
+    <!-- Settings -->
+    <color name="setings_thirty_pct_black">#4D000000</color>
+
 </resources>
