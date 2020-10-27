@@ -176,11 +176,11 @@ class PaymentCardsDetailsFragment :
 
     private fun cardState(paymentCard: PaymentCard?, membershipCard: List<MembershipCard>?) {
         paymentCard?.let { pCard ->
-            membershipCard?.let {membershipCard ->
+            membershipCard?.let { membershipCard ->
 
                 binding.paymentCardDetail = pCard
                 when (pCard.isCardActive()) {
-                    true -> setActivePcdScreen(pCard,membershipCard)
+                    true -> setActivePcdScreen(pCard, membershipCard)
                     else -> setInactivePcdScreen()
                 }
                 if (hasRefreshedAtLeastOnce) {
@@ -189,25 +189,6 @@ class PaymentCardsDetailsFragment :
                 viewModel.storePaymentCard(pCard)
             }
         }
-
-    }
-
-    private fun setInactivePcdScreen() {
-        setViewState(false)
-        if (viewModel.paymentCard.value?.status?.let { PaymentCardUtils.cardStatus(it) } == PENDING_CARD) {
-            countDownTimer = object : CountDownTimer(30000, 1000) {
-                override fun onFinish() {
-                    viewModel.paymentCard.value?.id?.let { viewModel.getPaymentCard(it) }
-                    hasRefreshedAtLeastOnce = true
-                }
-
-                override fun onTick(millisUntilFinished: Long) {
-
-                }
-
-            }
-        }
-
 
     }
 
@@ -237,65 +218,84 @@ class PaymentCardsDetailsFragment :
     }
 
 
-private fun setActivePcdScreen(
-    pCard: PaymentCard,
-    membershipCards: List<MembershipCard>
-) {
-    setViewState(true)
-    viewModel.membershipPlanData.observeNonNull(this) { plans ->
-        val pllPlansIds = mutableListOf<String>()
-        plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
+    private fun setActivePcdScreen(
+        pCard: PaymentCard,
+        membershipCards: List<MembershipCard>
+    ) {
+        setViewState(true)
+        viewModel.membershipPlanData.value?.let {   plans ->
+            val pllPlansIds = mutableListOf<String>()
+            plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
 
-        val pllCards =
-            membershipCards.filter { card -> pllPlansIds.contains(card.membership_plan) }
-        binding.apply {
-            hasAddedPllCards = pllCards.isNotEmpty()
-            availablePllList.apply {
-                layoutManager = GridLayoutManager(context, 1)
+            val pllCards =
+                membershipCards.filter { card -> pllPlansIds.contains(card.membership_plan) }
+            binding.apply {
+                hasAddedPllCards = pllCards.isNotEmpty()
+                availablePllList.apply {
+                    layoutManager = GridLayoutManager(context, 1)
 
-                availablePllAdapter = AvailablePllAdapter(
-                    pCard,
-                    plans,
-                    pllCards,
-                    onLinkStatusChange = ::onLinkStatusChange,
-                    onItemSelected = ::onItemSelected
-                )
+                    availablePllAdapter = AvailablePllAdapter(
+                        pCard,
+                        plans,
+                        pllCards,
+                        onLinkStatusChange = ::onLinkStatusChange,
+                        onItemSelected = ::onItemSelected
+                    )
 
-                adapter = availablePllAdapter
-            }
-            val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
-            for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
-                if (membershipCards.none { card -> card.membership_plan == plan.id }) {
-                    unaddedCardsForPlan.add(plan)
+                    adapter = availablePllAdapter
+                }
+                val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
+                for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
+                    if (membershipCards.none { card -> card.membership_plan == plan.id }) {
+                        unaddedCardsForPlan.add(plan)
+                    }
+                }
+                hasOtherCardsToAdd = unaddedCardsForPlan.isNotEmpty()
+                shouldDisplayOtherCardsTitleAndDescription = pllCards.isNotEmpty() &&
+                        unaddedCardsForPlan.isNotEmpty()
+                otherCardsList.apply {
+                    layoutManager = GridLayoutManager(context, 1)
+                    adapter = SuggestedCardsAdapter(
+                        unaddedCardsForPlan,
+                        itemClickListener = {
+                            val directions =
+                                PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
+                                    it,
+                                    null,
+                                    true,
+                                    isRetryJourney = false
+                                )
+                            findNavController().navigateIfAdded(
+                                this@PaymentCardsDetailsFragment,
+                                directions
+                            )
+                        }
+                    )
                 }
             }
-            hasOtherCardsToAdd = unaddedCardsForPlan.isNotEmpty()
-            shouldDisplayOtherCardsTitleAndDescription = pllCards.isNotEmpty() &&
-                    unaddedCardsForPlan.isNotEmpty()
-            otherCardsList.apply {
-                layoutManager = GridLayoutManager(context, 1)
-                adapter = SuggestedCardsAdapter(
-                    unaddedCardsForPlan,
-                    itemClickListener = {
-                        val directions =
-                            PaymentCardsDetailsFragmentDirections.paymentDetailsToAddJoin(
-                                it,
-                                null,
-                                true,
-                                isRetryJourney = false
-                            )
-                        findNavController().navigateIfAdded(
-                            this@PaymentCardsDetailsFragment,
-                            directions
-                        )
-                    }
-                )
-            }
+
         }
 
     }
 
-}
+    private fun setInactivePcdScreen() {
+        setViewState(false)
+        if (viewModel.paymentCard.value?.status?.let { PaymentCardUtils.cardStatus(it) } == PENDING_CARD) {
+            countDownTimer = object : CountDownTimer(30000, 1000) {
+                override fun onFinish() {
+                    viewModel.paymentCard.value?.id?.let { viewModel.getPaymentCard(it) }
+                    hasRefreshedAtLeastOnce = true
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+
+                }
+
+            }
+        }
+
+
+    }
 
     private fun setViewState(shouldShowViews: Boolean) {
         val visibility = if (shouldShowViews) View.VISIBLE else View.GONE
