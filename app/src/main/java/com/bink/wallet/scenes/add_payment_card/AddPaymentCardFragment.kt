@@ -77,8 +77,10 @@ class AddPaymentCardFragment :
         super.onActivityCreated(savedInstanceState)
         binding.lifecycleOwner = this
         addPaymentCardArgs.cardNumber?.let { safeCardNumber ->
-            cardNumber = safeCardNumber
-            viewModel.cardNumber.value = cardNumber
+            if (safeCardNumber.isNotEmpty()) {
+                cardNumber = safeCardNumber
+                viewModel.cardNumber.value = cardNumber
+            }
         }
         cardSwitcher(getString(R.string.empty_string))
         cardInfoDisplay()
