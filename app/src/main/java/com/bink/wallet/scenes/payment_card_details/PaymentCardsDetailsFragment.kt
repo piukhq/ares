@@ -313,6 +313,7 @@ private fun setActivePcdScreen(
         currentItem: Triple<String?, Boolean, MembershipPlan?>,
         position: Int?
     ) {
+        planAndPositionPair.clear()
         planAndPositionPair.add(Pair(currentItem.third, position))
 
         currentItem.first?.let {
