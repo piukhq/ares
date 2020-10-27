@@ -268,14 +268,6 @@ class PaymentCardsDetailsFragment :
             null
         )
 
-        viewModel.paymentCard.observeNonNull(this) {
-            binding.paymentCardDetail = it
-
-            viewModel.storePaymentCard(it)
-
-            viewModel.getMembershipCards()
-        }
-
         viewModel.linkError.observeNonNull(this) {
             (it.first as HttpException).response()?.errorBody()?.string()?.let { responseString ->
                 if (responseString.contains(PLAN_ALREADY_EXISTS)) {
