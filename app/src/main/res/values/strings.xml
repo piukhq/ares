@@ -285,6 +285,7 @@
     <string name="settings_menu_how_it_works">How it works</string>
     <string name="settings_menu_how_it_works_subtitle">Find out more about Bink</string>
     <string name="settings_menu_who_we_are">Who we are</string>
+    <string name="settings_menu_who_we_are_subtitle">Below are a list of people that have been instrumental in developing the app you now hold in your hands.</string>
     <string name="settings_menu_legal">Legal</string>
     <string name="settings_menu_privacy_policy">Privacy policy</string>
     <string name="settings_menu_terms_and_conditions">Terms and conditions</string>
