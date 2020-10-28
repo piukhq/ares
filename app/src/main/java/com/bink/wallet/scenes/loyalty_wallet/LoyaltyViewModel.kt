@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
@@ -15,7 +14,6 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.ZendeskUtils
 import com.bink.wallet.utils.enums.CardType
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +24,8 @@ import kotlinx.coroutines.withContext
 
 class LoyaltyViewModel constructor(
     private val loyaltyWalletRepository: LoyaltyWalletRepository,
-    private val paymentWalletRepository: PaymentWalletRepository
+    private val paymentWalletRepository: PaymentWalletRepository,
+    private var zendeskRepository: ZendeskRepository
 ) :
     BaseViewModel() {
 
@@ -87,7 +86,7 @@ class LoyaltyViewModel constructor(
     }
 
     fun checkZendeskResponse() {
-        _hasZendeskResponse.value = ZendeskUtils.hasResponseBeenReceived()
+        _hasZendeskResponse.value = zendeskRepository.hasResponseBeenReceived()
     }
 
     private fun combineCardsData(

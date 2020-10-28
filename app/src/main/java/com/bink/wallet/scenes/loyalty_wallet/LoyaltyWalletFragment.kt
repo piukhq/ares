@@ -25,7 +25,6 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.ZendeskUtils
 import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.logPaymentCardSuccess
