@@ -569,4 +569,18 @@
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
 
+    <!-- Dev Names -->
+    <string name="name_paul">Paul Batty</string>
+    <string name="name_enoch">Enoch Hankombo</string>
+    <string name="name_josh">Joshua Best</string>
+    <string name="name_susanne">Susanne King</string>
+    <string name="name_srikalyani">Srikalyani Kotha</string>
+    <string name="name_marius">Marius Lobontiu</string>
+    <string name="name_connor">Connor McFadden</string>
+    <string name="name_carmen">Carmen Muntean</string>
+    <string name="name_tedodora">Teodora Popescu</string>
+    <string name="name_mara">Mara Savan</string>
+    <string name="name_karl">Karl Sigiscar</string>
+    <string name="name_max">Max Woodhams</string>
+
 </resources>
