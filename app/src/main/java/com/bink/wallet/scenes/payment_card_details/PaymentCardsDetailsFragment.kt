@@ -70,7 +70,7 @@ class PaymentCardsDetailsFragment :
             with(viewModel) {
                 val pc = currentBundle.paymentCard
                 val fPc = PaymentCard(pc.id,pc.membership_cards,"failed",pc.card,pc.images,pc.account)
-                paymentCard.value = fPc
+                paymentCard.value = pc
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
             }
@@ -307,14 +307,15 @@ class PaymentCardsDetailsFragment :
 
     private fun setViewState(shouldShowViews: Boolean) {
         val visibility = if (shouldShowViews) View.VISIBLE else View.GONE
+        val invertedVisibility = if (shouldShowViews) View.GONE else View.VISIBLE
         with(binding) {
             availablePllList.visibility = visibility
             otherCardsTitle.visibility = visibility
             otherCardsDescription.visibility = visibility
             otherCardsList.visibility = visibility
-            separator.visibility = if (shouldShowViews) View.GONE else View.VISIBLE
-            footerFaqs.visibility = visibility
-            deleteSeparator.visibility = visibility
+            separator.visibility = visibility
+            footerFaqs.visibility = invertedVisibility
+            deleteSeparator.visibility = invertedVisibility
         }
 
     }
