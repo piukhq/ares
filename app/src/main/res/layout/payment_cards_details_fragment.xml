@@ -187,6 +187,34 @@
                     app:layout_constraintTop_toBottomOf="@+id/footer_rename"
                     app:type="delete_payment" />
 
+                <View
+                    android:id="@+id/delete_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_separator_line_height"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    android:background="@color/separator_color"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_delete"
+                    app:layout_constraintBottom_toTopOf="@+id/footer_faqs"
+
+                    />
+
+                <com.bink.wallet.FooterItem
+                    android:id="@+id/footer_faqs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    app:layout_constraintTop_toBottomOf="@+id/delete_separator"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:type="faqs"/>
+
+
+
                 <TextView
                     android:id="@+id/other_cards_title"
                     style="@style/HeaderTextView"

@@ -361,6 +361,8 @@
     <string name="payment_card_added_date">Card added: %s</string>
     <string name="payment_card_link_already_exists_title">Already Linked</string>
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
+    <string name="payment_card_footer_faq_title">FAQS</string>
+    <string name="payment_card_footer_faq_description">Learn more</string>
 
 
 
