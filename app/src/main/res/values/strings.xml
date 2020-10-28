@@ -357,7 +357,7 @@
     <string name="payment_card_inactive_title_text">Payment card inactive</string>
     <string name="payment_card_pending_description_text">You cannot link any loyalty cards to start earning rewards.\n\nPlease wait for the card to be authorised.
         If the problem persists please read our FAQs or you can get in touch with Bink using the Contact us form in Settings.</string>
-    <string name="payment_card_inactive_description_text">"Your payment card is not authorised and you cannot link any loyalty cards to start earning rewards.\n\nYour card has failed the authorisation process or has expired. Please use the “Delete this card” action below to remove it from your wallet and re-add if required.\n\nIf you have any concerns, please read the FAQs or you can get in touch with Bink using the Contact us form in Settings."</string>
+    <string name="payment_card_inactive_description_text">"Your payment card is not authorised and you cannot link any loyalty cards to start earning rewards.\n\nYour card has failed the authorisation process or has expired. Please use the “Delete this card” action below to remove it from your wallet and re-add if required.\n\nIf you have any concerns, please read the FAQs or you can get in touch with Bink by pressing Contact us."</string>
     <string name="payment_card_added_date">Card added: %s</string>
     <string name="payment_card_link_already_exists_title">Already Linked</string>
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>

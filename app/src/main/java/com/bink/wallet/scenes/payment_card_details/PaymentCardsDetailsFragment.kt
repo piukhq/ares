@@ -13,6 +13,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
 import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
@@ -67,7 +68,9 @@ class PaymentCardsDetailsFragment :
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
             with(viewModel) {
-                paymentCard.value = currentBundle.paymentCard
+                val pc = currentBundle.paymentCard
+                val fPc = PaymentCard(pc.id,pc.membership_cards,"failed",pc.card,pc.images,pc.account)
+                paymentCard.value = fPc
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
             }
@@ -310,6 +313,8 @@ class PaymentCardsDetailsFragment :
             otherCardsDescription.visibility = visibility
             otherCardsList.visibility = visibility
             separator.visibility = if (shouldShowViews) View.GONE else View.VISIBLE
+            footerFaqs.visibility = visibility
+            deleteSeparator.visibility = visibility
         }
 
     }
