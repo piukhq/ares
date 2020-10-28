@@ -15,6 +15,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
+import com.bink.wallet.utils.ZendeskUtils
 import com.bink.wallet.utils.enums.CardType
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +66,8 @@ class LoyaltyViewModel constructor(
         get() = _dismissedBannerDisplay
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
+    private val _hasZendeskResponse = MutableLiveData<Boolean>()
+    val hasZendeskResponse: MutableLiveData<Boolean> get() = _hasZendeskResponse
 
     init {
         _cardsDataMerger.addSource(membershipCardData) {
@@ -81,6 +84,10 @@ class LoyaltyViewModel constructor(
             _cardsDataMerger.value =
                 combineCardsData(membershipCardData, membershipPlanData, dismissedCardData)
         }
+    }
+
+    fun checkZendeskResponse() {
+        _hasZendeskResponse.value = ZendeskUtils.hasResponseBeenReceived()
     }
 
     private fun combineCardsData(

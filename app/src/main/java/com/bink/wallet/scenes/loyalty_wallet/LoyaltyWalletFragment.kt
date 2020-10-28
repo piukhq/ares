@@ -111,14 +111,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onResume() {
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
+        viewModel.checkZendeskResponse()
         logScreenView(LOYALTY_WALLET_VIEW)
-
-        if (ZendeskUtils.hasResponseBeenReceived()) {
-            binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
-        } else {
-            binding.settingsButton.setImageResource(R.drawable.ic_settings)
-
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -144,6 +138,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.isLoading.observeNonNull(this) {
             binding.swipeLayout.isRefreshing = it
+        }
+
+        viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
+            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
         }
 
         mainViewModel.isLoading.observeNonNull(this) {

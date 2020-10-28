@@ -11,6 +11,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
+import com.bink.wallet.utils.ZendeskUtils
 import okhttp3.ResponseBody
 
 class PaymentCardWalletViewModel(
@@ -34,6 +35,12 @@ class PaymentCardWalletViewModel(
     val addError: LiveData<Exception> get() = _addError
     val loyaltyUpdateDone = MutableLiveData<Boolean>()
     val paymentUpdateDone = MutableLiveData<Boolean>()
+    private val _hasZendeskResponse = MutableLiveData<Boolean>()
+    val hasZendeskResponse: MutableLiveData<Boolean> get() = _hasZendeskResponse
+
+    fun checkZendeskResponse() {
+        _hasZendeskResponse.value = ZendeskUtils.hasResponseBeenReceived()
+    }
 
     fun deleteCard(id: String?) {
         loyaltyWalletRepository.deleteMembershipCard(

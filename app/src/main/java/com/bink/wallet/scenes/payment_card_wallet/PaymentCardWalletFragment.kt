@@ -63,15 +63,9 @@ class PaymentCardWalletFragment :
         super.onResume()
 
         viewModel.getPeriodicPaymentCards()
+        viewModel.checkZendeskResponse()
 
         logScreenView(PAYMENT_WALLET_VIEW)
-
-        if (ZendeskUtils.hasResponseBeenReceived()) {
-            binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
-        } else {
-            binding.settingsButton.setImageResource(R.drawable.ic_settings)
-
-        }
     }
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
@@ -215,6 +209,11 @@ class PaymentCardWalletFragment :
             binding.swipeRefresh.isRefreshing = false
             viewModel.fetchLocalData()
         }
+
+        viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
+            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
+        }
+
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
         }
