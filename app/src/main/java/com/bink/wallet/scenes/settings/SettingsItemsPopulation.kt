@@ -94,6 +94,14 @@ object SettingsItemsPopulation {
         )
         itemsList.add(
             SettingsItem(
+                res.getString(R.string.settings_menu_who_we_are),
+                null,
+                SettingsItemType.WHO_WE_ARE,
+                null
+            )
+        )
+        itemsList.add(
+            SettingsItem(
                 res.getString(R.string.settings_menu_legal),
                 null,
                 SettingsItemType.HEADER,

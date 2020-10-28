@@ -284,6 +284,7 @@
     <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
     <string name="settings_menu_how_it_works">How it works</string>
     <string name="settings_menu_how_it_works_subtitle">Find out more about Bink</string>
+    <string name="settings_menu_who_we_are">Who we are</string>
     <string name="settings_menu_legal">Legal</string>
     <string name="settings_menu_privacy_policy">Privacy policy</string>
     <string name="settings_menu_terms_and_conditions">Terms and conditions</string>

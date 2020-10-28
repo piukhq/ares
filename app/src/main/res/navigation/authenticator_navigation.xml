@@ -613,6 +613,9 @@
             android:id="@+id/settings_to_preferences"
             app:destination="@+id/preference_fragment" />
         <action
+            android:id="@+id/settings_to_who_are_we"
+            app:destination="@+id/who_are_we_fragment" />
+        <action
             android:id="@+id/settings_to_debug"
             app:destination="@+id/debug_menu_screen"
             app:enterAnim="@anim/slide_in_right"
@@ -624,6 +627,10 @@
             app:destination="@id/binkWebFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/who_are_we_fragment"
+        android:name="com.bink.wallet.scenes.who_we_are.WhoWeAreFragment" />
 
     <fragment
         android:id="@+id/preference_fragment"
