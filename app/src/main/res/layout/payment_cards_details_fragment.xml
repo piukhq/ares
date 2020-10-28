@@ -128,6 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    app:layout_constraintBottom_toTopOf="@+id/security_separator"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/other_cards_list"
@@ -142,13 +143,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_separator_line_height"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     android:background="@color/separator_color"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/footer_rename"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_security" />
 
                 <com.bink.wallet.FooterItem
                     android:id="@+id/footer_rename"
@@ -170,6 +171,7 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     android:background="@color/separator_color"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/footer_delete"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -180,11 +182,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/delete_separator"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/footer_rename"
+                    app:layout_constraintTop_toBottomOf="@+id/security_separator"
                     app:type="delete_payment" />
 
                 <View
@@ -196,8 +198,11 @@
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
                     android:background="@color/separator_color"
-                    app:layout_constraintTop_toBottomOf="@+id/footer_delete"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/footer_faqs"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/footer_delete"
 
                     />
 
@@ -205,14 +210,14 @@
                     android:id="@+id/footer_faqs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                    app:layout_constraintTop_toBottomOf="@+id/delete_separator"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:type="faqs"/>
-
+                    app:layout_constraintTop_toBottomOf="@+id/delete_separator"
+                    app:type="faqs" />
 
 
                 <TextView
