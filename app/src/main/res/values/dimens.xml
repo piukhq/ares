@@ -192,7 +192,7 @@
 
     <!-- Who we are -->
     <dimen name="who_we_are_logo_size">142dp</dimen>
-    <dimen name="who_we_are_logo_corner_radius">142dp</dimen>
+    <dimen name="who_we_are_logo_corner_radius">20dp</dimen>
 
 
 </resources>
