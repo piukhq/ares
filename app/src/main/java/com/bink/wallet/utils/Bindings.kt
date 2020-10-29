@@ -534,9 +534,17 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
         if (PaymentCardUtils.cardStatus(
                 paymentCard.status ?: ""
             ) == PENDING_CARD
-        ) context.getString(
-            R.string.payment_card_pending_description_text
-        ) else context.getString(R.string.payment_card_inactive_description_text)
+        ) {
+            context.getString(
+                R.string.payment_card_pending_description_text
+            )
+        } else {
+            UtilFunctions.buildHyperlinkSpanString2(
+                context.getString(R.string.payment_card_inactive_description_text),
+                "Contact us",
+                this
+            )
+        }
     }
 
 }
@@ -544,7 +552,7 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
 @BindingAdapter("paymentCardAddedDate")
 fun TextView.setPaymentCardAddedDate(paymentCard: PaymentCard) {
     if (paymentCard.isCardActive()) {
-        visibility =View.GONE
+        visibility = View.GONE
     } else {
         if (PaymentCardUtils.cardStatus(paymentCard.status ?: "") == PENDING_CARD) {
             visibility = View.VISIBLE

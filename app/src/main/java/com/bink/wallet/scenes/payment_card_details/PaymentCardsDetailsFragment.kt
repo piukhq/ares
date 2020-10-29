@@ -29,6 +29,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
+import zendesk.core.Zendesk
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
 
@@ -112,14 +113,10 @@ class PaymentCardsDetailsFragment :
         }
 
         binding.footerFaqs.setOnClickListener {
-            val articleConfig = ViewArticleActivity.builder()
+            ViewArticleActivity.builder(360016721639)
                 .withContactUsButtonVisible(false)
-                .config()
+                 .show(requireContext())
 
-            HelpCenterActivity.builder()
-                .withContactUsButtonVisible(false)
-                .withShowConversationsMenuButton(false)
-                .show(requireContext(), articleConfig)
 
         }
 

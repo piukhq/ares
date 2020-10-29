@@ -1,5 +1,9 @@
 package com.bink.wallet.utils
 
+import com.bink.wallet.BuildConfig
+import com.bink.wallet.utils.enums.BuildTypes
+import java.util.*
+
 const val MINUTES = "minutes"
 const val HOURS = "hours"
 const val DAYS = "days"
@@ -73,4 +77,6 @@ const val ADD_AUTH_BARCODE = "ADD_AUTH_BARCODE"
 const val CAMERA_REQUEST_CODE = 101
 
 const val PLAN_ALREADY_EXISTS = "PLAN_ALREADY_LINKED"
+
+//const val ARTICLE_ID = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) 360016688220 else 360016721639
 
