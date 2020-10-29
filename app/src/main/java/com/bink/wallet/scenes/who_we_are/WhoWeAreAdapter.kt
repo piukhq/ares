@@ -8,7 +8,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.WhoWeAreItemBinding
 
 class WhoWeAreAdapter(
-    private val names: ArrayList<String>
+    private val names: Array<String>
 ) :
     RecyclerView.Adapter<WhoWeAreAdapter.WhoWeAreViewHolder>() {
 

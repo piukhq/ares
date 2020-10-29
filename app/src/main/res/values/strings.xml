@@ -365,7 +365,6 @@
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
 
 
-
     <!-- Payment Card entry -->
     <string name="empty_string" />
     <string name="card_number">Card number</string>
@@ -570,17 +569,19 @@
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
 
     <!-- Dev Names -->
-    <string name="name_paul">Paul Batty</string>
-    <string name="name_enoch">Enoch Hankombo</string>
-    <string name="name_josh">Joshua Best</string>
-    <string name="name_susanne">Susanne King</string>
-    <string name="name_srikalyani">Srikalyani Kotha</string>
-    <string name="name_marius">Marius Lobontiu</string>
-    <string name="name_connor">Connor McFadden</string>
-    <string name="name_carmen">Carmen Muntean</string>
-    <string name="name_tedodora">Teodora Popescu</string>
-    <string name="name_mara">Mara Savan</string>
-    <string name="name_karl">Karl Sigiscar</string>
-    <string name="name_max">Max Woodhams</string>
+    <string-array name="dev_names">
+        <item>Paul Batty</item>
+        <item>Joshua Best</item>
+        <item>Enoch Hankombo</item>
+        <item>Susanne King</item>
+        <item>Srikalyani Kotha</item>
+        <item>Marius Lobontiu</item>
+        <item>Connor McFadden</item>
+        <item>Carmen Muntean</item>
+        <item>Teodora Popescu</item>
+        <item>Mara Savan</item>
+        <item>Karl Sigiscar</item>
+        <item>Max Woodhams</item>
+    </string-array>
 
 </resources>

@@ -15,12 +15,6 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
 
     override val layoutRes = R.layout.who_we_are_fragment
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.populateNames(resources)
-        logScreenView(FirebaseEvents.WHO_ARE_WE)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -28,6 +22,12 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
             binding.nameList.adapter = WhoWeAreAdapter(nameList)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.populateNames(resources)
+        logScreenView(FirebaseEvents.WHO_ARE_WE)
     }
 
     override fun builder(): FragmentToolbar {

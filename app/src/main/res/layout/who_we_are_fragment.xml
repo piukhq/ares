@@ -28,10 +28,10 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/bink_logo"
-            android:layout_width="142dp"
-            android:layout_height="142dp"
-            android:layout_margin="5dp"
-            app:cardCornerRadius="20dp"
+            android:layout_width="@dimen/who_we_are_logo_size"
+            android:layout_height="@dimen/who_we_are_logo_size"
+            android:layout_margin="@dimen/margin_padding_size_extra_small"
+            app:cardCornerRadius="@dimen/who_we_are_logo_corner_radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
