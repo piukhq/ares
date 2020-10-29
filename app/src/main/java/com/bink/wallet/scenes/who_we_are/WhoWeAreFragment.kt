@@ -15,6 +15,13 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
 
     override val layoutRes = R.layout.who_we_are_fragment
 
+    override fun builder(): FragmentToolbar {
+        return FragmentToolbar.Builder()
+            .with(binding.toolbar)
+            .shouldDisplayBack(requireActivity())
+            .build()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -30,10 +37,5 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
         logScreenView(FirebaseEvents.WHO_ARE_WE)
     }
 
-    override fun builder(): FragmentToolbar {
-        return FragmentToolbar.Builder()
-            .with(binding.toolbar)
-            .shouldDisplayBack(requireActivity())
-            .build()
-    }
+
 }
