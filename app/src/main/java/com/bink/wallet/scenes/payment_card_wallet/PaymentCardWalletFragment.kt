@@ -24,7 +24,6 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.ZendeskUtils
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
@@ -63,15 +62,9 @@ class PaymentCardWalletFragment :
         super.onResume()
 
         viewModel.getPeriodicPaymentCards()
+        viewModel.checkZendeskResponse()
 
         logScreenView(PAYMENT_WALLET_VIEW)
-
-        if (ZendeskUtils.hasResponseBeenReceived()) {
-            binding.settingsButton.setImageResource(R.drawable.ic_settings_notified)
-        } else {
-            binding.settingsButton.setImageResource(R.drawable.ic_settings)
-
-        }
     }
 
     val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
@@ -215,6 +208,11 @@ class PaymentCardWalletFragment :
             binding.swipeRefresh.isRefreshing = false
             viewModel.fetchLocalData()
         }
+
+        viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
+            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
+        }
+
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
         }

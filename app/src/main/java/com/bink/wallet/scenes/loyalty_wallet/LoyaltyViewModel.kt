@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
@@ -25,7 +24,8 @@ import kotlinx.coroutines.withContext
 
 class LoyaltyViewModel constructor(
     private val loyaltyWalletRepository: LoyaltyWalletRepository,
-    private val paymentWalletRepository: PaymentWalletRepository
+    private val paymentWalletRepository: PaymentWalletRepository,
+    private var zendeskRepository: ZendeskRepository
 ) :
     BaseViewModel() {
 
@@ -65,6 +65,8 @@ class LoyaltyViewModel constructor(
         get() = _dismissedBannerDisplay
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
+    private val _hasZendeskResponse = MutableLiveData<Boolean>()
+    val hasZendeskResponse: LiveData<Boolean> get() = _hasZendeskResponse
 
     init {
         _cardsDataMerger.addSource(membershipCardData) {
@@ -81,6 +83,10 @@ class LoyaltyViewModel constructor(
             _cardsDataMerger.value =
                 combineCardsData(membershipCardData, membershipPlanData, dismissedCardData)
         }
+    }
+
+    fun checkZendeskResponse() {
+        _hasZendeskResponse.value = zendeskRepository.hasResponseBeenReceived()
     }
 
     private fun combineCardsData(

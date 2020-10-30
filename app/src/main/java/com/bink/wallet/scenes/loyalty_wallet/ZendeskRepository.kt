@@ -1,4 +1,4 @@
-package com.bink.wallet.utils
+package com.bink.wallet.scenes.loyalty_wallet
 
 import com.bink.wallet.data.SharedPreferenceManager
 import com.zendesk.service.ErrorResponse
@@ -6,7 +6,7 @@ import com.zendesk.service.ZendeskCallback
 import zendesk.support.RequestUpdates
 import zendesk.support.Support
 
-object ZendeskUtils {
+class ZendeskRepository {
 
     fun hasResponseBeenReceived(): Boolean {
         var responseReceived = false
@@ -30,4 +30,5 @@ object ZendeskUtils {
 
         return responseReceived
     }
+
 }
