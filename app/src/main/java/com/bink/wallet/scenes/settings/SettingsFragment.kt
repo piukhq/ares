@@ -159,7 +159,6 @@ class SettingsFragment :
                 findNavController().navigateIfAdded(this, action)
             }
             SettingsItemType.WHO_WE_ARE ->{
-                SettingsFragmentDirections.settingsToWhoAreWe()
                 findNavController().navigate(
                     SettingsFragmentDirections.settingsToWhoAreWe()
                 )
