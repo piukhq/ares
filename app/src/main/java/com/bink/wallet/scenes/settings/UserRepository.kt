@@ -43,6 +43,7 @@ class UserRepository(
         }
     }
 
+
     fun getUserDetails(
         user: MutableLiveData<User>,
         userReturned: MutableLiveData<Boolean> = MutableLiveData()

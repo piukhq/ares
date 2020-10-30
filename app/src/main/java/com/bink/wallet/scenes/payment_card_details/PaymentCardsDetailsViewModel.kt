@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
+import com.bink.wallet.scenes.settings.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,7 +20,8 @@ import okhttp3.ResponseBody
 class PaymentCardsDetailsViewModel(
     private var paymentWalletRepository: PaymentWalletRepository,
     private var loyaltyWalletRepository: LoyaltyWalletRepository,
-    private var zendeskRepository: ZendeskRepository
+    private var zendeskRepository: ZendeskRepository,
+    private var userRepository: UserRepository
 ) :
     BaseViewModel() {
 
@@ -115,5 +118,21 @@ class PaymentCardsDetailsViewModel(
     }
 
     fun shouldShowDetailsDialog() = zendeskRepository.shouldShowUserDetailsDialog()
+
+    fun getEmail() = zendeskRepository.getUserEmail()
+
+    fun getFirstName() = zendeskRepository.getUsersFirstName()
+
+    fun getLastName() = zendeskRepository.getUsersLastName()
+
+    fun putUserDetails(user:User){
+        viewModelScope.launch {
+            try {
+                userRepository.putUserDetails()
+            }catch (e:Exception){
+
+            }
+        }
+    }
 
 }

@@ -47,4 +47,31 @@ class ZendeskRepository {
         return userFirstName.isEmpty() || userSecondName.isEmpty()
     }
 
+    fun getUserEmail(): String {
+        var userEmail = ""
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
+            userEmail = safeEmail
+        }
+
+        return userEmail
+    }
+
+    fun getUsersFirstName(): String {
+        var userFirstName = ""
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME)?.let { safeFirstName ->
+            userFirstName = safeFirstName
+        }
+
+        return userFirstName
+    }
+
+    fun getUsersLastName(): String {
+        var userLastName = ""
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME)?.let { safeLastName ->
+            userLastName = safeLastName
+        }
+
+        return userLastName
+    }
+
 }

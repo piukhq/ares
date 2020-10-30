@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,6 +13,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.MembershipCardListWrapper
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -23,9 +25,11 @@ import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.goToContactUsForm
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.setZendeskIdentity
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,6 +37,7 @@ import retrofit2.HttpException
 import zendesk.core.Zendesk
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
+import zendesk.support.requestlist.RequestListActivity
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -378,7 +383,53 @@ class PaymentCardsDetailsFragment :
     }
 
      val onContactUsClicked:(()->Unit)? =  {
+         if (viewModel.shouldShowDetailsDialog()){
+             //show dialog
+         } else {
+             setZendeskIdentity(viewModel.getEmail(),viewModel.getFirstName(),viewModel.getLastName())
+             goToContactUsForm()
+
+
+         }
          Toast.makeText(requireContext(),"Clicked me",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun buildAndShowUserDetailsDialog() {
+        val dialog: androidx.appcompat.app.AlertDialog
+        val builder = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
+        builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
+        val container = layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
+        val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
+        val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
+        builder.setView(container)
+            .setPositiveButton(
+                getString(R.string.zendesk_user_details_prompt_cta), null
+            )
+            .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog = builder.create()
+        dialog.show()
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+            .setOnClickListener {
+                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+                    setZendeskIdentity(
+                        viewModel.getEmail(),
+                        etFirstName.text.toString(),
+                        etSecondName.text.toString()
+                    )
+                    viewModel.putUserDetails(
+                        User(
+                            etFirstName.text.toString(),
+                            etSecondName.text.toString()
+                        )
+                    )
+                    RequestListActivity.builder()
+                        .show(requireActivity())
+
+                    dialog.dismiss()
+                }
+            }
     }
 
 }
