@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -71,7 +72,7 @@ class PaymentCardsDetailsFragment :
             with(viewModel) {
                 val pc = currentBundle.paymentCard
                 val fPc = PaymentCard(pc.id,pc.membership_cards,"failed",pc.card,pc.images,pc.account)
-                paymentCard.value = pc
+                paymentCard.value = fPc
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
             }
@@ -82,6 +83,7 @@ class PaymentCardsDetailsFragment :
             binding.paymentHeader.membershipCardsWrapper =
                 MembershipCardListWrapper(it.toMutableList())
         }
+        binding.pcdt = this
         binding.footerSecurity.setOnClickListener {
             val action =
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(
@@ -373,6 +375,10 @@ class PaymentCardsDetailsFragment :
             }
             .setCancelable(false)
             .show()
+    }
+
+     val onContactUsClicked:(()->Unit)? =  {
+         Toast.makeText(requireContext(),"Clicked me",Toast.LENGTH_SHORT).show()
     }
 
 }
