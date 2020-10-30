@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
+const val CONTACT_US = "Contact us"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
@@ -522,8 +523,12 @@ fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
 
 }
 
-@BindingAdapter("paymentCardDetailsSubtitle", "paymentCard","listener",requireAll = false)
-fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard, hyperlinkClick: (()->Unit)?) {
+@BindingAdapter("paymentCardDetailsSubtitle", "paymentCard", "listener", requireAll = false)
+fun TextView.setPcdSubtitle(
+    hasAddedPlls: Boolean,
+    paymentCard: PaymentCard,
+    hyperlinkClick: (() -> Unit)?
+) {
     text = if (paymentCard.isCardActive()) {
         if (hasAddedPlls) {
             context.getString(R.string.payment_card_details_description_text)
@@ -535,13 +540,16 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard, hyp
                 paymentCard.status ?: ""
             ) == PENDING_CARD
         ) {
-            context.getString(
-                R.string.payment_card_pending_description_text
+            UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+                context.getString(
+                    R.string.payment_card_pending_description_text
+                ), CONTACT_US, this, hyperlinkClick
             )
+
         } else {
             UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
                 context.getString(R.string.payment_card_inactive_description_text),
-                "Contact us",
+                CONTACT_US,
                 this,
                 hyperlinkClick
             )

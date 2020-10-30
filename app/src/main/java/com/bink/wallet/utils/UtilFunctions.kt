@@ -66,6 +66,7 @@ object UtilFunctions {
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             )
         }
+        textView.text = spannableString
         textView.movementMethod = LinkMovementMethod.getInstance()
 
         return spannableString

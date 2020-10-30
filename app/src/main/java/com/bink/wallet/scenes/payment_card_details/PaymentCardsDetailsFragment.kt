@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PaymentCardsDetailsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
@@ -21,9 +22,12 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
 import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.PENDING_CARD
+import com.bink.wallet.utils.PROD_ARTICLE_ID
 import com.bink.wallet.utils.PaymentCardUtils
+import com.bink.wallet.utils.SANDBOX_ARTICLE_ID
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.goToContactUsForm
 import com.bink.wallet.utils.navigateIfAdded
@@ -38,6 +42,7 @@ import zendesk.core.Zendesk
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
 import zendesk.support.requestlist.RequestListActivity
+import java.util.*
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -57,7 +62,7 @@ class PaymentCardsDetailsFragment :
 
     private lateinit var availablePllAdapter: AvailablePllAdapter
 
-    private var planAndPositionPair = mutableListOf<Pair<MembershipPlan?,Int?>>()
+    private var planAndPositionPair = mutableListOf<Pair<MembershipPlan?, Int?>>()
 
     private var countDownTimer: CountDownTimer? = null
 
@@ -76,7 +81,14 @@ class PaymentCardsDetailsFragment :
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
             with(viewModel) {
                 val pc = currentBundle.paymentCard
-                val fPc = PaymentCard(pc.id,pc.membership_cards,"failed",pc.card,pc.images,pc.account)
+                val fPc = PaymentCard(
+                    pc.id,
+                    pc.membership_cards,
+                    "pending",
+                    pc.card,
+                    pc.images,
+                    pc.account
+                )
                 paymentCard.value = fPc
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
@@ -120,9 +132,11 @@ class PaymentCardsDetailsFragment :
         }
 
         binding.footerFaqs.setOnClickListener {
-            ViewArticleActivity.builder(360016721639)
+            val articleId =
+                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) PROD_ARTICLE_ID else SANDBOX_ARTICLE_ID
+            ViewArticleActivity.builder(articleId)
                 .withContactUsButtonVisible(false)
-                 .show(requireContext())
+                .show(requireContext())
 
 
         }
@@ -171,13 +185,13 @@ class PaymentCardsDetailsFragment :
 
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
 
-        viewModel.getCardError.observeErrorNonNull(requireContext(),false,this)
+        viewModel.getCardError.observeErrorNonNull(requireContext(), false, this)
 
     }
 
     private fun setInactivePcdScreen() {
         setViewState(false)
-        if (viewModel.paymentCard.value?.status?.let { PaymentCardUtils.cardStatus(it) } == PENDING_CARD){
+        if (viewModel.paymentCard.value?.status?.let { PaymentCardUtils.cardStatus(it) } == PENDING_CARD) {
             countDownTimer = object : CountDownTimer(30000, 1000) {
                 override fun onFinish() {
                     viewModel.paymentCard.value?.id?.let { viewModel.getPaymentCard(it) }
@@ -328,7 +342,7 @@ class PaymentCardsDetailsFragment :
         currentItem: Triple<String?, Boolean, MembershipPlan?>,
         position: Int?
     ) {
-        planAndPositionPair.add(Pair(currentItem.third,position))
+        planAndPositionPair.add(Pair(currentItem.third, position))
 
         currentItem.first?.let {
             currentItem.third?.let { plan ->
@@ -382,16 +396,20 @@ class PaymentCardsDetailsFragment :
             .show()
     }
 
-     val onContactUsClicked:(()->Unit)? =  {
-         if (viewModel.shouldShowDetailsDialog()){
-             //show dialog
-         } else {
-             setZendeskIdentity(viewModel.getEmail(),viewModel.getFirstName(),viewModel.getLastName())
-             goToContactUsForm()
+    val onContactUsClicked: (() -> Unit)? = {
+        if (viewModel.shouldShowDetailsDialog()) {
+            buildAndShowUserDetailsDialog()
+        } else {
+            setZendeskIdentity(
+                viewModel.getEmail(),
+                viewModel.getFirstName(),
+                viewModel.getLastName()
+            )
+            goToContactUsForm()
 
 
-         }
-         Toast.makeText(requireContext(),"Clicked me",Toast.LENGTH_SHORT).show()
+        }
+        Toast.makeText(requireContext(), "Clicked me", Toast.LENGTH_SHORT).show()
     }
 
     private fun buildAndShowUserDetailsDialog() {
