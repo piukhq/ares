@@ -13,6 +13,13 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.LocalStoreUtils
 import com.facebook.login.LoginManager
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class SettingsViewModel constructor(
@@ -40,6 +47,9 @@ class SettingsViewModel constructor(
     val userResponse: LiveData<User>
         get() = _userResponse
 
+    private val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.Main)
+
     fun logOut() {
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
         loyaltyWalletRepository.clearMembershipCards()
@@ -64,7 +74,31 @@ class SettingsViewModel constructor(
     }
 
     fun putUserDetails(user: User) {
-        userRepository.putUserDetails(user,_userResponse)
+        val handler = CoroutineExceptionHandler { _, _ -> //Exception handler to prevent app crash
+
+        }
+        scope.launch(handler) {
+            try {
+                val returnUser = withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
+
+                returnUser.first_name?.let {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_FIRST_NAME,
+                        it
+                    )
+                }
+
+                returnUser.last_name?.let {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_SECOND_NAME,
+                        it
+                    )
+                }
+                _userResponse.value = returnUser
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     fun shouldShowUserDetailsDialog(): Boolean {
@@ -107,5 +141,10 @@ class SettingsViewModel constructor(
         }
 
         return userLastName
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
     }
 }
