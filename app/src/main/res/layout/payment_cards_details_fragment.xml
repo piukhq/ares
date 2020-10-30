@@ -22,7 +22,7 @@
             type="Boolean" />
 
         <variable
-            name="pcdt"
+            name="fragment"
             type="com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsFragment" />
 
     </data>
@@ -87,7 +87,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title"
                     app:paymentCard="@{paymentCardDetail}"
                     app:paymentCardDetailsSubtitle="@{hasAddedPllCards}"
-                    app:listener="@{pcdt.onContactUsClicked}"
+                    app:listener="@{fragment.onContactUsClicked}"
                     tools:text="@string/payment_card_details_description_text" />
 
                 <TextView

@@ -523,7 +523,7 @@ fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
 }
 
 @BindingAdapter("paymentCardDetailsSubtitle", "paymentCard","listener",requireAll = false)
-fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard,listener: (()->Unit)?) {
+fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard, hyperlinkClick: (()->Unit)?) {
     text = if (paymentCard.isCardActive()) {
         if (hasAddedPlls) {
             context.getString(R.string.payment_card_details_description_text)
@@ -539,11 +539,11 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard,list
                 R.string.payment_card_pending_description_text
             )
         } else {
-            UtilFunctions.buildHyperlinkSpanString2(
+            UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
                 context.getString(R.string.payment_card_inactive_description_text),
                 "Contact us",
                 this,
-                listener
+                hyperlinkClick
             )
         }
     }

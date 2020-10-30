@@ -78,12 +78,12 @@ class PaymentCardsDetailsFragment :
             }
         }
 
+        binding.fragment = this
         binding.paymentCardDetail = viewModel.paymentCard.value
         viewModel.membershipCardData.value?.let {
             binding.paymentHeader.membershipCardsWrapper =
                 MembershipCardListWrapper(it.toMutableList())
         }
-        binding.pcdt = this
         binding.footerSecurity.setOnClickListener {
             val action =
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(

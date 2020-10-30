@@ -47,18 +47,18 @@ object UtilFunctions {
         textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    fun buildHyperlinkSpanString2(
+    fun buildHyperlinkSpanStringWithoutUrl(
         stringToSpan: String,
         stringToHyperlink: String,
         textView: TextView,
-        onLinkClickListener: (() -> Unit)? = null
+        hyperLinkClickListener: (() -> Unit)? = null
     ) :SpannableString {
         val spannableString = SpannableString(stringToSpan)
         if (spannableString.contains(stringToHyperlink)) {
             spannableString.setSpan(
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
-                        onLinkClickListener?.invoke()
+                        hyperLinkClickListener?.invoke()
                     }
                 },
                 spannableString.indexOf(stringToHyperlink),
@@ -66,7 +66,6 @@ object UtilFunctions {
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE
             )
         }
-//        textView.text = spannableString
         textView.movementMethod = LinkMovementMethod.getInstance()
 
         return spannableString
