@@ -31,7 +31,6 @@ import com.bink.wallet.utils.goToContactUsForm
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.setZendeskIdentity
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -387,11 +386,7 @@ class PaymentCardsDetailsFragment :
         if (viewModel.shouldShowDetailsDialog()) {
             buildAndShowUserDetailsDialog()
         } else {
-            setZendeskIdentity(
-                viewModel.getEmail(),
-                viewModel.getFirstName(),
-                viewModel.getLastName()
-            )
+            viewModel.setZendeskIdentity()
             goToContactUsForm()
         }
     }
@@ -415,11 +410,11 @@ class PaymentCardsDetailsFragment :
         dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
             .setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    setZendeskIdentity(
-                        viewModel.getEmail(),
+                    viewModel.setZendeskIdentity(
                         etFirstName.text.toString(),
                         etSecondName.text.toString()
                     )
+
                     viewModel.putUserDetails(
                         User(
                             etFirstName.text.toString(),

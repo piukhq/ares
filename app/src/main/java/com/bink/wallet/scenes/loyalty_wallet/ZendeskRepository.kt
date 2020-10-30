@@ -4,6 +4,8 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.utils.LocalStoreUtils
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
+import zendesk.core.AnonymousIdentity
+import zendesk.core.Zendesk
 import zendesk.support.RequestUpdates
 import zendesk.support.Support
 
@@ -47,7 +49,7 @@ class ZendeskRepository {
         return userFirstName.isEmpty() || userSecondName.isEmpty()
     }
 
-    fun getUserEmail(): String {
+    private fun getUserEmail(): String {
         var userEmail = ""
         LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
             userEmail = safeEmail
@@ -56,7 +58,7 @@ class ZendeskRepository {
         return userEmail
     }
 
-    fun getUsersFirstName(): String {
+    private fun getUsersFirstName(): String {
         var userFirstName = ""
         LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME)?.let { safeFirstName ->
             userFirstName = safeFirstName
@@ -65,13 +67,24 @@ class ZendeskRepository {
         return userFirstName
     }
 
-    fun getUsersLastName(): String {
+    private fun getUsersLastName(): String {
         var userLastName = ""
         LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME)?.let { safeLastName ->
             userLastName = safeLastName
         }
 
         return userLastName
+    }
+
+    fun setZendeskIdentity( firstName: String = "", lastName: String = "") {
+        val userFirstName = if (firstName.isEmpty()) getUsersFirstName() else firstName
+        val userLastName = if (lastName.isEmpty()) getUsersLastName() else lastName
+
+        val identity = AnonymousIdentity.Builder()
+            .withEmailIdentifier(getUserEmail())
+            .withNameIdentifier("$userFirstName $userLastName")
+            .build()
+        Zendesk.INSTANCE.setIdentity(identity)
     }
 
 }
