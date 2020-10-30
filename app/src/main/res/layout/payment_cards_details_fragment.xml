@@ -82,12 +82,13 @@
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:textColorLink="@color/blue_accent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/payment_card_details_title"
+                    app:listener="@{fragment.onContactUsClicked}"
                     app:paymentCard="@{paymentCardDetail}"
                     app:paymentCardDetailsSubtitle="@{hasAddedPllCards}"
-                    app:listener="@{fragment.onContactUsClicked}"
                     tools:text="@string/payment_card_details_description_text" />
 
                 <TextView
@@ -187,9 +188,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="16dp"
                     app:layout_constraintBottom_toTopOf="@+id/delete_separator"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginBottom="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/security_separator"
                     app:type="delete_payment" />

@@ -80,16 +80,7 @@ class PaymentCardsDetailsFragment :
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
             with(viewModel) {
-                val pc = currentBundle.paymentCard
-                val fPc = PaymentCard(
-                    pc.id,
-                    pc.membership_cards,
-                    "pending",
-                    pc.card,
-                    pc.images,
-                    pc.account
-                )
-                paymentCard.value = fPc
+                paymentCard.value = currentBundle.paymentCard
                 membershipCardData.value = currentBundle.membershipCards.toList()
                 membershipPlanData.value = currentBundle.membershipPlans.toList()
             }
@@ -406,10 +397,7 @@ class PaymentCardsDetailsFragment :
                 viewModel.getLastName()
             )
             goToContactUsForm()
-
-
         }
-        Toast.makeText(requireContext(), "Clicked me", Toast.LENGTH_SHORT).show()
     }
 
     private fun buildAndShowUserDetailsDialog() {
