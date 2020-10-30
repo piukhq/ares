@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
@@ -17,11 +16,10 @@ import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
-import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.PENDING_CARD
+import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.PROD_ARTICLE_ID
 import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.SANDBOX_ARTICLE_ID
@@ -38,8 +36,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import zendesk.core.Zendesk
-import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
 import zendesk.support.requestlist.RequestListActivity
 import java.util.*
