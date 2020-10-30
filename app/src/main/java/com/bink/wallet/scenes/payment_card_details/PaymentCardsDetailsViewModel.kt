@@ -12,6 +12,8 @@ import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
+import com.bink.wallet.utils.LocalStoreUtils
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,8 +38,8 @@ class PaymentCardsDetailsViewModel(
     val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
 
-    private val _linkError = MutableLiveData<Pair<Exception,String>>()
-    val linkError: LiveData<Pair<Exception,String>>
+    private val _linkError = MutableLiveData<Pair<Exception, String>>()
+    val linkError: LiveData<Pair<Exception, String>>
         get() = _linkError
 
     private val _unlinkError = MutableLiveData<Exception>()
@@ -49,8 +51,12 @@ class PaymentCardsDetailsViewModel(
         get() = _deleteError
     private val _getCardError = MutableLiveData<Exception>()
 
-    val getCardError : LiveData<Exception>
-    get() = _getCardError
+    val getCardError: LiveData<Exception>
+        get() = _getCardError
+
+    private val _userResponse = MutableLiveData<User>()
+    val userResponse: LiveData<User>
+        get() = _userResponse
 
     fun linkPaymentCard(cardId: String, membershipPlanId: String) {
         val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
@@ -89,9 +95,10 @@ class PaymentCardsDetailsViewModel(
     fun getPaymentCard(id: Int) {
         viewModelScope.launch {
             try {
-                val card = withContext(Dispatchers.IO){paymentWalletRepository.getPaymentCard(id.toString())}
+                val card =
+                    withContext(Dispatchers.IO) { paymentWalletRepository.getPaymentCard(id.toString()) }
                 paymentCard.value = card
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 _getCardError.value = e
             }
         }
@@ -125,11 +132,30 @@ class PaymentCardsDetailsViewModel(
 
     fun getLastName() = zendeskRepository.getUsersLastName()
 
-    fun putUserDetails(user:User){
-        viewModelScope.launch {
+    fun putUserDetails(user: User) {
+        val handler = CoroutineExceptionHandler { _, _ -> //Exception handler to prevent app crash
+
+        }
+        viewModelScope.launch(handler) {
             try {
-                userRepository.putUserDetails()
-            }catch (e:Exception){
+                val returnedUser =
+                    withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
+
+                returnedUser.first_name?.let {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_FIRST_NAME,
+                        it
+                    )
+                }
+
+                returnedUser.last_name?.let {
+                    LocalStoreUtils.setAppSharedPref(
+                        LocalStoreUtils.KEY_SECOND_NAME,
+                        it
+                    )
+                }
+                _userResponse.value = returnedUser
+            } catch (e: Exception) {
 
             }
         }
