@@ -49,6 +49,17 @@ class ZendeskRepository {
         return userFirstName.isEmpty() || userSecondName.isEmpty()
     }
 
+    fun setIdentity(firstName: String = "", lastName: String = "") {
+        val userFirstName = if (firstName.isEmpty()) getUsersFirstName() else firstName
+        val userLastName = if (lastName.isEmpty()) getUsersLastName() else lastName
+
+        val identity = AnonymousIdentity.Builder()
+            .withEmailIdentifier(getUserEmail())
+            .withNameIdentifier("$userFirstName $userLastName")
+            .build()
+        Zendesk.INSTANCE.setIdentity(identity)
+    }
+
     private fun getUserEmail(): String {
         var userEmail = ""
         LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { safeEmail ->
@@ -76,15 +87,6 @@ class ZendeskRepository {
         return userLastName
     }
 
-    fun setZendeskIdentity( firstName: String = "", lastName: String = "") {
-        val userFirstName = if (firstName.isEmpty()) getUsersFirstName() else firstName
-        val userLastName = if (lastName.isEmpty()) getUsersLastName() else lastName
 
-        val identity = AnonymousIdentity.Builder()
-            .withEmailIdentifier(getUserEmail())
-            .withNameIdentifier("$userFirstName $userLastName")
-            .build()
-        Zendesk.INSTANCE.setIdentity(identity)
-    }
 
 }

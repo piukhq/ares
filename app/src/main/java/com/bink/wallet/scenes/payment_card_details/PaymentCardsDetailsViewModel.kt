@@ -156,7 +156,7 @@ class PaymentCardsDetailsViewModel(
     }
 
     fun setZendeskIdentity(firstName: String = "", lastName: String = "") {
-        zendeskRepository.setZendeskIdentity(firstName, lastName)
+        zendeskRepository.setIdentity(firstName, lastName)
     }
 
 }
