@@ -66,7 +66,7 @@ class LoyaltyViewModel constructor(
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private val _hasZendeskResponse = MutableLiveData<Boolean>()
-    val hasZendeskResponse: MutableLiveData<Boolean> get() = _hasZendeskResponse
+    val hasZendeskResponse: LiveData<Boolean> get() = _hasZendeskResponse
 
     init {
         _cardsDataMerger.addSource(membershipCardData) {

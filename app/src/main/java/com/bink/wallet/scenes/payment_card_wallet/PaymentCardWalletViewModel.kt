@@ -37,7 +37,7 @@ class PaymentCardWalletViewModel(
     val loyaltyUpdateDone = MutableLiveData<Boolean>()
     val paymentUpdateDone = MutableLiveData<Boolean>()
     private val _hasZendeskResponse = MutableLiveData<Boolean>()
-    val hasZendeskResponse: MutableLiveData<Boolean> get() = _hasZendeskResponse
+    val hasZendeskResponse: LiveData<Boolean> get() = _hasZendeskResponse
 
     fun checkZendeskResponse() {
         _hasZendeskResponse.value = zendeskRepository.hasResponseBeenReceived()
