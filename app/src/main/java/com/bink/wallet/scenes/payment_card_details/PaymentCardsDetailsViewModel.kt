@@ -8,6 +8,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +17,8 @@ import okhttp3.ResponseBody
 
 class PaymentCardsDetailsViewModel(
     private var paymentWalletRepository: PaymentWalletRepository,
-    private var loyaltyWalletRepository: LoyaltyWalletRepository
+    private var loyaltyWalletRepository: LoyaltyWalletRepository,
+    private var zendeskRepository: ZendeskRepository
 ) :
     BaseViewModel() {
 
@@ -111,5 +113,7 @@ class PaymentCardsDetailsViewModel(
             }
         }
     }
+
+    fun shouldShowDetailsDialog() = zendeskRepository.shouldShowUserDetailsDialog()
 
 }

@@ -115,7 +115,7 @@ val viewModelModules = module {
 
     viewModel { PaymentCardWalletViewModel(get(), get(), get()) }
 
-    viewModel { PaymentCardsDetailsViewModel(get(), get()) }
+    viewModel { PaymentCardsDetailsViewModel(get(), get(),get()) }
 
     viewModel { BaseModalViewModel() }
 

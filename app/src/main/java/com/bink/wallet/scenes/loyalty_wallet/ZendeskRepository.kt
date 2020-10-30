@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.utils.LocalStoreUtils
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
 import zendesk.support.RequestUpdates
@@ -29,6 +30,21 @@ class ZendeskRepository {
         })
 
         return responseReceived
+    }
+
+    fun shouldShowUserDetailsDialog(): Boolean {
+        var userFirstName = ""
+        var userSecondName = ""
+
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME)?.let { safeFirstName ->
+            userFirstName = safeFirstName
+        }
+
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME)?.let { safeSecondName ->
+            userSecondName = safeSecondName
+        }
+
+        return userFirstName.isEmpty() || userSecondName.isEmpty()
     }
 
 }
