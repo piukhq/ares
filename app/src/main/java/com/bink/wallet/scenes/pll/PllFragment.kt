@@ -62,13 +62,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        runBlocking {
             if (isNetworkAvailable(requireActivity())) {
                 viewModel.getPaymentCards()
             } else {
                 viewModel.getLocalPaymentCards()
             }
-        }
 
         binding.toolbar.setNavigationOnClickListener {
             val directions = viewModel.membershipCard.value?.let { membershipCard ->
