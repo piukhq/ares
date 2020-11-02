@@ -49,27 +49,29 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 request: WebResourceRequest,
                 error: WebResourceError
             ) {
-                binding.webView.visibility = View.INVISIBLE
-                if (request.url.toString().startsWith("mailto:")) {
-                    hasOpenedEmail = true
-                    val intent = Intent(Intent.ACTION_SEND)
-                    intent.type = "message/rfc882"
-                    intent.putExtra(
-                        Intent.EXTRA_EMAIL,
-                        arrayOf(request.url.toString().split(":")[1])
-                    )
-                    try {
-                        startActivity(
-                            Intent.createChooser(
-                                intent,
-                                getString(R.string.contact_us_select_email_client)
-                            )
+                if(isAdded){
+                    binding.webView.visibility = View.INVISIBLE
+                    if (request.url.toString().startsWith("mailto:")) {
+                        hasOpenedEmail = true
+                        val intent = Intent(Intent.ACTION_SEND)
+                        intent.type = "message/rfc882"
+                        intent.putExtra(
+                            Intent.EXTRA_EMAIL,
+                            arrayOf(request.url.toString().split(":")[1])
                         )
-                    } catch (e: Exception) {
+                        try {
+                            startActivity(
+                                Intent.createChooser(
+                                    intent,
+                                    getString(R.string.contact_us_select_email_client)
+                                )
+                            )
+                        } catch (e: Exception) {
+                            showWebViewError()
+                        }
+                    } else {
                         showWebViewError()
                     }
-                } else {
-                    showWebViewError()
                 }
             }
         }
