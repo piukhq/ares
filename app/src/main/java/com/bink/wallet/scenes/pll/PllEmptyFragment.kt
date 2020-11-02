@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
+import com.bink.wallet.utils.goToPendingFaqArticle
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -43,6 +44,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         super.onActivityCreated(savedInstanceState)
 
         binding.viewModel = viewModel
+        binding.fragment = this
 
         arguments.let { bundle ->
             if (bundle != null) {
@@ -182,5 +184,9 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
 
 
+    }
+
+    val onFaqClicked: (() -> Unit)? = {
+        goToPendingFaqArticle()
     }
 }

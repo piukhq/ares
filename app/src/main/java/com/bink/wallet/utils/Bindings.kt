@@ -42,6 +42,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 
 private const val CONTACT_US = "Contact us"
+private const val HERE = "here"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
@@ -589,4 +590,12 @@ fun TextView.setPreferenceLabel(preferenceLabel: String?, preferenceSlug: String
     } else {
         preferenceLabel
     }
+}
+
+@BindingAdapter("pllEmptyPendingFaq")
+fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
+    UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+        context.getString(R.string.pll_empty_faqs_description),
+        HERE, this, hyperlinkClick
+    )
 }
