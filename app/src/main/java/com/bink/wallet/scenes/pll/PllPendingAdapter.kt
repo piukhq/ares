@@ -35,6 +35,8 @@ class PllPendingAdapter(val paymentCards: MutableList<PaymentCard>) :
 
         fun bind(paymentCard: PaymentCard) {
 
+            binding.paymentCard = paymentCard
+
             with(binding.imageView) {
                 val type = paymentCard.card?.provider?.getCardTypeFromProvider()
                 if (type != null) {

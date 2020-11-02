@@ -25,7 +25,7 @@ object MembershipPlanUtils {
                     } else {
                         if (membershipPlan.feature_set.transactions_available == true && membershipPlan.feature_set.has_vouchers == true) {
                             LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE
-                        } else if (membershipPlan.feature_set.transactions_available == true ) {
+                        } else if (membershipPlan.feature_set.transactions_available == true) {
                             LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE
                         } else {
                             LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE
@@ -85,7 +85,7 @@ object MembershipPlanUtils {
                 when (membershipCard.status?.state) {
                     AUTHORISED.status -> {
                         return when {
-                            paymentCards.isNullOrEmpty() -> {
+                            paymentCards.isNullOrEmpty() || hasNoActiveCards(paymentCards) -> {
                                 LinkStatus.STATUS_LINKABLE_NO_PAYMENT_CARDS
                             }
                             membershipCard.payment_cards.isNullOrEmpty() ||
@@ -153,5 +153,14 @@ object MembershipPlanUtils {
         return membershipCard.payment_cards?.count { card ->
             paymentCardIds.contains(card.id) && card.active_link == true
         }
+    }
+
+    private fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
+        val originalSize = paymentCards.size
+        val filteredCards = paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
+
+        return originalSize == filteredCards.size
+
+
     }
 }

@@ -12,6 +12,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
@@ -78,15 +79,15 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         }
         viewModel.getPaymentCards()
 
-        viewModel.paymentCards.observeNonNull(this){
-            if (hasPendingCards(it).isNotEmpty()){
-                    //show recyclerView
-                binding.rvPendingCards.visibility = View.GONE
+        viewModel.paymentCards.observeNonNull(this) {
+            if (hasPendingCards(it).isNotEmpty()) {
+                //show recyclerView
+                showPendingCardsList(true)
                 pendingAdapter.updateData(it)
 
-                } else {
+            } else {
                 //hide the recyclerView
-                binding.rvPendingCards.visibility = View.GONE
+                showPendingCardsList(false)
 
             }
         }
@@ -157,14 +158,29 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
     }
 
-    private fun hasPendingCards(paymentCards: List<PaymentCard>):List<PaymentCard> {
+    private fun hasPendingCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
         val pendingCards = mutableListOf<PaymentCard>()
 
         paymentCards.forEach { card ->
-            if (card.status == "pending"){
+            if (card.status == PAYMENT_CARD_STATUS_PENDING) {
                 pendingCards.add(card)
             }
         }
         return pendingCards
+    }
+
+    private fun showPendingCardsList(shouldShowList: Boolean) {
+        if (shouldShowList) {
+            binding.rvPendingCards.visibility = View.VISIBLE
+            binding.pllEmptyDescriptionPart1.visibility = View.GONE
+            binding.pllEmptyDescriptionPart2.text = getString(R.string.pending_pll_card_description)
+        } else {
+            binding.rvPendingCards.visibility = View.GONE
+            binding.pllEmptyDescriptionPart1.visibility = View.VISIBLE
+            binding.pllEmptyDescriptionPart2.text =
+                getString(R.string.link_payment_card_description_part_2)
+        }
+
+
     }
 }
