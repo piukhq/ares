@@ -126,12 +126,6 @@ class PaymentCardsDetailsViewModel(
 
     fun shouldShowDetailsDialog() = zendeskRepository.shouldShowUserDetailsDialog()
 
-    fun getEmail() = zendeskRepository.getUserEmail()
-
-    fun getFirstName() = zendeskRepository.getUsersFirstName()
-
-    fun getLastName() = zendeskRepository.getUsersLastName()
-
     fun putUserDetails(user: User) {
         val handler = CoroutineExceptionHandler { _, _ -> //Exception handler to prevent app crash
 
@@ -159,6 +153,10 @@ class PaymentCardsDetailsViewModel(
 
             }
         }
+    }
+
+    fun setZendeskIdentity(firstName: String = "", lastName: String = "") {
+        zendeskRepository.setIdentity(firstName, lastName)
     }
 
 }
