@@ -183,6 +183,7 @@
     <string name="link_payment_card_description_part_1">You have not added any payment cards yet.</string>
     <string name="link_payment_card_description_part_2">Add them to link to this card and others.</string>
     <string name="pending_pll_card_description">The payment cards below are pending authorisation. You will be able to link them to your loyalty card once they\'ve been approved.</string>
+    <string name="pll_empty_faqs_description">You can find out more about pending payment cards by reading our FAQS here</string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
