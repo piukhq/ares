@@ -47,24 +47,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     val selectedCards = mutableListOf<PaymentCard>()
     private val recyclerViewHelper: RecyclerViewHelper = RecyclerViewHelper()
 
-    override fun onResume() {
-        super.onResume()
-        recyclerViewHelper.setFooterFadeEffect(
-            mutableListOf(binding.buttonDone),
-            binding.paymentCards,
-            binding.bgPllBottomGradient,
-            false,
-            footerQuotient
-        )
-        recyclerViewHelper.registerFooterListener(binding.root)
-        logScreenView(PLL_VIEW)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        recyclerViewHelper.removeFooterListener(binding.root)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
@@ -273,6 +255,24 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 showLinkErrorMessage(shouldShowPlanAlreadyExists)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recyclerViewHelper.setFooterFadeEffect(
+            mutableListOf(binding.buttonDone),
+            binding.paymentCards,
+            binding.bgPllBottomGradient,
+            false,
+            footerQuotient
+        )
+        recyclerViewHelper.registerFooterListener(binding.root)
+        logScreenView(PLL_VIEW)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        recyclerViewHelper.removeFooterListener(binding.root)
     }
 
     private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {
