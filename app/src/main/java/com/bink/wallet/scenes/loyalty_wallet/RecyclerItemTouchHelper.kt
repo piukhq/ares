@@ -1,9 +1,11 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.graphics.Canvas
+import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletAdapter
+import kotlinx.android.synthetic.main.barcode_fragment.view.*
 
 class RecyclerItemTouchHelper(
     dragDirs: Int,
@@ -84,16 +86,9 @@ class RecyclerItemTouchHelper(
             else ->
                 null
         }
+
         if (foregroundView != null) {
-            getDefaultUIUtil().onDraw(
-                c,
-                recyclerView,
-                foregroundView,
-                dX / 3.6f,
-                dY / 2,
-                actionState,
-                isCurrentlyActive
-            )
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
         }
     }
 

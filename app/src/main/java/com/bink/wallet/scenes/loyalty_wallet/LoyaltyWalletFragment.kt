@@ -2,9 +2,13 @@ package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,23 +23,16 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
-import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletAdapter
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.ZendeskUtils
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.barcode_fragment.view.*
+import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -63,42 +60,64 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var isErrorShowing = false
     private var deletedCard: MembershipCard? = null
 
-    private val listener = object :
-        RecyclerItemTouchHelperListener {
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-            if (walletItems[position] is MembershipCard) {
-                if (viewHolder is LoyaltyWalletAdapter.LoyaltyWalletViewHolder) {
-                    if (direction == ItemTouchHelper.RIGHT) {
-                        val card = walletItems[position] as MembershipCard
-                        val membershipPlanData = viewModel.membershipPlanData.value
-                            ?: viewModel.localMembershipPlanData.value
-                        val plan =
-                            membershipPlanData?.firstOrNull {
-                                it.id == card.membership_plan
-                            }
 
-                        if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
-                            if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
-                            ) {
-                                displayNoBarcodeDialog(position)
-                            } else {
-                                plan?.let {
-                                    findNavController().navigate(
-                                        LoyaltyWalletFragmentDirections.loyaltyToBarcode(
-                                            plan,
-                                            card
-                                        )
-                                    )
-                                }
-                                this@LoyaltyWalletFragment.onDestroy()
-                            }
-                        }
+    var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            if (direction == ItemTouchHelper.RIGHT) {
+                val card = walletItems[position] as MembershipCard
+                val membershipPlanData = viewModel.membershipPlanData.value
+                    ?: viewModel.localMembershipPlanData.value
+                val plan =
+                    membershipPlanData?.firstOrNull {
+                        it.id == card.membership_plan
+                    }
+
+                if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
+                    if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
+                    ) {
+                        displayNoBarcodeDialog(position)
                     } else {
-                        deleteDialog(walletItems[position] as MembershipCard, position)
+                        plan?.let {
+                            findNavController().navigate(
+                                LoyaltyWalletFragmentDirections.loyaltyToBarcode(
+                                    plan,
+                                    card
+                                )
+                            )
+                        }
+                        this@LoyaltyWalletFragment.onDestroy()
                     }
                 }
             } else {
-                onCardClicked(walletItems[position])
+                deleteDialog(walletItems[position] as MembershipCard, position)
+            }
+        }
+
+        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+            val foregroundView = when (viewHolder) {
+                is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
+                    viewHolder.binding.cardItem.mainLayout
+                is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                    viewHolder.binding.mainPayment
+                else ->
+                    null
+            }
+            if (foregroundView != null) {
+
+                if (dX >= 0) {
+                    viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
+                    viewHolder.itemView.delete_layout.visibility = View.GONE
+                } else {
+                    viewHolder.itemView.barcode_layout.visibility = View.GONE
+                    viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                }
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
         }
     }
@@ -154,14 +173,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
 
-            val helperListenerLeft =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-            val helperListenerRight =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
-
-            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+            ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
         }
 
         setHasOptionsMenu(true)
@@ -307,14 +319,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
 
-            val helperListenerLeft =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, listener)
-
-            val helperListenerRight =
-                RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, listener)
-
-            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
-            ItemTouchHelper(helperListenerRight).attachToRecyclerView(this)
+            ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
         }
     }
 
