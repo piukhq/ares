@@ -31,8 +31,8 @@ class PaymentCardsDetailsViewModel(
     val loadCardsError: LiveData<Exception>
         get() = _loadCardsError
 
-    private val _linkError = MutableLiveData<Pair<Exception,String>>()
-    val linkError: LiveData<Pair<Exception,String>>
+    private val _linkError = MutableLiveData<Pair<Exception, String>>()
+    val linkError: LiveData<Pair<Exception, String>>
         get() = _linkError
 
     private val _unlinkError = MutableLiveData<Exception>()
@@ -44,8 +44,8 @@ class PaymentCardsDetailsViewModel(
         get() = _deleteError
     private val _getCardError = MutableLiveData<Exception>()
 
-    val getCardError : LiveData<Exception>
-    get() = _getCardError
+    val getCardError: LiveData<Exception>
+        get() = _getCardError
 
     fun linkPaymentCard(cardId: String, membershipPlanId: String) {
         val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
