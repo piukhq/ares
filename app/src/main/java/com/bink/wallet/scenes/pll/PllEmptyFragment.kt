@@ -176,11 +176,14 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             binding.rvPendingCards.visibility = View.VISIBLE
             binding.pllEmptyDescriptionPart1.visibility = View.GONE
             binding.pllEmptyDescriptionPart2.text = getString(R.string.pending_pll_card_description)
+            binding.pllEmptyFaqs.visibility = View.VISIBLE
         } else {
             binding.rvPendingCards.visibility = View.GONE
             binding.pllEmptyDescriptionPart1.visibility = View.VISIBLE
             binding.pllEmptyDescriptionPart2.text =
                 getString(R.string.link_payment_card_description_part_2)
+            binding.pllEmptyFaqs.visibility = View.GONE
+
         }
 
 
