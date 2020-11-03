@@ -47,6 +47,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     val selectedCards = mutableListOf<PaymentCard>()
     private val recyclerViewHelper: RecyclerViewHelper = RecyclerViewHelper()
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
