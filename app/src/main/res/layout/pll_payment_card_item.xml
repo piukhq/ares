@@ -8,7 +8,7 @@
 
         <variable
             name="paymentCard"
-            type="com.bink.wallet.scenes.pll.PllAdapterItem.PaymentCardItem" />
+            type="com.bink.wallet.model.response.payment_card.PaymentCard" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

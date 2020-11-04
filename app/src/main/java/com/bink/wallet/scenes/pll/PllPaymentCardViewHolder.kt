@@ -3,15 +3,16 @@ package com.bink.wallet.scenes.pll
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bindCard(paymentCard: PllAdapterItem.PaymentCardItem, isLast: Boolean) {
+    fun bindCard(paymentCard: PaymentCard, isLast: Boolean) {
         binding.paymentCard = paymentCard
 
         with(binding.imageView) {
-            val type = paymentCard.paymentCard.card?.provider?.getCardTypeFromProvider()
+            val type = paymentCard.card?.provider?.getCardTypeFromProvider()
             if (type != null) {
                 setImageResource(type.addLogo)
             }
