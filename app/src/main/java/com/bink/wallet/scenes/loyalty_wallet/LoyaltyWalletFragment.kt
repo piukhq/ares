@@ -4,11 +4,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,16 +19,12 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
-import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletAdapter
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.barcode_fragment.view.*
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -61,7 +54,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var deletedCard: MembershipCard? = null
 
 
-    var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
             return false
         }
@@ -102,23 +95,43 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             val foregroundView = when (viewHolder) {
                 is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                     viewHolder.binding.cardItem.mainLayout
-                is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
-                    viewHolder.binding.mainPayment
                 else ->
                     null
             }
+
             if (foregroundView != null) {
 
-                if (dX >= 0) {
-                    viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                    viewHolder.itemView.delete_layout.visibility = View.GONE
-                } else {
-                    viewHolder.itemView.barcode_layout.visibility = View.GONE
-                    viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                when {
+                    dX > 0 -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
+                        viewHolder.itemView.delete_layout.visibility = View.GONE
+                    }
+                    dX == 0f -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
+                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.GONE
+                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                    }
                 }
 
                 getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
+        }
+
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            val foregroundView = when (viewHolder) {
+                is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
+                    viewHolder.binding.cardItem.mainLayout
+                else ->
+                    null
+            }
+
+            if (foregroundView != null) {
+                getDefaultUIUtil().clearView(foregroundView)
+            }
+
         }
     }
 
