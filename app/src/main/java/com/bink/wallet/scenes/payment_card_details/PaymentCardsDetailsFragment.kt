@@ -327,7 +327,7 @@ class PaymentCardsDetailsFragment :
             otherCardsTitle.visibility = visibility
             otherCardsDescription.visibility = visibility
             otherCardsList.visibility = visibility
-            separator.visibility = visibility
+            separator.visibility = invertedVisibility
             footerFaqs.visibility = invertedVisibility
             deleteSeparator.visibility = invertedVisibility
         }
