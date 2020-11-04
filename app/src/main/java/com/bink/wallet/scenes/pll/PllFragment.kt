@@ -165,53 +165,53 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-//        binding.buttonDone.setOnClickListener {
-//            when {
-//                viewModel.paymentCardsMerger.value.isNullOrEmpty() -> {
-//                    findNavController().popBackStack()
-//                }
-//                isNetworkAvailable(requireActivity(), true) -> {
-//                    viewModel.membershipCard.value?.let {
-//                        adapter.paymentCards.forEach { paymentCard ->
-//
-//                                if (paymentCard.isSelected &&
-//                                    !paymentCard.isLinkedToMembershipCard(it)
-//                                ) {
-//                                    selectedCards.add(paymentCard)
-//                                } else if (viewModel.membershipCard.value != null &&
-//                                    !paymentCard.isSelected &&
-//                                    paymentCard.isLinkedToMembershipCard(it)
-//                                ) {
-//                                    unselectedCards.add(paymentCard)
-//                                }
-//
-//                        }
-//                    }
-//
-//                    viewModel.membershipCard.value?.let {
-//                        if (unselectedCards.isNotEmpty()) {
-//                            viewModel.unlinkPaymentCards(
-//                                unselectedCards,
-//                                it
-//                            )
-//                        }
-//
-//                        if (selectedCards.isNotEmpty()) {
-//                            viewModel.linkPaymentCards(
-//                                selectedCards,
-//                                it
-//                            )
-//                        }
-//                    }
-//
-//                    if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
-//                        navigateToLCD()
-//                    }
-//                }
-//            }
-//
-//            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
-//        }
+        binding.buttonDone.setOnClickListener {
+            when {
+                viewModel.paymentCardsMerger.value.isNullOrEmpty() -> {
+                    findNavController().popBackStack()
+                }
+                isNetworkAvailable(requireActivity(), true) -> {
+                    viewModel.membershipCard.value?.let {
+                        adapter.paymentCards.forEach { paymentCard ->
+
+                                if (paymentCard.isSelected &&
+                                    !paymentCard.isLinkedToMembershipCard(it)
+                                ) {
+                                    selectedCards.add(paymentCard)
+                                } else if (viewModel.membershipCard.value != null &&
+                                    !paymentCard.isSelected &&
+                                    paymentCard.isLinkedToMembershipCard(it)
+                                ) {
+                                    unselectedCards.add(paymentCard)
+                                }
+
+                        }
+                    }
+
+                    viewModel.membershipCard.value?.let {
+                        if (unselectedCards.isNotEmpty()) {
+                            viewModel.unlinkPaymentCards(
+                                unselectedCards,
+                                it
+                            )
+                        }
+
+                        if (selectedCards.isNotEmpty()) {
+                            viewModel.linkPaymentCards(
+                                selectedCards,
+                                it
+                            )
+                        }
+                    }
+
+                    if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
+                        navigateToLCD()
+                    }
+                }
+            }
+
+            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
+        }
 
         viewModel.fetchError.observeErrorNonNull(requireContext(), false, this)
 
@@ -275,20 +275,20 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun onResume() {
         super.onResume()
-//        recyclerViewHelper.setFooterFadeEffect(
-//            mutableListOf(binding.buttonDone),
-//            binding.paymentCards,
-//            binding.bgPllBottomGradient,
-//            false,
-//            footerQuotient
-//        )
-//        recyclerViewHelper.registerFooterListener(binding.root)
+        recyclerViewHelper.setFooterFadeEffect(
+            mutableListOf(binding.buttonDone),
+            binding.rvPendingPaymentCards,
+            binding.bgPllBottomGradient,
+            false,
+            footerQuotient
+        )
+        recyclerViewHelper.registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)
     }
 
     override fun onPause() {
         super.onPause()
-//        recyclerViewHelper.removeFooterListener(binding.root)
+        recyclerViewHelper.removeFooterListener(binding.root)
     }
 
     private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {
