@@ -9,6 +9,10 @@
         <variable
             name="viewModel"
             type="com.bink.wallet.scenes.pll.PllViewModel" />
+
+        <variable
+            name="item"
+            type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,6 +38,26 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+
+                <include
+                    android:id="@+id/brand_modal"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small"
+                    layout="@layout/modal_brand_header"/>
+
+                <include
+                    android:id="@+id/pll_healine"
+                    layout="@layout/item_pll_description"
+                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/brand_modal"
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/payment_cards"
