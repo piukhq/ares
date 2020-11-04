@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.pll
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.NetworkUtils
+import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
 import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
@@ -46,6 +48,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     val unselectedCards = mutableListOf<PaymentCard>()
     val selectedCards = mutableListOf<PaymentCard>()
     private val recyclerViewHelper: RecyclerViewHelper = RecyclerViewHelper()
+    private lateinit var pendingAdapter: PllPendingAdapter
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -63,11 +66,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-            if (isNetworkAvailable(requireActivity())) {
-                viewModel.getPaymentCards()
-            } else {
-                viewModel.getLocalPaymentCards()
-            }
+        if (isNetworkAvailable(requireActivity())) {
+            viewModel.getPaymentCards()
+        } else {
+            viewModel.getLocalPaymentCards()
+        }
 
         binding.toolbar.setNavigationOnClickListener {
             val directions = viewModel.membershipCard.value?.let { membershipCard ->
@@ -82,6 +85,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
         val adapter = PllPaymentCardAdapter()
+        pendingAdapter = PllPendingAdapter(mutableListOf(), true)
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
             viewModel.membershipCard.value?.let { membershipCard ->
@@ -110,6 +114,15 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     )
                 }
                 adapter.notifyDataSetChanged()
+            }
+
+            val pendingCards = it.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
+
+            if (pendingCards.isNotEmpty()) {
+                pendingAdapter.updateData(pendingCards)
+                showPendingCardsList(true)
+            } else {
+                showPendingCardsList(false)
             }
         }
 
@@ -345,5 +358,13 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
             return listPaymentCards
         }
+    }
+
+    private fun showPendingCardsList(shouldShowPendingCards: Boolean) {
+        val visibility = if (shouldShowPendingCards) View.VISIBLE else View.GONE
+
+        binding.rvPendingPaymentCards.visibility = visibility
+        binding.pendingCardsTitle.visibility = visibility
+        binding.pendingCardsDescription.visibility = visibility
     }
 }

@@ -1,16 +1,20 @@
 package com.bink.wallet.scenes.pll
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PendingCardItemBinding
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.getCardTypeFromProvider
 
-class PllPendingAdapter(val paymentCards: MutableList<PaymentCard>) :
+class PllPendingAdapter(
+    val paymentCards: MutableList<PaymentCard>,
+    val isFromPll: Boolean = false
+) :
     RecyclerView.Adapter<PllPendingAdapter.PendingCardsViewHolder>() {
 
-    fun updateData(paymentCards: List<PaymentCard>){
+    fun updateData(paymentCards: List<PaymentCard>) {
         this.paymentCards.clear()
         this.paymentCards.addAll(paymentCards)
         notifyDataSetChanged()
@@ -43,6 +47,10 @@ class PllPendingAdapter(val paymentCards: MutableList<PaymentCard>) :
                     setImageResource(type.addLogo)
                 }
             }
+
+            if (isFromPll) binding.cardPending.visibility =
+                View.VISIBLE else binding.cardPending.visibility = View.GONE
+
         }
     }
 }
