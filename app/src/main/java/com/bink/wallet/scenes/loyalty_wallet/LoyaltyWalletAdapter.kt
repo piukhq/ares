@@ -171,12 +171,17 @@ class LoyaltyWalletAdapter(
         override fun bind(item: MembershipCard) {
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
-                val currentMembershipPlan = membershipPlans.first { it.id == item.membership_plan }
-                paymentCards?.let {
-                    val loyaltyItem = LoyaltyWalletItem(item, currentMembershipPlan, it)
-                    bindCardToLoyaltyItem(loyaltyItem, binding)
+
+                val currentMembershipPlan =
+                    membershipPlans.firstOrNull { it.id == item.membership_plan }
+
+                currentMembershipPlan?.let { membershipPlan ->
+                    paymentCards?.let {
+                        val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
+                        bindCardToLoyaltyItem(loyaltyItem, binding)
+                    }
+                    bindVouchersToDisplay(cardBinding, membershipPlan, item)
                 }
-                bindVouchersToDisplay(cardBinding, currentMembershipPlan, item)
             }
             with(cardBinding.cardView) {
                 setFirstColor(Color.parseColor(item.card?.getSecondaryColor()))
