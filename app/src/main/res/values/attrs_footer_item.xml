@@ -8,6 +8,7 @@
             <enum name="rename" value="3" />
             <enum name="delete_payment" value="4"/>
             <enum name="rewards" value="5"/>
+            <enum name="faqs" value="6"/>
         </attr>
     </declare-styleable>
 </resources>
