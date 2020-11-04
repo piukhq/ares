@@ -85,7 +85,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             if (hasPendingCards(it).isNotEmpty()) {
                 //show recyclerView
                 showPendingCardsList(true)
-                pendingAdapter.updateData(it)
+                pendingAdapter.updateData(it.toMutableList())
 
             } else {
                 //hide the recyclerView

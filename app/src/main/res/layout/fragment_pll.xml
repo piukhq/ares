@@ -30,7 +30,9 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:overScrollMode="always"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -80,12 +82,11 @@
                     android:id="@+id/payment_cards"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:clipToPadding="false"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/pll_description"
-                    tools:itemCount="6"
+                    tools:itemCount="1"
                     tools:listitem="@layout/pll_payment_card_item" />
 
                 <TextView
@@ -129,7 +130,9 @@
                     tools:listitem="@layout/pll_payment_card_item"
                     tools:visibility="visible" />
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.core.widget.NestedScrollView>
 
         <Button
@@ -142,6 +145,7 @@
             android:layout_marginBottom="@dimen/margin_padding_size_large"
             android:text="@string/done_button"
             android:textAllCaps="false"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

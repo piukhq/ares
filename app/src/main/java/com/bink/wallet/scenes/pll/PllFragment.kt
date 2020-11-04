@@ -25,7 +25,6 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -84,22 +83,24 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
-        val adapter = PllPaymentCardAdapter()
+        val adapter = PllPaymentCardAdapter(mutableListOf(),isAddJourney)
         pendingAdapter = PllPendingAdapter(mutableListOf(), true)
+        binding.rvPendingPaymentCards.layoutManager = LinearLayoutManager(context)
+        binding.rvPendingPaymentCards.adapter = pendingAdapter
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
             viewModel.membershipCard.value?.let { membershipCard ->
-                val adapterItems = mutableListOf<PllAdapterItem>().apply {
-                    viewModel.membershipPlan.value?.let { membershipPlan ->
-                        add(PllAdapterItem.PllBrandHeaderItem(membershipPlan))
-                    }
-                    add(PllAdapterItem.PllTitleItem)
-                    viewModel.membershipPlan.value?.account?.plan_name_card?.let { planName ->
-                        add(PllAdapterItem.PllDescriptionItem(planName))
-                    }
-                    addAll(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
-                }
-                adapter.paymentCards = adapterItems
+//                val adapterItems = mutableListOf<PllAdapterItem>().apply {
+//                    viewModel.membershipPlan.value?.let { membershipPlan ->
+//                        add(PllAdapterItem.PllBrandHeaderItem(membershipPlan))
+//                    }
+//                    add(PllAdapterItem.PllTitleItem)
+//                    viewModel.membershipPlan.value?.account?.plan_name_card?.let { planName ->
+//                        add(PllAdapterItem.PllDescriptionItem(planName))
+//                    }
+//                    addAll(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
+
+                adapter.updateData( it,membershipCard)
                 adapter.setOnBrandHeaderClickListener {
                     findNavController().navigate(
                         PllFragmentDirections.pllToBrandHeader(
@@ -119,8 +120,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             val pendingCards = it.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
             if (pendingCards.isNotEmpty()) {
-                pendingAdapter.updateData(pendingCards)
                 showPendingCardsList(true)
+                pendingAdapter.updateData(pendingCards.toMutableList())
+
+
+
             } else {
                 showPendingCardsList(false)
             }
@@ -161,53 +165,53 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        binding.buttonDone.setOnClickListener {
-            when {
-                viewModel.paymentCardsMerger.value.isNullOrEmpty() -> {
-                    findNavController().popBackStack()
-                }
-                isNetworkAvailable(requireActivity(), true) -> {
-                    viewModel.membershipCard.value?.let {
-                        adapter.paymentCards.forEach { pllItem ->
-                            if (pllItem is PllAdapterItem.PaymentCardItem) {
-                                if (pllItem.isSelected &&
-                                    !pllItem.paymentCard.isLinkedToMembershipCard(it)
-                                ) {
-                                    selectedCards.add(pllItem.paymentCard)
-                                } else if (viewModel.membershipCard.value != null &&
-                                    !pllItem.isSelected &&
-                                    pllItem.paymentCard.isLinkedToMembershipCard(it)
-                                ) {
-                                    unselectedCards.add(pllItem.paymentCard)
-                                }
-                            }
-                        }
-                    }
-
-                    viewModel.membershipCard.value?.let {
-                        if (unselectedCards.isNotEmpty()) {
-                            viewModel.unlinkPaymentCards(
-                                unselectedCards,
-                                it
-                            )
-                        }
-
-                        if (selectedCards.isNotEmpty()) {
-                            viewModel.linkPaymentCards(
-                                selectedCards,
-                                it
-                            )
-                        }
-                    }
-
-                    if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
-                        navigateToLCD()
-                    }
-                }
-            }
-
-            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
-        }
+//        binding.buttonDone.setOnClickListener {
+//            when {
+//                viewModel.paymentCardsMerger.value.isNullOrEmpty() -> {
+//                    findNavController().popBackStack()
+//                }
+//                isNetworkAvailable(requireActivity(), true) -> {
+//                    viewModel.membershipCard.value?.let {
+//                        adapter.paymentCards.forEach { paymentCard ->
+//
+//                                if (paymentCard.isSelected &&
+//                                    !paymentCard.isLinkedToMembershipCard(it)
+//                                ) {
+//                                    selectedCards.add(paymentCard)
+//                                } else if (viewModel.membershipCard.value != null &&
+//                                    !paymentCard.isSelected &&
+//                                    paymentCard.isLinkedToMembershipCard(it)
+//                                ) {
+//                                    unselectedCards.add(paymentCard)
+//                                }
+//
+//                        }
+//                    }
+//
+//                    viewModel.membershipCard.value?.let {
+//                        if (unselectedCards.isNotEmpty()) {
+//                            viewModel.unlinkPaymentCards(
+//                                unselectedCards,
+//                                it
+//                            )
+//                        }
+//
+//                        if (selectedCards.isNotEmpty()) {
+//                            viewModel.linkPaymentCards(
+//                                selectedCards,
+//                                it
+//                            )
+//                        }
+//                    }
+//
+//                    if (unselectedCards.isEmpty() && selectedCards.isEmpty()) {
+//                        navigateToLCD()
+//                    }
+//                }
+//            }
+//
+//            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
+//        }
 
         viewModel.fetchError.observeErrorNonNull(requireContext(), false, this)
 
@@ -271,20 +275,20 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun onResume() {
         super.onResume()
-        recyclerViewHelper.setFooterFadeEffect(
-            mutableListOf(binding.buttonDone),
-            binding.paymentCards,
-            binding.bgPllBottomGradient,
-            false,
-            footerQuotient
-        )
-        recyclerViewHelper.registerFooterListener(binding.root)
+//        recyclerViewHelper.setFooterFadeEffect(
+//            mutableListOf(binding.buttonDone),
+//            binding.paymentCards,
+//            binding.bgPllBottomGradient,
+//            false,
+//            footerQuotient
+//        )
+//        recyclerViewHelper.registerFooterListener(binding.root)
         logScreenView(PLL_VIEW)
     }
 
     override fun onPause() {
         super.onPause()
-        recyclerViewHelper.removeFooterListener(binding.root)
+//        recyclerViewHelper.removeFooterListener(binding.root)
     }
 
     private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {

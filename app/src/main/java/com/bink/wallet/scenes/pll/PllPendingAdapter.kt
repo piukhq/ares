@@ -9,15 +9,15 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.getCardTypeFromProvider
 
 class PllPendingAdapter(
-    val paymentCards: MutableList<PaymentCard>,
+    var paymentCards: MutableList<PaymentCard>,
     val isFromPll: Boolean = false
 ) :
     RecyclerView.Adapter<PllPendingAdapter.PendingCardsViewHolder>() {
 
-    fun updateData(paymentCards: List<PaymentCard>) {
+    fun updateData(paymentCards: MutableList<PaymentCard>) {
         this.paymentCards.clear()
         this.paymentCards.addAll(paymentCards)
-        notifyDataSetChanged()
+        this.notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PendingCardsViewHolder {
