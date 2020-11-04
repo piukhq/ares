@@ -106,10 +106,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
                     }
-                    dX == 0f -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                    }
                     else -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE

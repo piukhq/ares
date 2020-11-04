@@ -80,9 +80,6 @@ class PaymentCardWalletFragment :
                     viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
                 }
             }
-            if (direction == ItemTouchHelper.RIGHT) {
-                binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
-            }
         }
 
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -95,15 +92,15 @@ class PaymentCardWalletFragment :
 
             if (foregroundView != null) {
 
-                if (dX >= 0) {
-                    viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                    viewHolder.itemView.delete_layout.visibility = View.GONE
-                } else if (dX == 0f) {
-                    viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                    viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                }else {
-                    viewHolder.itemView.barcode_layout.visibility = View.GONE
-                    viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                when {
+                    dX >= 0 -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
+                        viewHolder.itemView.delete_layout.visibility = View.GONE
+                    }
+                    else -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.GONE
+                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                    }
                 }
 
                 getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
