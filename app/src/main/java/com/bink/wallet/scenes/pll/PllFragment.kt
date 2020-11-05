@@ -99,6 +99,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 //                        add(PllAdapterItem.PllDescriptionItem(planName))
 //                    }
 //                    addAll(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
+                val (activeCards,pendingCards) = it.partition { it.status == PAYMENT_CARD_STATUS_PENDING }
 
                 adapter.updateData( it,membershipCard)
                 adapter.setOnBrandHeaderClickListener {
