@@ -76,9 +76,16 @@ class PaymentCardsDetailsFragment :
         arguments?.let {
             val currentBundle = PaymentCardsDetailsFragmentArgs.fromBundle(it)
             with(viewModel) {
-                paymentCard.value = currentBundle.paymentCard
-                membershipCardData.value = currentBundle.membershipCards.toList()
-                membershipPlanData.value = currentBundle.membershipPlans.toList()
+
+                if (paymentCard.value == null) {
+                    paymentCard.value = currentBundle.paymentCard
+                }
+                if (membershipCardData.value == null) {
+                    membershipCardData.value = currentBundle.membershipCards.toList()
+                }
+                if (membershipPlanData.value == null) {
+                    membershipPlanData.value = currentBundle.membershipPlans.toList()
+                }
             }
         }
 
@@ -245,7 +252,7 @@ class PaymentCardsDetailsFragment :
         membershipCards: List<MembershipCard>
     ) {
         setViewState(true)
-        viewModel.membershipPlanData.value?.let {   plans ->
+        viewModel.membershipPlanData.value?.let { plans ->
             val pllPlansIds = mutableListOf<String>()
             plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
 
