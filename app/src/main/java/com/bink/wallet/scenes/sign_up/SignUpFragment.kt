@@ -27,7 +27,6 @@ import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.setTermsAndPrivacyUrls
@@ -306,6 +305,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
     private fun showSignUpFailedDialog(){
 
         AlertDialog.Builder(requireContext())
+            .setTitle(R.string.error)
             .setMessage(
                 getString(
                     R.string.error_sign_up_failed
