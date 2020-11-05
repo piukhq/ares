@@ -5,14 +5,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.bink.wallet.scenes.preference.PreferencesFragment">
+        android:layout_height="match_parent">
 
         <Toolbar
             android:id="@+id/toolbar"
@@ -22,69 +18,87 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/bink_logo"
-            android:layout_width="@dimen/who_we_are_logo_size"
-            android:layout_height="@dimen/who_we_are_logo_size"
-            android:layout_margin="@dimen/margin_padding_size_extra_small"
-            app:cardCornerRadius="@dimen/who_we_are_logo_corner_radius"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-            <ImageView
-                android:id="@+id/logo"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_bink_icon" />
+                tools:context="com.bink.wallet.scenes.preference.PreferencesFragment">
 
-        </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/bink_logo"
+                    android:layout_width="@dimen/who_we_are_logo_size"
+                    android:layout_height="@dimen/who_we_are_logo_size"
+                    android:layout_margin="@dimen/margin_padding_size_extra_small"
+                    app:cardCornerRadius="@dimen/who_we_are_logo_corner_radius"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/who_are_we_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_medium"
-            android:layout_marginTop="@dimen/margin_padding_size_large"
-            android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:text="@string/settings_menu_who_we_are"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_description_biggest"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bink_logo" />
+                    <ImageView
+                        android:id="@+id/logo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/ic_bink_icon" />
 
-        <TextView
-            android:id="@+id/who_are_we_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_medium"
-            android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:text="@string/settings_menu_who_we_are_subtitle"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_description_big"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/who_are_we_title" />
+                </androidx.cardview.widget.CardView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/name_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_medium"
-            android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/who_are_we_body"
-            tools:itemCount="3"
-            tools:listitem="@layout/who_we_are_item" />
+                <TextView
+                    android:id="@+id/who_are_we_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_large"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:text="@string/settings_menu_who_we_are"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_biggest"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bink_logo" />
+
+                <TextView
+                    android:id="@+id/who_are_we_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:text="@string/settings_menu_who_we_are_subtitle"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/who_are_we_title" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/name_list"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/who_are_we_body"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/who_we_are_item" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.core.widget.NestedScrollView>
 </layout>
