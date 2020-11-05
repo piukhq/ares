@@ -86,6 +86,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
         }
 
+
         val adapter = PllPaymentCardAdapter(mutableListOf(),isAddJourney)
         pendingAdapter = PllPendingAdapter(mutableListOf(), true)
         binding.rvPendingPaymentCards.layoutManager = LinearLayoutManager(context)
@@ -97,15 +98,15 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             viewModel.membershipCard.value?.let { membershipCard ->
 
                 adapter.updateData( activeCards,membershipCard)
-                adapter.setOnBrandHeaderClickListener {
+                binding.brandModal.setOnClickListener {
                     findNavController().navigate(
                         PllFragmentDirections.pllToBrandHeader(
                             GenericModalParameters(
                                 R.drawable.ic_close,
                                 true,
                                 viewModel.membershipPlan.value?.account?.plan_name
-                                    ?: getString(R.string.plan_description),
-                                it
+                                    ?: getString(R.string.plan_description)
+
                             )
                         )
                     )
