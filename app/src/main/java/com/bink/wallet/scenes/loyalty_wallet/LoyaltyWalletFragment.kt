@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
+import java.lang.ClassCastException
 import java.net.SocketTimeoutException
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
@@ -61,34 +62,42 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
-            if (direction == ItemTouchHelper.RIGHT) {
-                val card = walletItems[position] as MembershipCard
-                val membershipPlanData = viewModel.membershipPlanData.value
-                    ?: viewModel.localMembershipPlanData.value
-                val plan =
-                    membershipPlanData?.firstOrNull {
+            var card: MembershipCard? = null
+
+            try {
+                card = walletItems[position] as MembershipCard
+            } catch (e: ClassCastException) {
+                //User swiping membership plan
+            }
+
+            card?.let {
+                if (direction == ItemTouchHelper.RIGHT) {
+                    val membershipPlanData = viewModel.membershipPlanData.value ?: viewModel.localMembershipPlanData.value
+                    val plan = membershipPlanData?.firstOrNull {
                         it.id == card.membership_plan
                     }
 
-                if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
-                    if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
-                    ) {
-                        displayNoBarcodeDialog(position)
-                    } else {
-                        plan?.let {
-                            findNavController().navigate(
-                                LoyaltyWalletFragmentDirections.loyaltyToBarcode(
-                                    plan,
-                                    card
+                    if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
+                        if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
+                        ) {
+                            displayNoBarcodeDialog(position)
+                        } else {
+                            plan?.let {
+                                findNavController().navigate(
+                                    LoyaltyWalletFragmentDirections.loyaltyToBarcode(
+                                        plan,
+                                        card
+                                    )
                                 )
-                            )
+                            }
+                            this@LoyaltyWalletFragment.onDestroy()
                         }
-                        this@LoyaltyWalletFragment.onDestroy()
                     }
+                } else {
+                    deleteDialog(walletItems[position] as MembershipCard, position)
                 }
-            } else {
-                deleteDialog(walletItems[position] as MembershipCard, position)
             }
+
         }
 
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -179,8 +188,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
-
-            ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
         }
 
         setHasOptionsMenu(true)
