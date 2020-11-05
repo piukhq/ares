@@ -116,6 +116,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 //Failure
                 logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
 
+                viewModel.signUpErrorResponse.value = null
             }
 
             postServiceErrorResponse.observeErrorNonNull(
