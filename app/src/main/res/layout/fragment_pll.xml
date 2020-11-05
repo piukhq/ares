@@ -42,17 +42,16 @@
                 android:layout_height="match_parent">
 
 
-                <include
+                <com.bink.wallet.ModalBrandHeader
                     android:id="@+id/brand_modal"
-                    layout="@layout/modal_brand_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_small"
-                    android:layout_marginTop="@dimen/loyalty_details_margin_top"
                     android:layout_marginEnd="@dimen/margin_padding_size_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:membershipPlan="@{item}" />
 
                 <include
                     android:id="@+id/pll_title"
@@ -66,17 +65,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/brand_modal" />
 
-                <include
+                <TextView
                     android:id="@+id/pll_description"
-                    layout="@layout/item_pll_description"
+                    style="@style/DescriptionTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/pll_title"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:pllDescription="@{item.account.plan_name_card}"
+                    tools:text="The payment cards below will be linked to your Rewards. Simply pay with them to collect points." />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/payment_cards"
@@ -104,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/pending_cards_description"
-                    style="@style/CustomTextView"
+                    style="@style/DescriptionTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -156,6 +157,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/footer_default_fade_view_height"
             android:background="@drawable/bg_btn_gradient"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />

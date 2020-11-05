@@ -65,6 +65,9 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
+        binding.item = viewModel.membershipPlan.value
+
+
         if (isNetworkAvailable(requireActivity())) {
             viewModel.getPaymentCards()
         } else {
@@ -89,19 +92,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         binding.rvPendingPaymentCards.adapter = pendingAdapter
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            viewModel.membershipCard.value?.let { membershipCard ->
-//                val adapterItems = mutableListOf<PllAdapterItem>().apply {
-//                    viewModel.membershipPlan.value?.let { membershipPlan ->
-//                        add(PllAdapterItem.PllBrandHeaderItem(membershipPlan))
-//                    }
-//                    add(PllAdapterItem.PllTitleItem)
-//                    viewModel.membershipPlan.value?.account?.plan_name_card?.let { planName ->
-//                        add(PllAdapterItem.PllDescriptionItem(planName))
-//                    }
-//                    addAll(it.toPllPaymentCardWrapperList(isAddJourney, membershipCard))
-                val (activeCards,pendingCards) = it.partition { it.status == PAYMENT_CARD_STATUS_PENDING }
+            val (pendingCards,activeCards) = it.partition { it.status == PAYMENT_CARD_STATUS_PENDING }
 
-                adapter.updateData( it,membershipCard)
+            viewModel.membershipCard.value?.let { membershipCard ->
+
+                adapter.updateData( activeCards,membershipCard)
                 adapter.setOnBrandHeaderClickListener {
                     findNavController().navigate(
                         PllFragmentDirections.pllToBrandHeader(
@@ -117,8 +112,6 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
                 adapter.notifyDataSetChanged()
             }
-
-            val pendingCards = it.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
             if (pendingCards.isNotEmpty()) {
                 showPendingCardsList(true)
@@ -280,7 +273,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             mutableListOf(binding.buttonDone),
             binding.rvPendingPaymentCards,
             binding.bgPllBottomGradient,
-            false,
+            true,
             footerQuotient
         )
         recyclerViewHelper.registerFooterListener(binding.root)
