@@ -15,14 +15,14 @@
             android:orientation="vertical">
 
         <CheckBox
-                android:id="@+id/content_add_auth_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:buttonTint="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/content_add_auth_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/forms_checkbox_margin"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:buttonTint="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
                 android:id="@+id/add_auth_checkbox_text"

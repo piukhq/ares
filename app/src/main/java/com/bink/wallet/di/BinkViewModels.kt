@@ -30,10 +30,7 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
-import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.*
 import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
@@ -59,6 +56,8 @@ val viewModelModules = module {
 
     single { provideLoginRepository(get(NetworkQualifiers.BinkApiInterface), get()) }
     single { provideUserRepository(get(NetworkQualifiers.BinkApiInterface)) }
+
+    single { provideZendeskRepository() }
     viewModel { LoginViewModel(get(), get(), get()) }
 
     single {
@@ -70,7 +69,7 @@ val viewModelModules = module {
             get()
         )
     }
-    viewModel { LoyaltyViewModel(get(), get()) }
+    viewModel { LoyaltyViewModel(get(), get(), get()) }
 
     viewModel { AddAuthViewModel(get()) }
     viewModel { AddCardViewModel(get()) }
@@ -115,9 +114,9 @@ val viewModelModules = module {
 
     viewModel { AddPaymentCardViewModel(get()) }
 
-    viewModel { PaymentCardWalletViewModel(get(), get()) }
+    viewModel { PaymentCardWalletViewModel(get(), get(), get()) }
 
-    viewModel { PaymentCardsDetailsViewModel(get(), get()) }
+    viewModel { PaymentCardsDetailsViewModel(get(), get(),get(),get()) }
 
     viewModel { BaseModalViewModel() }
 
@@ -157,6 +156,8 @@ val viewModelModules = module {
 
     viewModel { SplashViewModel(get(), get()) }
 }
+
+fun provideZendeskRepository() = ZendeskRepository()
 
 fun provideLoginRepository(
     restApiService: ApiService,

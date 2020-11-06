@@ -2,6 +2,7 @@ package com.bink.wallet.di
 
 import android.content.Context
 import android.content.Intent
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
@@ -63,6 +64,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             .header("Content-Type", "application/json")
             .header("Accept", BackendVersion.VERSION_2.version)
             .header("Authorization", jwtToken ?: EMPTY_STRING)
+            .header("User-Agent","Bink / Android ${BuildConfig.VERSION_CODE} / ${android.os.Build.VERSION.SDK_INT}")
             .url(request)
             .build()
         val response = chain.proceed(newRequest)

@@ -195,5 +195,7 @@
     <dimen name="who_we_are_logo_corner_radius">20dp</dimen>
     <dimen name="who_we_are_item_height">80dp</dimen>
 
+    <!-- Forms -->
+    <dimen name="forms_checkbox_margin">10dp</dimen>
 
 </resources>

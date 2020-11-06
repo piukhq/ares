@@ -33,6 +33,7 @@
     <string name="error_data_retrieval">Could not retrieve server error. Please try again.</string>
     <string name="error_server_down_title">Error</string>
     <string name="error_server_down_message">There was a problem communicating with the server. Please try again later.</string>
+    <string name="error_sign_up_failed">Registration failed.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
@@ -358,11 +359,13 @@
     <string name="payment_card_pending_title_text">Payment card pending</string>
     <string name="payment_card_inactive_title_text">Payment card inactive</string>
     <string name="payment_card_pending_description_text">You cannot link any loyalty cards to start earning rewards.\n\nPlease wait for the card to be authorised.
-        If the problem persists please read our FAQs or you can get in touch with Bink using the Contact us form in Settings.</string>
-    <string name="payment_card_inactive_description_text">"Your payment card is not authorised and you cannot link any loyalty cards to start earning rewards.\n\nYour card has failed the authorisation process or has expired. Please use the “Delete this card” action below to remove it from your wallet and re-add if required.\n\nIf you have any concerns, please read the FAQs or you can get in touch with Bink using the Contact us form in Settings."</string>
+        If the problem persists please read our FAQs or you can get in touch with Bink by pressing Contact us.</string>
+    <string name="payment_card_inactive_description_text">"Your payment card is not authorised and you cannot link any loyalty cards to start earning rewards.\n\nYour card has failed the authorisation process or has expired. Please use the “Delete this card” action below to remove it from your wallet and re-add if required.\n\nIf you have any concerns, please read the FAQs or you can get in touch with Bink by pressing Contact us."</string>
     <string name="payment_card_added_date">Card added: %s</string>
     <string name="payment_card_link_already_exists_title">Already Linked</string>
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
+    <string name="payment_card_footer_faq_title">FAQS</string>
+    <string name="payment_card_footer_faq_description">Learn more</string>
 
 
     <!-- Payment Card entry -->
@@ -394,7 +397,7 @@
     <string name="log_in_with_email">Log in with email</string>
     <string name="page_1_title">Payment linked loyalty. Magic!</string>
     <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
-    <string name="page_2_title">All you cards in one place</string>
+    <string name="page_2_title">All your cards in one place</string>
     <string name="page_2_description">Store all your loyalty cards in a single digital wallet. View your rewards and points balances any time, anywhere.</string>
     <string name="page_3_title">Never miss out</string>
     <string name="page_3_description">Show your loyalty cards\' barcodes on screen, or collect points instantly when you pay. Whichever way, you\'re always covered.</string>

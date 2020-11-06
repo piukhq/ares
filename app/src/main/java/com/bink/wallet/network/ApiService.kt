@@ -135,9 +135,9 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @PUT("/users/me")
-    fun putUserDetailsAsync(
+   suspend fun putUserDetailsAsync(
         @Body userRequest: User
-    ): Deferred<User>
+    ): User
 
     @GET("/users/me")
     fun getUserAsync(): Deferred<User>

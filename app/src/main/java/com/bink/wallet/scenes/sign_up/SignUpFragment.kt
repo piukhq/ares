@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.sign_up
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
@@ -34,6 +35,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
@@ -110,9 +112,11 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             signUpErrorResponse.observeErrorNonNull(requireContext(), this@SignUpFragment, true) {
                 handleErrorResponse()
+                showSignUpFailedDialog()
                 //Failure
                 logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
 
+                viewModel.signUpErrorResponse.value = null
             }
 
             postServiceErrorResponse.observeErrorNonNull(
@@ -297,5 +301,23 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         if (SharedPreferenceManager.isUserLoggedIn) {
             findNavController().navigate(SignUpFragmentDirections.globalToHome(true))
         }
+    }
+
+    private fun showSignUpFailedDialog(){
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.error)
+            .setMessage(
+                getString(
+                    R.string.error_sign_up_failed
+                )
+            )
+            .setPositiveButton(
+                getString(R.string.ok)
+            ) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 }
