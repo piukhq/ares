@@ -13,15 +13,18 @@ data class Card(
     @ColumnInfo(name = "barcode") var barcode: String?,
     @ColumnInfo(name = "barcode_type") var barcode_type: Int?,
     @ColumnInfo(name = "membership_id") var membership_id: String?,
-    @ColumnInfo(name = "colour") var colour: String?
+    @ColumnInfo(name = "colour") var colour: String?,
+    @ColumnInfo(name = "secondary_colour") var secondary_colour: String?
 ) : Parcelable {
 
     fun getSecondaryColor(): String {
+        if(secondary_colour != null) return secondary_colour!!
+
         val primaryColor = Color.parseColor(colour)
-        if (ColorUtil.isColorLight(primaryColor)) {
-            return ColorUtil.darkenColor(primaryColor)
+        return if (ColorUtil.isColorLight(primaryColor)) {
+            ColorUtil.darkenColor(primaryColor)
         } else {
-            return ColorUtil.lightenColor(primaryColor)
+            ColorUtil.lightenColor(primaryColor)
         }
     }
 
