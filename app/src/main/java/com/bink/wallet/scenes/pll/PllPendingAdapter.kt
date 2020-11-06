@@ -31,13 +31,13 @@ class PllPendingAdapter(
     }
 
     override fun onBindViewHolder(holder: PendingCardsViewHolder, position: Int) {
-        holder.bind(paymentCards[position])
+        holder.bind(paymentCards[position], paymentCards.lastIndex == position)
     }
 
     inner class PendingCardsViewHolder(val binding: PendingCardItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(paymentCard: PaymentCard) {
+        fun bind(paymentCard: PaymentCard, isLastCard: Boolean) {
 
             binding.paymentCard = paymentCard
 
@@ -48,8 +48,9 @@ class PllPendingAdapter(
                 }
             }
 
-            if (isFromPll) binding.cardPending.visibility =
-                View.VISIBLE else binding.cardPending.visibility = View.GONE
+//            binding.separator.visibility = if (isLastCard) View.GONE else View.VISIBLE
+
+            binding.cardPending.visibility = if (isFromPll) View.VISIBLE else View.GONE
 
         }
     }

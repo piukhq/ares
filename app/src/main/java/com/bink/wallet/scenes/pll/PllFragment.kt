@@ -99,17 +99,21 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
                 adapter.updateData( activeCards,membershipCard)
                 binding.brandModal.setOnClickListener {
-                    findNavController().navigate(
-                        PllFragmentDirections.pllToBrandHeader(
-                            GenericModalParameters(
-                                R.drawable.ic_close,
-                                true,
-                                viewModel.membershipPlan.value?.account?.plan_name
-                                    ?: getString(R.string.plan_description)
+                    viewModel.membershipPlan.value?.account?.plan_description?.let {
+                        findNavController().navigate(
+                            PllFragmentDirections.pllToBrandHeader(
+                                GenericModalParameters(
+                                    R.drawable.ic_close,
+                                    true,
+                                    viewModel.membershipPlan.value?.account?.plan_name
+                                        ?: getString(R.string.plan_description),
+                                    it
 
+                                )
                             )
                         )
-                    )
+                    }
+
                 }
                 adapter.notifyDataSetChanged()
             }
