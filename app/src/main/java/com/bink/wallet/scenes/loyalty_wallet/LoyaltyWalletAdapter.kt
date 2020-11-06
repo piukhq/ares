@@ -172,16 +172,14 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
 
-                val currentMembershipPlan =
-                    membershipPlans.firstOrNull { it.id == item.membership_plan }
-
-                currentMembershipPlan?.let { membershipPlan ->
+                membershipPlans.firstOrNull { it.id == item.membership_plan }?.let { membershipPlan ->
                     paymentCards?.let {
                         val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
                     bindVouchersToDisplay(cardBinding, membershipPlan, item)
                 }
+
             }
             with(cardBinding.cardView) {
                 setFirstColor(Color.parseColor(item.card?.getSecondaryColor()))
@@ -222,16 +220,18 @@ class LoyaltyWalletAdapter(
 
                             }
                     } else if (!item.balances.isNullOrEmpty()) {
-                        val balance = item.balances?.first()
-                        when (balance?.prefix != null) {
-                            true ->
-                                loyaltyValue.text =
-                                    balance?.prefix?.plus(balance.value)
-                            else -> {
-                                loyaltyValue.text = balance?.value
-                                loyaltyValueExtra.text = balance?.suffix
+                        item.balances?.firstOrNull()?.let { balance ->
+                            when (balance?.prefix != null) {
+                                true ->
+                                    loyaltyValue.text =
+                                        balance?.prefix?.plus(balance.value)
+                                else -> {
+                                    loyaltyValue.text = balance?.value
+                                    loyaltyValueExtra.text = balance?.suffix
+                                }
                             }
                         }
+
                     }
                 }
             }
