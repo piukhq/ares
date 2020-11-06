@@ -190,4 +190,7 @@
     <!-- BinkWebView -->
     <dimen name="web_view_back_button_margin_horizontal">4dp</dimen>
 
+    <!-- Forms -->
+    <dimen name="forms_checkbox_margin">10dp</dimen>
+
 </resources>
