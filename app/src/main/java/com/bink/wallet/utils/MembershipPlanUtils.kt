@@ -155,7 +155,7 @@ object MembershipPlanUtils {
         }
     }
 
-    private fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
+     fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
         val originalSize = paymentCards.size
         val filteredCards = paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
