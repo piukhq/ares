@@ -18,13 +18,17 @@ class PllEmptyViewModel(val paymentWalletRepository: PaymentWalletRepository) : 
     val paymentCards: LiveData<List<PaymentCard>>
         get() = _paymentCards
 
+    private val _paymentCardsError = MutableLiveData<Exception>()
+    val paymentCardsError:LiveData<Exception>
+    get() = _paymentCardsError
+
     fun getPaymentCards() {
         viewModelScope.launch {
             try {
                 val paymentCards = withContext(Dispatchers.IO){paymentWalletRepository.getLocalPaymentCards()}
                 _paymentCards.value = paymentCards
             } catch (e: Exception) {
-
+            _paymentCardsError.value = e
             }
         }
     }

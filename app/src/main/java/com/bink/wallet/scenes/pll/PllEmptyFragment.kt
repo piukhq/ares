@@ -17,6 +17,7 @@ import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.goToPendingFaqArticle
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
@@ -93,6 +94,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             }
         }
 
+        viewModel.paymentCardsError.observeErrorNonNull(requireContext(), false, this)
+
         currentMembershipPlan?.let {
             binding.membershipPlan = it
         }
@@ -160,7 +163,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     }
 
     private fun pendingCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
-        return  paymentCards.filter { it.status == PAYMENT_CARD_STATUS_PENDING }
+        return paymentCards.filter { it.status == PAYMENT_CARD_STATUS_PENDING }
     }
 
     private fun showPendingCardsList(shouldShowList: Boolean) {
