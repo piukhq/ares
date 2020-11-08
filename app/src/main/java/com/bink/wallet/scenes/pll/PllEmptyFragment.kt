@@ -85,7 +85,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         viewModel.paymentCards.observeNonNull(this) {
             if (pendingCards(it).isNotEmpty()) {
                 showPendingCardsList(true)
-                pendingAdapter.updateData(PaymentCardUtils.removeExpiredCard(it).toMutableList())
+                pendingAdapter.updateData(PaymentCardUtils.inDateCards(it).toMutableList())
 
             } else {
                 showPendingCardsList(false)

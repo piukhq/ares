@@ -273,7 +273,7 @@ object PaymentCardUtils {
         }
     }
 
-    fun removeExpiredCard(paymentCards: List<PaymentCard>):List<PaymentCard>{
+    fun inDateCards(paymentCards: List<PaymentCard>):List<PaymentCard>{
         val activeCards = mutableListOf<PaymentCard>()
         paymentCards.forEach { pCard->
             pCard.card?.let {

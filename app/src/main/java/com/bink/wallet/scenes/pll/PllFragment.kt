@@ -94,7 +94,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         binding.rvPendingPaymentCards.adapter = pendingAdapter
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            val (pendingCards,activeCards) = PaymentCardUtils.removeExpiredCard(it).partition { paymentCard -> paymentCard.status == PAYMENT_CARD_STATUS_PENDING }
+            val (pendingCards,activeCards) = PaymentCardUtils.inDateCards(it).partition { paymentCard -> paymentCard.status == PAYMENT_CARD_STATUS_PENDING }
 
             viewModel.membershipCard.value?.let { membershipCard ->
 
@@ -116,14 +116,11 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     }
 
                 }
-                adapter.notifyDataSetChanged()
             }
 
             if (pendingCards.isNotEmpty()) {
                 showPendingCardsList(true)
                 pendingAdapter.updateData(pendingCards.toMutableList())
-
-
 
             } else {
                 showPendingCardsList(false)
