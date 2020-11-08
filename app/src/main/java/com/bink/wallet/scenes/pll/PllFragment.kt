@@ -18,6 +18,7 @@ import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.NetworkUtils
 import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
 import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
+import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.isLinkedToMembershipCard
@@ -93,7 +94,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         binding.rvPendingPaymentCards.adapter = pendingAdapter
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            val (pendingCards,activeCards) = it.partition { it.status == PAYMENT_CARD_STATUS_PENDING }
+            val (pendingCards,activeCards) = PaymentCardUtils.removeExpiredCard(it).partition { paymentCard -> paymentCard.status == PAYMENT_CARD_STATUS_PENDING }
 
             viewModel.membershipCard.value?.let { membershipCard ->
 
