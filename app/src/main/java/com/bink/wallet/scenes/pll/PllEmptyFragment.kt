@@ -83,7 +83,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         viewModel.getPaymentCards()
 
         viewModel.paymentCards.observeNonNull(this) {
-            if (hasPendingCards(it).isNotEmpty()) {
+            if (pendingCards(it).isNotEmpty()) {
                 showPendingCardsList(true)
                 pendingAdapter.updateData(PaymentCardUtils.removeExpiredCard(it).toMutableList())
 
@@ -159,15 +159,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
     }
 
-    private fun hasPendingCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
-        val pendingCards = mutableListOf<PaymentCard>()
-
-        paymentCards.forEach { card ->
-            if (card.status == PAYMENT_CARD_STATUS_PENDING) {
-                pendingCards.add(card)
-            }
-        }
-        return pendingCards
+    private fun pendingCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
+        return  paymentCards.filter { it.status == PAYMENT_CARD_STATUS_PENDING }
     }
 
     private fun showPendingCardsList(shouldShowList: Boolean) {
