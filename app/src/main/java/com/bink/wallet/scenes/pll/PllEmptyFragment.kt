@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
+import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.goToPendingFaqArticle
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
@@ -83,12 +84,10 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
         viewModel.paymentCards.observeNonNull(this) {
             if (hasPendingCards(it).isNotEmpty()) {
-                //show recyclerView
                 showPendingCardsList(true)
-                pendingAdapter.updateData(it.toMutableList())
+                pendingAdapter.updateData(PaymentCardUtils.removeExpiredCard(it).toMutableList())
 
             } else {
-                //hide the recyclerView
                 showPendingCardsList(false)
 
             }

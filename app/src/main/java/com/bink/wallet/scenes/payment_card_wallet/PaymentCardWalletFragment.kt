@@ -23,6 +23,7 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.JOIN_CARD
+import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
@@ -306,6 +307,10 @@ class PaymentCardWalletFragment :
 
         SharedPreferenceManager.isPaymentEmpty =
             viewModel.paymentCards.value.isNullOrEmpty()
+
+        viewModel.paymentCards.value?.let {
+            SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(it)
+        }
 
         walletItems.clear()
 

@@ -48,7 +48,7 @@ class PllPendingAdapter(
                 }
             }
 
-//            binding.separator.visibility = if (isLastCard) View.GONE else View.VISIBLE
+            binding.separator.visibility = if (isLastCard) View.INVISIBLE else View.VISIBLE
 
             binding.cardPending.visibility = if (isFromPll) View.VISIBLE else View.GONE
 
