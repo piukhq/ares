@@ -18,7 +18,7 @@ data class Card(
 ) : Parcelable {
 
     fun getSecondaryColor(): String {
-        if(secondary_colour != null) return secondary_colour!!
+        secondary_colour?.let { return it }
 
         val primaryColor = Color.parseColor(colour)
         return if (ColorUtil.isColorLight(primaryColor)) {

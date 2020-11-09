@@ -182,7 +182,7 @@ class LoyaltyWalletAdapter(
                     }
 
                     membershipPlan.card?.let {  membershipPlanCard ->
-                        item.card?.let { membershipCardCard ->
+                        item.card?.let { 
                             item.card!!.secondary_colour = membershipPlanCard.secondary_colour
                         }
                     }
