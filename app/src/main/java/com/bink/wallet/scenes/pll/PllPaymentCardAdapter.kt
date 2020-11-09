@@ -43,18 +43,12 @@ class PllPaymentCardAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         paymentCards[position].let { paymentCard ->
-            paymentCard.let {
                 (holder as PllPaymentCardViewHolder).bindCard(
                     paymentCard,
                     paymentCards.last() == paymentCard, isFromAddJourney, membershipCard
                 )
-            }
         }
 
-    }
-
-    fun setOnBrandHeaderClickListener(onBrandHeaderClickListener: OnBrandHeaderClickListener) {
-        this.onBrandHeaderClickListener = onBrandHeaderClickListener
     }
 
 }
