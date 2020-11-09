@@ -108,6 +108,16 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 View.GONE
             }
 
+        currentMembershipPlan?.let { membershipPlan ->
+            if ((membershipPlan.account != null && membershipPlan.account.enrol_fields.isNullOrEmpty()) ||
+                (membershipPlan.feature_set?.linking_support != null && !membershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name))
+            ) {
+                binding.getCardButton.visibility = View.GONE
+            } else {
+                binding.getCardButton.visibility = View.VISIBLE
+            }
+        }
+
         binding.closeButton.setOnClickListener {
             if (isFromJoinCard) {
                 findNavController().popBackStack()
