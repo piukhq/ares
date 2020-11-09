@@ -42,9 +42,8 @@ class PllPendingAdapter(
             binding.paymentCard = paymentCard
 
             with(binding.imageView) {
-                val type = paymentCard.card?.provider?.getCardTypeFromProvider()
-                if (type != null) {
-                    setImageResource(type.addLogo)
+                paymentCard.card?.provider?.getCardTypeFromProvider()?.let {
+                    setImageResource(it.addLogo)
                 }
             }
 
