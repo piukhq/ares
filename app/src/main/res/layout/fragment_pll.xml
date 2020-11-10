@@ -9,6 +9,10 @@
         <variable
             name="viewModel"
             type="com.bink.wallet.scenes.pll.PllViewModel" />
+
+        <variable
+            name="item"
+            type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,17 +28,116 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/payment_cards"
-            android:layout_width="0dp"
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
+            android:overScrollMode="always"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:itemCount="5"
-            tools:listitem="@layout/pll_payment_card_item" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <com.bink.wallet.ModalBrandHeader
+                    android:id="@+id/brand_modal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:membershipPlan="@{item}" />
+
+                <include
+                    android:id="@+id/pll_title"
+                    layout="@layout/item_pll_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/brand_modal" />
+
+                <TextView
+                    android:id="@+id/pll_description"
+                    style="@style/DescriptionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pll_title"
+                    app:pllDescription="@{item.account.plan_name_card}"
+                    tools:text="The payment cards below will be linked to your Rewards. Simply pay with them to collect points." />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/payment_cards"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pll_description"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/pll_payment_card_item" />
+
+                <TextView
+                    android:id="@+id/pending_cards_title"
+                    style="@style/HeaderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:text="@string/pll_pending_cards_title"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payment_cards"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/pending_cards_description"
+                    style="@style/DescriptionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:text="@string/pll_pending_cards_description"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pending_cards_title"
+                    tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_pending_payment_cards"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pending_cards_description"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/pending_card_item"
+                    tools:visibility="visible" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/button_done"
@@ -55,9 +158,10 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/footer_default_fade_view_height"
             android:background="@drawable/bg_btn_gradient"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

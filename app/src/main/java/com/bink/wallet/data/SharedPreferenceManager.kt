@@ -38,6 +38,7 @@ object SharedPreferenceManager {
     private const val IS_SCANNED_CARD = "is_scanned_card"
     private const val BARCODE_VALUE = "barcode_value"
     private const val CARD_NUMBER_VALUE = "cardNumber_value"
+    private const val HAS_NO_ACTIVE_PAYMENT_CARD = "has_no_active_payment_cards"
 
 
     //----- PAIRS ----
@@ -86,6 +87,12 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(IS_PAYMENT_EMPTY.first, IS_PAYMENT_EMPTY.second)
         set(value) = preferences.edit {
             it.putBoolean(IS_PAYMENT_EMPTY.first, value)
+        }
+
+    var hasNoActivePaymentCards: Boolean
+        get() = preferences.getBoolean(HAS_NO_ACTIVE_PAYMENT_CARD, false)
+        set(value) = preferences.edit {
+            it.putBoolean(HAS_NO_ACTIVE_PAYMENT_CARD, value)
         }
 
     var isPaymentJoinBannerDismissed: Boolean

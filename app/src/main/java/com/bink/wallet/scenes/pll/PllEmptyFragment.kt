@@ -2,15 +2,23 @@ package com.bink.wallet.scenes.pll
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentPllEmptyBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
+import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
+import com.bink.wallet.utils.PaymentCardUtils
+import com.bink.wallet.utils.goToPendingFaqArticle
 import com.bink.wallet.utils.logPaymentCardSuccess
 import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
 import com.bink.wallet.utils.scanResult
@@ -32,10 +40,13 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
     override val viewModel: PllEmptyViewModel by viewModel()
 
+    private lateinit var pendingAdapter: PllPendingAdapter
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         binding.viewModel = viewModel
+        binding.fragment = this
 
         arguments.let { bundle ->
             if (bundle != null) {
@@ -63,6 +74,28 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
                 )
             }
         }
+
+        pendingAdapter =
+            PllPendingAdapter(mutableListOf(), clickListener = { goToPendingFaqArticle() })
+
+        binding.rvPendingCards.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = pendingAdapter
+        }
+        viewModel.getPaymentCards()
+
+        viewModel.paymentCards.observeNonNull(this) {
+            if (pendingCards(it).isNotEmpty()) {
+                showPendingCardsList(true)
+                pendingAdapter.updateData(PaymentCardUtils.inDateCards(it).toMutableList())
+
+            } else {
+                showPendingCardsList(false)
+
+            }
+        }
+
+        viewModel.paymentCardsError.observeErrorNonNull(requireContext(), false, this)
 
         currentMembershipPlan?.let {
             binding.membershipPlan = it
@@ -128,5 +161,27 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
                 }
             }
         directions?.let { _ -> findNavController().navigateIfAdded(this, directions) }
+    }
+
+    private fun pendingCards(paymentCards: List<PaymentCard>): List<PaymentCard> {
+        return paymentCards.filter { it.status == PAYMENT_CARD_STATUS_PENDING }
+    }
+
+    private fun showPendingCardsList(shouldShowList: Boolean) {
+        if (shouldShowList) {
+            binding.rvPendingCards.visibility = View.VISIBLE
+            binding.pllEmptyTitle.text = getString(R.string.pll_pending_cards_title)
+            binding.pllEmptyDescriptionPart1.visibility = View.GONE
+            binding.pllEmptyDescriptionPart2.text = getString(R.string.pending_pll_card_description)
+        } else {
+            binding.rvPendingCards.visibility = View.GONE
+            binding.pllEmptyTitle.text = getString(R.string.link_payment_cards)
+            binding.pllEmptyDescriptionPart1.visibility = View.VISIBLE
+            binding.pllEmptyDescriptionPart2.text =
+                getString(R.string.link_payment_card_description_part_2)
+
+        }
+
+
     }
 }
