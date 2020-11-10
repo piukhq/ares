@@ -158,6 +158,11 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
+            SettingsItemType.WHO_WE_ARE ->{
+                findNavController().navigate(
+                    SettingsFragmentDirections.settingsToWhoAreWe()
+                )
+            }
             SettingsItemType.TERMS_AND_CONDITIONS,
             SettingsItemType.PRIVACY_POLICY -> {
                 item.url?.let { url ->

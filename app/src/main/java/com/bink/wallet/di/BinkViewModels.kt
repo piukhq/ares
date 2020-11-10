@@ -48,6 +48,7 @@ import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
+import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -127,6 +128,8 @@ val viewModelModules = module {
     viewModel { SettingsViewModel(get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
+
+    viewModel { WhoWeAreViewModel() }
 
     single {
         provideAddPaymentCardRepository(
