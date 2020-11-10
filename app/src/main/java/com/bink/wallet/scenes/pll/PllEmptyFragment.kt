@@ -75,7 +75,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             }
         }
 
-        pendingAdapter = PllPendingAdapter(mutableListOf(),clickListener = {goToPendingFaqArticle()})
+        pendingAdapter =
+            PllPendingAdapter(mutableListOf(), clickListener = { goToPendingFaqArticle() })
 
         binding.rvPendingCards.apply {
             layoutManager = LinearLayoutManager(context)
@@ -183,8 +184,4 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
 
 
     }
-
-//    val onFaqClicked: (() -> Unit)? = {
-//        goToPendingFaqArticle()
-//    }
 }

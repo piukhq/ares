@@ -91,7 +91,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
         val adapter = PllPaymentCardAdapter(mutableListOf(), isAddJourney)
         pendingAdapter =
-            PllPendingAdapter(mutableListOf(), true, clickListener = { goToPendingFaqArticle() })
+            PllPendingAdapter(mutableListOf(), clickListener = { goToPendingFaqArticle() })
         binding.rvPendingPaymentCards.layoutManager = LinearLayoutManager(context)
         binding.rvPendingPaymentCards.adapter = pendingAdapter
 
