@@ -433,11 +433,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
-                        logDebug(
-                            LoyaltyWalletFragment::class.java.simpleName,
-                            getString(R.string.loyalty_wallet_dialog_description)
-                        )
-                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+                        dialog.cancel()
                     }
                 }
             }
@@ -445,6 +441,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             builder.setNeutralButton(getString(R.string.cancel_text_upper), dialogClickListener)
             dialog = builder.create()
             dialog.show()
+
+            dialog.setOnCancelListener {
+                logDebug(
+                    LoyaltyWalletFragment::class.java.simpleName,
+                    getString(R.string.loyalty_wallet_dialog_description)
+                )
+                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+            }
         }
     }
 
