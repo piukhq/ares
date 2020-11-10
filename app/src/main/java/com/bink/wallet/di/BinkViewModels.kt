@@ -98,7 +98,7 @@ val viewModelModules = module {
 
     viewModel { LoyaltyCardRewardsHistoryViewModel() }
 
-    viewModel { PllEmptyViewModel() }
+    viewModel { PllEmptyViewModel(get()) }
 
     viewModel { MaximisedBarcodeViewModel() }
 

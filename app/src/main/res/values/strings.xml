@@ -183,6 +183,8 @@
     <string name="link_payment_cards">Link to payment cards</string>
     <string name="link_payment_card_description_part_1">You have not added any payment cards yet.</string>
     <string name="link_payment_card_description_part_2">Add them to link to this card and others.</string>
+    <string name="pending_pll_card_description">The payment cards below are pending authorisation. You will be able to link them to your loyalty card once they\'ve been approved.</string>
+    <string name="pll_empty_faqs_description">You can find out more about pending payment cards by reading our FAQS here</string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
@@ -259,6 +261,10 @@
     <string name="pll_linked_title">Link to payment cards</string>
     <string name="pll_unlinked_title">Add card</string>
     <string name="pll_last_digits">Card ending in %1$s</string>
+    <string name="pll_pending_authorisation">Pending authorisation</string>
+    <string name="pll_pending_cards_title">Pending payment cards</string>
+    <string name="pll_pending_cards_description">The payment cards below are pending authorisation. You will be able to link them to your loyalty card once they have been approved.</string>
+    <string name="pll_pending">Pending</string>
 
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text">I authorise Mastercard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction, and for Mastercard, Visa and American Express to share such transaction details with Bink to enable my card-linked offer(s) and target offers that may be of interest to me.</string>
