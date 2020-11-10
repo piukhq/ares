@@ -171,9 +171,6 @@ class LoyaltyCardDetailsFragment :
 
         binding.footerAbout.binding.title.text = aboutTitle
 
-        binding.footerAbout.setOnClickListener {
-            viewAboutInformation()
-        }
         if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
             binding.footerPlrRewards.visibility = View.GONE
             binding.footerPlrSeparator.visibility = View.GONE
@@ -340,14 +337,15 @@ class LoyaltyCardDetailsFragment :
 
         findNavController().navigateIfAdded(
             this,
-            LoyaltyCardDetailsFragmentDirections.detailToAbout(
+            LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
                 GenericModalParameters(
                     R.drawable.ic_close,
                     true,
                     aboutText,
                     summary,
-                    description2 = description
-                )
+                    description2 = description,
+                    firstButtonText = getString(R.string.go_to_site)
+                ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
             ),
             currentDestination
         )
@@ -421,34 +419,7 @@ class LoyaltyCardDetailsFragment :
 
     private fun handleFootersListeners() {
         binding.footerAbout.setOnClickListener {
-            var aboutText = getString(R.string.about_membership)
-            var summary = ""
-            var description = getString(R.string.no_plan_description_available)
-
-            viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
-                aboutText = getString(R.string.about_membership_title_template, plan_name)
-            }
-            viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
-                description = plan_description
-            }
-            viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
-                summary = planSummary
-            }
-
-            findNavController().navigateIfAdded(
-                this,
-                LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        aboutText,
-                        summary,
-                        description2 = description
-                    )
-                ),
-                currentDestination
-            )
-
+            viewAboutInformation()
         }
 
         binding.footerSecurity.setOnClickListener {
