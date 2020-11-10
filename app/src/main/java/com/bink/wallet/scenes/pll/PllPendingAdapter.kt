@@ -40,6 +40,8 @@ class PllPendingAdapter(
 
         fun bind(paymentCard: PaymentCard, isLastCard: Boolean) {
 
+            binding.root.setOnClickListener { clickListener.invoke() }
+
             binding.paymentCard = paymentCard
 
             with(binding.imageView) {
@@ -49,8 +51,6 @@ class PllPendingAdapter(
             }
 
             binding.separator.visibility = if (isLastCard) View.INVISIBLE else View.VISIBLE
-
-            binding.cardPending.visibility = if (isFromPll) View.VISIBLE else View.GONE
 
         }
     }
