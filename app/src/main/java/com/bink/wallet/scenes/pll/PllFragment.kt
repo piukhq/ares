@@ -21,6 +21,7 @@ import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
 import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.goToPendingFaqArticle
 import com.bink.wallet.utils.isLinkedToMembershipCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
@@ -88,17 +89,19 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         }
 
 
-        val adapter = PllPaymentCardAdapter(mutableListOf(),isAddJourney)
-        pendingAdapter = PllPendingAdapter(mutableListOf(), true)
+        val adapter = PllPaymentCardAdapter(mutableListOf(), isAddJourney)
+        pendingAdapter =
+            PllPendingAdapter(mutableListOf(), true, clickListener = { goToPendingFaqArticle() })
         binding.rvPendingPaymentCards.layoutManager = LinearLayoutManager(context)
         binding.rvPendingPaymentCards.adapter = pendingAdapter
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
-            val (pendingCards,activeCards) = PaymentCardUtils.inDateCards(it).partition { paymentCard -> paymentCard.status == PAYMENT_CARD_STATUS_PENDING }
+            val (pendingCards, activeCards) = PaymentCardUtils.inDateCards(it)
+                .partition { paymentCard -> paymentCard.status == PAYMENT_CARD_STATUS_PENDING }
 
             viewModel.membershipCard.value?.let { membershipCard ->
 
-                adapter.updateData( activeCards,membershipCard)
+                adapter.updateData(activeCards, membershipCard)
                 binding.brandModal.setOnClickListener {
                     viewModel.membershipPlan.value?.account?.plan_description?.let {
                         findNavController().navigate(
@@ -171,16 +174,16 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                     viewModel.membershipCard.value?.let {
                         adapter.paymentCards.forEach { paymentCard ->
 
-                                if (paymentCard.isSelected &&
-                                    !paymentCard.isLinkedToMembershipCard(it)
-                                ) {
-                                    selectedCards.add(paymentCard)
-                                } else if (viewModel.membershipCard.value != null &&
-                                    !paymentCard.isSelected &&
-                                    paymentCard.isLinkedToMembershipCard(it)
-                                ) {
-                                    unselectedCards.add(paymentCard)
-                                }
+                            if (paymentCard.isSelected &&
+                                !paymentCard.isLinkedToMembershipCard(it)
+                            ) {
+                                selectedCards.add(paymentCard)
+                            } else if (viewModel.membershipCard.value != null &&
+                                !paymentCard.isSelected &&
+                                paymentCard.isLinkedToMembershipCard(it)
+                            ) {
+                                unselectedCards.add(paymentCard)
+                            }
 
                         }
                     }
