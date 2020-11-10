@@ -177,6 +177,13 @@ class LoyaltyWalletAdapter(
                         val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
+
+                    membershipPlan.card?.let {  membershipPlanCard ->
+                        item.card?.let { 
+                            it.secondary_colour = membershipPlanCard.secondary_colour
+                        }
+                    }
+
                     bindVouchersToDisplay(cardBinding, membershipPlan, item)
                 }
 
