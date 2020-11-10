@@ -25,7 +25,6 @@ class AccumulatorVouchersViewHolder(
         with(binding) {
             voucher = thisVoucher
             thisVoucher.burn?.let {
-                if (it.value != null) {
                     title.text = ValueDisplayUtils.displayValue(
                         it.value,
                         it.prefix,
@@ -33,7 +32,6 @@ class AccumulatorVouchersViewHolder(
                         it.currency,
                         it.type
                     )
-                }
             }
             root.apply {
                 this.setOnClickListener {

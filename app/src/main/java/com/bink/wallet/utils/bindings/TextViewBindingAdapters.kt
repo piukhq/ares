@@ -5,8 +5,13 @@ import androidx.databinding.BindingAdapter
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.Burn
 import com.bink.wallet.model.response.membership_card.Earn
+import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.ValueDisplayUtils
+import com.bink.wallet.utils.enums.VoucherStates
+
+const val ACCUMULATOR = "accumulator"
+const val STAMP = "stamps"
 
 @BindingAdapter("showNumberOrBarcodeDescription")
 fun TextView.setNumberOrBarcodeDescription(isBarcodeAvailable: Boolean) {
@@ -47,4 +52,29 @@ fun TextView.setVoucherCollectedProgress(voucherEarn: Earn) {
         voucherEarn.target_value?.toInt(),
         voucherEarn.suffix
     )
+}
+
+@BindingAdapter("voucherHeadline")
+fun TextView.setVoucherHeadline(voucher: Voucher) {
+    voucher.state?.let { state ->
+        text = when (state) {
+            VoucherStates.REDEEMED.state,
+            VoucherStates.EXPIRED.state,
+            VoucherStates.CANCELLED.state
+            -> state.capitalize()
+            VoucherStates.ISSUED.state -> context.getString(R.string.earned).capitalize()
+            else ->
+                if (voucher.earn?.type == STAMP)
+                    context.getString(
+                        R.string.voucher_stamp_in_progress_headline,
+                        ValueDisplayUtils.displayFormattedHeadline(voucher.earn)
+                    ) else context.getString(
+                    R.string.voucher_accumulator_in_progress_headline,
+                    ValueDisplayUtils.displayFormattedHeadline(voucher.earn)
+                )
+
+
+        }
+    }
+
 }

@@ -24,6 +24,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
+import retrofit2.HttpException
 
 class PaymentWalletRepository(
     private val apiService: ApiService,
@@ -52,12 +53,32 @@ class PaymentWalletRepository(
         }
     }
 
+    suspend fun getPaymentCard(id: String): PaymentCard {
+        return apiService.getPaymentCardAsync(id)
+    }
+
+
     private fun storePaymentsCards(
         cards: List<PaymentCard>,
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            generateUuidForPaymentCards(cards, paymentCardDao,membershipCardDao)
+
+            val cardIdsInDb = paymentCardDao.getAllAsync().map { card -> card.id }
+            val idsFromApi = cards.map { cardsFromApi -> cardsFromApi.id }
+
+            // List if id's which are in the database but not in the api data.
+            val difference = idsFromApi?.let { cardIdsInDb.minus(it) }
+            difference?.let {
+                if (it.isNotEmpty()) {
+                    it.forEach { cardId ->
+                        withContext(Dispatchers.IO) {
+                            paymentCardDao.deletePaymentCardById(cardId.toString())
+                        }
+                    }
+                }
+            }
+            generateUuidForPaymentCards(cards, paymentCardDao, membershipCardDao)
             withContext(Dispatchers.Main) {
                 try {
                     withContext(Dispatchers.IO) {
@@ -103,23 +124,28 @@ class PaymentWalletRepository(
     fun linkPaymentCard(
         membershipCard: MembershipCard,
         paymentCard: PaymentCard,
-        linkError: MutableLiveData<Exception>,
-        paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData()
+        linkError: MutableLiveData<Pair<Exception, String>>,
+        paymentCardMutableLiveData: MutableLiveData<PaymentCard> = MutableLiveData(),
+        membershipPlanId: String
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val paymentCardResponse =
-                apiService.linkToPaymentCardAsync(membershipCard.id, paymentCard.id.toString())
-            withContext(Dispatchers.Main) {
-                try {
-                    paymentCardMutableLiveData.value = paymentCardResponse
-                    logPatchEvent(paymentCard, membershipCard, paymentCardResponse)
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val paymentCardResponse =
+                    withContext(Dispatchers.IO) {
+                        apiService.linkToPaymentCardAsync(
+                            membershipCard.id,
+                            paymentCard.id.toString()
+                        )
+                    }
+                paymentCardMutableLiveData.value = paymentCardResponse
+                logPatchEvent(paymentCard, membershipCard, paymentCardResponse)
 
 
-                } catch (e: Exception) {
-                    linkError.value = e
-                    logPllFailure(paymentCard, membershipCard,true)
-                }
+            } catch (e: Exception) {
+                linkError.value = Pair(e, membershipPlanId)
+                logPllFailure(paymentCard, membershipCard, true)
             }
+
         }
     }
 
@@ -147,7 +173,7 @@ class PaymentWalletRepository(
                     logDeleteEvent(paymentCard, membershipCard)
                 } catch (e: Exception) {
                     unlinkError?.value = e
-                    logPllFailure(paymentCard, membershipCard,false)
+                    logPllFailure(paymentCard, membershipCard, false)
                 }
             }
         }
@@ -181,7 +207,7 @@ class PaymentWalletRepository(
                     } catch (e: Exception) {
                         localErrors.add(e)
                         unlinkErrors.value = localErrors
-                        logPllFailure(card, membershipCard,false)
+                        logPllFailure(card, membershipCard, false)
 
                     }
 
@@ -199,8 +225,8 @@ class PaymentWalletRepository(
     ) {
         val localSuccesses = ArrayList<Any>()
         val localErrors = ArrayList<Exception>()
-        val handler = CoroutineExceptionHandler {
-                _, exception -> logDebug("paymentWalletRepository","Caught $exception")
+        val handler = CoroutineExceptionHandler { _, exception ->
+            logDebug("paymentWalletRepository", "Caught $exception")
         }
         paymentCards.forEach { card ->
             CoroutineScope(Dispatchers.IO).launch(handler) {
@@ -223,7 +249,7 @@ class PaymentWalletRepository(
                     } catch (e: Exception) {
                         localErrors.add(e)
                         linkErrors.value = localErrors
-                        logPllFailure(card, membershipCard,true)
+                        logPllFailure(card, membershipCard, true)
 
                     }
                 }

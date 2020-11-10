@@ -17,7 +17,7 @@ class AvailablePllAdapter(
     private val currentPaymentCard: PaymentCard,
     private val plans: List<MembershipPlan> = ArrayList(),
     private val membershipCards: List<MembershipCard> = ArrayList(),
-    private val onLinkStatusChange: (Pair<String?, Boolean>) -> Unit = {},
+    private val onLinkStatusChange: (Triple<String?, Boolean,MembershipPlan?>,Int?) -> Unit ,
     private val onItemSelected: (MembershipPlan, MembershipCard) -> Unit
 ) : RecyclerView.Adapter<AvailablePllAdapter.AvailablePllViewHolder>() {
 
@@ -54,7 +54,7 @@ class AvailablePllAdapter(
 
             binding.toggle.setOnCheckedChangeListener { _, isChecked ->
                 if (isNetworkAvailable(binding.root.context, true)) {
-                    onLinkStatusChange(Pair(item.id, isChecked))
+                    onLinkStatusChange(Triple(item.id, isChecked,currentMembershipPlan),adapterPosition)
                     binding.toggle.displayCustomSwitch(isChecked)
                 } else {
                     binding.toggle.isChecked = !isChecked

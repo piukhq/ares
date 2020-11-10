@@ -353,6 +353,16 @@
     <string name="default_card_second_color">#888888</string>
     <string name="payment_card_pending">Pending</string>
     <string name="payment_card_retry">Retry</string>
+    <string name="payment_card_pending_title_text">Payment card pending</string>
+    <string name="payment_card_inactive_title_text">Payment card inactive</string>
+    <string name="payment_card_pending_description_text">You cannot link any loyalty cards to start earning rewards.\n\nPlease wait for the card to be authorised.
+        If the problem persists please read our FAQs or you can get in touch with Bink using the Contact us form in Settings.</string>
+    <string name="payment_card_inactive_description_text">"Your payment card is not authorised and you cannot link any loyalty cards to start earning rewards.\n\nYour card has failed the authorisation process or has expired. Please use the “Delete this card” action below to remove it from your wallet and re-add if required.\n\nIf you have any concerns, please read the FAQs or you can get in touch with Bink using the Contact us form in Settings."</string>
+    <string name="payment_card_added_date">Card added: %s</string>
+    <string name="payment_card_link_already_exists_title">Already Linked</string>
+    <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
+
+
 
     <!-- Payment Card entry -->
     <string name="empty_string" />
@@ -486,6 +496,7 @@
     <string name="voucher_detail_date_redeemed">Redeemed %s</string>
     <string name="voucher_detail_title_expired">Your %s has expired</string>
     <string name="voucher_detail_text_expired">""</string>
+    <string name="voucher_detail_headline_cancelled">Cancelled</string>
     <string name="voucher_detail_date_expired">Expired %s</string>
     <string name="voucher_detail_date_expires">Expires %s</string>
     <string name="preference_marketing_bink">Receive marketing messages</string>
@@ -514,6 +525,10 @@
     <string name="voucher_stamp_redeemed_body">You have redeemed your FREE Whopper</string>
     <string name="voucher_stamp_expired_title">Your voucher has expired</string>
     <string name="voucher_stamp_expired_body">Your FREE Whopper voucher has expired</string>
+    <string name="voucher_stamp_cancelled_title">Your voucher has been cancelled </string>
+    <string name="voucher_stamp_in_progress_headline">%s to go!</string>
+    <string name="voucher_accumulator_in_progress_headline">%s left to go!</string>
+
 
     <!-- Certificate Pinning -->
     <string name="ssl_pinning_failure_title">Error</string>

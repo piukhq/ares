@@ -319,7 +319,7 @@ class PaymentCardWalletFragment :
         }
 
         viewModel.paymentCards.value?.let { paymentCards ->
-            walletItems.addAll(paymentCards)
+            walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
 
         walletAdapter.paymentCards = walletItems

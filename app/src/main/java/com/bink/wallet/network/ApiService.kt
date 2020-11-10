@@ -25,6 +25,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
 
@@ -49,7 +50,7 @@ interface ApiService {
 
     @POST("/ubiquity/payment_cards")
     fun addPaymentCardAsync(
-        @Body cardAdd: PaymentCardAdd
+        @Body cardAdd: PaymentCardAdd,@Query("autoLink") autoLink:Boolean = true
     ): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
@@ -98,9 +99,9 @@ interface ApiService {
     fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
 
     @GET("/ubiquity/payment_card/{payment_id}")
-    fun getPaymentCardAsync(
+    suspend fun getPaymentCardAsync(
         @Path("payment_id") cardId: String
-    ): Deferred<PaymentCard>
+    ): PaymentCard
 
     @POST("/users/auth/facebook")
     fun authWithFacebookAsync(

@@ -20,6 +20,7 @@ class StampVouchersViewHolder(
         }
         if (voucher.state == VoucherStates.REDEEMED.state ||
             voucher.state == VoucherStates.EXPIRED.state ||
+            voucher.state == VoucherStates.CANCELLED.state ||
             voucher.state == VoucherStates.NONE.state
         ) {
             val dateToDisplay =

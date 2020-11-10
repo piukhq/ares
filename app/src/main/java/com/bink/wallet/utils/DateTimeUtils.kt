@@ -26,5 +26,8 @@ class DateTimeUtils {
 
         fun dateTimeFormatTransactionTime(timeStamp: Long) =
             SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
+
+        fun dateFormatTimeStamp(timeStamp: Long) =
+            SimpleDateFormat("dd MMM yyyy",Locale.ENGLISH).format(timeStamp * ONE_THOUSAND).toString()
     }
 }

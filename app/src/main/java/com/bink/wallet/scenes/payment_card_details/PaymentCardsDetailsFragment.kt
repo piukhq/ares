@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.payment_card_details
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +15,9 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_DETAIL_VIEW
+import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
+import com.bink.wallet.utils.PENDING_CARD
+import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.CardType
@@ -23,6 +27,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -39,6 +44,14 @@ class PaymentCardsDetailsFragment :
         get() = R.layout.payment_cards_details_fragment
 
     private var scrollY = 0
+
+    private lateinit var availablePllAdapter: AvailablePllAdapter
+
+    private var planAndPositionPair = mutableListOf<Pair<MembershipPlan?,Int?>>()
+
+    private var countDownTimer: CountDownTimer? = null
+
+    private var hasRefreshedAtLeastOnce = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -107,6 +120,88 @@ class PaymentCardsDetailsFragment :
             }
         }
 
+
+        viewModel.deleteRequest.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
+        }
+
+        viewModel.deleteError.observeErrorNonNull(
+            requireContext(),
+            this,
+            EMPTY_STRING,
+            getString(R.string.card_error_dialog),
+            true,
+            null
+        )
+
+        viewModel.paymentCard.observeNonNull(this) {
+            binding.paymentCardDetail = it
+            when (it.isCardActive()) {
+                true -> setActivePcdScreen()
+                else -> setInactivePcdScreen()
+            }
+            if (hasRefreshedAtLeastOnce) {
+                countDownTimer?.start()
+            }
+            viewModel.storePaymentCard(it)
+
+            viewModel.getMembershipCards()
+        }
+
+        viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
+
+        viewModel.getCardError.observeErrorNonNull(requireContext(),false,this)
+
+    }
+
+    private fun setInactivePcdScreen() {
+        setViewState(false)
+        if (viewModel.paymentCard.value?.status?.let { PaymentCardUtils.cardStatus(it) } == PENDING_CARD){
+            countDownTimer = object : CountDownTimer(30000, 1000) {
+                override fun onFinish() {
+                    viewModel.paymentCard.value?.id?.let { viewModel.getPaymentCard(it) }
+                    hasRefreshedAtLeastOnce = true
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+
+                }
+
+            }
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        logScreenView(PAYMENT_DETAIL_VIEW)
+        binding.scrollView.postDelayed({
+            binding.scrollView.scrollTo(0, scrollY)
+        }, SCROLL_DELAY)
+        if (isNetworkAvailable(requireActivity())) {
+            viewModel.getMembershipCards()
+        }
+        countDownTimer?.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scrollY = binding.scrollView.scrollY
+
+        countDownTimer?.cancel()
+    }
+
+
+    private fun goHome() {
+        findNavController().navigateIfAdded(
+            this,
+            R.id.global_to_home
+        )
+    }
+
+    private fun setActivePcdScreen() {
+        setViewState(true)
         viewModel.membershipPlanData.observeNonNull(this) { plans ->
             val pllPlansIds = mutableListOf<String>()
             plans.forEach { plan -> if (plan.getCardType() == CardType.PLL) pllPlansIds.add(plan.id) }
@@ -117,7 +212,7 @@ class PaymentCardsDetailsFragment :
                     availablePllList.apply {
                         layoutManager = GridLayoutManager(context, 1)
                         viewModel.paymentCard.value?.let {
-                            adapter = AvailablePllAdapter(
+                            availablePllAdapter = AvailablePllAdapter(
                                 it,
                                 plans,
                                 pllCards,
@@ -125,6 +220,8 @@ class PaymentCardsDetailsFragment :
                                 onItemSelected = ::onItemSelected
                             )
                         }
+
+                        adapter = availablePllAdapter
                     }
                     val unaddedCardsForPlan = mutableListOf<MembershipPlan>()
                     for (plan in plans.filter { it.getCardType() == CardType.PLL }) {
@@ -179,41 +276,42 @@ class PaymentCardsDetailsFragment :
             viewModel.getMembershipCards()
         }
 
-        viewModel.linkError.observeErrorNonNull(requireContext(), true, this)
+        viewModel.linkError.observeNonNull(this) {
+            (it.first as HttpException).response()?.errorBody()?.string()?.let { responseString ->
+                if (responseString.contains(PLAN_ALREADY_EXISTS)) {
+                    showLinkErrorMessage(it.second)
+                }
+            }
+
+        }
 
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
     }
 
-    override fun onPause() {
-        super.onPause()
-        scrollY = binding.scrollView.scrollY
-    }
-
-    override fun onResume() {
-        super.onResume()
-        logScreenView(PAYMENT_DETAIL_VIEW)
-        binding.scrollView.postDelayed({
-            binding.scrollView.scrollTo(0, scrollY)
-        }, SCROLL_DELAY)
-        if (isNetworkAvailable(requireActivity())) {
-            viewModel.getMembershipCards()
+    private fun setViewState(shouldShowViews: Boolean) {
+        val visibility = if (shouldShowViews) View.VISIBLE else View.GONE
+        with(binding) {
+            availablePllList.visibility = visibility
+            otherCardsTitle.visibility = visibility
+            otherCardsDescription.visibility = visibility
+            otherCardsList.visibility = visibility
+            separator.visibility = if (shouldShowViews) View.GONE else View.VISIBLE
         }
+
     }
 
-    private fun goHome() {
-        findNavController().navigateIfAdded(
-            this,
-            R.id.global_to_home
-        )
-    }
+    private fun onLinkStatusChange(
+        currentItem: Triple<String?, Boolean, MembershipPlan?>,
+        position: Int?
+    ) {
+        planAndPositionPair.add(Pair(currentItem.third,position))
 
-    private fun onLinkStatusChange(currentItem: Pair<String?, Boolean>) {
         currentItem.first?.let {
-            runBlocking {
+            currentItem.third?.let { plan ->
                 if (currentItem.second) {
                     viewModel.linkPaymentCard(
                         it,
-                        viewModel.paymentCard.value?.id.toString()
+                        plan.id
                     )
                 } else {
                     viewModel.unlinkPaymentCard(
@@ -232,4 +330,32 @@ class PaymentCardsDetailsFragment :
         )
         directions.let { findNavController().navigateIfAdded(this, directions) }
     }
+
+    private fun showLinkErrorMessage(planId: String) {
+        val membershipPlan = planAndPositionPair.firstOrNull { pair -> pair.first?.id == planId }
+        val planName = membershipPlan?.first?.account?.plan_name ?: ""
+        val planNameCard = membershipPlan?.first?.account?.plan_name_card ?: ""
+        val position = membershipPlan?.second
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.payment_card_link_already_exists_title))
+            .setMessage(
+                getString(
+                    R.string.payment_card_link_already_exists_message,
+                    planName,
+                    planNameCard,
+                    planName,
+                    planNameCard
+                )
+            )
+            .setPositiveButton(
+                getString(R.string.ok)
+            ) { dialog, _ ->
+                position?.let { availablePllAdapter.notifyItemChanged(it) }
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
 }
