@@ -69,7 +69,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
                             currentMembershipPlan?.account?.plan_name
                                 ?: getString(R.string.plan_description),
                             planDescription
-                        )
+                        ),currentMembershipPlan?.account?.plan_url ?: ""
                     )
                 )
             }

@@ -131,7 +131,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                     ?: getString(R.string.plan_description),
                                 summary,
                                 description2 = it.account.plan_description
-                            )
+                            ), it.account.plan_url ?: ""
                         )
                     )
                 } else if (it.account?.plan_name_card != null) {
@@ -143,7 +143,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                     R.drawable.ic_close,
                                     true,
                                     planName
-                                )
+                                ), it.account.plan_url ?: ""
                             )
                         )
                     }

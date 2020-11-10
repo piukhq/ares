@@ -112,8 +112,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                                     viewModel.membershipPlan.value?.account?.plan_name
                                         ?: getString(R.string.plan_description),
                                     it
+                                ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
 
-                                )
                             )
                         )
                     }

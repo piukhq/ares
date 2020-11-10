@@ -45,7 +45,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                             viewModel.membershipPlan.value?.account?.plan_name
                                 ?: getString(R.string.plan_description),
                             planDescription
-                        )
+                        ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
                     )
                 )
             }

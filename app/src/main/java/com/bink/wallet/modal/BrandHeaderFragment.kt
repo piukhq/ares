@@ -16,6 +16,7 @@ class BrandHeaderFragment : GenericModalFragment() {
     }
 
     override fun onFirstButtonClicked() {
+
         findNavController().popBackStack()
     }
 }

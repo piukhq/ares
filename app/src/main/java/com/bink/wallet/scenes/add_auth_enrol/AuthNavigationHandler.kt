@@ -29,7 +29,7 @@ class AuthNavigationHandler(
                             plan.account.plan_name
                                 ?: context.getString(R.string.plan_description),
                             plan.account.plan_description
-                        )
+                        ), plan.account.plan_url ?: ""
                     )
                 )
             } else if (plan?.account?.plan_name_card != null) {
@@ -41,7 +41,7 @@ class AuthNavigationHandler(
                                 R.drawable.ic_close,
                                 true,
                                 planName
-                            )
+                            ), plan.account.plan_url ?: ""
                         )
                     )
                 }
