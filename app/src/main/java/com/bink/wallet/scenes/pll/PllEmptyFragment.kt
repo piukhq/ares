@@ -169,11 +169,13 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     private fun showPendingCardsList(shouldShowList: Boolean) {
         if (shouldShowList) {
             binding.rvPendingCards.visibility = View.VISIBLE
+            binding.pllEmptyTitle.text = getString(R.string.pll_pending_cards_title)
             binding.pllEmptyDescriptionPart1.visibility = View.GONE
             binding.pllEmptyDescriptionPart2.text = getString(R.string.pending_pll_card_description)
             binding.pllEmptyFaqs.visibility = View.VISIBLE
         } else {
             binding.rvPendingCards.visibility = View.GONE
+            binding.pllEmptyTitle.text = getString(R.string.link_payment_cards)
             binding.pllEmptyDescriptionPart1.visibility = View.VISIBLE
             binding.pllEmptyDescriptionPart2.text =
                 getString(R.string.link_payment_card_description_part_2)
