@@ -11,19 +11,14 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_FACEBOOK
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_LOGIN
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_START
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.ONBOARDING_SCROLL_DURATION_SECONDS
-import com.bink.wallet.utils.PAGE_1
-import com.bink.wallet.utils.PAGE_2
-import com.bink.wallet.utils.PAGE_3
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -233,6 +228,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             try {
                 this.accessToken = accessToken
                 facebookEmail = jsonObject.getString(EMAIL_KEY)
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    facebookEmail
+                )
+
             } catch (e: JSONException) {
                 if (!::facebookEmail.isInitialized) {
                     facebookEmail = getString(R.string.empty_string)
