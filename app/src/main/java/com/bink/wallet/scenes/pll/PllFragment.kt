@@ -111,7 +111,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                                     true,
                                     viewModel.membershipPlan.value?.account?.plan_name
                                         ?: getString(R.string.plan_description),
-                                    it
+                                    it,
+                                    firstButtonText = getString(R.string.go_to_site)
                                 ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
 
                             )
