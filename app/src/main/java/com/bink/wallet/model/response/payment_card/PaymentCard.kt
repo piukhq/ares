@@ -3,6 +3,7 @@ package com.bink.wallet.model.response.payment_card
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
@@ -21,6 +22,8 @@ data class PaymentCard(
     @ColumnInfo(name = "account") val account: Account?,
     @ColumnInfo(name = "uuid") var uuid: String? = null
 ) : Parcelable {
+    @Ignore var isSelected: Boolean = false
+
     fun addPaymentCard(cardId: String) {
         (membership_cards as ArrayList<PaymentMembershipCard>).add(
             PaymentMembershipCard(

@@ -24,6 +24,7 @@ object FirebaseEvents {
     const val INFORMATION_MODAL_VIEW = "InformationModal"
     const val SETTINGS_VIEW = "Settings"
     const val PREFERENCES_VIEW = "Preferences"
+    const val WHO_ARE_WE = "WhoAreWe"
     const val SPLASH_VIEW = "SplashScreen"
     const val ADD_LOYALTY_CARD_VIEW = "AddLoyaltyCard"
     const val PAYMENT_CARD_SCAN = "payment_scan"

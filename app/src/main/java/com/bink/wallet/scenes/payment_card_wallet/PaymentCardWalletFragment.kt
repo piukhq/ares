@@ -24,6 +24,8 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
+import com.bink.wallet.utils.JOIN_CARD
+import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
@@ -331,6 +333,10 @@ class PaymentCardWalletFragment :
 
         SharedPreferenceManager.isPaymentEmpty =
             viewModel.paymentCards.value.isNullOrEmpty()
+
+        viewModel.paymentCards.value?.let {
+            SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(it)
+        }
 
         walletItems.clear()
 

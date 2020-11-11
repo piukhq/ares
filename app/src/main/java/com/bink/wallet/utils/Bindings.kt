@@ -41,6 +41,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
 
+private const val CONTACT_US = "Contact us"
+private const val HERE = "here"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
@@ -522,8 +524,12 @@ fun TextView.setPcdTitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
 
 }
 
-@BindingAdapter("paymentCardDetailsSubtitle", "paymentCard", requireAll = true)
-fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
+@BindingAdapter("paymentCardDetailsSubtitle", "paymentCard", "listener", requireAll = false)
+fun TextView.setPcdSubtitle(
+    hasAddedPlls: Boolean,
+    paymentCard: PaymentCard,
+    hyperlinkClick: (() -> Unit)?
+) {
     text = if (paymentCard.isCardActive()) {
         if (hasAddedPlls) {
             context.getString(R.string.payment_card_details_description_text)
@@ -534,9 +540,21 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
         if (PaymentCardUtils.cardStatus(
                 paymentCard.status ?: ""
             ) == PENDING_CARD
-        ) context.getString(
-            R.string.payment_card_pending_description_text
-        ) else context.getString(R.string.payment_card_inactive_description_text)
+        ) {
+            UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+                context.getString(
+                    R.string.payment_card_pending_description_text
+                ), CONTACT_US, this, hyperlinkClick
+            )
+
+        } else {
+            UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+                context.getString(R.string.payment_card_inactive_description_text),
+                CONTACT_US,
+                this,
+                hyperlinkClick
+            )
+        }
     }
 
 }
@@ -544,7 +562,7 @@ fun TextView.setPcdSubtitle(hasAddedPlls: Boolean, paymentCard: PaymentCard) {
 @BindingAdapter("paymentCardAddedDate")
 fun TextView.setPaymentCardAddedDate(paymentCard: PaymentCard) {
     if (paymentCard.isCardActive()) {
-        visibility =View.GONE
+        visibility = View.GONE
     } else {
         if (PaymentCardUtils.cardStatus(paymentCard.status ?: "") == PENDING_CARD) {
             visibility = View.VISIBLE
@@ -572,4 +590,12 @@ fun TextView.setPreferenceLabel(preferenceLabel: String?, preferenceSlug: String
     } else {
         preferenceLabel
     }
+}
+
+@BindingAdapter("pllEmptyPendingFaq")
+fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
+    UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+        context.getString(R.string.pll_empty_faqs_description),
+        HERE, this, hyperlinkClick
+    )
 }

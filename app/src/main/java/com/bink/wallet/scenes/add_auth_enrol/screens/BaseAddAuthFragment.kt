@@ -203,8 +203,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 navigationHandler?.navigateToLCD(membershipCard)
             }
             CardType.PLL -> {
-                if (SharedPreferenceManager.isPaymentEmpty
-                ) {
+                if (SharedPreferenceManager.isPaymentEmpty || SharedPreferenceManager.hasNoActivePaymentCards) {
                     navigationHandler?.navigateToPllEmpty(membershipCard)
                 } else {
                     navigationHandler?.navigateToPll(membershipCard)

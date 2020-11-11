@@ -43,7 +43,7 @@
             tools:text="Business" />
 
         <TextView
-            android:id="@+id/card_digits"
+            android:id="@+id/card_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -52,13 +52,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/card_title"
-            tools:text="Card ending in 1234" />
+            tools:text="Card ending in 0000" />
 
-        <com.bink.wallet.GradientSwitch
-            android:id="@+id/toggle"
-            android:layout_width="@dimen/toggle_width"
-            android:layout_height="@dimen/margin_padding_size_medium_large"
+        <TextView
+            android:id="@+id/card_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
+            android:fontFamily="@font/nunito_sans_semibold"
+            android:text="@string/pll_pending"
+            android:textColor="@color/amber_pending"
+            android:textSize="@dimen/link_status_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -69,6 +73,8 @@
             android:layout_height="@dimen/item_separator_line_height"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:background="@color/separator_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
     </androidx.constraintlayout.widget.ConstraintLayout>

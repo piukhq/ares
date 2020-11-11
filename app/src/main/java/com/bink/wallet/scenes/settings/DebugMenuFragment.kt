@@ -107,7 +107,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         val items =
             arrayOf<CharSequence>(
                 BackendVersion.VERSION_1.name,
-                BackendVersion.VERSION_2.name
+                BackendVersion.VERSION_2.name,
+                BackendVersion.VERSION_3.name
             )
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
@@ -117,10 +118,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         adb.setPositiveButton(
             getString(R.string.ok)
         ) { _, _ ->
-            if (selection == 0) {
-                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
-            } else {
-                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
+            when (selection) {
+                0 -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
+                1 -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
+                else -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_3.version
             }
             shouldApplyChanges = true
         }
