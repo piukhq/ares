@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.payment_card_wallet
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -17,7 +18,8 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.loyalty_wallet.RecyclerItemTouchHelper
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletAdapter
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
@@ -25,14 +27,8 @@ import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PaymentCardWalletFragment :
@@ -68,22 +64,60 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
-    val listener: RecyclerItemTouchHelper.RecyclerItemTouchHelperListener = object :
-        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
-            if (viewModel.paymentCards.value != null &&
-                viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder &&
-                direction == ItemTouchHelper.LEFT
-            ) {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            if (viewModel.paymentCards.value != null && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
                 if (!viewModel.paymentCards.value.isNullOrEmpty()) {
                     viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
                 }
             }
-            if (direction == ItemTouchHelper.RIGHT) {
-                binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+        }
+
+        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+            val foregroundView = when (viewHolder) {
+                is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                    viewHolder.binding.mainPayment
+                else ->
+                    null
+            }
+
+            if (foregroundView != null) {
+
+                when {
+                    dX >= 0 -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
+                        viewHolder.itemView.delete_layout.visibility = View.GONE
+                    }
+                    else -> {
+                        viewHolder.itemView.barcode_layout.visibility = View.GONE
+                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                    }
+                }
+
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
         }
+
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            val foregroundView = when (viewHolder) {
+                is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
+                    viewHolder.binding.mainPayment
+                else ->
+                    null
+            }
+
+            if (foregroundView != null) {
+                getDefaultUIUtil().clearView(foregroundView)
+            }
+
+        }
     }
+
 
     fun deleteDialog(paymentCard: PaymentCard) {
         val dialog: AlertDialog
@@ -177,15 +211,7 @@ class PaymentCardWalletFragment :
             layoutManager = GridLayoutManager(context, 1)
             adapter = walletAdapter
 
-
-            val helperListenerLeft =
-                RecyclerItemTouchHelper(
-                    0,
-                    ItemTouchHelper.LEFT,
-                    listener
-                )
-
-            ItemTouchHelper(helperListenerLeft).attachToRecyclerView(this)
+            ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
         }
 
         viewModel.paymentCards.observeNonNull(this) {

@@ -291,6 +291,8 @@
     <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
     <string name="settings_menu_how_it_works">How it works</string>
     <string name="settings_menu_how_it_works_subtitle">Find out more about Bink</string>
+    <string name="settings_menu_who_we_are">Who we are</string>
+    <string name="settings_menu_who_we_are_subtitle">Below are a list of people that have been instrumental in developing the app you now hold in your hands.</string>
     <string name="settings_menu_legal">Legal</string>
     <string name="settings_menu_privacy_policy">Privacy policy</string>
     <string name="settings_menu_terms_and_conditions">Terms and conditions</string>
@@ -370,7 +372,6 @@
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
     <string name="payment_card_footer_faq_title">FAQS</string>
     <string name="payment_card_footer_faq_description">Learn more</string>
-
 
 
     <!-- Payment Card entry -->
@@ -575,5 +576,21 @@
     <string name="card_scan_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+
+    <!-- Dev Names -->
+    <string-array name="dev_names">
+        <item>Paul Batty</item>
+        <item>Joshua Best</item>
+        <item>Enoch Hankombo</item>
+        <item>Susanne King</item>
+        <item>Srikalyani Kotha</item>
+        <item>Marius Lobontiu</item>
+        <item>Connor McFadden</item>
+        <item>Carmen Muntean</item>
+        <item>Teodora Popescu</item>
+        <item>Mara Savan</item>
+        <item>Karl Sigiscar</item>
+        <item>Max Woodhams</item>
+    </string-array>
 
 </resources>
