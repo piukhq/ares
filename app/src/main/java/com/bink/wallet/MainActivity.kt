@@ -34,13 +34,13 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         logUserPropertiesAtStartUp()
 
-//        SentryAndroid.init(
-//            this
-//        ) { options: SentryAndroidOptions ->
-//            options.environment =
-//                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
-//            options.isDebug = BuildConfig.DEBUG
-//        }
+        SentryAndroid.init(
+            this
+        ) { options: SentryAndroidOptions ->
+            options.environment =
+                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+            options.isDebug = BuildConfig.DEBUG
+        }
 
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
