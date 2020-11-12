@@ -288,4 +288,8 @@ dependencies {
     /** LEAK CANARY**/
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
+    /** In-app Review **/
+    implementation 'com.google.android.play:core:1.8.3'
+    implementation 'com.google.android.play:core-ktx:1.8.1'
+
 }
