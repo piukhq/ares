@@ -64,8 +64,8 @@ fun Fragment.requestPermissionsResult(
     navigateToBrowseBrands: (() -> Unit)?
 ) {
     if (requestCode == CAMERA_REQUEST_CODE) {
-        if (permissions[0] == Manifest.permission.CAMERA
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        if ((permissions[0] == Manifest.permission.CAMERA)
+            && (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         ) {
             if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
                 openScanPaymentCard()
