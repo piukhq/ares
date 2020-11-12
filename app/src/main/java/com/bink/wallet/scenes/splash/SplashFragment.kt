@@ -23,6 +23,9 @@ import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
@@ -81,6 +84,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         persistPaymentCardHashSecret()
         configureZendesk()
         persistBouncerKeys()
+        setUpRemoteConfig()
         if (findNavController().currentDestination?.id == R.id.splash) {
             if (getDirections() == R.id.global_to_home) {
                 goToDashboard()
@@ -232,5 +236,14 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
             setAnalyticsUserId(it.uid)
         }
         viewModel.getCurrentUser()
+    }
+
+    private fun setUpRemoteConfig() {
+        val remoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 3600
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
     }
 }
