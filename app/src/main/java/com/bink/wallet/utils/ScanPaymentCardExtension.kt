@@ -31,17 +31,6 @@ fun Fragment.requestCameraPermissionAndNavigate(
     }
 
     if (permission != PackageManager.PERMISSION_GRANTED) {
-        val shouldShowPermissionExplanation =
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                Manifest.permission.CAMERA
-            )
-
-        // This allows us to verify if the user has just seen a permission dialog before
-        // we show them our permission explanation dialog (in onRequestPermissionsResult).
-        // "ActivityCompat.shouldShowRequestPermissionRationale" will be true
-        // until the user ticks "Don't show me this again".
-        SharedPreferenceManager.hasViewDialogPermission = shouldShowPermissionExplanation
         requestPermissions(
             arrayOf(Manifest.permission.CAMERA),
             CAMERA_REQUEST_CODE
@@ -74,12 +63,12 @@ fun Fragment.requestPermissionsResult(
             }
         } else {
             val shouldShowPermissionExplanation =
-                !ActivityCompat.shouldShowRequestPermissionRationale(
+                ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
                     Manifest.permission.CAMERA
                 )
 
-            if (shouldShowPermissionExplanation && !SharedPreferenceManager.hasViewDialogPermission) {
+            if (!shouldShowPermissionExplanation) {
                 DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
                     if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
                         navigateToAddPaymentCard?.invoke()
