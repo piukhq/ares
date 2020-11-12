@@ -255,7 +255,9 @@ class AddLoyaltyCardFragment :
             override fun onFinish() {
                 resumeTimerFromMillis = -1
                 if (!cancelHaptic) {
-                    performHaptic()
+                    if (isAdded){
+                        performHaptic()
+                    }
                 }
             }
         }
