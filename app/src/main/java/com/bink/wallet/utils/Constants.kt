@@ -83,3 +83,5 @@ const val SANDBOX_ARTICLE_ID = 360016721639
 
 const val PAYMENT_CARD_STATUS_PENDING = "pending"
 
+const val REMOTE_CONFIG_REVIEW_ENABLED = "in_app_review_enabled"
+
