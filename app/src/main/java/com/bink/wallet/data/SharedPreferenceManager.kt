@@ -26,7 +26,6 @@ object SharedPreferenceManager {
     private const val CONTACT_US_CLICKED = "contactUsClicked"
     private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
-    private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
     private const val BARCODE = "barcode"
     private const val CARD_NUMBER = "cardNumber"
     private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
@@ -140,12 +139,6 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, false)
         set(value) = preferences.edit {
             it.putBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, value)
-        }
-
-    var hasViewDialogPermission: Boolean
-        get() = preferences.getBoolean(HAS_VIEW_DIALOG_PERMISSION, false)
-        set(value) = preferences.edit {
-            it.putBoolean(HAS_VIEW_DIALOG_PERMISSION, value)
         }
 
     var scannedLoyaltyBarCode: String?
