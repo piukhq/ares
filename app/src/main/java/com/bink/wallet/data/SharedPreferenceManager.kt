@@ -40,7 +40,6 @@ object SharedPreferenceManager {
     private const val CARD_NUMBER_VALUE = "cardNumber_value"
     private const val HAS_NO_ACTIVE_PAYMENT_CARD = "has_no_active_payment_cards"
     private const val LAST_REVIEW_MINOR = "last_review_minor"
-    private const val LOYALTY_WALLET_CARD_COUNT = "loyalty_wallet_card_count"
     private const val FIRST_OPEN_DATE = "first_open_date"
     private const val TOTAL_OPEN_COUNT = "total_open_count"
 
@@ -220,12 +219,6 @@ object SharedPreferenceManager {
         get() = preferences.getString(LAST_REVIEW_MINOR, null)
         set(value) = preferences.edit {
             it.putString(LAST_REVIEW_MINOR, value)
-        }
-
-    var loyaltyWalletCardCount: Int
-        get() = preferences.getInt(LOYALTY_WALLET_CARD_COUNT, 0)
-        set(value) = preferences.edit {
-            it.putInt(LOYALTY_WALLET_CARD_COUNT, value)
         }
 
     var firstOpenDate: String?
