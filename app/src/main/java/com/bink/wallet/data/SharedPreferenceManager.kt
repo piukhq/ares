@@ -39,7 +39,7 @@ object SharedPreferenceManager {
     private const val BARCODE_VALUE = "barcode_value"
     private const val CARD_NUMBER_VALUE = "cardNumber_value"
     private const val HAS_NO_ACTIVE_PAYMENT_CARD = "has_no_active_payment_cards"
-
+    private const val LAST_REVIEW_MINOR = "last_review_minor"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -211,6 +211,12 @@ object SharedPreferenceManager {
         get() = preferences.getString(CARD_NUMBER_VALUE, null)
         set(value) = preferences.edit {
             it.putString(CARD_NUMBER_VALUE, value)
+        }
+
+    var lastReviewedMinor: String?
+        get() = preferences.getString(LAST_REVIEW_MINOR, null)
+        set(value) = preferences.edit {
+            it.putString(LAST_REVIEW_MINOR, value)
         }
 
     fun clear() {
