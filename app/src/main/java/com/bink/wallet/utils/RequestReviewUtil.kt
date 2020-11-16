@@ -1,15 +1,39 @@
 package com.bink.wallet.utils
 
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.SharedPreferenceManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
+
 object RequestReviewUtil {
-    
-    fun requestReviewFlow(activity: FragmentActivity?) {
-        val reviewManager = ReviewManagerFactory.create(activity)
+
+    private const val twoDaysInMillis = 172800000
+
+    fun triggerViaCards(fragment: Fragment?) {
+        fragment?.let {
+            SharedPreferenceManager.firstOpenDate?.let { firstOpenDate ->
+                if ((System.currentTimeMillis() - firstOpenDate.toLong()) > twoDaysInMillis) {
+                    if (SharedPreferenceManager.totalOpenCount > 10) {
+                        requestReviewFlow(fragment)
+                    }
+                }
+            }
+        }
+    }
+
+    fun recordAppOpen() {
+        val firstOpenDate = SharedPreferenceManager.firstOpenDate
+        if (firstOpenDate.isNullOrEmpty()) {
+            SharedPreferenceManager.firstOpenDate = System.currentTimeMillis().toString()
+        }
+
+        SharedPreferenceManager.totalOpenCount = SharedPreferenceManager.totalOpenCount + 1
+    }
+
+    private fun requestReviewFlow(fragment: Fragment) {
+        val reviewManager = ReviewManagerFactory.create(fragment.activity)
 
         if (!hasReviewedInThisVersion()) {
             val remoteConfig = FirebaseRemoteConfig.getInstance()
@@ -20,7 +44,7 @@ object RequestReviewUtil {
 
                 requestReview.addOnCompleteListener { request ->
                     if (request.isSuccessful) {
-                        val reviewFlow = reviewManager.launchReviewFlow(activity, request.result)
+                        val reviewFlow = reviewManager.launchReviewFlow(fragment.activity, request.result)
 
                         reviewFlow.addOnCompleteListener {
 

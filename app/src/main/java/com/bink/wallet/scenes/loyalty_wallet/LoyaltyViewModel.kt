@@ -15,6 +15,7 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.observeNonNull
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -167,7 +168,6 @@ class LoyaltyViewModel constructor(
 
     fun fetchLocalMembershipCards() {
             loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
-
     }
 
     fun fetchMembershipCardsAndPlansForRefresh() {
