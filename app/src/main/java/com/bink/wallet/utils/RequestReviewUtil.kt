@@ -13,10 +13,12 @@ object RequestReviewUtil {
 
     fun triggerViaCards(fragment: Fragment?) {
         fragment?.let {
-            SharedPreferenceManager.firstOpenDate?.let { firstOpenDate ->
-                if ((System.currentTimeMillis() - firstOpenDate.toLong()) > twoDaysInMillis) {
-                    if (SharedPreferenceManager.totalOpenCount > 10) {
-                        requestReviewFlow(fragment)
+            if (SharedPreferenceManager.loyaltyWalletCardCount > 4) {
+                SharedPreferenceManager.firstOpenDate?.let { firstOpenDate ->
+                    if ((System.currentTimeMillis() - firstOpenDate.toLong()) > twoDaysInMillis) {
+                        if (SharedPreferenceManager.totalOpenCount > 10) {
+                            requestReviewFlow(fragment)
+                        }
                     }
                 }
             }

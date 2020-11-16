@@ -220,9 +220,7 @@ class PaymentCardWalletFragment :
                 binding.swipeRefresh.isRefreshing = false
                 updatePaymentCardList()
 
-                if(it.size > 4){
-                    RequestReviewUtil.triggerViaCards(this)
-                }
+                RequestReviewUtil.triggerViaCards(this)
             }
         }
 
