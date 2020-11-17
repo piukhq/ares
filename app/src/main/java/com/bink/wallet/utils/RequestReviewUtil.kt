@@ -23,6 +23,15 @@ object RequestReviewUtil {
         }
     }
 
+    fun triggerViaWallet(fragment: Fragment?){
+        fragment?.let {
+            if(SharedPreferenceManager.hasAddedNewPll){
+                SharedPreferenceManager.hasAddedNewPll = false
+                requestReviewFlow(fragment)
+            }
+        }
+    }
+
     fun recordAppOpen() {
         val firstOpenDate = SharedPreferenceManager.firstOpenDate
         if (firstOpenDate.isNullOrEmpty()) {

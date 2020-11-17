@@ -149,6 +149,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         viewModel.checkZendeskResponse()
+        RequestReviewUtil.triggerViaWallet(this)
         logScreenView(LOYALTY_WALLET_VIEW)
     }
 
