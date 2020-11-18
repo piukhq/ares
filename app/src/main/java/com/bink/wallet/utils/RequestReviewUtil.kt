@@ -32,6 +32,16 @@ object RequestReviewUtil {
         }
     }
 
+    fun triggerViaCardDetails(fragment: Fragment?) {
+        fragment?.let {
+            if(SharedPreferenceManager.hasNewTransactions){
+                SharedPreferenceManager.hasNewTransactions = false
+                requestReviewFlow(fragment)
+            }
+        }
+    }
+
+
     fun recordAppOpen() {
         val firstOpenDate = SharedPreferenceManager.firstOpenDate
         if (firstOpenDate.isNullOrEmpty()) {

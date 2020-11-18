@@ -5,6 +5,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.TransactionFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.utils.navigateIfAdded
@@ -58,6 +59,19 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                         binding.pointsDescription.text = getString(R.string.no_transactions_text)
                         binding.transactionsList.visibility = View.GONE
                     } else {
+                        val currentTransactionHistory = "${membershipCard.id}${transactions.size}"
+                        val previousTransactionHistory = SharedPreferenceManager.lastSeenTransactions ?: ""
+
+                        /**
+                         * This checks that the user has had new transactions since their last visits, and that they have also visited this specific card before.
+                         */
+
+                        if(!previousTransactionHistory.contains(currentTransactionHistory) && previousTransactionHistory.contains(membershipCard.id)){
+                            SharedPreferenceManager.hasNewTransactions = true
+                        }
+
+                        SharedPreferenceManager.lastSeenTransactions = "${SharedPreferenceManager.lastSeenTransactions?:""}$currentTransactionHistory"
+
                         binding.transactionsList.adapter = TransactionAdapter(transactions)
                     }
                 }
