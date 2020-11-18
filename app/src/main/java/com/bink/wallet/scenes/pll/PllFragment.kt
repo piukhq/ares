@@ -177,6 +177,10 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                             if (paymentCard.isSelected &&
                                 !paymentCard.isLinkedToMembershipCard(it)
                             ) {
+                                if(isAddJourney){
+                                    SharedPreferenceManager.hasAddedNewPll = true
+                                }
+                                
                                 selectedCards.add(paymentCard)
                             } else if (viewModel.membershipCard.value != null &&
                                 !paymentCard.isSelected &&

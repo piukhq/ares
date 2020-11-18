@@ -37,9 +37,6 @@ class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
                 paymentCard.isSelected = isChecked
                 displayCustomSwitch(isChecked)
 
-                if(isFromAddJourney){
-                    SharedPreferenceManager.hasAddedNewPll = isChecked
-                }
             }
         }
 
