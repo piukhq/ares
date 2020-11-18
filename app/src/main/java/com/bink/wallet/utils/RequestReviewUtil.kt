@@ -70,7 +70,7 @@ object RequestReviewUtil {
     private fun hasReviewedInThisVersion(): Boolean {
         currentMinorVersion()?.let { currentMinor ->
             SharedPreferenceManager.lastReviewedMinor?.let { lastReviewedMinor ->
-                if (!lastReviewedMinor.isNullOrEmpty()) {
+                if (lastReviewedMinor.isNotEmpty()) {
                     return currentMinor.equals(lastReviewedMinor)
                 }
             }
@@ -87,7 +87,7 @@ object RequestReviewUtil {
         val currentVersionName = BuildConfig.VERSION_NAME
 
         return try {
-            currentVersionName?.split(".")?.get(1)
+            currentVersionName.split(".")[1]
         } catch (e: Exception) {
             //Error getting current minor version
             return null
