@@ -59,22 +59,23 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                         binding.pointsDescription.text = getString(R.string.no_transactions_text)
                         binding.transactionsList.visibility = View.GONE
                     } else {
-                        val currentTransactionHistory = "${membershipCard.id}${transactions.size}"
-                        val previousTransactionHistory = SharedPreferenceManager.lastSeenTransactions ?: ""
-
-                        /**
-                         * This checks that the user has had new transactions since their last visits, and that they have also visited this specific card before.
-                         */
-
-                        if(!previousTransactionHistory.contains(currentTransactionHistory) && previousTransactionHistory.contains(membershipCard.id)){
-                            SharedPreferenceManager.hasNewTransactions = true
-                        }
-
-                        SharedPreferenceManager.lastSeenTransactions = "${SharedPreferenceManager.lastSeenTransactions?:""}$currentTransactionHistory"
-
                         binding.transactionsList.adapter = TransactionAdapter(transactions)
                     }
                 }
+                
+                val currentTransactionHistory = "${membershipCard.id}${membershipCard.membership_transactions?.size ?: 0}"
+                val previousTransactionHistory = SharedPreferenceManager.lastSeenTransactions ?: ""
+
+                /**
+                 * This checks that the user has had new transactions since their last visits, and that they have also visited this specific card before.
+                 */
+
+                if(!previousTransactionHistory.contains(currentTransactionHistory) && previousTransactionHistory.contains(membershipCard.id)){
+                    SharedPreferenceManager.hasNewTransactions = true
+                }
+
+                SharedPreferenceManager.lastSeenTransactions = "${SharedPreferenceManager.lastSeenTransactions?:""}$currentTransactionHistory"
+
             } else {
                 binding.pointsHistory.text = getString(R.string.points_history_not_available_title)
                 binding.pointsDescription.textAndShow(
