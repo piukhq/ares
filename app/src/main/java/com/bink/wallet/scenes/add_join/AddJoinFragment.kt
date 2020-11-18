@@ -130,8 +130,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                 it.account.plan_name
                                     ?: getString(R.string.plan_description),
                                 summary,
-                                description2 = it.account.plan_description
-                            )
+                                description2 = it.account.plan_description,
+                                firstButtonText = getString(R.string.go_to_site)
+                            ), it.account.plan_url ?: ""
                         )
                     )
                 } else if (it.account?.plan_name_card != null) {
@@ -142,8 +143,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                 GenericModalParameters(
                                     R.drawable.ic_close,
                                     true,
-                                    planName
-                                )
+                                    planName,
+                                    firstButtonText = getString(R.string.go_to_site)
+
+                                ), it.account.plan_url ?: ""
                             )
                         )
                     }

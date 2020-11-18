@@ -679,6 +679,11 @@
         <argument
             android:name="genericModalParameters"
             app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+
+        <argument
+            android:name="planUrl"
+            app:argType="string" />
+
     </fragment>
 
     <fragment
