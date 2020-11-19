@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.SharedPreferenceManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 
@@ -52,7 +53,7 @@ object RequestReviewUtil {
     }
 
     private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
-        val reviewManager = ReviewManagerFactory.create(fragment.activity)
+        val reviewManager = FakeReviewManager(fragment.activity)
 
         if (!hasReviewedInThisVersion()) {
             val remoteConfig = FirebaseRemoteConfig.getInstance()
