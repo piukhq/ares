@@ -409,7 +409,9 @@ class LoyaltyCardDetailsFragment :
             }
         }, SCROLL_DELAY)
 
-        RequestReviewUtil.triggerViaCardDetails(this)
+        RequestReviewUtil.triggerViaCardDetails(this){
+            logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap("TRANSACTIONS"))
+        }
     }
 
     private fun handleFootersListeners() {
