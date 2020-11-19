@@ -18,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRANSACTIONS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.enums.LinkStatus
@@ -407,7 +408,7 @@ class LoyaltyCardDetailsFragment :
         }, SCROLL_DELAY)
 
         RequestReviewUtil.triggerViaCardDetails(this){
-            logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap("TRANSACTIONS"))
+            logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS))
         }
     }
 
