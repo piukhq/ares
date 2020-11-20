@@ -41,6 +41,7 @@ object SharedPreferenceManager {
     private const val LAST_REVIEW_MINOR = "last_review_minor"
     private const val FIRST_OPEN_DATE = "first_open_date"
     private const val TOTAL_OPEN_COUNT = "total_open_count"
+    private const val ADDED_NEW_PLL = "added_new_pll"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -224,6 +225,12 @@ object SharedPreferenceManager {
         get() = preferences.getInt(TOTAL_OPEN_COUNT, 0)
         set(value) = preferences.edit {
             it.putInt(TOTAL_OPEN_COUNT, value)
+        }
+
+    var hasAddedNewPll: Boolean
+        get() = preferences.getBoolean(ADDED_NEW_PLL, false)
+        set(value) = preferences.edit {
+            it.putBoolean(ADDED_NEW_PLL, value)
         }
 
     fun clear() {
