@@ -324,6 +324,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
+
+                if(userDataResult.result.first.size > 4){
+                    RequestReviewUtil.triggerViaCards(this)
+                }
+
             }
         }
     }
