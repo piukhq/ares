@@ -11,36 +11,26 @@ object RequestReviewUtil {
 
     private const val twoDaysInMillis = 172800000
 
-    fun triggerViaCards(fragment: Fragment?, reviewRequested: () -> Unit) {
+    fun triggerViaCards(fragment: Fragment?) {
         fragment?.let {
             SharedPreferenceManager.firstOpenDate?.let { firstOpenDate ->
                 if ((System.currentTimeMillis() - firstOpenDate.toLong()) > twoDaysInMillis) {
                     if (SharedPreferenceManager.totalOpenCount > 10) {
-                        requestReviewFlow(fragment, reviewRequested)
+                        requestReviewFlow(fragment)
                     }
                 }
             }
         }
     }
 
-    fun triggerViaWallet(fragment: Fragment?, reviewRequested: () -> Unit) {
+    fun triggerViaWallet(fragment: Fragment?){
         fragment?.let {
-            if (SharedPreferenceManager.hasAddedNewPll) {
+            if(SharedPreferenceManager.hasAddedNewPll){
                 SharedPreferenceManager.hasAddedNewPll = false
-                requestReviewFlow(fragment, reviewRequested)
+                requestReviewFlow(fragment)
             }
         }
     }
-
-    fun triggerViaCardDetails(fragment: Fragment?, reviewRequested: () -> Unit) {
-        fragment?.let {
-            if (SharedPreferenceManager.hasNewTransactions) {
-                SharedPreferenceManager.hasNewTransactions = false
-                requestReviewFlow(fragment, reviewRequested)
-            }
-        }
-    }
-
 
     fun recordAppOpen() {
         val firstOpenDate = SharedPreferenceManager.firstOpenDate
@@ -51,7 +41,7 @@ object RequestReviewUtil {
         SharedPreferenceManager.totalOpenCount = SharedPreferenceManager.totalOpenCount + 1
     }
 
-    private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
+    private fun requestReviewFlow(fragment: Fragment) {
         val reviewManager = ReviewManagerFactory.create(fragment.activity)
 
         if (!hasReviewedInThisVersion()) {
@@ -60,7 +50,6 @@ object RequestReviewUtil {
 
             if (isReviewEnabled.toLowerCase().equals("true")) {
                 val requestReview = reviewManager.requestReviewFlow()
-                reviewRequested()
 
                 requestReview.addOnCompleteListener { request ->
                     if (request.isSuccessful) {
