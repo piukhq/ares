@@ -8,10 +8,14 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.TransactionFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.TransactionHistory
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.reflect.Type
 
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -62,19 +66,36 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                         binding.transactionsList.adapter = TransactionAdapter(transactions)
                     }
                 }
-                
-                val currentTransactionHistory = "${membershipCard.id}${membershipCard.membership_transactions?.size ?: 0}"
-                val previousTransactionHistory = SharedPreferenceManager.lastSeenTransactions ?: ""
 
                 /**
-                 * This checks that the user has had new transactions since their last visits, and that they have also visited this specific card before.
+                 * The way this is written ensures there can only be a single entry for each type of card.
                  */
 
-                if(!previousTransactionHistory.contains(currentTransactionHistory) && previousTransactionHistory.contains(membershipCard.id)){
-                    SharedPreferenceManager.hasNewTransactions = true
+                val gson = Gson()
+                val type: Type = object : TypeToken<ArrayList<TransactionHistory?>?>() {}.type
+
+                var previousTransactionHistoryVisitList: ArrayList<TransactionHistory> = arrayListOf()
+
+                SharedPreferenceManager.lastSeenTransactions?.let {
+                    previousTransactionHistoryVisitList = gson.fromJson(it, type)
                 }
 
-                SharedPreferenceManager.lastSeenTransactions = "${SharedPreferenceManager.lastSeenTransactions?:""}$currentTransactionHistory"
+                val currentTransactionHistoryVisit = TransactionHistory(membershipCard.id, membershipCard.membership_transactions?.size ?: 0)
+
+                val previousMatchingVisit = previousTransactionHistoryVisitList.firstOrNull { it.membershipId.equals(membershipCard.id) }
+
+                if (previousMatchingVisit != null) {
+                    SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize != membershipCard.membership_transactions?.size ?: 0
+                    val foundIndex =
+                        previousTransactionHistoryVisitList.indexOfFirst { it.membershipId.equals(membershipCard.id) && it.transactionSize == membershipCard.membership_transactions?.size ?: 0 }
+                    previousTransactionHistoryVisitList.removeAt(foundIndex)
+                } else {
+                    SharedPreferenceManager.hasNewTransactions = false
+                }
+
+                previousTransactionHistoryVisitList.add(currentTransactionHistoryVisit)
+                val newTransactionHistoryVisitList = gson.toJson(previousTransactionHistoryVisitList)
+                SharedPreferenceManager.lastSeenTransactions = newTransactionHistoryVisitList
 
             } else {
                 binding.pointsHistory.text = getString(R.string.points_history_not_available_title)
