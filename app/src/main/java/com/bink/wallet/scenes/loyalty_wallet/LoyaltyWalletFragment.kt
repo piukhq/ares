@@ -110,7 +110,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
             if (foregroundView != null) {
 
+                binding.swipeLayout.isEnabled = false
+
                 when {
+                    dX == 0f -> binding.swipeLayout.isEnabled = true
+
                     dX > 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
@@ -134,6 +138,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
 
             if (foregroundView != null) {
+                binding.swipeLayout.isEnabled = true
                 getDefaultUIUtil().clearView(foregroundView)
             }
 
