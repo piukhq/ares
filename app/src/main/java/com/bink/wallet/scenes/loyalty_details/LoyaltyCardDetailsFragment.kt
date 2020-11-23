@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
@@ -144,6 +145,10 @@ class LoyaltyCardDetailsFragment :
             }
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
+            }
+
+            card?.card?.secondary_colour?.let { secondaryCardColour ->
+                binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
             }
         }
 

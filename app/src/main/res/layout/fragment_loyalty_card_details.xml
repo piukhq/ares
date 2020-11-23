@@ -68,6 +68,7 @@
                             app:layout_constraintGuide_percent="0.5" />
 
                     <View
+                        android:id="@+id/card_background"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/background_height"
                             android:background="@drawable/ic_bkgr"
