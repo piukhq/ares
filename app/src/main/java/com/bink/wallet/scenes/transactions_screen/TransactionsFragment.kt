@@ -86,7 +86,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                 val previousMatchingVisit = previousTransactionHistoryVisitList.firstOrNull { it.membershipId.equals(membershipCard.id) }
 
                 if (previousMatchingVisit != null) {
-                    SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize != membershipCard.membership_transactions?.size ?: 0
+                    SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize > membershipCard.membership_transactions?.size ?: 0
                     val foundIndex =
                         previousTransactionHistoryVisitList.indexOfFirst { it.membershipId.equals(membershipCard.id) && it.transactionSize == membershipCard.membership_transactions?.size ?: 0 }
                     previousTransactionHistoryVisitList.removeAt(foundIndex)
