@@ -26,7 +26,6 @@ object SharedPreferenceManager {
     private const val CONTACT_US_CLICKED = "contactUsClicked"
     private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
-    private const val HAS_VIEW_DIALOG_PERMISSION = "hasViewedDialogPermission"
     private const val BARCODE = "barcode"
     private const val CARD_NUMBER = "cardNumber"
     private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
@@ -43,8 +42,6 @@ object SharedPreferenceManager {
     private const val FIRST_OPEN_DATE = "first_open_date"
     private const val TOTAL_OPEN_COUNT = "total_open_count"
     private const val ADDED_NEW_PLL = "added_new_pll"
-    private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
-    private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -147,12 +144,6 @@ object SharedPreferenceManager {
             it.putBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, value)
         }
 
-    var hasViewDialogPermission: Boolean
-        get() = preferences.getBoolean(HAS_VIEW_DIALOG_PERMISSION, false)
-        set(value) = preferences.edit {
-            it.putBoolean(HAS_VIEW_DIALOG_PERMISSION, value)
-        }
-
     var scannedLoyaltyBarCode: String?
         get() = preferences.getString(SCANNED_LOYALTY_BARCODE, null)
         set(value) = preferences.edit {
@@ -240,18 +231,6 @@ object SharedPreferenceManager {
         get() = preferences.getBoolean(ADDED_NEW_PLL, false)
         set(value) = preferences.edit {
             it.putBoolean(ADDED_NEW_PLL, value)
-        }
-
-    var lastSeenTransactions: String?
-        get() = preferences.getString(LAST_SEEN_TRANSACTIONS, null)
-        set(value) = preferences.edit {
-            it.putString(LAST_SEEN_TRANSACTIONS, value)
-        }
-
-    var hasNewTransactions: Boolean
-        get() = preferences.getBoolean(HAS_NEW_TRANSACTIONS, false)
-        set(value) = preferences.edit {
-            it.putBoolean(HAS_NEW_TRANSACTIONS, value)
         }
 
     fun clear() {
