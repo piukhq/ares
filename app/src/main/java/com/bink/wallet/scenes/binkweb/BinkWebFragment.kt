@@ -76,6 +76,11 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             }
         }
 
+        binding.webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+        }
+
         binding.buttonRefresh.setOnClickListener {
             binding.webView.reload()
         }
