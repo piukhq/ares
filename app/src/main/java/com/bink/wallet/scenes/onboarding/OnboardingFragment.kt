@@ -20,12 +20,7 @@ import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.FacebookSdk
-import com.facebook.GraphRequest
+import com.facebook.*
 import com.facebook.login.LoginBehavior
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
