@@ -13,35 +13,13 @@ class UserRepository(
     private val apiService: ApiService
 ) {
 
-    fun putUserDetails(
-        user: User,
-        userResponse: MutableLiveData<User>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.putUserDetailsAsync(user)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    response.first_name?.let {
-                        LocalStoreUtils.setAppSharedPref(
-                            LocalStoreUtils.KEY_FIRST_NAME,
-                            it
-                        )
-                    }
+    suspend fun putUserDetails(
+        user: User
 
-                    response.last_name?.let {
-                        LocalStoreUtils.setAppSharedPref(
-                            LocalStoreUtils.KEY_SECOND_NAME,
-                            it
-                        )
-                    }
-                    userResponse.value = response
-                } catch (e: Exception) {
-                    // We don't care about any error
-                }
-            }
-        }
+    ): User {
+        return apiService.putUserDetailsAsync(user)
     }
+
 
     fun getUserDetails(
         user: MutableLiveData<User>,

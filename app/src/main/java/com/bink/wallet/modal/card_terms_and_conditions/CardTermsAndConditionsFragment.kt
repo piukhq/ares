@@ -127,7 +127,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
 
     override fun onSecondButtonClicked() {
         if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-            requireActivity().supportFragmentManager.popBackStack()
+            findNavController().popBackStack()
         }
     }
 

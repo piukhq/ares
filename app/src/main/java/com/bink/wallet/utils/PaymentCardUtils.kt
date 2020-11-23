@@ -218,30 +218,34 @@ fun String.dateValidation(): Boolean {
 
 fun String.formatDate(): String {
     val builder = StringBuilder()
-    val new = replace(REGEX_DECIMAL_OR_SLASH.toRegex(), EMPTY_STRING)
-    if (new.isNotEmpty()) {
-        val parts = new.split(SEPARATOR_SLASH)
-        val year: String
-        var month: String
-        if (parts.size == 1) {
-            val len = kotlin.math.max(0, length - 2)
-            month = new.substring(0, len)
-            year = new.substring(len)
-        } else {
-            month = parts[0]
-            year = parts[1]
+    try {
+        val new = replace(REGEX_DECIMAL_OR_SLASH.toRegex(), EMPTY_STRING)
+        if (new.isNotEmpty()) {
+            val parts = new.split(SEPARATOR_SLASH)
+            val year: String
+            var month: String
+            if (parts.size == 1) {
+                val len = kotlin.math.max(0, length - 2)
+                month = new.substring(0, len)
+                year = new.substring(len)
+            } else {
+                month = parts[0]
+                year = parts[1]
+            }
+            month = "00$month"
+            builder.append(month.substring(month.length - 2))
+            builder.append(SEPARATOR_SLASH)
+            builder.append(year)
         }
-        month = "00$month"
-        builder.append(month.substring(month.length - 2))
-        builder.append(SEPARATOR_SLASH)
-        builder.append(year)
+        return builder.toString()
+    } catch (e: StringIndexOutOfBoundsException) {
+        return ""
     }
-    return builder.toString()
 }
 
 object PaymentCardUtils {
 
-   fun existLinkedMembershipCards(
+    fun existLinkedMembershipCards(
         paymentCard: PaymentCard,
         membershipCards: MutableList<MembershipCard>
     ): Boolean {
@@ -264,8 +268,8 @@ object PaymentCardUtils {
         }
     }
 
-    fun cardStatus(status:String):String{
-        return when(status.toLowerCase(Locale.getDefault())) {
+    fun cardStatus(status: String): String {
+        return when (status.toLowerCase(Locale.getDefault())) {
             "pending" -> PENDING_CARD
             "failed" -> FAILED_CARD
             else -> PENDING_CARD
