@@ -15,6 +15,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.IndexOutOfBoundsException
 import java.lang.reflect.Type
 
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
@@ -89,7 +90,10 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                     SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize > membershipCard.membership_transactions?.size ?: 0
                     val foundIndex =
                         previousTransactionHistoryVisitList.indexOfFirst { it.membershipId.equals(membershipCard.id) && it.transactionSize == membershipCard.membership_transactions?.size ?: 0 }
-                    previousTransactionHistoryVisitList.removeAt(foundIndex)
+                    try {
+                        previousTransactionHistoryVisitList.removeAt(foundIndex)
+                    } catch (e: IndexOutOfBoundsException) {
+                    }
                 } else {
                     SharedPreferenceManager.hasNewTransactions = false
                 }
