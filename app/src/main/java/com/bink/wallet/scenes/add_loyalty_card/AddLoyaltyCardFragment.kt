@@ -198,7 +198,7 @@ class AddLoyaltyCardFragment :
     }
 
     private fun showUnsupportedBarcodePopup(companyName: String = "") {
-        if (isFromAddAuth) {
+        if (isFromAddAuth && isAdded) {
             showTryAgainGenericError(
                 requireActivity(), getString(R.string.scan_failure_body, companyName)
             )
