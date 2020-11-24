@@ -23,6 +23,9 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
@@ -154,7 +157,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         viewModel.checkZendeskResponse()
-        RequestReviewUtil.triggerViaWallet(this)
+        RequestReviewUtil.triggerViaWallet(this){
+            logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
+        }
         logScreenView(LOYALTY_WALLET_VIEW)
     }
 
@@ -332,7 +337,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.notifyDataSetChanged()
 
                 if(userDataResult.result.first.size > 4){
-                    RequestReviewUtil.triggerViaCards(this)
+                    RequestReviewUtil.triggerViaCards(this){
+                        logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME))
+                    }
                 }
 
             }

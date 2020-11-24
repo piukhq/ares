@@ -82,6 +82,11 @@ object FirebaseEvents {
     const val PLL_STATE_SOFT_LINK = "SOFT_LINK"
     const val PLL_STATE_FAILED = "FAILED"
     const val LOYALTY_CARD_STATUS = "loyalty_card_status"
+    const val FIREBASE_REQUEST_REVIEW = "in_app_review_request"
+    const val FIREBASE_REQUEST_REVIEW_TRIGGER = "review_trigger"
+    const val FIREBASE_REQUEST_REVIEW_TIME = "TIME"
+    const val FIREBASE_REQUEST_REVIEW_ADD = "ADD"
+    const val FIREBASE_REQUEST_REVIEW_TRANSACTIONS = "TRANSACTIONS"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

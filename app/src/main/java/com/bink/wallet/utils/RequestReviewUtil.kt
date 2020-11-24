@@ -11,23 +11,32 @@ object RequestReviewUtil {
 
     private const val twoDaysInMillis = 172800000
 
-    fun triggerViaCards(fragment: Fragment?) {
+    fun triggerViaCards(fragment: Fragment?, reviewRequested: () -> Unit) {
         fragment?.let {
             SharedPreferenceManager.firstOpenDate?.let { firstOpenDate ->
                 if ((System.currentTimeMillis() - firstOpenDate.toLong()) > twoDaysInMillis) {
                     if (SharedPreferenceManager.totalOpenCount > 10) {
-                        requestReviewFlow(fragment)
+                        requestReviewFlow(fragment, reviewRequested)
                     }
                 }
             }
         }
     }
 
-    fun triggerViaWallet(fragment: Fragment?){
+    fun triggerViaWallet(fragment: Fragment?, reviewRequested: () -> Unit) {
         fragment?.let {
-            if(SharedPreferenceManager.hasAddedNewPll){
+            if (SharedPreferenceManager.hasAddedNewPll) {
                 SharedPreferenceManager.hasAddedNewPll = false
-                requestReviewFlow(fragment)
+                requestReviewFlow(fragment, reviewRequested)
+            }
+        }
+    }
+
+    fun triggerViaCardDetails(fragment: Fragment?, reviewRequested: () -> Unit) {
+        fragment?.let {
+            if (SharedPreferenceManager.hasNewTransactions) {
+                SharedPreferenceManager.hasNewTransactions = false
+                requestReviewFlow(fragment, reviewRequested)
             }
         }
     }
@@ -41,7 +50,7 @@ object RequestReviewUtil {
         SharedPreferenceManager.totalOpenCount = SharedPreferenceManager.totalOpenCount + 1
     }
 
-    private fun requestReviewFlow(fragment: Fragment) {
+    private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
         val reviewManager = ReviewManagerFactory.create(fragment.activity)
 
         if (!hasReviewedInThisVersion()) {
@@ -50,6 +59,7 @@ object RequestReviewUtil {
 
             if (isReviewEnabled.toLowerCase().equals("true")) {
                 val requestReview = reviewManager.requestReviewFlow()
+                reviewRequested()
 
                 requestReview.addOnCompleteListener { request ->
                     if (request.isSuccessful) {
