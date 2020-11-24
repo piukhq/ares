@@ -44,7 +44,8 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                             true,
                             viewModel.membershipPlan.value?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription,
+                            viewModel.membershipPlan.value?.account?.plan_summary?:"",
+                            description2 = planDescription,
                             firstButtonText = getString(R.string.go_to_site)
                         ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
                     )
