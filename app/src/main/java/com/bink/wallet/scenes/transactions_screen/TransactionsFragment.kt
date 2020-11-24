@@ -15,6 +15,7 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.Exception
 import java.lang.IndexOutOfBoundsException
 import java.lang.reflect.Type
 
@@ -71,6 +72,8 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
 
                 /**
                  * The way this is written ensures there can only be a single entry for each type of card.
+                 * It does this by trying to find an entry in the array that has the same membership ID, if it finds an entry, it will be removed and re-added with the up-to-date transaction size
+                 * If the Transaction size is found to have increased from the previous entry we update the hasNewTransactions boolean accordingly
                  */
 
                 val gson = Gson()
@@ -88,11 +91,9 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
 
                 if (previousMatchingVisit != null) {
                     SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize < membershipCard.membership_transactions?.size ?: 0
-                    val foundIndex =
-                        previousTransactionHistoryVisitList.indexOfFirst { it.membershipId.equals(membershipCard.id) && it.transactionSize == membershipCard.membership_transactions?.size ?: 0 }
                     try {
-                        previousTransactionHistoryVisitList.removeAt(foundIndex)
-                    } catch (e: IndexOutOfBoundsException) {
+                        previousTransactionHistoryVisitList.remove(previousMatchingVisit)
+                    } catch (e: Exception) {
                     }
                 } else {
                     SharedPreferenceManager.hasNewTransactions = false
