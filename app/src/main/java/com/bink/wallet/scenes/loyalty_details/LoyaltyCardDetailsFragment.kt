@@ -405,7 +405,10 @@ class LoyaltyCardDetailsFragment :
                 binding.containerToolbarTitle.visibility = View.GONE
             }
         }, SCROLL_DELAY)
-        RequestReviewUtil.triggerViaCardDetails(this)
+
+        RequestReviewUtil.triggerViaCardDetails(this){
+            logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap("TRANSACTIONS"))
+        }
     }
 
     private fun handleFootersListeners() {
