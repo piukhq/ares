@@ -91,10 +91,7 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
 
                 if (previousMatchingVisit != null) {
                     SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize < membershipCard.membership_transactions?.size ?: 0
-                    try {
-                        previousTransactionHistoryVisitList.remove(previousMatchingVisit)
-                    } catch (e: Exception) {
-                    }
+                    previousTransactionHistoryVisitList.remove(previousMatchingVisit)
                 } else {
                     SharedPreferenceManager.hasNewTransactions = false
                 }
