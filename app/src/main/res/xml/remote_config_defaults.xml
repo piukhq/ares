@@ -3,5 +3,7 @@
     <entry>
         <key>in_app_review_enabled</key>
         <value>false</value>
+        <key>dynamic_actions</key>
+        <value></value>
     </entry>
 </defaultsMap>
