@@ -63,8 +63,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     abstract val viewModel: VM
 
-    open lateinit var currentDynamicActionScreen: DynamicActionScreen
-
     open fun createDynamicAction(dynamicAction: DynamicAction) {}
 
     open lateinit var binding: DB
@@ -94,6 +92,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             init(inflater, container)
         }
         init()
+        checkForDynamicActions()
         return binding.root
     }
 
@@ -131,32 +130,47 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             }
         }
-
-        checkForDynamicActions()
     }
 
     private fun checkForDynamicActions() {
-        if (::currentDynamicActionScreen.isInitialized) {
+        getDynamicActionScreenForFragment(this.javaClass.canonicalName ?: "")?.let { currentDynamicActionScreen ->
+
             val dynamicActionsList: ArrayList<DynamicAction> =
                 Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
 
             for (dynamicAction in dynamicActionsList) {
-                dynamicAction.locations?.let { dynamicActionLocations ->
+                if (dynamicAction.start_date != null && dynamicAction.end_date != null) {
 
-                    for (dynamicActionLocation in dynamicActionLocations) {
-                        dynamicActionLocation.screen?.let { dynamicActionScreen ->
+                    //val currentTime = System.currentTimeMillis() / 1000
+                    //For testing
+                    val currentTime = 1608537601
+                    if (currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date) {
+                        dynamicAction.locations?.let { dynamicActionLocations ->
 
-                            if (dynamicActionScreen == currentDynamicActionScreen) {
-                                createDynamicAction(dynamicAction)
+                            for (dynamicActionLocation in dynamicActionLocations) {
+                                dynamicActionLocation.screen?.let { dynamicActionScreen ->
+
+                                    if (dynamicActionScreen == currentDynamicActionScreen) {
+                                        createDynamicAction(dynamicAction)
+                                    }
+
+                                }
                             }
 
                         }
                     }
-
                 }
             }
 
         }
+    }
+
+    private fun getDynamicActionScreenForFragment(fragmentName: String): DynamicActionScreen? {
+        when (fragmentName){
+            "com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment" -> return DynamicActionScreen.LOYALTY_WALLET
+        }
+
+        return null
     }
 
     private fun setUpBottomNavListener() {
