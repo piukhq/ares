@@ -68,7 +68,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
                             true,
                             currentMembershipPlan?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription,
+                            currentMembershipPlan?.account?.plan_summary?:"",
+                            description2 = planDescription,
                             firstButtonText = getString(R.string.go_to_site)
                         ),currentMembershipPlan?.account?.plan_url ?: ""
                     )
