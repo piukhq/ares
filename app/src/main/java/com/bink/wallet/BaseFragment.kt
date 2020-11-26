@@ -51,6 +51,7 @@ import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import java.lang.Exception
 import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.HashMap
@@ -139,25 +140,19 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
 
             for (dynamicAction in dynamicActionsList) {
-                if (dynamicAction.start_date != null && dynamicAction.end_date != null) {
+                if (isDynamicActionInDate(dynamicAction)) {
+                    dynamicAction.locations?.let { dynamicActionLocations ->
 
-                    //val currentTime = System.currentTimeMillis() / 1000
-                    //For testing
-                    val currentTime = 1608537601
-                    if (currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date) {
-                        dynamicAction.locations?.let { dynamicActionLocations ->
+                        for (dynamicActionLocation in dynamicActionLocations) {
+                            dynamicActionLocation.screen?.let { dynamicActionScreen ->
 
-                            for (dynamicActionLocation in dynamicActionLocations) {
-                                dynamicActionLocation.screen?.let { dynamicActionScreen ->
-
-                                    if (dynamicActionScreen == currentDynamicActionScreen) {
-                                        createDynamicAction(dynamicAction)
-                                    }
-
+                                if (dynamicActionScreen == currentDynamicActionScreen) {
+                                    createDynamicAction(dynamicAction)
                                 }
-                            }
 
+                            }
                         }
+
                     }
                 }
             }
@@ -166,11 +161,25 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     private fun getDynamicActionScreenForFragment(fragmentName: String): DynamicActionScreen? {
-        when (fragmentName){
-            "com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment" -> return DynamicActionScreen.LOYALTY_WALLET
+        val className = try {
+            fragmentName.split(".").last()
+        } catch (e: Exception) {
+            return null
+        }
+
+        when (className) {
+            "LoyaltyWalletFragment" -> return DynamicActionScreen.LOYALTY_WALLET
         }
 
         return null
+    }
+
+    private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
+        if (dynamicAction.start_date == null || dynamicAction.end_date == null) return false
+        val currentTime = System.currentTimeMillis() / 1000
+        //For testing
+        //val currentTime = 1608537601
+        return currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date
     }
 
     private fun setUpBottomNavListener() {
