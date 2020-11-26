@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.loyalty_details
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -14,6 +15,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
@@ -26,8 +28,12 @@ import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.reflect.Type
 import java.util.*
 
 
@@ -245,6 +251,23 @@ class LoyaltyCardDetailsFragment :
 
             }
         }
+
+        /**
+         *
+         * This is here as an example if you'd like to test, put a break point on the log line (267) and look at the array that is given back.
+         * I'd like to leave this here so I can use it in future.
+         *
+        val gson = Gson()
+        val type: Type = object : TypeToken<ArrayList<DynamicAction?>?>() {}.type
+
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val dynamicActions = remoteConfig.getString(REMOTE_CONFIG_DYNAMIC_ACTIONS)
+
+        val arrayList : ArrayList<DynamicAction> = gson.fromJson(dynamicActions, type)
+
+        Log.d("test", arrayList.size.toString())
+        **/
+
     }
 
     private fun setUpScrollView(colorDrawable: ColorDrawable) {

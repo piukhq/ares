@@ -13,9 +13,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.DynamicAction
+import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
-import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY
@@ -37,19 +39,20 @@ import com.bink.wallet.utils.FirebaseEvents.PLL_LINK_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_LOYALTY_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_PAYMENT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_KEY
-import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
-import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import java.lang.Exception
+import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.HashMap
 import io.sentry.core.protocol.User as SentryUser
@@ -60,6 +63,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     abstract val layoutRes: Int
 
     abstract val viewModel: VM
+
+    open fun createDynamicAction(dynamicAction: DynamicAction) {}
 
     open lateinit var binding: DB
 
@@ -88,6 +93,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             init(inflater, container)
         }
         init()
+        checkForDynamicActions()
         return binding.root
     }
 
@@ -125,6 +131,55 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             }
         }
+    }
+
+    private fun checkForDynamicActions() {
+        getDynamicActionScreenForFragment(this.javaClass.canonicalName ?: "")?.let { currentDynamicActionScreen ->
+
+            val dynamicActionsList: ArrayList<DynamicAction> =
+                Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
+
+            for (dynamicAction in dynamicActionsList) {
+                if (isDynamicActionInDate(dynamicAction)) {
+                    dynamicAction.locations?.let { dynamicActionLocations ->
+
+                        for (dynamicActionLocation in dynamicActionLocations) {
+                            dynamicActionLocation.screen?.let { dynamicActionScreen ->
+
+                                if (dynamicActionScreen == currentDynamicActionScreen) {
+                                    createDynamicAction(dynamicAction)
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun getDynamicActionScreenForFragment(fragmentName: String): DynamicActionScreen? {
+        val className = try {
+            fragmentName.split(".").last()
+        } catch (e: Exception) {
+            return null
+        }
+
+        when (className) {
+            "LoyaltyWalletFragment" -> return DynamicActionScreen.LOYALTY_WALLET
+        }
+
+        return null
+    }
+
+    private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
+        if (dynamicAction.start_date == null || dynamicAction.end_date == null) return false
+        val currentTime = System.currentTimeMillis() / 1000
+        //For testing
+        //val currentTime = 1608537601
+        return currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date
     }
 
     private fun setUpBottomNavListener() {
