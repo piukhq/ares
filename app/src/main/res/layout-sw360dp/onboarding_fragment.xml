@@ -75,7 +75,6 @@
             android:id="@+id/log_in_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_accent"
             android:layout_marginStart="@dimen/buttons_margin"
             android:layout_marginEnd="@dimen/buttons_margin"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
