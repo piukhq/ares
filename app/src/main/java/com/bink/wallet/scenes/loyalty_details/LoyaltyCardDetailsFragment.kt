@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -134,13 +135,18 @@ class LoyaltyCardDetailsFragment :
             viewModel.setLinkStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this) { card ->
+        viewModel.membershipCard.observeNonNull(this) { membershipCard ->
             binding.swipeLayoutLoyaltyDetails.isRefreshing = false
             viewModel.membershipPlan.value?.let { plan ->
-                binding.cardHeader.linkCard(card, plan)
+                binding.cardHeader.linkCard(membershipCard, plan)
             }
+
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
+            }
+
+            membershipCard?.card?.getSecondaryColor()?.let { secondaryCardColour ->
+                binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
             }
         }
 
