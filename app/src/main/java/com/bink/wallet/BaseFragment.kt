@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.DynamicAction
+import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
@@ -31,7 +32,6 @@ import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRIGGER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_KEY
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
@@ -52,8 +52,6 @@ import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import java.lang.Exception
-import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.HashMap
 import io.sentry.core.protocol.User as SentryUser
@@ -65,7 +63,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     abstract val viewModel: VM
 
-    open fun createDynamicAction(dynamicAction: DynamicAction) {}
+    open fun createDynamicAction(dynamicActionLocation: DynamicActionLocation) {}
 
     open lateinit var binding: DB
 
@@ -152,7 +150,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                             dynamicActionLocation.screen?.let { dynamicActionScreen ->
 
                                 if (dynamicActionScreen == currentDynamicActionScreen) {
-                                    createDynamicAction(dynamicAction)
+                                    createDynamicAction(dynamicActionLocation)
                                 }
 
                             }
@@ -179,11 +177,22 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return null
     }
 
+    fun getEmojiByUnicode(unicode: String?): String? {
+        try{
+            if(unicode == null) return ""
+            val trimmedUniCode = unicode.removeRange(0,2)
+            val longUniCode = trimmedUniCode.toLong(16)
+            return String(Character.toChars(longUniCode.toInt()))
+        } catch (e: Exception){
+            return ""
+        }
+    }
+
     private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
         if (dynamicAction.start_date == null || dynamicAction.end_date == null) return false
-        val currentTime = System.currentTimeMillis() / 1000
+        //val currentTime = System.currentTimeMillis() / 1000
         //For testing
-        //val currentTime = 1608537601
+        val currentTime = 1608537601
         return currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date
     }
 
