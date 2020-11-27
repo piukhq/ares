@@ -14,6 +14,9 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
+import com.bink.wallet.model.DynamicAction
+import com.bink.wallet.model.DynamicActionArea
+import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -242,6 +245,17 @@ class PaymentCardWalletFragment :
 
         binding.settingsButton.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
+        }
+    }
+
+    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+        dynamicActionLocation.area?.let { dynamicActionLocationArea ->
+            when (dynamicActionLocationArea){
+                DynamicActionArea.LEFT_TOP_BAR -> {
+                    binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
+                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
+                }
+            }
         }
     }
 

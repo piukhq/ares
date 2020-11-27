@@ -15,9 +15,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
-import com.bink.wallet.model.DynamicActionArea
-import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.*
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -323,11 +321,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             .build()
     }
 
-    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation) {
+    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea){
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
+                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
                 }
             }
         }
