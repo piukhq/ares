@@ -47,6 +47,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
@@ -135,10 +136,14 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(this.javaClass.canonicalName ?: "")?.let { currentDynamicActionScreen ->
+            var dynamicActionsList: ArrayList<DynamicAction>
 
-            val dynamicActionsList: ArrayList<DynamicAction> =
-                Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
-
+            try{
+                dynamicActionsList = Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
+            } catch (e: JsonParseException){
+                return
+            }
+         
             for (dynamicAction in dynamicActionsList) {
                 if (isDynamicActionInDate(dynamicAction)) {
                     dynamicAction.locations?.let { dynamicActionLocations ->
