@@ -35,7 +35,9 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
                         binding.firstButton.visibility = View.VISIBLE
 
                         cta.action?.let { action ->
-                            launchDynamicActionEventCta(action)
+                            binding.firstButton.setOnClickListener {
+                                launchDynamicActionEventCta(action)
+                            }
                         }
                     }
                 }
@@ -46,7 +48,7 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
     private fun launchDynamicActionEventCta(action: DynamicActionEventBodyCTAHandler){
         when(action) {
             DynamicActionEventBodyCTAHandler.ZENDESK_CONTACT_US -> {
-
+                viewModel.launchZendesk(this){}
             }
         }
     }

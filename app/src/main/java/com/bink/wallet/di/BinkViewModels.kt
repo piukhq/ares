@@ -23,6 +23,7 @@ import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
+import com.bink.wallet.scenes.dynamic_actions.DynamicActionViewModel
 import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
@@ -125,11 +126,13 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
 
     viewModel { WhoWeAreViewModel() }
+
+    viewModel { DynamicActionViewModel(get()) }
 
     single {
         provideAddPaymentCardRepository(
