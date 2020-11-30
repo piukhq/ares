@@ -69,27 +69,27 @@
             app:layout_constraintTop_toBottomOf="@+id/log_in_screen_description" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_error"
+            android:id="@+id/email_field"
             android:layout_width="match_parent"
-            app:hintEnabled="false"
-            android:layout_height="@dimen/login_edit_text_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            app:hintEnabled="false"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email_description">
 
             <EditText
-                android:id="@+id/email_field"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@+id/email_description"
+                android:layout_height="80dp"
                 android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_email_text"
                 android:inputType="textEmailAddress"
                 android:text="@={viewModel.email}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_sub_headline"
+                app:layout_constraintTop_toBottomOf="@+id/email_description"
 
                 tools:ignore="Autofill" />
 
@@ -108,7 +108,7 @@
             android:textSize="@dimen/size_body_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_error" />
+            app:layout_constraintTop_toBottomOf="@+id/email_field" />
 
         <EditText
             android:id="@+id/password_field"

@@ -28,6 +28,7 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
+import com.google.android.material.textfield.TextInputLayout
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.util.*
@@ -231,6 +232,21 @@ fun Context.validateEmail(emailValue: String?, editText: EditText) {
                 editText.error = getString(R.string.incorrect_email_text)
             } else {
                 editText.error = null
+            }
+        }
+    }
+}
+
+fun Context.validateEmail(emailValue: String?, editText: TextInputLayout) {
+    editText.editText?.setOnFocusChangeListener { _, hasFocus ->
+        if (!hasFocus) {
+            if (!emailValue.isNullOrEmpty() &&
+                !UtilFunctions.isValidField(EMAIL_REGEX, emailValue)
+            ) {
+                editText.error = getString(R.string.incorrect_email_text)
+            } else {
+                editText.error = null
+                editText.isErrorEnabled = false
             }
         }
     }
