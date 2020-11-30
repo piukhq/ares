@@ -68,22 +68,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/log_in_screen_description" />
 
-        <EditText
-            android:id="@+id/email_field"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_error"
+            android:layout_width="match_parent"
+            app:hintEnabled="false"
+            android:layout_height="@dimen/login_edit_text_height"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:fontFamily="@font/nunito_sans_light"
-            android:hint="@string/enter_email_text"
-            android:inputType="textEmailAddress"
-            android:text="@={viewModel.email}"
-            android:textColor="@color/black"
-            android:textSize="@dimen/size_sub_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_description"
-            tools:ignore="Autofill" />
+            app:layout_constraintTop_toBottomOf="@+id/email_description">
+
+            <EditText
+                android:id="@+id/email_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@+id/email_description"
+                android:fontFamily="@font/nunito_sans_light"
+                android:hint="@string/enter_email_text"
+                android:inputType="textEmailAddress"
+                android:text="@={viewModel.email}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_sub_headline"
+
+                tools:ignore="Autofill" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/password_description"
@@ -98,12 +108,12 @@
             android:textSize="@dimen/size_body_large"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_field" />
+            app:layout_constraintTop_toBottomOf="@+id/email_error" />
 
         <EditText
             android:id="@+id/password_field"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/login_edit_text_height"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:fontFamily="@font/nunito_sans_light"
