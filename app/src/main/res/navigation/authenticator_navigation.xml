@@ -118,18 +118,18 @@
             app:destination="@id/add_payment_card" />
 
         <action
-            android:id="@+id/loyalty_to_xmas_easter_egg"
-            app:destination="@id/xmas_easter_egg_fragment" />
+            android:id="@+id/loyalty_to_dynamic_action"
+            app:destination="@id/dynamic_action_fragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/xmas_easter_egg_fragment"
-        android:name="com.bink.wallet.scenes.dynamic_actions.XmasEasterEggFragment">
+        android:id="@+id/dynamic_action_fragment"
+        android:name="com.bink.wallet.scenes.dynamic_actions.DynamicActionFragment">
 
         <argument
-            android:name="genericModalParameters"
-            app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+            android:name="dynamicActionEvent"
+            app:argType="com.bink.wallet.model.DynamicActionEvent" />
 
     </fragment>
 
@@ -163,8 +163,8 @@
             app:destination="@+id/loyalty_fragment"/>
 
         <action
-            android:id="@+id/payment_to_xmas_easter_egg"
-            app:destination="@id/xmas_easter_egg_fragment" />
+            android:id="@+id/payment_to_dynamic_action"
+            app:destination="@id/dynamic_action_fragment" />
 
     </fragment>
 

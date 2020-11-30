@@ -204,19 +204,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent) {
-        val modalParameters = GenericModalParameters(
-            R.drawable.ic_close,
-            true,
-            event.body?.title ?: "",
-            event.body?.description ?: "",
-            firstButtonText = event.body?.cta?.title ?: ""
-        )
-
         when (type) {
             DynamicActionType.XMAS -> {
                 val directions = when (findNavController().currentDestination?.id) {
-                    R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToXmasEasterEgg(modalParameters)
-                    R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToXmasEasterEgg(modalParameters)
+                    R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToDynamicAction(event)
+                    R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(event)
                     else -> null
                 }
                 directions?.let { findNavController().navigateIfAdded(this, directions) }
