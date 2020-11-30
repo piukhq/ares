@@ -18,6 +18,7 @@
         <item name="colorControlHighlight">@color/grey_10</item>
         <item name="android:fontFamily">@font/nunitosans</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="colorSurface">#FFFFFF</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">

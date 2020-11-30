@@ -237,16 +237,16 @@ fun Context.validateEmail(emailValue: String?, editText: EditText) {
     }
 }
 
-fun Context.validateEmail(emailValue: String?, editText: TextInputLayout) {
-    editText.editText?.setOnFocusChangeListener { _, hasFocus ->
+fun Context.validateEmail(emailValue: String?, textInputLayout: TextInputLayout) {
+    textInputLayout.editText?.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
             if (!emailValue.isNullOrEmpty() &&
                 !UtilFunctions.isValidField(EMAIL_REGEX, emailValue)
             ) {
-                editText.error = getString(R.string.incorrect_email_text)
+                textInputLayout.error = getString(R.string.incorrect_email_text)
             } else {
-                editText.error = null
-                editText.isErrorEnabled = false
+                textInputLayout.error = null
+                textInputLayout.isErrorEnabled = false
             }
         }
     }
@@ -265,6 +265,24 @@ fun Context.validatePassword(passwordValue: String?, editText: EditText) {
                     getString(R.string.password_description)
             } else {
                 editText.error = null
+            }
+        }
+    }
+}
+
+fun Context.validatePassword(passwordValue: String?, textInputLayout: TextInputLayout) {
+    textInputLayout.editText?.setOnFocusChangeListener { _, hasFocus ->
+        if (!hasFocus) {
+            if (!passwordValue.isNullOrEmpty() &&
+                !UtilFunctions.isValidField(
+                    PASSWORD_REGEX,
+                    passwordValue
+                )
+            ) {
+                textInputLayout.error =
+                    getString(R.string.password_description)
+            } else {
+                textInputLayout.error = null
             }
         }
     }

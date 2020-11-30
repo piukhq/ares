@@ -22,7 +22,7 @@
             android:background="@drawable/bg_card_shadow">
 
             <androidx.cardview.widget.CardView
-                style="@style/ShadowedCardView"
+               style="@style/ShadowedCardView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/card_height">
 
