@@ -117,7 +117,6 @@ class Snow(context: Context, private val screenW: Float, private val screenH: Fl
     }
 
     fun update() {
-        // far=slow, close=fast
         snowflake.translationY = (snowflake.translationY + fallingSpeed * (1 - distance * 0.8)).toFloat()
         snowflake.translationX = (snowflake.translationX + windSpeed * (1 - distance * 0.7)).toFloat()
 
