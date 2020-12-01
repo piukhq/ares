@@ -21,6 +21,7 @@
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,16 +30,17 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingBottom="@dimen/margin_padding_size_large"
                 tools:context="com.bink.wallet.scenes.preference.PreferencesFragment">
 
                 <ImageView
                     android:id="@+id/bink_logo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/ic_bink_logo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/christmas_logo" />
 
                 <TextView
                     android:id="@+id/title"
@@ -72,11 +74,11 @@
                     android:id="@+id/first_button"
                     style="@style/RoundedGradientButton"
                     android:layout_width="0dp"
-                    android:visibility="gone"
                     android:layout_marginTop="@dimen/margin_padding_size_large"
                     android:background="@drawable/rounded_corners_gradient_button"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/description" />
