@@ -132,7 +132,7 @@ val viewModelModules = module {
 
     viewModel { WhoWeAreViewModel() }
 
-    viewModel { DynamicActionViewModel(get()) }
+    viewModel { DynamicActionViewModel(get(), get()) }
 
     single {
         provideAddPaymentCardRepository(

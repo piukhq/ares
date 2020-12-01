@@ -55,7 +55,23 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
             }
         }
 
+    }
+
+    override fun onResume() {
         setUpSnowEffect()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        var container: ViewGroup = activity?.window?.decorView as ViewGroup
+        if (snowList.isNotEmpty()) {
+            for (snowflake in snowList) {
+                container.removeView(snowflake.snowflake)
+            }
+        }
+
+        snowList.clear()
+        super.onPause()
     }
 
     private fun setUpSnowEffect() {
@@ -77,22 +93,14 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
         bgHandler.post(runnable)
     }
 
-    private fun launchDynamicActionEventCta(action: DynamicActionEventBodyCTAHandler){
-        when(action) {
+    private fun launchDynamicActionEventCta(action: DynamicActionEventBodyCTAHandler) {
+        when (action) {
             DynamicActionEventBodyCTAHandler.ZENDESK_CONTACT_US -> {
-                viewModel.launchZendesk(this){}
+                viewModel.launchZendesk(this) { user ->
+                    viewModel.putUserDetails(user)
+                }
             }
         }
-    }
-
-    override fun onPause() {
-        var container: ViewGroup = activity?.window?.decorView as ViewGroup
-        if(snowList.isNotEmpty()){
-            for(snowflake in snowList) {
-                container.removeView(snowflake.snowflake)
-            }
-        }
-        super.onPause()
     }
 
 }
@@ -125,6 +133,6 @@ class Snow(context: Context, private val screenW: Float, private val screenH: Fl
         if (snowflake.translationX > screenW)
             snowflake.translationX = snowflake.translationX - screenW
 
-        snowflake.rotation = snowflake.rotation +  (Random().nextFloat() * 0.6f - 0.3f) * 5
+        snowflake.rotation = snowflake.rotation + (Random().nextFloat() * 0.6f - 0.3f) * 5
     }
 }

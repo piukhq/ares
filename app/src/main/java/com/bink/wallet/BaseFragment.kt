@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
@@ -14,7 +13,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
@@ -178,7 +176,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return null
     }
 
-    fun getEmojiByUnicode(unicode: String?): String? {
+    fun getEmojiByUnicode(unicode: String?): String {
         try {
             if (unicode == null) return ""
             val trimmedUniCode = unicode.removeRange(0, 2)
@@ -218,9 +216,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
         if (dynamicAction.start_date == null || dynamicAction.end_date == null) return false
-        val currentTime = System.currentTimeMillis() / 1000
+        //val currentTime = System.currentTimeMillis() / 1000
         //For testing
-        //val currentTime = 1608537601
+        val currentTime = 1608537601
         return currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date
     }
 
