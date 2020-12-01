@@ -91,7 +91,6 @@
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
                     app:endIconMode="clear_text"
-                    app:errorEnabled="true"
                     app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -125,21 +124,29 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/email_field" />
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/password_field"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:fontFamily="@font/nunito_sans"
-                    android:hint="@string/enter_password"
-                    android:importantForAutofill="no"
-                    android:inputType="textPassword"
-                    android:text="@={viewModel.password}"
-                    android:textSize="@dimen/text_size_description_big"
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/password_description" />
+                    app:layout_constraintTop_toBottomOf="@+id/password_description">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_sans"
+                        android:hint="@string/enter_password"
+                        android:importantForAutofill="no"
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.password}"
+                        android:textSize="@dimen/text_size_description_big" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/confirm_password_description"
@@ -156,20 +163,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/password_field" />
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/confirm_password_field"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:fontFamily="@font/nunito_sans"
-                    android:hint="@string/confirm_password"
-                    android:inputType="textPassword"
-                    android:text="@={viewModel.confirmPassword}"
-                    android:textSize="@dimen/text_size_description_big"
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/confirm_password_description" />
+                    app:layout_constraintTop_toBottomOf="@+id/confirm_password_description">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_sans"
+                        android:hint="@string/confirm_password"
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.confirmPassword}"
+                        android:textSize="@dimen/text_size_description_big" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <CheckBox
                     android:id="@+id/checkbox_terms_conditions"
