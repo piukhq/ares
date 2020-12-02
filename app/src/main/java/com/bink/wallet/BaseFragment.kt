@@ -216,9 +216,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
         if (dynamicAction.start_date == null || dynamicAction.end_date == null) return false
-        //val currentTime = System.currentTimeMillis() / 1000
+        val currentTime = System.currentTimeMillis() / 1000
         //For testing
-        val currentTime = 1608537601
+        //val currentTime = 1608537601
         return currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date
     }
 
