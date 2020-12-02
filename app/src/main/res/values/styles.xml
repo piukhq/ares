@@ -120,4 +120,16 @@
         <item name="fontFamily">@font/nunitosans</item>
     </style>
 
+
+    <style name="InputTextAppearance" parent="Widget.Design.TextInputLayout">
+        <item name="errorTextAppearance">@style/InputTextError</item>
+        <item name="endIconTint">@color/gray_inactive</item>
+    </style>
+
+    <style name="InputTextError" parent="TextAppearance.Design.Error">
+        <item name="fontFamily">@font/nunito_sans</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/red_attention</item>
+    </style>
+
 </resources>

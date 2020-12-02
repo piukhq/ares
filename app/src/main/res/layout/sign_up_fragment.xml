@@ -86,6 +86,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/email_field"
+                    style="@style/InputTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -126,6 +127,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/password_field"
+                    style="@style/InputTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
@@ -165,6 +167,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/confirm_password_field"
+                    style="@style/InputTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
