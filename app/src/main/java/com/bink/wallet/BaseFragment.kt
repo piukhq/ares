@@ -196,8 +196,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 DynamicActionHandler.SINGLE_TAP -> {
                     view.setOnClickListener {
                         dynamicAction.event?.let { event ->
-                            logEvent(FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT, getRequestReviewMap(dynamicAction.name?:""))
-                            launchDynamicActionEvent(dynamicAction.type, event)
+                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name?:"")
                         }
                     }
                 }
@@ -205,7 +204,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent) {
+    private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent, dynamicActionName: String) {
+        logEvent(FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT, getRequestReviewMap(dynamicActionName))
         when (type) {
             DynamicActionType.XMAS -> {
                 val directions = when (findNavController().currentDestination?.id) {
@@ -213,7 +213,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(event)
                     else -> null
                 }
-                directions?.let { findNavController().navigateIfAdded(this, directions) }
+                directions?.let {
+                    findNavController().navigateIfAdded(this, directions)
+                }
             }
         }
     }
