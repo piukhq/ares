@@ -198,4 +198,7 @@
     <!-- Forms -->
     <dimen name="forms_checkbox_margin">10dp</dimen>
 
+    <!-- Dynamic Actions -->
+    <dimen name="christmas_logo_height">125dp</dimen>
+
 </resources>

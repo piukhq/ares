@@ -15,7 +15,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
-import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.*
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -32,7 +32,6 @@ import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.lang.ClassCastException
 import java.net.SocketTimeoutException
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
@@ -320,6 +319,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
             .build()
+    }
+
+    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+        dynamicActionLocation.area?.let { dynamicActionLocationArea ->
+            when (dynamicActionLocationArea){
+                DynamicActionArea.LEFT_TOP_BAR -> {
+                    binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
+                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
+                }
+            }
+        }
     }
 
     private fun setCardsData(userDataResult: UserDataResult) {

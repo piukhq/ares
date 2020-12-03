@@ -13,8 +13,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.DynamicAction
-import com.bink.wallet.model.DynamicActionScreen
+import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.*
@@ -31,7 +30,6 @@ import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
-import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRIGGER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_KEY
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
@@ -52,8 +50,6 @@ import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import java.lang.Exception
-import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.HashMap
 import io.sentry.core.protocol.User as SentryUser
@@ -65,7 +61,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     abstract val viewModel: VM
 
-    open fun createDynamicAction(dynamicAction: DynamicAction) {}
+    open fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {}
 
     open lateinit var binding: DB
 
@@ -138,12 +134,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         getDynamicActionScreenForFragment(this.javaClass.canonicalName ?: "")?.let { currentDynamicActionScreen ->
             var dynamicActionsList: ArrayList<DynamicAction>
 
-            try{
+            try {
                 dynamicActionsList = Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
-            } catch (e: JsonParseException){
+            } catch (e: JsonParseException) {
                 return
             }
-         
+
             for (dynamicAction in dynamicActionsList) {
                 if (isDynamicActionInDate(dynamicAction)) {
                     dynamicAction.locations?.let { dynamicActionLocations ->
@@ -152,7 +148,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                             dynamicActionLocation.screen?.let { dynamicActionScreen ->
 
                                 if (dynamicActionScreen == currentDynamicActionScreen) {
-                                    createDynamicAction(dynamicAction)
+                                    createDynamicAction(dynamicActionLocation, dynamicAction)
                                 }
 
                             }
@@ -174,9 +170,48 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
         when (className) {
             "LoyaltyWalletFragment" -> return DynamicActionScreen.LOYALTY_WALLET
+            "PaymentCardWalletFragment" -> return DynamicActionScreen.PAYMENT_WALLET
         }
 
         return null
+    }
+
+    fun getEmojiByUnicode(unicode: String?): String {
+        try {
+            if (unicode == null) return ""
+            val trimmedUniCode = unicode.removeRange(0, 2)
+            val longUniCode = trimmedUniCode.toLong(16)
+            return String(Character.toChars(longUniCode.toInt()))
+        } catch (e: Exception) {
+            return ""
+        }
+    }
+
+    fun bindEventToDynamicAction(view: View, dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+        dynamicActionLocation.action?.let { action ->
+            when (action) {
+                DynamicActionHandler.SINGLE_TAP -> {
+                    view.setOnClickListener {
+                        dynamicAction.event?.let { event ->
+                            launchDynamicActionEvent(dynamicAction.type, event)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent) {
+        when (type) {
+            DynamicActionType.XMAS -> {
+                val directions = when (findNavController().currentDestination?.id) {
+                    R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToDynamicAction(event)
+                    R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(event)
+                    else -> null
+                }
+                directions?.let { findNavController().navigateIfAdded(this, directions) }
+            }
+        }
     }
 
     private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
