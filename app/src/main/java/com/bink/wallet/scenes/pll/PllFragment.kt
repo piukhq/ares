@@ -101,7 +101,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
             viewModel.membershipCard.value?.let { membershipCard ->
 
-                adapter.updateData(activeCards, membershipCard)
+                adapter.updateData(activeCards.sortedByDescending { card -> card.id }, membershipCard)
                 binding.brandModal.setOnClickListener {
                     viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
                         findNavController().navigate(
