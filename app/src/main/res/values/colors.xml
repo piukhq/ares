@@ -54,4 +54,5 @@
     <!-- Settings -->
     <color name="setings_thirty_pct_black">#4D000000</color>
 
+    <color name="mtrl_error" >@color/blue_accent</color>
 </resources>

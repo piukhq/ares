@@ -84,6 +84,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_email_text"
                 android:inputType="textEmailAddress"
@@ -127,6 +128,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_password"
                 android:inputType="textPassword"

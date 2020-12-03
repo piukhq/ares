@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="ActionButtonOverflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_settings</item>
@@ -124,12 +124,20 @@
     <style name="InputTextAppearance" parent="Widget.Design.TextInputLayout">
         <item name="errorTextAppearance">@style/InputTextError</item>
         <item name="endIconTint">@color/gray_inactive</item>
+        <item name="boxStrokeErrorColor">?attr/colorError</item>
+
     </style>
 
     <style name="InputTextError" parent="TextAppearance.Design.Error">
         <item name="fontFamily">@font/nunito_sans</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/red_attention</item>
+        <item name="boxStrokeErrorColor">?attr/colorError</item>
+
+    </style>
+
+    <style name="BoxStrokeColor" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeErrorColor">@color/blue_accent</item>
     </style>
 
 </resources>
