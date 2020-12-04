@@ -207,13 +207,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent, dynamicActionName: String) {
         when (type) {
             DynamicActionType.XMAS -> {
-                logEvent(FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT, getRequestReviewMap(dynamicActionName))
                 val directions = when (findNavController().currentDestination?.id) {
                     R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToDynamicAction(event)
                     R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(event)
                     else -> null
                 }
                 directions?.let {
+                    logEvent(FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT, getRequestReviewMap(dynamicActionName))
                     findNavController().navigateIfAdded(this, directions)
                 }
             }
