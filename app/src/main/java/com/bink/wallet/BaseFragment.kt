@@ -26,6 +26,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.FirebaseEvents.ATTEMPTED_EVENT_KEY
+import com.bink.wallet.utils.FirebaseEvents.DYNAMIC_ACTION_NAME
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
@@ -193,7 +194,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 DynamicActionHandler.SINGLE_TAP -> {
                     view.setOnClickListener {
                         dynamicAction.event?.let { event ->
-                            launchDynamicActionEvent(dynamicAction.type, event)
+                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name?:"")
                         }
                     }
                 }
@@ -201,7 +202,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent) {
+    private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent, dynamicActionName: String) {
         when (type) {
             DynamicActionType.XMAS -> {
                 val directions = when (findNavController().currentDestination?.id) {
@@ -209,7 +210,10 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(event)
                     else -> null
                 }
-                directions?.let { findNavController().navigateIfAdded(this, directions) }
+                directions?.let {
+                    logEvent(FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT, getRequestReviewMap(dynamicActionName))
+                    findNavController().navigateIfAdded(this, directions)
+                }
             }
         }
     }
@@ -466,6 +470,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected fun getRequestReviewMap(reviewTrigger: String): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_REQUEST_REVIEW_TRIGGER] = reviewTrigger
+        return map
+    }
+
+    protected fun getDynamicActionMap(dynamicActionName: String): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[DYNAMIC_ACTION_NAME] = dynamicActionName
         return map
     }
 
