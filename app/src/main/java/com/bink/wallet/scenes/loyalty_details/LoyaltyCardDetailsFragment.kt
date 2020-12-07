@@ -114,29 +114,16 @@ class LoyaltyCardDetailsFragment :
 
         setUpScrollView(colorDrawable)
 
-        binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            if (isNetworkAvailable(requireActivity(), true)) {
-                viewModel.updateMembershipCard(true)
-            } else {
-                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-                viewModel.setAccountStatus()
-                viewModel.setLinkStatus()
-                setLoadingState(false)
-            }
-        }
-
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
             viewModel.membershipCard.value = it
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
             viewModel.setAccountStatus()
             viewModel.setLinkStatus()
         }
 
         viewModel.membershipCard.observeNonNull(this) { membershipCard ->
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
             viewModel.membershipPlan.value?.let { plan ->
                 binding.cardHeader.linkCard(membershipCard, plan)
             }
