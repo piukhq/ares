@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthTextItemBinding
@@ -82,102 +83,104 @@ class TextFieldViewHolder(
 
         binding.planField = planField
 
-        with(binding.contentAddAuthText) {
-            planField.description?.length?.let {
-                hint = planField.description
-            }
-            item.fieldType.common_name?.let {
-                displayCustomKeyboard(it)
-                createDateAndShowPicker(it)
-            }
+        with(binding.contentAddAuthText.editText) {
+            if (this != null) {
+                planField.description?.length?.let {
+                    hint = planField.description
+                }
+                item.fieldType.common_name?.let {
+                    displayCustomKeyboard(it)
+                    createDateAndShowPicker(it)
+                }
 
-            setText(planRequest?.value)
+                setText(planRequest?.value)
 
 
-            if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
-                addTextChangedListener(emailTextWatcher)
-            } else {
-                addTextChangedListener(textWatcher)
-            }
-            if (planRequest?.value.isNullOrBlank()) {
-                error = null
-            } else {
-                checkIfFieldIsValid(item)
-            }
-
-            imeOptions =
-                if (isLastEditText) {
-                    EditorInfo.IME_ACTION_DONE
+                if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
+                    addTextChangedListener(emailTextWatcher)
                 } else {
-                    EditorInfo.IME_ACTION_NEXT
+                    addTextChangedListener(textWatcher)
                 }
-
-            setOnFocusChangeListener { _, isFocus ->
-                if (!isFocus) {
+                if (planRequest?.value.isNullOrBlank()) {
+                    error = null
+                } else {
                     checkIfFieldIsValid(item)
                 }
-            }
-            setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    checkIfFieldIsValid(item)
+
+                imeOptions =
+                    if (isLastEditText) {
+                        EditorInfo.IME_ACTION_DONE
+                    } else {
+                        EditorInfo.IME_ACTION_NEXT
+                    }
+
+                setOnFocusChangeListener { _, isFocus ->
+                    if (!isFocus) {
+                        checkIfFieldIsValid(item)
+                    }
                 }
-                false
-            }
-
-            if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
-                    .isEmpty() && hasBarcodeCommonName()
-            ) {
-                isCardNumberField = true
-                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-                onTouchListener(false, planField)
-                SharedPreferenceManager.isNowBarcode = false
-                SharedPreferenceManager.isScannedCard = true
-
-                addTextChangedListener(object : SimplifiedTextWatcher {
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        if (s.toString().trim().isNotEmpty()) {
-                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-                            onTouchListener(true, planField)
-                        } else {
-                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-                            onTouchListener(false, planField)
-                        }
+                setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        checkIfFieldIsValid(item)
                     }
-                })
-            }
+                    false
+                }
 
-            if (planField.common_name.equals(BARCODE) && text.toString().trim()
-                    .isNotEmpty() && hasCardNumberCommonName()
-            ) {
-                isBarcodeField = true
-                editTextState(false)
-                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-                onTouchListener(true, planField)
-                SharedPreferenceManager.isNowBarcode = true
-                SharedPreferenceManager.scannedLoyaltyBarCode = planRequest?.value
+                if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
+                        .isEmpty() && hasBarcodeCommonName()
+                ) {
+                    isCardNumberField = true
+                    setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                    onTouchListener(false, planField)
+                    SharedPreferenceManager.isNowBarcode = false
+                    SharedPreferenceManager.isScannedCard = true
 
-                addTextChangedListener(object : SimplifiedTextWatcher {
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        if (s.toString().trim().isNotEmpty()) {
-                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-                            onTouchListener(true, planField)
-                        } else {
-                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-                            onTouchListener(false, planField)
-                            binding.titleAddAuthText.text = columnNameForCardNumber
+                    addTextChangedListener(object : SimplifiedTextWatcher {
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+                            if (s.toString().trim().isNotEmpty()) {
+                                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                                onTouchListener(true, planField)
+                            } else {
+                                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                                onTouchListener(false, planField)
+                            }
                         }
-                    }
-                })
+                    })
+                }
+
+                if (planField.common_name.equals(BARCODE) && text.toString().trim()
+                        .isNotEmpty() && hasCardNumberCommonName()
+                ) {
+                    isBarcodeField = true
+                    editTextState(false)
+                    setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                    onTouchListener(true, planField)
+                    SharedPreferenceManager.isNowBarcode = true
+                    SharedPreferenceManager.scannedLoyaltyBarCode = planRequest?.value
+
+                    addTextChangedListener(object : SimplifiedTextWatcher {
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+                            if (s.toString().trim().isNotEmpty()) {
+                                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                                onTouchListener(true, planField)
+                            } else {
+                                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                                onTouchListener(false, planField)
+                                binding.titleAddAuthText.text = columnNameForCardNumber
+                            }
+                        }
+                    })
+                }
             }
         }
 
@@ -331,7 +334,7 @@ class TextFieldViewHolder(
         return true
     }
 
-    private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
+    private fun EditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
         try {
             checkIfError(this, currentItem)
             if (text.toString().trim().isNotEmpty()) {
@@ -346,7 +349,7 @@ class TextFieldViewHolder(
         }
     }
 
-    private fun checkIfError(text: TextInputEditText, currentItem: AddAuthItemWrapper) {
+    private fun checkIfError(text: EditText, currentItem: AddAuthItemWrapper) {
         if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
             val currentPlanField = currentItem.fieldType as PlanField
             val requestValue = currentItem.fieldsRequest?.value
@@ -363,7 +366,7 @@ class TextFieldViewHolder(
         }
     }
 
-    private fun TextInputEditText.displayCustomKeyboard(commonName: String) {
+    private fun EditText.displayCustomKeyboard(commonName: String) {
         when (commonName) {
             SignUpFieldTypes.PASSWORD.common_name -> {
                 transformationMethod = PasswordTransformationMethod()

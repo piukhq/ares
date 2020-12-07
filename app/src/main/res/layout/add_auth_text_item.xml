@@ -36,21 +36,28 @@
             app:planField="@{planField}"
             tools:text="Email" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/content_add_auth_text"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/InputTextAppearance"
+            app:hintEnabled="false"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:background="@android:color/transparent"
-            android:ellipsize="end"
-            android:fontFamily="@font/nunito_sans"
-            android:textSize="@dimen/size_sub_headline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text"
-            tools:text="binkdev@testbink.com" />
+            app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:ellipsize="end"
+                android:fontFamily="@font/nunito_sans"
+                android:textSize="@dimen/size_sub_headline"
+                tools:text="binkdev@testbink.com" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tv_date_picker"
