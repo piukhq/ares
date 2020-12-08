@@ -142,7 +142,6 @@
     <dimen name="login_button_margin_bottom">64dp</dimen>
     <dimen name="login_button_width">260dp</dimen>
     <dimen name="list_margin">64dp</dimen>
-    <dimen name="login_edit_text_height">80dp</dimen>
 
     <!-- PLR -->
     <dimen name="voucher_padding_top">12dp</dimen>
@@ -198,6 +197,5 @@
 
     <!-- Forms -->
     <dimen name="forms_checkbox_margin">10dp</dimen>
-    <dimen name="forms_paddingStart">1dp</dimen>
 
 </resources>

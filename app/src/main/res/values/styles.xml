@@ -133,7 +133,7 @@
     </style>
 
     <style name="FormEditText" parent="Widget.AppCompat.EditText">
-        <item name="android:paddingBottom">@dimen/margin_padding_size_medium_large</item>
+        <item name="android:paddingBottom">@dimen/notification_oval_padding</item>
         <item name="fontFamily">@font/nunito_sans_light</item>
         <item name="android:textSize">@dimen/text_size_description_big</item>
     </style>

@@ -169,16 +169,15 @@
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/FormEditText"
                         android:hint="@string/expiry_format"
                         android:imeOptions="actionNext"
                         android:importantForAutofill="no"
                         android:inputType="date"
                         android:maxLength="5"
                         android:nextFocusDown="@id/card_name"
-                        android:paddingBottom="@dimen/margin_padding_size_medium_large"
                         android:text="@={viewModel.expiryDate}"
                         tools:ignore="Autofill" />
 

@@ -245,21 +245,23 @@ class TextFieldViewHolder(
         setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 if (event?.action == MotionEvent.ACTION_UP) {
-                    if (event.rawX >= (binding.contentAddAuthText.right - binding.contentAddAuthText.editText!!.compoundDrawables[DRAWABLE_END].bounds.width())) {
-                        if (shouldClearText) {
-                            binding.titleAddAuthText.text = planField.column
-                            binding.titleAddAuthText.setTextColor(Color.BLACK)
-                            clearField()
-                            editTextState(true)
-                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-                            SharedPreferenceManager.isNowBarcode = false
-                            SharedPreferenceManager.isNowCardNumber = true
+                    binding.contentAddAuthText.editText?.let {
+                        if (event.rawX >= (binding.contentAddAuthText.right - it.compoundDrawables[DRAWABLE_END].bounds.width())) {
+                            if (shouldClearText) {
+                                binding.titleAddAuthText.text = planField.column
+                                binding.titleAddAuthText.setTextColor(Color.BLACK)
+                                clearField()
+                                editTextState(true)
+                                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                                SharedPreferenceManager.isNowBarcode = false
+                                SharedPreferenceManager.isNowCardNumber = true
 
 
-                        } else {
-                            account?.let { onNavigateToBarcodeScan(it) }
+                            } else {
+                                account?.let { onNavigateToBarcodeScan(it) }
+                            }
+                            return true
                         }
-                        return true
                     }
                 }
                 return false

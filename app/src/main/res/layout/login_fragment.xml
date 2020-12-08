@@ -84,15 +84,14 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_email_text"
                 android:inputType="textEmailAddress"
+                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:text="@={viewModel.email}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_sub_headline"
                 app:layout_constraintTop_toBottomOf="@+id/email_description"
-
                 tools:ignore="Autofill" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -128,10 +127,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:fontFamily="@font/nunito_sans_light"
                 android:hint="@string/enter_password"
                 android:inputType="textPassword"
+                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:text="@={viewModel.password}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/size_sub_headline"

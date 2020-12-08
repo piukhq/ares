@@ -56,12 +56,16 @@ class AddPaymentCardFragment :
     }
 
     private fun validateCardName() {
-        binding.cardName.error =
-            if (binding.cardName.editText?.text!!.isEmpty()) {
-                getString(R.string.incorrect_card_name)
-            } else {
-                null
-            }
+        binding.cardName.editText?.let {
+            binding.cardName.error =
+                if (it.text.isEmpty()) {
+                    getString(R.string.incorrect_card_name)
+                } else {
+                    null
+                }
+
+        }
+
     }
 
     private fun validateCardNumber() {
