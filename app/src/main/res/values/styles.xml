@@ -124,7 +124,6 @@
     <style name="InputTextAppearance" parent="Widget.Design.TextInputLayout">
         <item name="errorTextAppearance">@style/InputTextError</item>
         <item name="endIconTint">@color/gray_inactive</item>
-
     </style>
 
     <style name="InputTextError" parent="TextAppearance.Design.Error">
@@ -133,6 +132,11 @@
         <item name="android:textColor">@color/red_attention</item>
     </style>
 
+    <style name="FormEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:paddingBottom">@dimen/margin_padding_size_medium_large</item>
+        <item name="fontFamily">@font/nunito_sans_light</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
 
 </resources>

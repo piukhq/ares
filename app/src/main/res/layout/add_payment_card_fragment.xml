@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:navigationIcon="@drawable/ic_back"/>
+            tools:navigationIcon="@drawable/ic_back" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -125,21 +125,29 @@
                     android:textSize="@dimen/size_body_large"
                     android:textStyle="bold" />
 
-
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/card_number"
+                    style="@style/InputTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_sans_light"
-                    android:hint="@string/card_number_hint"
-                    android:imeOptions="actionNext"
-                    android:importantForAutofill="no"
-                    android:digits="0123456789 "
-                    android:inputType="number"
-                    android:maxLength="19"
-                    android:nextFocusDown="@id/card_expiry"
-                    android:text="@={viewModel.cardNumber}"
-                    tools:ignore="Autofill" />
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="0123456789 "
+                        android:hint="@string/card_number_hint"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:maxLength="19"
+                        android:nextFocusDown="@id/card_expiry"
+                        android:text="@={viewModel.cardNumber}"
+                        tools:ignore="Autofill" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/card_expiry_label"
@@ -152,19 +160,29 @@
                     android:textSize="@dimen/size_body_large"
                     android:textStyle="bold" />
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/card_expiry"
+                    style="@style/InputTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/nunito_sans_light"
-                    android:hint="@string/expiry_format"
-                    android:imeOptions="actionNext"
-                    android:importantForAutofill="no"
-                    android:inputType="date"
-                    android:maxLength="5"
-                    android:nextFocusDown="@id/card_name"
-                    android:text="@={viewModel.expiryDate}"
-                    tools:ignore="Autofill" />
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/FormEditText"
+                        android:hint="@string/expiry_format"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:inputType="date"
+                        android:maxLength="5"
+                        android:nextFocusDown="@id/card_name"
+                        android:paddingBottom="@dimen/margin_padding_size_medium_large"
+                        android:text="@={viewModel.expiryDate}"
+                        tools:ignore="Autofill" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
 
                 <TextView
@@ -178,19 +196,27 @@
                     android:textSize="@dimen/size_body_large"
                     android:textStyle="bold" />
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/card_name"
+                    style="@style/InputTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="@string/only_letters_space"
-                    android:fontFamily="@font/nunito_sans_light"
-                    android:hint="@string/name_on_card"
-                    android:imeOptions="actionDone"
-                    android:importantForAutofill="no"
-                    android:inputType="textFilter"
-                    android:minLines="2"
-                    android:text="@={viewModel.cardHolder}"
-                    tools:ignore="Autofill" />
+                    app:endIconMode="clear_text"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/only_letters_space"
+                        android:hint="@string/name_on_card"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="textFilter"
+                        android:text="@={viewModel.cardHolder}"
+                        tools:ignore="Autofill" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/privacy_link"

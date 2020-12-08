@@ -23,7 +23,7 @@
             android:id="@+id/title_add_auth_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/add_card_margin"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:textColor="@android:color/black"
@@ -37,25 +37,25 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/content_add_auth_text"
-            android:layout_width="match_parent"
-            app:endIconMode="clear_text"
-            android:layout_height="wrap_content"
             style="@style/InputTextAppearance"
-            app:hintEnabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_add_auth_text">
 
             <com.google.android.material.textfield.TextInputEditText
+                style="@style/FormEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/margin_padding_size_medium_large"
                 android:ellipsize="end"
-                tools:hint="Email"
-                android:fontFamily="@font/nunito_sans"
-                android:textSize="@dimen/size_sub_headline" />
+                android:textSize="@dimen/size_sub_headline"
+                tools:hint="Email" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -65,7 +65,7 @@
             android:layout_marginStart="@dimen/add_card_margin"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:fontFamily="@font/nunito_sans"
+            android:fontFamily="@font/nunito_sans_light"
             android:textSize="@dimen/size_sub_headline"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,8 +80,8 @@
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
-            android:visibility="gone"
             android:background="@color/separator_color"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_date_picker" />

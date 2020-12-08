@@ -57,7 +57,7 @@ class AddPaymentCardFragment :
 
     private fun validateCardName() {
         binding.cardName.error =
-            if (binding.cardName.text.isEmpty()) {
+            if (binding.cardName.editText?.text!!.isEmpty()) {
                 getString(R.string.incorrect_card_name)
             } else {
                 null
@@ -66,7 +66,7 @@ class AddPaymentCardFragment :
 
     private fun validateCardNumber() {
         binding.cardNumber.error =
-            if (binding.cardNumber.text.toString().cardValidation() == PaymentCardType.NONE) {
+            if (binding.cardNumber.editText?.text.toString().cardValidation() == PaymentCardType.NONE) {
                 getString(R.string.incorrect_card_error)
             } else {
                 null
@@ -102,28 +102,30 @@ class AddPaymentCardFragment :
             cardInfoDisplay()
         }
 
-        with(binding.cardNumber) {
-            filters = arrayOf(
-                *this.filters,
-                InputFilter.LengthFilter(
-                    enumValues<PaymentCardType>().maxBy { it.format.length }?.format?.length
-                        ?: 0
+        with(binding.cardNumber.editText) {
+            this?.let {
+                filters = arrayOf(
+                    *this.filters,
+                    InputFilter.LengthFilter(
+                        enumValues<PaymentCardType>().maxBy { it.format.length }?.format?.length
+                            ?: 0
+                    )
                 )
-            )
-            setOnFocusChangeListener { _, focus ->
-                if (!focus) {
-                    validateCardNumber()
+                setOnFocusChangeListener { _, focus ->
+                    if (!focus) {
+                        validateCardNumber()
+                    }
                 }
             }
         }
-        binding.cardExpiry.setOnFocusChangeListener { _, focus ->
+        binding.cardExpiry.editText?.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 binding.cardExpiry.error =
                     cardExpiryErrorCheck(viewModel.expiryDate.value ?: EMPTY_STRING)
             }
         }
 
-        binding.cardName.setOnFocusChangeListener { _, focus ->
+        binding.cardName.editText?.setOnFocusChangeListener { _, focus ->
             if (!focus) {
                 validateCardName()
             }
@@ -144,8 +146,8 @@ class AddPaymentCardFragment :
 
         binding.addButton.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                val cardNo = binding.cardNumber.text.toString().numberSanitize()
-                val cardExp = binding.cardExpiry.text.toString().split("/")
+                val cardNo = binding.cardNumber.editText?.text.toString().numberSanitize()
+                val cardExp = binding.cardExpiry.editText?.text.toString().split("/")
 
                 val bankCard = BankCard(
                     cardNo.substring(0, 6),
@@ -154,7 +156,7 @@ class AddPaymentCardFragment :
                     (cardExp[1].toInt() + YEAR_BASE_ADDITION).toString(),
                     getString(R.string.country_code_gb),
                     getString(R.string.currency_code_gbp),
-                    binding.cardName.text.toString(),
+                    binding.cardName.editText?.text.toString(),
                     cardNo.cardValidation().type,
                     cardNo.cardValidation().type,
                     BankCard.tokenGenerator(),
@@ -200,7 +202,7 @@ class AddPaymentCardFragment :
     }
 
     private fun setUpCardInputFormat() {
-        binding.cardNumber.addTextChangedListener(object : TextWatcher {
+        binding.cardNumber.editText?.addTextChangedListener(object : TextWatcher {
             private val MAX_SYMBOLS = 19
             private val MAX_DIGITS = 16
             private val MAX_UNSEPARATED_DIGITS = 4
@@ -293,7 +295,7 @@ class AddPaymentCardFragment :
                 return getString(R.string.incorrect_card_expiry)
             }
             if (!formatDate().contentEquals(text))
-                binding.cardExpiry.setText(formatDate())
+                binding.cardExpiry.editText?.setText(formatDate())
         }
         return null
     }
@@ -310,13 +312,13 @@ class AddPaymentCardFragment :
     }
 
     private fun cardInfoDisplay() {
-        binding.displayCardNumber.text = binding.cardNumber.text.toString().cardStarFormatter()
-        binding.displayCardName.text = binding.cardName.text.toString()
+        binding.displayCardNumber.text = binding.cardNumber.editText?.text.toString().cardStarFormatter()
+        binding.displayCardName.text = binding.cardName.editText?.text.toString()
     }
 
     private fun bindScannedCardNumber() {
         if (cardNumber.isNotEmpty()) {
-            binding.cardNumber.setText(cardNumber)
+            binding.cardNumber.editText?.setText(cardNumber)
         }
     }
 }

@@ -198,5 +198,6 @@
 
     <!-- Forms -->
     <dimen name="forms_checkbox_margin">10dp</dimen>
+    <dimen name="forms_paddingStart">1dp</dimen>
 
 </resources>
