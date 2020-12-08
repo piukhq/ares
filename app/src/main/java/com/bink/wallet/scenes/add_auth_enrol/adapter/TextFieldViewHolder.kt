@@ -342,10 +342,10 @@ class TextFieldViewHolder(
             }
         } catch (ex: Exception) {
             logError(AddAuthAdapter::class.simpleName, "Invalid regex : $ex")
-//            error = context?.getString(
-//                R.string.add_auth_error_message,
-//                ex.message
-//            )
+            error = context?.getString(
+                R.string.add_auth_error_message,
+                ex.message
+            )
         }
     }
 

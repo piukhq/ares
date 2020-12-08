@@ -17,8 +17,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/title_add_auth_text"
@@ -56,8 +55,7 @@
                 android:ellipsize="end"
                 tools:hint="Email"
                 android:fontFamily="@font/nunito_sans"
-                android:textSize="@dimen/size_sub_headline"
-                />
+                android:textSize="@dimen/size_sub_headline" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
