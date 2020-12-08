@@ -200,7 +200,12 @@ class TextFieldViewHolder(
 
         if (isCardNumberField || isBarcodeField) {
             SharedPreferenceManager.scannedLoyaltyBarCode?.let {
-                binding.contentAddAuthText.editText?.let { editText -> updateOnSuccess(editText, it) }
+                binding.contentAddAuthText.editText?.let { editText ->
+                    updateOnSuccess(
+                        editText,
+                        it
+                    )
+                }
                 SharedPreferenceManager.isNowBarcode = true
                 SharedPreferenceManager.isNowCardNumber = false
             }
@@ -358,9 +363,8 @@ class TextFieldViewHolder(
                     requestValue
                 )
             ) {
-               text.error = text.context.getString(
-                    R.string.add_auth_error_message,
-                    currentPlanField.column
+                text.error = text.context.getString(
+                    R.string.add_auth_invalid_field
                 )
             } else {
                 text.error = null

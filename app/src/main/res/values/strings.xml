@@ -217,6 +217,7 @@
     <string name="brand_list_item_description">Can be linked to your payment cards</string>
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
     <string name="add_auth_error_message">Invalid %1$s</string>
+    <string name="add_auth_invalid_field">Invalid Format</string>
     <string name="pll_text">PLL</string>
     <string name="pll_title">Payment Linked Loyalty</string>
     <string name="all_text">All</string>
