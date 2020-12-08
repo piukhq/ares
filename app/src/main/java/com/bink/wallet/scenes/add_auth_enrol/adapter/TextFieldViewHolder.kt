@@ -414,8 +414,9 @@ class TextFieldViewHolder(
                 Calendar.getInstance().get(Calendar.MONTH),
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
             )
-            binding.contentAddAuthText.visibility = View.INVISIBLE
+            binding.contentAddAuthText.visibility = View.GONE
             binding.tvDatePicker.visibility = View.VISIBLE
+
 
             binding.tvDatePicker.setOnClickListener {
                 datePickerDialog.show()
