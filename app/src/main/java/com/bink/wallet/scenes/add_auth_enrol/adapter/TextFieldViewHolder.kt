@@ -416,6 +416,7 @@ class TextFieldViewHolder(
             )
             binding.contentAddAuthText.visibility = View.GONE
             binding.tvDatePicker.visibility = View.VISIBLE
+            binding.separator.visibility = View.VISIBLE
 
 
             binding.tvDatePicker.setOnClickListener {
@@ -428,6 +429,8 @@ class TextFieldViewHolder(
         } else {
             binding.contentAddAuthText.visibility = View.VISIBLE
             binding.tvDatePicker.visibility = View.GONE
+            binding.separator.visibility = View.GONE
+
         }
     }
 
