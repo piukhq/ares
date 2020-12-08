@@ -24,6 +24,9 @@ import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -178,8 +181,8 @@ class LoyaltyWalletAdapter(
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
 
-                    membershipPlan.card?.let {  membershipPlanCard ->
-                        item.card?.let { 
+                    membershipPlan.card?.let { membershipPlanCard ->
+                        item.card?.let {
                             it.secondary_colour = membershipPlanCard.secondary_colour
                         }
                     }
@@ -229,9 +232,27 @@ class LoyaltyWalletAdapter(
                     } else if (!item.balances.isNullOrEmpty()) {
                         item.balances?.firstOrNull()?.let { balance ->
                             when (balance?.prefix != null) {
-                                true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
+                                true -> {
+                                    loyaltyValue.text = when (balance?.prefix) {
+                                        "£" -> {
+                                            try {
+                                                val currencyInstance = NumberFormat.getCurrencyInstance()
+                                                currencyInstance.maximumFractionDigits = 2
+                                                currencyInstance.currency = Currency.getInstance("GBP")
+
+                                                currencyInstance.format(balance.value?.toDouble()).replace(".00", "")
+                                            } catch (e: Exception) {
+                                                balance?.prefix?.plus(balance.value)
+                                            }
+
+                                        }
+                                        else -> {
+                                            balance?.prefix?.plus(balance.value)
+                                        }
+                                    }
+                                }
+
+
                                 else -> {
                                     loyaltyValue.text = balance?.value
                                     loyaltyValueExtra.text = balance?.suffix
