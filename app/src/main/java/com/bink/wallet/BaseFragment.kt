@@ -381,6 +381,16 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
+    protected fun getAddPaymentCardFailMap(paymentSchemeValue: String, error_code: Int, error_message: String): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+        return map
+    }
+
     protected fun getAddPaymentCardResponseSuccessMap(
         paymentSchemeValue: String,
         isAccountNew: String,
