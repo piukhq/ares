@@ -24,6 +24,7 @@ import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.formatBalance
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -235,16 +236,7 @@ class LoyaltyWalletAdapter(
                                 true -> {
                                     loyaltyValue.text = when (balance?.prefix) {
                                         "£" -> {
-                                            try {
-                                                val currencyInstance = NumberFormat.getCurrencyInstance()
-                                                currencyInstance.maximumFractionDigits = 2
-                                                currencyInstance.currency = Currency.getInstance("GBP")
-
-                                                currencyInstance.format(balance.value?.toDouble()).replace(".00", "")
-                                            } catch (e: Exception) {
-                                                balance?.prefix?.plus(balance.value)
-                                            }
-
+                                            balance.formatBalance()
                                         }
                                         else -> {
                                             balance?.prefix?.plus(balance.value)
