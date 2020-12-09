@@ -34,6 +34,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 import java.lang.reflect.Type
 import java.util.*
 
@@ -237,11 +238,18 @@ class LoyaltyCardDetailsFragment :
             if (planId == null || uuid == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
-                logEvent(
-                    FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
-                )
-
+                try{
+                    val httpException = it as HttpException
+                    logEvent(
+                        FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                        getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.message())
+                    )
+                } catch(e: Exception){
+                    logEvent(
+                        FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                        getDeleteLoyaltyCardGenericMap(planId, uuid)
+                    )
+                }
             }
         }
 

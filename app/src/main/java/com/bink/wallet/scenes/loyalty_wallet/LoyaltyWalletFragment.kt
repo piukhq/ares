@@ -258,11 +258,18 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             if (planId == null || uuid == null) {
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
-                logEvent(
-                    DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
-                )
-
+                try{
+                    val httpException = it as HttpException
+                    logEvent(
+                        DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                        getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.message())
+                    )
+                } catch(e: Exception){
+                    logEvent(
+                        DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                        getDeleteLoyaltyCardGenericMap(planId, uuid)
+                    )
+                }
             }
         }
     }

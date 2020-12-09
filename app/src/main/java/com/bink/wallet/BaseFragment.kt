@@ -511,6 +511,21 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
+    protected fun getDeleteLoyaltyCardFailMap(
+        loyaltyPlan: String,
+        uuid: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+
+        return map
+    }
+
     protected fun getRequestReviewMap(reviewTrigger: String): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_REQUEST_REVIEW_TRIGGER] = reviewTrigger
