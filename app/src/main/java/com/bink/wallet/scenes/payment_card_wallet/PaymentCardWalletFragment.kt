@@ -33,6 +33,7 @@ import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class PaymentCardWalletFragment :
     BaseFragment<PaymentCardWalletViewModel, PaymentCardWalletFragmentBinding>() {
@@ -198,17 +199,25 @@ class PaymentCardWalletFragment :
             if (pScheme == null || uuid == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
             } else {
-                logEvent(
-                    DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                    getDeletePaymentCardGenericMap(pScheme, uuid)
-                )
+                try{
+                    val httpException = it as HttpException
+                    logEvent(
+                        DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                        getDeletePaymentCardFailedMap(pScheme, uuid, httpException.code(), httpException.message())
+                    )
+                } catch(e: Exception){
+                    logEvent(
+                        DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                        getDeletePaymentCardGenericMap(pScheme, uuid)
+                    )
+                }
             }
 
 
         }
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
-        viewModel.deleteError.observeErrorNonNull(requireContext(), true, this)
+        //viewModel.deleteError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
             layoutManager = GridLayoutManager(context, 1)
