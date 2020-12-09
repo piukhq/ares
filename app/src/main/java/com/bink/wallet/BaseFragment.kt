@@ -472,6 +472,23 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getAddLoyaltyResponseFailureMap(
         journeyValue: String,
+        membershipPlanId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
+            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+
+        return map
+    }
+
+    protected fun getAddLoyaltyResponseFailureMap(
+        journeyValue: String,
         membershipPlanId: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
