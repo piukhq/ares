@@ -95,42 +95,41 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
             }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        currentMembershipPlan?.let {
-            viewModel.addItems(it)
+        override fun onResume() {
+            super.onResume()
+            currentMembershipPlan?.let {
+                viewModel.addItems(it)
+            }
+            logScreenView(ENROL_FORM_VIEW)
         }
-        logScreenView(ENROL_FORM_VIEW)
-    }
 
-    private fun setViewsContent() {
-        currentMembershipPlan?.let {
-            val titleText = it.account?.plan_name ?: getString(R.string.sign_up_new_card_text)
-            viewModel.titleText.set(getString(R.string.sign_up_enrol, titleText))
-            viewModel.ctaText.set(getString(R.string.sign_up_text))
-            viewModel.descriptionText.set(
-                it.account?.plan_summary
+        private fun setViewsContent() {
+            currentMembershipPlan?.let {
+                val titleText = it.account?.plan_name ?: getString(R.string.sign_up_new_card_text)
+                viewModel.titleText.set(getString(R.string.sign_up_enrol, titleText))
+                viewModel.ctaText.set(getString(R.string.sign_up_text))
+                viewModel.descriptionText.set(
+                    it.account?.plan_summary
+                )
+            }
+            viewModel.isNoAccountFooter.set(false)
+        }
+
+        private fun logCTAClick(button: View) {
+            logEvent(
+                FirebaseEvents.getFirebaseIdentifier(
+                    ENROL_FORM_VIEW,
+                    (button as Button).text.toString()
+                )
             )
         }
-        viewModel.isNoAccountFooter.set(false)
-    }
 
-    private fun logCTAClick(button: View) {
-        logEvent(
-            FirebaseEvents.getFirebaseIdentifier(
-                ENROL_FORM_VIEW,
-                (button as Button).text.toString()
-            )
-        )
-    }
-
-    private fun handleCtaRequest() {
-        membershipCardId?.let {
-            currentMembershipPlan?.let { plan ->
-                viewModel.handleRequest(isRetryJourney, it, plan)
+        private fun handleCtaRequest() {
+            membershipCardId?.let {
+                currentMembershipPlan?.let { plan ->
+                    viewModel.handleRequest(isRetryJourney, it, plan)
+                }
             }
         }
     }
-}

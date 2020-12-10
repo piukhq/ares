@@ -207,10 +207,13 @@ class LoyaltyWalletRepository(
 
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.createMembershipCardAsync(membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
             addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
@@ -233,10 +236,13 @@ class LoyaltyWalletRepository(
 
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
             addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
@@ -254,10 +260,13 @@ class LoyaltyWalletRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.ghostMembershipCardAsync(cardId, membershipCardRequest)
+            val uuid = UUID.randomUUID().toString()
             addLoyaltyCardRequestMade.postValue(true)
+            SharedPreferenceManager.addLoyaltyCardRequestUuid = uuid
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    response.uuid = uuid
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
