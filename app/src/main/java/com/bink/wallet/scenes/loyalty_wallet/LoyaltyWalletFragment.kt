@@ -156,7 +156,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         viewModel.checkZendeskResponse()
-        RequestReviewUtil.triggerViaWallet(this){
+        RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
         }
         logScreenView(LOYALTY_WALLET_VIEW)
@@ -258,18 +258,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             if (planId == null || uuid == null) {
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
-                try{
-                    val httpException = it as HttpException
-                    logEvent(
-                        DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                        getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
-                    )
-                } catch(e: Exception){
-                    logEvent(
-                        DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                        getDeleteLoyaltyCardGenericMap(planId, uuid)
-                    )
-                }
+                val httpException = it as HttpException
+                logEvent(
+                    DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                    getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
+                )
             }
         }
     }
@@ -330,7 +323,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
-            when (dynamicActionLocationArea){
+            when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
                     bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
@@ -353,8 +346,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
 
-                if(userDataResult.result.first.size > 4){
-                    RequestReviewUtil.triggerViaCards(this){
+                if (userDataResult.result.first.size > 4) {
+                    RequestReviewUtil.triggerViaCards(this) {
                         logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME))
                     }
                 }

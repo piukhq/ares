@@ -238,18 +238,11 @@ class LoyaltyCardDetailsFragment :
             if (planId == null || uuid == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
-                try{
-                    val httpException = it as HttpException
-                    logEvent(
-                        FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                        getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
-                    )
-                } catch(e: Exception){
-                    logEvent(
-                        FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                        getDeleteLoyaltyCardGenericMap(planId, uuid)
-                    )
-                }
+                val httpException = it as HttpException
+                logEvent(
+                    FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
+                    getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
+                )
             }
         }
 
@@ -267,7 +260,7 @@ class LoyaltyCardDetailsFragment :
         val arrayList : ArrayList<DynamicAction> = gson.fromJson(dynamicActions, type)
 
         Log.d("test", arrayList.size.toString())
-        **/
+         **/
 
     }
 
@@ -345,7 +338,7 @@ class LoyaltyCardDetailsFragment :
         viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
             description = plan_description
         }
-        viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
+        viewModel.membershipPlan.value?.account?.plan_summary?.let { planSummary ->
             summary = planSummary
 
         }
@@ -431,7 +424,7 @@ class LoyaltyCardDetailsFragment :
             }
         }, SCROLL_DELAY)
 
-        RequestReviewUtil.triggerViaCardDetails(this){
+        RequestReviewUtil.triggerViaCardDetails(this) {
             logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS))
         }
     }

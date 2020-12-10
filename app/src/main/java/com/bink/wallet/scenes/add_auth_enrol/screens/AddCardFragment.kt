@@ -100,20 +100,12 @@ class AddCardFragment : BaseAddAuthFragment() {
             if (mPlanId == null) {
                 failedEvent(ADD_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
-                try {
-                    val httpException = it as HttpException
-                    logEvent(
-                        ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                            FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
-                        )
+                val httpException = it as HttpException
+                logEvent(
+                    ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
+                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
                     )
-                } catch (e: Exception) {
-                    logEvent(
-                        ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                            FirebaseEvents.ADD_LOYALTY_CARD_ENROL_JOURNEY, mPlanId
-                        )
-                    )
-                }
+                )
             }
 
         }

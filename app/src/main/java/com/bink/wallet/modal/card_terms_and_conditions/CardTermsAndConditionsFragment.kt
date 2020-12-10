@@ -85,12 +85,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             binding.firstButton.isEnabled = true
             //add-payment-card-response-fail
             userBankCard?.provider?.let { provider ->
-                try {
-                    val httpException = it as HttpException
-                    logEvent(ADD_PAYMENT_CARD_RESPONSE_FAILURE, getAddPaymentCardFailMap(provider, httpException.code(), httpException.getErrorBody()))
-                } catch (e: Exception) {
-                    logEvent(ADD_PAYMENT_CARD_RESPONSE_FAILURE, getAddPaymentCardGenericMap(provider))
-                }
+                val httpException = it as HttpException
+                logEvent(ADD_PAYMENT_CARD_RESPONSE_FAILURE, getAddPaymentCardFailMap(provider, httpException.code(), httpException.getErrorBody()))
             }
         }
 

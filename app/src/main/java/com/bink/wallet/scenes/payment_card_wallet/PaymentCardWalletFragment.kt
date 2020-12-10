@@ -199,7 +199,6 @@ class PaymentCardWalletFragment :
             if (pScheme == null || uuid == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
             } else {
-
                 val httpException = it as HttpException
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
