@@ -348,3 +348,8 @@ fun TextView.setTermsAndPrivacyUrls(
     text = checkBoxSpannable
     movementMethod = LinkMovementMethod.getInstance()
 }
+
+fun HttpException.getErrorBody() : String{
+    val unformatedErrorBody = response()?.errorBody()?.string()
+    return unformatedErrorBody?.substring(unformatedErrorBody.indexOf("<title>"), unformatedErrorBody.indexOf("</title>"))?.replace("<title>", "") ?: ""
+}

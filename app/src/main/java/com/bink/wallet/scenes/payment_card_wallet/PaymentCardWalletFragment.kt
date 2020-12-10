@@ -199,25 +199,17 @@ class PaymentCardWalletFragment :
             if (pScheme == null || uuid == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
             } else {
-                try{
-                    val httpException = it as HttpException
-                    logEvent(
-                        DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                        getDeletePaymentCardFailedMap(pScheme, uuid, httpException.code(), httpException.message())
-                    )
-                } catch(e: Exception){
-                    logEvent(
-                        DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                        getDeletePaymentCardGenericMap(pScheme, uuid)
-                    )
-                }
+
+                val httpException = it as HttpException
+                logEvent(
+                    DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
+                    getDeletePaymentCardFailedMap(pScheme, uuid, httpException.code(), httpException.getErrorBody())
+                )
             }
 
-
         }
-        viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
-        //viewModel.deleteError.observeErrorNonNull(requireContext(), true, this)
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
             layoutManager = GridLayoutManager(context, 1)
@@ -259,7 +251,7 @@ class PaymentCardWalletFragment :
 
     override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
-            when (dynamicActionLocationArea){
+            when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
                     bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)

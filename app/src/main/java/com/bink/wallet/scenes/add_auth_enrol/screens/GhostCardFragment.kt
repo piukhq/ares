@@ -15,6 +15,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
 import com.bink.wallet.utils.FirebaseEvents.REGISTRATION_FORM_VIEW
+import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -98,7 +99,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
                     val httpException = it as HttpException
                     logEvent(
                         ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                            ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.message()
+                            ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
                         )
                     )
                 } catch (e: Exception) {

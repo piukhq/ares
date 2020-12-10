@@ -242,7 +242,7 @@ class LoyaltyCardDetailsFragment :
                     val httpException = it as HttpException
                     logEvent(
                         FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                        getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.message())
+                        getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
                     )
                 } catch(e: Exception){
                     logEvent(
