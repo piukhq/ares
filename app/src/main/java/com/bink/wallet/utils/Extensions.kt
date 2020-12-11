@@ -350,6 +350,10 @@ fun TextView.setTermsAndPrivacyUrls(
 }
 
 fun HttpException.getErrorBody() : String{
-    val unformatedErrorBody = response()?.errorBody()?.string()
-    return unformatedErrorBody?.substring(unformatedErrorBody.indexOf("<title>"), unformatedErrorBody.indexOf("</title>"))?.replace("<title>", "") ?: ""
+    return try{
+        val unformatedErrorBody = response()?.errorBody()?.string()
+        unformatedErrorBody?.substring(unformatedErrorBody.indexOf("<title>"), unformatedErrorBody.indexOf("</title>"))?.replace("<title>", "") ?: ""
+    }catch (e: Exception){
+        ""
+    }
 }
