@@ -139,7 +139,6 @@ class AddPaymentCardRepository(
         CoroutineScope(Dispatchers.IO).launch {
             val uuid = UUID.randomUUID().toString()
             val request = apiService.addPaymentCardAsync(card)
-            SharedPreferenceManager.addPaymentCardRequestUuid = uuid
             addCardRequestMade.postValue(true)
             withContext(Dispatchers.Main) {
                 try {

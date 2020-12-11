@@ -90,7 +90,6 @@ class GetNewCardFragment : BaseAddAuthFragment() {
                     )
                 )
             }
-
         }
     }
 

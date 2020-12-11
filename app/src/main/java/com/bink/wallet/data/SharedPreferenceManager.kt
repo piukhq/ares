@@ -162,12 +162,6 @@ object SharedPreferenceManager {
             it.putBoolean(CARD_NUMBER, value)
         }
 
-
-    var addPaymentCardRequestUuid: String?
-        get() = preferences.getString(ADD_PAYMENT_CARD_REQUEST_UUID, null)
-        set(value) = preferences.edit {
-            it.putString(ADD_PAYMENT_CARD_REQUEST_UUID, value)
-        }
     var addPaymentCardSuccessHttpCode: Int
         get() = preferences.getInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, 0)
         set(value) = preferences.edit {
@@ -180,11 +174,7 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putString(FIREBASE_UUID, value)
         }
-    var addLoyaltyCardRequestUuid: String?
-        get() = preferences.getString(ADD_LOYALTY_CARD_REQUEST_UUID, null)
-        set(value) = preferences.edit {
-            it.putString(ADD_LOYALTY_CARD_REQUEST_UUID, value)
-        }
+
     var addLoyaltyCardSuccessHttpCode: Int
         get() = preferences.getInt(ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE, 0)
         set(value) = preferences.edit {
