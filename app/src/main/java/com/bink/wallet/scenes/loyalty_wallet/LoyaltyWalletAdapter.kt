@@ -24,6 +24,7 @@ import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.formatBalance
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -178,8 +179,8 @@ class LoyaltyWalletAdapter(
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
 
-                    membershipPlan.card?.let {  membershipPlanCard ->
-                        item.card?.let { 
+                    membershipPlan.card?.let { membershipPlanCard ->
+                        item.card?.let {
                             it.secondary_colour = membershipPlanCard.secondary_colour
                         }
                     }
@@ -228,13 +229,13 @@ class LoyaltyWalletAdapter(
                             }
                     } else if (!item.balances.isNullOrEmpty()) {
                         item.balances?.firstOrNull()?.let { balance ->
-                            when (balance?.prefix != null) {
-                                true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
+                            when (balance.prefix != null) {
+                                true -> {
+                                    loyaltyValue.text = balance.formatBalance()
+                                }
                                 else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                                    loyaltyValue.text = balance.value
+                                    loyaltyValueExtra.text = balance.suffix
                                 }
                             }
                         }
