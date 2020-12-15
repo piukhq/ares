@@ -25,6 +25,8 @@ import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.formatBalance
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -150,6 +152,25 @@ class LoyaltyWalletAdapter(
         })
 
         diff.dispatchUpdatesTo(this)
+    }
+
+    fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
+        fromPosition?.let {
+            toPosition?.let {
+                if (fromPosition < toPosition) {
+                    for (i in fromPosition until toPosition) {
+                        Collections.swap(membershipCards, i, i + 1)
+                    }
+                } else {
+                    for (i in fromPosition downTo toPosition + 1) {
+                        Collections.swap(membershipCards, i, i - 1)
+                    }
+                }
+                notifyItemMoved(fromPosition, toPosition)
+                return true
+            }
+        }
+        return false
     }
 
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
