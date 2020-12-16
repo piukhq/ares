@@ -4,18 +4,23 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
-import com.bink.wallet.model.*
+import com.bink.wallet.model.DynamicAction
+import com.bink.wallet.model.DynamicActionArea
+import com.bink.wallet.model.DynamicActionLocation
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -33,6 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
+import kotlin.math.roundToInt
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
@@ -57,9 +63,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var deletedCard: MembershipCard? = null
 
 
-    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+    private var simpleCallback = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            return false
+            walletAdapter.onItemMove(viewHolder?.adapterPosition, target?.adapterPosition);
+            return true
+        }
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -73,7 +84,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
 
             card?.let {
-                if (direction == ItemTouchHelper.RIGHT) {
+                if (direction == RIGHT) {
                     val membershipPlanData = viewModel.membershipPlanData.value ?: viewModel.localMembershipPlanData.value
                     val plan = membershipPlanData?.firstOrNull {
                         it.id == card.membership_plan
@@ -103,6 +114,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+
             val foregroundView = when (viewHolder) {
                 is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                     viewHolder.binding.cardItem.mainLayout
@@ -115,20 +127,31 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.swipeLayout.isEnabled = false
 
                 when {
-                    dX == 0f -> binding.swipeLayout.isEnabled = true
+
+                    dY != 0f && dX == 0f -> {
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    }
+
+                    dX == 0f && dY == 0f -> {
+                        binding.swipeLayout.isEnabled = true
+                    }
 
                     dX > 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
+                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
-                    else -> {
+
+                    dX < 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
+
                 }
 
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
+
         }
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
@@ -145,7 +168,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
 
         }
-    }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,7 +179,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         viewModel.checkZendeskResponse()
-        RequestReviewUtil.triggerViaWallet(this){
+        RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
         }
         logScreenView(LOYALTY_WALLET_VIEW)
@@ -323,7 +346,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
-            when (dynamicActionLocationArea){
+            when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
                     bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
@@ -346,8 +369,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
 
-                if(userDataResult.result.first.size > 4){
-                    RequestReviewUtil.triggerViaCards(this){
+                if (userDataResult.result.first.size > 4) {
+                    RequestReviewUtil.triggerViaCards(this) {
                         logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME))
                     }
                 }
@@ -361,7 +384,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
 
-            ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
+            simpleCallback.attachToRecyclerView(this)
         }
     }
 
