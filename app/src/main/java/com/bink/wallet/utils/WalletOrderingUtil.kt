@@ -10,6 +10,28 @@ import java.lang.reflect.Type
 
 object WalletOrderingUtil {
 
+    fun getSavedWalletOrder(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
+
+        val rearrangedCards = ArrayList<Any>()
+        val allSavedWalletOrders = getSavedWalletOrders()
+
+        for (i in 0 until allSavedWalletOrders.size) {
+            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+
+                for (x in 0 until allSavedWalletOrders[i].loyaltyCardIds.size){
+                    for (loyaltyCard in loyaltyCards) {
+                        if(getLoyaltyCardId(loyaltyCard) == (allSavedWalletOrders[i].loyaltyCardIds[x])){
+                            rearrangedCards.add(loyaltyCard)
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return rearrangedCards
+    }
+
     fun saveLoyaltyWalletOrder(loyaltyCards: ArrayList<Any>) {
         /**
          * Check to see if the current user has saved a custom order, if they have then override their order
