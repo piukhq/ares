@@ -45,6 +45,7 @@ object SharedPreferenceManager {
     private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
+    private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -242,6 +243,12 @@ object SharedPreferenceManager {
         get() = preferences.getString(LOYALTY_WALLET_ORDER, null)
         set(value) = preferences.edit {
             it.putString(LOYALTY_WALLET_ORDER, value)
+        }
+
+    var paymentWalletOrder: String?
+        get() = preferences.getString(PAYMENT_WALLET_ORDER, null)
+        set(value) = preferences.edit {
+            it.putString(PAYMENT_WALLET_ORDER, value)
         }
 
 
