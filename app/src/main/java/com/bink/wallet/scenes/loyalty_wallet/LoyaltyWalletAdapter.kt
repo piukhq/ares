@@ -164,7 +164,7 @@ class LoyaltyWalletAdapter(
                     }
                 }
                 notifyItemMoved(fromPosition, toPosition)
-                WalletOrderingUtil.saveLoyaltyWalletOrder(membershipCards)
+                WalletOrderingUtil.setSavedLoyaltyCardWallet(membershipCards)
                 return true
             }
         }
