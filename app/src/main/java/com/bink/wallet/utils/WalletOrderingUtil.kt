@@ -11,17 +11,23 @@ import java.lang.reflect.Type
 object WalletOrderingUtil {
 
     fun getSavedWalletOrder(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
-
+        /**
+         * We need to keep a reference of all un added cards, this is in the case that the user adds a new loyalty card to their wallet.
+         * If this happens, the saved list wont have the new id saved, and therefore wont know where to add it, so we just add it on the bottom.
+         */
         val rearrangedCards = ArrayList<Any>()
+        val unassignedCards = ArrayList<Any>()
+        unassignedCards.addAll(loyaltyCards)
         val allSavedWalletOrders = getSavedWalletOrders()
 
         for (i in 0 until allSavedWalletOrders.size) {
             if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
 
-                for (x in 0 until allSavedWalletOrders[i].loyaltyCardIds.size){
+                for (x in 0 until allSavedWalletOrders[i].loyaltyCardIds.size) {
                     for (loyaltyCard in loyaltyCards) {
-                        if(getLoyaltyCardId(loyaltyCard) == (allSavedWalletOrders[i].loyaltyCardIds[x])){
+                        if (getLoyaltyCardId(loyaltyCard) == (allSavedWalletOrders[i].loyaltyCardIds[x])) {
                             rearrangedCards.add(loyaltyCard)
+                            unassignedCards.remove(loyaltyCard)
                         }
                     }
                 }
@@ -29,6 +35,7 @@ object WalletOrderingUtil {
             }
         }
 
+        rearrangedCards.addAll(unassignedCards)
         return rearrangedCards
     }
 
