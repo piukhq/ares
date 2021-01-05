@@ -2,6 +2,7 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 object SharedPreferenceManager {
 
@@ -263,8 +264,17 @@ object SharedPreferenceManager {
 
 
     fun clear() {
+        /**
+         * Saving the current wallet orders and re-writing them to the shared preferences as its the only data that needs to persist over logouts.
+         */
+        val oldLoyaltyWalletOrder = loyaltyWalletOrder
+        val oldPaymentWalletOrder = paymentWalletOrder
+
         val editor = preferences.edit()
         editor.clear()
         editor.apply()
+
+        loyaltyWalletOrder = oldLoyaltyWalletOrder
+        paymentWalletOrder = oldPaymentWalletOrder
     }
 }
