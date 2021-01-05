@@ -63,7 +63,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private var simpleCallback = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            walletAdapter.onItemMove(viewHolder?.adapterPosition, target?.adapterPosition);
+            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true
         }
 

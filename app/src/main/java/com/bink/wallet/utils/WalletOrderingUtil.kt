@@ -20,11 +20,13 @@ object WalletOrderingUtil {
         for (i in 0 until allSavedWalletOrders.size) {
             if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
 
-                for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
-                    for (paymentCard in paymentCards) {
-                        if (getPaymentCardId(paymentCard) == (allSavedWalletOrders[i].cardIds[x])) {
-                            rearrangedCards.add(paymentCard)
-                            unassignedCards.remove(paymentCard)
+                if (!allSavedWalletOrders[i].cardIds.isNullOrEmpty()) {
+                    for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
+                        for (paymentCard in paymentCards) {
+                            if (getPaymentCardId(paymentCard) == (allSavedWalletOrders[i].cardIds[x])) {
+                                rearrangedCards.add(paymentCard)
+                                unassignedCards.remove(paymentCard)
+                            }
                         }
                     }
                 }
@@ -45,15 +47,16 @@ object WalletOrderingUtil {
         for (i in 0 until allSavedWalletOrders.size) {
             if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
 
-                for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
-                    for (loyaltyCard in loyaltyCards) {
-                        if (getLoyaltyCardId(loyaltyCard) == (allSavedWalletOrders[i].cardIds[x])) {
-                            rearrangedCards.add(loyaltyCard)
-                            unassignedCards.remove(loyaltyCard)
+                if (!allSavedWalletOrders[i].cardIds.isNullOrEmpty()) {
+                    for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
+                        for (loyaltyCard in loyaltyCards) {
+                            if (getLoyaltyCardId(loyaltyCard) == (allSavedWalletOrders[i].cardIds[x])) {
+                                rearrangedCards.add(loyaltyCard)
+                                unassignedCards.remove(loyaltyCard)
+                            }
                         }
                     }
                 }
-
             }
         }
 
@@ -116,7 +119,6 @@ object WalletOrderingUtil {
     }
 
 
-
     private fun getSavedLoyaltyWalletOrder(): ArrayList<WalletOrder> {
         val gson = Gson()
         val type: Type = object : TypeToken<ArrayList<WalletOrder?>?>() {}.type
@@ -151,10 +153,10 @@ object WalletOrderingUtil {
         }
 
     private fun getPaymentCardId(paymentCard: Any): Long? =
-            when (paymentCard) {
-                is PaymentCard -> paymentCard.id?.toLong()
-                else -> null
-            }
+        when (paymentCard) {
+            is PaymentCard -> paymentCard.id?.toLong()
+            else -> null
+        }
 
     private fun getUserEmail(): String {
         var userEmail = ""
