@@ -77,6 +77,7 @@ fun Context.displayModalPopup(
     title: String?,
     message: String?,
     okAction: () -> Unit = {},
+    cancelAction: () -> Unit = {},
     buttonText: Int = R.string.ok,
     hasNegativeButton: Boolean = false,
     isCancelable: Boolean = true
@@ -93,6 +94,10 @@ fun Context.displayModalPopup(
 
     builder.setNeutralButton(buttonText) { _, _ ->
         okAction()
+    }
+
+    builder.setOnCancelListener {
+        cancelAction()
     }
 
     builder.setCancelable(isCancelable)

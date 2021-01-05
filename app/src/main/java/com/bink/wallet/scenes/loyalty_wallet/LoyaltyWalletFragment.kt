@@ -486,6 +486,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             getString(R.string.loyalty_wallet_no_barcode_message),
             okAction = {
                 binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+            },
+            cancelAction = {
+                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
             }
         )
     }
