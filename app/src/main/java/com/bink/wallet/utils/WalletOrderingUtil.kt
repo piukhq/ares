@@ -38,6 +38,33 @@ object WalletOrderingUtil {
         return rearrangedCards
     }
 
+    fun getSavedPaymentCardWalletForPll(paymentCards: List<PaymentCard>): ArrayList<PaymentCard> {
+        val rearrangedCards = ArrayList<PaymentCard>()
+        val unassignedCards = ArrayList<PaymentCard>()
+        unassignedCards.addAll(paymentCards)
+        val allSavedWalletOrders = getSavedPaymentWalletOrder()
+
+        for (i in 0 until allSavedWalletOrders.size) {
+            if (allSavedWalletOrders[i].userId.equals(getUserEmail())) {
+
+                if (!allSavedWalletOrders[i].cardIds.isNullOrEmpty()) {
+                    for (x in 0 until allSavedWalletOrders[i].cardIds.size) {
+                        for (paymentCard in paymentCards) {
+                            if (getPaymentCardId(paymentCard) == (allSavedWalletOrders[i].cardIds[x])) {
+                                rearrangedCards.add(paymentCard)
+                                unassignedCards.remove(paymentCard)
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        rearrangedCards.addAll(unassignedCards)
+        return rearrangedCards
+    }
+
     fun getSavedLoyaltyCardWallet(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
         val rearrangedCards = ArrayList<Any>()
         val unassignedCards = ArrayList<Any>()
