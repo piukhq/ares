@@ -13,19 +13,10 @@ import com.bink.wallet.databinding.FragmentPllBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PLL_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.NetworkUtils
-import com.bink.wallet.utils.PAYMENT_CARD_STATUS_PENDING
-import com.bink.wallet.utils.PLAN_ALREADY_EXISTS
-import com.bink.wallet.utils.PaymentCardUtils
-import com.bink.wallet.utils.RecyclerViewHelper
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.goToPendingFaqArticle
-import com.bink.wallet.utils.isLinkedToMembershipCard
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -100,8 +91,9 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 .partition { paymentCard -> paymentCard.status == PAYMENT_CARD_STATUS_PENDING }
 
             viewModel.membershipCard.value?.let { membershipCard ->
-
-                adapter.updateData(activeCards.sortedByDescending { card -> card.id }, membershipCard)
+                val unsortedCards = (activeCards.sortedByDescending { card -> card.id })
+                val sortedCards = WalletOrderingUtil.getSavedPaymentCardWalletForPll(unsortedCards)
+                adapter.updateData(sortedCards, membershipCard)
                 binding.brandModal.setOnClickListener {
                     viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
                         findNavController().navigate(
@@ -111,7 +103,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                                     true,
                                     viewModel.membershipPlan.value?.account?.plan_name
                                         ?: getString(R.string.plan_description),
-                                    viewModel.membershipPlan.value?.account?.plan_summary?:"",
+                                    viewModel.membershipPlan.value?.account?.plan_summary ?: "",
                                     description2 = planDescription,
                                     firstButtonText = getString(R.string.go_to_site)
                                 ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
@@ -179,10 +171,10 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                             if (paymentCard.isSelected &&
                                 !paymentCard.isLinkedToMembershipCard(it)
                             ) {
-                                if(isAddJourney){
+                                if (isAddJourney) {
                                     SharedPreferenceManager.hasAddedNewPll = true
                                 }
-                                
+
                                 selectedCards.add(paymentCard)
                             } else if (viewModel.membershipCard.value != null &&
                                 !paymentCard.isSelected &&
