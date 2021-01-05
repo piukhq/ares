@@ -67,9 +67,10 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
-    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP + ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            return false
+            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -91,18 +92,32 @@ class PaymentCardWalletFragment :
 
             if (foregroundView != null) {
 
+                binding.swipeRefresh.isEnabled = false
+
                 when {
-                    dX >= 0 -> {
+
+                    dY != 0f && dX == 0f -> {
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    }
+
+                    dX == 0f && dY == 0f -> {
+                        binding.swipeRefresh.isEnabled = true
+                    }
+
+                    dX > 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
+                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
-                    else -> {
+
+                    dX < 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
+
                 }
 
-                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
         }
 
@@ -115,6 +130,7 @@ class PaymentCardWalletFragment :
             }
 
             if (foregroundView != null) {
+                binding.swipeRefresh.isEnabled = true
                 getDefaultUIUtil().clearView(foregroundView)
             }
 
@@ -363,7 +379,7 @@ class PaymentCardWalletFragment :
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
 
-        walletAdapter.paymentCards = walletItems
+        walletAdapter.paymentCards = WalletOrderingUtil.getSavedPaymentCardWallet(walletItems)
 
         viewModel.localMembershipPlanData.value?.let { plans ->
             viewModel.localMembershipCardData.value?.let { cards ->
