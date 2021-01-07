@@ -29,6 +29,7 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.setFocusChangeListenerForTextField
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
@@ -138,7 +139,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             ) {
                 handleErrorResponse()
                 //SHOULD WE COUNT THIS AS END OF JOURNEY?
-                logEvent(ONBOARDING_END,getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
+                logEvent(ONBOARDING_END, getOnboardingEndMap(ONBOARDING_SUCCESS_FALSE))
             }
 
             postServiceErrorResponse.observeNetworkDrivenErrorNonNull(
@@ -197,6 +198,12 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         initMembershipPlansObserver()
         initUserDetailsObserver()
+
+        requireContext().apply {
+            setFocusChangeListenerForTextField(binding.emailField)
+            setFocusChangeListenerForTextField(binding.passwordField,true)
+        }
+
     }
 
     private fun initMembershipPlansObserver() {

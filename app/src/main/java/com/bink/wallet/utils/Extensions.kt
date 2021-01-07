@@ -288,6 +288,26 @@ fun Context.validatePassword(passwordValue: String?, textInputLayout: TextInputL
     }
 }
 
+ fun Context.setFocusChangeListenerForTextField(
+    editText: TextInputLayout,
+    isPasswordField: Boolean = false
+) {
+    editText.editText?.setOnFocusChangeListener { v, hasFocus ->
+        if (!hasFocus) {
+            when (isPasswordField) {
+                true ->
+                    editText.error = getString(R.string.password_description)
+                else ->
+                    editText.error = getString(R.string.incorrect_email_text)
+            }
+        } else {
+            editText.error = null
+            editText.isErrorEnabled = false
+        }
+
+    }
+}
+
 fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
     val safeClickListener = SafeClickListener {
         onSafeClick(it)
