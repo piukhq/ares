@@ -137,13 +137,11 @@ class AddPaymentCardRepository(
         addCardRequestMade: MutableLiveData<Boolean>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val uuid = UUID.randomUUID().toString()
             val request = apiService.addPaymentCardAsync(card)
             addCardRequestMade.postValue(true)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    response.uuid = uuid
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
                 } catch (e: Exception) {
