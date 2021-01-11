@@ -58,7 +58,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_REGISTER_JOURNEY,it.uuid?:"",
+                        ADD_LOYALTY_CARD_REGISTER_JOURNEY,it.id,
                         status,
                         reasonCode,
                         mPlanId,
