@@ -48,7 +48,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ENROL_JOURNEY, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ENROL_JOURNEY,it.uuid?:"", status, reasonCode, mPlanId, isAccountNew
                     )
                 )
             }
