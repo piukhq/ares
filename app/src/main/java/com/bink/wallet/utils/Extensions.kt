@@ -28,6 +28,8 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
+import com.google.gson.Gson
+import com.google.gson.TypeAdapter
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.util.*
@@ -351,8 +353,7 @@ fun TextView.setTermsAndPrivacyUrls(
 
 fun HttpException.getErrorBody() : String{
     return try{
-        val unformatedErrorBody = response()?.errorBody()?.string()
-        unformatedErrorBody?.substring(unformatedErrorBody.indexOf("<title>"), unformatedErrorBody.indexOf("</title>"))?.replace("<title>", "") ?: ""
+        response()?.errorBody()?.string() ?: ""
     }catch (e: Exception){
         ""
     }
