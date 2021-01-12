@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.payment_card_details
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
@@ -181,7 +180,7 @@ class PaymentCardsDetailsFragment :
             null
         )
 
-        viewModel.linkError.observeNonNull(this) {this
+        viewModel.linkError.observeNonNull(this) {
             (it.first as HttpException).getErrorBody().let { responseString ->
                 if (responseString.contains(PLAN_ALREADY_EXISTS)) {
                     showLinkErrorMessage(it.second)
