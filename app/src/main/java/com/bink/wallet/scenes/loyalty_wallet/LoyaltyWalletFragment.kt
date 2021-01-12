@@ -10,16 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
-import com.bink.wallet.model.DynamicAction
-import com.bink.wallet.model.DynamicActionArea
-import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.*
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -37,8 +33,6 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
-import java.util.*
-import kotlin.collections.ArrayList
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
@@ -63,14 +57,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var deletedCard: MembershipCard? = null
 
 
-    private var simpleCallback = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
-        }
-
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
+            return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -78,13 +67,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             var card: MembershipCard? = null
 
             try {
-                card = walletAdapter.membershipCards[position] as MembershipCard
+                card = walletItems[position] as MembershipCard
             } catch (e: ClassCastException) {
                 //User swiping membership plan
             }
 
             card?.let {
-                if (direction == RIGHT) {
+                if (direction == ItemTouchHelper.RIGHT) {
                     val membershipPlanData = viewModel.membershipPlanData.value ?: viewModel.localMembershipPlanData.value
                     val plan = membershipPlanData?.firstOrNull {
                         it.id == card.membership_plan
@@ -107,14 +96,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-                    deleteDialog(it, position)
+                    deleteDialog(walletItems[position] as MembershipCard, position)
                 }
             }
 
         }
 
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-
             val foregroundView = when (viewHolder) {
                 is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
                     viewHolder.binding.cardItem.mainLayout
@@ -127,31 +115,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 binding.swipeLayout.isEnabled = false
 
                 when {
-
-                    dY != 0f && dX == 0f -> {
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    }
-
-                    dX == 0f && dY == 0f -> {
-                        binding.swipeLayout.isEnabled = true
-                    }
+                    dX == 0f -> binding.swipeLayout.isEnabled = true
 
                     dX > 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
-
-                    dX < 0 -> {
+                    else -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
-
                 }
 
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
-
         }
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
@@ -168,7 +145,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
 
         }
-    })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -363,7 +340,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.second.isNotEmpty()) {
-                    walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(ArrayList(userDataResult.result.third))
+                    walletAdapter.membershipCards = ArrayList(userDataResult.result.third)
                     disableIndicators()
                 }
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
@@ -384,7 +361,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
 
-            simpleCallback.attachToRecyclerView(this)
+            ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
         }
     }
 

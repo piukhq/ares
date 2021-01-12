@@ -59,7 +59,7 @@ class PaymentWalletRepository(
         return apiService.getPaymentCardAsync(id)
     }
 
-    suspend fun getLocalPaymentCards(): List<PaymentCard> {
+    suspend fun getLocalPaymentCards():List<PaymentCard>{
         return paymentCardDao.getAllAsync()
     }
 

@@ -34,7 +34,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.lang.ClassCastException
 
 class PaymentCardWalletFragment :
     BaseFragment<PaymentCardWalletViewModel, PaymentCardWalletFragmentBinding>() {
@@ -69,19 +68,16 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
-    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP + ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
+            return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
-            val paymentCards = walletAdapter.paymentCards
-            if (!paymentCards.isNullOrEmpty() && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
-                try {
-                    deleteDialog(paymentCards[position] as PaymentCard)
-                } catch (e: ClassCastException) {
+            if (viewModel.paymentCards.value != null && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
+                if (!viewModel.paymentCards.value.isNullOrEmpty()) {
+                    viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
                 }
             }
         }
@@ -96,32 +92,18 @@ class PaymentCardWalletFragment :
 
             if (foregroundView != null) {
 
-                binding.swipeRefresh.isEnabled = false
-
                 when {
-
-                    dY != 0f && dX == 0f -> {
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    }
-
-                    dX == 0f && dY == 0f -> {
-                        binding.swipeRefresh.isEnabled = true
-                    }
-
-                    dX > 0 -> {
+                    dX >= 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
-
-                    dX < 0 -> {
+                    else -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
                     }
-
                 }
 
+                getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
             }
         }
 
@@ -134,7 +116,6 @@ class PaymentCardWalletFragment :
             }
 
             if (foregroundView != null) {
-                binding.swipeRefresh.isEnabled = true
                 getDefaultUIUtil().clearView(foregroundView)
             }
 
@@ -384,7 +365,7 @@ class PaymentCardWalletFragment :
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
 
-        walletAdapter.paymentCards = WalletOrderingUtil.getSavedPaymentCardWallet(walletItems)
+        walletAdapter.paymentCards = walletItems
 
         viewModel.localMembershipPlanData.value?.let { plans ->
             viewModel.localMembershipCardData.value?.let { cards ->
