@@ -37,6 +37,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
@@ -76,7 +78,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             var card: MembershipCard? = null
 
             try {
-                card = walletItems[position] as MembershipCard
+                card = walletAdapter.membershipCards[position] as MembershipCard
             } catch (e: ClassCastException) {
                 //User swiping membership plan
             }
@@ -105,7 +107,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-                    deleteDialog(walletItems[position] as MembershipCard, position)
+                    deleteDialog(it, position)
                 }
             }
 
