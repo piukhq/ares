@@ -199,11 +199,21 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         initMembershipPlansObserver()
         initUserDetailsObserver()
 
-        requireContext().apply {
-            setFocusChangeListenerForTextField(binding.emailField)
-            setFocusChangeListenerForTextField(binding.passwordField,true)
+        with(binding.emailField) {
+            this.editText?.let {
+                it.setOnFocusChangeListener { _, _ ->
+                    requireContext().validateEmail(null,binding.emailField)
+                }
+            }
         }
 
+        with(binding.passwordField) {
+            this.editText?.let {
+                it.setOnFocusChangeListener { _, _ ->
+                    requireContext().validatePassword(null,binding.passwordField)
+                }
+            }
+        }
     }
 
     private fun initMembershipPlansObserver() {

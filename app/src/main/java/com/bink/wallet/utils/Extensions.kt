@@ -240,8 +240,11 @@ fun Context.validateEmail(emailValue: String?, editText: EditText) {
 fun Context.validateEmail(emailValue: String?, textInputLayout: TextInputLayout) {
     textInputLayout.editText?.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
-            if (!emailValue.isNullOrEmpty() &&
-                !UtilFunctions.isValidField(EMAIL_REGEX, emailValue)
+            if ((!emailValue.isNullOrEmpty() &&
+                        !UtilFunctions.isValidField(
+                            EMAIL_REGEX,
+                            emailValue
+                        )) || (emailValue.isNullOrEmpty())
             ) {
                 textInputLayout.error = getString(R.string.incorrect_email_text)
             } else {
@@ -273,11 +276,11 @@ fun Context.validatePassword(passwordValue: String?, editText: EditText) {
 fun Context.validatePassword(passwordValue: String?, textInputLayout: TextInputLayout) {
     textInputLayout.editText?.setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) {
-            if (!passwordValue.isNullOrEmpty() &&
-                !UtilFunctions.isValidField(
-                    PASSWORD_REGEX,
-                    passwordValue
-                )
+            if ((!passwordValue.isNullOrEmpty() &&
+                        !UtilFunctions.isValidField(
+                            PASSWORD_REGEX,
+                            passwordValue
+                        )) || (passwordValue.isNullOrEmpty())
             ) {
                 textInputLayout.error =
                     getString(R.string.password_description)
@@ -288,7 +291,7 @@ fun Context.validatePassword(passwordValue: String?, textInputLayout: TextInputL
     }
 }
 
- fun Context.setFocusChangeListenerForTextField(
+fun Context.setFocusChangeListenerForTextField(
     editText: TextInputLayout,
     isPasswordField: Boolean = false
 ) {
