@@ -144,7 +144,7 @@ class PaymentCardWalletFragment :
                         } else {
                             logEvent(
                                 DELETE_PAYMENT_CARD_REQUEST,
-                                getDeletePaymentCardGenericMap(paymentSchemeValue, uuidValue)
+                                getDeletePaymentCardGenericMap(paymentSchemeValue, paymentCard.id.toString())
                             )
                         }
 
