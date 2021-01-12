@@ -181,7 +181,7 @@ class PaymentCardsDetailsFragment :
         )
 
         viewModel.linkError.observeNonNull(this) {
-            (it.first as HttpException).getErrorBody().let { responseString ->
+            (it.first as HttpException).response()?.errorBody()?.string()?.let { responseString ->
                 if (responseString.contains(PLAN_ALREADY_EXISTS)) {
                     showLinkErrorMessage(it.second)
                 }

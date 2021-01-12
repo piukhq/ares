@@ -28,6 +28,8 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.util.*
@@ -349,5 +351,19 @@ fun TextView.setTermsAndPrivacyUrls(
 }
 
 fun HttpException.getErrorBody(): String {
-    return response()?.errorBody()?.string() ?: ""
+    val errorBody = response()?.errorBody()?.string() ?: ""
+
+    try{
+        val jsonObject = JSONObject(errorBody)
+        val keys = jsonObject.keys()
+
+        while(keys.hasNext()){
+            val key = keys.next()
+            return jsonObject.getString(key)
+        }
+
+    } catch (e: JSONException){ }
+
+    //Just returning the entire string as a backup in the case that it can't find a json object.
+    return errorBody
 }
