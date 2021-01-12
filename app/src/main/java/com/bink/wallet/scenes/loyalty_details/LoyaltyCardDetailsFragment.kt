@@ -234,7 +234,7 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             val planId = viewModel.membershipCard.value?.membership_plan
-            val uuid = viewModel.membershipCard.value?.uuid
+            val uuid = viewModel.membershipCard.value?.id
             if (planId == null || uuid == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {

@@ -254,7 +254,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.deleteCardError.observeNonNull(this) {
             fetchData()
             val planId = deletedCard?.membership_plan
-            val uuid = deletedCard?.uuid
+            val uuid = deletedCard?.id
             if (planId == null || uuid == null) {
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
