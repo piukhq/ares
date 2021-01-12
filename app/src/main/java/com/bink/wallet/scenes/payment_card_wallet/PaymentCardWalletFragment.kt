@@ -78,9 +78,10 @@ class PaymentCardWalletFragment :
             val position = viewHolder.adapterPosition
             val paymentCards = walletAdapter.paymentCards
             if (!paymentCards.isNullOrEmpty() && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
-                try{
+                try {
                     deleteDialog(paymentCards[position] as PaymentCard)
-                } catch (e: ClassCastException){}
+                } catch (e: ClassCastException) {
+                }
             }
         }
 

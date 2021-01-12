@@ -122,7 +122,7 @@ class PaymentCardWalletAdapter(
         override fun bind(item: PaymentCard) {
             with(binding) {
                 paymentCard = item
-                membershipCards?.let{
+                membershipCards?.let {
                     membershipCardsWrapper = MembershipCardListWrapper(it)
                 }
                 executePendingBindings()
