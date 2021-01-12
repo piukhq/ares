@@ -34,8 +34,8 @@ object WalletOrderingUtil {
             }
         }
 
-        rearrangedCards.addAll(unassignedCards)
-        return rearrangedCards
+        unassignedCards.addAll(rearrangedCards)
+        return unassignedCards
     }
 
     fun getSavedPaymentCardWalletForPll(paymentCards: List<PaymentCard>): ArrayList<PaymentCard> {
@@ -61,8 +61,8 @@ object WalletOrderingUtil {
             }
         }
 
-        rearrangedCards.addAll(unassignedCards)
-        return rearrangedCards
+        unassignedCards.addAll(rearrangedCards)
+        return unassignedCards
     }
 
     fun getSavedLoyaltyCardWallet(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
@@ -87,8 +87,8 @@ object WalletOrderingUtil {
             }
         }
 
-        rearrangedCards.addAll(unassignedCards)
-        return rearrangedCards
+        unassignedCards.addAll(rearrangedCards)
+        return unassignedCards
     }
 
     fun setSavedPaymentCardWallet(paymentCards: ArrayList<Any>) {
