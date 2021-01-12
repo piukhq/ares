@@ -29,6 +29,7 @@ import retrofit2.HttpException
 import zendesk.support.guide.ViewArticleActivity
 import zendesk.support.requestlist.RequestListActivity
 import java.util.*
+import kotlin.collections.ArrayList
 
 class PaymentCardsDetailsFragment :
     BaseFragment<PaymentCardsDetailsViewModel, PaymentCardsDetailsFragmentBinding>() {
@@ -255,7 +256,7 @@ class PaymentCardsDetailsFragment :
                     availablePllAdapter = AvailablePllAdapter(
                         pCard,
                         plans,
-                        pllCards,
+                        WalletOrderingUtil.getSavedLoyaltyCardWallet(pllCards as ArrayList<Any>) as ArrayList<MembershipCard>,
                         onLinkStatusChange = ::onLinkStatusChange,
                         onItemSelected = ::onItemSelected
                     )

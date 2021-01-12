@@ -2,6 +2,7 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 object SharedPreferenceManager {
 
@@ -44,6 +45,8 @@ object SharedPreferenceManager {
     private const val ADDED_NEW_PLL = "added_new_pll"
     private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
+    private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
+    private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -247,10 +250,31 @@ object SharedPreferenceManager {
             it.putBoolean(HAS_NEW_TRANSACTIONS, value)
         }
 
+    var loyaltyWalletOrder: String?
+        get() = preferences.getString(LOYALTY_WALLET_ORDER, null)
+        set(value) = preferences.edit {
+            it.putString(LOYALTY_WALLET_ORDER, value)
+        }
+
+    var paymentWalletOrder: String?
+        get() = preferences.getString(PAYMENT_WALLET_ORDER, null)
+        set(value) = preferences.edit {
+            it.putString(PAYMENT_WALLET_ORDER, value)
+        }
+
 
     fun clear() {
+        /**
+         * Saving the current wallet orders and re-writing them to the shared preferences as its the only data that needs to persist over logouts.
+         */
+        val oldLoyaltyWalletOrder = loyaltyWalletOrder
+        val oldPaymentWalletOrder = paymentWalletOrder
+
         val editor = preferences.edit()
         editor.clear()
         editor.apply()
+
+        loyaltyWalletOrder = oldLoyaltyWalletOrder
+        paymentWalletOrder = oldPaymentWalletOrder
     }
 }

@@ -13,7 +13,10 @@ import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
+import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.getCardTypeFromProvider
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class PaymentCardWalletAdapter(
@@ -93,13 +96,33 @@ class PaymentCardWalletAdapter(
 
     override fun getItemId(position: Int) = position.toLong()
 
+    fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
+        fromPosition?.let {
+            toPosition?.let {
+                if (fromPosition < toPosition) {
+                    for (i in fromPosition until toPosition) {
+                        Collections.swap(paymentCards, i, i + 1)
+                    }
+                } else {
+                    for (i in fromPosition downTo toPosition + 1) {
+                        Collections.swap(paymentCards, i, i - 1)
+                    }
+                }
+                notifyItemMoved(fromPosition, toPosition)
+                WalletOrderingUtil.setSavedPaymentCardWallet(paymentCards)
+                return true
+            }
+        }
+        return false
+    }
+
     inner class PaymentCardWalletHolder(val binding: PaymentCardWalletItemBinding) :
         BaseViewHolder<PaymentCard>(binding) {
 
         override fun bind(item: PaymentCard) {
             with(binding) {
                 paymentCard = item
-                membershipCards?.let{
+                membershipCards?.let {
                     membershipCardsWrapper = MembershipCardListWrapper(it)
                 }
                 executePendingBindings()

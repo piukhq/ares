@@ -18,12 +18,12 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.utils.ColorUtil
-import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
-import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -151,6 +151,26 @@ class LoyaltyWalletAdapter(
         diff.dispatchUpdatesTo(this)
     }
 
+    fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
+        fromPosition?.let {
+            toPosition?.let {
+                if (fromPosition < toPosition) {
+                    for (i in fromPosition until toPosition) {
+                        Collections.swap(membershipCards, i, i + 1)
+                    }
+                } else {
+                    for (i in fromPosition downTo toPosition + 1) {
+                        Collections.swap(membershipCards, i, i - 1)
+                    }
+                }
+                notifyItemMoved(fromPosition, toPosition)
+                WalletOrderingUtil.setSavedLoyaltyCardWallet(membershipCards)
+                return true
+            }
+        }
+        return false
+    }
+
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
         BaseViewHolder<Any>(binding) {
 
@@ -178,8 +198,8 @@ class LoyaltyWalletAdapter(
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
 
-                    membershipPlan.card?.let {  membershipPlanCard ->
-                        item.card?.let { 
+                    membershipPlan.card?.let { membershipPlanCard ->
+                        item.card?.let {
                             it.secondary_colour = membershipPlanCard.secondary_colour
                         }
                     }
@@ -228,13 +248,13 @@ class LoyaltyWalletAdapter(
                             }
                     } else if (!item.balances.isNullOrEmpty()) {
                         item.balances?.firstOrNull()?.let { balance ->
-                            when (balance?.prefix != null) {
-                                true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
+                            when (balance.prefix != null) {
+                                true -> {
+                                    loyaltyValue.text = balance.formatBalance()
+                                }
                                 else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                                    loyaltyValue.text = balance.value
+                                    loyaltyValueExtra.text = balance.suffix
                                 }
                             }
                         }
