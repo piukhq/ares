@@ -374,22 +374,19 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected fun getAddPaymentCardGenericMap(paymentSchemeValue: String): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         return map
     }
 
     protected fun getAddPaymentCardResponseSuccessMap(
+        paymentCardId: String,
         paymentSchemeValue: String,
         isAccountNew: String,
         paymentStatus: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
 
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = paymentCardId
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-
-            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         map[FIREBASE_ACCOUNT_IS_NEW_KEY] = isAccountNew
         map[ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY] = paymentStatus
 
@@ -404,8 +401,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
         map[ADD_LOYALTY_CARD_SCANNED_CARD_KEY] = isAScannedCard
 
@@ -415,6 +410,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getAddLoyaltyResponseSuccessMap(
         journeyValue: String,
+        loyaltyCardId: String,
         loyaltyStatus: String,
         reasonCode: String,
         membershipPlanId: String,
@@ -422,8 +418,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
         map[FIREBASE_ACCOUNT_IS_NEW_KEY] = isAccountNew
         map[ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY] = loyaltyStatus
         map[ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY] = reasonCode
@@ -434,11 +429,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getDeletePaymentCardGenericMap(
         paymentSchemeValue: String,
-        uuid: String
+        paymentCardId: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = paymentCardId
 
         return map
     }
@@ -449,8 +444,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
 
         return map
@@ -458,11 +451,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getDeleteLoyaltyCardGenericMap(
         loyaltyPlan: String,
-        uuid: String
+        loyaltyCardId: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
 
         return map
     }
