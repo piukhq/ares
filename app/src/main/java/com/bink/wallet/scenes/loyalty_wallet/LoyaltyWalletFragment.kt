@@ -254,14 +254,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.deleteCardError.observeNonNull(this) {
             fetchData()
             val planId = deletedCard?.membership_plan
-            val uuid = deletedCard?.id
-            if (planId == null || uuid == null) {
+            val cardId = deletedCard?.id
+            if (planId == null || cardId == null) {
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
                 val httpException = it as HttpException
                 logEvent(
                     DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
+                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
             }
         }

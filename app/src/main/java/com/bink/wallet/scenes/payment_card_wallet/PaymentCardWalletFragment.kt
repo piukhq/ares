@@ -21,7 +21,6 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletAdapter
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
@@ -50,7 +49,7 @@ class PaymentCardWalletFragment :
 
     private var paymentScheme: String? = null
 
-    private var uuid: String? = null
+    private var paymentCardId: String? = null
 
     override val layoutRes: Int
         get() = R.layout.payment_card_wallet_fragment
@@ -135,16 +134,15 @@ class PaymentCardWalletFragment :
                         viewModel.deletePaymentCard(paymentCard.id.toString())
                         binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                         val paymentSchemeValue = paymentCard.card?.provider
-                        val uuidValue = paymentCard.uuid
                         paymentScheme = paymentSchemeValue
-                        this.uuid = uuidValue
+                        this.paymentCardId = paymentCard.id.toString()
 
-                        if (paymentSchemeValue == null || uuidValue == null) {
+                        if (paymentSchemeValue == null || paymentCardId == null) {
                             failedEvent(DELETE_PAYMENT_CARD_REQUEST)
                         } else {
                             logEvent(
                                 DELETE_PAYMENT_CARD_REQUEST,
-                                getDeletePaymentCardGenericMap(paymentSchemeValue, paymentCard.id.toString())
+                                getDeletePaymentCardGenericMap(paymentSchemeValue, paymentCardId!!)
                             )
                         }
 
@@ -180,13 +178,13 @@ class PaymentCardWalletFragment :
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchLocalData()
             val pScheme = paymentScheme
-            val uuid = this.uuid
-            if (pScheme == null || uuid == null) {
+            val paymentCardId = this.paymentCardId
+            if (pScheme == null || paymentCardId == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_SUCCESS)
             } else {
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,
-                    getDeletePaymentCardGenericMap(pScheme, uuid)
+                    getDeletePaymentCardGenericMap(pScheme, paymentCardId)
                 )
             }
 
@@ -195,14 +193,14 @@ class PaymentCardWalletFragment :
         viewModel.deleteError.observeNonNull(this) {
             viewModel.fetchLocalData()
             val pScheme = paymentScheme
-            val uuid = this.uuid
-            if (pScheme == null || uuid == null) {
+            val paymentCardId = this.paymentCardId
+            if (pScheme == null || paymentCardId == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
             } else {
                 val httpException = it as HttpException
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                    getDeletePaymentCardFailedMap(pScheme, uuid, httpException.code(), httpException.getErrorBody())
+                    getDeletePaymentCardFailedMap(pScheme, paymentCardId, httpException.code(), httpException.getErrorBody())
                 )
             }
 

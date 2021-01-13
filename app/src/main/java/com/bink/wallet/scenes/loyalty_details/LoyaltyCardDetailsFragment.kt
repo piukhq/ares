@@ -234,14 +234,14 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             val planId = viewModel.membershipCard.value?.membership_plan
-            val uuid = viewModel.membershipCard.value?.id
-            if (planId == null || uuid == null) {
+            val cardId = viewModel.membershipCard.value?.id
+            if (planId == null || cardId == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
                 val httpException = it as HttpException
                 logEvent(
                     FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardFailMap(planId, uuid, httpException.code(), httpException.getErrorBody())
+                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
             }
         }
