@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -16,7 +15,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
@@ -29,12 +27,8 @@ import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.lang.reflect.Type
 import java.util.*
 
 
@@ -259,7 +253,7 @@ class LoyaltyCardDetailsFragment :
         val arrayList : ArrayList<DynamicAction> = gson.fromJson(dynamicActions, type)
 
         Log.d("test", arrayList.size.toString())
-        **/
+         **/
 
     }
 
@@ -337,7 +331,7 @@ class LoyaltyCardDetailsFragment :
         viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
             description = plan_description
         }
-        viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
+        viewModel.membershipPlan.value?.account?.plan_summary?.let { planSummary ->
             summary = planSummary
 
         }
@@ -423,7 +417,7 @@ class LoyaltyCardDetailsFragment :
             }
         }, SCROLL_DELAY)
 
-        RequestReviewUtil.triggerViaCardDetails(this){
+        RequestReviewUtil.triggerViaCardDetails(this) {
             logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS))
         }
     }
@@ -938,18 +932,19 @@ class LoyaltyCardDetailsFragment :
         binding.voucherTiles.apply {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
-            viewModel.membershipCard.value?.vouchers?.filter {
-                it.state == VoucherStates.IN_PROGRESS.state ||
-                        it.state == VoucherStates.ISSUED.state
-            }?.let { vouchers ->
-                adapter = VouchersAdapter(
-                    vouchers
-                ).apply {
-                    setOnVoucherClickListener { voucher ->
-                        viewVoucherDetails(voucher)
-                    }
+            val allVouchers = viewModel.membershipCard.value?.vouchers
+
+            val joinedVouchers = ArrayList<Voucher>().apply {
+                allVouchers?.filter { it.state == VoucherStates.ISSUED.state }?.let { addAll(it) }
+                allVouchers?.filter { it.state == VoucherStates.IN_PROGRESS.state }?.let { addAll(it) }
+            }
+
+            adapter = VouchersAdapter(joinedVouchers).apply {
+                setOnVoucherClickListener { voucher ->
+                    viewVoucherDetails(voucher)
                 }
             }
+
         }
     }
 
