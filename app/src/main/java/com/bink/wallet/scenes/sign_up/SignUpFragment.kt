@@ -240,6 +240,18 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                 )
             }
         )
+
+//        with(binding.emailField){
+//            this.e
+//            validateCredentials()
+//            requireContext().validateEmail(null,)
+//        }
+
+        binding.emailField.editText?.let {
+            it.setOnFocusChangeListener { v, hasFocus ->
+                requireContext().validateEmail(null,binding.emailField)
+            }
+        }
     }
 
     override fun onPause() {

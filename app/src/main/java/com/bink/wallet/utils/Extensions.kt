@@ -250,7 +250,11 @@ fun Context.validateEmail(emailValue: String?, textInputLayout: TextInputLayout)
             } else {
                 textInputLayout.error = null
                 textInputLayout.isErrorEnabled = false
+                textInputLayout.isEndIconVisible = false
             }
+        } else {
+            textInputLayout.isEndIconVisible = true
+
         }
     }
 }

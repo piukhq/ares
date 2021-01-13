@@ -202,6 +202,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         with(binding.emailField) {
             this.editText?.let {
                 it.setOnFocusChangeListener { _, _ ->
+                    if (it.text.isNotEmpty()) binding.emailField.isEndIconVisible = true
                     requireContext().validateEmail(null,binding.emailField)
                 }
             }
