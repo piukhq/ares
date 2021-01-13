@@ -351,19 +351,20 @@ fun TextView.setTermsAndPrivacyUrls(
 }
 
 fun HttpException.getErrorBody(): String {
-    val errorBody = response()?.errorBody()?.string() ?: ""
+    val errorBody = response()?.errorBody()?.string() ?: "Error body is null or empty"
 
-    try{
+    try {
         val jsonObject = JSONObject(errorBody)
         val keys = jsonObject.keys()
 
-        while(keys.hasNext()){
+        while (keys.hasNext()) {
             val key = keys.next()
             return jsonObject.getString(key)
         }
 
-    } catch (e: JSONException){ }
+    } catch (e: JSONException) {
+        return "Could not deserialise error body"
+    }
 
-    //Just returning the entire string as a backup in the case that it can't find a json object.
     return errorBody
 }
