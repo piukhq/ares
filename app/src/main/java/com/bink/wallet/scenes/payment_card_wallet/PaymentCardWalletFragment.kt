@@ -32,6 +32,7 @@ import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.ClassCastException
 import retrofit2.HttpException
 
 class PaymentCardWalletFragment :
@@ -75,10 +76,11 @@ class PaymentCardWalletFragment :
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
-            if (viewModel.paymentCards.value != null && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
-                if (!viewModel.paymentCards.value.isNullOrEmpty()) {
-                    viewModel.paymentCards.value?.get(position)?.let { deleteDialog(it) }
-                }
+            val paymentCards = walletAdapter.paymentCards
+            if (!paymentCards.isNullOrEmpty() && viewHolder is PaymentCardWalletAdapter.PaymentCardWalletHolder && direction == ItemTouchHelper.LEFT) {
+                try{
+                    deleteDialog(paymentCards[position] as PaymentCard)
+                } catch (e: ClassCastException){}
             }
         }
 
