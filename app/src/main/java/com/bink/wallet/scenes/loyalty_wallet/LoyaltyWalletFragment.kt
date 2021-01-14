@@ -65,8 +65,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private var simpleCallback = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
+            val currentPosition = viewHolder.adapterPosition
+            var card: MembershipCard? = null
+
+            try {
+                card = walletAdapter.membershipCards[currentPosition] as MembershipCard
+            } catch (e: ClassCastException) {
+                //User swiping membership plan
+            }
+
+            card?.let {
+                return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+            }
+            return false
         }
 
         override fun isLongPressDragEnabled(): Boolean {
@@ -83,7 +94,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 //User swiping membership plan
             }
 
-            card?.let {
+            card?.let { card ->
                 if (direction == RIGHT) {
                     val membershipPlanData = viewModel.membershipPlanData.value ?: viewModel.localMembershipPlanData.value
                     val plan = membershipPlanData?.firstOrNull {
@@ -107,7 +118,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }
                 } else {
-                    deleteDialog(it, position)
+                    deleteDialog(card, position)
                 }
             }
 
