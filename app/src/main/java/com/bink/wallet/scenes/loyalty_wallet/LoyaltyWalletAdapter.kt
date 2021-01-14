@@ -18,8 +18,11 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.ColorUtil
+import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
+import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
+import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import java.util.*
@@ -154,6 +157,8 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
+                if (getItemViewType(toPosition) == JOIN_PLAN) return false
+
                 if (fromPosition < toPosition) {
                     for (i in fromPosition until toPosition) {
                         Collections.swap(membershipCards, i, i + 1)
@@ -198,8 +203,8 @@ class LoyaltyWalletAdapter(
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
 
-                    membershipPlan.card?.let {  membershipPlanCard ->
-                        item.card?.let { 
+                    membershipPlan.card?.let { membershipPlanCard ->
+                        item.card?.let {
                             it.secondary_colour = membershipPlanCard.secondary_colour
                         }
                     }
