@@ -934,17 +934,16 @@ class LoyaltyCardDetailsFragment :
             layoutManager = LinearLayoutManager(requireContext())
             val allVouchers = viewModel.membershipCard.value?.vouchers
 
-            val joinedVouchers = ArrayList<Voucher>().apply {
-                allVouchers?.filter { it.state == VoucherStates.ISSUED.state }?.let { addAll(it) }
-                allVouchers?.filter { it.state == VoucherStates.IN_PROGRESS.state }?.let { addAll(it) }
-            }
-
-            adapter = VouchersAdapter(joinedVouchers).apply {
-                setOnVoucherClickListener { voucher ->
-                    viewVoucherDetails(voucher)
+            allVouchers?.filter {
+                it.state == VoucherStates.ISSUED.state || it.state == VoucherStates.IN_PROGRESS.state
+            }?.let { filteredVouchers ->
+                adapter = VouchersAdapter(filteredVouchers.sortedByDescending { it.state }).apply {
+                    setOnVoucherClickListener { voucher ->
+                        viewVoucherDetails(voucher)
+                    }
                 }
             }
-
+            
         }
     }
 
