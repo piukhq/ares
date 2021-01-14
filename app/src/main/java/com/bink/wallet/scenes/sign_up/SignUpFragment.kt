@@ -248,6 +248,13 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
         }
 
+        binding.passwordField.editText?.let {
+            it.setOnFocusChangeListener { v, hasFocus ->
+                requireContext().validatePassword(null,binding.passwordField)
+            }
+        }
+
+
 
     }
 
