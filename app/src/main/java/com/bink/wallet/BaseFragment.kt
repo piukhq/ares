@@ -30,6 +30,8 @@ import com.bink.wallet.utils.FirebaseEvents.DYNAMIC_ACTION_NAME
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ERROR_CODE
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ERROR_MESSAGE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRIGGER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_KEY
@@ -377,6 +379,14 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
+    protected fun getAddPaymentCardFailMap(paymentSchemeValue: String, error_code: Int, error_message: String): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+        return map
+    }
+
     protected fun getAddPaymentCardResponseSuccessMap(
         paymentCardId: String,
         paymentSchemeValue: String,
@@ -438,6 +448,36 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
+    protected fun getDeletePaymentCardFailedMap(
+        paymentSchemeValue: String,
+        paymentCardId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = paymentCardId
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+
+        return map
+    }
+
+    protected fun getAddLoyaltyResponseFailureMap(
+        journeyValue: String,
+        membershipPlanId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+
+        return map
+    }
+
     protected fun getAddLoyaltyResponseFailureMap(
         journeyValue: String,
         membershipPlanId: String
@@ -456,6 +496,21 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
         map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
+
+        return map
+    }
+
+    protected fun getDeleteLoyaltyCardFailMap(
+        loyaltyPlan: String,
+        loyaltyCardId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
 
         return map
     }

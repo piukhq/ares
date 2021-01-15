@@ -29,6 +29,8 @@ import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import java.lang.reflect.Type
 import java.util.*
 
 
@@ -227,15 +229,15 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             val planId = viewModel.membershipCard.value?.membership_plan
-            val uuid = viewModel.membershipCard.value?.uuid
-            if (planId == null || uuid == null) {
+            val cardId = viewModel.membershipCard.value?.id
+            if (planId == null || cardId == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
-
             }
         }
 

@@ -21,7 +21,6 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletAdapter
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
@@ -33,6 +32,7 @@ import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class PaymentCardWalletFragment :
     BaseFragment<PaymentCardWalletViewModel, PaymentCardWalletFragmentBinding>() {
@@ -49,7 +49,7 @@ class PaymentCardWalletFragment :
 
     private var paymentScheme: String? = null
 
-    private var uuid: String? = null
+    private var paymentCardId: String? = null
 
     override val layoutRes: Int
         get() = R.layout.payment_card_wallet_fragment
@@ -134,16 +134,15 @@ class PaymentCardWalletFragment :
                         viewModel.deletePaymentCard(paymentCard.id.toString())
                         binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
                         val paymentSchemeValue = paymentCard.card?.provider
-                        val uuidValue = paymentCard.uuid
                         paymentScheme = paymentSchemeValue
-                        this.uuid = uuidValue
+                        this.paymentCardId = paymentCard.id.toString()
 
-                        if (paymentSchemeValue == null || uuidValue == null) {
+                        if (paymentSchemeValue == null || paymentCardId == null) {
                             failedEvent(DELETE_PAYMENT_CARD_REQUEST)
                         } else {
                             logEvent(
                                 DELETE_PAYMENT_CARD_REQUEST,
-                                getDeletePaymentCardGenericMap(paymentSchemeValue, paymentCard.id.toString())
+                                getDeletePaymentCardGenericMap(paymentSchemeValue, paymentCardId!!)
                             )
                         }
 
@@ -179,13 +178,13 @@ class PaymentCardWalletFragment :
         viewModel.deleteRequest.observeNonNull(this) {
             viewModel.fetchLocalData()
             val pScheme = paymentScheme
-            val uuid = this.uuid
-            if (pScheme == null || uuid == null) {
+            val paymentCardId = this.paymentCardId
+            if (pScheme == null || paymentCardId == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_SUCCESS)
             } else {
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_SUCCESS,
-                    getDeletePaymentCardGenericMap(pScheme, uuid)
+                    getDeletePaymentCardGenericMap(pScheme, paymentCardId)
                 )
             }
 
@@ -194,21 +193,20 @@ class PaymentCardWalletFragment :
         viewModel.deleteError.observeNonNull(this) {
             viewModel.fetchLocalData()
             val pScheme = paymentScheme
-            val uuid = this.uuid
-            if (pScheme == null || uuid == null) {
+            val paymentCardId = this.paymentCardId
+            if (pScheme == null || paymentCardId == null) {
                 failedEvent(DELETE_PAYMENT_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                    getDeletePaymentCardGenericMap(pScheme, uuid)
+                    getDeletePaymentCardFailedMap(pScheme, paymentCardId, httpException.code(), httpException.getErrorBody())
                 )
             }
 
-
         }
-        viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
-        viewModel.deleteError.observeErrorNonNull(requireContext(), true, this)
+        viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
             layoutManager = GridLayoutManager(context, 1)
@@ -250,7 +248,7 @@ class PaymentCardWalletFragment :
 
     override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
-            when (dynamicActionLocationArea){
+            when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
                     bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
