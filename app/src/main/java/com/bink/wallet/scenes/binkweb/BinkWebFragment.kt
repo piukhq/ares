@@ -49,7 +49,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 request: WebResourceRequest,
                 error: WebResourceError
             ) {
-                if(isAdded && error.errorCode != -2){
+                if(isAdded && error.errorCode != ERROR_CODE){
                     binding.webView.visibility = View.INVISIBLE
                     if (request.url.toString().startsWith("mailto:")) {
                         hasOpenedEmail = true
@@ -113,6 +113,10 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             },
             isCancelable = false
         )
+    }
+
+    companion object {
+        private const val ERROR_CODE = -2
     }
 
 }
