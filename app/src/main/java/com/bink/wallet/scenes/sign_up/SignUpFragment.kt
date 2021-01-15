@@ -243,17 +243,32 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
 
         binding.emailField.editText?.let {
-            it.setOnFocusChangeListener { v, hasFocus ->
+            it.setOnFocusChangeListener { _, _ ->
                 requireContext().validateEmail(null,binding.emailField)
             }
         }
 
         binding.passwordField.editText?.let {
-            it.setOnFocusChangeListener { v, hasFocus ->
+            it.setOnFocusChangeListener { _, _ ->
                 requireContext().validatePassword(null,binding.passwordField)
             }
         }
 
+        binding.confirmPasswordField.editText?.let {
+            it.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus){
+                    if ((it.text.isNotEmpty()) || (it.text.isEmpty())) {
+                        binding.confirmPasswordField.error =
+                            if (it.text.toString() != viewModel.password.value) {
+                                getString(R.string.password_not_match)
+                            } else {
+                                null
+                            }
+                    }
+                }
+
+            }
+        }
 
 
     }
