@@ -49,7 +49,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 request: WebResourceRequest,
                 error: WebResourceError
             ) {
-                if(isAdded){
+                if(isAdded && error.errorCode != -2){
                     binding.webView.visibility = View.INVISIBLE
                     if (request.url.toString().startsWith("mailto:")) {
                         hasOpenedEmail = true
