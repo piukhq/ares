@@ -18,6 +18,7 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.model.response.membership_plan.Images
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRANSACTIONS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
@@ -75,14 +76,14 @@ class LoyaltyCardDetailsFragment :
         binding.viewModel = viewModel
 
         arguments?.let {
-            val tiles = arrayListOf<String>()
+            val tiles = arrayListOf<Images>()
             viewModel.apply {
                 membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
                 isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipPlan.value?.images
                     ?.filter { image -> image.type == 2 }
-                    ?.forEach { image -> tiles.add(image.url.toString()) }
+                    ?.forEach { image -> tiles.add(image) }
                 this.tiles.value = tiles
             }
         }
@@ -111,7 +112,14 @@ class LoyaltyCardDetailsFragment :
         setUpScrollView(colorDrawable)
 
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
+        binding.offerTiles.adapter = viewModel.tiles.value?.let {
+            LoyaltyDetailsTilesAdapter(it) { image ->
+                if(!image.cta_url.isNullOrEmpty()){
+                    findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
+
+                }
+            }
+        }
 
         viewModel.updatedMembershipCard.observeNonNull(this) {
             viewModel.membershipCard.value = it
