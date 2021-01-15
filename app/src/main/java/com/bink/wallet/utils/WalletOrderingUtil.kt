@@ -87,8 +87,29 @@ object WalletOrderingUtil {
             }
         }
 
+        /**
+         * This ensures that when a user deletes a card that comes with a plan, the plan goes underneath the other cards the user has in their wallet.
+         * It then returns the array in the correct order: New cards -> Arranged Cards -> Membership/join plans
+         */
         unassignedCards.addAll(rearrangedCards)
-        return unassignedCards
+
+        val sortedMembershipCards = ArrayList<Any>()
+        val sortedMembershipPlans = ArrayList<Any>()
+
+        for(card in unassignedCards){
+            if(card is MembershipCard) {
+                sortedMembershipCards.add(card)
+            } else {
+                sortedMembershipPlans.add(card)
+            }
+        }
+
+        sortedMembershipCards.addAll(sortedMembershipPlans)
+
+        //Unsure why the below doesnt work. Without converting it to an Arraylist it will work. We ofc can't use a List for this.
+        //val sortedCards = (unassignedCards.sortedByDescending { it is MembershipCard }) as ArrayList<Any>
+
+        return sortedMembershipCards
     }
 
     fun setSavedPaymentCardWallet(paymentCards: ArrayList<Any>) {
