@@ -24,6 +24,7 @@ import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.formatBalance
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -228,13 +229,13 @@ class LoyaltyWalletAdapter(
                             }
                     } else if (!item.balances.isNullOrEmpty()) {
                         item.balances?.firstOrNull()?.let { balance ->
-                            when (balance?.prefix != null) {
+                            when (balance.prefix != null) {
                                 true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
+                                    loyaltyValue.text = balance.formatBalance()
+
                                 else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                                    loyaltyValue.text = balance.value
+                                    loyaltyValueExtra.text = balance.suffix
                                 }
                             }
                         }
