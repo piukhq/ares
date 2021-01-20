@@ -44,6 +44,7 @@ object SharedPreferenceManager {
     private const val ADDED_NEW_PLL = "added_new_pll"
     private const val LAST_SEEN_TRANSACTIONS = "last_seen_transactions"
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
+    private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -237,6 +238,11 @@ object SharedPreferenceManager {
             it.putBoolean(HAS_NEW_TRANSACTIONS, value)
         }
 
+    var hasLaunchedAfterApiUpdate: Boolean
+        get() = environmentPreferences.getBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, false)
+        set(value) = environmentPreferences.edit {
+            it.putBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, value)
+        }
 
     fun clear() {
         val editor = preferences.edit()
