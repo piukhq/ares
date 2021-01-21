@@ -290,6 +290,7 @@ fun Context.validatePassword(passwordValue: String?, textInputLayout: TextInputL
                     getString(R.string.password_description)
             } else {
                 textInputLayout.error = null
+                textInputLayout.isErrorEnabled = false
             }
         }
     }

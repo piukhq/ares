@@ -368,10 +368,10 @@ class TextFieldViewHolder(
                     R.string.add_auth_invalid_field
                 )
             }
-//            else {
-//                text.error = null
-//                text.isErrorEnabled = false
-//            }
+            else {
+                text.error = null
+                text.isErrorEnabled = false
+            }
         }
     }
 
