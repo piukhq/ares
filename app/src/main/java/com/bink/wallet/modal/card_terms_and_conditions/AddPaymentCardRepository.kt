@@ -5,7 +5,6 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -20,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import retrofit2.HttpException
 
 class AddPaymentCardRepository(
     private val apiService: ApiService,
@@ -143,7 +142,8 @@ class AddPaymentCardRepository(
                     mutableAddCard.value = response
                 } catch (e: Exception) {
                     error.value = e
-                    SentryUtils.logError(SentryErrorType.API_REJECTED, e.message)
+
+                    SentryUtils.logError(SentryErrorType.API_REJECTED, (e as HttpException).getErrorBody())
                 }
             }
         }
