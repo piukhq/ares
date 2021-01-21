@@ -1,9 +1,9 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -15,10 +15,10 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyCardDetailsBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.model.response.membership_plan.Images
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRANSACTIONS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
@@ -28,11 +28,9 @@ import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 import java.lang.reflect.Type
 import java.util.*
 
@@ -78,14 +76,14 @@ class LoyaltyCardDetailsFragment :
         binding.viewModel = viewModel
 
         arguments?.let {
-            val tiles = arrayListOf<String>()
+            val tiles = arrayListOf<Images>()
             viewModel.apply {
                 membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
                 isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipPlan.value?.images
                     ?.filter { image -> image.type == 2 }
-                    ?.forEach { image -> tiles.add(image.url.toString()) }
+                    ?.forEach { image -> tiles.add(image) }
                 this.tiles.value = tiles
             }
         }
@@ -113,34 +111,33 @@ class LoyaltyCardDetailsFragment :
 
         setUpScrollView(colorDrawable)
 
-        binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            if (isNetworkAvailable(requireActivity(), true)) {
-                viewModel.updateMembershipCard(true)
-            } else {
-                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-                viewModel.setAccountStatus()
-                viewModel.setLinkStatus()
-                setLoadingState(false)
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
+        binding.offerTiles.adapter = viewModel.tiles.value?.let {
+            LoyaltyDetailsTilesAdapter(it) { image ->
+                if(!image.cta_url.isNullOrEmpty()){
+                    findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
+
+                }
             }
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
-
         viewModel.updatedMembershipCard.observeNonNull(this) {
             viewModel.membershipCard.value = it
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
             viewModel.setAccountStatus()
             viewModel.setLinkStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this) { card ->
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+        viewModel.membershipCard.observeNonNull(this) { membershipCard ->
             viewModel.membershipPlan.value?.let { plan ->
-                binding.cardHeader.linkCard(card, plan)
+                binding.cardHeader.linkCard(membershipCard, plan)
             }
+
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
+            }
+
+            membershipCard?.card?.getSecondaryColor()?.let { secondaryCardColour ->
+                binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
             }
         }
 
@@ -240,15 +237,15 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             val planId = viewModel.membershipCard.value?.membership_plan
-            val uuid = viewModel.membershipCard.value?.uuid
-            if (planId == null || uuid == null) {
+            val cardId = viewModel.membershipCard.value?.id
+            if (planId == null || cardId == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
-
             }
         }
 
@@ -266,7 +263,7 @@ class LoyaltyCardDetailsFragment :
         val arrayList : ArrayList<DynamicAction> = gson.fromJson(dynamicActions, type)
 
         Log.d("test", arrayList.size.toString())
-        **/
+         **/
 
     }
 
@@ -344,7 +341,7 @@ class LoyaltyCardDetailsFragment :
         viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
             description = plan_description
         }
-        viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
+        viewModel.membershipPlan.value?.account?.plan_summary?.let { planSummary ->
             summary = planSummary
 
         }
@@ -430,7 +427,7 @@ class LoyaltyCardDetailsFragment :
             }
         }, SCROLL_DELAY)
 
-        RequestReviewUtil.triggerViaCardDetails(this){
+        RequestReviewUtil.triggerViaCardDetails(this) {
             logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS))
         }
     }
@@ -945,18 +942,18 @@ class LoyaltyCardDetailsFragment :
         binding.voucherTiles.apply {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
-            viewModel.membershipCard.value?.vouchers?.filter {
-                it.state == VoucherStates.IN_PROGRESS.state ||
-                        it.state == VoucherStates.ISSUED.state
-            }?.let { vouchers ->
-                adapter = VouchersAdapter(
-                    vouchers
-                ).apply {
+            val allVouchers = viewModel.membershipCard.value?.vouchers
+
+            allVouchers?.filter {
+                it.state == VoucherStates.ISSUED.state || it.state == VoucherStates.IN_PROGRESS.state
+            }?.let { filteredVouchers ->
+                adapter = VouchersAdapter(filteredVouchers.sortedByDescending { it.state }).apply {
                     setOnVoucherClickListener { voucher ->
                         viewVoucherDetails(voucher)
                     }
                 }
             }
+            
         }
     }
 

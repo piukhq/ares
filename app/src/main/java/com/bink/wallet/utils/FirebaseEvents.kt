@@ -87,6 +87,10 @@ object FirebaseEvents {
     const val FIREBASE_REQUEST_REVIEW_TIME = "TIME"
     const val FIREBASE_REQUEST_REVIEW_ADD = "ADD"
     const val FIREBASE_REQUEST_REVIEW_TRANSACTIONS = "TRANSACTIONS"
+    const val DYNAMIC_ACTION_NAME = "dynamic_action_name"
+    const val DYNAMIC_ACTION_TRIGGER_EVENT = "dynamic_action_triggered"
+    const val FIREBASE_ERROR_CODE = "error_code"
+    const val FIREBASE_ERROR_MESSAGE = "error_message"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

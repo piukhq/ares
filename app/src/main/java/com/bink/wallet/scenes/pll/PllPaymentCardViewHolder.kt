@@ -28,16 +28,13 @@ class PllPaymentCardViewHolder(val binding: PllPaymentCardItemBinding) :
         }
 
         with(binding.toggle) {
-            setOnCheckedChangeListener(null)
-
-            isChecked = if (isFromAddJourney) true else paymentCard.isLinkedToMembershipCard(membershipCard)
-            displayCustomSwitch(isChecked)
-
             setOnCheckedChangeListener { _, isChecked ->
                 paymentCard.isSelected = isChecked
                 displayCustomSwitch(isChecked)
-
             }
+
+            isChecked = if (isFromAddJourney) true else paymentCard.isLinkedToMembershipCard(membershipCard)
+            displayCustomSwitch(isChecked)
         }
 
         binding.separator.visibility = if (isLast) {

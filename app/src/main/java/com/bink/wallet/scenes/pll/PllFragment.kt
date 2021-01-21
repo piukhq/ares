@@ -101,9 +101,9 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
             viewModel.membershipCard.value?.let { membershipCard ->
 
-                adapter.updateData(activeCards, membershipCard)
+                adapter.updateData(activeCards.sortedByDescending { card -> card.id }, membershipCard)
                 binding.brandModal.setOnClickListener {
-                    viewModel.membershipPlan.value?.account?.plan_description?.let {
+                    viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
                         findNavController().navigate(
                             PllFragmentDirections.pllToBrandHeader(
                                 GenericModalParameters(
@@ -111,7 +111,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                                     true,
                                     viewModel.membershipPlan.value?.account?.plan_name
                                         ?: getString(R.string.plan_description),
-                                    it,
+                                    viewModel.membershipPlan.value?.account?.plan_summary?:"",
+                                    description2 = planDescription,
                                     firstButtonText = getString(R.string.go_to_site)
                                 ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
 

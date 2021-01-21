@@ -14,7 +14,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20020119"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20020121"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 android {
     externalNativeBuild {
@@ -51,7 +51,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode buildNumber
-        versionName "2.1.11"
+        versionName "2.1.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -286,7 +286,7 @@ dependencies {
     /** SENTRY **/
     implementation 'io.sentry:sentry-android:2.3.1'
 
-    /** LEAK CANARY**/
+//    /** LEAK CANARY**/
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     /** In-app Review **/

@@ -15,7 +15,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
-import com.bink.wallet.model.JoinCardItem
+import com.bink.wallet.model.*
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -32,7 +32,6 @@ import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.lang.ClassCastException
 import java.net.SocketTimeoutException
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
@@ -157,7 +156,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         super.onResume()
         viewModel.fetchPeriodicMembershipCards()
         viewModel.checkZendeskResponse()
-        RequestReviewUtil.triggerViaWallet(this){
+        RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
         }
         logScreenView(LOYALTY_WALLET_VIEW)
@@ -255,15 +254,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.deleteCardError.observeNonNull(this) {
             fetchData()
             val planId = deletedCard?.membership_plan
-            val uuid = deletedCard?.uuid
-            if (planId == null || uuid == null) {
+            val cardId = deletedCard?.id
+            if (planId == null || cardId == null) {
                 failedEvent(DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
-
             }
         }
     }
@@ -322,6 +321,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             .build()
     }
 
+    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+        dynamicActionLocation.area?.let { dynamicActionLocationArea ->
+            when (dynamicActionLocationArea) {
+                DynamicActionArea.LEFT_TOP_BAR -> {
+                    binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
+                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
+                }
+            }
+        }
+    }
+
     private fun setCardsData(userDataResult: UserDataResult) {
         isRefresh = false
         when (userDataResult) {
@@ -336,8 +346,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
 
-                if(userDataResult.result.first.size > 4){
-                    RequestReviewUtil.triggerViaCards(this){
+                if (userDataResult.result.first.size > 4) {
+                    RequestReviewUtil.triggerViaCards(this) {
                         logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME))
                     }
                 }
@@ -475,6 +485,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             getString(R.string.loyalty_wallet_no_barcode_title),
             getString(R.string.loyalty_wallet_no_barcode_message),
             okAction = {
+                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+            },
+            cancelAction = {
                 binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
             }
         )

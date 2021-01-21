@@ -26,9 +26,9 @@ class AuthNavigationHandler(
                         GenericModalParameters(
                             R.drawable.ic_close,
                             true,
-                            plan.account.plan_name
-                                ?: context.getString(R.string.plan_description),
-                            plan.account.plan_description,
+                            plan.account.plan_name ?: context.getString(R.string.plan_description),
+                             plan.account.plan_summary?:"",
+                            description2 = plan.account.plan_description,
                             firstButtonText = context.getString(R.string.go_to_site)
                         ), plan.account.plan_url ?: ""
                     )
