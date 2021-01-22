@@ -1,8 +1,23 @@
 package com.bink.wallet.utils
 
 import io.sentry.core.Sentry
+import retrofit2.HttpException
 
 object SentryUtils {
+
+    fun logError(sentryError: SentryErrorType, exception: Exception) {
+        var userInfo = exception.message
+
+        when (exception) {
+            is HttpException -> {
+                val errorBody = exception.response()?.errorBody()?.string()
+                val errorCode = exception.code()
+                userInfo = "$errorCode $errorBody"
+            }
+        }
+
+        logError(sentryError, userInfo)
+    }
 
     fun logError(sentryError: SentryErrorType, userInfo: String?) {
         Sentry.withScope { scope ->

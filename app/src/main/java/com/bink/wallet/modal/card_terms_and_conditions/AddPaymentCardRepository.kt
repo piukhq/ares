@@ -89,9 +89,9 @@ class AddPaymentCardRepository(
                             error,
                             addCardRequestMade
                         )
-                    } catch (e: Exception) {
-                        error.value = e
-                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, e.message)
+                    } catch (exception: Exception) {
+                        error.value = exception
+                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception)
                     }
                 }
             }
@@ -140,10 +140,10 @@ class AddPaymentCardRepository(
                     val response = request.await()
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
-                } catch (e: Exception) {
-                    error.value = e
+                } catch (exception: Exception) {
+                    error.value = exception
 
-                    SentryUtils.logError(SentryErrorType.API_REJECTED, (e as HttpException).getErrorBody())
+                    SentryUtils.logError(SentryErrorType.API_REJECTED, exception)
                 }
             }
         }
