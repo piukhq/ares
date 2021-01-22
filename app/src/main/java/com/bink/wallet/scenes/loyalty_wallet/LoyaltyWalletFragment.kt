@@ -4,6 +4,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -71,7 +73,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             try {
                 card = walletAdapter.membershipCards[currentPosition] as MembershipCard
             } catch (e: ClassCastException) {
-                //User swiping membership plan
+                //User attempting to drag join plan
             }
 
             card?.let {
@@ -174,7 +176,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
 
             if (foregroundView != null) {
-                binding.swipeLayout.isEnabled = true
+                Handler().postDelayed({
+                    binding.swipeLayout.isEnabled = true
+                }, 1000)
                 getDefaultUIUtil().clearView(foregroundView)
             }
 

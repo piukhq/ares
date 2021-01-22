@@ -157,7 +157,10 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == JOIN_PLAN) return false
+                if (getItemViewType(toPosition) == JOIN_PLAN) {
+                    notifyItemMoved(fromPosition, toPosition)
+                    return false
+                }
 
                 if (fromPosition < toPosition) {
                     for (i in fromPosition until toPosition) {
