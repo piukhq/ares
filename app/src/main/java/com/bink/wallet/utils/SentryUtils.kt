@@ -6,7 +6,7 @@ import retrofit2.HttpException
 object SentryUtils {
 
     fun logError(sentryError: SentryErrorType, exception: Exception) {
-        var userInfo = exception.message
+        var userInfo: String? = null
 
         when (exception) {
             is HttpException -> {
