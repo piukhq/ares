@@ -10,9 +10,7 @@ object SentryUtils {
 
         when (exception) {
             is HttpException -> {
-                val errorBody = exception.response()?.errorBody()?.string()
-                val errorCode = exception.code()
-                userInfo = "$errorCode $errorBody"
+                userInfo = "Error code: ${exception.response()?.errorBody()?.string()} - Error Body: ${exception.code()}"
             }
         }
 

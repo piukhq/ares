@@ -91,7 +91,7 @@ class AddPaymentCardRepository(
                         )
                     } catch (exception: Exception) {
                         error.value = exception
-                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception)
+                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                     }
                 }
             }
