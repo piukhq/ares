@@ -5,7 +5,6 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -15,16 +14,12 @@ import com.bink.wallet.model.spreedly.SpreedlyPaymentCard
 import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.RELEASE_BUILD_TYPE
-import com.bink.wallet.utils.SecurityUtils
-import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import retrofit2.HttpException
 
 class AddPaymentCardRepository(
     private val apiService: ApiService,
@@ -94,14 +89,15 @@ class AddPaymentCardRepository(
                             error,
                             addCardRequestMade
                         )
-                    } catch (e: Exception) {
-                        error.value = e
+                    } catch (exception: Exception) {
+                        error.value = exception
+                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                     }
                 }
             }
         } else {
             encryptCardDetails(card, cardNumber)
-            doAddPaymentCard(card, mutableAddCard, error,addCardRequestMade)
+            doAddPaymentCard(card, mutableAddCard, error, addCardRequestMade)
         }
     }
 
@@ -144,8 +140,10 @@ class AddPaymentCardRepository(
                     val response = request.await()
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
-                } catch (e: Exception) {
-                    error.value = e
+                } catch (exception: Exception) {
+                    error.value = exception
+
+                    SentryUtils.logError(SentryErrorType.API_REJECTED, exception)
                 }
             }
         }
@@ -195,22 +193,32 @@ class AddPaymentCardRepository(
 
                     if (encryptedHash.isNotEmpty()) {
                         card.card.hash = encryptedHash
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_HASH.error)
                     }
 
                     if (encryptedMonth.isNotEmpty()) {
                         card.card.month = encryptedMonth
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_MONTH.error)
                     }
 
                     if (encryptedYear.isNotEmpty()) {
                         card.card.year = encryptedYear
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_YEAR.error)
                     }
 
                     if (encryptedFirstSix.isNotEmpty()) {
                         card.card.first_six_digits = encryptedFirstSix
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_FIRST_SIX.error)
                     }
 
                     if (encryptedLastFour.isNotEmpty()) {
                         card.card.last_four_digits = encryptedLastFour
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_LAST_FOUR.error)
                     }
                 }
             }
