@@ -29,7 +29,6 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNetworkDrivenErrorNonNull
 import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.setFocusChangeListenerForTextField
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
