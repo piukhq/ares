@@ -81,7 +81,7 @@ class AddPaymentCardRepository(
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
 
-                        encryptCardDetails(card, cardNumber)
+                        encryptCardDetails(card)
 
                         doAddPaymentCard(
                             card,
@@ -96,7 +96,7 @@ class AddPaymentCardRepository(
                 }
             }
         } else {
-            encryptCardDetails(card, cardNumber)
+            encryptCardDetails(card)
             doAddPaymentCard(card, mutableAddCard, error, addCardRequestMade)
         }
     }
@@ -149,24 +149,14 @@ class AddPaymentCardRepository(
         }
     }
 
-    private fun encryptCardDetails(card: PaymentCardAdd, cardNumber: String) {
+    private fun encryptCardDetails(card: PaymentCardAdd) {
         card.card.month?.let { safeMonth ->
             card.card.year?.let { safeYear ->
-                var paymentCardHash = SecurityUtils.getPaymentCardHash(
-                    cardNumber,
-                    safeMonth,
-                    safeYear
-                )
-
                 val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
                     LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
                 )
 
                 publicEncryptionKey?.let { safeKey ->
-                    val encryptedHash = SecurityUtils.encryptMessage(
-                        paymentCardHash,
-                        publicEncryptionKey
-                    )
                     val encryptedMonth =
                         SecurityUtils.encryptMessage(safeMonth, safeKey)
 
@@ -191,11 +181,6 @@ class AddPaymentCardRepository(
                         )
                     }
 
-                    if (encryptedHash.isNotEmpty()) {
-                        card.card.hash = encryptedHash
-                    } else {
-                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_HASH.error)
-                    }
 
                     if (encryptedMonth.isNotEmpty()) {
                         card.card.month = encryptedMonth
