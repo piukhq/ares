@@ -31,6 +31,12 @@ buildscript {
 }
 
 allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+
     apply plugin: 'org.owasp.dependencycheck'
 
     dependencyCheck {
@@ -38,14 +44,6 @@ allprojects {
         analyzers {
             experimentalEnabled=true
         }
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://jitpack.io' }
     }
 }
 
