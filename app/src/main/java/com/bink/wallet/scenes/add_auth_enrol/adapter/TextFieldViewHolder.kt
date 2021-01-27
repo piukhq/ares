@@ -378,6 +378,7 @@ class TextFieldViewHolder(
     private fun EditText.displayCustomKeyboard(commonName: String) {
         when (commonName) {
             SignUpFieldTypes.PASSWORD.common_name -> {
+                inputType = InputType.TYPE_CLASS_TEXT
                 transformationMethod = PasswordTransformationMethod()
             }
             SignUpFieldTypes.PHONE.common_name,

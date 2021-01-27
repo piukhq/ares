@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -32,6 +33,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
+import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -204,6 +206,13 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     if (it.text.isNotEmpty()) binding.emailField.isEndIconVisible = true
                     requireContext().validateEmail(null,binding.emailField)
                 }
+
+                it.setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        requireContext().validateEmail(null,binding.emailField)
+                    }
+                    false
+                }
             }
         }
 
@@ -211,6 +220,13 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             this.editText?.let {
                 it.setOnFocusChangeListener { _, _ ->
                     requireContext().validatePassword(null,binding.passwordField)
+                }
+
+                it.setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        validatePasswordAfterKeyboardExit(this)
+                    }
+                    false
                 }
             }
         }
@@ -270,5 +286,23 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                     }
             }
         }
+    }
+
+    private fun validatePasswordAfterKeyboardExit(textInputLayout: TextInputLayout){
+        textInputLayout.editText?.let {
+            if ((!it.text.isNullOrEmpty() &&
+                        !UtilFunctions.isValidField(
+                            PASSWORD_REGEX,
+                            it.text.toString()
+                        )) || (it.text.isNullOrEmpty())
+            ) {
+                textInputLayout.error =
+                    getString(R.string.password_description)
+            } else {
+                textInputLayout.error = null
+                textInputLayout.isErrorEnabled = false
+            }
+        }
+
     }
 }

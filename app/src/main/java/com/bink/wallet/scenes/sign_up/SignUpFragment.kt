@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -35,7 +37,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
@@ -257,16 +258,16 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         binding.confirmPasswordField.editText?.let {
             it.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus){
-                    if ((it.text.isNotEmpty()) || (it.text.isEmpty())) {
-                        binding.confirmPasswordField.error =
-                            if (it.text.toString() != viewModel.password.value) {
-                                getString(R.string.password_not_match)
-                            } else {
-                                null
-                            }
-                    }
+                    validateConfirmPassword(it)
                 }
 
+            }
+
+            it.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    validateConfirmPassword(it)
+                }
+                false
             }
         }
 
@@ -310,6 +311,17 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                         null
                     }
             }
+        }
+    }
+
+    private fun validateConfirmPassword(it:EditText){
+        if ((it.text.isNotEmpty()) || (it.text.isEmpty())) {
+            binding.confirmPasswordField.error =
+                if (it.text.toString() != viewModel.password.value) {
+                    getString(R.string.password_not_match)
+                } else {
+                    null
+                }
         }
     }
 
