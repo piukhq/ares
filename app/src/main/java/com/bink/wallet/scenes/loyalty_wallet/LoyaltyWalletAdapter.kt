@@ -20,10 +20,13 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.utils.ColorUtil
 import com.bink.wallet.utils.VOUCHER_EARN_TYPE_STAMPS
+import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.bindings.setVoucherCollectedProgress
 import com.bink.wallet.utils.displayVoucherEarnAndTarget
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -151,6 +154,31 @@ class LoyaltyWalletAdapter(
         diff.dispatchUpdatesTo(this)
     }
 
+    fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
+        fromPosition?.let {
+            toPosition?.let {
+                if (getItemViewType(toPosition) == JOIN_PLAN) {
+                    notifyItemMoved(fromPosition, toPosition)
+                    return false
+                }
+
+                if (fromPosition < toPosition) {
+                    for (i in fromPosition until toPosition) {
+                        Collections.swap(membershipCards, i, i + 1)
+                    }
+                } else {
+                    for (i in fromPosition downTo toPosition + 1) {
+                        Collections.swap(membershipCards, i, i - 1)
+                    }
+                }
+                notifyItemMoved(fromPosition, toPosition)
+                WalletOrderingUtil.setSavedLoyaltyCardWallet(membershipCards)
+                return true
+            }
+        }
+        return false
+    }
+
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
         BaseViewHolder<Any>(binding) {
 
@@ -178,8 +206,8 @@ class LoyaltyWalletAdapter(
                         bindCardToLoyaltyItem(loyaltyItem, binding)
                     }
 
-                    membershipPlan.card?.let {  membershipPlanCard ->
-                        item.card?.let { 
+                    membershipPlan.card?.let { membershipPlanCard ->
+                        item.card?.let {
                             it.secondary_colour = membershipPlanCard.secondary_colour
                         }
                     }
