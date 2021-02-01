@@ -180,6 +180,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
 
         }
+
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            val hasMultipleCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>().size > 1
+            return Callback.makeMovementFlags(if(hasMultipleCards) UP + DOWN else 0, LEFT + RIGHT)
+        }
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
