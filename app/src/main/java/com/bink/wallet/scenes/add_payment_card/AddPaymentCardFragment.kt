@@ -13,19 +13,11 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.AddPaymentCardFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.payment_card.BankCard
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.cardStarFormatter
-import com.bink.wallet.utils.cardValidation
-import com.bink.wallet.utils.dateValidation
 import com.bink.wallet.utils.enums.PaymentCardType
-import com.bink.wallet.utils.formatDate
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.numberSanitize
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.presentedCardType
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

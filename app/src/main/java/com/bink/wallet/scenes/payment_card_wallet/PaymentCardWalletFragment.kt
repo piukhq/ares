@@ -138,6 +138,11 @@ class PaymentCardWalletFragment :
             }
 
         }
+
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            val hasMultipleCards = walletAdapter.paymentCards.size > 1
+            return ItemTouchHelper.Callback.makeMovementFlags(if (hasMultipleCards) ItemTouchHelper.UP + ItemTouchHelper.DOWN else 0, ItemTouchHelper.LEFT + ItemTouchHelper.RIGHT)
+        }
     }
 
 
