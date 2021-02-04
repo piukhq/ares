@@ -31,7 +31,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.lang.reflect.Type
 import java.util.*
 
 
@@ -114,7 +113,7 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let {
             LoyaltyDetailsTilesAdapter(it) { image ->
-                if(!image.cta_url.isNullOrEmpty()){
+                if (!image.cta_url.isNullOrEmpty()) {
                     findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
 
                 }
@@ -790,6 +789,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE -> {
+
                     viewModel.membershipPlan.value?.let { membershipPlan ->
                         val hasCorrectCardType = membershipPlan.feature_set?.card_type == 2
                         val hasTransactions =
@@ -807,7 +807,7 @@ class LoyaltyCardDetailsFragment :
 
                             findNavController().navigateIfAdded(this, action, currentDestination)
                         } else {
-                            viewAboutInformation()
+                            displayVouchersNotSupported()
                         }
                     }
                 }
@@ -836,28 +836,7 @@ class LoyaltyCardDetailsFragment :
                     pendingCardStatusModal()
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    viewModel.membershipPlan.value?.let {
-                        genericModalParameters = GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            getString(R.string.title_1_5),
-                            getString(R.string.description_1_5_part_1, it.account?.plan_name),
-                            "",
-                            "",
-                            "",
-                            getString(R.string.description_1_5_part_2)
-                        )
-                        val action =
-                            genericModalParameters.let { params ->
-                                LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                    params
-                                )
-                            }
-                        action.let {
-                            findNavController().navigateIfAdded(this, action, currentDestination)
-
-                        }
-                    }
+                    displayVouchersNotSupported()
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_CARD_ALREADY_EXISTS,
@@ -930,6 +909,31 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
+    private fun displayVouchersNotSupported() {
+        val genericModalParameters: GenericModalParameters?
+        viewModel.membershipPlan.value?.let {
+            genericModalParameters = GenericModalParameters(
+                R.drawable.ic_close,
+                true,
+                getString(R.string.title_1_5),
+                getString(R.string.description_1_5_part_1, it.account?.plan_name),
+                "",
+                "",
+                "",
+                getString(R.string.description_1_5_part_2)
+            )
+            val action =
+                genericModalParameters.let { params ->
+                    LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                        params
+                    )
+                }
+            action.let {
+                findNavController().navigateIfAdded(this, action, currentDestination)
+            }
+        }
+    }
+
     private fun getAlphaForActionBar(scrollY: Int): Int {
         return when {
             scrollY > MAX_DIST -> MAX_ALPHA.toInt()
@@ -953,7 +957,7 @@ class LoyaltyCardDetailsFragment :
                     }
                 }
             }
-            
+
         }
     }
 
