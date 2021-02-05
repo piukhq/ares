@@ -2,7 +2,10 @@ package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.webkit.WebView
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -14,11 +17,13 @@ import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import zendesk.support.requestlist.RequestListActivity
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
     override val layoutRes: Int
@@ -99,7 +104,45 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             DebugItemType.FORCE_CRASH -> {
                 throw RuntimeException()
             }
+            DebugItemType.TESCO_LPS -> {
+                launchTescoLPSDialog()
+            }
         }
+    }
+    private fun launchTescoLPSDialog(){
+        val dialog: androidx.appcompat.app.AlertDialog
+        context?.let { context ->
+            val builder = androidx.appcompat.app.AlertDialog.Builder(context)
+            builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
+            val container = layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
+            val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
+            val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
+            builder.setView(container)
+                .setPositiveButton(
+                    "Okay", null
+                )
+                .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+            dialog = builder.create()
+            dialog.show()
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener {
+                    if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+                        launchTescoLPS(etFirstName.text.toString(),
+                            etSecondName.text.toString())
+
+                        dialog.dismiss()
+                    }
+                }
+        }
+    }
+
+    private fun launchTescoLPS(email: String, password: String){
+        Log.d("TescoLPS", "Email: $email, Password: $password")
+
+        val webview = WebView(context)
+        webview.loadUrl("https://www.tesco.co.uk")
     }
 
     private fun displayVersionPicker() {
