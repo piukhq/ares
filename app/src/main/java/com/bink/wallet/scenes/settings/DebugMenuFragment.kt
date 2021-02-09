@@ -1,10 +1,15 @@
 package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,13 +22,12 @@ import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
-import com.bink.wallet.model.auth.User
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import zendesk.support.requestlist.RequestListActivity
+
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
     override val layoutRes: Int
@@ -109,7 +113,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             }
         }
     }
-    private fun launchTescoLPSDialog(){
+
+    private fun launchTescoLPSDialog() {
         val dialog: androidx.appcompat.app.AlertDialog
         context?.let { context ->
             val builder = androidx.appcompat.app.AlertDialog.Builder(context)
@@ -129,8 +134,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener {
                     if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                        launchTescoLPS(etFirstName.text.toString(),
-                            etSecondName.text.toString())
+                        launchTescoLPS(
+                            etFirstName.text.toString(),
+                            etSecondName.text.toString()
+                        )
 
                         dialog.dismiss()
                     }
@@ -138,11 +145,50 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         }
     }
 
-    private fun launchTescoLPS(email: String, password: String){
+    private fun launchTescoLPS(email: String, password: String) {
         Log.d("TescoLPS", "Email: $email, Password: $password")
 
         val webview = WebView(context)
-        webview.loadUrl("https://www.tesco.co.uk")
+        //binding.applyChanges.visibility = View.GONE
+        webview.visibility = View.GONE
+        binding.parent.addView(webview)
+
+        webview.settings.apply {
+            Log.d("TescoLPS", "settings.apply")
+            javaScriptEnabled = true
+            domStorageEnabled = true
+        }
+
+        webview.webViewClient = object : WebViewClient() {
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                Log.d("TescoLPS", "onPageStarted $url")
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+
+                webview.evaluateJavascript("javascript:document.getElementById('username').value = '$email';", null)
+                webview.evaluateJavascript("javascript:document.getElementById('password').value = '$password';", null)
+                Handler().postDelayed({
+                    //Need to delay these actions, otherwise Tesco will fail 'security checks'
+                    webview.evaluateJavascript("javascript:document.getElementsByClassName('ui-component__button')[0].click();", null)
+                    webview.evaluateJavascript("javascript:(function scrape() { return document.getElementById('currentPoints').innerHTML } )()") {
+                        Log.d("TescoLPS", "Points: $it")
+                    }
+                }, 250)
+                
+                Log.d("TescoLPS", "onPageFinished $url")
+            }
+
+            override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+                super.onReceivedError(view, request, error)
+                Log.d("TescoLPS", "onReceivedError ${error.description}")
+            }
+        }
+
+        webview.loadUrl("https://secure.tesco.com/Clubcard/MyAccount/home/Home")
     }
 
     private fun displayVersionPicker() {
