@@ -9,7 +9,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-object WalletOrderingUtil {
+object  WalletOrderingUtil {
 
     fun getSavedPaymentCardWallet(paymentCards: ArrayList<Any>): ArrayList<Any> {
         val rearrangedCards = ArrayList<Any>()

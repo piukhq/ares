@@ -1,13 +1,10 @@
 package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
@@ -22,10 +19,14 @@ import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
+import com.bink.wallet.model.PointScrapeResponse
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.gson.Gson
+import com.google.gson.JsonParseException
+import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -118,77 +119,100 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         val dialog: androidx.appcompat.app.AlertDialog
         context?.let { context ->
             val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-            builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
-            val container = layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
-            val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
-            val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
-            builder.setView(container)
-                .setPositiveButton(
-                    "Okay", null
-                )
-                .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
-                    dialog.cancel()
-                }
-            dialog = builder.create()
-            dialog.show()
-            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
-                .setOnClickListener {
-                    if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                        launchTescoLPS(
-                            etFirstName.text.toString(),
-                            etSecondName.text.toString()
-                        )
+            builder.setTitle("Enter Tesco Credentials")
+            val container = layoutInflater.inflate(R.layout.layout_lps_login, null)
+            val etFirstName = container.findViewById<EditText>(R.id.et_email)
+            val etSecondName = container.findViewById<EditText>(R.id.et_password)
 
-                        dialog.dismiss()
-                    }
+            builder.setView(container).setPositiveButton("Okay", null)
+            dialog = builder.create()
+
+            dialog.show()
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+                    launchTescoLPS(etFirstName.text.toString(), etSecondName.text.toString())
+                    dialog.dismiss()
                 }
+            }
         }
+    }
+
+    private fun launchDialog(message: String) {
+        AlertDialog.Builder(context)
+            .setTitle("Tesco LPS")
+            .setMessage(message)
+            .setPositiveButton("Okay", null)
+            .show()
     }
 
     private fun launchTescoLPS(email: String, password: String) {
         Log.d("TescoLPS", "Email: $email, Password: $password")
 
         val webview = WebView(context)
-        //binding.applyChanges.visibility = View.GONE
         webview.visibility = View.GONE
         binding.parent.addView(webview)
 
         webview.settings.apply {
-            Log.d("TescoLPS", "settings.apply")
             javaScriptEnabled = true
             domStorageEnabled = true
         }
 
         webview.webViewClient = object : WebViewClient() {
-
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                Log.d("TescoLPS", "onPageStarted $url")
-            }
-
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                webview.evaluateJavascript("javascript:document.getElementById('username').value = '$email';", null)
-                webview.evaluateJavascript("javascript:document.getElementById('password').value = '$password';", null)
-                Handler().postDelayed({
-                    //Need to delay these actions, otherwise Tesco will fail 'security checks'
-                    webview.evaluateJavascript("javascript:document.getElementsByClassName('ui-component__button')[0].click();", null)
-                    webview.evaluateJavascript("javascript:(function scrape() { return document.getElementById('currentPoints').innerHTML } )()") {
-                        Log.d("TescoLPS", "Points: $it")
+                val jsString = when (url) {
+                    "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home" -> {
+                        val javascriptClass = readFileText("lps_tesco_login.txt")
+                        val replacedEmail = javascriptClass.replaceFirst("%@", email)
+                        val replacedPassword = replacedEmail.replaceFirst("%@", password)
+                        replacedPassword
                     }
-                }, 250)
-                
-                Log.d("TescoLPS", "onPageFinished $url")
-            }
+                    "https://secure.tesco.com/Clubcard/MyAccount/home/Home" -> readFileText("lps_tesco_scrape.txt")
+                    else -> null
+                }
 
-            override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                super.onReceivedError(view, request, error)
-                Log.d("TescoLPS", "onReceivedError ${error.description}")
+                jsString?.let { js ->
+                    Handler().postDelayed({
+                        webview.evaluateJavascript(js) { response ->
+                            Log.d("TescoLPS", "Response $response")
+                            var pointScrapeResponse: PointScrapeResponse
+                            try {
+                                pointScrapeResponse = Gson().fromJson(response, object : TypeToken<PointScrapeResponse?>() {}.type)
+                                if (pointScrapeResponse.success) {
+                                    pointScrapeResponse.points?.let { points ->
+                                        Log.d("TescoLPS", "points $points")
+                                        launchDialog("$email has $points points")
+                                    }
+                                } else {
+                                    pointScrapeResponse.error_message?.let { error ->
+                                        Log.d("TescoLPS", "error_message $error")
+                                        launchDialog(error)
+                                    }
+                                }
+                            } catch (e: JsonParseException) {
+                                Log.d("TescoLPS", "JsonParseException ${e.localizedMessage}")
+                                launchDialog("JsonParseException ${e.localizedMessage}")
+                            }
+                        }
+                    }, 250)
+                }
+
+                Log.d("TescoLPS", "onPageFinished $url")
             }
         }
 
-        webview.loadUrl("https://secure.tesco.com/Clubcard/MyAccount/home/Home")
+        webview.loadUrl("https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home")
+    }
+
+    fun readFileText(fileName: String): String {
+        return try {
+            context?.assets?.open(fileName)?.bufferedReader().use {
+                it?.readText() ?: "JS Error"
+            }
+        } catch (e: Exception) {
+            e.localizedMessage ?: ""
+        }
     }
 
     private fun displayVersionPicker() {
