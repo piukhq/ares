@@ -2,11 +2,7 @@ package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,14 +15,10 @@ import com.bink.wallet.databinding.FragmentDebugMenuBinding
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
-import com.bink.wallet.model.PointScrapeResponse
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.gson.Gson
-import com.google.gson.JsonParseException
-import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -130,88 +122,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             dialog.show()
             dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    launchTescoLPS(etFirstName.text.toString(), etSecondName.text.toString())
+                    PointScrapingUtil.performScrape(context, PointScrapeSite.TESCO, binding.parent, etFirstName.text.toString(), etSecondName.text.toString())
                     dialog.dismiss()
                 }
             }
-        }
-    }
-
-    private fun launchDialog(message: String) {
-        AlertDialog.Builder(context)
-            .setTitle("Tesco LPS")
-            .setMessage(message)
-            .setPositiveButton("Okay", null)
-            .show()
-    }
-
-    private fun launchTescoLPS(email: String, password: String) {
-        Log.d("TescoLPS", "Email: $email, Password: $password")
-
-        val webview = WebView(context)
-        webview.visibility = View.GONE
-        binding.parent.addView(webview)
-
-        webview.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-        }
-
-        webview.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-
-                val jsString = when (url) {
-                    "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home" -> {
-                        val javascriptClass = readFileText("lps_tesco_login.txt")
-                        val replacedEmail = javascriptClass.replaceFirst("%@", email)
-                        val replacedPassword = replacedEmail.replaceFirst("%@", password)
-                        replacedPassword
-                    }
-                    "https://secure.tesco.com/Clubcard/MyAccount/home/Home" -> readFileText("lps_tesco_scrape.txt")
-                    else -> null
-                }
-
-                jsString?.let { js ->
-                    Handler().postDelayed({
-                        webview.evaluateJavascript(js) { response ->
-                            Log.d("TescoLPS", "Response $response")
-                            var pointScrapeResponse: PointScrapeResponse
-                            try {
-                                pointScrapeResponse = Gson().fromJson(response, object : TypeToken<PointScrapeResponse?>() {}.type)
-                                if (pointScrapeResponse.success) {
-                                    pointScrapeResponse.points?.let { points ->
-                                        Log.d("TescoLPS", "points $points")
-                                        launchDialog("$email has $points points")
-                                    }
-                                } else {
-                                    pointScrapeResponse.error_message?.let { error ->
-                                        Log.d("TescoLPS", "error_message $error")
-                                        launchDialog(error)
-                                    }
-                                }
-                            } catch (e: JsonParseException) {
-                                Log.d("TescoLPS", "JsonParseException ${e.localizedMessage}")
-                                launchDialog("JsonParseException ${e.localizedMessage}")
-                            }
-                        }
-                    }, 250)
-                }
-
-                Log.d("TescoLPS", "onPageFinished $url")
-            }
-        }
-
-        webview.loadUrl("https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home")
-    }
-
-    fun readFileText(fileName: String): String {
-        return try {
-            context?.assets?.open(fileName)?.bufferedReader().use {
-                it?.readText() ?: "JS Error"
-            }
-        } catch (e: Exception) {
-            e.localizedMessage ?: ""
         }
     }
 
