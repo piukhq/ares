@@ -2,7 +2,11 @@ package com.bink.wallet.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Handler
+import android.util.Log
 import android.view.View
+import android.webkit.CookieManager
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,7 +14,9 @@ import com.bink.wallet.model.PointScrapeResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-object PointScrapingUtil {
+class PointScrapingUtil {
+
+    private var lastSeenURL: String? = null
 
     fun performScrape(context: Context, pointScrapeSite: PointScrapeSite, parentView: ConstraintLayout, email: String, password: String) {
         /**
@@ -21,7 +27,7 @@ object PointScrapingUtil {
             visibility = View.GONE
             settings.apply {
                 javaScriptEnabled = true
-                domStorageEnabled = true
+                cacheMode = WebSettings.LOAD_NO_CACHE
             }
         }
 
@@ -31,11 +37,19 @@ object PointScrapingUtil {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                getJavascript(context, url, pointScrapeSite, email, password).let { js ->
-                    webView.evaluateJavascript(js) { response ->
-                        processResponse(context, response)
-                    }
+                //In the case of Tesco, it re-directs you to the login address before signing you in, there for this check stops the first login script from running again
+                if (!lastSeenURL.equals(url)) {
+                    Handler().postDelayed({
+                        getJavascript(context, url, pointScrapeSite, email, password).let { js ->
+                            webView.evaluateJavascript(js) { response ->
+                                processResponse(context, response)
+                            }
+                        }
+                    }, 1000)
+
                 }
+
+                lastSeenURL = url
             }
         }
 

@@ -122,7 +122,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             dialog.show()
             dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    PointScrapingUtil.performScrape(context, PointScrapeSite.TESCO, binding.parent, etFirstName.text.toString(), etSecondName.text.toString())
+                    PointScrapingUtil().performScrape(context, PointScrapeSite.TESCO, binding.parent, etFirstName.text.toString(), etSecondName.text.toString())
                     dialog.dismiss()
                 }
             }
