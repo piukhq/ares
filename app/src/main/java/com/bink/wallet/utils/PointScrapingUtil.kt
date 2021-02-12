@@ -3,9 +3,7 @@ package com.bink.wallet.utils
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import android.view.View
-import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
