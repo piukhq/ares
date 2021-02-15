@@ -42,7 +42,7 @@ payload = """ {
     "themeColor": "0076D7",
     "summary": "Vulnerability Report",
     "sections": [{
-        "activityTitle": "^-^ Bunk the DependencyBot ^-^",
+        "activityTitle": "^-^ Bunk the VulnerabilityBot ^-^",
         "activitySubtitle": "Android Report",
         "facts": [{
             "name": "Dependencies Scanned",

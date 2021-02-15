@@ -38,6 +38,13 @@ files = {
 print('== MobSF 2/3 == \nScan Starting')
 time.sleep(5)
 r = requests.post(url, data=files, headers=headers, auth=(mobsfUser, mobsfPass))
+
+##"average_cvss": 6.9,
+    ##"security_score": 50
+json = r.json()
+cvss = json.get('average_cvss')
+score = json.get('security_score')
+
 print('Scan Complete - ', r.status_code)
 
 url = 'https://mobsf.uksouth.bink.sh/api/v1/download_pdf'
@@ -51,6 +58,50 @@ if r:
     with open(mobsfDest + '/report.pdf', 'wb') as f:
         print('Report Saved')
         f.write(r.content)
+        webhook = os.environ.get('MOBILE_TEAMS_WEBHOOK') 
+        url = os.environ.get('BITRISE_BUILD_URL') + '?tab=artifacts'
+
+        payload = """ {
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "themeColor": "0076D7",
+            "summary": "Static Analysis Report",
+            "sections": [{
+                "activityTitle": "^-^ Bunk the VulnerabilityBot ^-^",
+                "activitySubtitle": "SAST Android Report",
+                "markdown": true,
+            }, 
+            {
+                "activityTitle": "Static Analysis Report",
+                "activityText": "MobSF has processed a Static Analysis report of the APK.",
+                "facts": [{
+                    "name": "Average CVSS",
+                    "value": "%s",
+                }, {
+                    "name": "Security Score",
+                    "value": "%s",
+                }],
+             }, {
+                "text": "NOTE: When selecting See Report, you need to navigate to <b>Apps and Artifacts</b> and open the report.pdf file.",
+            }
+            ],
+        "potentialAction": [{
+            "@type": "OpenUri",
+            "name": "See Report",
+            "targets": [{
+                "os": "default",
+                "uri": "%s"
+            }]
+         }]
+        }
+        """ % (cvss, score, url)
+
+print(payload)
+
+headers = {'content-type': 'application/json'}
+r = requests.post(webhook, data=payload, headers=headers)
+print(r.json)
+    print(r.raw)
 else:
     print('An error has occurred.')
     exit(1)
