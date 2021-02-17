@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -19,6 +20,7 @@ import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
     override val layoutRes: Int
@@ -98,6 +100,31 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             }
             DebugItemType.FORCE_CRASH -> {
                 throw RuntimeException()
+            }
+            DebugItemType.TESCO_LPS -> {
+                launchTescoLPSDialog()
+            }
+        }
+    }
+
+    private fun launchTescoLPSDialog() {
+        val dialog: androidx.appcompat.app.AlertDialog
+        context?.let { context ->
+            val builder = androidx.appcompat.app.AlertDialog.Builder(context)
+            builder.setTitle("Enter Tesco Credentials")
+            val container = layoutInflater.inflate(R.layout.layout_lps_login, null)
+            val etFirstName = container.findViewById<EditText>(R.id.et_email)
+            val etSecondName = container.findViewById<EditText>(R.id.et_password)
+
+            builder.setView(container).setPositiveButton("Okay", null)
+            dialog = builder.create()
+
+            dialog.show()
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+                    PointScrapingUtil().performScrape(context, PointScrapeSite.TESCO, binding.parent, etFirstName.text.toString(), etSecondName.text.toString())
+                    dialog.dismiss()
+                }
             }
         }
     }

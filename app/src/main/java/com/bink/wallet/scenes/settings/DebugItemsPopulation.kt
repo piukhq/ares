@@ -55,6 +55,14 @@ object DebugItemsPopulation {
                 DebugItemType.FORCE_CRASH
             )
         )
+
+        itemsList.add(
+            DebugItem(
+                "Tesco LPS",
+                "Ask's user for their Tesco login",
+                DebugItemType.TESCO_LPS
+            )
+        )
         return itemsList
     }
 
