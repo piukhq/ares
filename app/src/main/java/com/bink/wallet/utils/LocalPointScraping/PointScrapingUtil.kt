@@ -1,4 +1,4 @@
-package com.bink.wallet.utils
+package com.bink.wallet.utils.LocalPointScraping
 
 import android.app.AlertDialog
 import android.content.Context
