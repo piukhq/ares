@@ -39,11 +39,9 @@ print('== MobSF 2/3 == \nScan Starting')
 time.sleep(5)
 r = requests.post(url, data=files, headers=headers, auth=(mobsfUser, mobsfPass))
 
-##"average_cvss": 6.9,
-    ##"security_score": 50
 json = r.json()
-cvss = json.get('average_cvss')
-score = json.get('security_score')
+cvss = json.get('average_cvss'[, 0.0])
+score = json.get('security_score'[, 0.0])
 
 print('Scan Complete - ', r.status_code)
 
@@ -100,8 +98,9 @@ print(payload)
 
 headers = {'content-type': 'application/json'}
 r = requests.post(webhook, data=payload, headers=headers)
-print(r.json)
+if r:
     print(r.raw)
 else:
     print('An error has occurred.')
     exit(1)
+
