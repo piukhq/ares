@@ -57,7 +57,7 @@ if r:
         print('Report Saved')
         f.write(r.content)
         webhook = os.environ.get('MOBILE_TEAMS_WEBHOOK') 
-        url = os.environ.get('BITRISE_BUILD_URL') + '?tab=artifacts'
+        url = os.environ.get('BITRISE_BUILD_URL') + '#?tab=artifacts'
 
         payload = """ {
             "@type": "MessageCard",
@@ -99,8 +99,8 @@ print(payload)
 headers = {'content-type': 'application/json'}
 r = requests.post(webhook, data=payload, headers=headers)
 if r:
-    print(r.raw)
+    print('Success - Teams notification sent. SAST Process Complete.')
 else:
-    print('An error has occurred.')
+    print('Error - Could not send Teams notification. An error has occurred.')
     exit(1)
 
