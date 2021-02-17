@@ -1,11 +1,7 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.MainViewModel
-import com.bink.wallet.data.BannersDisplayDao
-import com.bink.wallet.data.BinkDatabase
-import com.bink.wallet.data.MembershipCardDao
-import com.bink.wallet.data.MembershipPlanDao
-import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.data.*
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
@@ -50,6 +46,8 @@ import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
 import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
+import com.bink.wallet.utils.LocalPointScraping.WebScrapeRepository
+import com.bink.wallet.utils.LocalPointScraping.WebScrapeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -81,7 +79,7 @@ val viewModelModules = module {
 
     viewModel { BarcodeViewModel() }
 
-    viewModel { AddViewModel(get(),get()) }
+    viewModel { AddViewModel(get(), get()) }
 
     viewModel { AddJoinViewModel(get()) }
 
@@ -117,7 +115,7 @@ val viewModelModules = module {
 
     viewModel { PaymentCardWalletViewModel(get(), get(), get()) }
 
-    viewModel { PaymentCardsDetailsViewModel(get(), get(),get(),get()) }
+    viewModel { PaymentCardsDetailsViewModel(get(), get(), get(), get()) }
 
     viewModel { BaseModalViewModel() }
 
@@ -158,6 +156,12 @@ val viewModelModules = module {
     viewModel { MainViewModel(get()) }
 
     viewModel { SplashViewModel(get(), get()) }
+
+    single {
+        provideWebScrapeRepository(get())
+    }
+
+    viewModel { WebScrapeViewModel(get()) }
 }
 
 fun provideZendeskRepository() = ZendeskRepository()
@@ -197,7 +201,7 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao
-): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao,membershipCardDao)
+): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao, membershipCardDao)
 
 fun provideUserRepository(
     restApiService: ApiService
@@ -217,3 +221,5 @@ fun provideAddPaymentCardRepository(
         membershipCardDao,
         membershipPlanDao
     )
+
+fun provideWebScrapeRepository(webScrapeDao: WebScrapeDao): WebScrapeRepository = WebScrapeRepository(webScrapeDao)

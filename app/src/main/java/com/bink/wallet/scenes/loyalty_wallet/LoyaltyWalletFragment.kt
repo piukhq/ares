@@ -32,6 +32,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -183,7 +184,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             val hasMultipleCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>().size > 1
-            return Callback.makeMovementFlags(if(hasMultipleCards) UP + DOWN else 0, LEFT + RIGHT)
+            return Callback.makeMovementFlags(if (hasMultipleCards) UP + DOWN else 0, LEFT + RIGHT)
         }
     })
 
@@ -305,6 +306,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 )
             }
         }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

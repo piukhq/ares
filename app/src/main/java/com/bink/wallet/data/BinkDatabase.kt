@@ -8,10 +8,11 @@ import com.bink.wallet.model.LoginData
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.LocalPointScraping.WebScrapeCredentials
 
 @Database(
-    entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class],
-    version = 20,
+    entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class, WebScrapeCredentials::class],
+    version = 21,
     exportSchema = false
 )
 @TypeConverters(
@@ -26,4 +27,5 @@ abstract class BinkDatabase : RoomDatabase() {
     abstract fun paymentCardDao(): PaymentCardDao
     abstract fun loginDataDao(): LoginDataDao
     abstract fun bannersDisplayDao(): BannersDisplayDao
+    abstract fun webScrapeDao(): WebScrapeDao
 }
