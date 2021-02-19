@@ -44,6 +44,28 @@ allprojects {
         analyzers {
             experimentalEnabled=true
         }
+        skipTestGroups=true
+        skipConfigurations = [
+                'kaptAndroidTestDebug',
+                'kaptTest',
+                'kaptAndroidTest',
+                'kaptTestRelease',
+                'kaptTestDebug',
+                'kaptTestNightly',
+                'kaptTestBeta',
+                'kaptTestMr',
+                'kaptTestExternal',
+                'kaptTestGamma',
+                'kaptAndroidTestDebug',
+                '_classStructurekaptGammaUnitTestKotlin',
+                '_classStructurekaptExternalUnitTestKotlin',
+                '_classStructurekaptNightlyUnitTestKotlin',
+                '_classStructurekaptDebugUnitTestKotlin',
+                '_classStructurekaptMrUnitTestKotlin',
+                '_classStructurekaptBetaUnitTestKotlin',
+                '_classStructurekaptReleaseUnitTestKotlin',
+                'lintClassPath',
+        ]
     }
 }
 
