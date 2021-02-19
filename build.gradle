@@ -45,6 +45,7 @@ allprojects {
             experimentalEnabled=true
         }
         skipTestGroups=true
+        failBuildOnCVSS=7
         skipConfigurations = [
                 'kaptAndroidTestDebug',
                 'kaptTest',
