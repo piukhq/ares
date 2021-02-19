@@ -1,5 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
+import android.content.Context
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,14 +16,9 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.observeNonNull
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class LoyaltyViewModel constructor(
     private val loyaltyWalletRepository: LoyaltyWalletRepository,
@@ -153,8 +150,7 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchMembershipPlans(fromPersistence: Boolean) {
-        val handler = CoroutineExceptionHandler {
-                _, _ -> //Exception handler to prevent app crash
+        val handler = CoroutineExceptionHandler { _, _ -> //Exception handler to prevent app crash
 
         }
         scope.launch(handler) {
@@ -167,12 +163,12 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchLocalMembershipCards() {
-            loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
+        loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
     }
 
-    fun fetchMembershipCardsAndPlansForRefresh() {
-        val handler = CoroutineExceptionHandler {
-                _, _ -> _isLoading.value = false
+    fun fetchMembershipCardsAndPlansForRefresh(context: Context?, parentView: ConstraintLayout) {
+        val handler = CoroutineExceptionHandler { _, _ ->
+            _isLoading.value = false
 
         }
         /**
@@ -185,6 +181,7 @@ class LoyaltyViewModel constructor(
          **/
         scope.launch(handler) {
             _isLoading.value = true
+
             try {
                 val membershipCardsAndPlans = withContext(Dispatchers.IO) {
                     loyaltyWalletRepository.retrieveMembershipCardsAndPlans()
@@ -192,6 +189,11 @@ class LoyaltyViewModel constructor(
 
                 membershipPlanData.value = membershipCardsAndPlans.membershipPlans
                 membershipCardData.value = membershipCardsAndPlans.membershipCards
+
+                //user has forced a refresh, if card is a scrapable card, get balance.
+                //Figure out how to call tryScrapeCards with context
+
+                membershipCardsAndPlans.membershipCards?.let { WebScrapableManager.tryScrapeCards(it, context, parentView) }
 
                 _isLoading.value = false
 

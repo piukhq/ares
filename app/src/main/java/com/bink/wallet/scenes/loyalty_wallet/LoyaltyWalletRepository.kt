@@ -1,11 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import androidx.lifecycle.MutableLiveData
-import com.bink.wallet.data.BannersDisplayDao
-import com.bink.wallet.data.MembershipCardDao
-import com.bink.wallet.data.MembershipPlanDao
-import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.data.*
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -15,14 +11,11 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.generateUuidForMembershipCards
+import com.bink.wallet.utils.logDebug
+import kotlinx.coroutines.*
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,

@@ -267,7 +267,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh()
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context, binding.parent)
             } else {
                 isRefresh = false
                 disableIndicators()
