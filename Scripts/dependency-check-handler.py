@@ -4,12 +4,13 @@ import os
 
 location = os.environ.get('BITRISE_SOURCE_DIR')
 url = os.environ.get('BITRISE_BUILD_URL')
-webhook = os.environ.get('MOBILE_TEAMS_WEBHOOK') 
+webhook = os.environ.get('MOBILE_TEAMS_WEBHOOK')
+pipename = os.environ.get('CI_PIPELINE_NAME') + " Pipeline"
 
 print(location)
 print(url)
 
-with open(location + '/build/reports/dependency-check-report.json') as f:
+with open(location + '/app/build/reports/dependency-check-report.json') as f:
     data = json.load(f)
 
 deps = data['dependencies']
@@ -54,7 +55,8 @@ payload = """ {
         "markdown": true
     }, 
     {
-        "activityTitle": "Result",
+        "activityTitle": "%s",
+        "activitySubtitle": "Result",
         "activityText": "<pre>%s</pre>",
         "text": "NOTE: When selecting See Report, you need to navigate to <b>Apps and Artifacts</b> to see the HTML report in detail.",
     }
@@ -68,7 +70,7 @@ payload = """ {
         }]
     }]
 }
-""" % (depsScannedCount, str(totalVulnsCount), vulnsFound, url)
+""" % (depsScannedCount, str(totalVulnsCount), pipename, vulnsFound, url)
 
 print(payload)
 
