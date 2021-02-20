@@ -3,7 +3,7 @@
 buildscript {
     ext.kotlin_version = '1.3.50'
     ext.room_version = '2.3.0-alpha02'
-    ext.bouncyCastleVersion = '1.56'
+    ext.bouncyCastleVersion = '1.60'
     repositories {
         google()
         jcenter()
@@ -44,6 +44,29 @@ allprojects {
         analyzers {
             experimentalEnabled=true
         }
+        skipTestGroups=true
+        failBuildOnCVSS=9
+        skipConfigurations = [
+                'kaptAndroidTestDebug',
+                'kaptTest',
+                'kaptAndroidTest',
+                'kaptTestRelease',
+                'kaptTestDebug',
+                'kaptTestNightly',
+                'kaptTestBeta',
+                'kaptTestMr',
+                'kaptTestExternal',
+                'kaptTestGamma',
+                'kaptAndroidTestDebug',
+                '_classStructurekaptGammaUnitTestKotlin',
+                '_classStructurekaptExternalUnitTestKotlin',
+                '_classStructurekaptNightlyUnitTestKotlin',
+                '_classStructurekaptDebugUnitTestKotlin',
+                '_classStructurekaptMrUnitTestKotlin',
+                '_classStructurekaptBetaUnitTestKotlin',
+                '_classStructurekaptReleaseUnitTestKotlin',
+                'lintClassPath',
+        ]
     }
 }
 
