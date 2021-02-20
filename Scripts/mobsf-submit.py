@@ -40,8 +40,8 @@ time.sleep(5)
 r = requests.post(url, data=files, headers=headers, auth=(mobsfUser, mobsfPass))
 
 json = r.json()
-cvss = json.get('average_cvss'[, 0.0])
-score = json.get('security_score'[, 0.0])
+cvss = json.get('average_cvss')
+score = json.get('security_score')
 
 print('Scan Complete - ', r.status_code)
 
@@ -93,8 +93,6 @@ if r:
          }]
         }
         """ % (cvss, score, url)
-
-print(payload)
 
 headers = {'content-type': 'application/json'}
 r = requests.post(webhook, data=payload, headers=headers)
