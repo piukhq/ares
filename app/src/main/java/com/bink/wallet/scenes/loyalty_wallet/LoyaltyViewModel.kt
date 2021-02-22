@@ -190,10 +190,9 @@ class LoyaltyViewModel constructor(
                 membershipPlanData.value = membershipCardsAndPlans.membershipPlans
                 membershipCardData.value = membershipCardsAndPlans.membershipCards
 
-                //user has forced a refresh, if card is a scrapable card, get balance.
-                //Figure out how to call tryScrapeCards with context
-
-                membershipCardsAndPlans.membershipCards?.let { WebScrapableManager.tryScrapeCards(it, context, parentView) }
+                membershipCardsAndPlans.membershipCards?.let {
+                    WebScrapableManager.tryScrapeCards(it, context, parentView)
+                }
 
                 _isLoading.value = false
 

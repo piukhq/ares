@@ -2,23 +2,14 @@ package com.bink.wallet.utils.LocalPointScraping
 
 import com.bink.wallet.data.WebScrapeDao
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class WebScrapeRepository(private val webScrapeDao: WebScrapeDao) {
 
-    fun getWebScrapeCredentials(callback: (List<WebScrapeCredentials>?) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val webScrapeCredentials = webScrapeDao.getWebScrapeCredentials()
-                withContext(Dispatchers.Main) {
-                    callback(webScrapeCredentials)
-                }
-            } catch (e: Exception) {
-                callback(null)
-            }
+    suspend fun getWebScrapeCredentials(): List<WebScrapeCredentials>? {
+        return coroutineScope {
+            val webScrapeCredentialsRequest = async { webScrapeDao.getWebScrapeCredentials() }
+            webScrapeCredentialsRequest.await()
         }
     }
 

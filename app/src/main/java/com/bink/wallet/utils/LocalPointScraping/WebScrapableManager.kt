@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -37,47 +39,44 @@ object WebScrapableManager : KoinComponent {
 
     }
 
-    fun tryScrapeCards(membershipCards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
+    suspend fun tryScrapeCards(membershipCards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout): List<MembershipCard>? {
         Log.d("LocalPointScrape", "tryScrapeCards")
-        if (context == null) return
-        webScrapeViewModel.getWebScrapeCredentials {
-            it?.let { storedCredentials ->
-                for (card in membershipCards) {
+        if (context != null) {
 
-                    if (!card.isAuthorised()) {
-                        Log.d("LocalPointScrape", "Attempt on ${card.id} - ${card.plan?.account?.company_name}")
+            val storedCredentials = webScrapeViewModel.getWebScrapeCredentials()
 
-                        val credentials = storedCredentials.firstOrNull { it.id.toString().equals(card.membership_plan) }
-                        val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
+            for (card in membershipCards) {
 
-                        Log.d("LocalPointScrape", "Credentials ${credentials?.email} ${credentials?.password}")
-                        Log.d("LocalPointScrape", "Agent ${agent?.merchant?.name}")
+                //swap this if statement to true
+                if (!card.isAuthorised()) {
+                    Log.d("LocalPointScrape", "Attempt on ${card.id} - ${card.plan?.account?.company_name}")
 
-                        val pointScrapingUtil = PointScrapingUtil()
+                    val credentials = storedCredentials?.firstOrNull { it.id.toString().equals(card.membership_plan) }
+                    val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
 
-                        pointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password){ response, isDone ->
-                            Log.d("LocalPointScrape", "isDone $isDone, $response")
-                        }
+                    Log.d("LocalPointScrape", "Credentials ${credentials?.email} ${credentials?.password}")
+                    Log.d("LocalPointScrape", "Agent ${agent?.merchant?.name}")
+
+                    val pointScrapingUtil = PointScrapingUtil()
+
+                    coroutineScope {
+                        val scrapeRequest = async { pointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password) }
+                        val scrapeResponse = scrapeRequest.await()
+
+                        //Log.d("LocalPointScrape", "isDone ${scrapeResponse?.first}, ${scrapeResponse?.second}")
+                        //Once we have the points we need to store it against the card
+                        //we also need to store the card as authorized
                     }
 
                 }
-            }
-        }
-    }
 
-    /** To test if it stores, uncomment this and call somewhere.
-    fun logCreds() {
-    webScrapeViewModel.getWebScrapeCredentials{
-    Log.d("TescoLPS", "Stored creds $it")
+            }
+
+            return membershipCards
+
+
+        } else { return null }
+
     }
-    }
-     **/
 
 }
-
-/*
-User creates a new card
-we take their creds from request
-we log them in a scrape points and update points cached card with points
-
- */

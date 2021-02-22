@@ -9,7 +9,7 @@ import com.bink.wallet.utils.LocalPointScraping.WebScrapeCredentials
 @Dao
 interface WebScrapeDao {
     @Query("SELECT * FROM webscrape_credentials")
-    fun getWebScrapeCredentials(): List<WebScrapeCredentials>
+    suspend fun getWebScrapeCredentials(): List<WebScrapeCredentials>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun storeWebScrapeCredentials(webScrapeCredentials: WebScrapeCredentials)

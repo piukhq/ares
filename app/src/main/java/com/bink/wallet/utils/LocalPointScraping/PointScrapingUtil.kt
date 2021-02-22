@@ -18,7 +18,7 @@ class PointScrapingUtil {
     private var lastSeenURL: String? = null
     private var webView: WebView? = null
 
-    fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, parentView: ConstraintLayout?, email: String?, password: String?, callback: (String?, Boolean) -> Unit) {
+    fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, parentView: ConstraintLayout?, email: String?, password: String?): Pair<String?, Boolean>? {
         /**
          * To open a webview for scraping we also need a view to attach it to, otherwise the webview will automatically
          * open up inside of Google Chrome outside of the app
@@ -26,7 +26,7 @@ class PointScrapingUtil {
 
         if (pointScrapeSite == null || parentView == null || email == null || password == null) {
             Log.d("LocalPointScrape", "Null data")
-            return
+            return null
         }
 
         Log.d("LocalPointScrape", "Performing Scrape")
@@ -59,7 +59,8 @@ class PointScrapingUtil {
                                             webView?.destroy()
                                             lastSeenURL = null
                                         }
-                                        callback(message, isDone)
+
+                                        return Pair(message, isDone)
                                     }
                                 }
                             }
