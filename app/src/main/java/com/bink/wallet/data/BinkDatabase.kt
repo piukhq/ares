@@ -12,7 +12,7 @@ import com.bink.wallet.utils.LocalPointScraping.WebScrapeCredentials
 
 @Database(
     entities = [MembershipCard::class, MembershipPlan::class, LoginData::class, PaymentCard::class, BannerDisplay::class, WebScrapeCredentials::class],
-    version = 21,
+    version = 22,
     exportSchema = false
 )
 @TypeConverters(

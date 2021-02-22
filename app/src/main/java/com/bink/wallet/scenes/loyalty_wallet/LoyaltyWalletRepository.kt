@@ -173,7 +173,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    private fun storeMembershipCard(card: MembershipCard) {
+    fun storeMembershipCard(card: MembershipCard) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {

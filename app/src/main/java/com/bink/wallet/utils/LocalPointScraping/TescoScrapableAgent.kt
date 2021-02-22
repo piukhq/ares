@@ -21,5 +21,8 @@ class TescoScrapableAgent : WebScrapable() {
         get() = "Password"
 
     override val cardBalancePrefix: String
+        get() = ""
+
+    override val cardBalanceSuffix: String
         get() = "points"
 }

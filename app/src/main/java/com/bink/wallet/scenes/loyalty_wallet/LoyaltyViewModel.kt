@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.Context
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -191,7 +192,13 @@ class LoyaltyViewModel constructor(
                 membershipCardData.value = membershipCardsAndPlans.membershipCards
 
                 membershipCardsAndPlans.membershipCards?.let {
-                    WebScrapableManager.tryScrapeCards(it, context, parentView)
+                    WebScrapableManager.tryScrapeCards(0, it, context, parentView){ cards ->
+                        membershipCardData.value = cards
+                        if (cards != null) {
+                            updateScrapedCards(cards)
+                        }
+                        Log.d("membershipCards", cards.toString())
+                    }
                 }
 
                 _isLoading.value = false
@@ -201,6 +208,13 @@ class LoyaltyViewModel constructor(
                 _loadPlansError.value = e
                 _loadCardsError.value = e
             }
+        }
+    }
+
+    private fun updateScrapedCards(cards : List<MembershipCard>){
+        val scrapedCards = cards.filter { it.isScraped == true }
+        for(card in scrapedCards){
+            loyaltyWalletRepository.storeMembershipCard(card)
         }
     }
 

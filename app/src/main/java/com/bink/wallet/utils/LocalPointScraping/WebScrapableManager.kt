@@ -4,17 +4,23 @@ import android.content.Context
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
+import com.bink.wallet.model.response.membership_card.CardBalance
+import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.lang.IndexOutOfBoundsException
 
 object WebScrapableManager : KoinComponent {
 
     private val webScrapeViewModel: WebScrapeViewModel by inject()
 
     private val scrapableAgents = arrayListOf(TescoScrapableAgent())
+
+    private var membershipCards: List<MembershipCard>? = null
 
     fun storeCredentialsFromRequest(membershipCardRequest: MembershipCardRequest) {
 
@@ -39,16 +45,18 @@ object WebScrapableManager : KoinComponent {
 
     }
 
-    suspend fun tryScrapeCards(membershipCards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout): List<MembershipCard>? {
-        Log.d("LocalPointScrape", "tryScrapeCards")
-        if (context != null) {
+    fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout, callback: (List<MembershipCard>?) -> Unit) {
+        if (context == null) return
+        if (index == 0) membershipCards = cards
 
-            val storedCredentials = webScrapeViewModel.getWebScrapeCredentials()
+        webScrapeViewModel.getWebScrapeCredentials {
+            it?.let { storedCredentials ->
+                try {
 
-            for (card in membershipCards) {
+                    //TODO: ADD 60 SECOND TIMER TO ITERATE
 
-                //swap this if statement to true
-                if (!card.isAuthorised()) {
+                    val card = cards[index]
+
                     Log.d("LocalPointScrape", "Attempt on ${card.id} - ${card.plan?.account?.company_name}")
 
                     val credentials = storedCredentials?.firstOrNull { it.id.toString().equals(card.membership_plan) }
@@ -59,24 +67,37 @@ object WebScrapableManager : KoinComponent {
 
                     val pointScrapingUtil = PointScrapingUtil()
 
-                    coroutineScope {
-                        val scrapeRequest = async { pointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password) }
-                        val scrapeResponse = scrapeRequest.await()
+                    if (credentials == null || agent == null) {
+                        //Try next card
+                        tryScrapeCards(index + 1, cards, context, parentView, callback)
+                    } else {
+                        pointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password) { pointScrapeResponse ->
 
-                        //Log.d("LocalPointScrape", "isDone ${scrapeResponse?.first}, ${scrapeResponse?.second}")
-                        //Once we have the points we need to store it against the card
-                        //we also need to store the card as authorized
+                            Log.d("LocalPointScrape", "isDone ${pointScrapeResponse.isDone()}")
+
+                                pointScrapeResponse.points?.let { points ->
+                                    if (membershipCards != null) {
+                                        val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, System.currentTimeMillis())
+                                        membershipCards!![index].balances = arrayListOf(balance)
+                                        membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
+                                        membershipCards!![index].isScraped = true
+
+                                        tryScrapeCards(index + 1, cards, context, parentView, callback)
+                                    }
+                                }
+
+                        }
                     }
 
+
+                } catch (e: IndexOutOfBoundsException) {
+                    //Ran through all cards, return updated values
+                    callback(membershipCards)
+                    Log.d("LocalPointScrape", "${e.localizedMessage}")
                 }
 
             }
-
-            return membershipCards
-
-
-        } else { return null }
-
+        }
     }
 
 }

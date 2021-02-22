@@ -8,8 +8,8 @@ class WebScrapeViewModel(private val repository: WebScrapeRepository) : BaseView
         repository.storeWebScrapeCredentials(webScrapeCredentials)
     }
 
-    suspend fun getWebScrapeCredentials() : List<WebScrapeCredentials>? {
-        return repository.getWebScrapeCredentials()
+    fun getWebScrapeCredentials(callback: (List<WebScrapeCredentials>?) -> Unit) {
+        repository.getWebScrapeCredentials(callback)
     }
 
 }

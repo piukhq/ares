@@ -18,7 +18,7 @@ class PointScrapingUtil {
     private var lastSeenURL: String? = null
     private var webView: WebView? = null
 
-    fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, parentView: ConstraintLayout?, email: String?, password: String?): Pair<String?, Boolean>? {
+    fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, parentView: ConstraintLayout?, email: String?, password: String?, callback: (PointScrapeResponse) -> Unit) {
         /**
          * To open a webview for scraping we also need a view to attach it to, otherwise the webview will automatically
          * open up inside of Google Chrome outside of the app
@@ -26,7 +26,7 @@ class PointScrapingUtil {
 
         if (pointScrapeSite == null || parentView == null || email == null || password == null) {
             Log.d("LocalPointScrape", "Null data")
-            return null
+            return
         }
 
         Log.d("LocalPointScrape", "Performing Scrape")
@@ -54,13 +54,12 @@ class PointScrapingUtil {
                                 Log.d("LocalPointScrape", "Javascript being evaluated")
                                 webView?.evaluateJavascript(js) { response ->
                                     Log.d("LocalPointScrape", "${site.name} responded with $response")
-                                    processResponse(response) { message, isDone ->
-                                        if (isDone) {
+                                    processResponse(response) { pointScrapeResponse ->
+                                        if (pointScrapeResponse.isDone()) {
                                             webView?.destroy()
                                             lastSeenURL = null
                                         }
-
-                                        return Pair(message, isDone)
+                                        callback(pointScrapeResponse)
                                     }
                                 }
                             }
@@ -99,26 +98,17 @@ class PointScrapingUtil {
         }
     }
 
-    private fun processResponse(response: String, callback: (String?, Boolean) -> Unit) {
+    private fun processResponse(response: String, callback: (PointScrapeResponse) -> Unit) {
         /**
          * Once we have a response it's being mapped to an object so we can check whether it has
          * any messages to display to the user
          */
         try {
             (Gson().fromJson(response, object : TypeToken<PointScrapeResponse?>() {}.type) as PointScrapeResponse).let { pointScrapeResponse ->
-                if (pointScrapeResponse.success) {
-                    pointScrapeResponse.points?.let { points ->
-                        callback(points, true)
-                    }
-                } else {
-                    pointScrapeResponse.error_message?.let { error ->
-                        callback(error, false)
-                    }
-                }
+                callback(pointScrapeResponse)
             }
         } catch (e: Exception) {
             //Either an issue with casting to a PointScrapeResponse or in Parsing the JSON
-            callback(e.localizedMessage, false)
         }
     }
 

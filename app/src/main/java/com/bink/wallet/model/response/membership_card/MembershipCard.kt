@@ -27,7 +27,8 @@ data class MembershipCard(
     @ColumnInfo(name = "membership_transactions") var membership_transactions: List<MembershipTransactions>?,
     @ColumnInfo(name = "account") var account: Account?,
     @ColumnInfo(name = "vouchers") var vouchers: List<Voucher>?,
-    @ColumnInfo(name = "uuid") var uuid: String? = null
+    @ColumnInfo(name = "uuid") var uuid: String? = null,
+    @ColumnInfo(name = "isScraped") var isScraped: Boolean? = false
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore
@@ -35,6 +36,7 @@ data class MembershipCard(
 
     constructor(id: String) : this(
         id,
+        null,
         null,
         null,
         null,
