@@ -139,6 +139,14 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
     }
 
+    fun checkCardScrape(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
+        val shouldScrapeCards = DateTimeUtils.haveTwoHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped)
+
+        if (shouldScrapeCards) {
+            scrapeCards(cards, context, parentView)
+        }
+    }
+
     fun fetchPeriodicMembershipCards() {
         val shouldMakePeriodicCall =
             DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
@@ -191,12 +199,7 @@ class LoyaltyViewModel constructor(
                 membershipCardData.value = membershipCardsAndPlans.membershipCards
 
                 membershipCardsAndPlans.membershipCards?.let {
-                    WebScrapableManager.tryScrapeCards(0, it, context, parentView) { cards ->
-                        membershipCardData.value = cards
-                        if (cards != null) {
-                            updateScrapedCards(cards)
-                        }
-                    }
+                    scrapeCards(it, context, parentView)
                 }
 
                 _isLoading.value = false
@@ -205,6 +208,15 @@ class LoyaltyViewModel constructor(
                 _isLoading.value = false
                 _loadPlansError.value = e
                 _loadCardsError.value = e
+            }
+        }
+    }
+
+    private fun scrapeCards(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
+        WebScrapableManager.tryScrapeCards(0, cards, context, parentView) { cards ->
+            membershipCardData.value = cards
+            if (cards != null) {
+                updateScrapedCards(cards)
             }
         }
     }

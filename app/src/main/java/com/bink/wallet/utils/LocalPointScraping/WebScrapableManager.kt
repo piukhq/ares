@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.CardStatus
@@ -46,6 +47,7 @@ object WebScrapableManager : KoinComponent {
     fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout, callback: (List<MembershipCard>?) -> Unit) {
         if (context == null) return
         if (index == 0) membershipCards = cards
+        SharedPreferenceManager.membershipCardsLastScraped = System.currentTimeMillis()
 
         //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
         val timer = object : CountDownTimer(60000, 10000) {

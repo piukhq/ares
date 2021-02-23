@@ -32,7 +32,6 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -383,6 +382,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.second.isNotEmpty()) {
                     walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(ArrayList(userDataResult.result.third))
+
+                    val cards = userDataResult.result.third.filterIsInstance<MembershipCard>()
+                    viewModel.checkCardScrape(cards, context, binding.parent)
+
                     disableIndicators()
                 }
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
