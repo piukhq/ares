@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.navigation.fragment.navArgs
@@ -15,6 +16,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -72,6 +74,12 @@ class AddCardFragment : BaseAddAuthFragment() {
                         ADD_LOYALTY_CARD_ADD_JOURNEY,it.id, status, reasonCode, mPlanId, isAccountNew
                     )
                 )
+            }
+
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, binding.layout){ cards ->
+                if (cards != null) {
+                    viewModel.updateScrapedCards(cards)
+                }
             }
 
         }

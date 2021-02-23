@@ -1,6 +1,7 @@
 package com.bink.wallet.utils.LocalPointScraping
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -8,11 +9,8 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.lang.IndexOutOfBoundsException
 
 object WebScrapableManager : KoinComponent {
 
@@ -49,11 +47,20 @@ object WebScrapableManager : KoinComponent {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
+        //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
+        val timer = object : CountDownTimer(60000, 10000) {
+            override fun onFinish() {
+                tryScrapeCards(index + 1, cards, context, parentView, callback)
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+            }
+        }
+
         webScrapeViewModel.getWebScrapeCredentials {
             it?.let { storedCredentials ->
                 try {
-
-                    //TODO: ADD 60 SECOND TIMER TO ITERATE
+                    timer.start()
 
                     val card = cards[index]
 
@@ -75,16 +82,16 @@ object WebScrapableManager : KoinComponent {
 
                             Log.d("LocalPointScrape", "isDone ${pointScrapeResponse.isDone()}")
 
-                                pointScrapeResponse.points?.let { points ->
-                                    if (membershipCards != null) {
-                                        val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, System.currentTimeMillis())
-                                        membershipCards!![index].balances = arrayListOf(balance)
-                                        membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
-                                        membershipCards!![index].isScraped = true
+                            pointScrapeResponse.points?.let { points ->
+                                if (membershipCards != null) {
+                                    val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, System.currentTimeMillis())
+                                    membershipCards!![index].balances = arrayListOf(balance)
+                                    membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
+                                    membershipCards!![index].isScraped = true
 
-                                        tryScrapeCards(index + 1, cards, context, parentView, callback)
-                                    }
+                                    tryScrapeCards(index + 1, cards, context, parentView, callback)
                                 }
+                            }
 
                         }
                     }
@@ -92,6 +99,7 @@ object WebScrapableManager : KoinComponent {
 
                 } catch (e: IndexOutOfBoundsException) {
                     //Ran through all cards, return updated values
+                    timer.cancel()
                     callback(membershipCards)
                     Log.d("LocalPointScrape", "${e.localizedMessage}")
                 }
