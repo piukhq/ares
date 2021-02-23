@@ -12,7 +12,8 @@ val dataModule = module {
             .addMigrations(
                 BinkDatabaseMigrations.MIGRATION_17_18,
                 BinkDatabaseMigrations.MIGRATION_18_19,
-                BinkDatabaseMigrations.MIGRATION_19_20
+                BinkDatabaseMigrations.MIGRATION_19_20,
+                BinkDatabaseMigrations.MIGRATION_20_22
             )
             .fallbackToDestructiveMigration()
             .build()
