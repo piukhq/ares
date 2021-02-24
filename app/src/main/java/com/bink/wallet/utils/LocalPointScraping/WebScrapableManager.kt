@@ -70,7 +70,7 @@ object WebScrapableManager : KoinComponent {
                         //Try next card
                         tryScrapeCards(index + 1, cards, context, parentView, callback)
                     } else {
-                        PointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password) { pointScrapeResponse ->
+                        PointScrapingUtil.performScrape(context, agent.merchant, parentView, credentials.email, credentials.password) { pointScrapeResponse ->
 
                             pointScrapeResponse.points?.let { points ->
                                 if (membershipCards != null) {
