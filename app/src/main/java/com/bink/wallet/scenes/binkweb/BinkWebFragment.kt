@@ -109,7 +109,9 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             getString(R.string.webview_error_title),
             getString(R.string.webview_error_message),
             {
-                findNavController().navigateUp()
+                view?.let {
+                    findNavController().navigateUp()
+                }
             },
             isCancelable = false
         )
