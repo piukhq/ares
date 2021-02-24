@@ -3,7 +3,6 @@ package com.bink.wallet.utils.LocalPointScraping
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -13,7 +12,7 @@ import com.bink.wallet.model.PointScrapeResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class PointScrapingUtil {
+object PointScrapingUtil {
 
     private var lastSeenURL: String? = null
     private var webView: WebView? = null
@@ -25,11 +24,8 @@ class PointScrapingUtil {
          */
 
         if (pointScrapeSite == null || parentView == null || email == null || password == null) {
-            Log.d("LocalPointScrape", "Null data")
             return
         }
-
-        Log.d("LocalPointScrape", "Performing Scrape")
 
         webView = WebView(context).apply {
             visibility = View.GONE
@@ -49,11 +45,8 @@ class PointScrapingUtil {
                 if (!lastSeenURL.equals(url)) {
                     Handler().postDelayed({
                         pointScrapeSite.let { site ->
-                            Log.d("LocalPointScrape", "Scraping ${site.name}")
                             getJavascript(context, url, site, email, password).let { js ->
-                                Log.d("LocalPointScrape", "Javascript being evaluated")
                                 webView?.evaluateJavascript(js) { response ->
-                                    Log.d("LocalPointScrape", "${site.name} responded with $response")
                                     processResponse(response) { pointScrapeResponse ->
                                         if (pointScrapeResponse.isDone()) {
                                             webView?.destroy()

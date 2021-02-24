@@ -1,7 +1,6 @@
 package com.bink.wallet.utils.LocalPointScraping
 
 import com.bink.wallet.data.WebScrapeDao
-import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +27,6 @@ class WebScrapeRepository(private val webScrapeDao: WebScrapeDao) {
                 try {
                     webScrapeDao.storeWebScrapeCredentials(webScrapeCredentials)
                 } catch (e: Exception) {
-                    logDebug(WebScrapeRepository::class.simpleName, e.toString())
                 }
             }
         }
@@ -40,7 +38,6 @@ class WebScrapeRepository(private val webScrapeDao: WebScrapeDao) {
                 try {
                     webScrapeDao.deleteWebScrapeCredentials(membershipPlanId)
                 } catch (e: Exception) {
-                    logDebug(WebScrapeRepository::class.simpleName, e.toString())
                 }
             }
         }

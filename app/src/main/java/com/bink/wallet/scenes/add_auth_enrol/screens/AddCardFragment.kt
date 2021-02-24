@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.navigation.fragment.navArgs
@@ -71,12 +70,12 @@ class AddCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ADD_JOURNEY,it.id, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ADD_JOURNEY, it.id, status, reasonCode, mPlanId, isAccountNew
                     )
                 )
             }
 
-            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, binding.layout){ cards ->
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, binding.layout) { cards ->
                 if (cards != null) {
                     viewModel.updateScrapedCards(cards)
                 }

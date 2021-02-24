@@ -2,7 +2,6 @@ package com.bink.wallet.utils.LocalPointScraping
 
 import android.content.Context
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -34,8 +33,6 @@ object WebScrapableManager : KoinComponent {
                         val webScrapeCredentials = WebScrapeCredentials(membershipPlanId, username, password)
                         webScrapeViewModel.storeWebScrapeCredentials(webScrapeCredentials)
 
-                        Log.d("TescoLPS", "$username, $password")
-
                     }
                 }
             }
@@ -66,23 +63,14 @@ object WebScrapableManager : KoinComponent {
 
                     val card = cards[index]
 
-                    Log.d("LocalPointScrape", "Attempt on ${card.id} - ${card.plan?.account?.company_name}")
-
                     val credentials = storedCredentials?.firstOrNull { it.id.toString().equals(card.membership_plan) }
                     val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
-
-                    Log.d("LocalPointScrape", "Credentials ${credentials?.email} ${credentials?.password}")
-                    Log.d("LocalPointScrape", "Agent ${agent?.merchant?.name}")
-
-                    val pointScrapingUtil = PointScrapingUtil()
 
                     if (credentials == null || agent == null) {
                         //Try next card
                         tryScrapeCards(index + 1, cards, context, parentView, callback)
                     } else {
-                        pointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password) { pointScrapeResponse ->
-
-                            Log.d("LocalPointScrape", "isDone ${pointScrapeResponse.isDone()}")
+                        PointScrapingUtil.performScrape(context, agent?.merchant, parentView, credentials?.email, credentials?.password) { pointScrapeResponse ->
 
                             pointScrapeResponse.points?.let { points ->
                                 if (membershipCards != null) {
@@ -103,7 +91,6 @@ object WebScrapableManager : KoinComponent {
                     //Ran through all cards, return updated values
                     timer.cancel()
                     callback(membershipCards)
-                    Log.d("LocalPointScrape", "${e.localizedMessage}")
                 }
 
             }
