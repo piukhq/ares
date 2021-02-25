@@ -10,6 +10,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class WebScrapeCredentials(
-    @ColumnInfo(name = "email") val email: String?,
-    @ColumnInfo(name = "password") val password: String?
+    val email: String?,
+    val password: String?
 ) : Parcelable
