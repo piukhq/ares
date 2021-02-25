@@ -76,6 +76,10 @@ object WebScrapableManager : KoinComponent {
         return WebScrapeCredentials(username,password)
     }
 
+    private fun removeCredentials(cardId: String){
+        LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.USERNAME))
+        LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
+    }
     private fun encryptedKeyForCardId(cardId: String, credentialType: CredentialType): String {
 
         return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, cardId, credentialType.name)

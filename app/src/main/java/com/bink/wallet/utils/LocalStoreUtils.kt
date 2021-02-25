@@ -43,6 +43,13 @@ object LocalStoreUtils {
         return null
     }
 
+    fun removeKey(secretKey: String){
+        encryptedSharedPreferences.edit().let {
+            it.remove(secretKey)
+            it.apply()
+        }
+    }
+
     fun createEncryptedPrefs(context: Context) {
         val masterKeyBuilder = MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         val masterKey = masterKeyBuilder.build()

@@ -7,12 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class WebScrapeRepository(private val webScrapeDao: WebScrapeDao) {
+class WebScrapeRepository() {
 
     fun getWebScrapeCredentials(callback: (List<WebScrapeCredentials>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val webScrapeCredentials = webScrapeDao.getWebScrapeCredentials()
+//                val webScrapeCredentials = webScrapeDao.getWebScrapeCredentials()
                 withContext(Dispatchers.Main) {
                     callback(webScrapeCredentials)
                 }
@@ -26,7 +26,7 @@ class WebScrapeRepository(private val webScrapeDao: WebScrapeDao) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    webScrapeDao.storeWebScrapeCredentials(webScrapeCredentials)
+//                    webScrapeDao.storeWebScrapeCredentials(webScrapeCredentials)
                 } catch (e: Exception) {
                     logDebug(WebScrapeRepository::class.simpleName, e.toString())
                 }

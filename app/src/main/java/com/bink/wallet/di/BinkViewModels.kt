@@ -158,7 +158,7 @@ val viewModelModules = module {
     viewModel { SplashViewModel(get(), get()) }
 
     single {
-        provideWebScrapeRepository(get())
+        provideWebScrapeRepository()
     }
 
     viewModel { WebScrapeViewModel(get()) }
@@ -222,4 +222,4 @@ fun provideAddPaymentCardRepository(
         membershipPlanDao
     )
 
-fun provideWebScrapeRepository(webScrapeDao: WebScrapeDao): WebScrapeRepository = WebScrapeRepository(webScrapeDao)
+fun provideWebScrapeRepository(): WebScrapeRepository = WebScrapeRepository()
