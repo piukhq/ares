@@ -3,12 +3,8 @@ package com.bink.wallet.utils.LocalPointScraping
 import android.util.Log
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.utils.LocalStoreUtils
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-object WebScrapableManager : KoinComponent {
-
-    private val webScrapeViewModel: WebScrapeViewModel by inject()
+object WebScrapableManager {
 
     private val scrapableAgents = arrayListOf(TescoScrapableAgent())
 
@@ -36,7 +32,6 @@ object WebScrapableManager : KoinComponent {
 
                         val webScrapeCredentials =
                             WebScrapeCredentials(username, password)
-                        webScrapeViewModel.storeWebScrapeCredentials(webScrapeCredentials)
 
                         Log.d("TescoLPS", "$username, $password")
 

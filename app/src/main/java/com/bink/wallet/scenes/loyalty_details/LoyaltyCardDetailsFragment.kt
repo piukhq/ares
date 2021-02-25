@@ -19,19 +19,30 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
 import com.bink.wallet.model.response.membership_plan.Images
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRANSACTIONS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
+import com.bink.wallet.utils.MembershipPlanUtils
+import com.bink.wallet.utils.RequestReviewUtil
+import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.ValueDisplayUtils
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
+import com.bink.wallet.utils.formatBalance
+import com.bink.wallet.utils.getElapsedTime
+import com.bink.wallet.utils.getErrorBody
+import com.bink.wallet.utils.linkCard
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeErrorNonNull
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
-import java.lang.reflect.Type
 import java.util.*
 
 

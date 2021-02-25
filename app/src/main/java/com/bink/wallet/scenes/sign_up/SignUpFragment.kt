@@ -35,7 +35,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.validateEmail
 import com.bink.wallet.utils.validatePassword
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.HttpException
 
 class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
