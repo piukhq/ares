@@ -2,11 +2,9 @@ package com.bink.wallet.scenes.pll
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.PllPaymentCardItemBinding
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.RequestReviewUtil
 import com.bink.wallet.utils.getCardTypeFromProvider
 import com.bink.wallet.utils.isLinkedToMembershipCard
 
