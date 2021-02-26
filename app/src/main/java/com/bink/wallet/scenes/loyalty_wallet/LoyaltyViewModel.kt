@@ -135,25 +135,34 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
-    fun fetchMembershipCards() {
-        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError)
+    fun fetchMembershipCards(context: Context?, parentView: ConstraintLayout) {
+        loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
+            checkCardScrape(it, context, parentView)
+        }
     }
 
-    fun checkCardScrape(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
+    private fun checkCardScrape(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
         val shouldScrapeCards = DateTimeUtils.haveTwoHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped)
 
         if (shouldScrapeCards) {
             scrapeCards(cards, context, parentView)
+            SharedPreferenceManager.membershipCardsLastScraped = System.currentTimeMillis()
+        } else {
+            fetchLocalMembershipCards { cardsFromDb ->
+                membershipCardData.postValue(WebScrapableManager.mapOldToNewCards(cardsFromDb, cards))
+            }
         }
     }
 
-    fun fetchPeriodicMembershipCards() {
+    fun fetchPeriodicMembershipCards(context: Context?, parentView: ConstraintLayout) {
         val shouldMakePeriodicCall =
             DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
         if (shouldMakePeriodicCall) {
-            fetchMembershipCards()
+            fetchMembershipCards(context, parentView)
         } else {
-            fetchLocalMembershipCards()
+            fetchLocalMembershipCards {
+                checkCardScrape(it, context, parentView)
+            }
         }
     }
 
@@ -170,8 +179,11 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun fetchLocalMembershipCards() {
-        loyaltyWalletRepository.retrieveStoredMembershipCards(membershipCardData)
+    fun fetchLocalMembershipCards(callback: ((List<MembershipCard>) -> Unit?)? = null) {
+        loyaltyWalletRepository.retrieveStoredMembershipCards {
+            membershipCardData.value = it
+            callback?.let { returnData -> returnData(it) }
+        }
     }
 
     fun fetchMembershipCardsAndPlansForRefresh(context: Context?, parentView: ConstraintLayout) {
@@ -199,7 +211,7 @@ class LoyaltyViewModel constructor(
                 membershipCardData.value = membershipCardsAndPlans.membershipCards
 
                 membershipCardsAndPlans.membershipCards?.let {
-                    scrapeCards(it, context, parentView)
+                    checkCardScrape(it, context, parentView)
                 }
 
                 _isLoading.value = false

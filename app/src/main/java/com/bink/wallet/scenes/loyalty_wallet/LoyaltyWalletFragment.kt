@@ -194,7 +194,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchPeriodicMembershipCards()
+        viewModel.fetchPeriodicMembershipCards(context, binding.parent)
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -382,10 +382,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.second.isNotEmpty()) {
                     walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(ArrayList(userDataResult.result.third))
-
-                    val cards = userDataResult.result.third.filterIsInstance<MembershipCard>()
-                    viewModel.checkCardScrape(cards, context, binding.parent)
-
                     disableIndicators()
                 }
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
@@ -463,7 +459,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            viewModel.fetchPeriodicMembershipCards()
+            viewModel.fetchPeriodicMembershipCards(context, binding.parent)
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
