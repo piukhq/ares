@@ -32,6 +32,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.RequestReviewUtil
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.WalletOrderingUtil
@@ -497,6 +498,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                             viewModel.deleteCard(membershipCard.id)
+                            WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard
                             val planId = membershipCard.membership_plan
                             val uuid = membershipCard.uuid

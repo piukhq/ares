@@ -11,6 +11,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SecurityUtils
 import com.bink.wallet.utils.generateUuidForMembershipCards
@@ -421,7 +422,7 @@ class LoyaltyWalletRepository(
     private suspend fun deleteFromDb(cardsToDelete: List<String>) {
 
         cardsToDelete.forEach { cardIdToDelete ->
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 membershipCardDao.deleteCard(cardIdToDelete)
             }
         }
