@@ -2,7 +2,6 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object SharedPreferenceManager {
 

@@ -6,7 +6,12 @@ import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.utils.LocalStoreUtils
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DynamicActionViewModel constructor(
     var zendeskRepository: ZendeskRepository,

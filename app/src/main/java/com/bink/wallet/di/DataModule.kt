@@ -25,5 +25,4 @@ val dataModule = module {
     single { get<BinkDatabase>().paymentCardDao() }
     single { get<BinkDatabase>().loginDataDao() }
     single { get<BinkDatabase>().bannersDisplayDao() }
-    single { get<BinkDatabase>().webScrapeDao() }
 }
