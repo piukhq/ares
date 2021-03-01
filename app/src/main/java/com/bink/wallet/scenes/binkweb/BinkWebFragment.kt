@@ -29,6 +29,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     private var hasOpenedEmail = false
+    private var hasEncounteredError = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,7 +51,8 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 request: WebResourceRequest,
                 error: WebResourceError
             ) {
-                if(isAdded && error.errorCode != ERROR_CODE){
+                hasEncounteredError = true
+                if (isAdded && error.errorCode != ERROR_CODE) {
                     binding.webView.visibility = View.INVISIBLE
                     if (request.url.toString().startsWith("mailto:")) {
                         hasOpenedEmail = true
@@ -106,41 +108,26 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     private fun showWebViewError() {
+        hasEncounteredError = false
         requireContext().displayModalPopup(
             getString(R.string.webview_error_title),
             getString(R.string.webview_error_message),
             {
-                    findNavController().navigateUp()
+                findNavController().navigateUp()
             },
             isCancelable = false
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (hasEncounteredError) {
+            findNavController().navigateUp()
+        }
     }
 
     companion object {
         private const val ERROR_CODE = -2
     }
 
-    override fun onPause() {
-        super.onPause()
-        logDebug("BinkWebFragment","onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        logDebug("BinkWebFragment","onStop")
-
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        logDebug("BinkWebFragment","onDestroyView")
-
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        logDebug("BinkWebFragment","onDetach")
-
-    }
 }
