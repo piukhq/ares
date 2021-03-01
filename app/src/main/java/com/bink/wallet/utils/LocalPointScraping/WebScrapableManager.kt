@@ -47,6 +47,9 @@ object WebScrapableManager : KoinComponent {
         //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
         val timer = object : CountDownTimer(60000, 10000) {
             override fun onFinish() {
+                if (membershipCards != null) {
+                    membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
+                }
                 tryScrapeCards(index + 1, cards, context, parentView, callback)
             }
 
@@ -66,6 +69,7 @@ object WebScrapableManager : KoinComponent {
 
                     if (credentials == null || agent == null) {
                         //Try next card
+                        timer.cancel()
                         tryScrapeCards(index + 1, cards, context, parentView, callback)
                     } else {
                         PointScrapingUtil.performScrape(context, agent.merchant, parentView, credentials.email, credentials.password) { pointScrapeResponse ->
@@ -77,6 +81,7 @@ object WebScrapableManager : KoinComponent {
                                     membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
+                                    timer.cancel()
                                     tryScrapeCards(index + 1, cards, context, parentView, callback)
                                 }
                             }
@@ -88,6 +93,7 @@ object WebScrapableManager : KoinComponent {
                 } catch (e: IndexOutOfBoundsException) {
                     //Ran through all cards, return updated values
                     timer.cancel()
+                    PointScrapingUtil.lastSeenURL = null
                     callback(membershipCards)
                 }
 

@@ -4,9 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
 import android.view.View
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.PointScrapeResponse
 import com.google.gson.Gson
@@ -14,7 +12,7 @@ import com.google.gson.reflect.TypeToken
 
 object PointScrapingUtil {
 
-    private var lastSeenURL: String? = null
+    var lastSeenURL: String? = null
     private var webView: WebView? = null
 
     fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, parentView: ConstraintLayout?, email: String?, password: String?, callback: (PointScrapeResponse) -> Unit) {
@@ -31,9 +29,17 @@ object PointScrapingUtil {
             visibility = View.GONE
             settings.apply {
                 javaScriptEnabled = true
-                cacheMode = WebSettings.LOAD_NO_CACHE
             }
+            clearCache(true)
+            clearFormData()
+            clearHistory()
+            clearSslPreferences()
         }
+
+        WebStorage.getInstance().deleteAllData()
+
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().flush()
 
         parentView.addView(webView)
 
