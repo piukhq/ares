@@ -14,6 +14,7 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.BinkWebViewBinding
 import com.bink.wallet.R
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -109,9 +110,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             getString(R.string.webview_error_title),
             getString(R.string.webview_error_message),
             {
-                view?.let {
                     findNavController().navigateUp()
-                }
             },
             isCancelable = false
         )
@@ -121,4 +120,27 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
         private const val ERROR_CODE = -2
     }
 
+    override fun onPause() {
+        super.onPause()
+        logDebug("BinkWebFragment","onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        logDebug("BinkWebFragment","onStop")
+
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        logDebug("BinkWebFragment","onDestroyView")
+
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        logDebug("BinkWebFragment","onDetach")
+
+    }
 }
