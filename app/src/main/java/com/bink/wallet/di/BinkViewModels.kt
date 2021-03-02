@@ -31,7 +31,11 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
-import com.bink.wallet.scenes.loyalty_wallet.*
+import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
@@ -81,7 +85,7 @@ val viewModelModules = module {
 
     viewModel { BarcodeViewModel() }
 
-    viewModel { AddViewModel(get(),get()) }
+    viewModel { AddViewModel(get(), get()) }
 
     viewModel { AddJoinViewModel(get()) }
 
@@ -117,7 +121,7 @@ val viewModelModules = module {
 
     viewModel { PaymentCardWalletViewModel(get(), get(), get()) }
 
-    viewModel { PaymentCardsDetailsViewModel(get(), get(),get(),get()) }
+    viewModel { PaymentCardsDetailsViewModel(get(), get(), get(), get()) }
 
     viewModel { BaseModalViewModel() }
 
@@ -197,7 +201,7 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao
-): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao,membershipCardDao)
+): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao, membershipCardDao)
 
 fun provideUserRepository(
     restApiService: ApiService

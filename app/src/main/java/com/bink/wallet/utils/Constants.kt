@@ -1,9 +1,5 @@
 package com.bink.wallet.utils
 
-import com.bink.wallet.BuildConfig
-import com.bink.wallet.utils.enums.BuildTypes
-import java.util.*
-
 const val MINUTES = "minutes"
 const val HOURS = "hours"
 const val DAYS = "days"

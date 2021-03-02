@@ -15,14 +15,16 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.generateUuidForMembershipCards
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
