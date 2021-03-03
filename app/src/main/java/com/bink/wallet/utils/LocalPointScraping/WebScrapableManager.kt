@@ -10,6 +10,7 @@ import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.logDebug
 
 object WebScrapableManager {
 
