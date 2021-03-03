@@ -3,6 +3,7 @@ package com.bink.wallet.utils.LocalPointScraping
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.webkit.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -41,8 +42,6 @@ object PointScrapingUtil {
         CookieManager.getInstance().removeAllCookies(null)
         CookieManager.getInstance().flush()
 
-        parentView.addView(webView)
-
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
@@ -52,8 +51,11 @@ object PointScrapingUtil {
                     Handler().postDelayed({
                         pointScrapeSite.let { site ->
                             getJavascript(context, url, site, email, password).let { js ->
+                                Log.d("LocalPointScrape", "Evaluating JS")
                                 webView?.evaluateJavascript(js) { response ->
+                                    Log.d("LocalPointScrape", "JS Response $response")
                                     processResponse(response) { pointScrapeResponse ->
+                                        Log.d("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
                                         if (pointScrapeResponse.isDone()) {
                                             webView?.destroy()
                                             lastSeenURL = null
@@ -75,20 +77,22 @@ object PointScrapingUtil {
     }
 
     private fun getJavascript(context: Context, url: String?, pointScrapeSite: PointScrapeSite, email: String, password: String): String? {
+        if(url == null) return null
         when (pointScrapeSite) {
             /**
              * To add a new site, you just need to add the new case, for e.g Morrisons, then underneath add all
              * used URL's to the corresponding Javascript classes
              */
             PointScrapeSite.TESCO -> {
-                return when (url) {
-                    PointScrapeSite.TESCO.signInURL -> {
+                Log.d("LocalPointScrape","Getting JS for $url")
+                return when {
+                    url.toLowerCase().contains(PointScrapeSite.TESCO.signInURL.toLowerCase()) -> {
                         val javascriptClass = readFileText(context, "lps_tesco_login.txt")
                         val replacedEmail = javascriptClass.replaceFirst("%@", email)
                         val replacedPassword = replacedEmail.replaceFirst("%@", password)
                         replacedPassword
                     }
-                    PointScrapeSite.TESCO.scrapeURL -> {
+                    url.toLowerCase().contains(PointScrapeSite.TESCO.scrapeURL.toLowerCase()) -> {
                         readFileText(context, "lps_tesco_scrape.txt")
                     }
                     else -> null

@@ -2,6 +2,7 @@ package com.bink.wallet.utils.LocalPointScraping
 
 import android.content.Context
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.CardBalance
@@ -53,9 +54,12 @@ object WebScrapableManager {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
+        Log.d("LocalPointScrape", "tryScrapeCards index: $index")
+
         //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
         val timer = object : CountDownTimer(60000, 10000) {
             override fun onFinish() {
+                Log.d("LocalPointScrape", "Countdown Timer Finished")
                 if (membershipCards != null) {
                     membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
                 }
@@ -72,16 +76,19 @@ object WebScrapableManager {
 
             val card = cards[index]
 
-            retrieveCredentials(card.membership_plan)?.let { credentials ->
+            retrieveCredentials(card.membership_plan).let { credentials ->
 
                 val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
 
                 if (credentials == null || agent == null) {
                     //Try next card
+                    Log.d("LocalPointScrape", "Credentials null, agent null")
                     timer.cancel()
                     tryScrapeCards(index + 1, cards, context, parentView, callback)
                 } else {
                     PointScrapingUtil.performScrape(context, agent.merchant, parentView, credentials.email, credentials.password) { pointScrapeResponse ->
+
+                        Log.d("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
                         pointScrapeResponse.points?.let { points ->
                             if (membershipCards != null) {
@@ -101,6 +108,7 @@ object WebScrapableManager {
 
         } catch (e: IndexOutOfBoundsException) {
             //Ran through all cards, return updated values
+            Log.d("LocalPointScrape", "Index out of bounds")
             timer.cancel()
             PointScrapingUtil.lastSeenURL = null
             callback(membershipCards)
