@@ -47,11 +47,11 @@ object PointScrapingUtil {
                     Handler().postDelayed({
                         pointScrapeSite.let { site ->
                             getJavascript(context, url, site, email, password).let { js ->
-                                Log.d("LocalPointScrape", "Evaluating JS")
+                                logDebug("LocalPointScrape", "Evaluating JS")
                                 webView?.evaluateJavascript(js) { response ->
-                                    Log.d("LocalPointScrape", "JS Response $response")
+                                    logDebug("LocalPointScrape", "JS Response $response")
                                     processResponse(response) { pointScrapeResponse ->
-                                        Log.d("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
+                                        logDebug("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
                                         if (pointScrapeResponse.isDone()) {
                                             webView?.destroy()
                                             webView = null
@@ -82,7 +82,7 @@ object PointScrapingUtil {
              * used URL's to the corresponding Javascript classes
              */
             PointScrapeSite.TESCO -> {
-                Log.d("LocalPointScrape","Getting JS for $url")
+                logDebug("LocalPointScrape","Getting JS for $url")
                 return when {
                     url.toLowerCase().contains(PointScrapeSite.TESCO.signInURL.toLowerCase()) -> {
                         val javascriptClass = readFileText(context, "lps_tesco_login.txt")

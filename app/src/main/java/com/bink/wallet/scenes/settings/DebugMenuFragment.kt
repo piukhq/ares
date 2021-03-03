@@ -131,7 +131,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
                     PointScrapingUtil
                         .performScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
-                            Log.d("LocalPointScrape", "isDone $pointScrapeResponse")
+                            logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
                         }
                     dialog.dismiss()
                 }

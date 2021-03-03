@@ -54,12 +54,12 @@ object WebScrapableManager {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
-        Log.d("LocalPointScrape", "tryScrapeCards index: $index")
+        logDebug("LocalPointScrape", "tryScrapeCards index: $index")
 
         //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
         val timer = object : CountDownTimer(60000, 10000) {
             override fun onFinish() {
-                Log.d("LocalPointScrape", "Countdown Timer Finished")
+                logDebug("LocalPointScrape", "Countdown Timer Finished")
                 if (membershipCards != null) {
                     membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
                 }
@@ -82,13 +82,13 @@ object WebScrapableManager {
 
                 if (credentials == null || agent == null) {
                     //Try next card
-                    Log.d("LocalPointScrape", "Credentials null, agent null")
+                    logDebug("LocalPointScrape", "Credentials null, agent null")
                     timer.cancel()
                     tryScrapeCards(index + 1, cards, context, callback)
                 } else {
                     PointScrapingUtil.performScrape(context, agent.merchant, credentials.email, credentials.password) { pointScrapeResponse ->
 
-                        Log.d("LocalPointScrape", "Scrape returned $pointScrapeResponse")
+                        logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
                         pointScrapeResponse.points?.let { points ->
                             if (membershipCards != null) {
@@ -108,7 +108,7 @@ object WebScrapableManager {
 
         } catch (e: IndexOutOfBoundsException) {
             //Ran through all cards, return updated values
-            Log.d("LocalPointScrape", "Index out of bounds")
+            logDebug("LocalPointScrape", "Index out of bounds")
             timer.cancel()
             PointScrapingUtil.lastSeenURL = null
             callback(membershipCards)
