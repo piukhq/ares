@@ -230,7 +230,7 @@ class LoyaltyViewModel constructor(
     }
 
     private fun scrapeCards(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
-        WebScrapableManager.tryScrapeCards(0, cards, context, parentView) { cards ->
+        WebScrapableManager.tryScrapeCards(0, cards, context) { cards ->
             membershipCardData.value = cards
             if (cards != null) {
                 updateScrapedCards(cards)

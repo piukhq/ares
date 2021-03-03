@@ -50,7 +50,7 @@ object WebScrapableManager {
 
     }
 
-    fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout, callback: (List<MembershipCard>?) -> Unit) {
+    fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, callback: (List<MembershipCard>?) -> Unit) {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
@@ -63,7 +63,7 @@ object WebScrapableManager {
                 if (membershipCards != null) {
                     membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
                 }
-                tryScrapeCards(index + 1, cards, context, parentView, callback)
+                tryScrapeCards(index + 1, cards, context, callback)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -84,9 +84,9 @@ object WebScrapableManager {
                     //Try next card
                     Log.d("LocalPointScrape", "Credentials null, agent null")
                     timer.cancel()
-                    tryScrapeCards(index + 1, cards, context, parentView, callback)
+                    tryScrapeCards(index + 1, cards, context, callback)
                 } else {
-                    PointScrapingUtil.performScrape(context, agent.merchant, parentView, credentials.email, credentials.password) { pointScrapeResponse ->
+                    PointScrapingUtil.performScrape(context, agent.merchant, credentials.email, credentials.password) { pointScrapeResponse ->
 
                         Log.d("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
@@ -98,7 +98,7 @@ object WebScrapableManager {
                                 membershipCards!![index].isScraped = true
 
                                 timer.cancel()
-                                tryScrapeCards(index + 1, cards, context, parentView, callback)
+                                tryScrapeCards(index + 1, cards, context, callback)
                             }
                         }
 
