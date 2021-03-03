@@ -54,9 +54,11 @@ object PointScrapingUtil {
                                         Log.d("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
                                         if (pointScrapeResponse.isDone()) {
                                             webView?.destroy()
+                                            webView = null
                                             lastSeenURL = null
+                                            
+                                            callback(pointScrapeResponse)
                                         }
-                                        callback(pointScrapeResponse)
                                     }
                                 }
                             }

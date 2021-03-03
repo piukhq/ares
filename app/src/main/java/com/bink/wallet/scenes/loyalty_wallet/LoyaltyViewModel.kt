@@ -140,17 +140,17 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
-    fun fetchMembershipCards(context: Context?, parentView: ConstraintLayout) {
+    fun fetchMembershipCards(context: Context?) {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
-            checkCardScrape(it, context, parentView)
+            checkCardScrape(it, context)
         }
     }
 
-    private fun checkCardScrape(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
+    private fun checkCardScrape(cards: List<MembershipCard>, context: Context?) {
         val shouldScrapeCards = DateTimeUtils.haveTwoHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped)
 
         if (shouldScrapeCards) {
-            scrapeCards(cards, context, parentView)
+            scrapeCards(cards, context)
             SharedPreferenceManager.membershipCardsLastScraped = System.currentTimeMillis()
         } else {
             fetchLocalMembershipCards { cardsFromDb ->
@@ -159,14 +159,14 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun fetchPeriodicMembershipCards(context: Context?, parentView: ConstraintLayout) {
+    fun fetchPeriodicMembershipCards(context: Context?) {
         val shouldMakePeriodicCall =
             DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
         if (shouldMakePeriodicCall) {
-            fetchMembershipCards(context, parentView)
+            fetchMembershipCards(context)
         } else {
             fetchLocalMembershipCards {
-                checkCardScrape(it, context, parentView)
+                checkCardScrape(it, context)
             }
         }
     }
@@ -191,7 +191,7 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun fetchMembershipCardsAndPlansForRefresh(context: Context?, parentView: ConstraintLayout) {
+    fun fetchMembershipCardsAndPlansForRefresh(context: Context?) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
 
@@ -216,7 +216,7 @@ class LoyaltyViewModel constructor(
                 membershipCardData.value = membershipCardsAndPlans.membershipCards
 
                 membershipCardsAndPlans.membershipCards?.let {
-                    checkCardScrape(it, context, parentView)
+                    checkCardScrape(it, context)
                 }
 
                 _isLoading.value = false
@@ -229,7 +229,7 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    private fun scrapeCards(cards: List<MembershipCard>, context: Context?, parentView: ConstraintLayout) {
+    private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
         WebScrapableManager.tryScrapeCards(0, cards, context) { cards ->
             membershipCardData.value = cards
             if (cards != null) {

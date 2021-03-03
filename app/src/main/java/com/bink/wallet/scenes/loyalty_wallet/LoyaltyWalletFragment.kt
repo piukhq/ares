@@ -208,7 +208,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchPeriodicMembershipCards(context, binding.parent)
+        viewModel.fetchPeriodicMembershipCards(context)
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -280,7 +280,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context, binding.parent)
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context)
             } else {
                 isRefresh = false
                 disableIndicators()
@@ -473,7 +473,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            viewModel.fetchPeriodicMembershipCards(context, binding.parent)
+            viewModel.fetchPeriodicMembershipCards(context)
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
