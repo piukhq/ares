@@ -62,9 +62,10 @@ object WebScrapableManager {
         if (index == 0) membershipCards = cards
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
+        timer?.cancel()
+        timer = null
 
-        //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
-        if(timer == null){
+        if (timer == null) {
             timer = object : CountDownTimer(60000, 10000) {
                 override fun onFinish() {
                     logDebug("LocalPointScrape", "Countdown Timer Finished")
@@ -91,11 +92,19 @@ object WebScrapableManager {
 
                 val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
 
+                if (!isAddCard) {
+                    card.isScraped?.let { isScraped ->
+                        if (!isScraped) {
+                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            return
+                        }
+                    }
+
+                }
+
                 if (credentials == null || agent == null) {
                     //Try next card
                     logDebug("LocalPointScrape", "Credentials null, agent null")
-                    timer?.cancel()
-                    timer = null
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
                     PointScrapingUtil.performScrape(context, agent.merchant, credentials.email, credentials.password) { pointScrapeResponse ->
@@ -109,8 +118,6 @@ object WebScrapableManager {
                                 membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                 membershipCards!![index].isScraped = true
 
-                                timer?.cancel()
-                                timer = null
                                 tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                             }
                         }
