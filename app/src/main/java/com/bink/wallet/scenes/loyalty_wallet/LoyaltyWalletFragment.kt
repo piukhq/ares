@@ -321,7 +321,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         WebScrapableManager.updatedCards.observeNonNull(this) {
-            viewModel.membershipCardData.postValue(it)
+            viewModel.membershipCardData.value = it
         }
 
         WebScrapableManager.newlyAddedCard.observeNonNull(this) { newCard ->

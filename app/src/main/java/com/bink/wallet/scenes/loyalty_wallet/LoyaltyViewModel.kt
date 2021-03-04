@@ -258,7 +258,7 @@ class LoyaltyViewModel constructor(
             combinedCards.addAll(cards.filter { it.id != newlyAddedCard?.id })
         }
 
-        membershipCardData.postValue(combinedCards)
+        membershipCardData.value = combinedCards
     }
 
     fun fetchLocalMembershipPlans() {

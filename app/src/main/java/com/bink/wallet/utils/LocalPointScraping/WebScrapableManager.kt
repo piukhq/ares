@@ -134,9 +134,9 @@ object WebScrapableManager {
             PointScrapingUtil.lastSeenURL = null
 
             if (isAddCard) {
-                newlyAddedCard.postValue(membershipCards)
+                newlyAddedCard.value = membershipCards
             } else {
-                updatedCards.postValue(membershipCards)
+                updatedCards.value = membershipCards
             }
 
             callback(membershipCards)

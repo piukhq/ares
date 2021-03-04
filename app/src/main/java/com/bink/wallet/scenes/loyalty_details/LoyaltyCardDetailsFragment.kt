@@ -263,7 +263,7 @@ class LoyaltyCardDetailsFragment :
 
         WebScrapableManager.newlyAddedCard.observeNonNull(this){
             it?.get(0)?.let { card ->
-                viewModel.updatedMembershipCard.postValue(card)
+                viewModel.updatedMembershipCard.value = card
             }
         }
 
