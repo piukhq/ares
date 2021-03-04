@@ -23,6 +23,7 @@ import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRANSACTIONS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.RequestReviewUtil
 import com.bink.wallet.utils.SCROLL_DELAY
@@ -257,6 +258,12 @@ class LoyaltyCardDetailsFragment :
                     FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
                     getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
+            }
+        }
+
+        WebScrapableManager.newlyAddedCard.observeNonNull(this){
+            it?.get(0)?.let { card ->
+                viewModel.updatedMembershipCard.postValue(card)
             }
         }
 

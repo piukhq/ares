@@ -75,7 +75,7 @@ class AddCardFragment : BaseAddAuthFragment() {
                 )
             }
 
-            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context) { cards ->
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
                 if (cards != null) {
                     viewModel.updateScrapedCards(cards)
                 }
@@ -116,6 +116,7 @@ class AddCardFragment : BaseAddAuthFragment() {
             }
 
         }
+
     }
 
     override fun onResume() {

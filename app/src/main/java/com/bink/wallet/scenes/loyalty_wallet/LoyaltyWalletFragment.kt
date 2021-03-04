@@ -320,6 +320,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
+        WebScrapableManager.updatedCards.observeNonNull(this) {
+            viewModel.membershipCardData.postValue(it)
+        }
+
+        WebScrapableManager.newlyAddedCard.observeNonNull(this) { newCard ->
+            viewModel.addNewlyScrapedCard(newCard)
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

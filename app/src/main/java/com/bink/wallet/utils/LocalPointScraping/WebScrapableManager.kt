@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.CardStatus
@@ -13,6 +14,11 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.logDebug
 
 object WebScrapableManager {
+
+    val newlyAddedCard = MutableLiveData<List<MembershipCard>?>()
+    val updatedCards = MutableLiveData<List<MembershipCard>?>()
+
+    private var timer: CountDownTimer? = null
 
     private val scrapableAgents = arrayListOf(TescoScrapableAgent())
 
@@ -51,29 +57,33 @@ object WebScrapableManager {
 
     }
 
-    fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, callback: (List<MembershipCard>?) -> Unit) {
+    fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, isAddCard: Boolean, callback: (List<MembershipCard>?) -> Unit) {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
 
         //We need a timer in the case that an uncaught error occurs, it will automatically carry on after 60 seconds
-        val timer = object : CountDownTimer(60000, 10000) {
-            override fun onFinish() {
-                logDebug("LocalPointScrape", "Countdown Timer Finished")
-                if (membershipCards != null) {
-                    membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
+        if(timer == null){
+            timer = object : CountDownTimer(60000, 10000) {
+                override fun onFinish() {
+                    logDebug("LocalPointScrape", "Countdown Timer Finished")
+                    if (membershipCards != null) {
+                        try {
+                            membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
+                        } catch (e: IndexOutOfBoundsException) {
+                        }
+                    }
+                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 }
-                tryScrapeCards(index + 1, cards, context, callback)
-            }
 
-            override fun onTick(millisUntilFinished: Long) {
+                override fun onTick(millisUntilFinished: Long) {
+                }
             }
         }
 
-
         try {
-            timer.start()
+            timer?.start()
 
             val card = cards[index]
 
@@ -84,8 +94,9 @@ object WebScrapableManager {
                 if (credentials == null || agent == null) {
                     //Try next card
                     logDebug("LocalPointScrape", "Credentials null, agent null")
-                    timer.cancel()
-                    tryScrapeCards(index + 1, cards, context, callback)
+                    timer?.cancel()
+                    timer = null
+                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
                     PointScrapingUtil.performScrape(context, agent.merchant, credentials.email, credentials.password) { pointScrapeResponse ->
 
@@ -98,8 +109,9 @@ object WebScrapableManager {
                                 membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                 membershipCards!![index].isScraped = true
 
-                                timer.cancel()
-                                tryScrapeCards(index + 1, cards, context, callback)
+                                timer?.cancel()
+                                timer = null
+                                tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                             }
                         }
 
@@ -110,8 +122,16 @@ object WebScrapableManager {
         } catch (e: IndexOutOfBoundsException) {
             //Ran through all cards, return updated values
             logDebug("LocalPointScrape", "Index out of bounds")
-            timer.cancel()
+            timer?.cancel()
+            timer = null
             PointScrapingUtil.lastSeenURL = null
+
+            if (isAddCard) {
+                newlyAddedCard.postValue(membershipCards)
+            } else {
+                updatedCards.postValue(membershipCards)
+            }
+
             callback(membershipCards)
         }
 

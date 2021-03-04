@@ -230,8 +230,8 @@ class LoyaltyViewModel constructor(
     }
 
     private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
-        WebScrapableManager.tryScrapeCards(0, cards, context) { cards ->
-            membershipCardData.value = cards
+        WebScrapableManager.tryScrapeCards(0, cards, context, false) { cards ->
+            //membershipCardData.value = cards
             if (cards != null) {
                 updateScrapedCards(cards)
             }
@@ -243,6 +243,22 @@ class LoyaltyViewModel constructor(
         for (card in scrapedCards) {
             loyaltyWalletRepository.storeMembershipCard(card)
         }
+    }
+
+    fun addNewlyScrapedCard(newCards: List<MembershipCard>?){
+        val combinedCards = ArrayList<MembershipCard>()
+        val newlyAddedCard = newCards?.get(0)
+        val previousCards = membershipCardData.value
+
+        newlyAddedCard?.let {
+            combinedCards.add(it)
+        }
+
+        previousCards?.let { cards ->
+            combinedCards.addAll(cards.filter { it.id != newlyAddedCard?.id })
+        }
+
+        membershipCardData.postValue(combinedCards)
     }
 
     fun fetchLocalMembershipPlans() {
