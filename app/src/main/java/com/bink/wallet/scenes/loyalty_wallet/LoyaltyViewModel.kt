@@ -245,14 +245,11 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    fun addNewlyScrapedCard(newCards: List<MembershipCard>?){
+    fun addNewlyScrapedCard(newlyAddedCard: MembershipCard) {
         val combinedCards = ArrayList<MembershipCard>()
-        val newlyAddedCard = newCards?.get(0)
         val previousCards = membershipCardData.value
 
-        newlyAddedCard?.let {
-            combinedCards.add(it)
-        }
+        combinedCards.add(newlyAddedCard)
 
         previousCards?.let { cards ->
             combinedCards.addAll(cards.filter { it.id != newlyAddedCard?.id })

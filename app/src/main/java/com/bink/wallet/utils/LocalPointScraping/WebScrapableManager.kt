@@ -16,7 +16,7 @@ import com.bink.wallet.utils.logDebug
 
 object WebScrapableManager {
 
-    val newlyAddedCard = MutableLiveData<List<MembershipCard>?>()
+    val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
 
     private var timer: CountDownTimer? = null
@@ -136,7 +136,9 @@ object WebScrapableManager {
             PointScrapingUtil.lastSeenURL = null
 
             if (isAddCard) {
-                newlyAddedCard.value = membershipCards
+                membershipCards?.get(0)?.let{ newCard ->
+                    newlyAddedCard.value = newCard
+                }
             } else {
                 updatedCards.value = membershipCards
             }
