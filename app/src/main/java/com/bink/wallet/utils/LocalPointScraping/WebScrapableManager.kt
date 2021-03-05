@@ -10,6 +10,7 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.logDebug
 
@@ -66,12 +67,13 @@ object WebScrapableManager {
         timer = null
 
         if (timer == null) {
-            timer = object : CountDownTimer(60000, 10000) {
+            timer = object : CountDownTimer(60000, 1000) {
                 override fun onFinish() {
                     logDebug("LocalPointScrape", "Countdown Timer Finished")
                     if (membershipCards != null) {
                         try {
-                            membershipCards!![index].status = CardStatus(null, MembershipCardStatus.FAILED.status)
+                            membershipCards!![index].status = CardStatus(listOf(CardCodes.X101.code), MembershipCardStatus.FAILED.status)
+                            membershipCards!![index].isScraped = true
                         } catch (e: IndexOutOfBoundsException) {
                         }
                     }

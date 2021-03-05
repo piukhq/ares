@@ -126,7 +126,7 @@ class LoyaltyCardDetailsFragment :
         binding.offerTiles.layoutManager = LinearLayoutManager(context)
         binding.offerTiles.adapter = viewModel.tiles.value?.let {
             LoyaltyDetailsTilesAdapter(it) { image ->
-                if(!image.cta_url.isNullOrEmpty()){
+                if (!image.cta_url.isNullOrEmpty()) {
                     findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
 
                 }
@@ -261,9 +261,10 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
-        WebScrapableManager.newlyAddedCard.observeNonNull(this){
+        WebScrapableManager.newlyAddedCard.observeNonNull(this) {
             it?.get(0)?.let { card ->
                 viewModel.updatedMembershipCard.value = card
+                WebScrapableManager.newlyAddedCard.value = null
             }
         }
 
@@ -971,7 +972,7 @@ class LoyaltyCardDetailsFragment :
                     }
                 }
             }
-            
+
         }
     }
 
