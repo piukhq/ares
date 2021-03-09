@@ -230,10 +230,9 @@ class LoyaltyViewModel constructor(
     }
 
     private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
-        WebScrapableManager.tryScrapeCards(0, cards, context, false) { cards ->
-            //membershipCardData.value = cards
-            if (cards != null) {
-                updateScrapedCards(cards)
+        WebScrapableManager.tryScrapeCards(0, cards, context, false) { scrapedCards ->
+            if (scrapedCards != null) {
+                updateScrapedCards(scrapedCards)
             }
         }
     }
