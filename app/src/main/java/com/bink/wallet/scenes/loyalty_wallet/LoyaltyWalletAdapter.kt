@@ -179,6 +179,9 @@ class LoyaltyWalletAdapter(
         return false
     }
 
+    fun updateItem(){
+
+    }
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
         BaseViewHolder<Any>(binding) {
 
