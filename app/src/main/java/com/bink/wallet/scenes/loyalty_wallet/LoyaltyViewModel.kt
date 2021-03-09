@@ -154,9 +154,13 @@ class LoyaltyViewModel constructor(
             SharedPreferenceManager.membershipCardsLastScraped = System.currentTimeMillis()
         } else {
             fetchLocalMembershipCards { cardsFromDb ->
-                membershipCardData.postValue(WebScrapableManager.mapOldToNewCards(cardsFromDb, cards))
+                setMembershipCardsFromDb(cardsFromDb, cards)
             }
         }
+    }
+
+    private fun setMembershipCardsFromDb(cardsFromDb: List<MembershipCard>, cards: List<MembershipCard>){
+        membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
     fun fetchPeriodicMembershipCards(context: Context?) {
@@ -230,10 +234,9 @@ class LoyaltyViewModel constructor(
     }
 
     private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
-        WebScrapableManager.tryScrapeCards(0, cards, context, false) { cards ->
-            //membershipCardData.value = cards
-            if (cards != null) {
-                updateScrapedCards(cards)
+        WebScrapableManager.tryScrapeCards(0, cards, context, false) { scrapedCards ->
+            if (scrapedCards != null) {
+                updateScrapedCards(scrapedCards)
             }
         }
     }
