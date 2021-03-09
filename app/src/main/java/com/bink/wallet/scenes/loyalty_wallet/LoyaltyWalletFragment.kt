@@ -507,7 +507,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                             viewModel.deleteCard(membershipCard.id)
-                            WebScrapableManager.removeCredentials(membershipCard.id)
+                            WebScrapableManager.removeCredentials(membershipCard.card?.membership_id?:"")
                             deletedCard = membershipCard
                             val planId = membershipCard.membership_plan
                             val uuid = membershipCard.uuid

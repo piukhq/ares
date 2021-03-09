@@ -6,6 +6,7 @@ abstract class WebScrapable {
     abstract val membershipPlanId: Int
     abstract val usernameFieldTitle: String
     abstract val passwordFieldTitle: String
+    abstract val uniqueFieldTitle: String
     abstract val cardBalancePrefix: String
     abstract val cardBalanceSuffix: String
 
