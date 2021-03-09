@@ -7,9 +7,15 @@ import com.bink.wallet.databinding.CardOnboardingLoyaltyItemBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.BaseViewHolder
 
-class CardOnboardLinkAdapter() :RecyclerView.Adapter<CardOnboardLinkAdapter.GridImageViewHolder>() {
+class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
+    RecyclerView.Adapter<CardOnboardLinkAdapter.GridImageViewHolder>() {
 
+    private var plansList = mutableListOf<MembershipPlan>()
 
+    fun setPlansData( plans:MutableList<MembershipPlan>){
+        plansList = plans
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridImageViewHolder {
         TODO("Not yet implemented")
     }
@@ -22,7 +28,7 @@ class CardOnboardLinkAdapter() :RecyclerView.Adapter<CardOnboardLinkAdapter.Grid
         TODO("Not yet implemented")
     }
 
-    class GridImageViewHolder(val binding : CardOnboardingLoyaltyItemBinding):
+    class GridImageViewHolder(val binding: CardOnboardingLoyaltyItemBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
 
         override fun bind(item: MembershipPlan) {
