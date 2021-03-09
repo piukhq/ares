@@ -5,5 +5,7 @@
         <value>false</value>
         <key>dynamic_actions</key>
         <value></value>
+        <key>LPC_master_enabled_debug</key>
+        <value></value>
     </entry>
 </defaultsMap>
