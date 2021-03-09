@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.CardItemBinding
+import com.bink.wallet.databinding.CardOnboardingItemBinding
 import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.BannerDisplay
@@ -55,7 +56,7 @@ class LoyaltyWalletAdapter(
 
         return when (viewType) {
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
-            JOIN_PLAN -> PlanSuggestionHolder(EmptyLoyaltyItemBinding.inflate(inflater))
+            JOIN_PLAN -> CardOnBoardingLinkHolder(CardOnboardingItemBinding.inflate(inflater))
             else -> {
                 val binding = EmptyLoyaltyItemBinding.inflate(inflater)
                 binding.apply {
@@ -179,9 +180,6 @@ class LoyaltyWalletAdapter(
         return false
     }
 
-    fun updateItem(){
-
-    }
     inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
         BaseViewHolder<Any>(binding) {
 
@@ -351,5 +349,16 @@ class LoyaltyWalletAdapter(
                 joinCardMainLayout.setOnClickListener { onClickListener(item) }
             }
         }
+    }
+
+    inner class CardOnBoardingLinkHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
+
+        private val gridRecyclerView:RecyclerView = binding.rvImageGrid
+        val cardOnboardLinkAdapter = CardOnboardLinkAdapter()
+
+        override fun bind(item: MembershipPlan) {
+            TODO("Not yet implemented")
+        }
+
     }
 }

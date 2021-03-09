@@ -6,13 +6,18 @@
 
 
     <androidx.cardview.widget.CardView
+        style="@style/ShadowedCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
+        android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
         app:cardCornerRadius="6dp">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
+            android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
