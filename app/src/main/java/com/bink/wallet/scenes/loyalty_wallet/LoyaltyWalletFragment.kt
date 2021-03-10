@@ -63,6 +63,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var isRefresh = false
     private var isErrorShowing = false
     private var deletedCard: MembershipCard? = null
+    private lateinit var cards : List<MembershipCard>
+    private lateinit var plans : List<MembershipPlan>
 
 
     private var simpleCallback =
@@ -443,6 +445,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.second.isNotEmpty()) {
+                    cards = userDataResult.result.first
+                    plans = userDataResult.result.second
+
                     walletAdapter.membershipCards =
                         WalletOrderingUtil.getSavedLoyaltyCardWallet(
                             sortPlans(ArrayList(userDataResult.result.third))
@@ -517,11 +522,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
             is MembershipPlan -> {
                 findNavController().navigate(
-                    LoyaltyWalletFragmentDirections.loyaltyToAddJoin(
-                        item,
-                        null,
-                        true,
-                        isRetryJourney = false
+                    LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(plans.toTypedArray(),
+                        cards.toTypedArray()
                     )
                 )
             }

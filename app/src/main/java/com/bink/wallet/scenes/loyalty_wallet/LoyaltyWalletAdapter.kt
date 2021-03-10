@@ -77,7 +77,7 @@ class LoyaltyWalletAdapter(
         membershipCards[position].let {
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
-                is PlanSuggestionHolder -> holder.bind(it as MembershipPlan)
+                is CardOnBoardingLinkHolder -> holder.bind(it as MembershipPlan)
                 is PaymentCardWalletJoinHolder -> holder.bind(it)
             }
         }
@@ -365,7 +365,11 @@ class LoyaltyWalletAdapter(
             gridRecyclerView.adapter = cardOnboardLinkAdapter
         }
         override fun bind(item: MembershipPlan) {
-
+            with(binding){
+                mainContainer.setOnClickListener {
+                    onClickListener(item)
+                }
+            }
         }
 
     }

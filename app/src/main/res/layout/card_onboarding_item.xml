@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -36,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/title_margin_top"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:fontFamily="@font/nunito_sans_bold"
                     android:text="@string/card_onboarding_title"
                     android:textColor="@color/white"
