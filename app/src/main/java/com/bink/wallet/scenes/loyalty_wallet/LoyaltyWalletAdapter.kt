@@ -356,12 +356,12 @@ class LoyaltyWalletAdapter(
     inner class CardOnBoardingLinkHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
 
         private val gridRecyclerView:RecyclerView = binding.rvImageGrid
-         val cardOnboardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
+         private val cardOnboardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
 
         init {
             val context = binding.root.context
             gridRecyclerView.layoutManager = GridLayoutManager(context,2)
-            cardOnboardLinkAdapter.setPlansData(membershipPlans.sortedByDescending { it.id }.take(3) as MutableList<MembershipPlan>)
+            cardOnboardLinkAdapter.setPlansData(membershipPlans.sortedByDescending { it.id }.take(1) as MutableList<MembershipPlan>)
             gridRecyclerView.adapter = cardOnboardLinkAdapter
         }
         override fun bind(item: MembershipPlan) {

@@ -13,7 +13,7 @@
             android:layout_height="0dp"
             android:background="#102F82"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="56:34"
+            app:layout_constraintDimensionRatio="57:34"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

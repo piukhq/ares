@@ -9,27 +9,37 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.BaseViewHolder
 
 class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
-    RecyclerView.Adapter<CardOnboardLinkAdapter.GridImageViewHolder>() {
+    RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private var plansList = mutableListOf<MembershipPlan>()
+
+    companion object{
+        private const val IMAGEGRIDVIEW = 0
+        private const val PLACEHOLDER = 1
+    }
 
     fun setPlansData(plans: MutableList<MembershipPlan>) {
         plansList = plans
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridImageViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
-        return GridImageViewHolder(CardOnboardingLoyaltyItemBinding.inflate(inflater))
+        return when(viewType){
+            IMAGEGRIDVIEW -> GridImageViewHolder(CardOnboardingLoyaltyItemBinding.inflate(inflater))
+            else -> ItemPlaceHolder(CardOnboardingLoyaltyItemPlaceholderBinding.inflate(inflater))
+        }
     }
 
     override fun getItemCount(): Int {
         return itemsToDisplay(plansList)
     }
 
-    override fun onBindViewHolder(holder: GridImageViewHolder, position: Int) {
-        holder.bind(plansList[position])
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        when(holder){
+            is GridImageViewHolder -> holder.bind(plansList[position])
+        }
 
     }
 
@@ -45,13 +55,13 @@ class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        if ((position == plansList.size -1) && shouldShowPlaceHolder()){
-
+        return  when(shouldShowPlaceHolder(position)){
+            true -> PLACEHOLDER
+            else -> IMAGEGRIDVIEW
         }
-        return super.getItemViewType(position)
     }
 
-    class placeHolder(val binding: CardOnboardingLoyaltyItemPlaceholderBinding) :
+    class ItemPlaceHolder(val binding: CardOnboardingLoyaltyItemPlaceholderBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
         override fun bind(item: MembershipPlan) {
 
@@ -64,14 +74,18 @@ class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
         val size = plansList.size
         return when {
             size >= 4 || size == 3 -> 4
-            size == 2 || size == 1 || size == 1 -> 2
+            size == 2 || size == 1 -> 2
             else -> 0
 
         }
     }
 
-    private fun shouldShowPlaceHolder():Boolean{
-        return !(itemCount == 4 || itemCount == 3)
+    private fun shouldShowPlaceHolder(position: Int): Boolean {
+        return (position == plansList.size) && (itemsToDisplay(plansList) == 4 || itemsToDisplay(
+            plansList
+        ) == 2)
+
 
     }
+
 }
