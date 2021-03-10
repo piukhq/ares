@@ -5,7 +5,7 @@ import com.bink.wallet.network.ApiConstants
 
 class TescoScrapableAgent : WebScrapable() {
 
-    override val merchant = ScrapableMerchanct.TESCO
+    override val merchant = PointScrapeSite.TESCO
 
     override val membershipPlanId = when (ApiConstants.BASE_URL) {
         ApiConfig.PROD_URL -> 203
@@ -20,4 +20,9 @@ class TescoScrapableAgent : WebScrapable() {
     override val passwordFieldTitle: String
         get() = "Password"
 
+    override val cardBalancePrefix: String
+        get() = ""
+
+    override val cardBalanceSuffix: String
+        get() = "points"
 }

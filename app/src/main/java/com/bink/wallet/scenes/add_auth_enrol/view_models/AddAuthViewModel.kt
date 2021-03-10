@@ -167,6 +167,13 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         return true
     }
 
+    fun updateScrapedCards(cards : List<MembershipCard>){
+        val scrapedCards = cards.filter { it.isScraped == true }
+        for(card in scrapedCards){
+            loyaltyWalletRepository.storeMembershipCard(card)
+        }
+    }
+
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
         clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.createMembershipCard(
