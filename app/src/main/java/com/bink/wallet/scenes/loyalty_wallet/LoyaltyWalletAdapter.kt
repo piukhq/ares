@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.CardItemBinding
@@ -355,10 +356,16 @@ class LoyaltyWalletAdapter(
     inner class CardOnBoardingLinkHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
 
         private val gridRecyclerView:RecyclerView = binding.rvImageGrid
-        val cardOnboardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
+         val cardOnboardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
 
+        init {
+            val context = binding.root.context
+            gridRecyclerView.layoutManager = GridLayoutManager(context,2)
+            cardOnboardLinkAdapter.setPlansData(membershipPlans.sortedByDescending { it.id }.take(3) as MutableList<MembershipPlan>)
+            gridRecyclerView.adapter = cardOnboardLinkAdapter
+        }
         override fun bind(item: MembershipPlan) {
-            TODO("Not yet implemented")
+
         }
 
     }

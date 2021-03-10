@@ -63,7 +63,7 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 }
 
 fun getIconTypeFromPlan(item: MembershipPlan?) =
-    item?.images?.first { it.type == ImageType.ICON.type }?.url
+    item?.images?.first { it.type == 0 }?.url
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipCard?) {
@@ -84,7 +84,7 @@ fun ImageView.loadImage(item: MembershipCard?) {
 }
 
 fun getIconTypeFromCard(item: MembershipCard?) =
-    item?.images?.first { it.type == ImageType.ICON.type }?.url
+    item?.images?.first { it.type == 0 }?.url
 
 @BindingAdapter("image")
 fun ImageView.setPaymentCardImage(item: PaymentCard) {
