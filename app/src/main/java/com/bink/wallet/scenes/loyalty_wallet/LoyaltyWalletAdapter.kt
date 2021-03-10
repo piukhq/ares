@@ -32,7 +32,8 @@ import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
-    val onRemoveListener: (Any) -> Unit = {}
+    val onRemoveListener: (Any) -> Unit = {},
+    val onCardLinkClickListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
@@ -354,7 +355,7 @@ class LoyaltyWalletAdapter(
     inner class CardOnBoardingLinkHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
 
         private val gridRecyclerView:RecyclerView = binding.rvImageGrid
-        val cardOnboardLinkAdapter = CardOnboardLinkAdapter()
+        val cardOnboardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
 
         override fun bind(item: MembershipPlan) {
             TODO("Not yet implemented")

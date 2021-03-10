@@ -51,7 +51,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         onClickListener = {
             onCardClicked(it)
         },
-        onRemoveListener = { onBannerRemove(it) }
+        onRemoveListener = { onBannerRemove(it) },
+        onCardLinkClickListener = {
+
+        }
     ).apply {
         setHasStableIds(true)
     }

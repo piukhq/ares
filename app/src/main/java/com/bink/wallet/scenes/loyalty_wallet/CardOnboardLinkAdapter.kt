@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.CardOnboardingItemBinding
@@ -17,7 +18,9 @@ class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GridImageViewHolder {
-        TODO("Not yet implemented")
+        val inflater = LayoutInflater.from(parent.context)
+
+        return GridImageViewHolder(CardOnboardingLoyaltyItemBinding.inflate(inflater))
     }
 
     override fun getItemCount(): Int {
