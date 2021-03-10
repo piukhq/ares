@@ -34,7 +34,7 @@ import kotlin.properties.Delegates
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
     val onRemoveListener: (Any) -> Unit = {},
-    val onCardLinkClickListener: (Any) -> Unit = {}
+    val onCardLinkClickListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {

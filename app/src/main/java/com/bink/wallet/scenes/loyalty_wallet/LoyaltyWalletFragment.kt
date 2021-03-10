@@ -52,8 +52,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             onCardClicked(it)
         },
         onRemoveListener = { onBannerRemove(it) },
-        onCardLinkClickListener = {
 
+        onCardLinkClickListener = {
+            onCardLinkClicked(it)
         }
     ).apply {
         setHasStableIds(true)
@@ -63,8 +64,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var isRefresh = false
     private var isErrorShowing = false
     private var deletedCard: MembershipCard? = null
-    private lateinit var cards : List<MembershipCard>
-    private lateinit var plans : List<MembershipPlan>
+    private lateinit var cards: List<MembershipCard>
+    private lateinit var plans: List<MembershipPlan>
 
 
     private var simpleCallback =
@@ -522,7 +523,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
             is MembershipPlan -> {
                 findNavController().navigate(
-                    LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(plans.toTypedArray(),
+                    LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(
+                        plans.toTypedArray(),
                         cards.toTypedArray()
                     )
                 )
@@ -636,5 +638,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
         }
+    }
+
+    private fun onCardLinkClicked(item: MembershipPlan) {
+        val directions = LoyaltyWalletFragmentDirections.loyaltyToAddJoin(
+            item,
+            null, isFromJoinCard = false, isRetryJourney = false
+        )
+        findNavController().navigateIfAdded(this, directions, R.id.loyalty_fragment)
     }
 }

@@ -8,7 +8,7 @@ import com.bink.wallet.databinding.CardOnboardingLoyaltyItemPlaceholderBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.BaseViewHolder
 
-class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
+class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {}) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private var plansList = mutableListOf<MembershipPlan>()
@@ -43,12 +43,15 @@ class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
 
     }
 
-    class GridImageViewHolder(val binding: CardOnboardingLoyaltyItemBinding) :
+   inner class GridImageViewHolder(val binding: CardOnboardingLoyaltyItemBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
 
         override fun bind(item: MembershipPlan) {
             with(binding) {
                 membershipPlan = item
+                root.setOnClickListener {
+                    onClickListener(item)
+                }
             }
         }
 
@@ -61,10 +64,14 @@ class CardOnboardLinkAdapter(val onClickListener: (Any) -> Unit = {}) :
         }
     }
 
-    class ItemPlaceHolder(val binding: CardOnboardingLoyaltyItemPlaceholderBinding) :
+    inner class ItemPlaceHolder(val binding: CardOnboardingLoyaltyItemPlaceholderBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
         override fun bind(item: MembershipPlan) {
-
+        with(binding){
+            root.setOnClickListener {
+                onClickListener(item)
+            }
+        }
         }
 
     }
