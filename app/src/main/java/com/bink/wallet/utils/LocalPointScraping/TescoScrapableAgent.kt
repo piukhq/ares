@@ -20,9 +20,6 @@ class TescoScrapableAgent : WebScrapable() {
     override val passwordFieldTitle: String
         get() = "Password"
 
-    override val uniqueFieldTitle: String
-        get() = "Card Number"
-
     override val cardBalancePrefix: String
         get() = ""
 

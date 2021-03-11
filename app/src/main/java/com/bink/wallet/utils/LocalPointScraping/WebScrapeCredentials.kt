@@ -9,5 +9,5 @@ import kotlinx.android.parcel.Parcelize
 data class WebScrapeCredentials(
     val email: String?,
     val password: String?,
-    val uniqueString: String?
+    val cardId: String?
 ) : Parcelable
