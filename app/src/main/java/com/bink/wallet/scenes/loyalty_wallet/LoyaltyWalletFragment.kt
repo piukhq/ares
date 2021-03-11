@@ -476,7 +476,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         val allCards = ArrayList<Any>()
         val (cards, plans) = loyaltyCards.partition { cardType -> cardType is MembershipCard }
 
-        if (plans.isNotEmpty()) {
+        if (plans.isNotEmpty() && shouldShowCardLink(this.cards,this.plans)) {
             val plan = plans.firstOrNull()
             plan?.let { allCards.add(it) }
         }
@@ -646,5 +646,21 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             null, isFromJoinCard = false, isRetryJourney = false
         )
         findNavController().navigateIfAdded(this, directions, R.id.loyalty_fragment)
+    }
+
+    private fun shouldShowCardLink(cards:List<MembershipCard>,plan: List<MembershipPlan>):Boolean{
+
+        cards.forEach { membershipCard ->
+            plan.forEach { mPlan ->
+                if (membershipCard.membership_plan == mPlan.id){
+                    if(mPlan.isPlanPLL()){
+                        return false
+                    }
+                }
+            }
+
+        }
+
+        return true
     }
 }
