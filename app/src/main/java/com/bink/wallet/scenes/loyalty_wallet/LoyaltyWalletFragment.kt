@@ -448,7 +448,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (userDataResult.result.second.isNotEmpty()) {
                     cards = userDataResult.result.first
                     plans = userDataResult.result.second
-
+                    walletAdapter.cards = userDataResult.result.first as MutableList<MembershipCard>
                     walletAdapter.membershipCards =
                         WalletOrderingUtil.getSavedLoyaltyCardWallet(
                             sortPlans(ArrayList(userDataResult.result.third))

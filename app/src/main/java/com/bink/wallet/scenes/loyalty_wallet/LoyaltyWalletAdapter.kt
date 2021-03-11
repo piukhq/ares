@@ -53,6 +53,8 @@ class LoyaltyWalletAdapter(
 
     var paymentCards: MutableList<PaymentCard>? = null
 
+    var cards = mutableListOf<MembershipCard>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
@@ -86,7 +88,7 @@ class LoyaltyWalletAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
-            is MembershipPlan -> JOIN_PLAN
+            is MembershipPlan,shouldShowCardLink(cards,membershipPlans) -> JOIN_PLAN
             else -> JOIN_PAYMENT
         }
     }
@@ -361,7 +363,7 @@ class LoyaltyWalletAdapter(
         init {
             val context = binding.root.context
             gridRecyclerView.layoutManager = GridLayoutManager(context,2)
-            cardOnboardLinkAdapter.setPlansData(membershipPlans.sortedByDescending { it.id }.take(1) as MutableList<MembershipPlan>)
+            cardOnboardLinkAdapter.setPlansData(membershipPlans.filter { it.isPlanPLL() }.sortedByDescending { it.id }.take(4) as MutableList<MembershipPlan>)
             gridRecyclerView.adapter = cardOnboardLinkAdapter
         }
         override fun bind(item: MembershipPlan) {
@@ -372,5 +374,19 @@ class LoyaltyWalletAdapter(
             }
         }
 
+    }
+
+    private fun shouldShowCardLink(cards:List<MembershipCard>,plan: List<MembershipPlan>):Boolean{
+
+        cards.forEach { membershipCard ->
+            plan.forEach { mPlan ->
+                if (membershipCard.membership_plan == mPlan.id){
+                    return true
+                }
+            }
+
+        }
+
+        return false
     }
 }
