@@ -195,9 +195,9 @@ object WebScrapableManager {
         LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
     }
 
-    private fun encryptedKeyForCardId(uniqueString: String, credentialType: CredentialType): String {
+    private fun encryptedKeyForCardId(cardId: String, credentialType: CredentialType): String {
 
-        return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, uniqueString, credentialType.name)
+        return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, cardId, credentialType.name)
     }
 
     fun mapOldToNewCards(oldCards: List<MembershipCard>, newCards: List<MembershipCard>?): List<MembershipCard> {
