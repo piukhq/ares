@@ -17,7 +17,8 @@ object WebScrapableManager {
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
 
-    var currentCardRequest: MembershipCardRequest? = null
+    private var userName: String? = null
+    private var password: String? = null
 
     private var timer: CountDownTimer? = null
 
@@ -33,24 +34,18 @@ object WebScrapableManager {
 
     private var membershipCards: List<MembershipCard>? = null
 
-    fun storeCredentialsFromRequest(cardId: String) {
-
-        if (currentCardRequest == null) return
-
+    fun getCurrentCredentials(request: MembershipCardRequest) {
         for (scrapableAgent in scrapableAgents) {
-            currentCardRequest?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
+            request?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
-                    currentCardRequest?.account?.authorise_fields?.let { authorizeFields ->
+                    request?.account?.authorise_fields?.let { authorizeFields ->
 
-                        val username = authorizeFields.firstOrNull {
+                        userName = authorizeFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
                         }?.value
-                        val password = authorizeFields.firstOrNull {
+                        password = authorizeFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
                         }?.value
-
-                        val webScrapeCredentials = WebScrapeCredentials(username, password, cardId)
-                        storeCredentials(webScrapeCredentials)
 
                     }
 
@@ -58,6 +53,14 @@ object WebScrapableManager {
             }
 
         }
+    }
+
+    fun storeCredentialsFromRequest(cardId: String) {
+
+        if (userName == null || password == null) return
+
+        val webScrapeCredentials = WebScrapeCredentials(userName, password, cardId)
+        storeCredentials(webScrapeCredentials)
 
     }
 
@@ -173,7 +176,8 @@ object WebScrapableManager {
             )
         }
 
-        currentCardRequest = null
+        userName = null
+        password = null
     }
 
     private fun retrieveCredentials(cardId: String?): WebScrapeCredentials? {

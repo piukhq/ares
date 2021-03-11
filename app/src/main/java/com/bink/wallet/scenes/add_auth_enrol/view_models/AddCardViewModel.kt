@@ -68,7 +68,7 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         }
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
-        WebScrapableManager.currentCardRequest = currentRequest
+        WebScrapableManager.getCurrentCredentials(currentRequest)
 
         if (isRetryJourney) {
             updateMembershipCard(membershipCardId, currentRequest)
