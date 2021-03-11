@@ -20,6 +20,9 @@ object WebScrapableManager {
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
 
+    private var userName: String? = null
+    private var password: String? = null
+
     private var timer: CountDownTimer? = null
 
     private val scrapableAgents = arrayListOf(TescoScrapableAgent())
@@ -34,34 +37,33 @@ object WebScrapableManager {
 
     private var membershipCards: List<MembershipCard>? = null
 
-    fun storeCredentialsFromRequest(membershipCardRequest: MembershipCardRequest) {
-
+    fun setUsernameAndPassword(request: MembershipCardRequest) {
         for (scrapableAgent in scrapableAgents) {
-            membershipCardRequest.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
+            request?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
-                    membershipCardRequest.account?.add_fields?.let { addFields ->
-                        membershipCardRequest.account?.authorise_fields?.let { authorizeFields ->
+                    request?.account?.authorise_fields?.let { authorizeFields ->
 
-                            val username = authorizeFields.firstOrNull {
-                                (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
-                            }?.value
-                            val password = authorizeFields.firstOrNull {
-                                (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
-                            }?.value
+                        userName = authorizeFields.firstOrNull {
+                            (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
+                        }?.value
+                        password = authorizeFields.firstOrNull {
+                            (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
+                        }?.value
 
-                            val uniqueString = addFields.firstOrNull {
-                                (it.column ?: "").equals(scrapableAgent.uniqueFieldTitle)
-                            }?.value
-
-                            val webScrapeCredentials = WebScrapeCredentials(username, password, uniqueString)
-                            storeCredentials(webScrapeCredentials)
-
-                        }
                     }
+
                 }
             }
 
         }
+    }
+
+    fun storeCredentialsFromRequest(cardId: String) {
+
+        if (userName == null || password == null) return
+
+        val webScrapeCredentials = WebScrapeCredentials(userName, password, cardId)
+        storeCredentials(webScrapeCredentials)
 
     }
 
@@ -101,7 +103,7 @@ object WebScrapableManager {
 
             val card = cards[index]
 
-            retrieveCredentials(card.card?.membership_id).let { credentials ->
+            retrieveCredentials(card.id).let { credentials ->
 
                 val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
 
@@ -166,12 +168,12 @@ object WebScrapableManager {
     }
 
     private fun storeCredentials(webScrapeCredentials: WebScrapeCredentials) {
-        if (webScrapeCredentials.uniqueString == null) return
+        if (webScrapeCredentials.cardId == null) return
 
         //Storing the username/email here
         webScrapeCredentials.email?.let {
             LocalStoreUtils.setAppSharedPref(
-                encryptedKeyForCardId(webScrapeCredentials.uniqueString, CredentialType.USERNAME),
+                encryptedKeyForCardId(webScrapeCredentials.cardId, CredentialType.USERNAME),
                 it
             )
         }
@@ -179,30 +181,33 @@ object WebScrapableManager {
         //Storing password here
         webScrapeCredentials.password?.let {
             LocalStoreUtils.setAppSharedPref(
-                encryptedKeyForCardId(webScrapeCredentials.uniqueString, CredentialType.PASSWORD),
+                encryptedKeyForCardId(webScrapeCredentials.cardId, CredentialType.PASSWORD),
                 it
             )
         }
+
+        userName = null
+        password = null
     }
 
-    private fun retrieveCredentials(uniqueString: String?): WebScrapeCredentials? {
-        if (uniqueString == null) return null
+    private fun retrieveCredentials(cardId: String?): WebScrapeCredentials? {
+        if (cardId == null) return null
         val username =
-            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(uniqueString, CredentialType.USERNAME))
+            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.USERNAME)) ?: return null
         val password =
-            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(uniqueString, CredentialType.PASSWORD))
+            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.PASSWORD)) ?: return null
 
-        return WebScrapeCredentials(username, password, uniqueString)
+        return WebScrapeCredentials(username, password, cardId)
     }
 
-    fun removeCredentials(uniqueString: String) {
-        LocalStoreUtils.removeKey(encryptedKeyForCardId(uniqueString, CredentialType.USERNAME))
-        LocalStoreUtils.removeKey(encryptedKeyForCardId(uniqueString, CredentialType.PASSWORD))
+    fun removeCredentials(cardId: String) {
+        LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.USERNAME))
+        LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
     }
 
-    private fun encryptedKeyForCardId(uniqueString: String, credentialType: CredentialType): String {
+    private fun encryptedKeyForCardId(cardId: String, credentialType: CredentialType): String {
 
-        return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, uniqueString, credentialType.name)
+        return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, cardId, credentialType.name)
     }
 
     fun mapOldToNewCards(oldCards: List<MembershipCard>, newCards: List<MembershipCard>?): List<MembershipCard> {
