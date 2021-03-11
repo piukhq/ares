@@ -34,7 +34,7 @@ object WebScrapableManager {
 
     private var membershipCards: List<MembershipCard>? = null
 
-    fun getCurrentCredentials(request: MembershipCardRequest) {
+    fun setUsernameAndPassword(request: MembershipCardRequest) {
         for (scrapableAgent in scrapableAgents) {
             request?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
