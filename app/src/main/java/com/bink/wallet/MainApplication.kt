@@ -23,8 +23,14 @@ class MainApplication : Application() {
             } else {
                 ApiConstants.BASE_URL = SharedPreferenceManager.storedApiUrl.toString()
             }
+
+            if (!SharedPreferenceManager.hasLaunchedAfterApiUpdate) {
+                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_3.version
+                SharedPreferenceManager.hasLaunchedAfterApiUpdate = true
+            }
+
             if (SharedPreferenceManager.storedBackendVersion.isNullOrEmpty()) {
-                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
+                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_3.version
             }
             modules(listOf(viewModelModules, networkModule, dataModule, utilsModule))
         }
