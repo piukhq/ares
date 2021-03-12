@@ -34,18 +34,18 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         logUserPropertiesAtStartUp()
 
-//        SentryAndroid.init(
-//            this
-//        ) { options: SentryAndroidOptions ->
-//            options.environment =
-//                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
-//            options.isDebug = BuildConfig.DEBUG
-//            options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
-//        }
+        SentryAndroid.init(
+            this
+        ) { options: SentryAndroidOptions ->
+            options.environment =
+                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+            options.isDebug = BuildConfig.DEBUG
+            options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
+        }
 
-//        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
-//            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-//        }
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
     }
