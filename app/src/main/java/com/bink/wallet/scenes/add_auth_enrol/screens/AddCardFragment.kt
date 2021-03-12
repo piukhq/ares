@@ -15,6 +15,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -69,9 +70,17 @@ class AddCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ADD_JOURNEY,it.id, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ADD_JOURNEY, it.id, status, reasonCode, mPlanId, isAccountNew
                     )
                 )
+            }
+
+            WebScrapableManager.storeCredentialsFromRequest(it.id)
+
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
+                if (cards != null) {
+                    viewModel.updateScrapedCards(cards)
+                }
             }
 
         }
@@ -109,6 +118,7 @@ class AddCardFragment : BaseAddAuthFragment() {
             }
 
         }
+
     }
 
     override fun onResume() {

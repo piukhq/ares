@@ -32,6 +32,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.RequestReviewUtil
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.WalletOrderingUtil
@@ -207,7 +208,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchPeriodicMembershipCards()
+        viewModel.fetchPeriodicMembershipCards(context)
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -279,7 +280,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh()
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context)
             } else {
                 isRefresh = false
                 disableIndicators()
@@ -317,6 +318,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
             }
+        }
+
+        WebScrapableManager.updatedCards.observeNonNull(this) {
+            viewModel.membershipCardData.value = it
+        }
+
+        WebScrapableManager.newlyAddedCard.observeNonNull(this) { newCard ->
+            viewModel.addNewlyScrapedCard(newCard)
+            WebScrapableManager.newlyAddedCard.value = null
         }
 
     }
@@ -472,7 +482,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            viewModel.fetchPeriodicMembershipCards()
+            viewModel.fetchPeriodicMembershipCards(context)
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
@@ -497,6 +507,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                             viewModel.deleteCard(membershipCard.id)
+                            WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard
                             val planId = membershipCard.membership_plan
                             val uuid = membershipCard.uuid
