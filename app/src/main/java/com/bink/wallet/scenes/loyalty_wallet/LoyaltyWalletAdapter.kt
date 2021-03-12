@@ -40,9 +40,7 @@ class LoyaltyWalletAdapter(
     companion object {
         private const val MEMBERSHIP_CARD = 0
 
-        // used for join loyalty card
-        private const val JOIN_PLAN = 1
-        private const val JOIN_PAYMENT = 2
+        private const val CARD_ON_BOARDING = 1
     }
 
     var membershipCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
@@ -60,18 +58,8 @@ class LoyaltyWalletAdapter(
 
         return when (viewType) {
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
-            JOIN_PLAN -> CardOnBoardingLinkHolder(CardOnboardingItemBinding.inflate(inflater))
-            else -> {
-                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-                binding.apply {
-                    root.apply {
-                        this.setOnClickListener {
-                            onClickListener(it)
-                        }
-                    }
-                }
-                return PaymentCardWalletJoinHolder(binding)
-            }
+            else -> CardOnBoardingLinkHolder(CardOnboardingItemBinding.inflate(inflater))
+
         }
     }
 
@@ -80,7 +68,6 @@ class LoyaltyWalletAdapter(
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
                 is CardOnBoardingLinkHolder -> holder.bind(it as MembershipPlan)
-                is PaymentCardWalletJoinHolder -> holder.bind(it)
             }
         }
     }
@@ -88,8 +75,7 @@ class LoyaltyWalletAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
-            is MembershipPlan -> JOIN_PLAN
-            else -> JOIN_PAYMENT
+            else -> CARD_ON_BOARDING
         }
     }
 
@@ -162,7 +148,7 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == JOIN_PLAN) {
+                if (getItemViewType(toPosition) == CARD_ON_BOARDING) {
                     notifyItemMoved(fromPosition, toPosition)
                     return false
                 }
@@ -182,20 +168,6 @@ class LoyaltyWalletAdapter(
             }
         }
         return false
-    }
-
-    inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
-        BaseViewHolder<Any>(binding) {
-
-        override fun bind(item: Any) {
-            with(binding) {
-                dismissBanner.setOnClickListener {
-                    onRemoveListener(item)
-                }
-                joinCardDescription.text =
-                    joinCardDescription.context.getString(R.string.payment_join_description)
-            }
-        }
     }
 
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
@@ -341,30 +313,16 @@ class LoyaltyWalletAdapter(
         }
     }
 
-    inner class PlanSuggestionHolder(val binding: EmptyLoyaltyItemBinding) :
-        BaseViewHolder<MembershipPlan>(binding) {
-
-        override fun bind(item: MembershipPlan) {
-            with(binding) {
-                membershipPlan = item
-                dismissBanner.setOnClickListener {
-                    onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
-                }
-                joinCardMainLayout.setOnClickListener { onClickListener(item) }
-            }
-        }
-    }
-
     inner class CardOnBoardingLinkHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
 
         private val gridRecyclerView:RecyclerView = binding.rvImageGrid
-         private val cardOnboardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
+         private val cardOnBoardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
 
         init {
             val context = binding.root.context
             gridRecyclerView.layoutManager = GridLayoutManager(context,2)
-            cardOnboardLinkAdapter.setPlansData(membershipPlans.filter { it.isPlanPLL() }.sortedByDescending { it.id }.take(4) as MutableList<MembershipPlan>)
-            gridRecyclerView.adapter = cardOnboardLinkAdapter
+            cardOnBoardLinkAdapter.setPlansData(membershipPlans.filter { it.isPlanPLL() }.sortedByDescending { it.id }.take(4) as MutableList<MembershipPlan>)
+            gridRecyclerView.adapter = cardOnBoardLinkAdapter
         }
         override fun bind(item: MembershipPlan) {
             with(binding){
