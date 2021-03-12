@@ -75,7 +75,6 @@ object WebScrapableManager {
         val masterEnabled = remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getDebugSuffix())
         if (!masterEnabled) return
 
-
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
         timer?.cancel()
         timer = null
