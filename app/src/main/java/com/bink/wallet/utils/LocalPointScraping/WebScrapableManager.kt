@@ -19,13 +19,12 @@ object WebScrapableManager {
 
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
+    val scrapableAgents = arrayListOf(TescoScrapableAgent())
 
     private var userName: String? = null
     private var password: String? = null
 
     private var timer: CountDownTimer? = null
-
-    private val scrapableAgents = arrayListOf(TescoScrapableAgent())
 
     private const val BASE_ENCRYPTED_KEY_SHARED_PREFERENCES =
         "com.bink.wallet.utils.LocalPointScraping.credentials.cardId_%s.%s"

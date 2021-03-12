@@ -23,7 +23,7 @@ class GetNewCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
             }
         }
 
-        mapItems()
+        mapItems(membershipPlan.id)
     }
 
     fun handleRequest(

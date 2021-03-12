@@ -46,7 +46,7 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
                 }
             }
         }
-        mapItems()
+        mapItems(membershipPlan.id)
         allAddPlans.value = addPlans
     }
 
