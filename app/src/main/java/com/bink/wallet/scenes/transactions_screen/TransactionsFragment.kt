@@ -15,8 +15,6 @@ import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.lang.Exception
-import java.lang.IndexOutOfBoundsException
 import java.lang.reflect.Type
 
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {

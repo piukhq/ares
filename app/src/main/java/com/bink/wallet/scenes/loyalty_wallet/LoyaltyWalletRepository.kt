@@ -1,11 +1,7 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import androidx.lifecycle.MutableLiveData
-import com.bink.wallet.data.BannersDisplayDao
-import com.bink.wallet.data.MembershipCardDao
-import com.bink.wallet.data.MembershipPlanDao
-import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.data.*
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
@@ -15,14 +11,17 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.generateUuidForMembershipCards
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
@@ -35,7 +34,8 @@ class LoyaltyWalletRepository(
 
     fun retrieveMembershipCards(
         mutableMembershipCards: MutableLiveData<List<MembershipCard>>,
-        loadCardsError: MutableLiveData<Exception>
+        loadCardsError: MutableLiveData<Exception>,
+        callback: ((List<MembershipCard>) -> Unit?)? = null
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -43,6 +43,7 @@ class LoyaltyWalletRepository(
                 withContext(Dispatchers.Main) {
                     processMembershipCardsResult(membershipCards)
                     mutableMembershipCards.value = membershipCards
+                    callback?.let { it(membershipCards) }
                 }
             } catch (e: Exception) {
                 loadCardsError.postValue(e)
@@ -50,11 +51,11 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun retrieveStoredMembershipCards(localMembershipCards: MutableLiveData<List<MembershipCard>>) {
+    fun retrieveStoredMembershipCards(callback: (List<MembershipCard>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
-                    localMembershipCards.value = membershipCardDao.getAllAsync()
+                    callback(membershipCardDao.getAllAsync())
                 } catch (e: Exception) {
                     logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
                 }
@@ -180,7 +181,7 @@ class LoyaltyWalletRepository(
         }
     }
 
-    private fun storeMembershipCard(card: MembershipCard) {
+    fun storeMembershipCard(card: MembershipCard) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 try {
@@ -389,8 +390,9 @@ class LoyaltyWalletRepository(
 
     private fun processMembershipCardsResult(membershipCards: List<MembershipCard>?) {
         CoroutineScope(Dispatchers.Default).launch {
+            val cardsFromDb = membershipCardDao.getAllAsync()
             val cardIdInDb =
-                withContext(Dispatchers.IO) { membershipCardDao.getAllAsync() }.map { card -> card.id }
+                withContext(Dispatchers.IO) { cardsFromDb }.map { card -> card.id }
             val idFromApi = membershipCards?.map { card -> card.id }
 
             //list of Id's which are available in database but not in return api
@@ -408,7 +410,9 @@ class LoyaltyWalletRepository(
                     paymentCardDao
                 )
             }
-            membershipCardDao.storeAll(membershipCards)
+
+            val mappedFromScrapedCards = WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCards)
+            membershipCardDao.storeAll(mappedFromScrapedCards)
 
             SharedPreferenceManager.membershipCardsLastRequestTime =
                 System.currentTimeMillis()
@@ -418,7 +422,7 @@ class LoyaltyWalletRepository(
     private suspend fun deleteFromDb(cardsToDelete: List<String>) {
 
         cardsToDelete.forEach { cardIdToDelete ->
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 membershipCardDao.deleteCard(cardIdToDelete)
             }
         }

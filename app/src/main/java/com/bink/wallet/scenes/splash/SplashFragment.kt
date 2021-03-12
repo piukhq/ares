@@ -15,10 +15,14 @@ import com.bink.wallet.model.Consent
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.network.ApiConfig
 import com.bink.wallet.network.ApiConstants
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.RequestReviewUtil
+import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.enums.BuildTypes
+import com.bink.wallet.utils.getSessionHandlerNavigationDestination
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.crashlytics.android.Crashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings

@@ -25,7 +25,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
-import retrofit2.HttpException
 
 class PaymentWalletRepository(
     private val apiService: ApiService,

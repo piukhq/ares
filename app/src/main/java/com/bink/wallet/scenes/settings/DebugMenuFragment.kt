@@ -2,6 +2,7 @@ package com.bink.wallet.scenes.settings
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,8 @@ import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.LocalPointScraping.PointScrapeSite
+import com.bink.wallet.utils.LocalPointScraping.PointScrapingUtil
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
@@ -125,7 +128,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             dialog.show()
             dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    PointScrapingUtil().performScrape(context, PointScrapeSite.TESCO, binding.parent, etFirstName.text.toString(), etSecondName.text.toString())
+                    PointScrapingUtil
+                        .performScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
+                            logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
+                        }
                     dialog.dismiss()
                 }
             }

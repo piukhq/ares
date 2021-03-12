@@ -2,7 +2,6 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object SharedPreferenceManager {
 
@@ -23,6 +22,7 @@ object SharedPreferenceManager {
     private const val BACKEND_VERSION = "backendVersion"
     private const val PAYMENT_CARDS_LAST_REQUEST_TIME = "paymentCardsLastRequestTime"
     private const val MEMBERSHIP_CARDS_LAST_REQUEST_TIME = "membershipCardsLastRequestTime"
+    private const val MEMBERSHIP_CARDS_LAST_SCRAPED_TIME = "membershipCardsLastScrapedTime"
     private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
     private const val CONTACT_US_CLICKED = "contactUsClicked"
     private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
@@ -125,6 +125,12 @@ object SharedPreferenceManager {
         get() = preferences.getLong(MEMBERSHIP_CARDS_LAST_REQUEST_TIME, 0)
         set(value) = preferences.edit {
             it.putLong(MEMBERSHIP_CARDS_LAST_REQUEST_TIME, value)
+        }
+
+    var membershipCardsLastScraped: Long
+        get() = preferences.getLong(MEMBERSHIP_CARDS_LAST_SCRAPED_TIME, 0)
+        set(value) = preferences.edit {
+            it.putLong(MEMBERSHIP_CARDS_LAST_SCRAPED_TIME, value)
         }
 
     var isUserLoggedIn: Boolean

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import androidx.security.crypto.MasterKeys
 import com.bink.sdk.BinkCore
 import com.bink.wallet.data.SharedPreferenceManager
 
@@ -41,6 +40,13 @@ object LocalStoreUtils {
             e.printStackTrace()
         }
         return null
+    }
+
+    fun removeKey(secretKey: String){
+        encryptedSharedPreferences.edit().let {
+            it.remove(secretKey)
+            it.apply()
+        }
     }
 
     fun createEncryptedPrefs(context: Context) {
