@@ -104,6 +104,9 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             DebugItemType.TESCO_LPS -> {
                 launchTescoLPSDialog()
             }
+            DebugItemType.CARD_ON_BOARDING -> {
+                displayStatePicker()
+            }
         }
     }
 
@@ -151,6 +154,35 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
                 else -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_3.version
             }
             shouldApplyChanges = true
+        }
+        adb.setNegativeButton(getString(R.string.cancel_text), null)
+        adb.show()
+    }
+
+    private fun displayStatePicker(){
+        val adb = AlertDialog.Builder(requireContext())
+
+        val items =
+            arrayOf<CharSequence>(
+                "1",
+                "2",
+                "3",
+                "4"
+            )
+        var selection = -1
+        adb.setSingleChoiceItems(items, selection) { d, n ->
+            selection = n
+        }
+
+        adb.setPositiveButton(
+            getString(R.string.ok)
+        ) { _, _ ->
+            when (selection) {
+                0 -> SharedPreferenceManager.cardOnBoardingState = 1
+                1 -> SharedPreferenceManager.cardOnBoardingState = 2
+                2 -> SharedPreferenceManager.cardOnBoardingState = 3
+                3 -> SharedPreferenceManager.cardOnBoardingState = 4
+            }
         }
         adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()

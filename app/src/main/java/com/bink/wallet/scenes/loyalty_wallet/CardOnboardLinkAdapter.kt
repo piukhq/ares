@@ -11,14 +11,14 @@ import com.bink.wallet.scenes.BaseViewHolder
 class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {}) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    private var plansList = mutableListOf<MembershipPlan>()
+    private var plansList = listOf<MembershipPlan>()
 
     companion object {
         private const val IMAGE_GRID_VIEW = 0
         private const val PLACEHOLDER = 1
     }
 
-    fun setPlansData(plans: MutableList<MembershipPlan>) {
+    fun setPlansData(plans: List<MembershipPlan>) {
         plansList = plans
         notifyDataSetChanged()
     }
@@ -76,7 +76,7 @@ class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {})
 
     }
 
-    private fun itemsToDisplay(plansList: MutableList<MembershipPlan>): Int {
+    private fun itemsToDisplay(plansList: List<MembershipPlan>): Int {
 
         val size = plansList.size
         return when {

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.CardItemBinding
 import com.bink.wallet.databinding.CardOnboardingItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
@@ -176,20 +177,21 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
 
-                membershipPlans.firstOrNull { it.id == item.membership_plan }?.let { membershipPlan ->
-                    paymentCards?.let {
-                        val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
-                        bindCardToLoyaltyItem(loyaltyItem, binding)
-                    }
-
-                    membershipPlan.card?.let { membershipPlanCard ->
-                        item.card?.let {
-                            it.secondary_colour = membershipPlanCard.secondary_colour
+                membershipPlans.firstOrNull { it.id == item.membership_plan }
+                    ?.let { membershipPlan ->
+                        paymentCards?.let {
+                            val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
+                            bindCardToLoyaltyItem(loyaltyItem, binding)
                         }
-                    }
 
-                    bindVouchersToDisplay(cardBinding, membershipPlan, item)
-                }
+                        membershipPlan.card?.let { membershipPlanCard ->
+                            item.card?.let {
+                                it.secondary_colour = membershipPlanCard.secondary_colour
+                            }
+                        }
+
+                        bindVouchersToDisplay(cardBinding, membershipPlan, item)
+                    }
 
             }
             with(cardBinding.cardView) {
@@ -312,19 +314,24 @@ class LoyaltyWalletAdapter(
         }
     }
 
-    inner class CardOnBoardingLinkViewHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
+    inner class CardOnBoardingLinkViewHolder(val binding: CardOnboardingItemBinding) :
+        BaseViewHolder<MembershipPlan>(binding) {
 
-        private val gridRecyclerView:RecyclerView = binding.rvImageGrid
-         private val cardOnBoardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
+        private val gridRecyclerView: RecyclerView = binding.rvImageGrid
+        private val cardOnBoardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
 
         init {
             val context = binding.root.context
-            gridRecyclerView.layoutManager = GridLayoutManager(context,2)
-            cardOnBoardLinkAdapter.setPlansData(membershipPlans.filter { it.isPlanPLL() }.sortedByDescending { it.id }.take(4) as MutableList<MembershipPlan>)
+            gridRecyclerView.layoutManager = GridLayoutManager(context, 2)
+            val state =
+                if (SharedPreferenceManager.cardOnBoardingState > 0) SharedPreferenceManager.cardOnBoardingState else 4
+            cardOnBoardLinkAdapter.setPlansData(membershipPlans.filter { it.isPlanPLL() }
+                .sortedByDescending { it.id }.take(state))
             gridRecyclerView.adapter = cardOnBoardLinkAdapter
         }
+
         override fun bind(item: MembershipPlan) {
-            with(binding){
+            with(binding) {
                 mainContainer.setOnClickListener {
                     onClickListener(item)
                 }
