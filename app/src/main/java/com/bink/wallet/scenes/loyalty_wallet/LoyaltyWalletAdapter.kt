@@ -33,7 +33,6 @@ import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
-    val onRemoveListener: (Any) -> Unit = {},
     val onCardLinkClickListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
@@ -50,8 +49,6 @@ class LoyaltyWalletAdapter(
     var membershipPlans = ArrayList<MembershipPlan>()
 
     var paymentCards: MutableList<PaymentCard>? = null
-
-    var cards = mutableListOf<MembershipCard>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)

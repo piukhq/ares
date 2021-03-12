@@ -51,8 +51,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         onClickListener = {
             onCardClicked(it)
         },
-        onRemoveListener = { onBannerRemove(it) },
-
         onCardLinkClickListener = {
             onCardLinkClicked(it)
         }
@@ -448,7 +446,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 if (userDataResult.result.second.isNotEmpty()) {
                     cards = userDataResult.result.first
                     plans = userDataResult.result.second
-                    walletAdapter.cards = userDataResult.result.first as MutableList<MembershipCard>
+
                     walletAdapter.membershipCards =
                         WalletOrderingUtil.getSavedLoyaltyCardWallet(
                             sortPlans(ArrayList(userDataResult.result.third))
@@ -550,14 +548,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
-        }
-    }
-
-    private fun onBannerRemove(item: Any) {
-        binding.swipeLayout.isEnabled = false
-        when (item) {
-            is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
-            else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
         }
     }
 
