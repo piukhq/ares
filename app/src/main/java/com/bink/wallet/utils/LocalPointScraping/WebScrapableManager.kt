@@ -8,9 +8,12 @@ import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
+import com.bink.wallet.utils.getDebugSuffix
 import com.bink.wallet.utils.logDebug
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 object WebScrapableManager {
 
@@ -68,7 +71,9 @@ object WebScrapableManager {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
-
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val masterEnabled = remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getDebugSuffix())
+        if (!masterEnabled) return
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
         timer?.cancel()
@@ -109,7 +114,6 @@ object WebScrapableManager {
                             return
                         }
                     }
-
                 }
 
                 if (credentials == null || agent == null) {
@@ -119,17 +123,23 @@ object WebScrapableManager {
                 } else {
                     PointScrapingUtil.performScrape(context, agent.merchant, credentials.email, credentials.password) { pointScrapeResponse ->
 
-                        logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
+                        if (agent.isEnabled(remoteConfig)) {
 
-                        pointScrapeResponse.points?.let { points ->
-                            if (membershipCards != null) {
-                                val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, System.currentTimeMillis())
-                                membershipCards!![index].balances = arrayListOf(balance)
-                                membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
-                                membershipCards!![index].isScraped = true
+                            logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
-                                tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            pointScrapeResponse.points?.let { points ->
+                                if (membershipCards != null) {
+                                    val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, System.currentTimeMillis())
+                                    membershipCards!![index].balances = arrayListOf(balance)
+                                    membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
+                                    membershipCards!![index].isScraped = true
+
+                                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                                }
                             }
+
+                        } else {
+                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                         }
 
                     }

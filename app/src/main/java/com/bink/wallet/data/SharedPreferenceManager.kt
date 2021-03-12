@@ -47,6 +47,7 @@ object SharedPreferenceManager {
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
+    private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -258,6 +259,11 @@ object SharedPreferenceManager {
             it.putString(PAYMENT_WALLET_ORDER, value)
         }
 
+    var hasLaunchedAfterApiUpdate: Boolean
+        get() = environmentPreferences.getBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, false)
+        set(value) = environmentPreferences.edit {
+            it.putBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, value)
+        }
 
     fun clear() {
         /**
