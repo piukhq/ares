@@ -2,8 +2,6 @@ package com.bink.wallet.utils.LocalPointScraping
 
 import android.content.Context
 import android.os.CountDownTimer
-import android.util.Log
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.CardBalance
@@ -19,6 +17,9 @@ object WebScrapableManager {
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
 
+    private var userName: String? = null
+    private var password: String? = null
+
     private var timer: CountDownTimer? = null
 
     private val scrapableAgents = arrayListOf(TescoScrapableAgent())
@@ -33,34 +34,41 @@ object WebScrapableManager {
 
     private var membershipCards: List<MembershipCard>? = null
 
-    fun storeCredentialsFromRequest(membershipCardRequest: MembershipCardRequest) {
-
+    fun setUsernameAndPassword(request: MembershipCardRequest) {
         for (scrapableAgent in scrapableAgents) {
-            membershipCardRequest.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
+            request?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
-                    membershipCardRequest.account?.authorise_fields?.let { authorizeFields ->
+                    request?.account?.authorise_fields?.let { authorizeFields ->
 
-                        val username = authorizeFields.firstOrNull {
+                        userName = authorizeFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
                         }?.value
-                        val password = authorizeFields.firstOrNull {
+                        password = authorizeFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
                         }?.value
 
-                        val webScrapeCredentials = WebScrapeCredentials(membershipCardRequest.membership_plan, username, password)
-                        storeCredentials(webScrapeCredentials)
-
                     }
+
                 }
             }
 
         }
+    }
+
+    fun storeCredentialsFromRequest(cardId: String) {
+
+        if (userName == null || password == null) return
+
+        val webScrapeCredentials = WebScrapeCredentials(userName, password, cardId)
+        storeCredentials(webScrapeCredentials)
 
     }
 
     fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, isAddCard: Boolean, callback: (List<MembershipCard>?) -> Unit) {
         if (context == null) return
         if (index == 0) membershipCards = cards
+
+
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
         timer?.cancel()
@@ -90,7 +98,7 @@ object WebScrapableManager {
 
             val card = cards[index]
 
-            retrieveCredentials(card.membership_plan).let { credentials ->
+            retrieveCredentials(card.id).let { credentials ->
 
                 val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
 
@@ -136,7 +144,7 @@ object WebScrapableManager {
             PointScrapingUtil.lastSeenURL = null
 
             if (isAddCard) {
-                membershipCards?.get(0)?.let{ newCard ->
+                membershipCards?.get(0)?.let { newCard ->
                     newlyAddedCard.value = newCard
                 }
             } else {
@@ -150,13 +158,12 @@ object WebScrapableManager {
     }
 
     private fun storeCredentials(webScrapeCredentials: WebScrapeCredentials) {
-
-        if (webScrapeCredentials.id == null) return
+        if (webScrapeCredentials.cardId == null) return
 
         //Storing the username/email here
         webScrapeCredentials.email?.let {
             LocalStoreUtils.setAppSharedPref(
-                encryptedKeyForCardId(webScrapeCredentials.id, CredentialType.USERNAME),
+                encryptedKeyForCardId(webScrapeCredentials.cardId, CredentialType.USERNAME),
                 it
             )
         }
@@ -164,20 +171,23 @@ object WebScrapableManager {
         //Storing password here
         webScrapeCredentials.password?.let {
             LocalStoreUtils.setAppSharedPref(
-                encryptedKeyForCardId(webScrapeCredentials.id, CredentialType.PASSWORD),
+                encryptedKeyForCardId(webScrapeCredentials.cardId, CredentialType.PASSWORD),
                 it
             )
         }
+
+        userName = null
+        password = null
     }
 
     private fun retrieveCredentials(cardId: String?): WebScrapeCredentials? {
         if (cardId == null) return null
         val username =
-            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.USERNAME))
+            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.USERNAME)) ?: return null
         val password =
-            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
+            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.PASSWORD)) ?: return null
 
-        return WebScrapeCredentials(cardId, username, password)
+        return WebScrapeCredentials(username, password, cardId)
     }
 
     fun removeCredentials(cardId: String) {
