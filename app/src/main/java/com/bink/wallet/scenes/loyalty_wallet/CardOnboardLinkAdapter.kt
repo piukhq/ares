@@ -13,8 +13,8 @@ class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {})
 
     private var plansList = mutableListOf<MembershipPlan>()
 
-    companion object{
-        private const val IMAGEGRIDVIEW = 0
+    companion object {
+        private const val IMAGE_GRID_VIEW = 0
         private const val PLACEHOLDER = 1
     }
 
@@ -26,8 +26,8 @@ class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {})
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
-        return when(viewType){
-            IMAGEGRIDVIEW -> GridImageViewHolder(CardOnboardingLoyaltyItemBinding.inflate(inflater))
+        return when (viewType) {
+            IMAGE_GRID_VIEW -> GridImageViewHolder(CardOnboardingLoyaltyItemBinding.inflate(inflater))
             else -> ItemPlaceHolder(CardOnboardingLoyaltyItemPlaceholderBinding.inflate(inflater))
         }
     }
@@ -37,13 +37,13 @@ class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {})
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-        when(holder){
+        when (holder) {
             is GridImageViewHolder -> holder.bind(plansList[position])
         }
 
     }
 
-   inner class GridImageViewHolder(val binding: CardOnboardingLoyaltyItemBinding) :
+    inner class GridImageViewHolder(val binding: CardOnboardingLoyaltyItemBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
 
         override fun bind(item: MembershipPlan) {
@@ -58,20 +58,20 @@ class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {})
     }
 
     override fun getItemViewType(position: Int): Int {
-        return  when(shouldShowPlaceHolder(position)){
+        return when (shouldShowPlaceHolder(position)) {
             true -> PLACEHOLDER
-            else -> IMAGEGRIDVIEW
+            else -> IMAGE_GRID_VIEW
         }
     }
 
     inner class ItemPlaceHolder(val binding: CardOnboardingLoyaltyItemPlaceholderBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
         override fun bind(item: MembershipPlan) {
-        with(binding){
-            root.setOnClickListener {
-                onClickListener(item)
+            with(binding) {
+                root.setOnClickListener {
+                    onClickListener(item)
+                }
             }
-        }
         }
 
     }
@@ -91,7 +91,6 @@ class CardOnboardLinkAdapter(val onClickListener: (MembershipPlan) -> Unit = {})
         return (position == plansList.size) && (itemsToDisplay(plansList) == 4 || itemsToDisplay(
             plansList
         ) == 2)
-
 
     }
 

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
 import com.bink.wallet.databinding.CardItemBinding
 import com.bink.wallet.databinding.CardOnboardingItemBinding
-import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.JoinCardItem
@@ -58,7 +57,7 @@ class LoyaltyWalletAdapter(
 
         return when (viewType) {
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
-            else -> CardOnBoardingLinkHolder(CardOnboardingItemBinding.inflate(inflater))
+            else -> CardOnBoardingLinkViewHolder(CardOnboardingItemBinding.inflate(inflater))
 
         }
     }
@@ -67,7 +66,7 @@ class LoyaltyWalletAdapter(
         membershipCards[position].let {
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
-                is CardOnBoardingLinkHolder -> holder.bind(it as MembershipPlan)
+                is CardOnBoardingLinkViewHolder -> holder.bind(it as MembershipPlan)
             }
         }
     }
@@ -313,7 +312,7 @@ class LoyaltyWalletAdapter(
         }
     }
 
-    inner class CardOnBoardingLinkHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
+    inner class CardOnBoardingLinkViewHolder(val binding: CardOnboardingItemBinding):BaseViewHolder<MembershipPlan>(binding){
 
         private val gridRecyclerView:RecyclerView = binding.rvImageGrid
          private val cardOnBoardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)

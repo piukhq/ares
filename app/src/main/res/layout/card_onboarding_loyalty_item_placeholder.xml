@@ -11,7 +11,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#102F82"
+            android:background="@color/card_on_boarding_placeholder_backgorund"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="57:34"
             app:layout_constraintEnd_toEndOf="parent"
