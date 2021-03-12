@@ -88,7 +88,7 @@ class LoyaltyWalletAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
-            is MembershipPlan,shouldShowCardLink(cards,membershipPlans) -> JOIN_PLAN
+            is MembershipPlan -> JOIN_PLAN
             else -> JOIN_PAYMENT
         }
     }
@@ -374,19 +374,5 @@ class LoyaltyWalletAdapter(
             }
         }
 
-    }
-
-    private fun shouldShowCardLink(cards:List<MembershipCard>,plan: List<MembershipPlan>):Boolean{
-
-        cards.forEach { membershipCard ->
-            plan.forEach { mPlan ->
-                if (membershipCard.membership_plan == mPlan.id){
-                    return true
-                }
-            }
-
-        }
-
-        return false
     }
 }
