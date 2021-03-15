@@ -4,13 +4,11 @@ plugins {
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
-    id("io.fabric")
     id("com.google.gms.google-services")
     id("io.sentry.android.gradle")
 }
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
