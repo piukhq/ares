@@ -47,6 +47,7 @@ object SharedPreferenceManager {
     private const val HAS_NEW_TRANSACTIONS = "has_new_transactions"
     private const val LOYALTY_WALLET_ORDER = "loyalty_wallet_order"
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
+    private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
 
     //----- PAIRS ----
@@ -264,6 +265,12 @@ object SharedPreferenceManager {
         set(value) = environmentPreferences.edit {
             it.putBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, value)
         }
+
+    var cardOnBoardingState:Int
+    get() = preferences.getInt(CARD_ON_BOARDING_STATE,0)
+    set(value) = preferences.edit {
+        it.putInt(CARD_ON_BOARDING_STATE,value)
+    }
 
     fun clear() {
         /**

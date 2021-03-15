@@ -9,5 +9,6 @@ enum class ImageType(val type: Int) {
     REFERENCE(5),
     PERSONAL_OFFERS(6),
     PROMOTIONS(7),
-    TIER(8)
+    TIER(8),
+    ALTERNATE_HERO(9)
 }
