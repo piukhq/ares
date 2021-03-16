@@ -434,6 +434,9 @@
     <string name="enter_credentials">Enter credentials</string>
     <string name="add_card">Add card</string>
     <string name="please_enter_credentials">Please enter your %1$s credentials below to add this card to your wallet.</string>
+    <string name="card_onboarding_title">Link to your payment cards</string>
+    <string name="card_onboarding_description">Add these loyalty cards and link them to your payment cards to collect rewards automatically when you pay.</string>
+    <string name="card_onboarding_placeholder_message">More coming soon!</string>
 
     <!-- Accept T&Cs -->
     <string name="one_last_step">One last step...</string>
