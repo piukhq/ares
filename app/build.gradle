@@ -198,9 +198,9 @@ dependencies {
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
 
     // navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:2.3.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.4")
 
     // retrofi & moshi
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
