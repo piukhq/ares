@@ -1,5 +1,6 @@
 package com.bink.wallet.utils.LocalPointScraping
 
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.utils.getDebugSuffix
@@ -35,7 +36,8 @@ abstract class WebScrapable {
         }
 
         for (authField in authFields) {
-            addAuthItems.add(AddAuthItemWrapper(authField))
+            val fieldsRequest = PlanFieldsRequest(authField.column, null)
+            addAuthItems.add(AddAuthItemWrapper(authField, fieldsRequest))
         }
 
         return addAuthItems

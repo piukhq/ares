@@ -68,15 +68,16 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         }
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
-        WebScrapableManager.setUsernameAndPassword(currentRequest)
+        val strippedRequest = WebScrapableManager.setUsernameAndPassword(currentRequest)
 
         if (isRetryJourney) {
-            updateMembershipCard(membershipCardId, currentRequest)
+            updateMembershipCard(membershipCardId, strippedRequest)
         } else {
             createMembershipCard(
-                currentRequest
+                strippedRequest
             )
         }
+
     }
 
     fun retrieveDescriptionText(

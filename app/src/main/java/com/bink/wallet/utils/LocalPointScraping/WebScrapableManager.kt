@@ -36,25 +36,30 @@ object WebScrapableManager {
 
     private var membershipCards: List<MembershipCard>? = null
 
-    fun setUsernameAndPassword(request: MembershipCardRequest) {
+    fun setUsernameAndPassword(request: MembershipCardRequest): MembershipCardRequest {
         for (scrapableAgent in scrapableAgents) {
-            request?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
+            request.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
-                    request?.account?.authorise_fields?.let { authorizeFields ->
+                    request.account?.registration_fields?.let { registrationFields ->
 
-                        userName = authorizeFields.firstOrNull {
+                        userName = registrationFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
                         }?.value
-                        password = authorizeFields.firstOrNull {
+                        password = registrationFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
                         }?.value
 
+                        request.account.registration_fields!!.removeAll { it.value == userName }
+                        request.account.registration_fields!!.removeAll { it.value == password }
+                        return request
                     }
 
                 }
             }
 
         }
+
+        return request
     }
 
     fun storeCredentialsFromRequest(cardId: String) {
@@ -128,7 +133,7 @@ object WebScrapableManager {
 
                             pointScrapeResponse.points?.let { points ->
                                 if (membershipCards != null) {
-                                    val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, System.currentTimeMillis())
+                                    val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, (System.currentTimeMillis() / 1000))
                                     membershipCards!![index].balances = arrayListOf(balance)
                                     membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
@@ -223,6 +228,11 @@ object WebScrapableManager {
         }
 
         return newCards
+    }
+
+    fun isCardScrapable(card: MembershipCard): Boolean {
+        scrapableAgents.filter { it.membershipPlanId == card.membership_plan?.toIntOrNull() }
+        return !scrapableAgents.isNullOrEmpty()
     }
 
 }
