@@ -108,8 +108,10 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
 
         for (agent in WebScrapableManager.scrapableAgents) {
             membershipPlanId.toIntOrNull()?.let { planId ->
-                if (agent.membershipPlanId == planId) {
-                    return agent.getRemoteAuthFields(remoteConfig)
+                if (agent.isEnabled(remoteConfig)) {
+                    if (agent.membershipPlanId == planId) {
+                        return agent.getRemoteAuthFields(remoteConfig)
+                    }
                 }
             }
         }
