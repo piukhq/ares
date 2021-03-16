@@ -16,4 +16,7 @@
     <dimen name="transaction_arrow_size">30sp</dimen>
 
     <dimen name="title_line_spacing_extra">-8sp</dimen>
+    <dimen name="card_onboarding_link_title">20sp</dimen>
+    <dimen name="card_onnboarding_link_description">16sp</dimen>
+
 </resources>

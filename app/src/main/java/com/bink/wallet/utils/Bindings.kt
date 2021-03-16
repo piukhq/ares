@@ -65,6 +65,9 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 fun getIconTypeFromPlan(item: MembershipPlan?) =
     item?.images?.first { it.type == ImageType.ICON.type }?.url
 
+fun getAlternateHeroTypeFromPlan(item: MembershipPlan?) =
+    item?.images?.first { it.type == ImageType.ALTERNATE_HERO.type }?.url
+
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipCard?) {
     if (!item?.images.isNullOrEmpty()) {
@@ -213,6 +216,18 @@ fun ImageView.image(plan: MembershipPlan?) {
     }
 }
 
+@BindingAdapter("cardOnBoarding")
+fun ImageView.loadAlternateHeroImage(plan: MembershipPlan?) {
+        try {
+            Glide.with(context)
+                .load(getAlternateHeroTypeFromPlan(plan))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            logError("loadImage", e.localizedMessage, e)
+        }
+
+}
 
 @BindingAdapter("membershipCard", "membershipPlan", requireAll = true)
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
