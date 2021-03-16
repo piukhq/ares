@@ -1,4 +1,4 @@
-package com.bink.wallet.utils.LocalPointScraping
+package com.bink.wallet.utils.local_point_scraping.agents
 
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField

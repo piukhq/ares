@@ -1,4 +1,4 @@
-package com.bink.wallet.utils.LocalPointScraping
+package com.bink.wallet.utils.local_point_scraping
 
 import android.content.Context
 import android.os.CountDownTimer
@@ -12,6 +12,7 @@ import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.getDebugSuffix
+import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
 import com.bink.wallet.utils.logDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 

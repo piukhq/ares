@@ -1,13 +1,12 @@
-package com.bink.wallet.utils.LocalPointScraping
+package com.bink.wallet.utils.local_point_scraping
 
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.webkit.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.PointScrapeResponse
+import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.logDebug
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
