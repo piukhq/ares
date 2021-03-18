@@ -1,7 +1,15 @@
 package com.bink.wallet.utils.LocalPointScraping
 
-import com.bink.wallet.utils.getDebugSuffix
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
+import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
+import com.bink.wallet.utils.enums.TypeOfField
+import com.bink.wallet.utils.getSuffixForLPS
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
+import com.google.gson.JsonParseException
+import com.google.gson.reflect.TypeToken
 
 abstract class WebScrapable {
 
@@ -14,7 +22,30 @@ abstract class WebScrapable {
 
     fun isEnabled(firebaseRemoteConfig: FirebaseRemoteConfig): Boolean {
         val remoteConfigKey = "LPC_${merchant.remoteName}_enabled"
-        return firebaseRemoteConfig.getBoolean(remoteConfigKey.getDebugSuffix())
+        val masterEnabled = firebaseRemoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getSuffixForLPS())
+        if (!masterEnabled) return false
+        return firebaseRemoteConfig.getBoolean(remoteConfigKey.getSuffixForLPS())
+    }
+
+    fun getRemoteAuthFields(firebaseRemoteConfig: FirebaseRemoteConfig): List<AddAuthItemWrapper> {
+        val remoteConfigKey = "LPC_${merchant.remoteName}_auth_fields"
+        val authFieldsString = firebaseRemoteConfig.getString(remoteConfigKey.getSuffixForLPS())
+        val authFields: ArrayList<PlanField>
+        val addAuthItems = ArrayList<AddAuthItemWrapper>()
+
+        try {
+            authFields = Gson().fromJson(authFieldsString, object : TypeToken<java.util.ArrayList<PlanField?>?>() {}.type)
+        } catch (e: JsonParseException) {
+            return arrayListOf()
+        }
+
+        for (authField in authFields) {
+            authField.typeOfField = TypeOfField.AUTH
+            val fieldsRequest = PlanFieldsRequest(authField.column, null)
+            addAuthItems.add(AddAuthItemWrapper(authField, fieldsRequest))
+        }
+
+        return addAuthItems
     }
 
 }
