@@ -234,7 +234,12 @@ object WebScrapableManager {
 
     fun isCardScrapable(card: MembershipCard): Boolean {
         scrapableAgents.filter { it.membershipPlanId == card.membership_plan?.toIntOrNull() }
-        return !scrapableAgents.isNullOrEmpty()
+        val agent = scrapableAgents.firstOrNull()
+        agent?.isEnabled(FirebaseRemoteConfig.getInstance())?.let { isAgentEnabled ->
+            return isAgentEnabled
+        }
+
+        return false
     }
 
 }
