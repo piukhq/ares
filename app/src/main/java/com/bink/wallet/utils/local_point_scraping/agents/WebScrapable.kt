@@ -3,6 +3,7 @@ package com.bink.wallet.utils.local_point_scraping.agents
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.getDebugSuffix
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
@@ -36,6 +37,7 @@ abstract class WebScrapable {
         }
 
         for (authField in authFields) {
+            authField.typeOfField = TypeOfField.AUTH
             val fieldsRequest = PlanFieldsRequest(authField.column, null)
             addAuthItems.add(AddAuthItemWrapper(authField, fieldsRequest))
         }
