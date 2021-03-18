@@ -3,6 +3,7 @@ package com.bink.wallet.utils.LocalPointScraping
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.getDebugSuffix
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -21,6 +22,8 @@ abstract class WebScrapable {
 
     fun isEnabled(firebaseRemoteConfig: FirebaseRemoteConfig): Boolean {
         val remoteConfigKey = "LPC_${merchant.remoteName}_enabled"
+        val masterEnabled = firebaseRemoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getDebugSuffix())
+        if (!masterEnabled) return false
         return firebaseRemoteConfig.getBoolean(remoteConfigKey.getDebugSuffix())
     }
 
