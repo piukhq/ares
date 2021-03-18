@@ -374,7 +374,7 @@ fun HttpException.getErrorBody(): String {
     return errorBody
 }
 
-fun String.getDebugSuffix(): String {
+fun String.getSuffixForLPS(): String {
     val debugSuffix = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
         "_debug"
     } else {

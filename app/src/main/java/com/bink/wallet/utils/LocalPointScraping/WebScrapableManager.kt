@@ -11,7 +11,7 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.getDebugSuffix
+import com.bink.wallet.utils.getSuffixForLPS
 import com.bink.wallet.utils.logDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
@@ -76,7 +76,7 @@ object WebScrapableManager {
         if (index == 0) membershipCards = cards
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
-        val masterEnabled = remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getDebugSuffix())
+        val masterEnabled = remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getSuffixForLPS())
         if (!masterEnabled) return
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
