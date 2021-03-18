@@ -16,7 +16,11 @@ object PointScrapingUtil {
     var lastSeenURL: String? = null
     private var webView: WebView? = null
 
+    private var hasSignedIn = false
+
     fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, email: String?, password: String?, callback: (PointScrapeResponse) -> Unit) {
+
+        hasSignedIn = false
 
         if (pointScrapeSite == null || email == null || password == null) {
             return
@@ -43,7 +47,7 @@ object PointScrapingUtil {
                 super.onPageFinished(view, url)
 
                 //In the case of Tesco, it re-directs you to the login address before signing you in, there for this check stops the first login script from running again
-                if (!lastSeenURL.equals(url)) {
+                if (!lastSeenURL.equals(url) || pointScrapeSite == PointScrapeSite.SUPERDRUG) {
                     Handler().postDelayed({
                         pointScrapeSite.let { site ->
                             getJavascript(context, url, site, email, password).let { js ->
@@ -56,6 +60,7 @@ object PointScrapingUtil {
                                             webView?.destroy()
                                             webView = null
                                             lastSeenURL = null
+                                            hasSignedIn = false
 
                                             callback(pointScrapeResponse)
                                         }
@@ -81,7 +86,8 @@ object PointScrapingUtil {
             if (agent.merchant == pointScrapeSite) {
                 val merchantName = agent.merchant.remoteName
                 return when {
-                    url.toLowerCase().contains(agent.merchant.signInURL.toLowerCase()) -> {
+                    url.toLowerCase().contains(agent.merchant.signInURL.toLowerCase()) && !hasSignedIn -> {
+                        hasSignedIn = true
                         val javascriptClass = readFileText(context, "lps_${merchantName}_login.txt")
                         val replacedEmail = javascriptClass.replaceFirst("%@", email)
                         val replacedPassword = replacedEmail.replaceFirst("%@", password)
