@@ -12,6 +12,7 @@ import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.getDebugSuffix
+import com.bink.wallet.utils.local_point_scraping.agents.SuperdrugScrapableAgent
 import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
 import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
 import com.bink.wallet.utils.logDebug
@@ -21,7 +22,7 @@ object WebScrapableManager {
 
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
-    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent())
+    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent())
 
     private var userName: String? = null
     private var password: String? = null
