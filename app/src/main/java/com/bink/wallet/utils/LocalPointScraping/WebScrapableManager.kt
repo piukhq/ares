@@ -40,17 +40,17 @@ object WebScrapableManager {
         for (scrapableAgent in scrapableAgents) {
             request.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
-                    request.account?.registration_fields?.let { registrationFields ->
+                    request.account?.authorise_fields?.let { authoriseFields ->
 
-                        userName = registrationFields.firstOrNull {
+                        userName = authoriseFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
                         }?.value
-                        password = registrationFields.firstOrNull {
+                        password = authoriseFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
                         }?.value
 
-                        request.account.registration_fields!!.removeAll { it.value == userName }
-                        request.account.registration_fields!!.removeAll { it.value == password }
+                        request.account.authorise_fields!!.removeAll { it.value == userName }
+                        request.account.authorise_fields!!.removeAll { it.value == password }
                         return request
                     }
 
