@@ -8,7 +8,9 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.getCategories
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.*
 
@@ -83,28 +85,64 @@ class BrowseBrandsViewModel : BaseViewModel() {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
         var hasAllSubtitle = false
 
+        val (pllCards,RestOfCards) = membershipPlans.partition {  it.isPlanPLL()}
+
+        val (scrapableCards,storeCards) = RestOfCards.distinctBy { it.id }.partition { WebScrapableManager.canBeScraped(it.id) }
+
+        logDebug("BrowseBrands",storeCards.size.toString())
         if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
             browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.pll_title))
         }
-        membershipPlans.forEachIndexed { index, membershipPlan ->
-            val isLast = index == membershipPlans.size - 1
-            var isBeforeSectionTitle = false
 
-            if (!membershipPlan.isPlanPLL() && !hasAllSubtitle) {
-                browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.all_text))
-                hasAllSubtitle = true
-            }
-            if (!isLast && !membershipPlans[index + 1].isPlanPLL() && !hasAllSubtitle) {
-                isBeforeSectionTitle = true
-            }
+        pllCards.forEach {
+           browseBrandsItems.add( BrowseBrandsListItem.BrandItem(
+                it,
+                it.id in membershipCardIds,
+                false
+            ))
+        }
+
+        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.balance_text))
+
+        scrapableCards.forEach {
+            browseBrandsItems.add(BrowseBrandsListItem.BrandItem(
+                it,
+                it.id in membershipCardIds,
+                false
+            ))
+        }
+
+        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.store_barcode))
+
+        storeCards.forEach {
             browseBrandsItems.add(
                 BrowseBrandsListItem.BrandItem(
-                    membershipPlan,
-                    membershipPlan.id in membershipCardIds,
-                    !isLast && !isBeforeSectionTitle
+                    it,
+                    it.id in membershipCardIds,
+                    false
                 )
             )
         }
+
+//        membershipPlans.forEachIndexed { index, membershipPlan ->
+//            val isLast = index == membershipPlans.size - 1
+//            var isBeforeSectionTitle = false
+//
+//            if (!membershipPlan.isPlanPLL() && !hasAllSubtitle) {
+//                browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.all_text))
+//                hasAllSubtitle = true
+//            }
+//            if (!isLast && !membershipPlans[index + 1].isPlanPLL() && !hasAllSubtitle) {
+//                isBeforeSectionTitle = true
+//            }
+//            browseBrandsItems.add(
+//                BrowseBrandsListItem.BrandItem(
+//                    membershipPlan,
+//                    membershipPlan.id in membershipCardIds,
+//                    !isLast && !isBeforeSectionTitle
+//                )
+//            )
+//        }
         return browseBrandsItems
     }
 

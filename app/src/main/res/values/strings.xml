@@ -221,6 +221,7 @@
     <string name="pll_title">Payment Linked Loyalty</string>
     <string name="all_text">All</string>
     <string name="balance_text">See your balance</string>
+    <string name="store_barcode">Store your barcode</string>
 
     <!-- LCD Error Screen -->
     <!-- 1.2 -->
