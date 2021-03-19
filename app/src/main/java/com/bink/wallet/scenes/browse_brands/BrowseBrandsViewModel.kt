@@ -13,6 +13,7 @@ import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 class BrowseBrandsViewModel : BaseViewModel() {
     private val membershipPlans = MutableLiveData<List<MembershipPlan>>()
@@ -85,44 +86,50 @@ class BrowseBrandsViewModel : BaseViewModel() {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
         var hasAllSubtitle = false
 
-        val (pllCards,RestOfCards) = membershipPlans.partition {  it.isPlanPLL()}
+        val (pllCards, RestOfCards) = membershipPlans.partition { it.isPlanPLL() }
 
-        val (scrapableCards,storeCards) = RestOfCards.distinctBy { it.id }.partition { WebScrapableManager.canBeScraped(it.id) }
+        val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
+            .partition { WebScrapableManager.canBeScraped(it.id) }
 
-        logDebug("BrowseBrands",storeCards.size.toString())
+        logDebug("BrowseBrands", storeCards.size.toString())
         if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
             browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.pll_title))
         }
 
-        pllCards.forEach {
-           browseBrandsItems.add( BrowseBrandsListItem.BrandItem(
-                it,
-                it.id in membershipCardIds,
-                false
-            ))
+        pllCards.forEachIndexed { index, membershipPlan ->
+            browseBrandsItems.add(
+                BrowseBrandsListItem.BrandItem(
+                    membershipPlan,
+                    membershipPlan.id in membershipCardIds,
+                    index != pllCards.size - 1
+                )
+            )
         }
 
         browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.balance_text))
 
-        scrapableCards.forEach {
-            browseBrandsItems.add(BrowseBrandsListItem.BrandItem(
-                it,
-                it.id in membershipCardIds,
-                false
-            ))
+        scrapableCards.forEachIndexed { index, membershipPlan ->
+            browseBrandsItems.add(
+                BrowseBrandsListItem.BrandItem(
+                    membershipPlan,
+                    membershipPlan.id in membershipCardIds,
+                    index != scrapableCards.size - 1
+                )
+            )
         }
 
         browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.store_barcode))
 
-        storeCards.forEach {
+        storeCards.forEachIndexed { index, membershipPlan ->
             browseBrandsItems.add(
                 BrowseBrandsListItem.BrandItem(
-                    it,
-                    it.id in membershipCardIds,
-                    false
+                    membershipPlan,
+                    membershipPlan.id in membershipCardIds,
+                    index != storeCards.size - 1
                 )
             )
         }
+
 
 //        membershipPlans.forEachIndexed { index, membershipPlan ->
 //            val isLast = index == membershipPlans.size - 1
