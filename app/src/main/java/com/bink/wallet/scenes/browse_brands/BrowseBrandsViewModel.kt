@@ -91,9 +91,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
             .partition { WebScrapableManager.canBeScraped(it.id) }
 
-        logDebug("BrowseBrands", storeCards.size.toString())
         if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
-            browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.pll_title))
+            browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.pll_title,R.string.pll_browse_brands_description))
         }
 
         pllCards.forEachIndexed { index, membershipPlan ->
@@ -106,7 +105,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
             )
         }
 
-        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.balance_text))
+        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.balance_text,R.string.balance_description))
 
         scrapableCards.forEachIndexed { index, membershipPlan ->
             browseBrandsItems.add(
@@ -118,7 +117,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
             )
         }
 
-        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.store_barcode))
+        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.store_barcode,R.string.store_barcode_description))
 
         storeCards.forEachIndexed { index, membershipPlan ->
             browseBrandsItems.add(

@@ -11,6 +11,6 @@ sealed class BrowseBrandsListItem(val id: Int) {
         var hasSeparator: Boolean
     ) : BrowseBrandsListItem(R.layout.item_brand)
 
-    data class SectionTitleItem(@StringRes val sectionTitle: Int) :
+    data class SectionTitleItem(@StringRes val sectionTitle: Int,@StringRes val sectionDescription: Int) :
         BrowseBrandsListItem(R.layout.item_brands_section_title)
 }

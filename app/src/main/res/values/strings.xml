@@ -218,11 +218,13 @@
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
-    <string name="pll_title">Payment Linked Loyalty</string>
+    <string name="pll_title">Link to your Payment Cards</string>
     <string name="all_text">All</string>
     <string name="balance_text">See your balance</string>
     <string name="store_barcode">Store your barcode</string>
+    <string name="pll_browse_brands_description">Add these loyalty cards and link them to your payment cards to collect rewards <b>automatically</b> when you pay.</string>
     <string name="balance_description">Add these loyalty cards to see your points and rewards in real time in the bink app.</string>
+    <string name="store_barcode_description">Add these loyalty cards to store your barcode in Bink and always have it on your phone. No more plastic! </string>
 
     <!-- LCD Error Screen -->
     <!-- 1.2 -->
