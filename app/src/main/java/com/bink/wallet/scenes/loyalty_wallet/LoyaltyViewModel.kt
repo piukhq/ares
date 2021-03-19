@@ -1,7 +1,6 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
 import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +15,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.CardType
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope

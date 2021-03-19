@@ -1,4 +1,4 @@
-package com.bink.wallet.utils.LocalPointScraping
+package com.bink.wallet.utils.local_point_scraping.agents
 
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
@@ -51,5 +51,6 @@ abstract class WebScrapable {
 }
 
 enum class PointScrapeSite(val remoteName: String, val signInURL: String, val scrapeURL: String) {
-    TESCO("tesco", "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home", "https://secure.tesco.com/Clubcard/MyAccount/home/Home")
+    TESCO("tesco", "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home", "https://secure.tesco.com/Clubcard/MyAccount/home/Home"),
+    WATERSTONES("waterstones", "https://www.waterstones.com/plus/signin", "https://www.waterstones.com/account/waterstonescard")
 }

@@ -1,13 +1,12 @@
-package com.bink.wallet.utils.LocalPointScraping
+package com.bink.wallet.utils.local_point_scraping
 
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.webkit.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.PointScrapeResponse
+import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.logDebug
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -57,7 +56,7 @@ object PointScrapingUtil {
                                             webView?.destroy()
                                             webView = null
                                             lastSeenURL = null
-                                            
+
                                             callback(pointScrapeResponse)
                                         }
                                     }
@@ -76,28 +75,28 @@ object PointScrapingUtil {
     }
 
     private fun getJavascript(context: Context, url: String?, pointScrapeSite: PointScrapeSite, email: String, password: String): String? {
-        if(url == null) return null
-        when (pointScrapeSite) {
-            /**
-             * To add a new site, you just need to add the new case, for e.g Morrisons, then underneath add all
-             * used URL's to the corresponding Javascript classes
-             */
-            PointScrapeSite.TESCO -> {
-                logDebug("LocalPointScrape","Getting JS for $url")
+        if (url == null) return null
+
+        for (agent in WebScrapableManager.scrapableAgents) {
+            if (agent.merchant == pointScrapeSite) {
+                val merchantName = agent.merchant.remoteName
                 return when {
-                    url.toLowerCase().contains(PointScrapeSite.TESCO.signInURL.toLowerCase()) -> {
-                        val javascriptClass = readFileText(context, "lps_tesco_login.txt")
+                    url.toLowerCase().contains(agent.merchant.signInURL.toLowerCase()) -> {
+                        val javascriptClass = readFileText(context, "lps_${merchantName}_login.txt")
                         val replacedEmail = javascriptClass.replaceFirst("%@", email)
                         val replacedPassword = replacedEmail.replaceFirst("%@", password)
                         replacedPassword
                     }
-                    url.toLowerCase().contains(PointScrapeSite.TESCO.scrapeURL.toLowerCase()) -> {
-                        readFileText(context, "lps_tesco_scrape.txt")
+                    url.toLowerCase().contains(agent.merchant.scrapeURL.toLowerCase()) -> {
+                        readFileText(context, "lps_${merchantName}_scrape.txt")
                     }
                     else -> null
                 }
             }
         }
+
+        return null
+
     }
 
     private fun processResponse(response: String, callback: (PointScrapeResponse) -> Unit) {

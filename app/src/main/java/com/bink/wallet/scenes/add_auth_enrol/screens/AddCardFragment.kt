@@ -15,7 +15,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
