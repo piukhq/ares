@@ -17,6 +17,8 @@
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="notification_oval_padding">20dp</dimen>
     <dimen name="margin_gone_size_large">50dp</dimen>
+    <dimen name="debug_menu_guideline_begin">621dp</dimen>
+    <dimen name="debug_menu_guideline_begin_smaller_device">500dp</dimen>
     <dimen name="margin_card_on_boarding">18dp</dimen>
     <dimen name="margin_card_on_boarding_padding_bottom">12dp</dimen>
 
