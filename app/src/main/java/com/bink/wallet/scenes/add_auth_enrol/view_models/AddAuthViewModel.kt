@@ -16,7 +16,7 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
