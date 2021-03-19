@@ -222,6 +222,7 @@
     <string name="all_text">All</string>
     <string name="balance_text">See your balance</string>
     <string name="store_barcode">Store your barcode</string>
+    <string name="balance_description">Add these loyalty cards to see your points and rewards in real time in the bink app.</string>
 
     <!-- LCD Error Screen -->
     <!-- 1.2 -->
