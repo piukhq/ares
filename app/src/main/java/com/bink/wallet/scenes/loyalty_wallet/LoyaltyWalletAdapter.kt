@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.CardItemBinding
-import com.bink.wallet.databinding.EmptyLoyaltyItemBinding
+import com.bink.wallet.databinding.CardOnboardingItemBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.JoinCardItem
@@ -27,19 +29,18 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import java.util.*
 import kotlin.collections.ArrayList
+import com.bink.wallet.utils.formatBalance
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
-    val onRemoveListener: (Any) -> Unit = {}
+    val onCardLinkClickListener: (MembershipPlan) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
         private const val MEMBERSHIP_CARD = 0
 
-        // used for join loyalty card
-        private const val JOIN_PLAN = 1
-        private const val JOIN_PAYMENT = 2
+        private const val CARD_ON_BOARDING = 1
     }
 
     var membershipCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
@@ -55,18 +56,8 @@ class LoyaltyWalletAdapter(
 
         return when (viewType) {
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
-            JOIN_PLAN -> PlanSuggestionHolder(EmptyLoyaltyItemBinding.inflate(inflater))
-            else -> {
-                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
-                binding.apply {
-                    root.apply {
-                        this.setOnClickListener {
-                            onClickListener(it)
-                        }
-                    }
-                }
-                return PaymentCardWalletJoinHolder(binding)
-            }
+            else -> CardOnBoardingLinkViewHolder(CardOnboardingItemBinding.inflate(inflater))
+
         }
     }
 
@@ -74,8 +65,7 @@ class LoyaltyWalletAdapter(
         membershipCards[position].let {
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
-                is PlanSuggestionHolder -> holder.bind(it as MembershipPlan)
-                is PaymentCardWalletJoinHolder -> holder.bind(it)
+                is CardOnBoardingLinkViewHolder -> holder.bind(it as MembershipPlan)
             }
         }
     }
@@ -83,8 +73,7 @@ class LoyaltyWalletAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
-            is MembershipPlan -> JOIN_PLAN
-            else -> JOIN_PAYMENT
+            else -> CARD_ON_BOARDING
         }
     }
 
@@ -157,7 +146,7 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == JOIN_PLAN) {
+                if (getItemViewType(toPosition) == CARD_ON_BOARDING) {
                     notifyItemMoved(fromPosition, toPosition)
                     return false
                 }
@@ -179,20 +168,6 @@ class LoyaltyWalletAdapter(
         return false
     }
 
-    inner class PaymentCardWalletJoinHolder(val binding: EmptyLoyaltyItemBinding) :
-        BaseViewHolder<Any>(binding) {
-
-        override fun bind(item: Any) {
-            with(binding) {
-                dismissBanner.setOnClickListener {
-                    onRemoveListener(item)
-                }
-                joinCardDescription.text =
-                    joinCardDescription.context.getString(R.string.payment_join_description)
-            }
-        }
-    }
-
     inner class LoyaltyWalletViewHolder(val binding: LoyaltyWalletItemBinding) :
         BaseViewHolder<MembershipCard>(binding) {
 
@@ -200,20 +175,21 @@ class LoyaltyWalletAdapter(
             val cardBinding = binding.cardItem
             if (!membershipPlans.isNullOrEmpty()) {
 
-                membershipPlans.firstOrNull { it.id == item.membership_plan }?.let { membershipPlan ->
-                    paymentCards?.let {
-                        val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
-                        bindCardToLoyaltyItem(loyaltyItem, binding)
-                    }
-
-                    membershipPlan.card?.let { membershipPlanCard ->
-                        item.card?.let {
-                            it.secondary_colour = membershipPlanCard.secondary_colour
+                membershipPlans.firstOrNull { it.id == item.membership_plan }
+                    ?.let { membershipPlan ->
+                        paymentCards?.let {
+                            val loyaltyItem = LoyaltyWalletItem(item, membershipPlan, it)
+                            bindCardToLoyaltyItem(loyaltyItem, binding)
                         }
-                    }
 
-                    bindVouchersToDisplay(cardBinding, membershipPlan, item)
-                }
+                        membershipPlan.card?.let { membershipPlanCard ->
+                            item.card?.let {
+                                it.secondary_colour = membershipPlanCard.secondary_colour
+                            }
+                        }
+
+                        bindVouchersToDisplay(cardBinding, membershipPlan, item)
+                    }
 
             }
             with(cardBinding.cardView) {
@@ -256,13 +232,13 @@ class LoyaltyWalletAdapter(
                             }
                     } else if (!item.balances.isNullOrEmpty()) {
                         item.balances?.firstOrNull()?.let { balance ->
-                            when (balance?.prefix != null) {
+                            when (balance.prefix != null) {
                                 true ->
-                                    loyaltyValue.text =
-                                        balance?.prefix?.plus(balance.value)
+                                    loyaltyValue.text = balance.formatBalance()
+
                                 else -> {
-                                    loyaltyValue.text = balance?.value
-                                    loyaltyValueExtra.text = balance?.suffix
+                                    loyaltyValue.text = balance.value
+                                    loyaltyValueExtra.text = balance.suffix
                                 }
                             }
                         }
@@ -336,17 +312,29 @@ class LoyaltyWalletAdapter(
         }
     }
 
-    inner class PlanSuggestionHolder(val binding: EmptyLoyaltyItemBinding) :
+    inner class CardOnBoardingLinkViewHolder(val binding: CardOnboardingItemBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
+
+        private val gridRecyclerView: RecyclerView = binding.rvImageGrid
+        private val cardOnBoardLinkAdapter = CardOnboardLinkAdapter(onCardLinkClickListener)
+
+        init {
+            val context = binding.root.context
+            gridRecyclerView.layoutManager = GridLayoutManager(context, 2)
+            val state =
+                if (SharedPreferenceManager.cardOnBoardingState > 0) SharedPreferenceManager.cardOnBoardingState else 4
+            cardOnBoardLinkAdapter.setPlansData(membershipPlans.filter { it.isPlanPLL() }
+                .sortedByDescending { it.id }.take(state))
+            gridRecyclerView.adapter = cardOnBoardLinkAdapter
+        }
 
         override fun bind(item: MembershipPlan) {
             with(binding) {
-                membershipPlan = item
-                dismissBanner.setOnClickListener {
-                    onRemoveListener(membershipCards[adapterPosition] as MembershipPlan)
+                mainContainer.setOnClickListener {
+                    onClickListener(item)
                 }
-                joinCardMainLayout.setOnClickListener { onClickListener(item) }
             }
         }
+
     }
 }

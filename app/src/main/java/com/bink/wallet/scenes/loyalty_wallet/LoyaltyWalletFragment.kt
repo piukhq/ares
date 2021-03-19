@@ -65,7 +65,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         onClickListener = {
             onCardClicked(it)
         },
-        onRemoveListener = { onBannerRemove(it) }
+        onCardLinkClickListener = {
+            onCardLinkClicked(it)
+        }
     ).apply {
         setHasStableIds(true)
     }
@@ -74,132 +76,182 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var isRefresh = false
     private var isErrorShowing = false
     private var deletedCard: MembershipCard? = null
+    private lateinit var cards: List<MembershipCard>
+    private lateinit var plans: List<MembershipPlan>
 
 
-    private var simpleCallback = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            val currentPosition = viewHolder.adapterPosition
-            var card: MembershipCard? = null
+    private var simpleCallback =
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val currentPosition = viewHolder.adapterPosition
+                var card: MembershipCard? = null
 
-            try {
-                card = walletAdapter.membershipCards[currentPosition] as MembershipCard
-            } catch (e: ClassCastException) {
-                //User attempting to drag join plan
+                try {
+                    card = walletAdapter.membershipCards[currentPosition] as MembershipCard
+                } catch (e: ClassCastException) {
+                    //User attempting to drag join plan
+                }
+
+                card?.let {
+                    return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
+                }
+                return false
             }
 
-            card?.let {
-                return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
-            }
-            return false
-        }
-
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val position = viewHolder.adapterPosition
-            var card: MembershipCard? = null
-
-            try {
-                card = walletAdapter.membershipCards[position] as MembershipCard
-            } catch (e: ClassCastException) {
-                //User swiping membership plan
+            override fun isLongPressDragEnabled(): Boolean {
+                return true
             }
 
-            card?.let { card ->
-                if (direction == RIGHT) {
-                    val membershipPlanData = viewModel.membershipPlanData.value ?: viewModel.localMembershipPlanData.value
-                    val plan = membershipPlanData?.firstOrNull {
-                        it.id == card.membership_plan
-                    }
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                var card: MembershipCard? = null
 
-                    if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
-                        if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
-                        ) {
-                            displayNoBarcodeDialog(position)
-                        } else {
-                            plan?.let {
-                                findNavController().navigate(
-                                    LoyaltyWalletFragmentDirections.loyaltyToBarcode(
-                                        plan,
-                                        card
-                                    )
-                                )
-                            }
-                            this@LoyaltyWalletFragment.onDestroy()
+                try {
+                    card = walletAdapter.membershipCards[position] as MembershipCard
+                } catch (e: ClassCastException) {
+                    //User swiping membership plan
+                }
+
+                card?.let { card ->
+                    if (direction == RIGHT) {
+                        val membershipPlanData = viewModel.membershipPlanData.value
+                            ?: viewModel.localMembershipPlanData.value
+                        val plan = membershipPlanData?.firstOrNull {
+                            it.id == card.membership_plan
                         }
+
+                        if (findNavController().currentDestination?.id == R.id.loyalty_fragment) {
+                            if (card.card?.barcode.isNullOrEmpty() && card.card?.membership_id.isNullOrEmpty()
+                            ) {
+                                displayNoBarcodeDialog(position)
+                            } else {
+                                plan?.let {
+                                    findNavController().navigate(
+                                        LoyaltyWalletFragmentDirections.loyaltyToBarcode(
+                                            plan,
+                                            card
+                                        )
+                                    )
+                                }
+                                this@LoyaltyWalletFragment.onDestroy()
+                            }
+                        }
+                    } else {
+                        deleteDialog(card, position)
                     }
-                } else {
-                    deleteDialog(card, position)
                 }
+
             }
 
-        }
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
 
-        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                val foregroundView = when (viewHolder) {
+                    is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
+                        viewHolder.binding.cardItem.mainLayout
+                    else ->
+                        null
+                }
 
-            val foregroundView = when (viewHolder) {
-                is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
-                    viewHolder.binding.cardItem.mainLayout
-                else ->
-                    null
-            }
+                if (foregroundView != null) {
 
-            if (foregroundView != null) {
+                    binding.swipeLayout.isEnabled = false
 
-                binding.swipeLayout.isEnabled = false
+                    when {
 
-                when {
+                        dY != 0f && dX == 0f -> {
+                            super.onChildDraw(
+                                c,
+                                recyclerView,
+                                viewHolder,
+                                dX,
+                                dY,
+                                actionState,
+                                isCurrentlyActive
+                            )
+                        }
 
-                    dY != 0f && dX == 0f -> {
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        dX == 0f && dY == 0f -> {
+                            binding.swipeLayout.isEnabled = true
+                        }
+
+                        dX > 0 -> {
+                            viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
+                            viewHolder.itemView.delete_layout.visibility = View.GONE
+                            getDefaultUIUtil().onDraw(
+                                c,
+                                recyclerView,
+                                foregroundView,
+                                dX,
+                                dY,
+                                actionState,
+                                isCurrentlyActive
+                            )
+                        }
+
+                        dX < 0 -> {
+                            viewHolder.itemView.barcode_layout.visibility = View.GONE
+                            viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                            getDefaultUIUtil().onDraw(
+                                c,
+                                recyclerView,
+                                foregroundView,
+                                dX,
+                                dY,
+                                actionState,
+                                isCurrentlyActive
+                            )
+                        }
+
                     }
 
-                    dX == 0f && dY == 0f -> {
+                }
+
+            }
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                val foregroundView = when (viewHolder) {
+                    is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
+                        viewHolder.binding.cardItem.mainLayout
+                    else ->
+                        null
+                }
+
+                if (foregroundView != null) {
+                    Handler().postDelayed({
                         binding.swipeLayout.isEnabled = true
-                    }
-
-                    dX > 0 -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                        viewHolder.itemView.delete_layout.visibility = View.GONE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
-                    }
-
-                    dX < 0 -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.GONE
-                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
-                    }
-
+                    }, 1000)
+                    getDefaultUIUtil().clearView(foregroundView)
                 }
 
             }
 
-        }
-
-        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-            val foregroundView = when (viewHolder) {
-                is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
-                    viewHolder.binding.cardItem.mainLayout
-                else ->
-                    null
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val hasMultipleCards =
+                    walletAdapter.membershipCards.filterIsInstance<MembershipCard>().size > 1
+                return Callback.makeMovementFlags(
+                    if (hasMultipleCards) UP + DOWN else 0,
+                    LEFT + RIGHT
+                )
             }
-
-            if (foregroundView != null) {
-                Handler().postDelayed({
-                    binding.swipeLayout.isEnabled = true
-                }, 1000)
-                getDefaultUIUtil().clearView(foregroundView)
-            }
-
-        }
-
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-            val hasMultipleCards = walletAdapter.membershipCards.filterIsInstance<MembershipCard>().size > 1
-            return Callback.makeMovementFlags(if (hasMultipleCards) UP + DOWN else 0, LEFT + RIGHT)
-        }
-    })
+        })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -315,7 +367,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 val httpException = it as HttpException
                 logEvent(
                     DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
+                    getDeleteLoyaltyCardFailMap(
+                        planId,
+                        cardId,
+                        httpException.code(),
+                        httpException.getErrorBody()
+                    )
                 )
             }
         }
@@ -385,12 +442,19 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             .build()
     }
 
-    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+    override fun createDynamicAction(
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
-                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
+                    bindEventToDynamicAction(
+                        binding.leftTopBar,
+                        dynamicActionLocation,
+                        dynamicAction
+                    )
                 }
             }
         }
@@ -404,7 +468,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
                 if (userDataResult.result.second.isNotEmpty()) {
-                    walletAdapter.membershipCards = WalletOrderingUtil.getSavedLoyaltyCardWallet(ArrayList(userDataResult.result.third))
+                    cards = userDataResult.result.first
+                    plans = userDataResult.result.second
+
+                    walletAdapter.membershipCards =
+                        WalletOrderingUtil.getSavedLoyaltyCardWallet(
+                            sortPlans(ArrayList(userDataResult.result.third))
+                        )
+
                     disableIndicators()
                 }
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
@@ -412,12 +483,29 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 if (userDataResult.result.first.size > 4) {
                     RequestReviewUtil.triggerViaCards(this) {
-                        logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME))
+                        logEvent(
+                            FIREBASE_REQUEST_REVIEW,
+                            getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TIME)
+                        )
                     }
                 }
 
             }
         }
+    }
+
+    private fun sortPlans(loyaltyCards: ArrayList<Any>): ArrayList<Any> {
+        val allCards = ArrayList<Any>()
+        val (cards, plans) = loyaltyCards.partition { cardType -> cardType is MembershipCard }
+
+        if (plans.isNotEmpty() && shouldShowCardLink(this.cards,this.plans)) {
+            val plan = plans.firstOrNull()
+            plan?.let { allCards.add(it) }
+        }
+        allCards.addAll(cards)
+
+        return allCards
+
     }
 
     private fun manageRecyclerView() {
@@ -457,11 +545,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
             is MembershipPlan -> {
                 findNavController().navigate(
-                    LoyaltyWalletFragmentDirections.loyaltyToAddJoin(
-                        item,
-                        null,
-                        true,
-                        isRetryJourney = false
+                    LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(
+                        plans.toTypedArray(),
+                        cards.toTypedArray()
                     )
                 )
             }
@@ -486,14 +572,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
-        }
-    }
-
-    private fun onBannerRemove(item: Any) {
-        binding.swipeLayout.isEnabled = false
-        when (item) {
-            is MembershipPlan -> viewModel.addPlanIdAsDismissed(item.id)
-            else -> viewModel.addPlanIdAsDismissed((item as JoinCardItem).id)
         }
     }
 
@@ -575,5 +653,29 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
         }
+    }
+
+    private fun onCardLinkClicked(item: MembershipPlan) {
+        val directions = LoyaltyWalletFragmentDirections.loyaltyToAddJoin(
+            item,
+            null, isFromJoinCard = false, isRetryJourney = false
+        )
+        findNavController().navigateIfAdded(this, directions, R.id.loyalty_fragment)
+    }
+
+    private fun shouldShowCardLink(cards:List<MembershipCard>,plan: List<MembershipPlan>):Boolean{
+
+        cards.forEach { membershipCard ->
+            plan.forEach { mPlan ->
+                if (membershipCard.membership_plan == mPlan.id){
+                    if(mPlan.isPlanPLL()){
+                        return false
+                    }
+                }
+            }
+
+        }
+
+        return true
     }
 }

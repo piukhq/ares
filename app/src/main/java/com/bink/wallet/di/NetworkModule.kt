@@ -62,7 +62,7 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         val newRequest = chain.request().newBuilder()
             .header("Content-Type", "application/json")
-            .header("Accept", SharedPreferenceManager.storedBackendVersion ?: BackendVersion.VERSION_2.version)
+            .header("Accept", SharedPreferenceManager.storedBackendVersion ?: BackendVersion.VERSION_3.version)
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .header("User-Agent", "Bink / Android ${BuildConfig.VERSION_CODE} / ${android.os.Build.VERSION.SDK_INT}")
             .url(request)
