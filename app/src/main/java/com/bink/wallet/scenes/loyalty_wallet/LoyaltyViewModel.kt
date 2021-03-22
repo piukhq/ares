@@ -188,16 +188,16 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchLocalMembershipCards(callback: ((List<MembershipCard>) -> Unit?)? = null) {
-        loyaltyWalletRepository.retrieveStoredMembershipCards {
-            membershipCardData.value = it
-            callback?.let { returnData -> returnData(it) }
+        scope.launch {
+            val localCards = loyaltyWalletRepository.retrieveStoredMembershipCards()
+            membershipCardData.value = localCards
+            callback?.let { returnData -> returnData(localCards) }
         }
     }
 
     fun fetchMembershipCardsAndPlansForRefresh(context: Context?) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
-
         }
         /**
          * Ideally viewModelScope should be used here as it cancels itself automatically when onCleared() is called.

@@ -48,15 +48,10 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun retrieveStoredMembershipCards(callback: (List<MembershipCard>) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    callback(membershipCardDao.getAllAsync())
-                } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
+    suspend fun retrieveStoredMembershipCards(): List<MembershipCard> {
+        return coroutineScope {
+            val request = async {  membershipCardDao.getAllAsync() }
+            request.await()
         }
     }
 
@@ -114,14 +109,18 @@ class LoyaltyWalletRepository(
         return coroutineScope {
             val membershipPlansRequest = async { apiService.getMembershipPlansAsync() }
             val membershipCardsRequest = async { apiService.getMembershipCardsAsync() }
+            val cardsFromDb = retrieveStoredMembershipCards()
 
             val membershipPlansResult = membershipPlansRequest.await()
             val membershipCardsResult = membershipCardsRequest.await()
 
-            processMembershipCardsResult(membershipCardsResult)
+            val remappedCards = WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCardsResult)
+
+            processMembershipCardsResult(remappedCards)
+
             processMembershipPlansResult(membershipPlansResult)
 
-            MembershipCardAndPlan(membershipCardsResult, membershipPlansResult)
+            MembershipCardAndPlan(remappedCards, membershipPlansResult)
         }
 
     }
