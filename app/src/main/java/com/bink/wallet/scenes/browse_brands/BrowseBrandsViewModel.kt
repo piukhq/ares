@@ -8,12 +8,10 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
 import com.bink.wallet.utils.getCategories
-import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 class BrowseBrandsViewModel : BaseViewModel() {
     private val membershipPlans = MutableLiveData<List<MembershipPlan>>()
@@ -88,7 +86,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
         val (pllCards, RestOfCards) = membershipPlans.partition { it.isPlanPLL() }
 
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
-            .partition { WebScrapableManager.canBeScraped(it.id) }
+            .partition { WebScrapableManager.isCardScrapable(it.id) }
 
         if (pllCards.isNotEmpty()) {
             browseBrandsItems.add(

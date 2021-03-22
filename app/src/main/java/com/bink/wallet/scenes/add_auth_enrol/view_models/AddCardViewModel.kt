@@ -10,7 +10,7 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.BARCODE
 import com.bink.wallet.utils.CARD_NUMBER
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -46,7 +46,7 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
                 }
             }
         }
-        mapItems()
+        mapItems(membershipPlan.id)
         allAddPlans.value = addPlans
     }
 
@@ -68,15 +68,16 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         }
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
-        WebScrapableManager.setUsernameAndPassword(currentRequest)
+        val strippedRequest = WebScrapableManager.setUsernameAndPassword(currentRequest)
 
         if (isRetryJourney) {
-            updateMembershipCard(membershipCardId, currentRequest)
+            updateMembershipCard(membershipCardId, strippedRequest)
         } else {
             createMembershipCard(
-                currentRequest
+                strippedRequest
             )
         }
+
     }
 
     fun retrieveDescriptionText(

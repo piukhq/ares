@@ -16,11 +16,13 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
     BaseViewModel() {
@@ -72,8 +74,11 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         addHeader()
     }
 
-    fun mapItems() {
+    fun mapItems(membershipPlanId: String) {
         val addRegisterFieldsRequest = Account()
+
+        addAuthItemsList.addAll(getWebScrapeFields(membershipPlanId))
+
         addAuthItemsList.forEach { addAuthItem ->
             addAuthItem.fieldsRequest?.let {
                 if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
@@ -95,6 +100,23 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         }
         arrangeAuthItems()
         _addRegisterFieldsRequest.value = addRegisterFieldsRequest
+    }
+
+    private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
+
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+
+        for (agent in WebScrapableManager.scrapableAgents) {
+            membershipPlanId.toIntOrNull()?.let { planId ->
+                if (agent.isEnabled(remoteConfig)) {
+                    if (agent.membershipPlanId == planId) {
+                        return agent.getRemoteAuthFields(remoteConfig)
+                    }
+                }
+            }
+        }
+
+        return arrayListOf()
     }
 
     private fun arrangeAuthItems() {
@@ -167,9 +189,9 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         return true
     }
 
-    fun updateScrapedCards(cards : List<MembershipCard>){
+    fun updateScrapedCards(cards: List<MembershipCard>) {
         val scrapedCards = cards.filter { it.isScraped == true }
-        for(card in scrapedCards){
+        for (card in scrapedCards) {
             loyaltyWalletRepository.storeMembershipCard(card)
         }
     }

@@ -1,4 +1,4 @@
-package com.bink.wallet.utils.LocalPointScraping
+package com.bink.wallet.utils.local_point_scraping
 
 import android.content.Context
 import android.os.CountDownTimer
@@ -11,7 +11,9 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.getDebugSuffix
+import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
+import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
+import com.bink.wallet.utils.getSuffixForLPS
 import com.bink.wallet.utils.logDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
@@ -19,13 +21,12 @@ object WebScrapableManager {
 
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
+    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent())
 
     private var userName: String? = null
     private var password: String? = null
 
     private var timer: CountDownTimer? = null
-
-    private val scrapableAgents = arrayListOf(TescoScrapableAgent())
 
     private const val BASE_ENCRYPTED_KEY_SHARED_PREFERENCES =
         "com.bink.wallet.utils.LocalPointScraping.credentials.cardId_%s.%s"
@@ -37,25 +38,30 @@ object WebScrapableManager {
 
     private var membershipCards: List<MembershipCard>? = null
 
-    fun setUsernameAndPassword(request: MembershipCardRequest) {
+    fun setUsernameAndPassword(request: MembershipCardRequest): MembershipCardRequest {
         for (scrapableAgent in scrapableAgents) {
-            request?.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
+            request.membership_plan?.toIntOrNull()?.let { membershipPlanId ->
                 if (scrapableAgent.membershipPlanId == membershipPlanId) {
-                    request?.account?.authorise_fields?.let { authorizeFields ->
+                    request.account?.authorise_fields?.let { authoriseFields ->
 
-                        userName = authorizeFields.firstOrNull {
+                        userName = authoriseFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.usernameFieldTitle)
                         }?.value
-                        password = authorizeFields.firstOrNull {
+                        password = authoriseFields.firstOrNull {
                             (it.column ?: "").equals(scrapableAgent.passwordFieldTitle)
                         }?.value
 
+                        request.account.authorise_fields!!.removeAll { it.value == userName }
+                        request.account.authorise_fields!!.removeAll { it.value == password }
+                        return request
                     }
 
                 }
             }
 
         }
+
+        return request
     }
 
     fun storeCredentialsFromRequest(cardId: String) {
@@ -79,7 +85,7 @@ object WebScrapableManager {
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val masterEnabled =
-            remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getDebugSuffix())
+            remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getSuffixForLPS())
         if (!masterEnabled) return
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
@@ -151,7 +157,7 @@ object WebScrapableManager {
                                         null,
                                         null,
                                         agent.cardBalanceSuffix,
-                                        System.currentTimeMillis()
+                                        (System.currentTimeMillis() / 1000)
                                     )
                                     membershipCards!![index].balances = arrayListOf(balance)
                                     membershipCards!![index].status =
@@ -255,19 +261,14 @@ object WebScrapableManager {
         return newCards
     }
 
-    fun canBeScraped(planId:String): Boolean {
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
-        val masterEnabled =
-            remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getDebugSuffix())
-
-        if (!masterEnabled) {
-            return false
+    fun isCardScrapable(planId: String?): Boolean {
+        scrapableAgents.filter { it.membershipPlanId == planId?.toIntOrNull() }
+        val agent = scrapableAgents.firstOrNull()
+        agent?.isEnabled(FirebaseRemoteConfig.getInstance())?.let { isAgentEnabled ->
+            return isAgentEnabled
         }
 
-        val agent = scrapableAgents.firstOrNull { planId.toInt() == it.membershipPlanId }
-
-        return !(agent == null || !agent.isEnabled(remoteConfig))
-
+        return false
     }
 
 }

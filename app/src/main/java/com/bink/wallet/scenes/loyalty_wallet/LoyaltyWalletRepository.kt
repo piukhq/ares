@@ -7,21 +7,18 @@ import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membershipCardAndPlan.MembershipCardAndPlan
+import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.utils.LocalPointScraping.WebScrapableManager
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.generateUuidForMembershipCards
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
@@ -212,6 +209,9 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
+                    if (WebScrapableManager.isCardScrapable(response.membership_plan)) {
+                        response.status = CardStatus(null, MembershipCardStatus.PENDING.status)
+                    }
                     storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {

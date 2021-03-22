@@ -22,7 +22,7 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
             }
 
         }
-        mapItems()
+        mapItems(membershipPlan.id)
     }
 
     fun handleRequest(
