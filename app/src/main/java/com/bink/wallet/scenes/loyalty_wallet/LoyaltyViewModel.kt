@@ -188,10 +188,12 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchLocalMembershipCards(callback: ((List<MembershipCard>) -> Unit?)? = null) {
-        scope.launch {
-            val localCards = loyaltyWalletRepository.retrieveStoredMembershipCards()
-            membershipCardData.value = localCards
-            callback?.let { returnData -> returnData(localCards) }
+        scope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                val localCards = loyaltyWalletRepository.retrieveStoredMembershipCards()
+                membershipCardData.postValue(localCards)
+                callback?.let { returnData -> returnData(localCards) }
+            }
         }
     }
 
