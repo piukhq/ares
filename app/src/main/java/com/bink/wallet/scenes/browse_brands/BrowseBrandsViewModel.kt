@@ -106,8 +106,6 @@ class BrowseBrandsViewModel : BaseViewModel() {
             }
         }
 
-
-
         if (scrapableCards.isNotEmpty()) {
             browseBrandsItems.add(
                 BrowseBrandsListItem.SectionTitleItem(
@@ -117,7 +115,6 @@ class BrowseBrandsViewModel : BaseViewModel() {
             )
 
             scrapableCards.forEachIndexed { index, membershipPlan ->
-
                 browseBrandsItems.add(
                     BrowseBrandsListItem.BrandItem(
                         membershipPlan,
@@ -127,7 +124,6 @@ class BrowseBrandsViewModel : BaseViewModel() {
                 )
             }
         }
-
 
         if (storeCards.isNotEmpty()) {
             browseBrandsItems.add(
