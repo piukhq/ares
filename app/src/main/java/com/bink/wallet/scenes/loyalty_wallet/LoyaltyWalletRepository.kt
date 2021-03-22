@@ -49,10 +49,7 @@ class LoyaltyWalletRepository(
     }
 
     suspend fun retrieveStoredMembershipCards(): List<MembershipCard> {
-        return coroutineScope {
-            val request = async {  membershipCardDao.getAllAsync() }
-            request.await()
-        }
+        return membershipCardDao.getAllAsync()
     }
 
     fun clearMembershipCards() {
