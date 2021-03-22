@@ -17,6 +17,7 @@ import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.CardType
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -158,7 +159,7 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    private fun setMembershipCardsFromDb(cardsFromDb: List<MembershipCard>, cards: List<MembershipCard>){
+    private fun setMembershipCardsFromDb(cardsFromDb: List<MembershipCard>, cards: List<MembershipCard>) {
         membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
@@ -188,13 +189,16 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchLocalMembershipCards(callback: ((List<MembershipCard>) -> Unit?)? = null) {
-        scope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-                val localCards = loyaltyWalletRepository.retrieveStoredMembershipCards()
-                membershipCardData.postValue(localCards)
+        scope.launch {
+            try {
+                val localCards = withContext(Dispatchers.IO) { loyaltyWalletRepository.retrieveStoredMembershipCards() }
+                membershipCardData.value = localCards
                 callback?.let { returnData -> returnData(localCards) }
+            } catch (e: Exception) {
+                logDebug("LoyaltyViewModel", e.message)
             }
         }
+
     }
 
     fun fetchMembershipCardsAndPlansForRefresh(context: Context?) {
