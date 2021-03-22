@@ -223,7 +223,7 @@
     <string name="balance_text">See your balance</string>
     <string name="store_barcode">Store your barcode</string>
     <string name="pll_browse_brands_description">Add these loyalty cards and link them to your payment cards to collect rewards <b>automatically</b> when you pay.</string>
-    <string name="balance_description">Add these loyalty cards to see your points and rewards in real time in the bink app.</string>
+    <string name="balance_description">Add these loyalty cards to see your points and rewards in real time in the Bink app.</string>
     <string name="store_barcode_description">Add these loyalty cards to store your barcode in Bink and always have it on your phone. No more plastic! </string>
 
     <!-- LCD Error Screen -->

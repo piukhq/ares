@@ -31,6 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans"
+            android:textSize="@dimen/size_body"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
             app:layout_constraintEnd_toEndOf="parent"
