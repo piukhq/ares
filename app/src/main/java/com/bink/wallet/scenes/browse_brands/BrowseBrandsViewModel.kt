@@ -84,7 +84,6 @@ class BrowseBrandsViewModel : BaseViewModel() {
         membershipCardIds: List<String>
     ): List<BrowseBrandsListItem> {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
-        var hasAllSubtitle = false
 
         val (pllCards, RestOfCards) = membershipPlans.partition { it.isPlanPLL() }
 
@@ -151,26 +150,6 @@ class BrowseBrandsViewModel : BaseViewModel() {
             }
         }
 
-
-//        membershipPlans.forEachIndexed { index, membershipPlan ->
-//            val isLast = index == membershipPlans.size - 1
-//            var isBeforeSectionTitle = false
-//
-//            if (!membershipPlan.isPlanPLL() && !hasAllSubtitle) {
-//                browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.all_text))
-//                hasAllSubtitle = true
-//            }
-//            if (!isLast && !membershipPlans[index + 1].isPlanPLL() && !hasAllSubtitle) {
-//                isBeforeSectionTitle = true
-//            }
-//            browseBrandsItems.add(
-//                BrowseBrandsListItem.BrandItem(
-//                    membershipPlan,
-//                    membershipPlan.id in membershipCardIds,
-//                    !isLast && !isBeforeSectionTitle
-//                )
-//            )
-//        }
         return browseBrandsItems
     }
 
