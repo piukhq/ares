@@ -91,42 +91,64 @@ class BrowseBrandsViewModel : BaseViewModel() {
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
             .partition { WebScrapableManager.canBeScraped(it.id) }
 
-        if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
-            browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.pll_title,R.string.pll_browse_brands_description))
-        }
-
-        pllCards.forEachIndexed { index, membershipPlan ->
+        if (pllCards.isNotEmpty()) {
             browseBrandsItems.add(
-                BrowseBrandsListItem.BrandItem(
-                    membershipPlan,
-                    membershipPlan.id in membershipCardIds,
-                    index != pllCards.size - 1
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.pll_title,
+                    R.string.pll_browse_brands_description
                 )
             )
+            pllCards.forEachIndexed { index, membershipPlan ->
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, pllCards.size - 1)
+                    )
+                )
+            }
         }
 
-        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.balance_text,R.string.balance_description))
 
-        scrapableCards.forEachIndexed { index, membershipPlan ->
+
+        if (scrapableCards.isNotEmpty()) {
             browseBrandsItems.add(
-                BrowseBrandsListItem.BrandItem(
-                    membershipPlan,
-                    membershipPlan.id in membershipCardIds,
-                    index != scrapableCards.size - 1
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.balance_text,
+                    R.string.balance_description
                 )
             )
+
+            scrapableCards.forEachIndexed { index, membershipPlan ->
+
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, scrapableCards.size - 1)
+                    )
+                )
+            }
         }
 
-        browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.store_barcode,R.string.store_barcode_description))
 
-        storeCards.forEachIndexed { index, membershipPlan ->
+        if (storeCards.isNotEmpty()) {
             browseBrandsItems.add(
-                BrowseBrandsListItem.BrandItem(
-                    membershipPlan,
-                    membershipPlan.id in membershipCardIds,
-                    index != storeCards.size - 1
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.store_barcode,
+                    R.string.store_barcode_description
                 )
             )
+
+            storeCards.forEachIndexed { index, membershipPlan ->
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, storeCards.size - 1)
+                    )
+                )
+            }
         }
 
 
@@ -160,5 +182,9 @@ class BrowseBrandsViewModel : BaseViewModel() {
             filters.remove(brandFilter.category)
         }
         _activeFilters.value = filters
+    }
+
+    private fun isLastItem(currentIndex: Int, lastIndex: Int): Boolean {
+        return currentIndex != lastIndex
     }
 }
