@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.CardOnboardingSeeStoreBinding
+import com.bink.wallet.databinding.CardOnboardingSeeStoreItemBinding
 import com.bink.wallet.databinding.CardOnboardingSeeStoreMoreItemsPlaceholderBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.BaseViewHolder
 
-class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Unit = {}) : RecyclerView.Adapter<BaseViewHolder<*>>() {
+class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Unit = {}) :
+    RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private var plansList = listOf<MembershipPlan>()
 
@@ -21,33 +23,68 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
         plansList = plans
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
 
-        return when(viewType){
-            SEE_STORE_ITEM -> SeeStoreViewHolder(CardOnboardingSeeStoreBinding.inflate(inflater))
-            else -> MoreItemsPlaceHolder(CardOnboardingSeeStoreMoreItemsPlaceholderBinding.inflate(inflater))
+        return when (viewType) {
+            SEE_STORE_ITEM -> SeeStoreViewHolder(CardOnboardingSeeStoreItemBinding.inflate(inflater))
+            else -> MoreItemsPlaceHolder(
+                CardOnboardingSeeStoreMoreItemsPlaceholderBinding.inflate(
+                    inflater
+                )
+            )
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-        TODO("Not yet implemented")
+        when(holder){
+            is SeeStoreViewHolder -> holder.bind(plansList[position])
+        }
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return itemsToDisplay(plansList)
     }
 
-    inner class SeeStoreViewHolder(val binding:CardOnboardingSeeStoreBinding):BaseViewHolder<MembershipPlan>(binding) {
+    override fun getItemViewType(position: Int): Int {
+        return when(shouldShowPlaceHolder(position)){
+            true -> PLACEHOLDER
+            else -> SEE_STORE_ITEM
+        }
+    }
+
+    inner class SeeStoreViewHolder(val binding: CardOnboardingSeeStoreItemBinding) :
+        BaseViewHolder<MembershipPlan>(binding) {
+
+        override fun bind(item: MembershipPlan) {
+            with(binding){
+
+            }
+        }
+    }
+
+    inner class MoreItemsPlaceHolder(val binding: CardOnboardingSeeStoreMoreItemsPlaceholderBinding) :
+        BaseViewHolder<MembershipPlan>(binding) {
         override fun bind(item: MembershipPlan) {
             TODO("Not yet implemented")
         }
     }
 
-    inner class MoreItemsPlaceHolder(val binding:CardOnboardingSeeStoreMoreItemsPlaceholderBinding):BaseViewHolder<MembershipPlan>(binding) {
-        override fun bind(item: MembershipPlan) {
-            TODO("Not yet implemented")
+    private fun itemsToDisplay(plansList: List<MembershipPlan>): Int {
+
+        val size = plansList.size
+        return when {
+            size in 1..10 -> size
+            size > 10 -> 10
+            else -> 0
+
         }
+    }
+
+    private fun shouldShowPlaceHolder(position: Int): Boolean {
+        return (position == plansList.size) && (itemsToDisplay(plansList) == 10)
+
     }
 
 }
