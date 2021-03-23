@@ -30,6 +30,7 @@ import com.bink.wallet.utils.enums.VoucherStates
 import java.util.*
 import kotlin.collections.ArrayList
 import com.bink.wallet.utils.formatBalance
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
@@ -79,6 +80,7 @@ class LoyaltyWalletAdapter(
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
             (membershipCards[position] as MembershipPlan).isStoreCard() -> CARD_ON_BOARDING_STORE
+            WebScrapableManager.isCardScrapable((membershipCards[position] as MembershipPlan).id) -> CARD_ON_BOARDING_SEE
             else -> CARD_ON_BOARDING_PLL
         }
     }
