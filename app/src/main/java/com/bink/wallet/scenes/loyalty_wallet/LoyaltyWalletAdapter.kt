@@ -40,7 +40,12 @@ class LoyaltyWalletAdapter(
     companion object {
         private const val MEMBERSHIP_CARD = 0
 
-        private const val CARD_ON_BOARDING = 1
+        private const val CARD_ON_BOARDING_PLL = 1
+
+        private const val CARD_ON_BOARDING_SEE = 2
+
+        private const val CARD_ON_BOARDING_STORE = 3
+
     }
 
     var membershipCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
@@ -73,7 +78,8 @@ class LoyaltyWalletAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (membershipCards[position]) {
             is MembershipCard -> MEMBERSHIP_CARD
-            else -> CARD_ON_BOARDING
+            (membershipCards[position] as MembershipPlan).isStoreCard() -> CARD_ON_BOARDING_STORE
+            else -> CARD_ON_BOARDING_PLL
         }
     }
 
@@ -146,7 +152,7 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == CARD_ON_BOARDING) {
+                if (getItemViewType(toPosition) == CARD_ON_BOARDING_PLL) {
                     notifyItemMoved(fromPosition, toPosition)
                     return false
                 }
