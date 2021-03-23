@@ -3,14 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <variable
-            name="membershipPlan"
-            type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
-
-    </data>
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         app:cardCornerRadius="24dp"
