@@ -60,6 +60,9 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
         override fun bind(item: MembershipPlan) {
             with(binding){
                 membershipPlan = item
+                root.setOnClickListener {
+                    onClickListener(item)
+                }
             }
         }
     }

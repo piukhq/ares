@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -25,7 +25,8 @@
                 android:layout_width="0dp"
                 app:layout_constraintDimensionRatio="1:1"
                 android:layout_height="0dp"
-                android:src="@mipmap/ic_launcher_round"
+                tools:src="@mipmap/ic_launcher_round"
+                joinCardImage="@{membershipPlan}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

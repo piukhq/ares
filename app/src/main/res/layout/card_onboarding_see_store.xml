@@ -6,6 +6,7 @@
 
     <androidx.cardview.widget.CardView
         style="@style/ShadowedCardView"
+        android:background="@drawable/bg_card_shadow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >

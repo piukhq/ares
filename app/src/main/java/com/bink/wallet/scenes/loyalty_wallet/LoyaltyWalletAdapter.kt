@@ -360,6 +360,7 @@ class LoyaltyWalletAdapter(
             val context = binding.root.context
             seeStoreRecyclerView.layoutManager = GridLayoutManager(context, 5)
             seeStoreAdapter.setPlansData(membershipPlans.sortedByDescending { it.id })
+            seeStoreRecyclerView.adapter = seeStoreAdapter
         }
 
         override fun bind(item: MembershipPlan) {
