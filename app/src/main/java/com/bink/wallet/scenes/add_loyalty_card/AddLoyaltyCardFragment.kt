@@ -129,6 +129,7 @@ class AddLoyaltyCardFragment :
 
             membershipPlan?.also {
 
+                SharedPreferenceManager.hasBarcodeBeenScanned = true
                 val membershipCardId = ""
                 val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
                     membershipPlan = it,
@@ -314,4 +315,5 @@ class AddLoyaltyCardFragment :
         private const val BARCODE = "barcode"
 
     }
+
 }

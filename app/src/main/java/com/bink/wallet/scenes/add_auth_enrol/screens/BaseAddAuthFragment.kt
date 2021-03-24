@@ -92,7 +92,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler(it)
 
             barcode?.let {
-                viewModel.setBarcode(it)
+                if(SharedPreferenceManager.hasBarcodeBeenScanned){
+                    viewModel.setBarcode(it)
+                } else {
+                    viewModel.setBarcode("")
+                }
             }
         }
 
