@@ -498,9 +498,30 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         val allCards = ArrayList<Any>()
         val (cards, plans) = loyaltyCards.partition { cardType -> cardType is MembershipCard }
 
-        if (plans.isNotEmpty() && shouldShowCardLink(this.cards,this.plans)) {
-            val plan = plans.firstOrNull()
-            plan?.let { allCards.add(it) }
+        if (plans.isNotEmpty()) {
+            if (shouldShowCardLink(this.cards, this.plans)) {
+                val plan = plans.firstOrNull { (it as MembershipPlan).isPlanPLL() }
+                plan?.let {
+                    allCards.add(it)
+                }
+            }
+
+            if (shouldShowStoreCards(this.cards, this.plans)) {
+                val plan = plans.firstOrNull { (it as MembershipPlan).isStoreCard() }
+                plan?.let {
+                    allCards.add(it)
+                }
+
+            }
+
+            if (shouldShowSeeCards(this.cards, this.plans)) {
+                val plan =
+                    plans.firstOrNull { WebScrapableManager.isCardScrapable((it as MembershipPlan).id) }
+                plan?.let {
+                    allCards.add(it)
+                }
+            }
+
         }
         allCards.addAll(cards)
 
@@ -663,12 +684,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         findNavController().navigateIfAdded(this, directions, R.id.loyalty_fragment)
     }
 
-    private fun shouldShowCardLink(cards:List<MembershipCard>,plan: List<MembershipPlan>):Boolean{
+    private fun shouldShowCardLink(
+        cards: List<MembershipCard>,
+        plan: List<MembershipPlan>
+    ): Boolean {
 
         cards.forEach { membershipCard ->
             plan.forEach { mPlan ->
-                if (membershipCard.membership_plan == mPlan.id){
-                    if(mPlan.isPlanPLL()){
+                if (membershipCard.membership_plan == mPlan.id) {
+                    if (mPlan.isPlanPLL()) {
                         return false
                     }
                 }
@@ -676,6 +700,40 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         }
 
+        return true
+    }
+
+    private fun shouldShowStoreCards(
+        cards: List<MembershipCard>,
+        plan: List<MembershipPlan>
+    ): Boolean {
+        cards.forEach { membershipCard ->
+            plan.forEach { mPlan ->
+                if (membershipCard.membership_plan == mPlan.id) {
+                    if (mPlan.isStoreCard()) {
+                        return false
+                    }
+                }
+            }
+
+        }
+        return true
+    }
+
+    private fun shouldShowSeeCards(
+        cards: List<MembershipCard>,
+        plan: List<MembershipPlan>
+    ): Boolean {
+        cards.forEach { membershipCard ->
+            plan.forEach { mPlan ->
+                if (membershipCard.membership_plan == mPlan.id) {
+                    if (WebScrapableManager.isCardScrapable(mPlan.id)) {
+                        return false
+                    }
+                }
+            }
+
+        }
         return true
     }
 }
