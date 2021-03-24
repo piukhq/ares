@@ -74,12 +74,19 @@ object WebScrapableManager {
 
     }
 
-    fun tryScrapeCards(index: Int, cards: List<MembershipCard>, context: Context?, isAddCard: Boolean, callback: (List<MembershipCard>?) -> Unit) {
+    fun tryScrapeCards(
+        index: Int,
+        cards: List<MembershipCard>,
+        context: Context?,
+        isAddCard: Boolean,
+        callback: (List<MembershipCard>?) -> Unit
+    ) {
         if (context == null) return
         if (index == 0) membershipCards = cards
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
-        val masterEnabled = remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getSuffixForLPS())
+        val masterEnabled =
+            remoteConfig.getBoolean(REMOTE_CONFIG_LPC_MASTER_ENABLED.getSuffixForLPS())
         if (!masterEnabled) return
 
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
@@ -92,7 +99,10 @@ object WebScrapableManager {
                     logDebug("LocalPointScrape", "Countdown Timer Finished")
                     if (membershipCards != null) {
                         try {
-                            membershipCards!![index].status = CardStatus(listOf(CardCodes.X101.code), MembershipCardStatus.FAILED.status)
+                            membershipCards!![index].status = CardStatus(
+                                listOf(CardCodes.X101.code),
+                                MembershipCardStatus.FAILED.status
+                            )
                             membershipCards!![index].isScraped = true
                         } catch (e: IndexOutOfBoundsException) {
                         }
@@ -112,7 +122,9 @@ object WebScrapableManager {
 
             retrieveCredentials(card.id).let { credentials ->
 
-                val agent = scrapableAgents.firstOrNull { it.membershipPlanId.toString().equals(card.membership_plan) }
+                val agent = scrapableAgents.firstOrNull {
+                    it.membershipPlanId.toString().equals(card.membership_plan)
+                }
 
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
@@ -128,7 +140,12 @@ object WebScrapableManager {
                     logDebug("LocalPointScrape", "Credentials null, agent null")
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
-                    PointScrapingUtil.performScrape(context, agent.merchant, credentials.email, credentials.password) { pointScrapeResponse ->
+                    PointScrapingUtil.performScrape(
+                        context,
+                        agent.merchant,
+                        credentials.email,
+                        credentials.password
+                    ) { pointScrapeResponse ->
 
                         if (agent.isEnabled(remoteConfig)) {
 
@@ -136,9 +153,16 @@ object WebScrapableManager {
 
                             pointScrapeResponse.points?.let { points ->
                                 if (membershipCards != null) {
-                                    val balance = CardBalance(points, null, null, agent.cardBalanceSuffix, (System.currentTimeMillis() / 1000))
+                                    val balance = CardBalance(
+                                        points,
+                                        null,
+                                        null,
+                                        agent.cardBalanceSuffix,
+                                        (System.currentTimeMillis() / 1000)
+                                    )
                                     membershipCards!![index].balances = arrayListOf(balance)
-                                    membershipCards!![index].status = CardStatus(null, MembershipCardStatus.AUTHORISED.status)
+                                    membershipCards!![index].status =
+                                        CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
                                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
@@ -200,9 +224,11 @@ object WebScrapableManager {
     private fun retrieveCredentials(cardId: String?): WebScrapeCredentials? {
         if (cardId == null) return null
         val username =
-            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.USERNAME)) ?: return null
+            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.USERNAME))
+                ?: return null
         val password =
-            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.PASSWORD)) ?: return null
+            LocalStoreUtils.getAppSharedPref(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
+                ?: return null
 
         return WebScrapeCredentials(username, password, cardId)
     }
@@ -217,7 +243,10 @@ object WebScrapableManager {
         return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, cardId, credentialType.name)
     }
 
-    fun mapOldToNewCards(oldCards: List<MembershipCard>, newCards: List<MembershipCard>?): List<MembershipCard> {
+    fun mapOldToNewCards(
+        oldCards: List<MembershipCard>,
+        newCards: List<MembershipCard>?
+    ): List<MembershipCard> {
         if (newCards == null) return emptyList()
         val storedScrapedCards = oldCards.filter { it.isScraped == true }
 
@@ -233,9 +262,9 @@ object WebScrapableManager {
         return newCards
     }
 
-    fun isCardScrapable(card: MembershipCard): Boolean {
-        scrapableAgents.filter { it.membershipPlanId == card.membership_plan?.toIntOrNull() }
-        val agent = scrapableAgents.firstOrNull()
+    fun isCardScrapable(planId: String?): Boolean {
+        scrapableAgents.filter { it.membershipPlanId == planId?.toIntOrNull() }
+        val agent = scrapableAgents.firstOrNull{planId?.toInt() == it.membershipPlanId}
         agent?.isEnabled(FirebaseRemoteConfig.getInstance())?.let { isAgentEnabled ->
             return isAgentEnabled
         }

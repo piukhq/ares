@@ -52,8 +52,9 @@ class BrowseBrandsAdapter :
                 )
             }
             SECTION_TITLE_ITEM -> {
+                val item = (getItem(position) as BrowseBrandsListItem.SectionTitleItem)
                 (holder as SectionTitleViewHolder).bind(
-                    (getItem(position) as BrowseBrandsListItem.SectionTitleItem).sectionTitle
+                    item.sectionTitle, item.sectionDescription
                 )
             }
         }
