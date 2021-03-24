@@ -209,7 +209,7 @@ class LoyaltyWalletRepository(
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    if (WebScrapableManager.isCardScrapable(response)) {
+                    if (WebScrapableManager.isCardScrapable(response.membership_plan)) {
                         response.status = CardStatus(null, MembershipCardStatus.PENDING.status)
                     }
                     storeMembershipCard(response)
