@@ -74,13 +74,14 @@ class LoyaltyWalletAdapter(
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
                 is CardOnBoardingLinkViewHolder -> holder.bind(it as MembershipPlan)
+                is CardOnBoardingSeeStoreViewHolder -> holder.bind(it as MembershipPlan)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (membershipCards[position]) {
-            is MembershipCard -> MEMBERSHIP_CARD
+        return when {
+            membershipCards[position] is MembershipCard -> MEMBERSHIP_CARD
             (membershipCards[position] as MembershipPlan).isStoreCard() || WebScrapableManager.isCardScrapable(
                 (membershipCards[position] as MembershipPlan).id
             ) -> CARD_ON_BOARDING_SEE_STORE
@@ -352,17 +353,24 @@ class LoyaltyWalletAdapter(
     inner class CardOnBoardingSeeStoreViewHolder(val binding: CardOnboardingSeeStoreBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
 
-        private val seeStoreRecyclerView :RecyclerView = binding.rvSeeStoreItems
+        private val seeStoreRecyclerView: RecyclerView = binding.rvSeeStoreItems
         private val seeStoreAdapter = CardOnBoardingSeeStoreAdapter(onCardLinkClickListener)
 
         init {
             val context = binding.root.context
-            seeStoreRecyclerView.layoutManager = GridLayoutManager(context,5)
+            seeStoreRecyclerView.layoutManager = GridLayoutManager(context, 5)
             seeStoreAdapter.setPlansData(membershipPlans.sortedByDescending { it.id })
         }
+
         override fun bind(item: MembershipPlan) {
-            with(binding){
-                tvSeeStoreTitle.text = if (item.isStoreCard()) root.context.getString(R.string.store_barcode) else root.context.getString(R.string.balance_text)
+            with(binding) {
+                if (item.isStoreCard()) {
+                    tvSeeStoreTitle.text = root.context.getString(R.string.store_barcodes_title)
+                    tvSeeStoreDescription.text = root.context.getString(R.string.store_barcodes_description)
+                } else {
+                    tvSeeStoreTitle.text = root.context.getString(R.string.see_points_balance_title)
+                    tvSeeStoreDescription.text = root.context.getString(R.string.see_points_balance_description)
+                }
             }
             binding.root.setOnClickListener {
                 onClickListener(item)
