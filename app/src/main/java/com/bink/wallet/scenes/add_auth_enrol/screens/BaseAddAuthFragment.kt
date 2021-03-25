@@ -94,8 +94,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             barcode?.let {
                 if(SharedPreferenceManager.hasBarcodeBeenScanned){
                     viewModel.setBarcode(it)
-                } else {
-                    viewModel.setBarcode("")
+                }
+                else {
+                    barcode = ""
                 }
             }
         }

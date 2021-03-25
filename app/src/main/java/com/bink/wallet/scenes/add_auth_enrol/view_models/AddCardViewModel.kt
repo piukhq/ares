@@ -32,6 +32,10 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
                         planField.typeOfField = TypeOfField.ADD
                         addPlanField(planField)
                     }
+                    if (!SharedPreferenceManager.hasBarcodeBeenScanned && planField.common_name.equals(CARD_NUMBER)){
+                        planField.typeOfField = TypeOfField.ADD
+
+                    }
                 }
                 account.authorise_fields?.forEach { planField ->
                     planField.typeOfField = TypeOfField.AUTH
