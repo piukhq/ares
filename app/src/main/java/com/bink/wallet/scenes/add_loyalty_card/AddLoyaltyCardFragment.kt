@@ -111,6 +111,7 @@ class AddLoyaltyCardFragment :
         val savedInstanceState = findNavController().previousBackStackEntry?.savedStateHandle
         savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
         SharedPreferenceManager.scannedLoyaltyBarCode = null
+        SharedPreferenceManager.hasBarcodeBeenScanned = true
 
         if (isFromAddAuth && account != null && rawResult != null) {
             if (isValidRegex(rawResult.text)) {
@@ -129,7 +130,6 @@ class AddLoyaltyCardFragment :
 
             membershipPlan?.also {
 
-                SharedPreferenceManager.hasBarcodeBeenScanned = true
                 val membershipCardId = ""
                 val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
                     membershipPlan = it,
@@ -256,7 +256,7 @@ class AddLoyaltyCardFragment :
             override fun onFinish() {
                 resumeTimerFromMillis = -1
                 if (!cancelHaptic) {
-                    if (isAdded){
+                    if (isAdded) {
                         performHaptic()
                     }
                 }
