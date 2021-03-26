@@ -244,7 +244,6 @@ dependencies {
     testImplementation group: 'androidx.arch.core', name: 'core-testing', version: '2.1.0'
     testImplementation 'org.koin:koin-test:2.0.1'
     testImplementation 'com.xfinity:resourceprovider-library:1.2.1'
-    kapt "com.xfinity:resourceprovider-compiler:1.2.1"
     testImplementation('com.nhaarman:mockito-kotlin:1.4.0',
             {
                 exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
@@ -263,7 +262,7 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:2.0.0'
 
     /** ZENDESK **/
-    implementation group: 'com.zendesk', name: 'support', version: '5.0.0'
+    implementation group: 'com.zendesk', name: 'support', version: '5.0.2'
 
     /** TESTING **/
     testImplementation "org.robolectric:robolectric:4.3.1"
