@@ -121,8 +121,8 @@ class AddLoyaltyCardFragment :
 
                 }
             } else {
+                SharedPreferenceManager.hasBarcodeBeenScanned = false
                 showUnsupportedBarcodePopup(account!!.company_name!!)
-
             }
 
         } else {
