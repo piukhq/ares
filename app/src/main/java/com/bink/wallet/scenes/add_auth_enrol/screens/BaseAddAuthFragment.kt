@@ -92,7 +92,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler(it)
 
             barcode?.let {
-                viewModel.setBarcode(it)
+                if (SharedPreferenceManager.hasBarcodeBeenScanned) {
+                    viewModel.setBarcode(it)
+                } else {
+                    barcode = ""
+                }
             }
         }
 
@@ -279,6 +283,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun onResult(result: String) {
-        SharedPreferenceManager.scannedLoyaltyBarCode = result
+        if (SharedPreferenceManager.hasBarcodeBeenScanned) {
+            SharedPreferenceManager.scannedLoyaltyBarCode = result
+        }
     }
 }
