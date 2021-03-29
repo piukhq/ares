@@ -49,6 +49,7 @@ object SharedPreferenceManager {
     private const val PAYMENT_WALLET_ORDER = "payment_wallet_order"
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
+    private const val HAS_BARCODE_BEEN_SCANNED = "has_barcode_been_scanned"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -264,6 +265,12 @@ object SharedPreferenceManager {
         get() = environmentPreferences.getBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, false)
         set(value) = environmentPreferences.edit {
             it.putBoolean(HAS_LAUNCHED_AFTER_API_UPDATE, value)
+        }
+
+    var hasBarcodeBeenScanned: Boolean
+        get() = environmentPreferences.getBoolean(HAS_BARCODE_BEEN_SCANNED, false)
+        set(value) = environmentPreferences.edit {
+            it.putBoolean(HAS_BARCODE_BEEN_SCANNED, value)
         }
 
     var cardOnBoardingState:Int
