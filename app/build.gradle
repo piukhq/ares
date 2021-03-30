@@ -265,7 +265,7 @@ dependencies {
     implementation group: 'com.zendesk', name: 'support', version: '5.0.0'
 
     /** TESTING **/
-    testImplementation "org.robolectric:robolectric:4.3.1"
+    testImplementation "org.robolectric:robolectric:4.5.1"
 
     /** BARCODE SCANNING **/
     implementation 'com.github.greptastic:zxingscannerview:1.9.13.j'
