@@ -15,7 +15,7 @@ class MorrisonsScrapableAgent : WebScrapable() {
     }
 
     override val usernameFieldTitle: String
-        get() = "Email"
+        get() = "Email address"
 
     override val passwordFieldTitle: String
         get() = "Password"

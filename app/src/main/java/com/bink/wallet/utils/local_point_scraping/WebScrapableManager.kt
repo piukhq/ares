@@ -14,6 +14,7 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
 import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
 import com.bink.wallet.utils.getSuffixForLPS
+import com.bink.wallet.utils.local_point_scraping.agents.MorrisonsScrapableAgent
 import com.bink.wallet.utils.local_point_scraping.agents.SuperdrugScrapableAgent
 import com.bink.wallet.utils.logDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -22,7 +23,7 @@ object WebScrapableManager {
 
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
-    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent())
+    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent(), MorrisonsScrapableAgent())
 
     private var userName: String? = null
     private var password: String? = null
@@ -264,7 +265,7 @@ object WebScrapableManager {
 
     fun isCardScrapable(planId: String?): Boolean {
         scrapableAgents.filter { it.membershipPlanId == planId?.toIntOrNull() }
-        val agent = scrapableAgents.firstOrNull{planId?.toInt() == it.membershipPlanId}
+        val agent = scrapableAgents.firstOrNull { planId?.toInt() == it.membershipPlanId }
         agent?.isEnabled(FirebaseRemoteConfig.getInstance())?.let { isAgentEnabled ->
             return isAgentEnabled
         }

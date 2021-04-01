@@ -1,13 +1,14 @@
 package com.bink.wallet.utils.local_point_scraping
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Handler
 import android.view.View
 import android.webkit.*
 import com.bink.wallet.model.PointScrapeResponse
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
+import com.bink.wallet.utils.local_point_scraping.captcha.WebScrapeCaptchaDialog
 import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.readFileText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -47,7 +48,7 @@ object PointScrapingUtil {
                 super.onPageFinished(view, url)
 
                 //In the case of Tesco, it re-directs you to the login address before signing you in, there for this check stops the first login script from running again
-                if (!lastSeenURL.equals(url) || pointScrapeSite == PointScrapeSite.SUPERDRUG) {
+                if (!lastSeenURL.equals(url) || pointScrapeSite == PointScrapeSite.SUPERDRUG || pointScrapeSite == PointScrapeSite.MORRISONS) {
                     Handler().postDelayed({
                         pointScrapeSite.let { site ->
                             getJavascript(context, url, site, email, password).let { js ->
@@ -63,6 +64,15 @@ object PointScrapingUtil {
                                             hasSignedIn = false
 
                                             callback(pointScrapeResponse)
+                                        }
+
+                                        if (pointScrapeResponse.user_action_required) {
+                                            val dialog = WebScrapeCaptchaDialog(context, webView, js ?: "")
+                                            dialog.show()
+                                            dialog.setOnDismissListener {
+                                                //TODO Morrisons then takes them to https://my.morrisons.com/more/#/ rather than the points page
+                                                //webView?.loadUrl(pointScrapeSite.scrapeURL)
+                                            }
                                         }
                                     }
                                 }
@@ -82,20 +92,26 @@ object PointScrapingUtil {
     private fun getJavascript(context: Context, url: String?, pointScrapeSite: PointScrapeSite, email: String, password: String): String? {
         if (url == null) return null
 
+        logDebug("LocalPointScrape", "URL: $url")
+
         for (agent in WebScrapableManager.scrapableAgents) {
             if (agent.merchant == pointScrapeSite) {
                 val merchantName = agent.merchant.remoteName
                 return when {
                     url.toLowerCase().contains(agent.merchant.signInURL.toLowerCase()) && !hasSignedIn -> {
                         hasSignedIn = true
-                        val javascriptClass = readFileText(context, "lps_${merchantName}_login.txt")
+                        val javascriptClass = "lps_${merchantName}_login.txt".readFileText(context)
                         val replacedEmail = javascriptClass.replaceFirst("%@", email)
                         val replacedPassword = replacedEmail.replaceFirst("%@", password)
                         replacedPassword
                     }
                     url.toLowerCase().contains(agent.merchant.scrapeURL.toLowerCase()) -> {
-                        readFileText(context, "lps_${merchantName}_scrape.txt")
+                        "lps_${merchantName}_scrape.txt".readFileText(context)
                     }
+//                    url.toLowerCase().contains("https://my.morrisons.com/more/".toLowerCase()) -> {
+//                        webView?.loadUrl(agent.merchant.scrapeURL)
+//                        null
+//                    }
                     else -> null
                 }
             }
@@ -117,24 +133,6 @@ object PointScrapingUtil {
         } catch (e: Exception) {
             //Either an issue with casting to a PointScrapeResponse or in Parsing the JSON
         }
-    }
-
-    private fun readFileText(context: Context, fileName: String): String {
-        return try {
-            context.assets?.open(fileName)?.bufferedReader().use {
-                it?.readText() ?: "JS Error"
-            }
-        } catch (e: Exception) {
-            e.localizedMessage ?: ""
-        }
-    }
-
-    private fun launchDialog(context: Context, message: String) {
-        AlertDialog.Builder(context)
-            .setTitle("Tesco LPS")
-            .setMessage(message)
-            .setPositiveButton("Okay", null)
-            .show()
     }
 
 }
