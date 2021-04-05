@@ -16,7 +16,7 @@
                 android:layout_width="0dp"
                 app:layout_constraintDimensionRatio="1:1"
                 android:layout_height="0dp"
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/ic_see_store_more"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

@@ -17,6 +17,7 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
     companion object {
         private const val SEE_STORE_ITEM = 0
         private const val PLACEHOLDER = 1
+        private const val TARGET_POSITION = 9
     }
 
     fun setPlansData(plans: List<MembershipPlan>) {
@@ -86,7 +87,8 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
     }
 
     private fun shouldShowPlaceHolder(position: Int): Boolean {
-        return (position == plansList.size) && (itemsToDisplay(plansList) == 10)
+            val isLargerThanTen = plansList.size > 10
+        return (isLargerThanTen && position == TARGET_POSITION) && (itemsToDisplay(plansList) == 10)
 
     }
 
