@@ -19,11 +19,13 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.putSessionHandlerNavigationDestination
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import zendesk.core.Zendesk
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
 
@@ -118,6 +120,11 @@ class SettingsFragment :
                 )
             }
             SettingsItemType.FAQS -> {
+                if (Zendesk.INSTANCE.identity == null){
+                    viewModel.setIdentity()
+
+                }
+
                 val articleConfig = ViewArticleActivity.builder()
                     .withContactUsButtonVisible(false)
                     .config()
