@@ -112,4 +112,8 @@ class SettingsViewModel constructor(
         super.onCleared()
         scope.cancel()
     }
+
+    fun setIdentity() {
+        zendeskRepository.setIdentity()
+    }
 }
