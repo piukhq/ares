@@ -71,7 +71,9 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
     inner class MoreItemsPlaceHolder(val binding: CardOnboardingSeeStoreMoreItemsPlaceholderBinding) :
         BaseViewHolder<MembershipPlan>(binding) {
         override fun bind(item: MembershipPlan) {
-            TODO("Not yet implemented")
+            binding.root.setOnClickListener {
+                onClickListener(item)
+            }
         }
     }
 
