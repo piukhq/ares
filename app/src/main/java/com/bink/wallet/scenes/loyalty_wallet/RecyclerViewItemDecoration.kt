@@ -4,7 +4,12 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewItemDecoration :RecyclerView.ItemDecoration() {
+class RecyclerViewItemDecoration : RecyclerView.ItemDecoration() {
+
+    companion object {
+        private const val MARGIN = 20;
+    }
+
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -12,8 +17,7 @@ class RecyclerViewItemDecoration :RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
 
-        outRect.set(20,20,20,20)
-
+        outRect.set(MARGIN, MARGIN, MARGIN, MARGIN)
 
     }
 }
