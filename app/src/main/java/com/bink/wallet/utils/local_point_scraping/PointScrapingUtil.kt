@@ -3,7 +3,10 @@ package com.bink.wallet.utils.local_point_scraping
 import android.content.Context
 import android.os.Handler
 import android.view.View
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.WebStorage
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.bink.wallet.model.PointScrapeResponse
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.local_point_scraping.captcha.WebScrapeCaptchaDialog
@@ -47,7 +50,6 @@ object PointScrapingUtil {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                //In the case of Tesco, it re-directs you to the login address before signing you in, there for this check stops the first login script from running again
                 if (!lastSeenURL.equals(url) || pointScrapeSite == PointScrapeSite.SUPERDRUG || pointScrapeSite == PointScrapeSite.MORRISONS) {
                     Handler().postDelayed({
                         pointScrapeSite.let { site ->
@@ -70,8 +72,7 @@ object PointScrapingUtil {
                                             val dialog = WebScrapeCaptchaDialog(context, webView, js ?: "")
                                             dialog.show()
                                             dialog.setOnDismissListener {
-                                                //TODO Morrisons then takes them to https://my.morrisons.com/more/#/ rather than the points page
-                                                //webView?.loadUrl(pointScrapeSite.scrapeURL)
+                                                webView?.loadUrl(pointScrapeSite.scrapeURL)
                                             }
                                         }
                                     }
@@ -108,10 +109,6 @@ object PointScrapingUtil {
                     url.toLowerCase().contains(agent.merchant.scrapeURL.toLowerCase()) -> {
                         "lps_${merchantName}_scrape.txt".readFileText(context)
                     }
-//                    url.toLowerCase().contains("https://my.morrisons.com/more/".toLowerCase()) -> {
-//                        webView?.loadUrl(agent.merchant.scrapeURL)
-//                        null
-//                    }
                     else -> null
                 }
             }

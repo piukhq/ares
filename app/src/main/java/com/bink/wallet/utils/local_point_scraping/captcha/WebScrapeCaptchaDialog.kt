@@ -7,15 +7,11 @@ import android.os.CountDownTimer
 import android.view.View
 import android.webkit.WebView
 import com.bink.wallet.R
-import com.bink.wallet.model.PointScrapeResponse
-import com.bink.wallet.utils.local_point_scraping.PointScrapingUtil
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.readFileText
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.webscrape_captcha_fragment.*
 
-class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebView?, private val loginJavascript: String) : Dialog(context) {
+class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebView?, private val loginJavascript: String) : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 
     private var timer: CountDownTimer? = null
 
@@ -32,20 +28,16 @@ class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebVi
 
         timer = object : CountDownTimer(60000, 1000) {
             override fun onFinish() {
-
+                dismissDialog()
             }
 
             override fun onTick(millisUntilFinished: Long) {
                 captchaWebView?.evaluateJavascript(captchaJs) { response ->
                     logDebug("LocalPointScrape", "success: $response")
 
-                    if(response.contains("true")){
-                        captchaWebView?.evaluateJavascript(loginJavascript) { logInResponse ->
-                            timer?.cancel()
-                            timer = null
-
-                            dismiss()
-                            //Now we've logged in we need to go to the point page
+                    if (response.contains("true")) {
+                        captchaWebView.evaluateJavascript(loginJavascript) { logInResponse ->
+                            dismissDialog()
                         }
                     }
                 }
@@ -53,6 +45,13 @@ class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebVi
         }
 
         timer?.start()
+    }
+
+    private fun dismissDialog() {
+        timer?.cancel()
+        timer = null
+
+        dismiss()
     }
 
 }
