@@ -278,7 +278,4 @@ class LoyaltyViewModel constructor(
         paymentWalletRepository.getLocalPaymentCards(_localPaymentCards, _fetchError)
     }
 
-    fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id, _addError, _dismissedBannerDisplay)
-    }
 }

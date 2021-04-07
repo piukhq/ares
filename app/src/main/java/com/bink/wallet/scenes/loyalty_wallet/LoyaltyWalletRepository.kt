@@ -330,7 +330,6 @@ class LoyaltyWalletRepository(
     fun getLocalData(
         localMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         localMembershipCards: MutableLiveData<List<MembershipCard>>,
-        localDismissedMembershipCards: MutableLiveData<List<BannerDisplay>>,
         fetchError: MutableLiveData<Exception>,
         updateDone: MutableLiveData<Boolean>
     ) {
@@ -341,10 +340,7 @@ class LoyaltyWalletRepository(
                         async(Dispatchers.IO) { membershipPlanDao.getAllAsync() }
                     val storedMembershipCards =
                         async(Dispatchers.IO) { membershipCardDao.getAllAsync() }
-                    val storedDismissedBanners =
-                        async(Dispatchers.IO) { bannersDisplayDao.getDismissedBanners() }
 
-                    localDismissedMembershipCards.value = storedDismissedBanners.await()
                     localMembershipCards.value = storedMembershipCards.await()
                     localMembershipPlans.value = storedMembershipPlans.await()
                     updateDone.value = true

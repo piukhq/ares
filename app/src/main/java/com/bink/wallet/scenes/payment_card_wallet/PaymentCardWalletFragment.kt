@@ -293,13 +293,6 @@ class PaymentCardWalletFragment :
         viewModel.fetchLocalData()
     }
 
-    private fun onBannerRemove(item: Any) {
-        SharedPreferenceManager.isPaymentJoinBannerDismissed = true
-        viewModel.addPlanIdAsDismissed(JOIN_CARD)
-        walletAdapter.paymentCards.remove(item)
-        walletAdapter.notifyDataSetChanged()
-    }
-
     private fun clickHandler(it: Any, plans: List<MembershipPlan>, cards: List<MembershipCard>) {
         when (it) {
             is PaymentCard -> {
@@ -387,7 +380,11 @@ class PaymentCardWalletFragment :
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
 
-        walletItems.add(JoinCardItem())
+        if (SharedPreferenceManager.isPaymentEmpty){
+            walletItems.add(JoinCardItem())
+
+        }
+
 
         walletAdapter.paymentCards = WalletOrderingUtil.getSavedPaymentCardWallet(walletItems)
 
@@ -397,10 +394,6 @@ class PaymentCardWalletFragment :
                     clickHandler(it, plans, cards)
                 }
             }
-        }
-
-        walletAdapter.onRemoveListener = {
-            onBannerRemove(it)
         }
 
         walletAdapter.notifyDataSetChanged()

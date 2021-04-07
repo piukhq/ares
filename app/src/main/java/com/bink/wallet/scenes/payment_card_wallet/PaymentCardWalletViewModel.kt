@@ -24,7 +24,6 @@ class PaymentCardWalletViewModel(
     val deleteRequest = MutableLiveData<ResponseBody>()
     val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
     val localMembershipCardData = MutableLiveData<List<MembershipCard>>()
-    val dismissedCardData = MutableLiveData<List<BannerDisplay>>()
 
     private val _fetchError = MutableLiveData<Exception>()
     val fetchError: LiveData<Exception> get() = _fetchError
@@ -71,15 +70,11 @@ class PaymentCardWalletViewModel(
         paymentWalletRepository.deletePaymentCard(paymentCardId, deleteRequest, _deleteError)
     }
 
-    fun addPlanIdAsDismissed(id: String) {
-        loyaltyWalletRepository.addBannerAsDismissed(id, _addError)
-    }
 
     fun fetchLocalData() {
         loyaltyWalletRepository.getLocalData(
             localMembershipPlanData,
             localMembershipCardData,
-            dismissedCardData,
             _fetchError,
             loyaltyUpdateDone
         )

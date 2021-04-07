@@ -1,6 +1,7 @@
 package com.bink.wallet.utils
 
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.WalletOrder
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
@@ -35,6 +36,7 @@ object  WalletOrderingUtil {
         }
 
         unassignedCards.addAll(rearrangedCards)
+        unassignedCards.add(JoinCardItem())
         return unassignedCards
     }
 
