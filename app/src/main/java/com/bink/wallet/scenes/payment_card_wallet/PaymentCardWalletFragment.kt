@@ -383,16 +383,11 @@ class PaymentCardWalletFragment :
 
         walletItems.clear()
 
-        if (viewModel.dismissedCardData.value?.firstOrNull { it.id == JOIN_CARD } == null &&
-            SharedPreferenceManager.isPaymentEmpty) {
-            if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
-                walletItems.add(JoinCardItem())
-            }
-        }
-
         viewModel.paymentCards.value?.let { paymentCards ->
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
+
+        walletItems.add(JoinCardItem())
 
         walletAdapter.paymentCards = WalletOrderingUtil.getSavedPaymentCardWallet(walletItems)
 
