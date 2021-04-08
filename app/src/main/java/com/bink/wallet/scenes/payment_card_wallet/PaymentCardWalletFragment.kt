@@ -21,22 +21,12 @@ import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
-import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.WalletOrderingUtil
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -203,7 +193,12 @@ class PaymentCardWalletFragment :
         }
 
         viewModel.localMembershipCardData.observeNonNull(this) {
+            membershipCardsForBrands = it.toTypedArray()
             walletAdapter.membershipCards = it.toMutableList()
+        }
+
+        viewModel.localMembershipPlanData.observeNonNull(this) {
+            membershipPlansForBrands = it.toTypedArray()
         }
 
         viewModel.deleteRequest.observeNonNull(this) {
@@ -366,8 +361,8 @@ class PaymentCardWalletFragment :
         membershipPlans: List<MembershipPlan>
     ) {
         viewModel.run {
-            localMembershipCardData.value = membershipCards
-            localMembershipPlanData.value = membershipPlans
+            membershipCardsForBrands = membershipCards.toTypedArray()
+            membershipPlansForBrands = membershipPlans.toTypedArray()
         }
     }
 
