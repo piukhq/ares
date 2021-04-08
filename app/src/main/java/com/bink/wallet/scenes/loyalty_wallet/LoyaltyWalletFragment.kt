@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
@@ -302,7 +303,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
 
         binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(MarginItemDecoration(resources.getDimension(R.dimen.margin_padding_size_small).toInt()))
             adapter = walletAdapter
         }
 
@@ -506,20 +508,20 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
             }
 
-            if (shouldShowStoreCards(this.cards, this.plans)) {
-                val plan = plans.firstOrNull { (it as MembershipPlan).isStoreCard() }
-                plan?.let {
-                    allCards.add(it)
-                }
-
-            }
-
             if (shouldShowSeeCards(this.cards, this.plans)) {
                 val plan =
                     plans.firstOrNull { WebScrapableManager.isCardScrapable((it as MembershipPlan).id) }
                 plan?.let {
                     allCards.add(it)
                 }
+            }
+
+            if (shouldShowStoreCards(this.cards, this.plans)) {
+                val plan = plans.firstOrNull { (it as MembershipPlan).isStoreCard() }
+                plan?.let {
+                    allCards.add(it)
+                }
+
             }
 
         }
