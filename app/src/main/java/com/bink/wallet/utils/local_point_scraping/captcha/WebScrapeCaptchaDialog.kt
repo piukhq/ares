@@ -36,7 +36,7 @@ class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebVi
                     logDebug("LocalPointScrape", "success: $response")
 
                     if (response.contains("true")) {
-                        captchaWebView.evaluateJavascript(loginJavascript) { logInResponse ->
+                        captchaWebView.evaluateJavascript(loginJavascript) {
                             dismissDialog()
                         }
                     }
