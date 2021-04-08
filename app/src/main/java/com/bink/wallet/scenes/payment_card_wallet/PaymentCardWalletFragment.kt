@@ -438,12 +438,6 @@ class PaymentCardWalletFragment :
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
 
-        if (SharedPreferenceManager.isPaymentEmpty) {
-            walletItems.add(JoinCardItem())
-
-        }
-
-
         walletAdapter.paymentCards = WalletOrderingUtil.getSavedPaymentCardWallet(walletItems)
 
         viewModel.localMembershipPlanData.value?.let { plans ->
