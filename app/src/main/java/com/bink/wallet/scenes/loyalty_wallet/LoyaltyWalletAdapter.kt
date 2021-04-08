@@ -387,7 +387,7 @@ class LoyaltyWalletAdapter(
         init {
             val context = binding.root.context
             seeStoreRecyclerView.layoutManager = GridLayoutManager(context, 5)
-            seeStoreAdapter.setPlansData(membershipPlans.filter { it.isStoreCard() }.sortedByDescending { it.id })
+            seeStoreAdapter.setPlansData(membershipPlans.filter { it.isStoreCard() })
             seeStoreRecyclerView.adapter = seeStoreAdapter
         }
 
