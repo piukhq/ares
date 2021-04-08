@@ -25,7 +25,6 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
-import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.WalletOrderingUtil
@@ -75,8 +74,16 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
-    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP + ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object :
+        ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP + ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT
+        ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
             walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true
         }
@@ -92,7 +99,15 @@ class PaymentCardWalletFragment :
             }
         }
 
-        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
             val foregroundView = when (viewHolder) {
                 is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
                     viewHolder.binding.mainPayment
@@ -107,7 +122,15 @@ class PaymentCardWalletFragment :
                 when {
 
                     dY != 0f && dX == 0f -> {
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        super.onChildDraw(
+                            c,
+                            recyclerView,
+                            viewHolder,
+                            dX,
+                            dY,
+                            actionState,
+                            isCurrentlyActive
+                        )
                     }
 
                     dX == 0f && dY == 0f -> {
@@ -117,13 +140,29 @@ class PaymentCardWalletFragment :
                     dX > 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
+                        getDefaultUIUtil().onDraw(
+                            c,
+                            recyclerView,
+                            foregroundView,
+                            dX,
+                            dY,
+                            actionState,
+                            isCurrentlyActive
+                        )
                     }
 
                     dX < 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
+                        getDefaultUIUtil().onDraw(
+                            c,
+                            recyclerView,
+                            foregroundView,
+                            dX,
+                            dY,
+                            actionState,
+                            isCurrentlyActive
+                        )
                     }
 
                 }
@@ -146,9 +185,15 @@ class PaymentCardWalletFragment :
 
         }
 
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
             val hasMultipleCards = walletAdapter.paymentCards.size > 1
-            return ItemTouchHelper.Callback.makeMovementFlags(if (hasMultipleCards) ItemTouchHelper.UP + ItemTouchHelper.DOWN else 0, ItemTouchHelper.LEFT + ItemTouchHelper.RIGHT)
+            return ItemTouchHelper.Callback.makeMovementFlags(
+                if (hasMultipleCards) ItemTouchHelper.UP + ItemTouchHelper.DOWN else 0,
+                ItemTouchHelper.LEFT + ItemTouchHelper.RIGHT
+            )
         }
     }
 
@@ -231,7 +276,12 @@ class PaymentCardWalletFragment :
                 val httpException = it as HttpException
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                    getDeletePaymentCardFailedMap(pScheme, paymentCardId, httpException.code(), httpException.getErrorBody())
+                    getDeletePaymentCardFailedMap(
+                        pScheme,
+                        paymentCardId,
+                        httpException.code(),
+                        httpException.getErrorBody()
+                    )
                 )
             }
 
@@ -277,12 +327,19 @@ class PaymentCardWalletFragment :
         }
     }
 
-    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+    override fun createDynamicAction(
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
-                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
+                    bindEventToDynamicAction(
+                        binding.leftTopBar,
+                        dynamicActionLocation,
+                        dynamicAction
+                    )
                 }
             }
         }
@@ -371,7 +428,8 @@ class PaymentCardWalletFragment :
             viewModel.paymentCards.value.isNullOrEmpty()
 
         viewModel.paymentCards.value?.let {
-            SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(it)
+            SharedPreferenceManager.hasNoActivePaymentCards =
+                MembershipPlanUtils.hasNoActiveCards(it)
         }
 
         walletItems.clear()
@@ -380,7 +438,7 @@ class PaymentCardWalletFragment :
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
         }
 
-        if (SharedPreferenceManager.isPaymentEmpty){
+        if (SharedPreferenceManager.isPaymentEmpty) {
             walletItems.add(JoinCardItem())
 
         }
