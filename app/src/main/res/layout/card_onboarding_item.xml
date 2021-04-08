@@ -12,6 +12,7 @@
 
     <androidx.cardview.widget.CardView
         style="@style/ShadowedCardView"
+        app:cardCornerRadius="18dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_card_on_boarding"
