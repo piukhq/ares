@@ -170,6 +170,10 @@
             android:id="@+id/payment_to_dynamic_action"
             app:destination="@id/dynamic_action_fragment" />
 
+        <action
+            android:id="@+id/payment_to_browse_brands"
+            app:destination="@+id/browse_brands"/>
+
     </fragment>
 
     <fragment

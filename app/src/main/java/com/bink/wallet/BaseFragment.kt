@@ -19,6 +19,8 @@ import com.bink.wallet.model.DynamicActionHandler
 import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.model.DynamicActionType
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents
@@ -61,6 +63,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
@@ -85,6 +89,9 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             requireActivity()
         )
     }
+
+    open var membershipCardsForBrands: Array<MembershipCard>? = null
+    open var membershipPlansForBrands: Array<MembershipPlan>? = null
 
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
@@ -206,7 +213,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 DynamicActionHandler.SINGLE_TAP -> {
                     view.setOnClickListener {
                         dynamicAction.event?.let { event ->
-                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name?:"")
+                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name ?: "")
                         }
                     }
                 }
@@ -246,13 +253,16 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     navigateToLoyaltyWallet()
                 }
                 R.id.add_menu_item -> {
-                    val directions =
-                        when (findNavController().currentDestination?.id) {
-                            R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToAdd()
-                            R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentWalletToAdd()
-                            else -> null
-                        }
-                    directions?.let { findNavController().navigateIfAdded(this, directions) }
+
+                    if (membershipPlansForBrands != null && membershipCardsForBrands != null) {
+                        val directions =
+                            when (findNavController().currentDestination?.id) {
+                                R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(membershipPlansForBrands!!, membershipCardsForBrands!!)
+                                R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToBrowseBrands(membershipPlansForBrands!!, membershipCardsForBrands!!)
+                                else -> null
+                            }
+                        directions?.let { findNavController().navigateIfAdded(this, directions) }
+                    }
                 }
 
                 R.id.payment_menu_item -> {
