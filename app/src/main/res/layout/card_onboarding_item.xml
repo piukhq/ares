@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:layout_marginTop="@dimen/margin_padding_size_small"
-                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
                     android:fontFamily="@font/nunito_sans"
                     android:text="@string/card_onboarding_description"
                     android:textSize="@dimen/card_onnboarding_link_description"
