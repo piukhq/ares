@@ -20,8 +20,7 @@ import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 class PaymentCardWalletAdapter(
-    var onClickListener: (Any) -> Unit = {},
-    var onRemoveListener: (Any) -> Unit = {}
+    var onClickListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
@@ -157,10 +156,6 @@ class PaymentCardWalletAdapter(
             with(binding) {
                 joinCardMainLayout.setOnClickListener {
                     onClickListener(paymentCards[adapterPosition])
-                }
-
-                dismissBanner.setOnClickListener {
-                    onRemoveListener(paymentCards[adapterPosition])
                 }
 
                 joinCardDescription.text =
