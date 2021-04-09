@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.loyalty_wallet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bink.wallet.databinding.CardOnboardingSeeStoreBinding
 import com.bink.wallet.databinding.CardOnboardingSeeStoreItemBinding
 import com.bink.wallet.databinding.CardOnboardingSeeStoreMoreItemsPlaceholderBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
