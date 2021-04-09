@@ -105,20 +105,8 @@ class LoyaltyViewModel constructor(
         }
         val walletItems = arrayListOf<Any>()
         walletItems.addAll(cardsReceivedValue)
-        walletItems.addAll(
-            plansReceivedValue
-//                .filter { membershipPlan ->
-//                membershipPlan.getCardType() == CardType.PLL &&
-//                        merchantNoLoyalty(cardsReceivedValue, membershipPlan) &&
-//                        dismissedCardsValue.firstOrNull { currentId ->
-//                            membershipPlan.id == currentId.id
-//                        } == null
-//            }.sortedBy { it.account?.company_name }
-        )
-//        if (dismissedCardsValue.firstOrNull { it.id == JOIN_CARD } == null &&
-//            SharedPreferenceManager.isPaymentEmpty) {
-//            walletItems.add(JoinCardItem())
-//        }
+        walletItems.addAll(plansReceivedValue)
+
         return UserDataResult.UserDataSuccess(
             Triple(
                 cardsReceivedValue,
@@ -126,15 +114,6 @@ class LoyaltyViewModel constructor(
                 walletItems
             )
         )
-    }
-
-    private fun merchantNoLoyalty(
-        cardsReceived: List<MembershipCard>,
-        plan: MembershipPlan
-    ): Boolean {
-        return cardsReceived.firstOrNull { card ->
-            card.membership_plan == plan.id
-        } == null
     }
 
     fun deleteCard(id: String?) {
