@@ -17,7 +17,6 @@ import com.bink.wallet.databinding.PaymentCardWalletFragmentBinding
 import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.DynamicActionArea
 import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -65,8 +64,16 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
-    private var simpleCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP + ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+    private var simpleCallback: ItemTouchHelper.SimpleCallback = object :
+        ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP + ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT
+        ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
             walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
             return true
         }
@@ -82,7 +89,15 @@ class PaymentCardWalletFragment :
             }
         }
 
-        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
             val foregroundView = when (viewHolder) {
                 is PaymentCardWalletAdapter.PaymentCardWalletHolder ->
                     viewHolder.binding.mainPayment
@@ -97,7 +112,15 @@ class PaymentCardWalletFragment :
                 when {
 
                     dY != 0f && dX == 0f -> {
-                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        super.onChildDraw(
+                            c,
+                            recyclerView,
+                            viewHolder,
+                            dX,
+                            dY,
+                            actionState,
+                            isCurrentlyActive
+                        )
                     }
 
                     dX == 0f && dY == 0f -> {
@@ -107,13 +130,29 @@ class PaymentCardWalletFragment :
                     dX > 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
                         viewHolder.itemView.delete_layout.visibility = View.GONE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
+                        getDefaultUIUtil().onDraw(
+                            c,
+                            recyclerView,
+                            foregroundView,
+                            dX,
+                            dY,
+                            actionState,
+                            isCurrentlyActive
+                        )
                     }
 
                     dX < 0 -> {
                         viewHolder.itemView.barcode_layout.visibility = View.GONE
                         viewHolder.itemView.delete_layout.visibility = View.VISIBLE
-                        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive)
+                        getDefaultUIUtil().onDraw(
+                            c,
+                            recyclerView,
+                            foregroundView,
+                            dX,
+                            dY,
+                            actionState,
+                            isCurrentlyActive
+                        )
                     }
 
                 }
@@ -136,9 +175,15 @@ class PaymentCardWalletFragment :
 
         }
 
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
             val hasMultipleCards = walletAdapter.paymentCards.size > 1
-            return ItemTouchHelper.Callback.makeMovementFlags(if (hasMultipleCards) ItemTouchHelper.UP + ItemTouchHelper.DOWN else 0, ItemTouchHelper.LEFT + ItemTouchHelper.RIGHT)
+            return ItemTouchHelper.Callback.makeMovementFlags(
+                if (hasMultipleCards) ItemTouchHelper.UP + ItemTouchHelper.DOWN else 0,
+                ItemTouchHelper.LEFT + ItemTouchHelper.RIGHT
+            )
         }
     }
 
@@ -226,7 +271,12 @@ class PaymentCardWalletFragment :
                 val httpException = it as HttpException
                 logEvent(
                     DELETE_PAYMENT_CARD_RESPONSE_FAILURE,
-                    getDeletePaymentCardFailedMap(pScheme, paymentCardId, httpException.code(), httpException.getErrorBody())
+                    getDeletePaymentCardFailedMap(
+                        pScheme,
+                        paymentCardId,
+                        httpException.code(),
+                        httpException.getErrorBody()
+                    )
                 )
             }
 
@@ -272,12 +322,19 @@ class PaymentCardWalletFragment :
         }
     }
 
-    override fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+    override fun createDynamicAction(
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
                     binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
-                    bindEventToDynamicAction(binding.leftTopBar, dynamicActionLocation, dynamicAction)
+                    bindEventToDynamicAction(
+                        binding.leftTopBar,
+                        dynamicActionLocation,
+                        dynamicAction
+                    )
                 }
             }
         }
@@ -286,13 +343,6 @@ class PaymentCardWalletFragment :
 
     private fun populateWallet() {
         viewModel.fetchLocalData()
-    }
-
-    private fun onBannerRemove(item: Any) {
-        SharedPreferenceManager.isPaymentJoinBannerDismissed = true
-        viewModel.addPlanIdAsDismissed(JOIN_CARD)
-        walletAdapter.paymentCards.remove(item)
-        walletAdapter.notifyDataSetChanged()
     }
 
     private fun clickHandler(it: Any, plans: List<MembershipPlan>, cards: List<MembershipCard>) {
@@ -373,17 +423,11 @@ class PaymentCardWalletFragment :
             viewModel.paymentCards.value.isNullOrEmpty()
 
         viewModel.paymentCards.value?.let {
-            SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(it)
+            SharedPreferenceManager.hasNoActivePaymentCards =
+                MembershipPlanUtils.hasNoActiveCards(it)
         }
 
         walletItems.clear()
-
-        if (viewModel.dismissedCardData.value?.firstOrNull { it.id == JOIN_CARD } == null &&
-            SharedPreferenceManager.isPaymentEmpty) {
-            if (!SharedPreferenceManager.isPaymentJoinBannerDismissed) {
-                walletItems.add(JoinCardItem())
-            }
-        }
 
         viewModel.paymentCards.value?.let { paymentCards ->
             walletItems.addAll(paymentCards.sortedByDescending { card -> card.id })
@@ -397,10 +441,6 @@ class PaymentCardWalletFragment :
                     clickHandler(it, plans, cards)
                 }
             }
-        }
-
-        walletAdapter.onRemoveListener = {
-            onBannerRemove(it)
         }
 
         walletAdapter.notifyDataSetChanged()
