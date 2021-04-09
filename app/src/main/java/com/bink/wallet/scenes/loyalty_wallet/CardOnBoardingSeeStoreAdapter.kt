@@ -8,7 +8,10 @@ import com.bink.wallet.databinding.CardOnboardingSeeStoreMoreItemsPlaceholderBin
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.BaseViewHolder
 
-class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Unit = {}) :
+class CardOnBoardingSeeStoreAdapter(
+    val onClickListener: (MembershipPlan) -> Unit = {},
+    val placeHolderClicked: (Any) -> Unit = {}
+) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private var plansList = listOf<MembershipPlan>()
@@ -38,8 +41,9 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-        when(holder){
+        when (holder) {
             is SeeStoreViewHolder -> holder.bind(plansList[position])
+            is MoreItemsPlaceHolder -> holder.bind(plansList[position])
         }
     }
 
@@ -48,7 +52,7 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(shouldShowPlaceHolder(position)){
+        return when (shouldShowPlaceHolder(position)) {
             true -> PLACEHOLDER
             else -> SEE_STORE_ITEM
         }
@@ -58,7 +62,7 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
         BaseViewHolder<MembershipPlan>(binding) {
 
         override fun bind(item: MembershipPlan) {
-            with(binding){
+            with(binding) {
                 membershipPlan = item
                 root.setOnClickListener {
                     onClickListener(item)
@@ -71,7 +75,7 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
         BaseViewHolder<MembershipPlan>(binding) {
         override fun bind(item: MembershipPlan) {
             binding.root.setOnClickListener {
-                onClickListener(item)
+                placeHolderClicked(Unit)
             }
         }
     }
@@ -88,7 +92,7 @@ class CardOnBoardingSeeStoreAdapter(val onClickListener: (MembershipPlan) -> Uni
     }
 
     private fun shouldShowPlaceHolder(position: Int): Boolean {
-            val isLargerThanTen = plansList.size > 10
+        val isLargerThanTen = plansList.size > 10
         return (isLargerThanTen && position == TARGET_POSITION) && (itemsToDisplay(plansList) == 10)
 
     }

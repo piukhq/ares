@@ -54,6 +54,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         },
         onCardLinkClickListener = {
             onCardLinkClicked(it)
+        },
+        onPlaceholderClickListener = {
+            placeHolderToBrowseBrands()
         }
     ).apply {
         setHasStableIds(true)
@@ -720,5 +723,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         }
         return true
+    }
+
+    private fun placeHolderToBrowseBrands(){
+            findNavController().navigate(
+                LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(
+                    plans.toTypedArray(),
+                    cards.toTypedArray()
+                )
+            )
     }
 }
