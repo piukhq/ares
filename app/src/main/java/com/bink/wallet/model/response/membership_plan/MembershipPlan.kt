@@ -41,6 +41,7 @@ class MembershipPlan(
             0 -> CardType.STORE
             1 -> CardType.VIEW
             2 -> CardType.PLL
+            3 -> CardType.COMING_SOON
             else -> null
         }
     }
