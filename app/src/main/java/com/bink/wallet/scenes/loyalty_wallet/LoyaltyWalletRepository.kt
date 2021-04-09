@@ -48,16 +48,8 @@ class LoyaltyWalletRepository(
         }
     }
 
-    fun retrieveStoredMembershipCards(callback: (List<MembershipCard>) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    callback(membershipCardDao.getAllAsync())
-                } catch (e: Exception) {
-                    logDebug(LoyaltyWalletRepository::class.simpleName, e.toString())
-                }
-            }
-        }
+    suspend fun retrieveStoredMembershipCards(): List<MembershipCard> {
+        return membershipCardDao.getAllAsync()
     }
 
     fun clearMembershipCards() {
@@ -114,14 +106,18 @@ class LoyaltyWalletRepository(
         return coroutineScope {
             val membershipPlansRequest = async { apiService.getMembershipPlansAsync() }
             val membershipCardsRequest = async { apiService.getMembershipCardsAsync() }
+            val cardsFromDb = retrieveStoredMembershipCards()
 
             val membershipPlansResult = membershipPlansRequest.await()
             val membershipCardsResult = membershipCardsRequest.await()
 
-            processMembershipCardsResult(membershipCardsResult)
+            val remappedCards = WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCardsResult)
+
+            processMembershipCardsResult(remappedCards)
+
             processMembershipPlansResult(membershipPlansResult)
 
-            MembershipCardAndPlan(membershipCardsResult, membershipPlansResult)
+            MembershipCardAndPlan(remappedCards, membershipPlansResult)
         }
 
     }
@@ -334,7 +330,6 @@ class LoyaltyWalletRepository(
     fun getLocalData(
         localMembershipPlans: MutableLiveData<List<MembershipPlan>>,
         localMembershipCards: MutableLiveData<List<MembershipCard>>,
-        localDismissedMembershipCards: MutableLiveData<List<BannerDisplay>>,
         fetchError: MutableLiveData<Exception>,
         updateDone: MutableLiveData<Boolean>
     ) {
@@ -345,10 +340,7 @@ class LoyaltyWalletRepository(
                         async(Dispatchers.IO) { membershipPlanDao.getAllAsync() }
                     val storedMembershipCards =
                         async(Dispatchers.IO) { membershipCardDao.getAllAsync() }
-                    val storedDismissedBanners =
-                        async(Dispatchers.IO) { bannersDisplayDao.getDismissedBanners() }
 
-                    localDismissedMembershipCards.value = storedDismissedBanners.await()
                     localMembershipCards.value = storedMembershipCards.await()
                     localMembershipPlans.value = storedMembershipPlans.await()
                     updateDone.value = true

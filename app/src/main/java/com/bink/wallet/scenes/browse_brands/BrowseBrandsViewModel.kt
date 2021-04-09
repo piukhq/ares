@@ -8,6 +8,7 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
@@ -40,7 +41,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
             membershipPlans.sortedByCardTypeAndCompany(),
             membershipCardIds
         )
-        this.membershipPlans.value = membershipPlans
+        this.membershipPlans.value = membershipPlans.filter { it.getCardType() != CardType.COMING_SOON }
         this.membershipCardIds.value = membershipCardIds
         _filteredBrandItems.value = formattedBrandItems
         _activeFilters.value = membershipPlans.getCategories()

@@ -126,7 +126,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
         var format: BarcodeFormat? = null
         var shouldShowBarcodeImage = true
         val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
-        val EAN_13_BARCODE_LENGTH_LIMIT = 12
+        val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
 
         when (membershipCard?.membershipCard?.card?.barcode_type) {
             0, null -> format = BarcodeFormat.CODE_128
@@ -150,7 +150,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
                     BarcodeFormat.EAN_13 -> {
                         // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
                         // that has a length below or above the specified limits
-                        shouldShowBarcodeImage = barcodeNumberLength == EAN_13_BARCODE_LENGTH_LIMIT
+                        shouldShowBarcodeImage = (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
                     }
                     else -> {
                     }

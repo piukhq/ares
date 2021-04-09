@@ -21,11 +21,10 @@ import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.DynamicActionArea
 import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
@@ -34,19 +33,6 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.RequestReviewUtil
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.WalletOrderingUtil
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -485,6 +471,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         )
                     }
                 }
+
+                membershipPlansForBrands = plans.toTypedArray()
+                membershipCardsForBrands = cards.toTypedArray()
 
             }
         }
