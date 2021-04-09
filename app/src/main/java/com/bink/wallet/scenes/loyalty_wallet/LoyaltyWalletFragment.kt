@@ -302,12 +302,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             binding.swipeLayout.isRefreshing = it
         }
 
-        binding.loyaltyWalletList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(MarginItemDecoration(resources.getDimension(R.dimen.margin_padding_size_small).toInt()))
-            adapter = walletAdapter
-        }
-
         setHasOptionsMenu(true)
         fetchData()
 
