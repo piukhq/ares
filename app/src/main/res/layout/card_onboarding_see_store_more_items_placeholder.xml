@@ -5,6 +5,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+        app:cardElevation="@dimen/card_on_boarding_card_view_elevation"
         app:cardCornerRadius="@dimen/margin_padding_size_small"
         android:layout_height="wrap_content">
 
