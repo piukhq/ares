@@ -19,8 +19,6 @@ class ZendeskRepository {
 
     fun launchZendesk(fragment: Fragment, callbackUser: (User) -> Unit) {
 
-        setIdentity(getUsersFirstName(), getUsersLastName())
-
         if (shouldShowUserDetailsDialog()) {
             buildAndShowUserDetailsDialog(fragment, callbackUser)
         } else {
