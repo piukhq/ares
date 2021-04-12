@@ -149,7 +149,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
             try {
                 dynamicActionsList = Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
-            } catch (e: JsonParseException) {
+            } catch (e: Exception) {
                 return
             }
 
