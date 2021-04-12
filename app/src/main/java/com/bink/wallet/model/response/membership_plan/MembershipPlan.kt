@@ -53,4 +53,6 @@ class MembershipPlan(
                 feature_set.transactions_available
 
     fun isPlanPLL(): Boolean = this.getCardType() == CardType.PLL
+
+    fun isStoreCard():Boolean = this.getCardType() == CardType.STORE
 }
