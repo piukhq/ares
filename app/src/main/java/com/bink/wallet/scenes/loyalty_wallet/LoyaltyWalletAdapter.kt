@@ -12,6 +12,7 @@ import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.CardItemBinding
 import com.bink.wallet.databinding.CardOnboardingItemBinding
+import com.bink.wallet.databinding.CardOnboardingSeeStoreBinding
 import com.bink.wallet.databinding.LoyaltyWalletItemBinding
 import com.bink.wallet.model.BannerDisplay
 import com.bink.wallet.model.JoinCardItem
@@ -30,17 +31,24 @@ import com.bink.wallet.utils.enums.VoucherStates
 import java.util.*
 import kotlin.collections.ArrayList
 import com.bink.wallet.utils.formatBalance
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import kotlin.properties.Delegates
 
 class LoyaltyWalletAdapter(
     val onClickListener: (Any) -> Unit = {},
-    val onCardLinkClickListener: (MembershipPlan) -> Unit = {}
+    val onCardLinkClickListener: (MembershipPlan) -> Unit = {},
+    var onPlaceholderClickListener: (Any) -> Unit = {}
 ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     companion object {
         private const val MEMBERSHIP_CARD = 0
 
-        private const val CARD_ON_BOARDING = 1
+        private const val CARD_ON_BOARDING_PLL = 1
+
+        private const val CARD_ON_BOARDING_SEE = 2
+
+        private const val CARD_ON_BOARDING_STORE = 3
+
     }
 
     var membershipCards: ArrayList<Any> by Delegates.observable(ArrayList()) { _, oldList, newList ->
@@ -56,6 +64,10 @@ class LoyaltyWalletAdapter(
 
         return when (viewType) {
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(LoyaltyWalletItemBinding.inflate(inflater))
+            CARD_ON_BOARDING_SEE -> CardOnBoardingSeeViewHolder(
+                CardOnboardingSeeStoreBinding.inflate(inflater)
+            )
+            CARD_ON_BOARDING_STORE -> CardOnBoardingStoreViewHolder(CardOnboardingSeeStoreBinding.inflate(inflater))
             else -> CardOnBoardingLinkViewHolder(CardOnboardingItemBinding.inflate(inflater))
 
         }
@@ -66,14 +78,19 @@ class LoyaltyWalletAdapter(
             when (holder) {
                 is LoyaltyWalletViewHolder -> holder.bind(it as MembershipCard)
                 is CardOnBoardingLinkViewHolder -> holder.bind(it as MembershipPlan)
+                is CardOnBoardingSeeViewHolder -> holder.bind(it as MembershipPlan)
+                is CardOnBoardingStoreViewHolder -> holder.bind(it as MembershipPlan)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (membershipCards[position]) {
-            is MembershipCard -> MEMBERSHIP_CARD
-            else -> CARD_ON_BOARDING
+        return when {
+            membershipCards[position] is MembershipCard -> MEMBERSHIP_CARD
+            (membershipCards[position] as MembershipPlan).isStoreCard() -> CARD_ON_BOARDING_STORE
+            WebScrapableManager.isCardScrapable(
+                (membershipCards[position] as MembershipPlan).id) -> CARD_ON_BOARDING_SEE
+            else -> CARD_ON_BOARDING_PLL
         }
     }
 
@@ -146,7 +163,7 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == CARD_ON_BOARDING) {
+                if (getItemViewType(toPosition) == CARD_ON_BOARDING_PLL) {
                     notifyItemMoved(fromPosition, toPosition)
                     return false
                 }
@@ -336,5 +353,53 @@ class LoyaltyWalletAdapter(
             }
         }
 
+    }
+
+    inner class CardOnBoardingSeeViewHolder(val binding: CardOnboardingSeeStoreBinding) :
+        BaseViewHolder<MembershipPlan>(binding) {
+
+        private val seeStoreRecyclerView: RecyclerView = binding.rvSeeStoreItems
+        private val seeStoreAdapter = CardOnBoardingSeeStoreAdapter(onCardLinkClickListener)
+
+        init {
+            val context = binding.root.context
+            seeStoreRecyclerView.layoutManager = GridLayoutManager(context, 5)
+            seeStoreAdapter.setPlansData(membershipPlans.filter {WebScrapableManager.isCardScrapable(it.id) }.sortedByDescending { it.id })
+            seeStoreRecyclerView.adapter = seeStoreAdapter
+        }
+
+        override fun bind(item: MembershipPlan) {
+            with(binding) {
+                    tvSeeStoreTitle.text = root.context.getString(R.string.see_points_balance_title)
+                    tvSeeStoreDescription.text = root.context.getString(R.string.see_points_balance_description)
+            }
+            binding.root.setOnClickListener {
+                onClickListener(item)
+            }
+        }
+    }
+
+    inner class CardOnBoardingStoreViewHolder(val binding: CardOnboardingSeeStoreBinding) :
+        BaseViewHolder<MembershipPlan>(binding) {
+
+        private val seeStoreRecyclerView: RecyclerView = binding.rvSeeStoreItems
+        private val seeStoreAdapter = CardOnBoardingSeeStoreAdapter(onCardLinkClickListener,onPlaceholderClickListener)
+
+        init {
+            val context = binding.root.context
+            seeStoreRecyclerView.layoutManager = GridLayoutManager(context, 5)
+            seeStoreAdapter.setPlansData(membershipPlans.filter { it.isStoreCard() })
+            seeStoreRecyclerView.adapter = seeStoreAdapter
+        }
+
+        override fun bind(item: MembershipPlan) {
+            with(binding) {
+                    tvSeeStoreTitle.text = root.context.getString(R.string.store_barcodes_title)
+                    tvSeeStoreDescription.text = root.context.getString(R.string.store_barcodes_description)
+            }
+            binding.root.setOnClickListener {
+                onClickListener(item)
+            }
+        }
     }
 }

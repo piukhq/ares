@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            style="@style/ShadowedCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_small_medium"
+            android:layout_marginEnd="@dimen/card_on_boarding_card_view_end_margin"
+            app:cardCornerRadius="@dimen/margin_card_on_boarding"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/tv_see_store_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_bold"
+                    tools:text="Title"
+                    android:textSize="@dimen/card_onboarding_link_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_see_store_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small"
+                    android:fontFamily="@font/nunito_sans"
+                    android:textSize="@dimen/card_onnboarding_link_description"
+                    tools:text="Description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_see_store_title" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_see_store_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_small_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:layout_marginBottom="@dimen/margin_padding_size_small_medium"
+                    app:itemDecorationSpacing="@{@dimen/margin_padding_size_medium}"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_see_store_description"
+                    app:layout_constraintVertical_bias="0.059"
+                    app:spanCount="5"
+                    tools:listitem="@layout/card_onboarding_see_store_item" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -85,7 +85,7 @@
 
     <style name="ShadowedCardView" parent="Widget.MaterialComponents.CardView">
         <item name="cardCornerRadius">6dp</item>
-        <item name="cardElevation">0dp</item>
+        <item name="cardElevation">3dp</item>
     </style>
 
     <style name="StandardModalButton">

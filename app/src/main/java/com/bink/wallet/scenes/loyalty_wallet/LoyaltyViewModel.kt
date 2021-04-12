@@ -7,16 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.BannerDisplay
-import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
-import com.bink.wallet.utils.JOIN_CARD
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -105,19 +102,8 @@ class LoyaltyViewModel constructor(
         }
         val walletItems = arrayListOf<Any>()
         walletItems.addAll(cardsReceivedValue)
-        walletItems.addAll(
-            plansReceivedValue.filter { membershipPlan ->
-                membershipPlan.getCardType() == CardType.PLL &&
-                        merchantNoLoyalty(cardsReceivedValue, membershipPlan) &&
-                        dismissedCardsValue.firstOrNull { currentId ->
-                            membershipPlan.id == currentId.id
-                        } == null
-            }.sortedBy { it.account?.company_name }
-        )
-        if (dismissedCardsValue.firstOrNull { it.id == JOIN_CARD } == null &&
-            SharedPreferenceManager.isPaymentEmpty) {
-            walletItems.add(JoinCardItem())
-        }
+        walletItems.addAll(plansReceivedValue)
+
         return UserDataResult.UserDataSuccess(
             Triple(
                 cardsReceivedValue,
@@ -125,15 +111,6 @@ class LoyaltyViewModel constructor(
                 walletItems
             )
         )
-    }
-
-    private fun merchantNoLoyalty(
-        cardsReceived: List<MembershipCard>,
-        plan: MembershipPlan
-    ): Boolean {
-        return cardsReceived.firstOrNull { card ->
-            card.membership_plan == plan.id
-        } == null
     }
 
     fun deleteCard(id: String?) {
