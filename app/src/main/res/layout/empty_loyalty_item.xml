@@ -60,7 +60,7 @@
                             android:textColor="@color/blue_accent"
                             android:textSize="@dimen/size_sub_headline"
                             android:textStyle="bold"
-                            app:layout_constraintEnd_toStartOf="@+id/dismiss_banner"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/join_card_image"
                             app:layout_constraintTop_toTopOf="parent" />
 
