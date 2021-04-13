@@ -31,10 +31,10 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
-import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyViewModel
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyViewModel
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel

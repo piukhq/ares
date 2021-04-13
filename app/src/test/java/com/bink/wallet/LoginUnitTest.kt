@@ -9,7 +9,7 @@ import com.bink.wallet.scenes.login.LoginBody
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginResponse
 import com.bink.wallet.scenes.login.LoginViewModel
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.Dispatchers

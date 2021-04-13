@@ -8,7 +8,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.FirebaseEvents.PLL_DELETE
 import com.bink.wallet.utils.FirebaseEvents.PLL_PATCH
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_ACTIVE

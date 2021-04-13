@@ -24,8 +24,8 @@ import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
-import com.bink.wallet.scenes.loyalty_wallet.RecyclerViewItemDecoration
+import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide

@@ -13,7 +13,7 @@ import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.response.SignUpResponse
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.EMPTY_STRING
