@@ -5,7 +5,6 @@ import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.BarcodeFragmentBinding
-import com.bink.wallet.scenes.loyalty_wallet.BarcodeFragmentArgs
 import com.bink.wallet.utils.BarcodeWrapper
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
