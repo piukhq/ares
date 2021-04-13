@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.barcode
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle

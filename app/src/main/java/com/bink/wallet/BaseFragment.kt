@@ -13,7 +13,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.*
 import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.DynamicActionEvent
 import com.bink.wallet.model.DynamicActionHandler
@@ -22,7 +21,7 @@ import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.model.DynamicActionType
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY

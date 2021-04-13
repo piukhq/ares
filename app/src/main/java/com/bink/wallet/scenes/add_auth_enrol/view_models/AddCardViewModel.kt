@@ -7,7 +7,7 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.BARCODE
 import com.bink.wallet.utils.CARD_NUMBER
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
