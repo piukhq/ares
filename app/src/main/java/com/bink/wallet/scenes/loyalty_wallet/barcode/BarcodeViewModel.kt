@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.barcode
 
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField

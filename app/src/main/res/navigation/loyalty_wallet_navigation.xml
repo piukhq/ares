@@ -5,6 +5,6 @@
             app:startDestination="@id/loyalty_wallet_fragment">
 
         <fragment android:id="@+id/loyalty_wallet_fragment"
-            android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment"/>
+            android:name="com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment"/>
 
 </navigation>

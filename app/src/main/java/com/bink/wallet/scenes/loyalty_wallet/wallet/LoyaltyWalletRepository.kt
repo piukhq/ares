@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.wallet
 
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.*

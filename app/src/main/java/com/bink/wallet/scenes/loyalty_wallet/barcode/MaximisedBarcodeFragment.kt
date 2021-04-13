@@ -1,10 +1,11 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.barcode
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentMaximisedBarcodeBinding
+import com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeFragmentArgs
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

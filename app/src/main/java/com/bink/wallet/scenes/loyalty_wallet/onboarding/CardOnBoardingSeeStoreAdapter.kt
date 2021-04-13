@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.onboarding
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

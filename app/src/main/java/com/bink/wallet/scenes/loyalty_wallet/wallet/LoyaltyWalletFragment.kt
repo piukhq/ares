@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.wallet
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -23,8 +23,9 @@ import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.loyalty_wallet.adapter.LoyaltyWalletAdapter
-import com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders.LoyaltyWalletViewHolder
+import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.LoyaltyWalletAdapter
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyWalletViewHolder
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
