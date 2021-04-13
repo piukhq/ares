@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders
+package com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -6,7 +6,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.CardOnboardingSeeStoreBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.CardOnBoardingSeeStoreAdapter
+import com.bink.wallet.scenes.loyalty_wallet.onboarding.CardOnBoardingSeeStoreAdapter
 
 class CardOnBoardingStoreViewHolder(
     val binding: CardOnboardingSeeStoreBinding,

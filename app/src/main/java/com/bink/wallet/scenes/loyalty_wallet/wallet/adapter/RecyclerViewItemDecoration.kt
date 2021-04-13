@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.wallet.adapter
 
 import android.graphics.Rect
 import android.view.View
@@ -17,7 +17,12 @@ class RecyclerViewItemDecoration : RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
 
-        outRect.set(MARGIN, MARGIN, MARGIN, MARGIN)
+        outRect.set(
+            MARGIN,
+            MARGIN,
+            MARGIN,
+            MARGIN
+        )
 
     }
 }

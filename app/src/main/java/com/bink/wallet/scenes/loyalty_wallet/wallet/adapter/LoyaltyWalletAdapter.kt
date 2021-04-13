@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet.adapter
+package com.bink.wallet.scenes.loyalty_wallet.wallet.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,10 +13,10 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders.CardOnBoardingLinkViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders.CardOnBoardingSeeViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders.CardOnBoardingStoreViewHolder
-import com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders.LoyaltyWalletViewHolder
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.CardOnBoardingLinkViewHolder
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.CardOnBoardingSeeViewHolder
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.CardOnBoardingStoreViewHolder
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyWalletViewHolder
 import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import java.util.*

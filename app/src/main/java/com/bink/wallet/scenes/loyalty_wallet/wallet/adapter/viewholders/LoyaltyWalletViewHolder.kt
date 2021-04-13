@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet.adapter.viewholders
+package com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders
 
 import android.graphics.Color
 import android.view.View
