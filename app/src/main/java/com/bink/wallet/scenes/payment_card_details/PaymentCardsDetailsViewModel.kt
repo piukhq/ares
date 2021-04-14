@@ -54,9 +54,7 @@ class PaymentCardsDetailsViewModel(
     val getCardError: LiveData<Exception>
         get() = _getCardError
 
-    private val _userResponse = MutableLiveData<User>()
-    val userResponse: LiveData<User>
-        get() = _userResponse
+    val userResponse = MutableLiveData<User>()
 
     fun linkPaymentCard(cardId: String, membershipPlanId: String) {
         val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
@@ -135,20 +133,8 @@ class PaymentCardsDetailsViewModel(
                 val returnedUser =
                     withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
 
-                returnedUser.first_name?.let {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_FIRST_NAME,
-                        it
-                    )
-                }
 
-                returnedUser.last_name?.let {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_SECOND_NAME,
-                        it
-                    )
-                }
-                _userResponse.value = returnedUser
+                userResponse.value = returnedUser
             } catch (e: Exception) {
 
             }

@@ -21,7 +21,9 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.combineNonNull
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class LoginViewModel constructor(
@@ -107,6 +109,17 @@ class LoginViewModel constructor(
     }
 
     fun getCurrentUser() {
-        userRepository.getUserDetails(_getUserResponse)
+        viewModelScope.launch {
+            try {
+                val user = withContext(Dispatchers.IO) {
+                    userRepository.getUserDetails()
+                }
+
+                _getUserResponse.value = user
+            } catch (e: java.lang.Exception) {
+
+            }
+
+        }
     }
 }

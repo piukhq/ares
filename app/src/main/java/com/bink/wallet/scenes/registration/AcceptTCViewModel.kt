@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.registration
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.FacebookAuthRequest
@@ -13,6 +14,9 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class AcceptTCViewModel(
@@ -78,6 +82,18 @@ class AcceptTCViewModel(
     }
 
     fun getCurrentUser() {
-        userRepository.getUserDetails(_getUserResponse,_userReturned)
+        viewModelScope.launch {
+            try {
+                val user = withContext(Dispatchers.IO) {
+                    userRepository.getUserDetails()
+                }
+
+                _getUserResponse.value = user
+                _userReturned.value = true
+            } catch (e: java.lang.Exception) {
+                _userReturned.value = false
+            }
+
+        }
     }
 }
