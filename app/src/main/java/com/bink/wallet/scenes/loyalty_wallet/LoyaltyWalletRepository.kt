@@ -15,6 +15,8 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.SentryErrorType
+import com.bink.wallet.utils.SentryUtils
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.generateUuidForMembershipCards
 import com.bink.wallet.utils.logDebug
@@ -212,6 +214,7 @@ class LoyaltyWalletRepository(
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
                     createError.value = e
+                    SentryUtils.logError(SentryErrorType.API_REJECTED,e)
                 }
             }
         }
