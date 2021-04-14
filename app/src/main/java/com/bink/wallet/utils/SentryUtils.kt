@@ -12,6 +12,7 @@ object SentryUtils {
             is HttpException -> {
                 userInfo = "Error code: ${exception.response()?.errorBody()?.string()} - Error Body: ${exception.code()}"
             }
+            else -> userInfo = "Error code: ${exception.message}"
         }
 
         logError(sentryError, userInfo)
