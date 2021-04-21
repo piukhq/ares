@@ -111,9 +111,8 @@ class LoginViewModel constructor(
     fun getCurrentUser() {
         viewModelScope.launch {
             try {
-                val user = withContext(Dispatchers.IO) {
+                val user =
                     userRepository.getUserDetails()
-                }
 
                 _getUserResponse.value = user
             } catch (e: java.lang.Exception) {

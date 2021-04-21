@@ -38,9 +38,8 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
     fun getCurrentUser() {
         viewModelScope.launch {
             try {
-                val user = withContext(Dispatchers.IO) {
+                val user =
                     userRepository.getUserDetails()
-                }
 
                 _getUserResponse.value = user
             } catch (e: java.lang.Exception) {

@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import java.lang.RuntimeException
+import kotlin.RuntimeException
 
 @RunWith(MockitoJUnitRunner::class)
 
@@ -71,13 +71,9 @@ class AcceptTCViewModelTest {
 
     @Test
     fun `Get user failure`() = runBlocking {
-//        val error = java.lang.Exception()
-////        given(userRepository.getUserDetails()).willAnswer {
-////            throw error
-////        }
-//        Mockito.`when`(userRepository.getUserDetails()).thenThrow(error)
-//        acceptTCViewModel.getCurrentUser()
-//        verify(userReturnedObserver).onChanged(false)
+        Mockito.`when`(userRepository.getUserDetails()).thenThrow(RuntimeException())
+        acceptTCViewModel.getCurrentUser()
+        verify(userReturnedObserver).onChanged(false)
     }
 
 }

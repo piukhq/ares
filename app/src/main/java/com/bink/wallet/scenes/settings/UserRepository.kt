@@ -3,6 +3,8 @@ package com.bink.wallet.scenes.settings
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UserRepository(private val apiService: ApiService) {
 
@@ -27,7 +29,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 
     suspend fun getUserDetails(): User {
-        val user = apiService.getUserAsync()
+        val user = withContext(Dispatchers.IO){apiService.getUserAsync()}
 
         user.first_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME, it) }
         user.last_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME, it) }

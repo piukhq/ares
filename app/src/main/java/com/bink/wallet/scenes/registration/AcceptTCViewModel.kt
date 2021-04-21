@@ -84,14 +84,13 @@ class AcceptTCViewModel(
     fun getCurrentUser() {
         viewModelScope.launch {
             try {
-                val user = withContext(Dispatchers.IO) {
+                val user =
                     userRepository.getUserDetails()
-                }
 
                 _getUserResponse.value = user
                 _userReturned.value = true
             } catch (e: java.lang.Exception) {
-                _userReturned.value = false
+                _userReturned.value =  false
             }
 
         }
