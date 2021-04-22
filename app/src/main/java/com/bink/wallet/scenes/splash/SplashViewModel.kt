@@ -8,9 +8,7 @@ import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.settings.UserRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class SplashViewModel(val loginRepository: LoginRepository, val userRepository: UserRepository) : BaseViewModel() {
@@ -42,7 +40,7 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
                     userRepository.getUserDetails()
 
                 _getUserResponse.value = user
-            } catch (e: java.lang.Exception) {
+            } catch (e: Exception) {
 
             }
 

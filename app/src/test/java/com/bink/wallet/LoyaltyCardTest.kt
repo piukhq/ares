@@ -1,5 +1,6 @@
 package com.bink.wallet
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -97,7 +98,7 @@ class LoyaltyCardTest {
 
                     val observer = mock(Observer::class.java) as Observer<List<MembershipCard>>
                     viewModel.membershipCardData.observeForever(observer)
-                    //viewModel.fetchMembershipCards()
+                    viewModel.fetchMembershipCards(mock(Context::class.java))
                     assertNotNull(viewModel.membershipCardData.value)
                 }
         }

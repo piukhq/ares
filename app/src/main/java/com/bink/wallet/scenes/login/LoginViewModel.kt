@@ -115,7 +115,7 @@ class LoginViewModel constructor(
                     userRepository.getUserDetails()
 
                 _getUserResponse.value = user
-            } catch (e: java.lang.Exception) {
+            } catch (e: Exception) {
 
             }
 
