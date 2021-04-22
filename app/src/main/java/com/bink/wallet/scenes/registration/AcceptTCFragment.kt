@@ -40,7 +40,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .build()
     }
 
@@ -58,8 +58,8 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding?.lifecycleOwner = this
+        binding?.viewModel = viewModel
 
         termsAndConditionsHyperlink = getString(R.string.terms_conditions_text)
         privacyPolicyHyperlink = getString(R.string.privacy_policy_text)
@@ -72,7 +72,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             }
         }
 
-        binding.termsAndConditionsText.setTermsAndPrivacyUrls(
+        binding?.termsAndConditionsText?.setTermsAndPrivacyUrls(
             getString(R.string.terms_and_conditions_message),
             getString(R.string.terms_and_conditions_title),
             getString(R.string.privacy_policy_text),
@@ -127,7 +127,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
                 )
             }
 
-            if (binding.acceptMarketing.isChecked) {
+            if (binding?.acceptMarketing?.isChecked == true) {
                 viewModel.handleMarketingPreferences(
                     MarketingOption(MARKETING_OPTION_YES.selected)
                 )
@@ -153,7 +153,7 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
         }
 
 
-        binding.accept.setOnClickListener {
+        binding?.accept?.setOnClickListener {
             startLoading()
             if (isNetworkAvailable(requireContext(), true)) {
                 accessToken?.token?.let { token ->
@@ -175,12 +175,12 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
             logEvent(
                 getFirebaseIdentifier(
                     TERMS_AND_CONDITIONS_VIEW,
-                    binding.accept.text.toString()
+                    binding?.accept?.text.toString()
                 )
             )
         }
 
-        binding.back.setOnClickListener {
+        binding?.back?.setOnClickListener {
             LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.accept_to_onboarding)
         }
@@ -220,22 +220,22 @@ class AcceptTCFragment : BaseFragment<AcceptTCViewModel, AcceptTcFragmentBinding
 
     private fun stopLoading() {
         viewModel.shouldAcceptBeEnabled.value = true
-        binding.accept.isEnabled = true
+        binding?.accept?.isEnabled = true
     }
 
     private fun startLoading() {
         viewModel.shouldLoadingBeVisible.set(true)
-        binding.accept.isEnabled = false
+        binding?.accept?.isEnabled = false
     }
 
     private fun handleAuthError() {
-        binding.accept.isClickable = false
+        binding?.accept?.isClickable = false
         val timer = Timer()
         context?.resources?.getInteger(R.integer.button_disabled_delay)?.toLong()
             ?.let { delay ->
                 timer.schedule(object : TimerTask() {
                     override fun run() {
-                        binding.accept.isClickable = true
+                        binding?.accept?.isClickable = true
                     }
                 }, delay)
             }

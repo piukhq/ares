@@ -33,7 +33,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -44,7 +44,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         DebugItemsPopulation.populateItems(requireContext().resources)
             .forEach { item -> viewModel.debugItems.addItem(item) }
 
-        binding.debugItems.let { recycler ->
+        binding?.debugItems?.let { recycler ->
             recycler.adapter =
                 DebugItemAdapter(viewModel.debugItems, itemClickListener = { onDebugItemClick(it) })
             recycler.layoutManager = LinearLayoutManager(requireContext())
@@ -73,7 +73,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             restartApplication()
         }
 
-        binding.applyChanges.setOnClickListener {
+        binding?.applyChanges?.setOnClickListener {
             if (shouldApplyChanges) {
                 applyChanges()
             } else {

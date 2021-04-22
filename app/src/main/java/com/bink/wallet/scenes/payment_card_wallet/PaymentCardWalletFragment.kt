@@ -107,7 +107,7 @@ class PaymentCardWalletFragment :
 
             if (foregroundView != null) {
 
-                binding.swipeRefresh.isEnabled = false
+                binding?.swipeRefresh?.isEnabled = false
 
                 when {
 
@@ -124,7 +124,7 @@ class PaymentCardWalletFragment :
                     }
 
                     dX == 0f && dY == 0f -> {
-                        binding.swipeRefresh.isEnabled = true
+                        binding?.swipeRefresh?.isEnabled = true
                     }
 
                     dX > 0 -> {
@@ -169,7 +169,7 @@ class PaymentCardWalletFragment :
             }
 
             if (foregroundView != null) {
-                binding.swipeRefresh.isEnabled = true
+                binding?.swipeRefresh?.isEnabled = true
                 getDefaultUIUtil().clearView(foregroundView)
             }
 
@@ -198,7 +198,7 @@ class PaymentCardWalletFragment :
                 DialogInterface.BUTTON_POSITIVE -> {
                     if (isNetworkAvailable(requireActivity(), true)) {
                         viewModel.deletePaymentCard(paymentCard.id.toString())
-                        binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+                        binding?.paymentCardRecycler?.adapter?.notifyDataSetChanged()
                         val paymentSchemeValue = paymentCard.card?.provider
                         paymentScheme = paymentSchemeValue
                         this.paymentCardId = paymentCard.id.toString()
@@ -215,7 +215,7 @@ class PaymentCardWalletFragment :
                     }
                 }
                 DialogInterface.BUTTON_NEUTRAL -> {
-                    binding.paymentCardRecycler.adapter?.notifyDataSetChanged()
+                    binding?.paymentCardRecycler?.adapter?.notifyDataSetChanged()
                 }
             }
         }
@@ -232,7 +232,7 @@ class PaymentCardWalletFragment :
 
         fetchPaymentCards(false)
 
-        binding.swipeRefresh.setOnRefreshListener {
+        binding?.swipeRefresh?.setOnRefreshListener {
             isRefreshing = true
             viewModel.getPaymentCards()
         }
@@ -284,7 +284,7 @@ class PaymentCardWalletFragment :
 
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
-        binding.paymentCardRecycler.apply {
+        binding?.paymentCardRecycler?.apply {
             layoutManager = GridLayoutManager(context, 1)
             adapter = walletAdapter
 
@@ -294,7 +294,7 @@ class PaymentCardWalletFragment :
         viewModel.paymentCards.observeNonNull(this) {
             if (isRefreshing) {
                 isRefreshing = false
-                binding.swipeRefresh.isRefreshing = false
+                binding?.swipeRefresh?.isRefreshing = false
                 updatePaymentCardList()
             }
         }
@@ -309,15 +309,15 @@ class PaymentCardWalletFragment :
 
         viewModel.fetchError.observeErrorNonNull(requireContext(), this, isRefreshing) {
             isRefreshing = false
-            binding.swipeRefresh.isRefreshing = false
+            binding?.swipeRefresh?.isRefreshing = false
             viewModel.fetchLocalData()
         }
 
         viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
-            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
+            binding?.settingsButton?.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
         }
 
-        binding.settingsButton.setOnClickListener {
+        binding?.settingsButton?.setOnClickListener {
             findNavController().navigateIfAdded(this, R.id.settings_screen)
         }
     }
@@ -329,12 +329,14 @@ class PaymentCardWalletFragment :
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
-                    binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
-                    bindEventToDynamicAction(
-                        binding.leftTopBar,
-                        dynamicActionLocation,
-                        dynamicAction
-                    )
+                    binding?.leftTopBar?.text = getEmojiByUnicode(dynamicActionLocation.icon)
+                    binding?.leftTopBar?.let { leftTopBar ->
+                        bindEventToDynamicAction(
+                            leftTopBar,
+                            dynamicActionLocation,
+                            dynamicAction
+                        )
+                    }
                 }
             }
         }
@@ -400,7 +402,7 @@ class PaymentCardWalletFragment :
 
     private fun fetchPaymentCards(isRefreshing: Boolean) {
         if (isNetworkAvailable(requireActivity(), isRefreshing)) {
-            binding.paymentCardRecycler.visibility = View.GONE
+            binding?.paymentCardRecycler?.visibility = View.GONE
             viewModel.getPeriodicPaymentCards()
         }
     }
@@ -417,7 +419,7 @@ class PaymentCardWalletFragment :
     }
 
     private fun updatePaymentCardList() {
-        binding.paymentCardRecycler.visibility = View.VISIBLE
+        binding?.paymentCardRecycler?.visibility = View.VISIBLE
 
         SharedPreferenceManager.isPaymentEmpty =
             viewModel.paymentCards.value.isNullOrEmpty()

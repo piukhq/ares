@@ -24,44 +24,46 @@ class ForgotPasswordFragment :
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
 
     override fun onResume() {
         super.onResume()
-        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
-        registerKeyboardHiddenLayoutListener(binding.container)
+        binding?.container?.let {
+            setupKeyboardHiddenListener(it, ::validateCredentials)
+            registerKeyboardHiddenLayoutListener(it)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+        binding?.lifecycleOwner = this
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
 
         viewModel.email.observeNonNull(this) {
-            requireContext().validateEmail(it, binding.emailText)
+            binding?.emailText?.let { emailText -> requireContext().validateEmail(it, emailText) }
         }
 
-        binding.buttonContinue.setOnClickListener {
+        binding?.buttonContinue?.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
                 viewModel.forgotPassword()
             }
         }
 
         viewModel.isLoading.observeNonNull(this@ForgotPasswordFragment) {
-            binding.progressSpinner.visibility = if (it) {
+            binding?.progressSpinner?.visibility = if (it) {
                 View.VISIBLE
             } else {
                 View.GONE
             }
-            binding.buttonContinue.isEnabled = !it
+            binding?.buttonContinue?.isEnabled = !it
         }
 
         viewModel.forgotPasswordResponse.observeNonNull(this) {
@@ -82,13 +84,15 @@ class ForgotPasswordFragment :
 
     override fun onPause() {
         super.onPause()
-        removeKeyboardHiddenLayoutListener(binding.container)
+        binding?.container?.let {
+            removeKeyboardHiddenLayoutListener(it)
+        }
     }
 
     private fun validateCredentials() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
-                binding.emailText.error =
+                binding?.emailText?.error =
                     if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {

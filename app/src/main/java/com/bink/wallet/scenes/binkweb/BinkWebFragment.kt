@@ -33,17 +33,17 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.webView.webViewClient = object : WebViewClient() {
+        binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                binding.webPageLoadingIndicator.visibility = View.VISIBLE
+                binding?.webPageLoadingIndicator?.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                binding.webPageLoadingIndicator.visibility = View.GONE
-                binding.buttonBack.isEnabled = binding.webView.canGoBack()
-                binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                binding?.webPageLoadingIndicator?.visibility = View.GONE
+                binding?.buttonBack?.isEnabled = binding?.webView?.canGoBack()?: false
+                binding?.buttonNext?.isEnabled = binding?.webView?.canGoForward()?: false
             }
 
             override fun onReceivedError(
@@ -53,7 +53,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             ) {
                 hasEncounteredError = true
                 if (isAdded && error.errorCode != ERROR_CODE) {
-                    binding.webView.visibility = View.INVISIBLE
+                    binding?.webView?.visibility = View.INVISIBLE
                     if (request.url.toString().startsWith("mailto:")) {
                         hasOpenedEmail = true
                         val intent = Intent(Intent.ACTION_SEND)
@@ -79,25 +79,25 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             }
         }
 
-        binding.webView.settings.apply {
+        binding?.webView?.settings?.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
         }
 
-        binding.buttonRefresh.setOnClickListener {
-            binding.webView.reload()
+        binding?.buttonRefresh?.setOnClickListener {
+            binding?.webView?.reload()
         }
-        binding.buttonNext.setOnClickListener {
-            binding.webView.goForward()
+        binding?.buttonNext?.setOnClickListener {
+            binding?.webView?.goForward()
         }
-        binding.buttonBack.setOnClickListener {
-            binding.webView.goBack()
+        binding?.buttonBack?.setOnClickListener {
+            binding?.webView?.goBack()
         }
-        binding.buttonClose.setOnClickListener {
+        binding?.buttonClose?.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        binding.webView.loadUrl(args.url)
+        binding?.webView?.loadUrl(args.url)
     }
 
     override fun onResume() {

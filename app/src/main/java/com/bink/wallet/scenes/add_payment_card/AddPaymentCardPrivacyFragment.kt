@@ -11,6 +11,6 @@ class AddPaymentCardPrivacyFragment : GenericModalFragment() {
         arguments?.let { bundle ->
             setupUi(AddPaymentCardPrivacyFragmentArgs.fromBundle(bundle).genericModalParameters)
         }
-        binding.firstButton.visibility = View.GONE
+        binding?.firstButton?.visibility = View.GONE
     }
 }

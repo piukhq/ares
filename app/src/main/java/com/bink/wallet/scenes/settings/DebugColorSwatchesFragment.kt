@@ -19,7 +19,7 @@ class DebugColorSwatchesFragment :
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -32,8 +32,8 @@ class DebugColorSwatchesFragment :
 
             val layoutManager = LinearLayoutManager(requireContext())
 
-            binding.rvColors.layoutManager = layoutManager
-            binding.rvColors.adapter = adapter
+            binding?.rvColors?.layoutManager = layoutManager
+            binding?.rvColors?.adapter = adapter
         }
         viewModel.getLocalMembershipCards()
     }

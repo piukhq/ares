@@ -20,7 +20,7 @@ import java.lang.reflect.Type
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(binding?.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -36,10 +36,10 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                 TransactionsFragmentArgs.fromBundle(it).membershipCard
             viewModel.membershipPlan.value =
                 TransactionsFragmentArgs.fromBundle(it).membershipPlan
-            binding.viewModel = viewModel
+            binding?.viewModel = viewModel
         }
 
-        binding.loyaltyCardHeader.setOnClickListener {
+        binding?.loyaltyCardHeader?.setOnClickListener {
             viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
                 findNavController().navigateIfAdded(
                     this,
@@ -62,10 +62,10 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
             if (membershipCard.plan?.feature_set?.transactions_available == true) {
                 membershipCard.membership_transactions?.let { transactions ->
                     if (transactions.isEmpty()) {
-                        binding.pointsDescription.text = getString(R.string.no_transactions_text)
-                        binding.transactionsList.visibility = View.GONE
+                        binding?.pointsDescription?.text = getString(R.string.no_transactions_text)
+                        binding?.transactionsList?.visibility = View.GONE
                     } else {
-                        binding.transactionsList.adapter = TransactionAdapter(transactions)
+                        binding?.transactionsList?.adapter = TransactionAdapter(transactions)
                     }
                 }
 
@@ -100,8 +100,8 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                 SharedPreferenceManager.lastSeenTransactions = newTransactionHistoryVisitList
 
             } else {
-                binding.pointsHistory.text = getString(R.string.points_history_not_available_title)
-                binding.pointsDescription.textAndShow(
+                binding?.pointsHistory?.text = getString(R.string.points_history_not_available_title)
+                binding?.pointsDescription?.textAndShow(
                     getString(
                         R.string.transaction_not_supported_description,
                         viewModel.membershipPlan.value?.account?.plan_name

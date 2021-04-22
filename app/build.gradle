@@ -281,7 +281,7 @@ dependencies {
     implementation 'io.sentry:sentry-android:2.3.1'
 
 //    /** LEAK CANARY**/
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     /** In-app Review **/
     implementation 'com.google.android.play:core:1.8.3'

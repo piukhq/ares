@@ -10,9 +10,9 @@ class RecyclerViewHelper {
     private lateinit var footerListener: ViewTreeObserver.OnGlobalLayoutListener
 
     fun handleFooterFadeEffect(
-        footerViews: List<View>,
-        recyclerView: RecyclerView,
-        gradientView: View,
+        footerViews: List<View?>,
+        recyclerView: RecyclerView?,
+        gradientView: View?,
         needsFooterPadding: Boolean,
         quotient: Int
     ) {
@@ -21,13 +21,13 @@ class RecyclerViewHelper {
         val fadingViewHeightQuotient = 2
 
         footerViews.forEach { footerView ->
-            val footerParams = footerView.layoutParams as ConstraintLayout.LayoutParams
+            val footerParams = footerView?.layoutParams as ConstraintLayout.LayoutParams
             footerMargin = +footerParams.bottomMargin
             footerHeight = +footerView.height
             footerView.bringToFront()
         }
 
-        val recyclerParams = recyclerView.layoutParams as ConstraintLayout.LayoutParams
+        val recyclerParams = recyclerView?.layoutParams as ConstraintLayout.LayoutParams
         val listMargin = quotient * recyclerParams.bottomMargin
 
         var totalRecyclerBottomPadding =
@@ -44,15 +44,15 @@ class RecyclerViewHelper {
             0,
             totalRecyclerBottomPadding
         )
-        val viewParams = gradientView.layoutParams
-        viewParams.height = fadingViewHeight
-        gradientView.layoutParams = viewParams
+        val viewParams = gradientView?.layoutParams
+        viewParams?.height = fadingViewHeight
+        gradientView?.layoutParams = viewParams
     }
 
     fun setFooterFadeEffect(
-        footerViews: List<View>,
-        recyclerView: RecyclerView,
-        gradientView: View,
+        footerViews: List<View?>,
+        recyclerView: RecyclerView?,
+        gradientView: View?,
         needsFooterPadding: Boolean,
         quotient: Int
     ) {

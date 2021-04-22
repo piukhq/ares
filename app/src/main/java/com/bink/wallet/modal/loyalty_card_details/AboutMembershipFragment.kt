@@ -13,7 +13,7 @@ class AboutMembershipFragment : GenericModalFragment() {
             setupUi(AboutMembershipFragmentArgs.fromBundle(bundle).genericModalParameters)
         }
 
-        binding.firstButton.visibility = View.GONE
+        binding?.firstButton?.visibility = View.GONE
     }
 
     override fun onFirstButtonClicked() {

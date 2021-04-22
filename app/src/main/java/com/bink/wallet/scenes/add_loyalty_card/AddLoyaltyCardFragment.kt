@@ -9,6 +9,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.setPadding
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -43,7 +44,7 @@ class AddLoyaltyCardFragment :
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(binding?.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -80,7 +81,7 @@ class AddLoyaltyCardFragment :
     }
 
     private fun stopScanning() {
-        binding.scannerView.stopCameraPreview()
+        binding?.scannerView?.stopCameraPreview()
     }
 
     private fun getValidators() {
@@ -146,17 +147,17 @@ class AddLoyaltyCardFragment :
     }
 
     private fun setBottomLayout() {
-        binding.scannerView.setViewFinderMeasureCallback {
-            val topPadding = binding.scannerView.totalPreviewHeight
-            binding.bottomView.root.post {
-                binding.bottomView.root.setPadding(0, topPadding, 0, 0)
-                binding.bottomView.root.alpha = 0f
-                binding.bottomView.root.setVisible(true)
-                binding.bottomView.root.animate().alpha(1f)
+        binding?.scannerView?.setViewFinderMeasureCallback {
+            val topPadding = binding?.scannerView?.totalPreviewHeight
+            binding?.bottomView?.root?.post {
+                topPadding?.let { binding?.bottomView?.root?.setPadding(0, it, 0, 0) }
+                binding?.bottomView?.root?.alpha = 0f
+                binding?.bottomView?.root?.setVisible(true)
+                binding?.bottomView?.root?.animate()?.alpha(1f)
 
             }
         }
-        binding.bottomView.enterManuallyContainer.setOnClickListener()
+        binding?.bottomView?.enterManuallyContainer?.setOnClickListener()
         {
             cancelHaptic = true
             if (isFromAddAuth) {
@@ -227,15 +228,15 @@ class AddLoyaltyCardFragment :
             vibrator?.vibrate(VIBRATION_DURATION)
         }
 
-        binding.bottomView.enterText.text = title
-        binding.bottomView.enterSubtext.text = text
+        binding?.bottomView?.enterText?.text = title
+        binding?.bottomView?.enterSubtext?.text = text
         val colorResource = resources.getColor(R.color.red_attention, null)
-        binding.bottomView.enterText.setTextColor(colorResource)
+        binding?.bottomView?.enterText?.setTextColor(colorResource)
 
-        binding.bottomView.icon.setImageResource(R.drawable.scan_message_icons_error)
+        binding?.bottomView?.icon?.setImageResource(R.drawable.scan_message_icons_error)
 
         val bounceAnimation = AnimationUtils.loadAnimation(context, R.anim.bounce)
-        binding.bottomView.enterManuallyContainer.startAnimation(bounceAnimation)
+        binding?.bottomView?.enterManuallyContainer?.startAnimation(bounceAnimation)
     }
 
 
@@ -272,8 +273,8 @@ class AddLoyaltyCardFragment :
     }
 
     private fun startScanning() {
-        binding.scannerView.setResultHandler(this)
-        binding.scannerView.startCamera()
+        binding?.scannerView?.setResultHandler(this)
+        binding?.scannerView?.startCamera()
     }
 
     private fun isValidRegex(barcode: String): Boolean {

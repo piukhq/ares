@@ -38,11 +38,11 @@ open class GenericModalFragment :
     private val scrollChangeListener = ViewTreeObserver.OnScrollChangedListener {
         val scrollBounds = Rect()
         with(binding) {
-            screenScrollView.getHitRect(scrollBounds)
-            if (title.getLocalVisibleRect(scrollBounds)) {
-                titleToolbar.text = EMPTY_STRING
+            this?.screenScrollView?.getHitRect(scrollBounds)
+            if (this?.title?.getLocalVisibleRect(scrollBounds) == true) {
+                this?.titleToolbar?.text = EMPTY_STRING
             } else {
-                titleToolbar.text = binding.title.text
+                this?.titleToolbar?.text = binding?.title?.text
             }
         }
     }
@@ -53,13 +53,13 @@ open class GenericModalFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(binding) {
-            toolbar.setNavigationOnClickListener {
+            this?.toolbar?.setNavigationOnClickListener {
                 onNavigationButtonClicked()
             }
-            close.setOnClickListener {
+            this?.close?.setOnClickListener {
                 onNavigationButtonClicked()
             }
-            firstButton.setOnClickListener {
+            this?.firstButton?.setOnClickListener {
                 onFirstButtonClicked()
 
                 logEvent(
@@ -69,13 +69,13 @@ open class GenericModalFragment :
                     )
                 )
             }
-            secondButton.setOnClickListener {
+            this?.secondButton?.setOnClickListener {
                 onSecondButtonClicked()
 
                 logEvent(
                     getFirebaseIdentifier(
                         INFORMATION_MODAL_VIEW,
-                        secondButton.text.toString()
+                        secondButton?.text.toString()
                     )
                 )
             }
@@ -85,20 +85,20 @@ open class GenericModalFragment :
                 goTo(it)
             }
             toolbarIconLiveData.observeNonNull(this@GenericModalFragment) {
-                binding.toolbar.setNavigationIcon(it)
+                binding?.toolbar?.setNavigationIcon(it)
             }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        binding.title.viewTreeObserver.addOnScrollChangedListener(
+        binding?.title?.viewTreeObserver?.addOnScrollChangedListener(
             scrollChangeListener
         )
     }
 
     override fun onStop() {
-        binding.title.viewTreeObserver.removeOnScrollChangedListener(
+        binding?.title?.viewTreeObserver?.removeOnScrollChangedListener(
             scrollChangeListener
         )
         super.onStop()
@@ -111,44 +111,44 @@ open class GenericModalFragment :
     protected fun setupUi(parameters: GenericModalParameters) {
         with(binding) {
             if (!parameters.isCloseModal) {
-                close.visibility = View.GONE
+                this?.close?.visibility = View.GONE
                 if (parameters.topBarIconId != 0) {
-                    toolbar.setNavigationIcon(parameters.topBarIconId)
+                    this?.toolbar?.setNavigationIcon(parameters.topBarIconId)
                 }
             }
-            title.text = parameters.title
+            this?.title?.text = parameters.title
 
             if (parameters.description2.trim().isNotEmpty() && parameters.description.trim().isEmpty()){
-                description.visibility = View.GONE
+                this?.description?.visibility = View.GONE
             }
 
-            description.text =
+            this?.description?.text =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Html.fromHtml(parameters.description, Html.FROM_HTML_MODE_LEGACY)
                 } else {
                     HtmlCompat.fromHtml(parameters.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 }
-            description.movementMethod = LinkMovementMethod.getInstance()
+            this?.description?.movementMethod = LinkMovementMethod.getInstance()
 
-            descriptionSecondPart.text =
+            this?.descriptionSecondPart?.text =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Html.fromHtml(parameters.description2, Html.FROM_HTML_MODE_LEGACY)
                 } else {
                     HtmlCompat.fromHtml(parameters.description2, HtmlCompat.FROM_HTML_MODE_LEGACY)
                 }
-            descriptionSecondPart.movementMethod = LinkMovementMethod.getInstance()
+            this?.descriptionSecondPart?.movementMethod = LinkMovementMethod.getInstance()
 
             if (parameters.firstButtonText.isNotEmpty()) {
-                firstButton.visibility = View.VISIBLE
-                firstButton.text = parameters.firstButtonText
+                this?.firstButton?.visibility = View.VISIBLE
+                this?.firstButton?.text = parameters.firstButtonText
             } else {
-                firstButton.visibility = View.GONE
+                this?.firstButton?.visibility = View.GONE
             }
             if (parameters.secondButtonText.isNotEmpty()) {
-                secondButton.visibility = View.VISIBLE
-                secondButton.text = parameters.secondButtonText
+                this?.secondButton?.visibility = View.VISIBLE
+                this?.secondButton?.text = parameters.secondButtonText
             } else {
-                secondButton.visibility = View.INVISIBLE
+                this?.secondButton?.visibility = View.INVISIBLE
             }
         }
     }

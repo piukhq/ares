@@ -34,12 +34,12 @@ class VoucherDetailsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+        binding?.lifecycleOwner = this
     }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -47,22 +47,22 @@ class VoucherDetailsFragment :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.membershipPlan = args.membershipPlan
+        binding?.membershipPlan = args.membershipPlan
 
         setColumnAndValue(args.membershipPlan.content)
         args.voucher.let { voucher ->
-            with(binding.recycler) {
-                layoutManager = LinearLayoutManager(requireContext())
+            with(binding?.recycler) {
+                this?.layoutManager = LinearLayoutManager(requireContext())
                 val vouchers = listOf(voucher)
-                adapter = VouchersAdapter(vouchers)
+                this?.adapter = VouchersAdapter(vouchers)
             }
             voucher.earn?.let { earn ->
                 voucher.burn?.let { burn ->
                     if (voucher.state == VoucherStates.EXPIRED.state || voucher.state == VoucherStates.REDEEMED.state || voucher.state == VoucherStates.CANCELLED.state) {
-                        binding.code.visibility = View.GONE
+                        binding?.code?.visibility = View.GONE
 
                     } else {
-                        binding.code.textAndShow(voucher.code)
+                        binding?.code?.textAndShow(voucher.code)
 
                     }
                     when (voucher.state) {
@@ -85,7 +85,7 @@ class VoucherDetailsFragment :
                                     )
                                 }
                             )
-                            binding.code.setTextColor(
+                            binding?.code?.setTextColor(
                                 resources.getColor(
                                     R.color.green_ok,
                                     null
@@ -144,6 +144,7 @@ class VoucherDetailsFragment :
                                 }
                             )
                         }
+                        else -> {}
                     }
                 }
             }
@@ -151,7 +152,7 @@ class VoucherDetailsFragment :
             args.membershipPlan.account?.plan_documents?.forEach { document ->
                 document.display?.let {
                     if (it.contains(DocumentTypes.VOUCHER.type)) {
-                        binding.linkText.apply {
+                        binding?.linkText?.apply {
                             setOnClickListener {
                                 document.url?.let { url ->
                                     findNavController().navigate(
@@ -184,13 +185,13 @@ class VoucherDetailsFragment :
         body: String? = null
 
     ) {
-        binding.mainTitle.textAndShow(title)
-        binding.mainText.textAndShow(body)
+        binding?.mainTitle?.textAndShow(title)
+        binding?.mainText?.textAndShow(body)
     }
 
     private fun setVoucherDates(firstDate: String?, secondDate: String?) {
-        binding.dateOne.textAndShow(firstDate)
-        binding.dateTwo.textAndShow(secondDate)
+        binding?.dateOne?.textAndShow(firstDate)
+        binding?.dateTwo?.textAndShow(secondDate)
     }
 
     private fun setInProgressVoucher(earn: Earn, burn: Burn) {

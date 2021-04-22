@@ -85,8 +85,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             getString(R.string.payment_card_error_message),
             true
         ) {
-            binding.progressSpinner.visibility = View.GONE
-            binding.firstButton.isEnabled = true
+            binding?.progressSpinner?.visibility = View.GONE
+            binding?.firstButton?.isEnabled = true
             //add-payment-card-response-fail
             userBankCard?.provider?.let { provider ->
                 if(it is HttpException){
@@ -108,8 +108,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
 
     override fun onFirstButtonClicked() {
         if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
-            binding.firstButton.isEnabled = false
-            binding.progressSpinner.visibility = View.VISIBLE
+            binding?.firstButton?.isEnabled = false
+            binding?.progressSpinner?.visibility = View.VISIBLE
             userBankCard?.let {
                 viewModel.sendAddCard(
                     PaymentCardAdd(
@@ -139,8 +139,8 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
     }
 
     private fun bindUi() {
-        binding.title.text = getString(R.string.terms_and_conditions_title)
-        binding.description.text = getString(R.string.terms_and_conditions_text)
+        binding?.title?.text = getString(R.string.terms_and_conditions_title)
+        binding?.description?.text = getString(R.string.terms_and_conditions_text)
 
         val secondDescriptionPrefix =
             getString(R.string.terms_and_conditions_second_paragraph_prefix)
@@ -167,7 +167,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        binding.descriptionSecondPart.text = ss
-        binding.descriptionSecondPart.movementMethod = LinkMovementMethod.getInstance()
+        binding?.descriptionSecondPart?.text = ss
+        binding?.descriptionSecondPart?.movementMethod = LinkMovementMethod.getInstance()
     }
 }

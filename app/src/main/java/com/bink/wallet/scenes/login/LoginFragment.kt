@@ -38,7 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -51,14 +51,16 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+        binding?.lifecycleOwner = this
     }
 
     override fun onResume() {
         super.onResume()
         logScreenView(LOGIN_VIEW)
-        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
-        registerKeyboardHiddenLayoutListener(binding.container)
+        binding?.container?.let {
+            setupKeyboardHiddenListener(it, ::validateCredentials)
+            registerKeyboardHiddenLayoutListener(it)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -66,29 +68,29 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
         val content = SpannableString(getString(R.string.forgot_password_text))
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
 
-        with(binding.forgotPassword) {
-            text = content
-            setOnClickListener {
+        with(binding?.forgotPassword) {
+            this?.text = content
+            this?.setOnClickListener {
                 findNavController().navigateIfAdded(
                     this@LoginFragment,
                     R.id.login_to_forgot_password
                 )
-                logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.forgotPassword.text.toString()))
+                logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding?.forgotPassword?.text.toString()))
             }
         }
 
-        binding.logInButton.isEnabled = false
+        binding?.logInButton?.isEnabled = false
 
         viewModel.retrieveStoredLoginData()
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
 
         with(viewModel) {
             email.observeNonNull(this@LoginFragment) {
-                requireContext().validateEmail(it, binding.emailField)
+                binding?.emailField?.let { emailField -> requireContext().validateEmail(it, emailField) }
             }
 
             password.observeNonNull(this@LoginFragment) {
-                requireContext().validatePassword(it, binding.passwordField)
+                binding?.passwordField?.let { passwordField -> requireContext().validatePassword(it, passwordField) }
             }
 
             logInResponse.observeNonNull(this@LoginFragment) {
@@ -157,27 +159,27 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
             isLoading.observeNonNull(this@LoginFragment) {
                 with(binding) {
-                    progressSpinner.visibility = when (it) {
+                    this?.progressSpinner?.visibility = when (it) {
                         true -> View.VISIBLE
                         else -> View.GONE
                     }
 
-                    logInButton.isEnabled = !it
+                    this?.logInButton?.isEnabled = !it
                 }
             }
         }
 
-        binding.logInButton.setOnClickListener {
+        binding?.logInButton?.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
                 it.isEnabled = false
                 requireContext().apply {
-                    validateEmail(viewModel.email.value, binding.emailField)
-                    validatePassword(viewModel.password.value, binding.passwordField)
+                    binding?.emailField?.let { emailField -> validateEmail(viewModel.email.value, emailField) }
+                    binding?.passwordField?.let { passwordField -> validatePassword(viewModel.password.value, passwordField) }
                 }
-                if (binding.passwordField.error == null &&
-                    binding.emailField.error == null
+                if (binding?.passwordField?.error == null &&
+                    binding?.emailField?.error == null
                 ) {
-                    binding.progressSpinner.visibility = View.VISIBLE
+                    binding?.progressSpinner?.visibility = View.VISIBLE
                     viewModel.logIn(
                         SignUpRequest(
                             email = viewModel.email.value,
@@ -192,7 +194,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
                 }
             }
 
-            logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.logInButton.text.toString()))
+            logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding?.logInButton?.text.toString()))
         }
 
         initMembershipPlansObserver()
@@ -228,13 +230,13 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     override fun onPause() {
         super.onPause()
-        removeKeyboardHiddenLayoutListener(binding.container)
+        binding?.container?.let { removeKeyboardHiddenLayoutListener(it) }
     }
 
     private fun validateCredentials() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
-                binding.emailField.error =
+                binding?.emailField?.error =
                     if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
@@ -245,7 +247,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
         viewModel.password.value?.let {
             if (it.isNotEmpty()) {
-                binding.passwordField.error =
+                binding?.passwordField?.error =
                     if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
                         getString(R.string.password_description)
                     } else {

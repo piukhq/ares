@@ -26,26 +26,26 @@ class DynamicActionFragment : BaseFragment<DynamicActionViewModel, DynamicAction
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+        binding?.toolbar?.setNavigationIcon(R.drawable.ic_close)
         arguments?.let { bundle ->
             DynamicActionFragmentArgs.fromBundle(bundle).apply {
                 dynamicActionEvent.body?.let { body ->
-                    binding.title.text = body.title
-                    binding.description.text = body.description
+                    binding?.title?.text = body.title
+                    binding?.description?.text = body.description
 
                     body.cta?.let { cta ->
-                        binding.firstButton.text = cta.title
-                        binding.firstButton.visibility = View.VISIBLE
+                        binding?.firstButton?.text = cta.title
+                        binding?.firstButton?.visibility = View.VISIBLE
 
                         cta.action?.let { action ->
-                            binding.firstButton.setOnClickListener {
+                            binding?.firstButton?.setOnClickListener {
                                 launchDynamicActionEventCta(action)
                             }
                         }

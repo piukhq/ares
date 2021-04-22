@@ -41,22 +41,22 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.getLocalMembershipCards()
-        binding.cancelButton.setOnClickListener {
+        binding?.cancelButton?.setOnClickListener {
             findNavController().navigateIfAdded(
                 this,
                 R.id.global_to_home
             )
         }
-        binding.browseBrandsContainer.setOnClickListener {
+        binding?.browseBrandsContainer?.setOnClickListener {
             navigateToBrowseBrands()
         }
-        binding.paymentCardContainer.setOnClickListener {
+        binding?.paymentCardContainer?.setOnClickListener {
             requestCameraPermissionAndNavigate(
                 false,
                 null
             )
         }
-        binding.loyaltyCardContainer.setOnClickListener {
+        binding?.loyaltyCardContainer?.setOnClickListener {
             requestCameraPermissionAndNavigate(
                 true
             ) { navigateToScanLoyaltyCard() }
@@ -65,7 +65,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.paymentCardContainer.waitForLayout { setCardMarginRelativeToButton() }
+        binding?.paymentCardContainer?.waitForLayout { setCardMarginRelativeToButton() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -96,17 +96,17 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     }
 
     private fun setCardMarginRelativeToButton() {
-        val lastCardHeight = binding.paymentCardContainer.height
+        val lastCardHeight = binding?.paymentCardContainer?.height
         val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.root)
+        constraintSet.clone(binding?.root)
         constraintSet.connect(
             R.id.payment_card_container,
             ConstraintSet.BOTTOM,
             R.id.cancel_button,
             ConstraintSet.TOP,
-            marginPercent * lastCardHeight / INT_ONE_HUNDRED
+            marginPercent * (lastCardHeight?:0) / INT_ONE_HUNDRED
         )
-        constraintSet.applyTo(binding.root)
+        constraintSet.applyTo(binding?.root)
     }
 
     private inline fun View.waitForLayout(crossinline f: () -> Unit) = with(viewTreeObserver) {

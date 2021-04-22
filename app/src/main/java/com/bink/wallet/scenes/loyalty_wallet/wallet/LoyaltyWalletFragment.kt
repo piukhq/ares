@@ -157,7 +157,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 if (foregroundView != null) {
 
-                    binding.swipeLayout.isEnabled = false
+                    binding?.swipeLayout?.isEnabled = false
 
                     when {
 
@@ -174,7 +174,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
 
                         dX == 0f && dY == 0f -> {
-                            binding.swipeLayout.isEnabled = true
+                            binding?.swipeLayout?.isEnabled = true
                         }
 
                         dX > 0 -> {
@@ -224,7 +224,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 if (foregroundView != null) {
                     Handler().postDelayed({
-                        binding.swipeLayout.isEnabled = true
+                        binding?.swipeLayout?.isEnabled = true
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
                 }
@@ -266,13 +266,13 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         }
         mainViewModel.isLoading.value?.let {
             if (it) {
-                binding.swipeLayout.isRefreshing = true
+                binding?.swipeLayout?.isRefreshing = true
             }
         }
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
-            binding.swipeLayout.isEnabled = true
+            binding?.swipeLayout?.isEnabled = true
         }
 
         viewModel.localPaymentCards.observeNonNull(this) {
@@ -281,15 +281,15 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
 
         viewModel.isLoading.observeNonNull(this) {
-            binding.swipeLayout.isRefreshing = it
+            binding?.swipeLayout?.isRefreshing = it
         }
 
         viewModel.hasZendeskResponse.observeNonNull(this) { hasZendeskResponse ->
-            binding.settingsButton.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
+            binding?.settingsButton?.setImageResource(if (hasZendeskResponse) R.drawable.ic_settings_notified else R.drawable.ic_settings)
         }
 
         mainViewModel.isLoading.observeNonNull(this) {
-            binding.swipeLayout.isRefreshing = it
+            binding?.swipeLayout?.isRefreshing = it
         }
 
         setHasOptionsMenu(true)
@@ -315,7 +315,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
         viewModel.fetchLocalPaymentCards()
 
-        binding.swipeLayout.setOnRefreshListener {
+        binding?.swipeLayout?.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                 viewModel.fetchMembershipCardsAndPlansForRefresh(context)
@@ -340,7 +340,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.dismissedBannerDisplay.observeNonNull(this) {
             walletAdapter.deleteBannerDisplayById(it)
             viewModel.fetchDismissedCards()
-            binding.swipeLayout.isEnabled = true
+            binding?.swipeLayout?.isEnabled = true
         }
 
         viewModel.deleteCardError.observeNonNull(this) {
@@ -383,7 +383,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             viewModel.fetchDismissedCards()
         })
 
-        binding.settingsButton.setOnClickListener {
+        binding?.settingsButton?.setOnClickListener {
             findNavController().navigateIfAdded(
                 this,
                 LoyaltyWalletFragmentDirections.loyaltyToSettingsScreen()
@@ -435,12 +435,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         dynamicActionLocation.area?.let { dynamicActionLocationArea ->
             when (dynamicActionLocationArea) {
                 DynamicActionArea.LEFT_TOP_BAR -> {
-                    binding.leftTopBar.text = getEmojiByUnicode(dynamicActionLocation.icon)
-                    bindEventToDynamicAction(
-                        binding.leftTopBar,
-                        dynamicActionLocation,
-                        dynamicAction
-                    )
+                    binding?.leftTopBar?.text = getEmojiByUnicode(dynamicActionLocation.icon)
+                    binding?.leftTopBar?.let { leftTopBar ->
+                        bindEventToDynamicAction(
+                            leftTopBar,
+                            dynamicActionLocation,
+                            dynamicAction
+                        )
+                    }
                 }
             }
         }
@@ -519,16 +521,16 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     }
 
     private fun manageRecyclerView() {
-        binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
-            adapter = walletAdapter
+        binding?.loyaltyWalletList.apply {
+            this?.layoutManager = GridLayoutManager(requireContext(), 1)
+            this?.adapter = walletAdapter
 
             simpleCallback.attachToRecyclerView(this)
         }
     }
 
     private fun disableIndicators() {
-        binding.loyaltyWalletList.visibility = View.VISIBLE
+        binding?.loyaltyWalletList?.visibility = View.VISIBLE
         mainViewModel.stopLoading()
     }
 
@@ -611,7 +613,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         } else {
                             disableIndicators()
                         }
-                        binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+                        binding?.loyaltyWalletList?.adapter?.notifyItemChanged(position)
                     }
                     DialogInterface.BUTTON_NEUTRAL -> {
                         dialog.cancel()
@@ -628,7 +630,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     LoyaltyWalletFragment::class.java.simpleName,
                     getString(R.string.loyalty_wallet_dialog_description)
                 )
-                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+                binding?.loyaltyWalletList?.adapter?.notifyItemChanged(position)
             }
         }
     }
@@ -638,10 +640,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             getString(R.string.loyalty_wallet_no_barcode_title),
             getString(R.string.loyalty_wallet_no_barcode_message),
             okAction = {
-                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+                binding?.loyaltyWalletList?.adapter?.notifyItemChanged(position)
             },
             cancelAction = {
-                binding.loyaltyWalletList.adapter?.notifyItemChanged(position)
+                binding?.loyaltyWalletList?.adapter?.notifyItemChanged(position)
             }
         )
     }
