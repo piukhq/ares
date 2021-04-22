@@ -1,4 +1,4 @@
-package com.bink.wallet.scenes.loyalty_wallet
+package com.bink.wallet.scenes.loyalty_wallet.wallet
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
@@ -26,6 +25,9 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.ApiErrorUtils
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.LoyaltyWalletAdapter
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyWalletViewHolder
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_SUCCESS
@@ -162,7 +164,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             ) {
 
                 val foregroundView = when (viewHolder) {
-                    is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
+                    is LoyaltyWalletViewHolder ->
                         viewHolder.binding.cardItem.mainLayout
                     else ->
                         null
@@ -229,7 +231,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 viewHolder: RecyclerView.ViewHolder
             ) {
                 val foregroundView = when (viewHolder) {
-                    is LoyaltyWalletAdapter.LoyaltyWalletViewHolder ->
+                    is LoyaltyWalletViewHolder ->
                         viewHolder.binding.cardItem.mainLayout
                     else ->
                         null

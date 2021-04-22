@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.scenes.login.LoginRepository
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import junit.framework.Assert.assertEquals
 import org.junit.Before

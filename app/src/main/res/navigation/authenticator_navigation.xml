@@ -86,7 +86,7 @@
 
     <fragment
         android:id="@+id/loyalty_fragment"
-        android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment"
+        android:name="com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment"
         android:label="@string/root" >
 
         <action
@@ -317,7 +317,7 @@
 
     <fragment
         android:id="@+id/barcode_fragment"
-        android:name="com.bink.wallet.scenes.loyalty_wallet.BarcodeFragment">
+        android:name="com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeFragment">
 
         <argument
             android:name="currentMembershipPlan"
@@ -504,7 +504,7 @@
 
     <fragment
         android:id="@+id/maximised_barcode_fragment"
-        android:name="com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeFragment">
+        android:name="com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeFragment">
 
         <argument
             android:name="currentMembershipPlan"

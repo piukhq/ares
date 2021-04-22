@@ -19,7 +19,7 @@ import com.bink.wallet.model.DynamicActionHandler
 import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.model.DynamicActionType
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
@@ -58,7 +58,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
-import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
