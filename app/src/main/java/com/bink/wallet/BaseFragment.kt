@@ -19,11 +19,9 @@ import com.bink.wallet.model.DynamicActionHandler
 import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.model.DynamicActionType
-import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY
@@ -47,7 +45,12 @@ import com.bink.wallet.utils.FirebaseEvents.PLL_LINK_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_LOYALTY_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_PAYMENT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_KEY
+import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
+import com.bink.wallet.utils.REMOTE_CONFIG_DYNAMIC_ACTIONS
+import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
+import com.bink.wallet.utils.hideKeyboard
+import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -55,7 +58,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
-import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
@@ -82,9 +84,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             requireActivity()
         )
     }
-
-    open var membershipCardsForBrands: Array<MembershipCard>? = null
-    open var membershipPlansForBrands: Array<MembershipPlan>? = null
 
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
@@ -206,7 +205,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 DynamicActionHandler.SINGLE_TAP -> {
                     view.setOnClickListener {
                         dynamicAction.event?.let { event ->
-                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name ?: "")
+                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name?:"")
                         }
                     }
                 }
@@ -246,16 +245,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     navigateToLoyaltyWallet()
                 }
                 R.id.add_menu_item -> {
-
-                    if (membershipPlansForBrands != null && membershipCardsForBrands != null) {
-                        val directions =
-                            when (findNavController().currentDestination?.id) {
-                                R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToBrowseBrands(membershipPlansForBrands!!, membershipCardsForBrands!!)
-                                R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToBrowseBrands(membershipPlansForBrands!!, membershipCardsForBrands!!)
-                                else -> null
-                            }
-                        directions?.let { findNavController().navigateIfAdded(this, directions) }
-                    }
+                    val directions =
+                        when (findNavController().currentDestination?.id) {
+                            R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToAdd()
+                            R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentWalletToAdd()
+                            else -> null
+                        }
+                    directions?.let { findNavController().navigateIfAdded(this, directions) }
                 }
 
                 R.id.payment_menu_item -> {
