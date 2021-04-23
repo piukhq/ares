@@ -140,5 +140,5 @@ interface ApiService {
     ): User
 
     @GET("/users/me")
-    fun getUserAsync(): Deferred<User>
+    suspend fun getUserAsync(): User
 }
