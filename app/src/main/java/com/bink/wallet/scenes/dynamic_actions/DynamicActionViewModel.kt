@@ -31,22 +31,7 @@ class DynamicActionViewModel constructor(
         }
         scope.launch(handler) {
             try {
-                val returnedUser = withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
-
-                returnedUser.first_name?.let {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_FIRST_NAME,
-                        it
-                    )
-                }
-
-                returnedUser.last_name?.let {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_SECOND_NAME,
-                        it
-                    )
-                }
-
+                withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
             } catch (e: Exception) {
 
             }

@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import junit.framework.Assert.assertEquals
@@ -31,6 +32,8 @@ class SettingsTest : AutoCloseKoinTest() {
     @Mock
     private lateinit var paymentWalletRepository: PaymentWalletRepository
     @Mock
+    private lateinit var zendeskRepository: ZendeskRepository
+    @Mock
     private lateinit var userRepository: UserRepository
 
     private lateinit var settingsMockViewModel: SettingsViewModel
@@ -44,7 +47,8 @@ class SettingsTest : AutoCloseKoinTest() {
                 loginRepository,
                 loyaltyWalletRepository,
                 paymentWalletRepository,
-                userRepository
+                userRepository,
+                zendeskRepository
             )
 
         for (item in SettingsItemsPopulation.populateItems(context.resources)) {
