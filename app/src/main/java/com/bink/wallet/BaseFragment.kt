@@ -14,12 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.DynamicAction
-import com.bink.wallet.model.DynamicActionEvent
-import com.bink.wallet.model.DynamicActionHandler
-import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.DynamicActionScreen
-import com.bink.wallet.model.DynamicActionType
+import com.bink.wallet.model.*
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
@@ -56,7 +51,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
-import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
@@ -152,14 +146,10 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding = null
         addOnDestinationChangedListener?.let {
             findNavController().removeOnDestinationChangedListener(it)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 
     private fun checkForDynamicActions() {
