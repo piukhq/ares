@@ -11,6 +11,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.DynamicAction
@@ -86,6 +87,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     open var membershipCardsForBrands: Array<MembershipCard>? = null
     open var membershipPlansForBrands: Array<MembershipPlan>? = null
 
+    private var addOnDestinationChangedListener: NavController.OnDestinationChangedListener? = null
+
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
@@ -130,7 +133,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         if (this.isAdded) {
-            findNavController().addOnDestinationChangedListener { _, destination, _ ->
+            addOnDestinationChangedListener = NavController.OnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
                     R.id.loyalty_fragment, R.id.payment_card_wallet -> {
                         bottomNavigation.visibility =
@@ -140,6 +143,17 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     else -> bottomNavigation.visibility = View.GONE
                 }
             }
+            addOnDestinationChangedListener?.let {
+                findNavController().addOnDestinationChangedListener(it)
+            }
+
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        addOnDestinationChangedListener?.let {
+            findNavController().removeOnDestinationChangedListener(it)
         }
     }
 
