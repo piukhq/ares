@@ -11,6 +11,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.DynamicAction
@@ -73,9 +74,17 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     abstract val viewModel: VM
 
-    open fun createDynamicAction(dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {}
+    open fun createDynamicAction(
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
+    }
 
-    open lateinit var binding: DB
+    private var _binding: DB? = null
+
+    open val binding get() = _binding!!
+
+    private lateinit var destinationListener: NavController.OnDestinationChangedListener
 
     open lateinit var bottomNavigation: BottomNavigationView
 
@@ -88,7 +97,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
-        binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
     }
 
     open fun init() {}
@@ -129,25 +138,32 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         if (this.isAdded) {
-            findNavController().addOnDestinationChangedListener { _, destination, _ ->
-                when (destination.id) {
-                    R.id.loyalty_fragment, R.id.payment_card_wallet -> {
-                        bottomNavigation.visibility =
-                            View.VISIBLE
-                        setUpBottomNavListener()
+             destinationListener =
+                NavController.OnDestinationChangedListener { _, destination, _ ->
+                    when (destination.id) {
+                        R.id.loyalty_fragment, R.id.payment_card_wallet -> {
+                            bottomNavigation.visibility =
+                                View.VISIBLE
+                            setUpBottomNavListener()
+                        }
+                        else -> bottomNavigation.visibility = View.GONE
                     }
-                    else -> bottomNavigation.visibility = View.GONE
                 }
-            }
+            findNavController().addOnDestinationChangedListener(destinationListener)
         }
     }
 
     private fun checkForDynamicActions() {
-        getDynamicActionScreenForFragment(this.javaClass.canonicalName ?: "")?.let { currentDynamicActionScreen ->
+        getDynamicActionScreenForFragment(
+            this.javaClass.canonicalName ?: ""
+        )?.let { currentDynamicActionScreen ->
             var dynamicActionsList: ArrayList<DynamicAction>
 
             try {
-                dynamicActionsList = Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS), object : TypeToken<ArrayList<DynamicAction?>?>() {}.type)
+                dynamicActionsList = Gson().fromJson(
+                    FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS),
+                    object : TypeToken<ArrayList<DynamicAction?>?>() {}.type
+                )
             } catch (e: Exception) {
                 return
             }
@@ -199,13 +215,21 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun bindEventToDynamicAction(view: View, dynamicActionLocation: DynamicActionLocation, dynamicAction: DynamicAction) {
+    fun bindEventToDynamicAction(
+        view: View,
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
         dynamicActionLocation.action?.let { action ->
             when (action) {
                 DynamicActionHandler.SINGLE_TAP -> {
                     view.setOnClickListener {
                         dynamicAction.event?.let { event ->
-                            launchDynamicActionEvent(dynamicAction.type, event, dynamicAction.name?:"")
+                            launchDynamicActionEvent(
+                                dynamicAction.type,
+                                event,
+                                dynamicAction.name ?: ""
+                            )
                         }
                     }
                 }
@@ -213,16 +237,27 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    private fun launchDynamicActionEvent(type: DynamicActionType?, event: DynamicActionEvent, dynamicActionName: String) {
+    private fun launchDynamicActionEvent(
+        type: DynamicActionType?,
+        event: DynamicActionEvent,
+        dynamicActionName: String
+    ) {
         when (type) {
             DynamicActionType.XMAS -> {
                 val directions = when (findNavController().currentDestination?.id) {
-                    R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToDynamicAction(event)
-                    R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(event)
+                    R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToDynamicAction(
+                        event
+                    )
+                    R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(
+                        event
+                    )
                     else -> null
                 }
                 directions?.let {
-                    logEvent(FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT, getRequestReviewMap(dynamicActionName))
+                    logEvent(
+                        FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT,
+                        getRequestReviewMap(dynamicActionName)
+                    )
                     findNavController().navigateIfAdded(this, directions)
                 }
             }
@@ -388,7 +423,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         return map
     }
 
-    protected fun getAddPaymentCardFailMap(paymentSchemeValue: String, error_code: Int, error_message: String): Map<String, Any> {
+    protected fun getAddPaymentCardFailMap(
+        paymentSchemeValue: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
         map[FIREBASE_ERROR_CODE] = error_code
@@ -651,4 +690,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+
+        if (this.isAdded) {
+            findNavController().removeOnDestinationChangedListener(destinationListener)
+        }
+    }
 }
