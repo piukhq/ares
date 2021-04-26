@@ -30,9 +30,9 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.progressSpinner.visibility = View.VISIBLE
+        binding?.progressSpinner?.visibility = View.VISIBLE
 
-        binding.preferenceDescription.text = HtmlCompat.fromHtml(
+        binding?.preferenceDescription?.text = HtmlCompat.fromHtml(
             getString(R.string.preference_description),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
@@ -40,9 +40,9 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
         viewModel.savePreferenceError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.preferences.observeNonNull(this) { preferences ->
-            binding.preferenceError.visibility = View.GONE
-            binding.progressSpinner.visibility = View.GONE
-            binding.preferencesRecycler.apply {
+            binding?.preferenceError?.visibility = View.GONE
+            binding?.progressSpinner?.visibility = View.GONE
+            binding?.preferencesRecycler?.apply {
                 adapter = PreferenceAdapter(
                     preferences,
                     onClickListener = { preference: Preference, isChecked: Boolean, _ ->
@@ -60,21 +60,21 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
 
         viewModel.preferenceErrorResponse.observeNonNull(this) {
             if (isNetworkAvailable(requireContext(), true)) {
-                binding.preferenceError.visibility = View.VISIBLE
+                binding?.preferenceError?.visibility = View.VISIBLE
             }
-            binding.progressSpinner.visibility = View.GONE
+            binding?.progressSpinner?.visibility = View.GONE
         }
 
         if (isNetworkAvailable(requireContext(), true)) {
             viewModel.getPreferences()
         } else {
-            binding.progressSpinner.visibility = View.GONE
+            binding?.progressSpinner?.visibility = View.GONE
         }
     }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }

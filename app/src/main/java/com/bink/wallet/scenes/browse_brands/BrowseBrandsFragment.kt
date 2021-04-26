@@ -32,7 +32,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(binding?.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -43,13 +43,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
         viewModel.setupBrandItems(
             args.membershipPlans.toList(),
             args.membershipCards.toList().getOwnedMembershipCardsIds()
         )
 
-        binding.brandsRecyclerView.adapter = adapter.apply {
+        binding?.brandsRecyclerView?.adapter = adapter.apply {
             setOnBrandItemClickListener { membershipPlan ->
                 findNavController().navigateIfAdded(
                     this@BrowseBrandsFragment,
@@ -67,34 +67,34 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                     if (viewModel.activeFilters.value?.size ==
                         args.membershipPlans.toList().getCategories().size
                     ) {
-                        binding.brandsRecyclerView.scrollToPosition(0)
+                        binding?.brandsRecyclerView?.scrollToPosition(0)
                     }
                 }
             })
         }
 
-        binding.filtersList.layoutManager = GridLayoutManager(context, FILTERS_COLUMNS_COUNT)
-        binding.filtersList.adapter = filtersAdapter.apply {
+        binding?.filtersList?.layoutManager = GridLayoutManager(context, FILTERS_COLUMNS_COUNT)
+        binding?.filtersList?.adapter = filtersAdapter.apply {
             setOnFilterClickListener {
                 viewModel.updateFilters(it)
             }
             setFilters(args.membershipPlans.toList().getCategories().map { BrandsFilter(it) })
         }
 
-        binding.buttonClearSearch.setOnClickListener {
+        binding?.buttonClearSearch?.setOnClickListener {
             viewModel.searchText.value = EMPTY_STRING
         }
 
-        binding.buttonFilters.setOnClickListener {
+        binding?.buttonFilters?.setOnClickListener {
             viewModel.isFilterSelected.set(!viewModel.isFilterSelected.get())
-            binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
+            binding?.filtersList?.setVisible(binding?.filtersList?.visibility != View.VISIBLE)
         }
         initBrowseBrandsList()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
+        binding?.lifecycleOwner = this
 
         viewModel.searchText.observe(viewLifecycleOwner, Observer {
             viewModel.filterBrandItems()
@@ -106,12 +106,12 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
         viewModel.filteredBrandItems.observeNonNull(this) {
             adapter.submitList(it)
-            binding.labelNoMatch.setVisible(it.isEmpty())
+            binding?.labelNoMatch?.setVisible(it.isEmpty())
         }
     }
 
     private fun initBrowseBrandsList() {
-        binding.brandsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding?.brandsRecyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 

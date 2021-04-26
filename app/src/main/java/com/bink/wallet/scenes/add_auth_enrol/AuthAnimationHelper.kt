@@ -8,7 +8,7 @@ import com.bink.wallet.utils.RecyclerViewHelper
 
 class AuthAnimationHelper(
     val fragment: BaseAddAuthFragment,
-    val binding: BaseAddAuthFragmentBinding,
+    val binding: BaseAddAuthFragmentBinding?,
     private val recyclerViewHelper: RecyclerViewHelper
 ) {
 
@@ -22,34 +22,34 @@ class AuthAnimationHelper(
         onStartTransition: () -> Unit = {}
     ) {
         layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            fragment.handleKeyboardHiddenListener(binding.layout, onEndTransition)
-            fragment.handleKeyboardVisibleListener(binding.layout, onStartTransition)
+            binding?.layout?.let { fragment.handleKeyboardHiddenListener(it, onEndTransition) }
+            binding?.layout?.let { fragment.handleKeyboardVisibleListener(it, onStartTransition) }
         }
         footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             recyclerViewHelper.handleFooterFadeEffect(
-                mutableListOf(binding.footerSimple.addAuthCta),
-                binding.authFields,
-                binding.footerSimple.footerBottomGradient,
+                mutableListOf(binding?.footerSimple?.addAuthCta),
+                binding?.authFields,
+                binding?.footerSimple?.footerBottomGradient,
                 true,
                 quotientFooterSimple
             )
             recyclerViewHelper.handleFooterFadeEffect(
-                mutableListOf(binding.footerComposed.addAuthCta),
-                binding.authFields,
-                binding.footerComposed.footerBottomGradient,
+                mutableListOf(binding?.footerComposed?.addAuthCta),
+                binding?.authFields,
+                binding?.footerComposed?.footerBottomGradient,
                 true,
                 quotientFooterComposed
             )
-            if (binding.footerComposed.root.visibility == View.VISIBLE) {
+            if (binding?.footerComposed?.root?.visibility == View.VISIBLE) {
                 binding.footerComposed.root.bringToFront()
             }
         }
-        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-        binding.layout.viewTreeObserver.addOnGlobalLayoutListener(footerLayoutListener)
+        binding?.layout?.viewTreeObserver?.addOnGlobalLayoutListener(layoutListener)
+        binding?.layout?.viewTreeObserver?.addOnGlobalLayoutListener(footerLayoutListener)
     }
 
     fun disableGlobalListeners() {
-        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
-        binding.layout.viewTreeObserver.removeOnGlobalLayoutListener(footerLayoutListener)
+        binding?.layout?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutListener)
+        binding?.layout?.viewTreeObserver?.removeOnGlobalLayoutListener(footerLayoutListener)
     }
 }

@@ -57,7 +57,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
 
         }
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding?.footerSimple?.addAuthCta?.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()
         }

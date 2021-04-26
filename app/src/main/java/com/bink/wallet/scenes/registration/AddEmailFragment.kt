@@ -23,7 +23,7 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .build()
     }
 
@@ -36,32 +36,32 @@ class AddEmailFragment : BaseFragment<AddEmailViewModel, AddEmailFragmentBinding
             this@AddEmailFragment.accessToken = AddEmailFragmentArgs.fromBundle(it).accessToken
         }
 
-        binding.email.addTextChangedListener(object : SimplifiedTextWatcher {
+        binding?.email?.addTextChangedListener(object : SimplifiedTextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s?.let {
                     val mailIsValid = Patterns.EMAIL_ADDRESS.matcher(it).matches()
                     if (!mailIsValid) {
-                        binding.email.error = getString(R.string.invalid_email_format)
+                        binding?.email?.error = getString(R.string.invalid_email_format)
                     }
-                    binding.continueButton.isEnabled = mailIsValid
+                    binding?.continueButton?.isEnabled = mailIsValid
                 }
             }
 
         })
 
-        binding.back.setOnClickListener {
+        binding?.back?.setOnClickListener {
             LoginManager.getInstance().logOut()
             findNavController().navigateIfAdded(this, R.id.add_email_to_onboarding)
         }
 
 
-        binding.continueButton.setOnClickListener {
+        binding?.continueButton?.setOnClickListener {
             if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
                 findNavController().navigateIfAdded(
                     this,
                     AddEmailFragmentDirections.addEmailToAcceptTerms(
                         accessToken,
-                        binding.email.text.toString()
+                        binding?.email?.text.toString()
                     )
                 )
             }

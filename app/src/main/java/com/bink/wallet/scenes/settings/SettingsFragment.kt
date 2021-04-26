@@ -35,7 +35,7 @@ class SettingsFragment :
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar).shouldDisplayBack(requireActivity())
+            .with(binding?.toolbar).shouldDisplayBack(requireActivity())
             .build()
     }
 
@@ -50,7 +50,7 @@ class SettingsFragment :
     }
 
     override fun onChanged(value: ListHolder<SettingsItem>?) {
-        binding.settingsContainer.adapter?.let {
+        binding?.settingsContainer?.adapter?.let {
             value?.applyChange(it)
         }
     }
@@ -62,8 +62,8 @@ class SettingsFragment :
         for (item in SettingsItemsPopulation.populateItems(resources)) {
             viewModel.itemsList.addItem(item)
         }
-        binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
-        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+        binding?.tvSettingsTitle?.text = getString(viewModel.getSettingsTitle())
+        binding?.toolbar?.setNavigationIcon(R.drawable.ic_close)
 
         var email = ""
 
@@ -77,7 +77,7 @@ class SettingsFragment :
             usersEmail = email
         )
 
-        binding.settingsContainer.apply {
+        binding?.settingsContainer?.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = settingsAdapter
         }

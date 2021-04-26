@@ -68,7 +68,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
     override fun onResume() {
         super.onResume()
         logScreenView(ONBOARDING_VIEW)
-        with(binding.pager) {
+        with(binding?.pager) {
             scrollPagesAutomatically(this)
         }
     }
@@ -109,22 +109,22 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     getString(R.string.page_3_description)
                 )
             )
-            binding.pager.adapter = it
+            binding?.pager?.adapter = it
         }
 
-        binding.logInEmail.setOnClickListener {
+        binding?.logInEmail?.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
                 findNavController().navigateIfAdded(
                     this,
                     OnboardingFragmentDirections.onboardingToLogIn()
                 )
             }
-            logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
+            logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding?.logInEmail?.text.toString()))
             logEvent(ONBOARDING_START, getOnboardingStartMap(ONBOARDING_JOURNEY_LOGIN))
         }
 
-        binding.continueWithFacebook.setOnClickListener {
-            binding.continueWithFacebook.apply {
+        binding?.continueWithFacebook?.setOnClickListener {
+            binding?.continueWithFacebook?.apply {
                 fragment = this@OnboardingFragment
                 setReadPermissions(listOf(EMAIL_KEY))
                 loginBehavior = LoginBehavior.WEB_VIEW_ONLY
@@ -155,14 +155,14 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 logEvent(
                     getFirebaseIdentifier(
                         ONBOARDING_VIEW,
-                        binding.continueWithFacebook.text.toString()
+                        binding?.continueWithFacebook?.text.toString()
                     )
                 )
             }
             //ONBOARDING JOUNRNEY STAR FOR FACEBOOK
             logEvent(ONBOARDING_START,getOnboardingStartMap(ONBOARDING_JOURNEY_FACEBOOK))
         }
-        binding.signUpWithEmail.setOnClickListener {
+        binding?.signUpWithEmail?.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
                 findNavController().navigateIfAdded(
                     this,
@@ -172,14 +172,14 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             logEvent(
                 getFirebaseIdentifier(
                     ONBOARDING_VIEW,
-                    binding.signUpWithEmail.text.toString()
+                    binding?.signUpWithEmail?.text.toString()
                 )
             )
             //ONBOARDING START FOR REGISTER
             logEvent(ONBOARDING_START,getOnboardingStartMap(ONBOARDING_JOURNEY_REGISTER))
         }
-        with(binding.pager) {
-            addOnPageChangeListener(object :
+        with(binding?.pager) {
+            this?.addOnPageChangeListener(object :
                 OnboardingPagerAdapter.CircularViewPagerHandler(this) {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)

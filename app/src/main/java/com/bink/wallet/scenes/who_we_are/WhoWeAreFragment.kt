@@ -17,7 +17,7 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -26,7 +26,7 @@ class WhoWeAreFragment : BaseFragment<WhoWeAreViewModel, WhoWeAreFragmentBinding
         super.onActivityCreated(savedInstanceState)
 
         viewModel.nameList.observeNonNull(this) { nameList ->
-            binding.nameList.adapter = WhoWeAreAdapter(nameList)
+            binding?.nameList?.adapter = WhoWeAreAdapter(nameList)
         }
 
     }

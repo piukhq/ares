@@ -76,16 +76,16 @@ class LoyaltyCardDetailsFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.lifecycleOwner = this
-        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
-        binding.toolbar.setNavigationOnClickListener {
+        binding?.lifecycleOwner = this
+        binding?.toolbar?.setNavigationIcon(R.drawable.ic_close)
+        binding?.toolbar?.setNavigationOnClickListener {
             findNavController().navigateIfAdded(this, LoyaltyCardDetailsFragmentDirections.detailToHome(), currentDestination)
 
         }
 
         fetchData()
 
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
 
         arguments?.let {
             val tiles = arrayListOf<Images>()
@@ -108,7 +108,7 @@ class LoyaltyCardDetailsFragment :
         val colorDrawable =
             ColorDrawable(ContextCompat.getColor(requireContext(), android.R.color.white))
         colorDrawable.alpha = MIN_ALPHA.toInt()
-        binding.toolbar.background = colorDrawable
+        binding?.toolbar?.background = colorDrawable
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
             if (isNetworkAvailable(requireContext(), false) &&
@@ -123,8 +123,8 @@ class LoyaltyCardDetailsFragment :
 
         setUpScrollView(colorDrawable)
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let {
+        binding?.offerTiles?.layoutManager = LinearLayoutManager(context)
+        binding?.offerTiles?.adapter = viewModel.tiles.value?.let {
             LoyaltyDetailsTilesAdapter(it) { image ->
                 if (!image.cta_url.isNullOrEmpty()) {
                     findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
@@ -141,7 +141,7 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.membershipCard.observeNonNull(this) { membershipCard ->
             viewModel.membershipPlan.value?.let { plan ->
-                binding.cardHeader.linkCard(membershipCard, plan)
+                binding?.cardHeader?.linkCard(membershipCard, plan)
             }
 
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
@@ -149,7 +149,7 @@ class LoyaltyCardDetailsFragment :
             }
 
             membershipCard?.card?.getSecondaryColor()?.let { secondaryCardColour ->
-                binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
+                binding?.cardBackground?.setBackgroundColor(Color.parseColor(secondaryCardColour))
             }
         }
 
@@ -157,12 +157,12 @@ class LoyaltyCardDetailsFragment :
             viewModel.membershipPlan.value?.account?.plan_name_card
                 ?: getString(R.string.delete_card_ending)
 
-        binding.footerDelete.binding.title.text =
+        binding?.footerDelete?.binding?.title?.text =
             getString(
                 R.string.delete_card_plan,
                 titleMessage
             )
-        binding.footerDelete.binding.description.text =
+        binding?.footerDelete?.binding?.description?.text =
             getString(R.string.remove_card)
 
         val aboutTitle =
@@ -175,13 +175,13 @@ class LoyaltyCardDetailsFragment :
                 )
             }
 
-        binding.footerAbout.binding.title.text = aboutTitle
+        binding?.footerAbout?.binding?.title?.text = aboutTitle
 
         if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
-            binding.footerPlrRewards.visibility = View.GONE
-            binding.footerPlrSeparator.visibility = View.GONE
+            binding?.footerPlrRewards?.visibility = View.GONE
+            binding?.footerPlrSeparator?.visibility = View.GONE
         } else {
-            binding.footerPlrRewards.setOnClickListener {
+            binding?.footerPlrRewards?.setOnClickListener {
                 val directions =
                     viewModel.membershipCard.value?.let { card ->
                         viewModel.membershipPlan.value?.let { plan ->
@@ -285,24 +285,24 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setUpScrollView(colorDrawable: ColorDrawable) {
-        binding.scrollView.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
+        binding?.scrollView?.setOnScrollChangeListener { v: NestedScrollView?, _: Int, _: Int, _: Int, _: Int ->
             val scrollValue = v?.scrollY?.let {
                 getAlphaForActionBar(it)
             }!!
 
             if (scrollValue < MAX_ALPHA.toInt()) {
                 isAnimating = false
-                binding.containerToolbarTitle.visibility = View.GONE
+                binding?.containerToolbarTitle?.visibility = View.GONE
             }
 
             colorDrawable.alpha = scrollValue
             if (scrollValue == MAX_ALPHA.toInt()) {
                 viewModel.membershipPlan.value?.account?.company_name?.let { name ->
-                    binding.toolbarTitle.text = name
+                    binding?.toolbarTitle?.text = name
                     if (!isAnimating) {
                         isAnimating = true
-                        binding.containerToolbarTitle.visibility = View.VISIBLE
-                        binding.containerToolbarTitle.startAnimation(
+                        binding?.containerToolbarTitle?.visibility = View.VISIBLE
+                        binding?.containerToolbarTitle?.startAnimation(
                             AnimationUtils.loadAnimation(
                                 requireContext(),
                                 android.R.anim.fade_in
@@ -318,7 +318,7 @@ class LoyaltyCardDetailsFragment :
                         if (!it.vouchers.isNullOrEmpty()) {
                             it.vouchers?.first()?.let { voucher ->
                                 voucherTitle = true
-                                binding.toolbarSubtitle.text =
+                                binding?.toolbarSubtitle?.text =
                                     getVoucherToolbarSubtitle(voucher.earn)
                             }
                         }
@@ -326,7 +326,7 @@ class LoyaltyCardDetailsFragment :
                 }
                 if (!voucherTitle) {
                     viewModel.membershipCard.value?.balances?.firstOrNull().let { balance ->
-                        binding.toolbarSubtitle.text =
+                        binding?.toolbarSubtitle?.text =
                             ValueDisplayUtils.displayValue(
                                 balance?.value?.toFloat(),
                                 balance?.prefix,
@@ -394,7 +394,7 @@ class LoyaltyCardDetailsFragment :
 
     private fun setBalanceText(balance: CardBalance?) {
         balance?.prefix?.let { prefix ->
-            binding.pointsText.text = if (balance.suffix.isNullOrEmpty()) {
+            binding?.pointsText?.text = if (balance.suffix.isNullOrEmpty()) {
                 balance.formatBalance()
             } else {
                 getString(
@@ -407,7 +407,7 @@ class LoyaltyCardDetailsFragment :
         }
         balance?.suffix?.let { suffix ->
             if (balance.prefix.isNullOrEmpty()) {
-                binding.pointsText.text =
+                binding?.pointsText?.text =
                     getString(R.string.points_prefix_or_suffix, balance.value, suffix)
             }
         }
@@ -416,31 +416,33 @@ class LoyaltyCardDetailsFragment :
     private fun setLoadingState(isLoading: Boolean) {
         with(binding) {
             if (isLoading) {
-                loadingIndicator.visibility = View.VISIBLE
-                linkedWrapper.visibility = View.INVISIBLE
-                pointsWrapper.visibility = View.INVISIBLE
+                this?.loadingIndicator?.visibility = View.VISIBLE
+                this?.linkedWrapper?.visibility = View.INVISIBLE
+                this?.pointsWrapper?.visibility = View.INVISIBLE
             } else {
-                loadingIndicator.visibility = View.GONE
-                linkedWrapper.visibility = View.VISIBLE
-                pointsWrapper.visibility = View.VISIBLE
+                this?.loadingIndicator?.visibility = View.GONE
+                this?.linkedWrapper?.visibility = View.VISIBLE
+                this?.pointsWrapper?.visibility = View.VISIBLE
             }
         }
     }
 
     override fun onPause() {
         super.onPause()
-        scrollY = binding.scrollView.scrollY
+         binding?.scrollView?.scrollY?.let {
+            scrollY = it
+        }
     }
 
     override fun onResume() {
         super.onResume()
         logScreenView(LOYALTY_DETAIL_VIEW)
-        binding.scrollView.postDelayed({
-            binding.scrollView.scrollTo(0, scrollY)
+        binding?.scrollView?.postDelayed({
+            binding?.scrollView?.scrollTo(0, scrollY)
             if (isAnimating) {
-                binding.containerToolbarTitle.visibility = View.VISIBLE
+                binding?.containerToolbarTitle?.visibility = View.VISIBLE
             } else {
-                binding.containerToolbarTitle.visibility = View.GONE
+                binding?.containerToolbarTitle?.visibility = View.GONE
             }
         }, SCROLL_DELAY)
 
@@ -450,11 +452,11 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun handleFootersListeners() {
-        binding.footerAbout.setOnClickListener {
+        binding?.footerAbout?.setOnClickListener {
             viewAboutInformation()
         }
 
-        binding.footerSecurity.setOnClickListener {
+        binding?.footerSecurity?.setOnClickListener {
             val action =
                 LoyaltyCardDetailsFragmentDirections.detailToSecurity(
                     GenericModalParameters(
@@ -469,7 +471,7 @@ class LoyaltyCardDetailsFragment :
 
         }
 
-        binding.footerDelete.setOnClickListener {
+        binding?.footerDelete?.setOnClickListener {
             with(AlertDialog.Builder(requireContext())) {
                 setMessage(getString(R.string.delete_card_modal_body))
                 setNeutralButton(getString(R.string.no_text)) { _, _ -> }
@@ -500,19 +502,19 @@ class LoyaltyCardDetailsFragment :
 
     private fun configureLoginStatus(loginStatus: LoginStatus) {
         with(binding) {
-            pointsImage.setImageDrawable(
+            this?.pointsImage?.setImageDrawable(
                 getDrawable(
                     requireContext(),
                     loginStatus.pointsImage
                 )
             )
             loginStatus.pointsText?.let {
-                pointsText.text = getString(R.string.points_login)
+                this?.pointsText?.text = getString(R.string.points_login)
             }
             loginStatus.pointsDescription?.let {
-                pointsDescription.text = getString(it)
+                this?.pointsDescription?.text = getString(it)
             }
-            pointsText.text = loginStatus.pointsText?.let { getString(it) }
+            this?.pointsText?.text = loginStatus.pointsText?.let { getString(it) }
         }
 
         when (loginStatus) {
@@ -531,7 +533,7 @@ class LoyaltyCardDetailsFragment :
                         val currentTime = Calendar.getInstance().timeInMillis / 1000
                         updateTime?.let {
                             val timeSinceUpdate = currentTime - it
-                            binding.pointsDescription.text =
+                            binding?.pointsDescription?.text =
                                 timeSinceUpdate.getElapsedTime(requireContext())
                         }
                     }
@@ -548,12 +550,12 @@ class LoyaltyCardDetailsFragment :
                             if (balance != null) {
                                 setBalanceText(balance)
                             } else {
-                                binding.pointsText.text = getString(R.string.points_signing_up)
+                                binding?.pointsText?.text = getString(R.string.points_signing_up)
                             }
                         }
                     }
                 } ?: run {
-                    binding.pointsText.text = getString(R.string.points_signing_up)
+                    binding?.pointsText?.text = getString(R.string.points_signing_up)
                 }
             }
             else -> {
@@ -563,8 +565,8 @@ class LoyaltyCardDetailsFragment :
 
     private fun setPlrPointsModuleText() {
         with(binding) {
-            pointsText.text = getString(R.string.collecting)
-            pointsDescription.text = getString(R.string.towards_rewards)
+            this?.pointsText?.text = getString(R.string.collecting)
+            this?.pointsDescription?.text = getString(R.string.towards_rewards)
         }
     }
 
@@ -589,21 +591,21 @@ class LoyaltyCardDetailsFragment :
             else -> linkStatus.descriptionParams = null
         }
         with(binding) {
-            activeLinked.setImageDrawable(
+            this?.activeLinked?.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
                     linkStatus.drawable
                 )
             )
-            linkStatusText.text =
+            this?.linkStatusText?.text =
                 getString(linkStatus.statusText)
 
             if (linkStatus.descriptionParams.isNullOrEmpty()) {
-                linkDescription.text =
+                this?.linkDescription?.text =
                     getString(linkStatus.descriptionText)
             } else {
                 linkStatus.descriptionParams?.let { descParams ->
-                    linkDescription.text = resources.getQuantityString(
+                    this?.linkDescription?.text = resources.getQuantityString(
                         linkStatus.descriptionText,
                         linkStatus.pluralSize,
                         descParams[0],
@@ -615,7 +617,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setLinkModuleClickListener() {
-        binding.linkedWrapper.setOnClickListener {
+        binding?.linkedWrapper?.setOnClickListener {
             when (viewModel.linkStatus.value) {
                 LinkStatus.STATUS_LINKED_TO_SOME_OR_ALL -> {
                     viewModel.membershipCard.value?.let { membershipCard ->
@@ -770,7 +772,7 @@ class LoyaltyCardDetailsFragment :
             if (!membershipCard.card?.barcode.isNullOrEmpty() ||
                 !membershipCard.card?.membership_id.isNullOrEmpty()
             ) {
-                binding.cardHeader.setOnClickListener {
+                binding?.cardHeader?.setOnClickListener {
                     viewModel.membershipPlan.value?.let { plan ->
                         findNavController().navigateIfAdded(
                             this,
@@ -801,7 +803,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setPointsModuleClickListener() {
-        binding.pointsWrapper.setOnClickListener {
+        binding?.pointsWrapper?.setOnClickListener {
             val genericModalParameters: GenericModalParameters?
             when (viewModel.accountStatus.value) {
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
@@ -961,7 +963,7 @@ class LoyaltyCardDetailsFragment :
     }
 
     private fun setupVouchers() {
-        binding.voucherTiles.apply {
+        binding?.voucherTiles?.apply {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
             val allVouchers = viewModel.membershipCard.value?.vouchers

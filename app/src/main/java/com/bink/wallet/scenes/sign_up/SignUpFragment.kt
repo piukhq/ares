@@ -42,7 +42,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -54,22 +54,24 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             !viewModel.confirmPassword.value.isNullOrEmpty() &&
             !viewModel.password.value.isNullOrEmpty()
         ) {
-            binding.confirmPasswordField.error = getString(R.string.password_not_match)
+            binding?.confirmPasswordField?.error = getString(R.string.password_not_match)
         } else {
-            binding.confirmPasswordField.error = null
+            binding?.confirmPasswordField?.error = null
         }
 
     override fun onResume() {
         super.onResume()
         logScreenView(REGISTER_VIEW)
-        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
-        registerKeyboardHiddenLayoutListener(binding.container)
+        binding?.container?.let {
+            setupKeyboardHiddenListener(it, ::validateCredentials)
+            registerKeyboardHiddenLayoutListener(it)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.signUpButton.isEnabled = false
-        binding.lifecycleOwner = this
+        binding?.signUpButton?.isEnabled = false
+        binding?.lifecycleOwner = this
         viewModel.isLoading.value = false
     }
 
@@ -77,8 +79,8 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
         super.onActivityCreated(savedInstanceState)
 
         with(binding) {
-            viewModel = this@SignUpFragment.viewModel
-            binding.checkboxTermsConditions.movementMethod = LinkMovementMethod.getInstance()
+            this?.viewModel = this@SignUpFragment.viewModel
+            binding?.checkboxTermsConditions?.movementMethod = LinkMovementMethod.getInstance()
         }
 
         with(viewModel) {
@@ -86,15 +88,15 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             marketingMessages.value = false
 
             email.observeNonNull(this@SignUpFragment) {
-                requireContext().validateEmail(it, binding.emailField)
+                binding?.emailField?.let { emailField -> requireContext().validateEmail(it, emailField) }
             }
 
             password.observeNonNull(this@SignUpFragment) {
                 checkPasswordsMatch()
-                requireContext().validatePassword(it, binding.passwordField)
+                binding?.passwordField?.let { passwordField -> requireContext().validatePassword(it, passwordField) }
             }
 
-            binding.confirmPasswordField.setOnFocusChangeListener { _, hasFocus ->
+            binding?.confirmPasswordField?.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     checkPasswordsMatch()
                 }
@@ -102,7 +104,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
             isLoading.observeNonNull(this@SignUpFragment) {
                 with(binding) {
-                    progressSpinner.visibility = when (it) {
+                    this?.progressSpinner?.visibility = when (it) {
                         true -> View.VISIBLE
                         else -> View.GONE
                     }
@@ -171,19 +173,19 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
             }
         }
 
-        binding.progressSpinner.setOnTouchListener { _, _ -> true }
+        binding?.progressSpinner?.setOnTouchListener { _, _ -> true }
 
-        binding.signUpButton.setOnClickListener {
+        binding?.signUpButton?.setOnClickListener {
             if (isNetworkAvailable(requireActivity(), true)) {
-                requireContext().validateEmail(viewModel.email.value, binding.emailField)
-                requireContext().validatePassword(viewModel.password.value, binding.passwordField)
+                binding?.emailField?.let { emailField -> requireContext().validateEmail(viewModel.email.value, emailField) }
+                binding?.passwordField?.let { passwordField -> requireContext().validatePassword(viewModel.password.value, passwordField) }
                 checkPasswordsMatch()
 
                 with(viewModel) {
                     if (termsCondition.value == true) {
-                        if (binding.confirmPasswordField.error == null &&
-                            binding.passwordField.error == null &&
-                            binding.emailField.error == null
+                        if (binding?.confirmPasswordField?.error == null &&
+                            binding?.passwordField?.error == null &&
+                            binding?.emailField?.error == null
                         ) {
                             isLoading.value = true
                             signUp(
@@ -224,10 +226,10 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
                     }
                 }
             }
-            logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding.signUpButton.text.toString()))
+            logEvent(getFirebaseIdentifier(REGISTER_VIEW, binding?.signUpButton?.text.toString()))
         }
         initMembershipPlansObserver()
-        binding.termsAndConditionsText.setTermsAndPrivacyUrls(
+        binding?.termsAndConditionsText?.setTermsAndPrivacyUrls(
             getString(R.string.terms_and_conditions_message),
             getString(R.string.terms_and_conditions_title),
             getString(R.string.privacy_policy_text),
@@ -243,13 +245,13 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
     override fun onPause() {
         super.onPause()
-        removeKeyboardHiddenLayoutListener(binding.container)
+        binding?.container?.let { removeKeyboardHiddenLayoutListener(it) }
     }
 
     private fun validateCredentials() {
         viewModel.email.value?.let {
             if (it.isNotEmpty()) {
-                binding.emailField.error =
+                binding?.emailField?.error =
                     if (!UtilFunctions.isValidField(EMAIL_REGEX, it)) {
                         getString(R.string.invalid_email_format)
                     } else {
@@ -260,7 +262,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         viewModel.password.value?.let {
             if (it.isNotEmpty()) {
-                binding.passwordField.error =
+                binding?.passwordField?.error =
                     if (!UtilFunctions.isValidField(PASSWORD_REGEX, it)) {
                         getString(R.string.password_description)
                     } else {
@@ -271,7 +273,7 @@ class SignUpFragment : BaseFragment<SignUpViewModel, SignUpFragmentBinding>() {
 
         viewModel.confirmPassword.value?.let {
             if (it.isNotEmpty()) {
-                binding.confirmPasswordField.error =
+                binding?.confirmPasswordField?.error =
                     if (it != viewModel.password.value) {
                         getString(R.string.password_not_match)
                     } else {

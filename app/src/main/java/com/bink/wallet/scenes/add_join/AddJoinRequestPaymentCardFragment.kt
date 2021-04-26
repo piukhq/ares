@@ -13,7 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddJoinRequestPaymentCardFragment : BaseFragment<AddJoinViewModel, AddJoinRequestPaymentCardBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -30,7 +30,7 @@ class AddJoinRequestPaymentCardFragment : BaseFragment<AddJoinViewModel, AddJoin
 
         viewModel.membershipPlan.value = args.currentMembershipPlan
 
-        binding.getCardButton.setOnClickListener {
+        binding?.getCardButton?.setOnClickListener {
             val action = AddJoinRequestPaymentCardFragmentDirections.paymentRequestToAddPayment()
             findNavController().navigateIfAdded(this, action)
         }

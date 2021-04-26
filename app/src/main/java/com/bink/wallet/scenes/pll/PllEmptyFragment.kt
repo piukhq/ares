@@ -45,8 +45,8 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.viewModel = viewModel
-        binding.fragment = this
+        binding?.viewModel = viewModel
+        binding?.fragment = this
 
         arguments.let { bundle ->
             if (bundle != null) {
@@ -58,7 +58,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
             }
         }
 
-        binding.header.setOnClickListener {
+        binding?.header?.setOnClickListener {
             currentMembershipPlan?.account?.plan_description?.let { planDescription ->
                 findNavController().navigateIfAdded(
                     this,
@@ -80,7 +80,7 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         pendingAdapter =
             PllPendingAdapter(mutableListOf(), clickListener = { goToPendingFaqArticle() })
 
-        binding.rvPendingCards.apply {
+        binding?.rvPendingCards?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = pendingAdapter
         }
@@ -100,22 +100,22 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
         viewModel.paymentCardsError.observeErrorNonNull(requireContext(), false, this)
 
         currentMembershipPlan?.let {
-            binding.membershipPlan = it
+            binding?.membershipPlan = it
         }
 
-        binding.back.setOnClickListener {
+        binding?.back?.setOnClickListener {
             navigateToLCDScreen()
         }
 
-        binding.buttonDone.setOnClickListener {
+        binding?.buttonDone?.setOnClickListener {
             navigateToLCDScreen()
         }
 
-        binding.buttonAddPaymentCardNonModal.setOnClickListener {
+        binding?.buttonAddPaymentCardNonModal?.setOnClickListener {
             requestCameraPermissionAndNavigate(false, null)
         }
 
-        binding.addPaymentCardModal.setOnClickListener {
+        binding?.addPaymentCardModal?.setOnClickListener {
             navigateToAddPaymentCards()
         }
     }
@@ -170,20 +170,21 @@ class PllEmptyFragment : BaseFragment<PllEmptyViewModel, FragmentPllEmptyBinding
     }
 
     private fun showPendingCardsList(shouldShowList: Boolean) {
-        if (shouldShowList) {
-            binding.rvPendingCards.visibility = View.VISIBLE
-            binding.pllEmptyTitle.text = getString(R.string.pll_pending_cards_title)
-            binding.pllEmptyDescriptionPart1.visibility = View.GONE
-            binding.pllEmptyDescriptionPart2.text = getString(R.string.pending_pll_card_description)
-        } else {
-            binding.rvPendingCards.visibility = View.GONE
-            binding.pllEmptyTitle.text = getString(R.string.link_payment_cards)
-            binding.pllEmptyDescriptionPart1.visibility = View.VISIBLE
-            binding.pllEmptyDescriptionPart2.text =
-                getString(R.string.link_payment_card_description_part_2)
+        binding?.let {
+            if (shouldShowList) {
+                it.rvPendingCards.visibility = View.VISIBLE
+                it.pllEmptyTitle.text = getString(R.string.pll_pending_cards_title)
+                it.pllEmptyDescriptionPart1.visibility = View.GONE
+                it.pllEmptyDescriptionPart2.text = getString(R.string.pending_pll_card_description)
+            } else {
+                it.rvPendingCards.visibility = View.GONE
+                it.pllEmptyTitle.text = getString(R.string.link_payment_cards)
+                it.pllEmptyDescriptionPart1.visibility = View.VISIBLE
+                it.pllEmptyDescriptionPart2.text =
+                    getString(R.string.link_payment_card_description_part_2)
 
+            }
         }
-
 
     }
 }

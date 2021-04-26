@@ -17,7 +17,7 @@ class LoyaltyCardRewardsHistoryFragment :
     BaseFragment<LoyaltyCardRewardsHistoryViewModel, LoyaltyCardRewardsHistoryBinding>() {
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -35,16 +35,16 @@ class LoyaltyCardRewardsHistoryFragment :
                 LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
         }
 
-        binding.membershipPlan = viewModel.membershipPlan.value
-        binding.executePendingBindings()
+        binding?.membershipPlan = viewModel.membershipPlan.value
+        binding?.executePendingBindings()
         setupVouchers()
     }
 
     private fun setupVouchers() {
-        with(binding.recycler) {
-            visibility = View.VISIBLE
-            layoutManager = LinearLayoutManager(requireContext())
-            isNestedScrollingEnabled = true
+        with(binding?.recycler) {
+            this?.visibility = View.VISIBLE
+            this?.layoutManager = LinearLayoutManager(requireContext())
+            this?.isNestedScrollingEnabled = true
             viewModel.membershipCard.value?.vouchers?.filterNot {
                 listOf(
                     VoucherStates.IN_PROGRESS.state,
@@ -57,7 +57,7 @@ class LoyaltyCardRewardsHistoryFragment :
                     it.expiry_date
                 }
             }?.let { vouchers ->
-                adapter = VouchersAdapter(
+                this?.adapter = VouchersAdapter(
                     vouchers
                 ).apply {
                     setOnVoucherClickListener { voucher ->

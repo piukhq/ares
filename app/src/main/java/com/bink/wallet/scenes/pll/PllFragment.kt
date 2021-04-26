@@ -39,7 +39,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -55,20 +55,20 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
         arguments?.let {
             PllFragmentArgs.fromBundle(it).apply {
                 viewModel.membershipPlan.value = membershipPlan
                 viewModel.membershipCard.value = membershipCard
                 if (isAddJourney) {
                     this@PllFragment.isAddJourney = isAddJourney
-                    binding.toolbar.navigationIcon = null
+                    binding?.toolbar?.navigationIcon = null
                 }
                 SharedPreferenceManager.isAddJourney = isAddJourney
             }
         }
 
-        binding.item = viewModel.membershipPlan.value
+        binding?.item = viewModel.membershipPlan.value
 
 
         if (isNetworkAvailable(requireActivity())) {
@@ -77,7 +77,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             viewModel.getLocalPaymentCards()
         }
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding?.toolbar?.setNavigationOnClickListener {
             val directions = viewModel.membershipCard.value?.let { membershipCard ->
                 viewModel.membershipPlan.value?.let { membershipPlan ->
                     PllFragmentDirections.pllToLcd(
@@ -93,8 +93,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         val adapter = PllPaymentCardAdapter(mutableListOf(), isAddJourney)
         pendingAdapter =
             PllPendingAdapter(mutableListOf(), clickListener = { goToPendingFaqArticle() })
-        binding.rvPendingPaymentCards.layoutManager = LinearLayoutManager(context)
-        binding.rvPendingPaymentCards.adapter = pendingAdapter
+        binding?.rvPendingPaymentCards?.layoutManager = LinearLayoutManager(context)
+        binding?.rvPendingPaymentCards?.adapter = pendingAdapter
 
         viewModel.paymentCardsMerger.observeNonNull(this) {
             val (pendingCards, activeCards) = PaymentCardUtils.inDateCards(it)
@@ -104,7 +104,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 val unsortedCards = (activeCards.sortedByDescending { card -> card.id })
                 val sortedCards = WalletOrderingUtil.getSavedPaymentCardWalletForPll(unsortedCards)
                 adapter.updateData(sortedCards, membershipCard)
-                binding.brandModal.setOnClickListener {
+                binding?.brandModal?.setOnClickListener {
                     viewModel.membershipPlan.value?.account?.plan_description?.let { planDescription ->
                         findNavController().navigate(
                             PllFragmentDirections.pllToBrandHeader(
@@ -134,8 +134,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        binding.paymentCards.adapter = adapter
-        binding.paymentCards.layoutManager =
+        binding?.paymentCards?.adapter = adapter
+        binding?.paymentCards?.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
 
@@ -169,7 +169,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             }
         }
 
-        binding.buttonDone.setOnClickListener {
+        binding?.buttonDone?.setOnClickListener {
             when {
                 viewModel.paymentCardsMerger.value.isNullOrEmpty() -> {
                     findNavController().popBackStack()
@@ -218,7 +218,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 }
             }
 
-            logEvent(getFirebaseIdentifier(PLL_VIEW, binding.buttonDone.text.toString()))
+            logEvent(getFirebaseIdentifier(PLL_VIEW, binding?.buttonDone?.text.toString()))
         }
 
         viewModel.fetchError.observeErrorNonNull(requireContext(), false, this)
@@ -284,19 +284,19 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     override fun onResume() {
         super.onResume()
         recyclerViewHelper.setFooterFadeEffect(
-            mutableListOf(binding.buttonDone),
-            binding.rvPendingPaymentCards,
-            binding.bgPllBottomGradient,
+            mutableListOf(binding?.buttonDone),
+            binding?.rvPendingPaymentCards,
+            binding?.bgPllBottomGradient,
             true,
             footerQuotient
         )
-        recyclerViewHelper.registerFooterListener(binding.root)
+        binding?.root?.let { recyclerViewHelper.registerFooterListener(it) }
         logScreenView(PLL_VIEW)
     }
 
     override fun onPause() {
         super.onPause()
-        recyclerViewHelper.removeFooterListener(binding.root)
+        binding?.root?.let { recyclerViewHelper.removeFooterListener(it) }
     }
 
     private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {
@@ -375,8 +375,8 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
     private fun showPendingCardsList(shouldShowPendingCards: Boolean) {
         val visibility = if (shouldShowPendingCards) View.VISIBLE else View.GONE
 
-        binding.rvPendingPaymentCards.visibility = visibility
-        binding.pendingCardsTitle.visibility = visibility
-        binding.pendingCardsDescription.visibility = visibility
+        binding?.rvPendingPaymentCards?.visibility = visibility
+        binding?.pendingCardsTitle?.visibility = visibility
+        binding?.pendingCardsDescription?.visibility = visibility
     }
 }

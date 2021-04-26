@@ -67,9 +67,9 @@ class PaymentCardsDetailsFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        with(binding.toolbar) {
-            setNavigationIcon(R.drawable.ic_close)
-            setNavigationOnClickListener {
+        with(binding?.toolbar) {
+            this?.setNavigationIcon(R.drawable.ic_close)
+            this?.setNavigationOnClickListener {
                 goHome()
             }
         }
@@ -90,13 +90,13 @@ class PaymentCardsDetailsFragment :
             }
         }
 
-        binding.fragment = this
-        binding.paymentCardDetail = viewModel.paymentCard.value
+        binding?.fragment = this
+        binding?.paymentCardDetail = viewModel.paymentCard.value
         viewModel.membershipCardData.value?.let {
-            binding.paymentHeader.membershipCardsWrapper =
+            binding?.paymentHeader?.membershipCardsWrapper =
                 MembershipCardListWrapper(it.toMutableList())
         }
-        binding.footerSecurity.setOnClickListener {
+        binding?.footerSecurity?.setOnClickListener {
             val action =
                 PaymentCardsDetailsFragmentDirections.paymentDetailToSecurity(
                     GenericModalParameters(
@@ -110,7 +110,7 @@ class PaymentCardsDetailsFragment :
             findNavController().navigateIfAdded(this, action)
         }
 
-        binding.footerDelete.setOnClickListener {
+        binding?.footerDelete?.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             val dialog: AlertDialog
             builder.setMessage(getString(R.string.delete_card_modal_body))
@@ -126,7 +126,7 @@ class PaymentCardsDetailsFragment :
             dialog.show()
         }
 
-        binding.footerFaqs.setOnClickListener {
+        binding?.footerFaqs?.setOnClickListener {
             val articleId =
                 if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) PROD_ARTICLE_ID else SANDBOX_ARTICLE_ID
             ViewArticleActivity.builder(articleId)
@@ -140,10 +140,10 @@ class PaymentCardsDetailsFragment :
             value?.let {
                 it.card?.let { bankCard ->
                     if (bankCard.isExpired()) {
-                        with(binding.paymentHeader) {
-                            cardExpired.visibility = View.VISIBLE
-                            linkStatus.visibility = View.GONE
-                            imageStatus.visibility = View.GONE
+                        with(binding?.paymentHeader) {
+                            this?.cardExpired?.visibility = View.VISIBLE
+                            this?.linkStatus?.visibility = View.GONE
+                            this?.imageStatus?.visibility = View.GONE
                         }
                     }
                 }
@@ -207,7 +207,7 @@ class PaymentCardsDetailsFragment :
         paymentCard?.let { pCard ->
             membershipCard?.let { membershipCard ->
 
-                binding.paymentCardDetail = pCard
+                binding?.paymentCardDetail = pCard
                 when (pCard.isCardActive()) {
                     true -> setActivePcdScreen(pCard, membershipCard)
                     else -> setInactivePcdScreen()
@@ -224,8 +224,8 @@ class PaymentCardsDetailsFragment :
     override fun onResume() {
         super.onResume()
         logScreenView(PAYMENT_DETAIL_VIEW)
-        binding.scrollView.postDelayed({
-            binding.scrollView.scrollTo(0, scrollY)
+        binding?.scrollView?.postDelayed({
+            binding?.scrollView?.scrollTo(0, scrollY)
         }, SCROLL_DELAY)
 
         countDownTimer?.start()
@@ -233,7 +233,9 @@ class PaymentCardsDetailsFragment :
 
     override fun onPause() {
         super.onPause()
-        scrollY = binding.scrollView.scrollY
+         binding?.scrollView?.scrollY?.let {
+            scrollY = it
+        }
 
         countDownTimer?.cancel()
     }
@@ -258,7 +260,7 @@ class PaymentCardsDetailsFragment :
 
             val pllCards =
                 membershipCards.filter { card -> pllPlansIds.contains(card.membership_plan) }
-            binding.apply {
+            binding?.apply {
                 hasAddedPllCards = pllCards.isNotEmpty()
                 availablePllList.apply {
                     layoutManager = GridLayoutManager(context, 1)
@@ -330,13 +332,13 @@ class PaymentCardsDetailsFragment :
         val visibility = if (shouldShowViews) View.VISIBLE else View.GONE
         val invertedVisibility = if (shouldShowViews) View.GONE else View.VISIBLE
         with(binding) {
-            availablePllList.visibility = visibility
-            otherCardsTitle.visibility = visibility
-            otherCardsDescription.visibility = visibility
-            otherCardsList.visibility = visibility
-            separator.visibility = invertedVisibility
-            footerFaqs.visibility = invertedVisibility
-            deleteSeparator.visibility = invertedVisibility
+            this?.availablePllList?.visibility = visibility
+            this?.otherCardsTitle?.visibility = visibility
+            this?.otherCardsDescription?.visibility = visibility
+            this?.otherCardsList?.visibility = visibility
+            this?.separator?.visibility = invertedVisibility
+            this?.footerFaqs?.visibility = invertedVisibility
+            this?.deleteSeparator?.visibility = invertedVisibility
         }
 
     }

@@ -74,16 +74,16 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
         setKeyboardTypeToAdjustResize()
 
-        binding.viewModel = viewModel
-        binding.membershipPlan = args.membershipPlan
-        binding.footerSimple.viewModel = viewModel
-        binding.footerComposed.viewModel = viewModel
+        binding?.viewModel = viewModel
+        binding?.membershipPlan = args.membershipPlan
+        binding?.footerSimple?.viewModel = viewModel
+        binding?.footerComposed?.viewModel = viewModel
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding?.toolbar?.setNavigationOnClickListener {
             handleToolbarAction()
             findNavController().navigateUp()
         }
-        binding.buttonCancel.setOnClickListener {
+        binding?.buttonCancel?.setOnClickListener {
             handleToolbarAction()
             findNavController().navigate(BaseAddAuthFragmentDirections.globalToHome())
         }
@@ -101,7 +101,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->
-            binding.loadingIndicator.visibility = View.GONE
+            binding?.loadingIndicator?.visibility = View.GONE
             when (ExceptionHandlingUtils.onHttpException(exception)) {
                 HandledException.BAD_REQUEST -> {
                     requireContext().displayModalPopup(
@@ -147,7 +147,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun populateRecycler(addRegisterFieldsRequest: Account) {
-        binding.authFields.apply {
+        binding?.authFields?.apply {
             layoutManager = object : GridLayoutManager(requireContext(), 1) {
                 override fun requestChildRectangleOnScreen(
                     parent: RecyclerView,
@@ -223,7 +223,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     override fun onPause() {
         animationHelper?.disableGlobalListeners()
-        binding.loadingIndicator.visibility = View.GONE
+        binding?.loadingIndicator?.visibility = View.GONE
         viewModel.addAuthItemsList.clear()
         super.onPause()
     }

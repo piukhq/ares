@@ -47,12 +47,12 @@ class AddCardFragment : BaseAddAuthFragment() {
 //            logNoAccountClick()
 //        }
 
-        binding.footerComposed.addAuthCta.setOnClickListener {
+        binding?.footerComposed?.addAuthCta?.setOnClickListener {
             logCTAClick(it)
             handleAuthCtaRequest()
         }
 
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding?.footerSimple?.addAuthCta?.setOnClickListener {
             logCTAClick(it)
             handleAuthCtaRequest()
         }
@@ -182,7 +182,7 @@ class AddCardFragment : BaseAddAuthFragment() {
     }
 
     private fun handleAuthCtaRequest() {
-        binding.loadingIndicator.visibility = View.VISIBLE
+        binding?.loadingIndicator?.visibility = View.VISIBLE
         membershipCardId?.let {
             currentMembershipPlan?.let { plan ->
                 viewModel.handleRequest(isRetryJourney, it, plan)

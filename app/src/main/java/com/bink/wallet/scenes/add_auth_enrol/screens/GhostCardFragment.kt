@@ -37,7 +37,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
 
         setViewsContent()
 
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding?.footerSimple?.addAuthCta?.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()
         }

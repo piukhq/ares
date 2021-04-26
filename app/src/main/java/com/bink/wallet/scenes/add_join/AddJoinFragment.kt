@@ -24,7 +24,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
+            .with(binding?.toolbar)
             .shouldDisplayBack(requireActivity())
             .build()
     }
@@ -68,40 +68,40 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
         }
 
         viewModel.membershipPlan.value = currentMembershipPlan
-        binding.item = currentMembershipPlan
+        binding?.item = currentMembershipPlan
 
         when (currentMembershipPlan?.feature_set?.card_type) {
             CardType.STORE.type -> {
-                binding.addJoinViewImage.setImageDrawable(
+                binding?.addJoinViewImage?.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_icons_svl_view_inactive
                     )
                 )
-                binding.addJoinViewDescription.text =
+                binding?.addJoinViewDescription?.text =
                     getString(R.string.add_join_inactive_view_description)
-                binding.addJoinLinkImage.setImageDrawable(
+                binding?.addJoinLinkImage?.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_icons_svl_link_inactive
                     )
                 )
-                binding.addJoinLinkDescription.text =
+                binding?.addJoinLinkDescription?.text =
                     getString(R.string.add_join_inactive_link_description)
             }
             CardType.VIEW.type -> {
-                binding.addJoinLinkImage.setImageDrawable(
+                binding?.addJoinLinkImage?.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_icons_svl_link_inactive
                     )
                 )
-                binding.addJoinLinkDescription.text =
+                binding?.addJoinLinkDescription?.text =
                     getString(R.string.add_join_inactive_link_description)
             }
         }
 
-        binding.addCardButton.visibility =
+        binding?.addCardButton?.visibility =
             if (currentMembershipPlan?.feature_set?.linking_support?.contains(ADD_BUTTON_ENTRY) == true) {
                 View.VISIBLE
             } else {
@@ -112,13 +112,13 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             if ((membershipPlan.account != null && membershipPlan.account.enrol_fields.isNullOrEmpty()) ||
                 (membershipPlan.feature_set?.linking_support != null && !membershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name))
             ) {
-                binding.getCardButton.visibility = View.GONE
+                binding?.getCardButton?.visibility = View.GONE
             } else {
-                binding.getCardButton.visibility = View.VISIBLE
+                binding?.getCardButton?.visibility = View.VISIBLE
             }
         }
 
-        binding.closeButton.setOnClickListener {
+        binding?.closeButton?.setOnClickListener {
             if (isFromJoinCard) {
                 findNavController().popBackStack()
             } else {
@@ -126,7 +126,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             }
         }
 
-        binding.addJoinReward.setOnClickListener {
+        binding?.addJoinReward?.setOnClickListener {
             var summary: String
             currentMembershipPlan?.let {
                 summary = it.account?.plan_summary ?: ""
@@ -164,7 +164,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
             }
         }
 
-        binding.addCardButton.setOnClickListener {
+        binding?.addCardButton?.setOnClickListener {
             if ((currentMembershipPlan?.feature_set?.has_vouchers == true ||
                         currentMembershipPlan?.has_vouchers == true) &&
                 viewModel.paymentCards.value.isNullOrEmpty()
@@ -195,10 +195,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
 
             }
 
-            logEvent(getFirebaseIdentifier(STORE_LINK_VIEW, binding.addCardButton.text.toString()))
+            logEvent(getFirebaseIdentifier(STORE_LINK_VIEW, binding?.addCardButton?.text.toString()))
         }
 
-        binding.getCardButton.setOnClickListener {
+        binding?.getCardButton?.setOnClickListener {
             currentMembershipPlan?.let { membershipPlan ->
                 val getNewCardNavigationDirections =
                     if (membershipPlan.feature_set?.linking_support != null &&
@@ -253,7 +253,7 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 logEvent(
                     getFirebaseIdentifier(
                         STORE_LINK_VIEW,
-                        binding.getCardButton.text.toString()
+                        binding?.getCardButton?.text.toString()
                     )
                 )
             }

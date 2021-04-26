@@ -27,12 +27,12 @@ class MaximisedBarcodeFragment :
             MaximisedBarcodeFragmentArgs.fromBundle(it).apply {
                 viewModel.barcodeWrapper.value = barcode
                 viewModel.membershipPlan.value = currentMembershipPlan
-                binding.viewModel = viewModel
+                binding?.viewModel = viewModel
             }
         }
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-        binding.cancel.setOnClickListener {
+        binding?.cancel?.setOnClickListener {
             requireActivity().onBackPressed()
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
