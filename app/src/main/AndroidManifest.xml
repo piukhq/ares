@@ -73,7 +73,7 @@
             android:name="zendesk.support.requestlist.RequestListActivity"
             android:theme="@style/BinkZendeskTheme" />
 
-        <meta-data android:name="io.sentry.dsn" android:value="https://db4378364c9643f393684246823f2ce4@sentry.uksouth.bink.sh/21" />
+        <meta-data android:name="io.sentry.dsn" android:value="https://a1f958affbf44716800bdf73443b37cf@o503751.ingest.sentry.io/5712794" />
 
         <meta-data android:name="io.sentry.auto-init" android:value="false" />
     </application>
