@@ -12,7 +12,7 @@ enum class LinkStatus(
 ) {
     STATUS_LINKED_TO_SOME_OR_ALL(
         2.1f,
-        R.drawable.ic_active_linked,
+        R.drawable.active_link,
         R.string.link_status_linked,
         R.plurals.description_linked
     ),
