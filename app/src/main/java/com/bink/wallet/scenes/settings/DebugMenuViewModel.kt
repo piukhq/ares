@@ -6,10 +6,14 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import okhttp3.ResponseBody
 
 class DebugMenuViewModel(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    var loyaltyWalletRepository: LoyaltyWalletRepository,
+    var paymentWalletRepository: PaymentWalletRepository
 ) : BaseViewModel() {
 
     val debugItems = ListLiveData<DebugItem>()
@@ -29,6 +33,8 @@ class DebugMenuViewModel(
 
     fun logOut() {
         loginRepository.logOut(_logOutResponse, _logOutErrorResponse)
+        loyaltyWalletRepository.clearMembershipCards()
+        paymentWalletRepository.clearPaymentCards()
     }
 
     fun clearData() {
