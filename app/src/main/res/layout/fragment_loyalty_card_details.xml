@@ -133,7 +133,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/margin_padding_size_medium"
                                         android:layout_marginTop="@dimen/margin_padding_size_medium"
-                                        android:src="@drawable/ic_active"
+                                        android:src="@drawable/active_link"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
                                         tools:ignore="ContentDescription" />
