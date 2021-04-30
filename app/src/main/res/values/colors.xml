@@ -8,10 +8,10 @@
     <color name="pale_grey">#e9ecf6</color>
     <color name="cool_grey">#99a7ae</color>
     <color name="green_blue">#00c176</color>
-    <color name="bink_blue_dark">#194B53</color>
-    <color name="bink_blue_dark_inactive">#80194B53</color>
-    <color name="bink_blue_light">#3D908F</color>
-    <color name="bink_blue_light_inactive">#803D908F</color>
+    <color name="blue_dark">#194B53</color>
+    <color name="blue_dark_inactive">#80194B53</color>
+    <color name="blue_light">#3D908F</color>
+    <color name="blue_light_inactive">#803D908F</color>
     <color name="blue_accent">#438086</color>
     <color name="blue_inactive">#b1c2cb</color>
     <color name="grey_50">#7f7f7f</color>
