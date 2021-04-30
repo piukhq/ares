@@ -205,7 +205,7 @@ fun TextView.planTitle(plan: MembershipPlan?) {
 @BindingAdapter("joinCardImage")
 fun ImageView.image(plan: MembershipPlan?) {
     if (plan == null) {
-        setImageResource(R.drawable.payment)
+        setImageResource(R.drawable.ic_payment_icon)
     } else {
         try {
             Glide.with(context)

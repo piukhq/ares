@@ -10,10 +10,10 @@ enum class LoginStatus(
 ) {
     STATUS_LOGGED_IN_HISTORY_AVAILABLE(
         1.1,
-        R.drawable.active_points,
+        R.drawable.ic_active_points,
         R.string.view_history
     ),
-    STATUS_LOGGED_IN_HISTORY_UNAVAILABLE(1.2, R.drawable.active_points),
+    STATUS_LOGGED_IN_HISTORY_UNAVAILABLE(1.2, R.drawable.ic_active_points),
     STATUS_NOT_LOGGED_IN_HISTORY_UNAVAILABLE(
         1.3,
         R.drawable.ic_lcd_module_icons_points_login,
@@ -70,7 +70,7 @@ enum class LoginStatus(
     ),
     STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE(
         1.15,
-        R.drawable.active_points,
+        R.drawable.ic_active_points,
         R.string.points_view_history,
         R.string.points_earning
     ),
