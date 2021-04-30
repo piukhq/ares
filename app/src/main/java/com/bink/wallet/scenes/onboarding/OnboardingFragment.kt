@@ -88,7 +88,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,
-                    R.drawable.onboarding_page_1,
+                    R.drawable.onboarding1,
                     getString(R.string.page_1_title),
                     getString(R.string.page_1_description)
                 )
@@ -96,7 +96,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_2,
-                    R.drawable.onboarding_page_2,
+                    R.drawable.onboarding2,
                     getString(R.string.page_2_title),
                     getString(R.string.page_2_description)
                 )
@@ -104,7 +104,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_3,
-                    R.drawable.onboarding_page_3,
+                    R.drawable.onboarding3,
                     getString(R.string.page_3_title),
                     getString(R.string.page_3_description)
                 )
