@@ -506,6 +506,7 @@ class LoyaltyCardDetailsFragment :
                     loginStatus.pointsImage
                 )
             )
+            pointsImage.visibility = View.VISIBLE
             loginStatus.pointsText?.let {
                 pointsText.text = getString(R.string.points_login)
             }
@@ -595,6 +596,7 @@ class LoyaltyCardDetailsFragment :
                     linkStatus.drawable
                 )
             )
+            activeLinked.visibility = View.VISIBLE
             linkStatusText.text =
                 getString(linkStatus.statusText)
 
