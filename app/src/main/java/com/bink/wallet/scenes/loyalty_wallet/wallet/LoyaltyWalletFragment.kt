@@ -239,7 +239,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 if (foregroundView != null) {
                     Handler().postDelayed({
-                        binding.swipeLayout.isEnabled = true
+                        try {
+                            binding.swipeLayout.isEnabled = true
+                        } catch (e:Exception){}
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
                 }
