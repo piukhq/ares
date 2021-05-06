@@ -41,9 +41,11 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                binding.webPageLoadingIndicator.visibility = View.GONE
-                binding.buttonBack.isEnabled = binding.webView.canGoBack()
-                binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                try{
+                    binding.webPageLoadingIndicator.visibility = View.GONE
+                    binding.buttonBack.isEnabled = binding.webView.canGoBack()
+                    binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                }catch (e: Exception){}
             }
 
             override fun onReceivedError(
@@ -120,10 +122,11 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        binding.webView.webViewClient = null
         if (hasEncounteredError) {
             findNavController().navigateUp()
         }
+        super.onDestroyView()
     }
 
     companion object {
