@@ -45,6 +45,7 @@ class AddAuthAdapter(
                         holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.account = membershipPlan?.account
+                        holder.position = position
                         holder.bind(addAuthItem)
                         holder.onBarcodeScanSuccess()
                     }

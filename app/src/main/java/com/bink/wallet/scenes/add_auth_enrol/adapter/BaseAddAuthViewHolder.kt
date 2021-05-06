@@ -19,6 +19,8 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var account: Account? = null
 
+    var position :Int ? = null
+
     override fun bind(item: T) {}
 
     open fun onBarcodeScanSuccess(){}

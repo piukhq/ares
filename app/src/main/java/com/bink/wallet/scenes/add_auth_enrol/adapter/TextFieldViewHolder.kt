@@ -12,6 +12,7 @@ import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.DATE_FORMAT
@@ -46,6 +47,8 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
+            //when this changes,update what we have in the form field
+            //We do so by using the position,then updating the request field
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
                 SharedPreferenceManager.cardNumberValue = currentText.toString()
@@ -79,6 +82,7 @@ class TextFieldViewHolder(
         isCardNumberField = false
         isBarcodeField = false
 
+        position?.let { FormsUtil.addFormField(it,planField.typeOfField) }
 
         binding.planField = planField
 

@@ -121,9 +121,21 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         if (hasEncounteredError) {
             findNavController().navigateUp()
         }
+    }
+
+    override fun onDestroy() {
+        if (binding.webView !=null){
+            binding.webView.destroy()
+            logDebug("WebFrag","Destroyed")
+        }
+        val boolean = binding.webView == null
+        logDebug("WebFrag","webview nullability is $boolean")
+
+        super.onDestroy()
     }
 
     companion object {
