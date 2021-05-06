@@ -14,7 +14,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.BinkWebViewBinding
 import com.bink.wallet.R
 import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -36,14 +35,20 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
         binding.webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                binding.webPageLoadingIndicator.visibility = View.VISIBLE
+                try {
+                    binding.webPageLoadingIndicator.visibility = View.VISIBLE
+                } catch (e: Exception) {
+                }
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                binding.webPageLoadingIndicator.visibility = View.GONE
-                binding.buttonBack.isEnabled = binding.webView.canGoBack()
-                binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                try {
+                    binding.webPageLoadingIndicator.visibility = View.GONE
+                    binding.buttonBack.isEnabled = binding.webView.canGoBack()
+                    binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                } catch (e: Exception) {
+                }
             }
 
             override fun onReceivedError(
@@ -120,10 +125,11 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        binding.webView.webViewClient = null
         if (hasEncounteredError) {
             findNavController().navigateUp()
         }
+        super.onDestroyView()
     }
 
     companion object {
