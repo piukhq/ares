@@ -19,14 +19,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/loyalty_card_margin_horizontal"
             android:layout_marginEnd="@dimen/loyalty_card_margin_horizontal"
-            android:background="@drawable/bg_card_shadow">
+            >
 
             <androidx.cardview.widget.CardView
                 style="@style/ShadowedCardView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/card_height">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/swipe_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
