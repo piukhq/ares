@@ -52,10 +52,14 @@ class TextFieldViewHolder(
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
                 SharedPreferenceManager.cardNumberValue = currentText.toString()
-                position?.let { it1 -> FormsUtil.updateField(it1,value = currentText.toString()) }
+                position?.let { it1 -> updateField(it1, currentText) }
             }
             checkValidation(fieldValidation)
         }
+    }
+
+    private fun updateField(it1: Int, currentText: CharSequence?) {
+        FormsUtil.updateField(it1, value = currentText.toString())
     }
 
     private val emailTextWatcher = object : SimplifiedTextWatcher {
@@ -70,6 +74,10 @@ class TextFieldViewHolder(
                     it,
                     currentText.toString().toLowerCase(Locale.ROOT)
                 )
+
+                position?.let { position ->
+                    updateField(position,currentText.toString().toLowerCase(Locale.ROOT))
+                }
             }
             checkValidation(null)
         }
@@ -411,6 +419,9 @@ class TextFieldViewHolder(
                     binding.tvDatePicker.text = strDate.toString()
                     item?.let {
                         setFieldRequestValue(it, strDate.toString())
+                        position?.let {
+                            updateField(it,strDate.toString())
+                        }
                     }
                     checkValidation(null)
                 },
