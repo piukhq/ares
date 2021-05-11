@@ -9,7 +9,7 @@ object FormsUtil {
     private var fields = mutableMapOf<Int, FormField>()
 
     fun addFormField(position: Int, planField: PlanField) {
-        fields.put(position, FormField(planField, PlanFieldsRequest(planField.column,null,null)))
+        fields.put(position, FormField(planField, PlanFieldsRequest(planField.column, null, null)))
     }
 
     fun getSize() = fields.size
@@ -18,14 +18,26 @@ object FormsUtil {
         fields.clear()
     }
 
-    fun updateField(position:Int,value:String){
+    fun updateField(position: Int, value: String) {
         //Update the
         val form = fields.get(position)
 
         form?.fieldsRequest?.value = value
     }
 
-//    fun formValueValidation():Boolean{
-//        return UtilFunctions.isValidField()
-//    }
+    fun updateValidation(position: Int, isValid: Boolean) {
+        fields.get(position)?.isValidField = isValid
+    }
+
+    fun returnForms() = fields
+
+    fun areAllFieldsValid(): Boolean {
+        fields.forEach { field ->
+            if (!field.value.isValidField){
+                return false
+            }
+        }
+
+        return true
+    }
 }

@@ -354,7 +354,7 @@ class TextFieldViewHolder(
     private fun checkIfError(text: TextInputEditText, currentItem: AddAuthItemWrapper) {
         if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
             val currentPlanField = currentItem.fieldType as PlanField
-            val requestValue = currentItem.fieldsRequest?.value
+            val requestValue = text.text.toString()
             if (!UtilFunctions.isValidField(
                     currentPlanField.validation,
                     requestValue
@@ -364,6 +364,10 @@ class TextFieldViewHolder(
                     R.string.add_auth_error_message,
                     currentPlanField.column
                 )
+                position?.let { FormsUtil.updateValidation(it,false) }
+            } else {
+                position?.let { FormsUtil.updateValidation(it,true) }
+
             }
         }
     }

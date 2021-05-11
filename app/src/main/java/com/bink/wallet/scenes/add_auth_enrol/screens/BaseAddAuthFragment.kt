@@ -170,15 +170,21 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 viewModel.titleText.get(),
                 viewModel.descriptionText.get(),
                 checkValidation = {
-                    if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
+                    logDebug("BaseAA","List is "+ FormsUtil.returnForms().toString())
+//                    if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
+//                        viewModel.haveValidationsPassed.set(false)
+//                        return@AddAuthAdapter
+//                    }
+//                    if (!viewModel.didPlanFieldsPassValidations(it)) {
+//                        viewModel.haveValidationsPassed.set(false)
+//                        return@AddAuthAdapter
+//                    }
+                    if (FormsUtil.areAllFieldsValid()){
+                        viewModel.haveValidationsPassed.set(true)
+                    } else {
                         viewModel.haveValidationsPassed.set(false)
-                        return@AddAuthAdapter
+
                     }
-                    if (!viewModel.didPlanFieldsPassValidations(it)) {
-                        viewModel.haveValidationsPassed.set(false)
-                        return@AddAuthAdapter
-                    }
-                    viewModel.haveValidationsPassed.set(true)
                 },
                 navigateToHeader = {
                     navigationHandler?.navigateToBrandHeader()
