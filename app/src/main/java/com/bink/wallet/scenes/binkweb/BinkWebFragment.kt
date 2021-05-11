@@ -127,17 +127,6 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
         }
     }
 
-    override fun onDestroy() {
-        if (binding.webView !=null){
-            binding.webView.destroy()
-            logDebug("WebFrag","Destroyed")
-        }
-        val boolean = binding.webView == null
-        logDebug("WebFrag","webview nullability is $boolean")
-
-        super.onDestroy()
-    }
-
     companion object {
         private const val ERROR_CODE = -2
     }

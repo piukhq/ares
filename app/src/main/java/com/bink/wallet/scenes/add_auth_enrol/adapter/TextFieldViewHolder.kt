@@ -52,6 +52,7 @@ class TextFieldViewHolder(
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
                 SharedPreferenceManager.cardNumberValue = currentText.toString()
+                position?.let { it1 -> FormsUtil.updateField(it1,value = currentText.toString()) }
             }
             checkValidation(fieldValidation)
         }
@@ -82,7 +83,7 @@ class TextFieldViewHolder(
         isCardNumberField = false
         isBarcodeField = false
 
-        position?.let { FormsUtil.addFormField(it,planField.typeOfField) }
+        position?.let { FormsUtil.addFormField(it,planField) }
 
         binding.planField = planField
 

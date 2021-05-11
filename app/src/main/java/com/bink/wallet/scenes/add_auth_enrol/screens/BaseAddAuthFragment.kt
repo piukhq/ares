@@ -18,6 +18,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.utils.ADD_AUTH_BARCODE
@@ -28,6 +29,7 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException
 import com.bink.wallet.utils.hideKeyboard
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
@@ -68,6 +70,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             this@BaseAddAuthFragment.barcode = barcode
         }
         SharedPreferenceManager.isLoyaltySelected = true
+
+        logDebug("BaseAA","Size is "+ FormsUtil.getSize())
+
 
         navigationHandler = AuthNavigationHandler(this, args.membershipPlan)
         animationHelper = AuthAnimationHelper(this, binding, RecyclerViewHelper())
@@ -286,5 +291,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         if (SharedPreferenceManager.hasBarcodeBeenScanned) {
             SharedPreferenceManager.scannedLoyaltyBarCode = result
         }
+    }
+
+    override fun onDestroyView() {
+        FormsUtil.clearForms()
+        super.onDestroyView()
     }
 }
