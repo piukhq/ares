@@ -52,6 +52,7 @@ class AddAuthAdapter(
                     is SpinnerViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
                         holder.bind(addAuthItem)
+                        holder.position = position
                     }
                     is CheckboxViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
