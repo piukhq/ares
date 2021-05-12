@@ -212,35 +212,43 @@ fun ImageView.image(plan: MembershipPlan?) {
 
 @BindingAdapter("cardOnBoarding")
 fun ImageView.loadAlternateHeroImage(plan: MembershipPlan?) {
-        try {
-            Glide.with(context)
-                .load(getAlternateHeroTypeFromPlan(plan))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(this)
-        } catch (e: NoSuchElementException) {
-            logError("loadImage", e.localizedMessage, e)
-        }
+    try {
+        Glide.with(context)
+            .load(getAlternateHeroTypeFromPlan(plan))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(this)
+    } catch (e: NoSuchElementException) {
+        logError("loadImage", e.localizedMessage, e)
+    }
 
 }
 
 @BindingAdapter("membershipCard", "membershipPlan", requireAll = true)
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
-    if(plan?.getCardType() != CardType.PLL && !card?.card?.barcode.isNullOrEmpty()){
+    if (plan?.getCardType() != CardType.PLL && !card?.card?.barcode.isNullOrEmpty()) {
+        val isSquareBarcode = false
+
         binding.container.visibility = View.GONE
-        binding.rectangleBarcodeContainer.visibility = View.VISIBLE
-
-        binding.rbBarcodeText.text = card?.card?.barcode!!
-        binding.rbTitle.text = context.getString(R.string.bonus_card_number)
-
-        binding.tapCard.text = when(card?.card?.getBarcodeFormat()){
+        binding.tapCard.text = when (card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE -> context.getString(R.string.tap_to_enlarge_qr)
             BarcodeFormat.AZTEC -> context.getString(R.string.tap_to_enlarge_aztec)
             else -> context.getString(R.string.tap_to_enlarge_barcode)
         }
 
-        binding.companyLogo.loadImage(plan)
-        binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+        if (isSquareBarcode) {
+            binding.sbBarcodeText.text = card?.card?.barcode!!
+            binding.sbTitle.text = context.getString(R.string.bonus_card_number)
+            binding.sbCompanyLogo.loadImage(plan)
+            binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
+            binding.squareBarcodeContainer.visibility = View.VISIBLE
+        } else {
+            binding.rbBarcodeText.text = card?.card?.barcode!!
+            binding.rbTitle.text = context.getString(R.string.bonus_card_number)
+            binding.rbCompanyLogo.loadImage(plan)
+            binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+            binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+        }
 
     } else {
         binding.cardPlaceholderText.text = context.getString(
@@ -634,7 +642,7 @@ fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
 }
 
 @BindingAdapter("itemDecorationSpacing")
-fun RecyclerView.setItemDecorationSpacing(spacingPx:Float){
+fun RecyclerView.setItemDecorationSpacing(spacingPx: Float) {
     addItemDecoration(
         RecyclerViewItemDecoration()
     )
