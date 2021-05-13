@@ -44,14 +44,17 @@ class SpinnerViewHolder(
         val spinner = binding.contentAddAuthSpinner
         val planField = item.fieldType as PlanField
         binding.planField = planField
+        position?.let {
+            FormsUtil.addFormField(it,planField)
+            FormsUtil.updateField(it,planField.choice?.get(0).toString())
+        }
+
         setFieldRequestValue(item, planField.choice?.get(0).toString())
         with(spinner) {
             isFocusable = false
             onItemSelectedListener = itemSelectedListener
         }
-        position?.let {
-            FormsUtil.addFormField(it,planField)
-        }
+
         binding.executePendingBindings()
     }
 }
