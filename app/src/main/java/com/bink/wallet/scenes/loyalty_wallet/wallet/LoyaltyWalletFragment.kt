@@ -85,6 +85,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private var deletedCard: MembershipCard? = null
     private lateinit var cards: List<MembershipCard>
     private lateinit var plans: List<MembershipPlan>
+    private lateinit var handler: Handler
 
 
     private var simpleCallback =
@@ -239,10 +240,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 }
 
                 if (foregroundView != null) {
-                    Handler().postDelayed({
+                    handler.postDelayed({
                         try {
                             binding.swipeLayout.isEnabled = true
-                        }catch (e: Exception){}
+                        } catch (e:Exception){}
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
                 }
@@ -279,6 +280,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        handler = Handler()
+
         viewModel.cardsDataMerger.observeNonNull(this) { userDataResult ->
             setCardsData(userDataResult)
         }
@@ -747,5 +750,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 cards.toTypedArray()
             )
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
     }
 }
