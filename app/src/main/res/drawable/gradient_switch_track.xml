@@ -14,8 +14,8 @@
     <item android:left="8dp" android:right="8dp" android:top="2dp" android:bottom="2dp">
         <shape android:shape="rectangle">
             <gradient
-                    android:endColor="@color/blue_dark"
-                    android:startColor="@color/blue_light"
+                    android:endColor="@color/light_purple"
+                    android:startColor="@color/blue_accent"
                     android:type="linear" />
             <corners
                     android:bottomLeftRadius="16dp"

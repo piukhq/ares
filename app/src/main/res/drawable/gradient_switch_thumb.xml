@@ -5,8 +5,8 @@
             android:width="20dp"
             android:height="20dp" />
     <gradient
-            android:endColor="@color/blue_dark"
-            android:startColor="@color/blue_light"
+            android:endColor="@color/light_purple"
+            android:startColor="@color/blue_accent"
             android:type="linear" />
 
 </shape>

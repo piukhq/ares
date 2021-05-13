@@ -11,9 +11,9 @@
             <!--make a gradient background-->
             <gradient
                     android:angle="180"
-                    android:endColor="@color/blue_dark_inactive"
+                    android:endColor="@color/blue_accent_inactive"
                     android:gradientRadius="180"
-                    android:startColor="@color/blue_light_inactive"
+                    android:startColor="@color/light_purple_inactive"
                     android:type="linear" />
             <!-- make the button corners rounded-->
             <corners android:radius="25dp" />

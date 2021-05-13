@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.MembershipCardListWrapper
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.MembershipTransactions
@@ -206,7 +205,7 @@ fun TextView.planTitle(plan: MembershipPlan?) {
 @BindingAdapter("joinCardImage")
 fun ImageView.image(plan: MembershipPlan?) {
     if (plan == null) {
-        setImageResource(R.drawable.ic_payment_icon)
+        setImageResource(R.drawable.ic_no_payment_card)
     } else {
         try {
             Glide.with(context)
@@ -454,9 +453,6 @@ fun ImageView.setLinkedStatus(
     membershipCards: MembershipCardListWrapper
 ) {
     if (paymentCard.isCardActive()) {
-        SharedPreferenceManager.hasNoActivePaymentCards = false
-        SharedPreferenceManager.isPaymentEmpty = false
-
         visibility = View.VISIBLE
         setImageResource(
             if (PaymentCardUtils.existLinkedMembershipCards(

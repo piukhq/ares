@@ -110,7 +110,7 @@ val viewModelModules = module {
 
     viewModel { TransactionViewModel() }
 
-    viewModel { DebugMenuViewModel(get(), get(), get()) }
+    viewModel { DebugMenuViewModel(get()) }
 
     viewModel { DebugColorSwatchesViewModel(get()) }
 

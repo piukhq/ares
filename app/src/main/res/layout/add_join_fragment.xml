@@ -83,7 +83,7 @@
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_browse"
+                            android:src="@drawable/ic_icons_svl_store_active"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="ContentDescription" />
@@ -131,7 +131,7 @@
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_payment_icon"
+                            android:src="@drawable/ic_icons_svl_view_active"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="ContentDescription" />
@@ -180,7 +180,7 @@
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_loyalty_icon"
+                            android:src="@drawable/ic_icons_svl_link_active"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="ContentDescription" />
