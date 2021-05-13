@@ -92,7 +92,11 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler(it)
 
             barcode?.let {
-                viewModel.setBarcode(it)
+                if (SharedPreferenceManager.hasBarcodeBeenScanned) {
+                    viewModel.setBarcode(it)
+                } else {
+                    barcode = ""
+                }
             }
         }
 
@@ -203,8 +207,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 navigationHandler?.navigateToLCD(membershipCard)
             }
             CardType.PLL -> {
-                if (SharedPreferenceManager.isPaymentEmpty
-                ) {
+                if (SharedPreferenceManager.isPaymentEmpty || SharedPreferenceManager.hasNoActivePaymentCards) {
                     navigationHandler?.navigateToPllEmpty(membershipCard)
                 } else {
                     navigationHandler?.navigateToPll(membershipCard)
@@ -280,6 +283,8 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun onResult(result: String) {
-        SharedPreferenceManager.scannedLoyaltyBarCode = result
+        if (SharedPreferenceManager.hasBarcodeBeenScanned) {
+            SharedPreferenceManager.scannedLoyaltyBarCode = result
+        }
     }
 }

@@ -108,6 +108,16 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                 View.GONE
             }
 
+        currentMembershipPlan?.let { membershipPlan ->
+            if ((membershipPlan.account != null && membershipPlan.account.enrol_fields.isNullOrEmpty()) ||
+                (membershipPlan.feature_set?.linking_support != null && !membershipPlan.feature_set.linking_support.contains(TypeOfField.ENROL.name))
+            ) {
+                binding.getCardButton.visibility = View.GONE
+            } else {
+                binding.getCardButton.visibility = View.VISIBLE
+            }
+        }
+
         binding.closeButton.setOnClickListener {
             if (isFromJoinCard) {
                 findNavController().popBackStack()
@@ -130,8 +140,9 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                 it.account.plan_name
                                     ?: getString(R.string.plan_description),
                                 summary,
-                                description2 = it.account.plan_description
-                            )
+                                description2 = it.account.plan_description,
+                                firstButtonText = getString(R.string.go_to_site)
+                            ), it.account.plan_url ?: ""
                         )
                     )
                 } else if (it.account?.plan_name_card != null) {
@@ -142,8 +153,10 @@ class AddJoinFragment : BaseFragment<AddJoinViewModel, AddJoinFragmentBinding>()
                                 GenericModalParameters(
                                     R.drawable.ic_close,
                                     true,
-                                    planName
-                                )
+                                    planName,
+                                    firstButtonText = getString(R.string.go_to_site)
+
+                                ), it.account.plan_url ?: ""
                             )
                         )
                     }

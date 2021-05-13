@@ -183,6 +183,8 @@
     <string name="link_payment_cards">Link to payment cards</string>
     <string name="link_payment_card_description_part_1">You have not added any payment cards yet.</string>
     <string name="link_payment_card_description_part_2">Add them to link to this card and others.</string>
+    <string name="pending_pll_card_description">The payment cards below are pending authorisation. You will be able to link them to your loyalty card once they\'ve been approved.</string>
+    <string name="pll_empty_faqs_description">You can find out more about pending payment cards by reading our FAQS here</string>
     <string name="done_button">Done</string>
     <string name="add_payment_cards">Add payment cards</string>
     <string name="arrow_left">&#9664;</string>
@@ -216,8 +218,17 @@
     <string name="terms_and_conditions_url">https://bink.com/terms-and-conditions/#privacy-policy</string>
     <string name="add_auth_error_message">Invalid %1$s</string>
     <string name="pll_text">PLL</string>
-    <string name="pll_title">Payment Linked Loyalty</string>
+    <string name="pll_title">Link to your Payment Cards</string>
     <string name="all_text">All</string>
+    <string name="balance_text">See your balance</string>
+    <string name="store_barcode">Store your barcode</string>
+    <string name="store_barcodes_title">Store your barcodes</string>
+    <string name="see_points_balance_title">See your points balances</string>
+    <string name="pll_browse_brands_description">Add these loyalty cards and link them to your payment cards to collect rewards <b>automatically</b> when you pay.</string>
+    <string name="balance_description">Add these loyalty cards to see your points and rewards in real time in the Bink app.</string>
+    <string name="store_barcode_description">Add these loyalty cards to store your barcode in Bink and always have it on your phone. No more plastic! </string>
+    <string name="see_points_balance_description">Add these loyalty cards to see your points and rewards balances in real time.</string>
+    <string name="store_barcodes_description">Add these loyalty cards to store their barcodes so you’ll always have them on your phone when you need them.</string>
 
     <!-- LCD Error Screen -->
     <!-- 1.2 -->
@@ -259,6 +270,10 @@
     <string name="pll_linked_title">Link to payment cards</string>
     <string name="pll_unlinked_title">Add card</string>
     <string name="pll_last_digits">Card ending in %1$s</string>
+    <string name="pll_pending_authorisation">Pending authorisation</string>
+    <string name="pll_pending_cards_title">Pending payment cards</string>
+    <string name="pll_pending_cards_description">The payment cards below are pending authorisation. You will be able to link them to your loyalty card once they have been approved.</string>
+    <string name="pll_pending">Pending</string>
 
     <!-- T&C Screen -->
     <string name="terms_and_conditions_text">I authorise Mastercard, Visa and American Express to monitor activity on my payment card to determine when I have made a qualifying transaction, and for Mastercard, Visa and American Express to share such transaction details with Bink to enable my card-linked offer(s) and target offers that may be of interest to me.</string>
@@ -285,6 +300,8 @@
     <string name="settings_menu_security_and_privacy_subtitle">How we protect your data</string>
     <string name="settings_menu_how_it_works">How it works</string>
     <string name="settings_menu_how_it_works_subtitle">Find out more about Bink</string>
+    <string name="settings_menu_who_we_are">Who we are</string>
+    <string name="settings_menu_who_we_are_subtitle">Below are a list of people that have been instrumental in developing the app you now hold in your hands.</string>
     <string name="settings_menu_legal">Legal</string>
     <string name="settings_menu_privacy_policy">Privacy policy</string>
     <string name="settings_menu_terms_and_conditions">Terms and conditions</string>
@@ -366,7 +383,6 @@
     <string name="payment_card_footer_faq_description">Learn more</string>
 
 
-
     <!-- Payment Card entry -->
     <string name="empty_string" />
     <string name="card_number">Card number</string>
@@ -427,6 +443,9 @@
     <string name="enter_credentials">Enter credentials</string>
     <string name="add_card">Add card</string>
     <string name="please_enter_credentials">Please enter your %1$s credentials below to add this card to your wallet.</string>
+    <string name="card_onboarding_title">Link to your payment cards</string>
+    <string name="card_onboarding_description">Add these loyalty cards and link them to your payment cards to collect rewards automatically when you pay.</string>
+    <string name="card_onboarding_placeholder_message">More coming soon!</string>
 
     <!-- Accept T&Cs -->
     <string name="one_last_step">One last step...</string>
@@ -476,6 +495,7 @@
     <string name="required_fields">Please check all the required fields</string>
 
     <!-- PLR -->
+    <string name="go_to_site">Go to site</string>
     <string name="rewards_history">Rewards history</string>
     <string name="see_your_past_rewards">See your past rewards</string>
     <string name="payment_card_needed">Payment card needed</string>
@@ -569,5 +589,21 @@
     <string name="card_scan_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+
+    <!-- Dev Names -->
+    <string-array name="dev_names">
+        <item>Paul Batty</item>
+        <item>Joshua Best</item>
+        <item>Enoch Hankombo</item>
+        <item>Susanne King</item>
+        <item>Srikalyani Kotha</item>
+        <item>Marius Lobontiu</item>
+        <item>Connor McFadden</item>
+        <item>Carmen Muntean</item>
+        <item>Teodora Popescu</item>
+        <item>Mara Savan</item>
+        <item>Karl Sigiscar</item>
+        <item>Max Woodhams</item>
+    </string-array>
 
 </resources>

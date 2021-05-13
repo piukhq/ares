@@ -15,6 +15,7 @@ enum class SettingsItemType : Parcelable {
     RATE_APP,
     SECURITY_AND_PRIVACY,
     HOW_IT_WORKS,
+    WHO_WE_ARE,
     PRIVACY_POLICY,
     TERMS_AND_CONDITIONS,
     DEBUG_MENU,

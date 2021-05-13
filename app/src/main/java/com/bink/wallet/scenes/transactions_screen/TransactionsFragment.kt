@@ -5,12 +5,17 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.TransactionFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
+import com.bink.wallet.model.TransactionHistory
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.textAndShow
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.reflect.Type
 
 class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragmentBinding>() {
     override fun builder(): FragmentToolbar {
@@ -44,8 +49,10 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                             true,
                             viewModel.membershipPlan.value?.account?.plan_name
                                 ?: getString(R.string.plan_description),
-                            planDescription
-                        )
+                            viewModel.membershipPlan.value?.account?.plan_summary?:"",
+                            description2 = planDescription,
+                            firstButtonText = getString(R.string.go_to_site)
+                        ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
                     )
                 )
             }
@@ -61,6 +68,37 @@ class TransactionsFragment : BaseFragment<TransactionViewModel, TransactionFragm
                         binding.transactionsList.adapter = TransactionAdapter(transactions)
                     }
                 }
+
+                /**
+                 * The way this is written ensures there can only be a single entry for each type of card.
+                 * It does this by trying to find an entry in the array that has the same membership ID, if it finds an entry, it will be removed and re-added with the up-to-date transaction size
+                 * If the Transaction size is found to have increased from the previous entry we update the hasNewTransactions boolean accordingly
+                 */
+
+                val gson = Gson()
+                val type: Type = object : TypeToken<ArrayList<TransactionHistory?>?>() {}.type
+
+                var previousTransactionHistoryVisitList: ArrayList<TransactionHistory> = arrayListOf()
+
+                SharedPreferenceManager.lastSeenTransactions?.let {
+                    previousTransactionHistoryVisitList = gson.fromJson(it, type)
+                }
+
+                val currentTransactionHistoryVisit = TransactionHistory(membershipCard.id, membershipCard.membership_transactions?.size ?: 0)
+
+                val previousMatchingVisit = previousTransactionHistoryVisitList.firstOrNull { it.membershipId.equals(membershipCard.id) }
+
+                if (previousMatchingVisit != null) {
+                    SharedPreferenceManager.hasNewTransactions = previousMatchingVisit.transactionSize < membershipCard.membership_transactions?.size ?: 0
+                    previousTransactionHistoryVisitList.remove(previousMatchingVisit)
+                } else {
+                    SharedPreferenceManager.hasNewTransactions = false
+                }
+
+                previousTransactionHistoryVisitList.add(currentTransactionHistoryVisit)
+                val newTransactionHistoryVisitList = gson.toJson(previousTransactionHistoryVisitList)
+                SharedPreferenceManager.lastSeenTransactions = newTransactionHistoryVisitList
+
             } else {
                 binding.pointsHistory.text = getString(R.string.points_history_not_available_title)
                 binding.pointsDescription.textAndShow(

@@ -24,6 +24,7 @@ object FirebaseEvents {
     const val INFORMATION_MODAL_VIEW = "InformationModal"
     const val SETTINGS_VIEW = "Settings"
     const val PREFERENCES_VIEW = "Preferences"
+    const val WHO_ARE_WE = "WhoAreWe"
     const val SPLASH_VIEW = "SplashScreen"
     const val ADD_LOYALTY_CARD_VIEW = "AddLoyaltyCard"
     const val PAYMENT_CARD_SCAN = "payment_scan"
@@ -81,6 +82,15 @@ object FirebaseEvents {
     const val PLL_STATE_SOFT_LINK = "SOFT_LINK"
     const val PLL_STATE_FAILED = "FAILED"
     const val LOYALTY_CARD_STATUS = "loyalty_card_status"
+    const val FIREBASE_REQUEST_REVIEW = "in_app_review_request"
+    const val FIREBASE_REQUEST_REVIEW_TRIGGER = "review_trigger"
+    const val FIREBASE_REQUEST_REVIEW_TIME = "TIME"
+    const val FIREBASE_REQUEST_REVIEW_ADD = "ADD"
+    const val FIREBASE_REQUEST_REVIEW_TRANSACTIONS = "TRANSACTIONS"
+    const val DYNAMIC_ACTION_NAME = "dynamic_action_name"
+    const val DYNAMIC_ACTION_TRIGGER_EVENT = "dynamic_action_triggered"
+    const val FIREBASE_ERROR_CODE = "error_code"
+    const val FIREBASE_ERROR_MESSAGE = "error_message"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

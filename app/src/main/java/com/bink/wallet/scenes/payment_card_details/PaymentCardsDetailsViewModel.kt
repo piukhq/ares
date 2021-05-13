@@ -8,7 +8,7 @@ import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
@@ -57,6 +57,7 @@ class PaymentCardsDetailsViewModel(
     private val _userResponse = MutableLiveData<User>()
     val userResponse: LiveData<User>
         get() = _userResponse
+
 
     fun linkPaymentCard(cardId: String, membershipPlanId: String) {
         val membershipCard = membershipCardData.value?.firstOrNull { card -> card.id == cardId }
@@ -135,19 +136,7 @@ class PaymentCardsDetailsViewModel(
                 val returnedUser =
                     withContext(Dispatchers.IO) { userRepository.putUserDetails(user) }
 
-                returnedUser.first_name?.let {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_FIRST_NAME,
-                        it
-                    )
-                }
 
-                returnedUser.last_name?.let {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_SECOND_NAME,
-                        it
-                    )
-                }
                 _userResponse.value = returnedUser
             } catch (e: Exception) {
 

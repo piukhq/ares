@@ -1,6 +1,7 @@
 package com.bink.wallet.scenes.loyalty_details
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
@@ -17,10 +18,14 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.Earn
 import com.bink.wallet.model.response.membership_card.Voucher
+import com.bink.wallet.model.response.membership_plan.Images
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRANSACTIONS
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_DETAIL_VIEW
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.MembershipPlanUtils
+import com.bink.wallet.utils.RequestReviewUtil
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.ValueDisplayUtils
@@ -30,6 +35,7 @@ import com.bink.wallet.utils.enums.MembershipCardStatus
 import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.formatBalance
 import com.bink.wallet.utils.getElapsedTime
+import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.linkCard
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
@@ -37,6 +43,7 @@ import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 import java.util.*
 
 
@@ -81,14 +88,14 @@ class LoyaltyCardDetailsFragment :
         binding.viewModel = viewModel
 
         arguments?.let {
-            val tiles = arrayListOf<String>()
+            val tiles = arrayListOf<Images>()
             viewModel.apply {
                 membershipPlan.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipPlan
                 membershipCard.value = LoyaltyCardDetailsFragmentArgs.fromBundle(it).membershipCard
                 isFromPll = LoyaltyCardDetailsFragmentArgs.fromBundle(it).isFromPll
                 membershipPlan.value?.images
                     ?.filter { image -> image.type == 2 }
-                    ?.forEach { image -> tiles.add(image.url.toString()) }
+                    ?.forEach { image -> tiles.add(image) }
                 this.tiles.value = tiles
             }
         }
@@ -116,34 +123,33 @@ class LoyaltyCardDetailsFragment :
 
         setUpScrollView(colorDrawable)
 
-        binding.swipeLayoutLoyaltyDetails.setOnRefreshListener {
-            if (isNetworkAvailable(requireActivity(), true)) {
-                viewModel.updateMembershipCard(true)
-            } else {
-                binding.swipeLayoutLoyaltyDetails.isRefreshing = false
-                viewModel.setAccountStatus()
-                viewModel.setLinkStatus()
-                setLoadingState(false)
+        binding.offerTiles.layoutManager = LinearLayoutManager(context)
+        binding.offerTiles.adapter = viewModel.tiles.value?.let {
+            LoyaltyDetailsTilesAdapter(it) { image ->
+                if (!image.cta_url.isNullOrEmpty()) {
+                    findNavController().navigate(LoyaltyCardDetailsFragmentDirections.globalToWeb(image.cta_url))
+
+                }
             }
         }
 
-        binding.offerTiles.layoutManager = LinearLayoutManager(context)
-        binding.offerTiles.adapter = viewModel.tiles.value?.let { LoyaltyDetailsTilesAdapter(it) }
-
         viewModel.updatedMembershipCard.observeNonNull(this) {
             viewModel.membershipCard.value = it
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
             viewModel.setAccountStatus()
             viewModel.setLinkStatus()
         }
 
-        viewModel.membershipCard.observeNonNull(this) { card ->
-            binding.swipeLayoutLoyaltyDetails.isRefreshing = false
+        viewModel.membershipCard.observeNonNull(this) { membershipCard ->
             viewModel.membershipPlan.value?.let { plan ->
-                binding.cardHeader.linkCard(card, plan)
+                binding.cardHeader.linkCard(membershipCard, plan)
             }
+
             if (!viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
                 setupVouchers()
+            }
+
+            membershipCard?.card?.getSecondaryColor()?.let { secondaryCardColour ->
+                binding.cardBackground.setBackgroundColor(Color.parseColor(secondaryCardColour))
             }
         }
 
@@ -171,9 +177,6 @@ class LoyaltyCardDetailsFragment :
 
         binding.footerAbout.binding.title.text = aboutTitle
 
-        binding.footerAbout.setOnClickListener {
-            viewAboutInformation()
-        }
         if (viewModel.membershipCard.value?.vouchers.isNullOrEmpty()) {
             binding.footerPlrRewards.visibility = View.GONE
             binding.footerPlrSeparator.visibility = View.GONE
@@ -246,17 +249,39 @@ class LoyaltyCardDetailsFragment :
 
         viewModel.deleteError.observeNonNull(this) {
             val planId = viewModel.membershipCard.value?.membership_plan
-            val uuid = viewModel.membershipCard.value?.uuid
-            if (planId == null || uuid == null) {
+            val cardId = viewModel.membershipCard.value?.id
+            if (planId == null || cardId == null) {
                 failedEvent(FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     FirebaseEvents.DELETE_LOYALTY_CARD_RESPONSE_FAILURE,
-                    getDeleteLoyaltyCardGenericMap(planId, uuid)
+                    getDeleteLoyaltyCardFailMap(planId, cardId, httpException.code(), httpException.getErrorBody())
                 )
-
             }
         }
+
+        WebScrapableManager.newlyAddedCard.observeNonNull(this) {
+            viewModel.updatedMembershipCard.value = it
+            WebScrapableManager.newlyAddedCard.value = null
+        }
+
+        /**
+         *
+         * This is here as an example if you'd like to test, put a break point on the log line (267) and look at the array that is given back.
+         * I'd like to leave this here so I can use it in future.
+         *
+        val gson = Gson()
+        val type: Type = object : TypeToken<ArrayList<DynamicAction?>?>() {}.type
+
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val dynamicActions = remoteConfig.getString(REMOTE_CONFIG_DYNAMIC_ACTIONS)
+
+        val arrayList : ArrayList<DynamicAction> = gson.fromJson(dynamicActions, type)
+
+        Log.d("test", arrayList.size.toString())
+         **/
+
     }
 
     private fun setUpScrollView(colorDrawable: ColorDrawable) {
@@ -333,21 +358,22 @@ class LoyaltyCardDetailsFragment :
         viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
             description = plan_description
         }
-        viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
+        viewModel.membershipPlan.value?.account?.plan_summary?.let { planSummary ->
             summary = planSummary
 
         }
 
         findNavController().navigateIfAdded(
             this,
-            LoyaltyCardDetailsFragmentDirections.detailToAbout(
+            LoyaltyCardDetailsFragmentDirections.detailToBrandHeader(
                 GenericModalParameters(
                     R.drawable.ic_close,
                     true,
                     aboutText,
                     summary,
-                    description2 = description
-                )
+                    description2 = description,
+                    firstButtonText = getString(R.string.go_to_site)
+                ), viewModel.membershipPlan.value?.account?.plan_url ?: ""
             ),
             currentDestination
         )
@@ -417,38 +443,15 @@ class LoyaltyCardDetailsFragment :
                 binding.containerToolbarTitle.visibility = View.GONE
             }
         }, SCROLL_DELAY)
+
+        RequestReviewUtil.triggerViaCardDetails(this) {
+            logEvent(FirebaseEvents.FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_TRANSACTIONS))
+        }
     }
 
     private fun handleFootersListeners() {
         binding.footerAbout.setOnClickListener {
-            var aboutText = getString(R.string.about_membership)
-            var summary = ""
-            var description = getString(R.string.no_plan_description_available)
-
-            viewModel.membershipPlan.value?.account?.plan_name?.let { plan_name ->
-                aboutText = getString(R.string.about_membership_title_template, plan_name)
-            }
-            viewModel.membershipPlan.value?.account?.plan_description?.let { plan_description ->
-                description = plan_description
-            }
-            viewModel.membershipPlan.value?.account?.plan_summary?.let {planSummary ->
-                summary = planSummary
-            }
-
-            findNavController().navigateIfAdded(
-                this,
-                LoyaltyCardDetailsFragmentDirections.detailToAbout(
-                    GenericModalParameters(
-                        R.drawable.ic_close,
-                        true,
-                        aboutText,
-                        summary,
-                        description2 = description
-                    )
-                ),
-                currentDestination
-            )
-
+            viewAboutInformation()
         }
 
         binding.footerSecurity.setOnClickListener {
@@ -804,6 +807,7 @@ class LoyaltyCardDetailsFragment :
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_UNAVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_LOGGED_IN_HISTORY_AND_VOUCHERS_AVAILABLE -> {
+
                     viewModel.membershipPlan.value?.let { membershipPlan ->
                         val hasCorrectCardType = membershipPlan.feature_set?.card_type == 2
                         val hasTransactions =
@@ -821,7 +825,7 @@ class LoyaltyCardDetailsFragment :
 
                             findNavController().navigateIfAdded(this, action, currentDestination)
                         } else {
-                            viewAboutInformation()
+                            displayVouchersNotSupported()
                         }
                     }
                 }
@@ -850,28 +854,7 @@ class LoyaltyCardDetailsFragment :
                     pendingCardStatusModal()
                 }
                 LoginStatus.STATUS_LOGIN_UNAVAILABLE -> {
-                    viewModel.membershipPlan.value?.let {
-                        genericModalParameters = GenericModalParameters(
-                            R.drawable.ic_close,
-                            true,
-                            getString(R.string.title_1_5),
-                            getString(R.string.description_1_5_part_1, it.account?.plan_name),
-                            "",
-                            "",
-                            "",
-                            getString(R.string.description_1_5_part_2)
-                        )
-                        val action =
-                            genericModalParameters.let { params ->
-                                LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
-                                    params
-                                )
-                            }
-                        action.let {
-                            findNavController().navigateIfAdded(this, action, currentDestination)
-
-                        }
-                    }
+                    displayVouchersNotSupported()
                 }
                 LoginStatus.STATUS_NOT_LOGGED_IN_HISTORY_AVAILABLE,
                 LoginStatus.STATUS_CARD_ALREADY_EXISTS,
@@ -944,6 +927,31 @@ class LoyaltyCardDetailsFragment :
         }
     }
 
+    private fun displayVouchersNotSupported() {
+        val genericModalParameters: GenericModalParameters?
+        viewModel.membershipPlan.value?.let {
+            genericModalParameters = GenericModalParameters(
+                R.drawable.ic_close,
+                true,
+                getString(R.string.title_1_5),
+                getString(R.string.description_1_5_part_1, it.account?.plan_name),
+                "",
+                "",
+                "",
+                getString(R.string.description_1_5_part_2)
+            )
+            val action =
+                genericModalParameters.let { params ->
+                    LoyaltyCardDetailsFragmentDirections.detailToErrorModal(
+                        params
+                    )
+                }
+            action.let {
+                findNavController().navigateIfAdded(this, action, currentDestination)
+            }
+        }
+    }
+
     private fun getAlphaForActionBar(scrollY: Int): Int {
         return when {
             scrollY > MAX_DIST -> MAX_ALPHA.toInt()
@@ -956,18 +964,18 @@ class LoyaltyCardDetailsFragment :
         binding.voucherTiles.apply {
             visibility = View.VISIBLE
             layoutManager = LinearLayoutManager(requireContext())
-            viewModel.membershipCard.value?.vouchers?.filter {
-                it.state == VoucherStates.IN_PROGRESS.state ||
-                        it.state == VoucherStates.ISSUED.state
-            }?.let { vouchers ->
-                adapter = VouchersAdapter(
-                    vouchers
-                ).apply {
+            val allVouchers = viewModel.membershipCard.value?.vouchers
+
+            allVouchers?.filter {
+                it.state == VoucherStates.ISSUED.state || it.state == VoucherStates.IN_PROGRESS.state
+            }?.let { filteredVouchers ->
+                adapter = VouchersAdapter(filteredVouchers.sortedByDescending { it.state }).apply {
                     setOnVoucherClickListener { voucher ->
                         viewVoucherDetails(voucher)
                     }
                 }
             }
+
         }
     }
 

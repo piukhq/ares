@@ -17,6 +17,10 @@
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="notification_oval_padding">20dp</dimen>
     <dimen name="margin_gone_size_large">50dp</dimen>
+    <dimen name="debug_menu_guideline_begin">621dp</dimen>
+    <dimen name="debug_menu_guideline_begin_smaller_device">500dp</dimen>
+    <dimen name="margin_card_on_boarding">18dp</dimen>
+    <dimen name="margin_card_on_boarding_padding_bottom">12dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>
@@ -190,7 +194,19 @@
     <!-- BinkWebView -->
     <dimen name="web_view_back_button_margin_horizontal">4dp</dimen>
 
+    <!-- Who we are -->
+    <dimen name="who_we_are_logo_size">142dp</dimen>
+    <dimen name="who_we_are_logo_corner_radius">20dp</dimen>
+    <dimen name="who_we_are_item_height">80dp</dimen>
+
     <!-- Forms -->
     <dimen name="forms_checkbox_margin">10dp</dimen>
+
+    <!-- Dynamic Actions -->
+    <dimen name="christmas_logo_height">125dp</dimen>
+
+    <!-- On Boarding -->
+    <dimen name="card_on_boarding_card_view_elevation">0dp</dimen>
+    <dimen name="card_on_boarding_card_view_end_margin">9dp</dimen>
 
 </resources>

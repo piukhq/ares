@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel" />
+            type="com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

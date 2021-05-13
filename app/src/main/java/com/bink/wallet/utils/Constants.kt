@@ -1,9 +1,5 @@
 package com.bink.wallet.utils
 
-import com.bink.wallet.BuildConfig
-import com.bink.wallet.utils.enums.BuildTypes
-import java.util.*
-
 const val MINUTES = "minutes"
 const val HOURS = "hours"
 const val DAYS = "days"
@@ -80,4 +76,10 @@ const val PLAN_ALREADY_EXISTS = "PLAN_ALREADY_LINKED"
 
 const val PROD_ARTICLE_ID = 360016688220
 const val SANDBOX_ARTICLE_ID = 360016721639
+
+const val PAYMENT_CARD_STATUS_PENDING = "pending"
+
+const val REMOTE_CONFIG_REVIEW_ENABLED = "in_app_review_enabled"
+const val REMOTE_CONFIG_DYNAMIC_ACTIONS = "dynamic_actions"
+const val REMOTE_CONFIG_LPC_MASTER_ENABLED = "LPC_master_enabled"
 

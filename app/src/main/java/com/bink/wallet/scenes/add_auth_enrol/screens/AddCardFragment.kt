@@ -15,8 +15,11 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
+import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class AddCardFragment : BaseAddAuthFragment() {
 
@@ -67,9 +70,17 @@ class AddCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ADD_JOURNEY, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ADD_JOURNEY, it.id, status, reasonCode, mPlanId, isAccountNew
                     )
                 )
+            }
+
+            WebScrapableManager.storeCredentialsFromRequest(it.id)
+
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
+                if (cards != null) {
+                    viewModel.updateScrapedCards(cards)
+                }
             }
 
         }
@@ -98,14 +109,16 @@ class AddCardFragment : BaseAddAuthFragment() {
             if (mPlanId == null) {
                 failedEvent(ADD_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                        ADD_LOYALTY_CARD_ADD_JOURNEY, mPlanId
+                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
                     )
                 )
             }
 
         }
+
     }
 
     override fun onResume() {
@@ -175,5 +188,10 @@ class AddCardFragment : BaseAddAuthFragment() {
                 viewModel.handleRequest(isRetryJourney, it, plan)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        SharedPreferenceManager.hasBarcodeBeenScanned = false
+        super.onDestroyView()
     }
 }

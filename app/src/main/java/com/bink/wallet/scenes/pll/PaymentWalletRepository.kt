@@ -8,12 +8,13 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.FirebaseEvents.PLL_DELETE
 import com.bink.wallet.utils.FirebaseEvents.PLL_PATCH
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_ACTIVE
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_FAILED
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_SOFT_LINK
+import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.generateUuidForPaymentCards
 import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.logDebug
@@ -24,7 +25,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
-import retrofit2.HttpException
 
 class PaymentWalletRepository(
     private val apiService: ApiService,
@@ -44,6 +44,7 @@ class PaymentWalletRepository(
 
                     SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
                     SharedPreferenceManager.isPaymentEmpty = response.isNullOrEmpty()
+                    SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(response)
 
                     paymentCards.value = response.toMutableList()
                 } catch (e: Exception) {
@@ -57,6 +58,9 @@ class PaymentWalletRepository(
         return apiService.getPaymentCardAsync(id)
     }
 
+    suspend fun getLocalPaymentCards(): List<PaymentCard> {
+        return paymentCardDao.getAllAsync()
+    }
 
     private fun storePaymentsCards(
         cards: List<PaymentCard>,

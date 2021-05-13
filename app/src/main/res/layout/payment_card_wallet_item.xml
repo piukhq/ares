@@ -47,7 +47,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/margin_padding_size_extra_small"
                     android:layout_weight="1"
-                    android:orientation="vertical" />
+                    android:background="@drawable/bg_barcode"/>
 
                 <RelativeLayout
                     android:id="@+id/delete_layout"
@@ -56,8 +56,7 @@
                     android:layout_marginStart="@dimen/margin_padding_size_extra_small"
                     android:layout_weight="1"
                     android:background="@drawable/bg_delete"
-                    android:gravity="end"
-                    android:orientation="vertical">
+                    android:gravity="end">
 
                     <LinearLayout
                         android:layout_width="wrap_content"

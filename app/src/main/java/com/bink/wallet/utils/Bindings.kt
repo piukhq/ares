@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.LoyaltyCardHeader
 import com.bink.wallet.ModalBrandHeader
 import com.bink.wallet.R
@@ -23,7 +24,8 @@ import com.bink.wallet.model.response.membership_card.MembershipTransactions
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.scenes.loyalty_wallet.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
@@ -42,6 +44,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 
 private const val CONTACT_US = "Contact us"
+private const val HERE = "here"
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipPlan?) {
@@ -63,6 +66,9 @@ fun ImageView.loadImage(item: MembershipPlan?) {
 
 fun getIconTypeFromPlan(item: MembershipPlan?) =
     item?.images?.first { it.type == ImageType.ICON.type }?.url
+
+fun getAlternateHeroTypeFromPlan(item: MembershipPlan?) =
+    item?.images?.first { it.type == ImageType.ALTERNATE_HERO.type }?.url
 
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(item: MembershipCard?) {
@@ -120,7 +126,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
         var format: BarcodeFormat? = null
         var shouldShowBarcodeImage = true
         val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
-        val EAN_13_BARCODE_LENGTH_LIMIT = 12
+        val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
 
         when (membershipCard?.membershipCard?.card?.barcode_type) {
             0, null -> format = BarcodeFormat.CODE_128
@@ -144,7 +150,7 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
                     BarcodeFormat.EAN_13 -> {
                         // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
                         // that has a length below or above the specified limits
-                        shouldShowBarcodeImage = barcodeNumberLength == EAN_13_BARCODE_LENGTH_LIMIT
+                        shouldShowBarcodeImage = (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
                     }
                     else -> {
                     }
@@ -212,6 +218,18 @@ fun ImageView.image(plan: MembershipPlan?) {
     }
 }
 
+@BindingAdapter("cardOnBoarding")
+fun ImageView.loadAlternateHeroImage(plan: MembershipPlan?) {
+        try {
+            Glide.with(context)
+                .load(getAlternateHeroTypeFromPlan(plan))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(this)
+        } catch (e: NoSuchElementException) {
+            logError("loadImage", e.localizedMessage, e)
+        }
+
+}
 
 @BindingAdapter("membershipCard", "membershipPlan", requireAll = true)
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
@@ -589,4 +607,20 @@ fun TextView.setPreferenceLabel(preferenceLabel: String?, preferenceSlug: String
     } else {
         preferenceLabel
     }
+}
+
+@BindingAdapter("pllEmptyPendingFaq")
+fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
+    UtilFunctions.buildHyperlinkSpanStringWithoutUrl(
+        context.getString(R.string.pll_empty_faqs_description),
+        HERE, this, hyperlinkClick
+    )
+
+}
+
+@BindingAdapter("itemDecorationSpacing")
+fun RecyclerView.setItemDecorationSpacing(spacingPx:Float){
+    addItemDecoration(
+        RecyclerViewItemDecoration()
+    )
 }

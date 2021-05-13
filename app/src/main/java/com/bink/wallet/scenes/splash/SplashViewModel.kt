@@ -2,11 +2,13 @@ package com.bink.wallet.scenes.splash
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.settings.UserRepository
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 
 class SplashViewModel(val loginRepository: LoginRepository, val userRepository: UserRepository) : BaseViewModel() {
@@ -32,6 +34,16 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
     }
 
     fun getCurrentUser() {
-        userRepository.getUserDetails(_getUserResponse)
+        viewModelScope.launch {
+            try {
+                val user =
+                    userRepository.getUserDetails()
+
+                _getUserResponse.value = user
+            } catch (e: Exception) {
+
+            }
+
+        }
     }
 }

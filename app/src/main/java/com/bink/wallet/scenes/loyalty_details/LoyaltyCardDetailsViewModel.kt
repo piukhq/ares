@@ -5,18 +5,18 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.membership_plan.Images
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.enums.LinkStatus
 import com.bink.wallet.utils.enums.LoginStatus
-import com.bink.wallet.utils.logDebug
 
 
 class LoyaltyCardDetailsViewModel(private val repository: LoyaltyCardDetailsRepository) :
     BaseViewModel() {
     // Data Region
-    val tiles = MutableLiveData<List<String>>()
+    val tiles = MutableLiveData<List<Images>>()
     val membershipPlan = MutableLiveData<MembershipPlan>()
     val membershipCard = MutableLiveData<MembershipCard>()
     private val paymentCards = MutableLiveData<List<PaymentCard>>()

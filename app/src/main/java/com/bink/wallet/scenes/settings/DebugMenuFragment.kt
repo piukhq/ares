@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.settings
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
@@ -15,10 +16,13 @@ import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.DebugItemType
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.utils.*
+import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
+import com.bink.wallet.utils.local_point_scraping.PointScrapingUtil
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
     override val layoutRes: Int
@@ -99,6 +103,37 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             DebugItemType.FORCE_CRASH -> {
                 throw RuntimeException()
             }
+            DebugItemType.TESCO_LPS -> {
+                launchTescoLPSDialog()
+            }
+            DebugItemType.CARD_ON_BOARDING -> {
+                displayStatePicker()
+            }
+        }
+    }
+
+    private fun launchTescoLPSDialog() {
+        val dialog: androidx.appcompat.app.AlertDialog
+        context?.let { context ->
+            val builder = androidx.appcompat.app.AlertDialog.Builder(context)
+            builder.setTitle("Enter Tesco Credentials")
+            val container = layoutInflater.inflate(R.layout.layout_lps_login, null)
+            val etFirstName = container.findViewById<EditText>(R.id.et_email)
+            val etSecondName = container.findViewById<EditText>(R.id.et_password)
+
+            builder.setView(container).setPositiveButton("Okay", null)
+            dialog = builder.create()
+
+            dialog.show()
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+                    PointScrapingUtil
+                        .performScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
+                            logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
+                        }
+                    dialog.dismiss()
+                }
+            }
         }
     }
 
@@ -107,7 +142,8 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         val items =
             arrayOf<CharSequence>(
                 BackendVersion.VERSION_1.name,
-                BackendVersion.VERSION_2.name
+                BackendVersion.VERSION_2.name,
+                BackendVersion.VERSION_3.name
             )
         var selection = -1
         adb.setSingleChoiceItems(items, selection) { d, n ->
@@ -117,12 +153,41 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         adb.setPositiveButton(
             getString(R.string.ok)
         ) { _, _ ->
-            if (selection == 0) {
-                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
-            } else {
-                SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
+            when (selection) {
+                0 -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_1.version
+                1 -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_2.version
+                else -> SharedPreferenceManager.storedBackendVersion = BackendVersion.VERSION_3.version
             }
             shouldApplyChanges = true
+        }
+        adb.setNegativeButton(getString(R.string.cancel_text), null)
+        adb.show()
+    }
+
+    private fun displayStatePicker(){
+        val adb = AlertDialog.Builder(requireContext())
+
+        val items =
+            arrayOf<CharSequence>(
+                "1",
+                "2",
+                "3",
+                "4"
+            )
+        var selection = -1
+        adb.setSingleChoiceItems(items, selection) { d, n ->
+            selection = n
+        }
+
+        adb.setPositiveButton(
+            getString(R.string.ok)
+        ) { _, _ ->
+            when (selection) {
+                0 -> SharedPreferenceManager.cardOnBoardingState = 1
+                1 -> SharedPreferenceManager.cardOnBoardingState = 2
+                2 -> SharedPreferenceManager.cardOnBoardingState = 3
+                3 -> SharedPreferenceManager.cardOnBoardingState = 4
+            }
         }
         adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()

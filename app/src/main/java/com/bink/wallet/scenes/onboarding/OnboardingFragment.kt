@@ -17,6 +17,7 @@ import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_START
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.ONBOARDING_SCROLL_DURATION_SECONDS
 import com.bink.wallet.utils.PAGE_1
 import com.bink.wallet.utils.PAGE_2
@@ -233,6 +234,12 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             try {
                 this.accessToken = accessToken
                 facebookEmail = jsonObject.getString(EMAIL_KEY)
+
+                LocalStoreUtils.setAppSharedPref(
+                    LocalStoreUtils.KEY_EMAIL,
+                    facebookEmail
+                )
+
             } catch (e: JSONException) {
                 if (!::facebookEmail.isInitialized) {
                     facebookEmail = getString(R.string.empty_string)
