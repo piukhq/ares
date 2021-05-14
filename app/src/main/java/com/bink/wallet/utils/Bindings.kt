@@ -5,12 +5,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -119,12 +114,12 @@ fun View.setVisible(isVisible: Boolean) {
 @Parcelize
 data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
-@BindingAdapter("membershipCard", "viewModel", requireAll = false)
-fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?) {
+@BindingAdapter("membershipCard", "viewModel", "isSquare", requireAll = false)
+fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?, isSquare: Boolean = false) {
     if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
-        val heightPx = context.toPixelFromDip(80f)
-        val widthPx = context.toPixelFromDip(320f)
+        val heightPx = context.toPixelFromDip(if (isSquare) 100f else 80f)
+        val widthPx = context.toPixelFromDip(if (isSquare) 100f else 320f)
         val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
         var shouldShowBarcodeImage = true
         val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
@@ -227,12 +222,18 @@ fun ImageView.loadAlternateHeroImage(plan: MembershipPlan?) {
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
     if (plan?.getCardType() != CardType.PLL && !card?.card?.barcode.isNullOrEmpty()) {
-        val isSquareBarcode = false
+        var isSquareBarcode = false
 
         binding.container.visibility = View.GONE
         binding.tapCard.text = when (card?.card?.getBarcodeFormat()) {
-            BarcodeFormat.QR_CODE -> context.getString(R.string.tap_to_enlarge_qr)
-            BarcodeFormat.AZTEC -> context.getString(R.string.tap_to_enlarge_aztec)
+            BarcodeFormat.QR_CODE -> {
+                isSquareBarcode = true
+                context.getString(R.string.tap_to_enlarge_qr)
+            }
+            BarcodeFormat.AZTEC -> {
+                isSquareBarcode = true
+                context.getString(R.string.tap_to_enlarge_aztec)
+            }
             else -> context.getString(R.string.tap_to_enlarge_barcode)
         }
 
@@ -240,13 +241,13 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
             binding.sbBarcodeText.text = card?.card?.barcode!!
             binding.sbTitle.text = context.getString(R.string.bonus_card_number)
             binding.sbCompanyLogo.loadImage(plan)
-            binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
+            binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null, isSquareBarcode)
             binding.squareBarcodeContainer.visibility = View.VISIBLE
         } else {
             binding.rbBarcodeText.text = card?.card?.barcode!!
             binding.rbTitle.text = context.getString(R.string.bonus_card_number)
             binding.rbCompanyLogo.loadImage(plan)
-            binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+            binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null, isSquareBarcode)
             binding.rectangleBarcodeContainer.visibility = View.VISIBLE
         }
 
