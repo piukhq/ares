@@ -12,14 +12,9 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.SecurityUtils
-import com.bink.wallet.utils.SentryErrorType
-import com.bink.wallet.utils.SentryUtils
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.generateUuidForMembershipCards
-import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
 
 class LoyaltyWalletRepository(
@@ -214,7 +209,7 @@ class LoyaltyWalletRepository(
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
                     createError.value = e
-                    SentryUtils.logError(SentryErrorType.API_REJECTED,e)
+                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
                 }
             }
         }
@@ -240,6 +235,7 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
+                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
                 }
             }
         }
@@ -261,6 +257,7 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
+                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
                 }
             }
         }
@@ -374,6 +371,11 @@ class LoyaltyWalletRepository(
                         planFieldRequest.value?.let { safeValue ->
                             val encryptedValue =
                                 SecurityUtils.encryptMessage(safeValue, safePubKey)
+
+                            if(encryptedValue.isEmpty()){
+                                SentryUtils.logError(SentryErrorType.LOYALTY_INVALID_PAYLOAD, Exception("Failed to encrypt ${planFieldRequest.column}"))
+                            }
+
                             planFieldRequest.value = encryptedValue
                         }
 
