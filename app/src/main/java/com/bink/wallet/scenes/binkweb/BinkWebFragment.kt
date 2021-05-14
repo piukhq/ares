@@ -28,20 +28,27 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     private var hasOpenedEmail = false
+    private var hasEncounteredError = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-                binding.webPageLoadingIndicator.visibility = View.VISIBLE
+                try {
+                    binding.webPageLoadingIndicator.visibility = View.VISIBLE
+                } catch (e: Exception) {
+                }
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                binding.webPageLoadingIndicator.visibility = View.GONE
-                binding.buttonBack.isEnabled = binding.webView.canGoBack()
-                binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                try {
+                    binding.webPageLoadingIndicator.visibility = View.GONE
+                    binding.buttonBack.isEnabled = binding.webView.canGoBack()
+                    binding.buttonNext.isEnabled = binding.webView.canGoForward()
+                } catch (e: Exception) {
+                }
             }
 
             override fun onReceivedError(
@@ -49,7 +56,8 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
                 request: WebResourceRequest,
                 error: WebResourceError
             ) {
-                if(isAdded){
+                hasEncounteredError = true
+                if (isAdded && error.errorCode != ERROR_CODE) {
                     binding.webView.visibility = View.INVISIBLE
                     if (request.url.toString().startsWith("mailto:")) {
                         hasOpenedEmail = true
@@ -76,6 +84,11 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             }
         }
 
+        binding.webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+        }
+
         binding.buttonRefresh.setOnClickListener {
             binding.webView.reload()
         }
@@ -100,6 +113,7 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     private fun showWebViewError() {
+        hasEncounteredError = false
         requireContext().displayModalPopup(
             getString(R.string.webview_error_title),
             getString(R.string.webview_error_message),
@@ -108,6 +122,18 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
             },
             isCancelable = false
         )
+    }
+
+    override fun onDestroyView() {
+        binding.webView.webViewClient = null
+        if (hasEncounteredError) {
+            findNavController().navigateUp()
+        }
+        super.onDestroyView()
+    }
+
+    companion object {
+        private const val ERROR_CODE = -2
     }
 
 }

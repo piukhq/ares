@@ -23,6 +23,7 @@ import com.bink.wallet.scenes.add_join.AddJoinRequestPaymentCardViewModel
 import com.bink.wallet.scenes.add_join.AddJoinViewModel
 import com.bink.wallet.scenes.add_payment_card.AddPaymentCardViewModel
 import com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel
+import com.bink.wallet.scenes.dynamic_actions.DynamicActionViewModel
 import com.bink.wallet.scenes.forgot_password.ForgotPasswordViewModel
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.login.LoginViewModel
@@ -30,7 +31,11 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
-import com.bink.wallet.scenes.loyalty_wallet.*
+import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyViewModel
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
@@ -48,6 +53,7 @@ import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
+import com.bink.wallet.scenes.who_we_are.WhoWeAreViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -79,7 +85,7 @@ val viewModelModules = module {
 
     viewModel { BarcodeViewModel() }
 
-    viewModel { AddViewModel(get(),get()) }
+    viewModel { AddViewModel(get(), get()) }
 
     viewModel { AddJoinViewModel(get()) }
 
@@ -98,7 +104,7 @@ val viewModelModules = module {
 
     viewModel { LoyaltyCardRewardsHistoryViewModel() }
 
-    viewModel { PllEmptyViewModel() }
+    viewModel { PllEmptyViewModel(get()) }
 
     viewModel { MaximisedBarcodeViewModel() }
 
@@ -115,7 +121,7 @@ val viewModelModules = module {
 
     viewModel { PaymentCardWalletViewModel(get(), get(), get()) }
 
-    viewModel { PaymentCardsDetailsViewModel(get(), get(),get(),get()) }
+    viewModel { PaymentCardsDetailsViewModel(get(), get(), get(), get()) }
 
     viewModel { BaseModalViewModel() }
 
@@ -124,9 +130,13 @@ val viewModelModules = module {
     single { providePllRepository(get(NetworkQualifiers.BinkApiInterface), get(), get()) }
     viewModel { PllViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get()) }
 
     viewModel { SignUpViewModel(get(), get()) }
+
+    viewModel { WhoWeAreViewModel() }
+
+    viewModel { DynamicActionViewModel(get(), get()) }
 
     single {
         provideAddPaymentCardRepository(
@@ -191,7 +201,7 @@ fun providePllRepository(
     restApiService: ApiService,
     paymentCardDao: PaymentCardDao,
     membershipCardDao: MembershipCardDao
-): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao,membershipCardDao)
+): PaymentWalletRepository = PaymentWalletRepository(restApiService, paymentCardDao, membershipCardDao)
 
 fun provideUserRepository(
     restApiService: ApiService

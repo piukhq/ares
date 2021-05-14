@@ -28,10 +28,11 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.util.*
-
 
 fun Context.toPixelFromDip(value: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics)
@@ -77,6 +78,7 @@ fun Context.displayModalPopup(
     title: String?,
     message: String?,
     okAction: () -> Unit = {},
+    cancelAction: () -> Unit = {},
     buttonText: Int = R.string.ok,
     hasNegativeButton: Boolean = false,
     isCancelable: Boolean = true
@@ -93,6 +95,10 @@ fun Context.displayModalPopup(
 
     builder.setNeutralButton(buttonText) { _, _ ->
         okAction()
+    }
+
+    builder.setOnCancelListener {
+        cancelAction()
     }
 
     builder.setCancelable(isCancelable)
@@ -347,4 +353,43 @@ fun TextView.setTermsAndPrivacyUrls(
     )
     text = checkBoxSpannable
     movementMethod = LinkMovementMethod.getInstance()
+}
+
+fun HttpException.getErrorBody(): String {
+    val errorBody = response()?.errorBody()?.string() ?: "Error body is null or empty"
+
+    try {
+        val jsonObject = JSONObject(errorBody)
+        val keys = jsonObject.keys()
+
+        while (keys.hasNext()) {
+            val key = keys.next()
+            return jsonObject.getString(key)
+        }
+
+    } catch (e: JSONException) {
+        return "Could not deserialise error body"
+    }
+
+    return errorBody
+}
+
+fun String.getSuffixForLPS(): String {
+    val debugSuffix = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        "_debug"
+    } else {
+        ""
+    }
+
+    return "$this${debugSuffix}"
+}
+
+fun String.readFileText(context: Context): String {
+    return try {
+        context.assets?.open(this)?.bufferedReader().use {
+            it?.readText() ?: "JS Error"
+        }
+    } catch (e: Exception) {
+        e.localizedMessage ?: ""
+    }
 }

@@ -15,8 +15,10 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
+import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 
 class GetNewCardFragment : BaseAddAuthFragment() {
 
@@ -48,7 +50,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
                     if (SharedPreferenceManager.addLoyaltyCardSuccessHttpCode == 201) FIREBASE_TRUE else FIREBASE_FALSE
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_SUCCESS, getAddLoyaltyResponseSuccessMap(
-                        ADD_LOYALTY_CARD_ENROL_JOURNEY, status, reasonCode, mPlanId, isAccountNew
+                        ADD_LOYALTY_CARD_ENROL_JOURNEY,it.id, status, reasonCode, mPlanId, isAccountNew
                     )
                 )
             }
@@ -78,19 +80,21 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
         }
 
+
         viewModel.createCardError.observeNonNull(this) {
             val mPlanId = membershipPlanId
 
             if (mPlanId == null) {
                 failedEvent(ADD_LOYALTY_CARD_RESPONSE_FAILURE)
             } else {
+                val httpException = it as HttpException
                 logEvent(
                     ADD_LOYALTY_CARD_RESPONSE_FAILURE, getAddLoyaltyResponseFailureMap(
-                        ADD_LOYALTY_CARD_ENROL_JOURNEY, mPlanId
+                        FirebaseEvents.ADD_LOYALTY_CARD_REGISTER_JOURNEY, mPlanId, httpException.code(), httpException.getErrorBody()
                     )
                 )
-            }
 
+            }
         }
     }
 

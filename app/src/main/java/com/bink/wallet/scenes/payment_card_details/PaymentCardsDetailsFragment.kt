@@ -26,6 +26,7 @@ import com.bink.wallet.utils.PaymentCardUtils
 import com.bink.wallet.utils.SANDBOX_ARTICLE_ID
 import com.bink.wallet.utils.SCROLL_DELAY
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
+import com.bink.wallet.utils.WalletOrderingUtil
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.goToContactUsForm
@@ -196,7 +197,6 @@ class PaymentCardsDetailsFragment :
                     showLinkErrorMessage(it.second)
                 }
             }
-
         }
 
         viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
@@ -266,7 +266,7 @@ class PaymentCardsDetailsFragment :
                     availablePllAdapter = AvailablePllAdapter(
                         pCard,
                         plans,
-                        pllCards,
+                        WalletOrderingUtil.getSavedLoyaltyCardWallet(pllCards as ArrayList<Any>) as ArrayList<MembershipCard>,
                         onLinkStatusChange = ::onLinkStatusChange,
                         onItemSelected = ::onItemSelected
                     )

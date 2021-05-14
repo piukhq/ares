@@ -8,7 +8,9 @@ import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.getCategories
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.*
 
@@ -39,7 +41,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
             membershipPlans.sortedByCardTypeAndCompany(),
             membershipCardIds
         )
-        this.membershipPlans.value = membershipPlans
+        this.membershipPlans.value = membershipPlans.filter { it.getCardType() != CardType.COMING_SOON }
         this.membershipCardIds.value = membershipCardIds
         _filteredBrandItems.value = formattedBrandItems
         _activeFilters.value = membershipPlans.getCategories()
@@ -81,30 +83,68 @@ class BrowseBrandsViewModel : BaseViewModel() {
         membershipCardIds: List<String>
     ): List<BrowseBrandsListItem> {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
-        var hasAllSubtitle = false
 
-        if (membershipPlans.firstOrNull()?.isPlanPLL() == true) {
-            browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.pll_title))
-        }
-        membershipPlans.forEachIndexed { index, membershipPlan ->
-            val isLast = index == membershipPlans.size - 1
-            var isBeforeSectionTitle = false
+        val (pllCards, RestOfCards) = membershipPlans.partition { it.isPlanPLL() }
 
-            if (!membershipPlan.isPlanPLL() && !hasAllSubtitle) {
-                browseBrandsItems.add(BrowseBrandsListItem.SectionTitleItem(R.string.all_text))
-                hasAllSubtitle = true
-            }
-            if (!isLast && !membershipPlans[index + 1].isPlanPLL() && !hasAllSubtitle) {
-                isBeforeSectionTitle = true
-            }
+        val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
+            .partition { WebScrapableManager.isCardScrapable(it.id) }
+
+        if (pllCards.isNotEmpty()) {
             browseBrandsItems.add(
-                BrowseBrandsListItem.BrandItem(
-                    membershipPlan,
-                    membershipPlan.id in membershipCardIds,
-                    !isLast && !isBeforeSectionTitle
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.pll_title,
+                    R.string.pll_browse_brands_description
                 )
             )
+            pllCards.forEachIndexed { index, membershipPlan ->
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, pllCards.size - 1)
+                    )
+                )
+            }
         }
+
+        if (scrapableCards.isNotEmpty()) {
+            browseBrandsItems.add(
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.balance_text,
+                    R.string.balance_description
+                )
+            )
+
+            scrapableCards.forEachIndexed { index, membershipPlan ->
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, scrapableCards.size - 1)
+                    )
+                )
+            }
+        }
+
+        if (storeCards.isNotEmpty()) {
+            browseBrandsItems.add(
+                BrowseBrandsListItem.SectionTitleItem(
+                    R.string.store_barcode,
+                    R.string.store_barcode_description
+                )
+            )
+
+            storeCards.forEachIndexed { index, membershipPlan ->
+                browseBrandsItems.add(
+                    BrowseBrandsListItem.BrandItem(
+                        membershipPlan,
+                        membershipPlan.id in membershipCardIds,
+                        isLastItem(index, storeCards.size - 1)
+                    )
+                )
+            }
+        }
+
         return browseBrandsItems
     }
 
@@ -116,5 +156,9 @@ class BrowseBrandsViewModel : BaseViewModel() {
             filters.remove(brandFilter.category)
         }
         _activeFilters.value = filters
+    }
+
+    private fun isLastItem(currentIndex: Int, lastIndex: Int): Boolean {
+        return currentIndex != lastIndex
     }
 }

@@ -11,5 +11,6 @@ data class Images(
     val type: Int?,
     val url: String?,
     val description: String?,
-    val encoding: String?
+    val encoding: String?,
+    val cta_url: String?
 ) : Parcelable

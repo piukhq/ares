@@ -3,8 +3,6 @@ package com.bink.wallet.scenes.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,22 +14,20 @@ import com.bink.wallet.modal.generic.GenericModalParameters
 import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
-import com.bink.wallet.model.auth.User
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.putSessionHandlerNavigationDestination
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import zendesk.core.AnonymousIdentity
 import zendesk.core.Zendesk
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
-import zendesk.support.requestlist.RequestListActivity
 
 class SettingsFragment :
     BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
@@ -89,7 +85,7 @@ class SettingsFragment :
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
         }
-        initZendesk()
+
     }
 
     private fun settingsItemClick(item: SettingsItem) {
@@ -124,6 +120,11 @@ class SettingsFragment :
                 )
             }
             SettingsItemType.FAQS -> {
+                if (Zendesk.INSTANCE.identity == null){
+                    viewModel.setIdentity()
+
+                }
+
                 val articleConfig = ViewArticleActivity.builder()
                     .withContactUsButtonVisible(false)
                     .config()
@@ -158,6 +159,11 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
+            SettingsItemType.WHO_WE_ARE ->{
+                findNavController().navigate(
+                    SettingsFragmentDirections.settingsToWhoAreWe()
+                )
+            }
             SettingsItemType.TERMS_AND_CONDITIONS,
             SettingsItemType.PRIVACY_POLICY -> {
                 item.url?.let { url ->
@@ -168,11 +174,8 @@ class SettingsFragment :
             }
 
             SettingsItemType.CONTACT_US -> {
-                if (viewModel.shouldShowUserDetailsDialog()) {
-                    buildAndShowUserDetailsDialog()
-                } else {
-                    RequestListActivity.builder()
-                        .show(requireActivity())
+                viewModel.launchZendesk(this) { user ->
+                    viewModel.putUserDetails(user)
                 }
             }
 
@@ -236,57 +239,4 @@ class SettingsFragment :
         }
     }
 
-    private fun initZendesk() {
-        setZendeskIdentity(
-            viewModel.getUserEmail(),
-            viewModel.getUsersFirstName(),
-            viewModel.getUsersLastName()
-        )
-    }
-
-    private fun buildAndShowUserDetailsDialog() {
-        val dialog: AlertDialog
-        val builder = AlertDialog.Builder(requireActivity())
-        builder.setTitle(getString(R.string.zendesk_user_details_prompt_title))
-        val container = layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
-        val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
-        val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
-        builder.setView(container)
-            .setPositiveButton(
-                getString(R.string.zendesk_user_details_prompt_cta), null
-            )
-            .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
-                dialog.cancel()
-            }
-        dialog = builder.create()
-        dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            .setOnClickListener {
-                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    setZendeskIdentity(
-                        viewModel.getUserEmail(),
-                        etFirstName.text.toString(),
-                        etSecondName.text.toString()
-                    )
-                    viewModel.putUserDetails(
-                        User(
-                            etFirstName.text.toString(),
-                            etSecondName.text.toString()
-                        )
-                    )
-                    RequestListActivity.builder()
-                        .show(requireActivity())
-
-                    dialog.dismiss()
-                }
-            }
-    }
-
-    private fun setZendeskIdentity(email: String, firstName: String, lastName: String) {
-        val identity = AnonymousIdentity.Builder()
-            .withEmailIdentifier(email)
-            .withNameIdentifier("$firstName $lastName")
-            .build()
-        Zendesk.INSTANCE.setIdentity(identity)
-    }
 }

@@ -55,6 +55,22 @@ object DebugItemsPopulation {
                 DebugItemType.FORCE_CRASH
             )
         )
+
+        itemsList.add(
+            DebugItem(
+                "Tesco LPS",
+                "Ask's user for their Tesco login",
+                DebugItemType.TESCO_LPS
+            )
+        )
+
+        itemsList.add(
+            DebugItem(
+                "Card on boarding state",
+                "Select how many cards to display",
+                DebugItemType.CARD_ON_BOARDING
+            )
+        )
         return itemsList
     }
 

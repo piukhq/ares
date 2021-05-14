@@ -1,6 +1,11 @@
 package com.bink.wallet.scenes.loyalty_wallet
 
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.utils.LocalStoreUtils
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
@@ -8,8 +13,58 @@ import zendesk.core.AnonymousIdentity
 import zendesk.core.Zendesk
 import zendesk.support.RequestUpdates
 import zendesk.support.Support
+import zendesk.support.requestlist.RequestListActivity
 
 class ZendeskRepository {
+
+    fun launchZendesk(fragment: Fragment, callbackUser: (User) -> Unit) {
+
+        if (shouldShowUserDetailsDialog()) {
+            buildAndShowUserDetailsDialog(fragment, callbackUser)
+        } else {
+            fragment.context?.let { context ->
+                RequestListActivity.builder()
+                    .show(context)
+            }
+        }
+    }
+
+    private fun buildAndShowUserDetailsDialog(fragment: Fragment, callbackUser: (User) -> Unit) {
+        val dialog: AlertDialog
+        fragment.context?.let { context ->
+        val builder = AlertDialog.Builder(context)
+            builder.setTitle(fragment.getString(R.string.zendesk_user_details_prompt_title))
+            val container = fragment.layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
+            val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
+            val etSecondName = container.findViewById<EditText>(R.id.et_last_name)
+            builder.setView(container)
+                .setPositiveButton(
+                    fragment.getString(R.string.zendesk_user_details_prompt_cta), null
+                )
+                .setNegativeButton(fragment.getString(android.R.string.cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+            dialog = builder.create()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener {
+                    if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+                        setIdentity(etFirstName.text.toString(), etSecondName.text.toString())
+                        callbackUser(
+                            User(
+                                etFirstName.text.toString(),
+                                etSecondName.text.toString()
+                            )
+                        )
+
+                        RequestListActivity.builder()
+                            .show(context)
+
+                        dialog.dismiss()
+                    }
+                }
+        }
+    }
 
     fun hasResponseBeenReceived(): Boolean {
         var responseReceived = false
@@ -35,18 +90,7 @@ class ZendeskRepository {
     }
 
     fun shouldShowUserDetailsDialog(): Boolean {
-        var userFirstName = ""
-        var userSecondName = ""
-
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME)?.let { safeFirstName ->
-            userFirstName = safeFirstName
-        }
-
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME)?.let { safeSecondName ->
-            userSecondName = safeSecondName
-        }
-
-        return userFirstName.isEmpty() || userSecondName.isEmpty()
+        return getUsersFirstName().isEmpty() || getUsersLastName().isEmpty()
     }
 
     fun setIdentity(firstName: String = "", lastName: String = "") {
@@ -86,7 +130,6 @@ class ZendeskRepository {
 
         return userLastName
     }
-
 
 
 }

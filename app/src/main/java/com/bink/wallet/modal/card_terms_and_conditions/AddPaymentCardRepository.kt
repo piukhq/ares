@@ -5,7 +5,6 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.MembershipCardDao
 import com.bink.wallet.data.MembershipPlanDao
 import com.bink.wallet.data.PaymentCardDao
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
@@ -16,15 +15,17 @@ import com.bink.wallet.model.spreedly.SpreedlyPaymentMethod
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.InvalidPayloadType
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.RELEASE_BUILD_TYPE
 import com.bink.wallet.utils.SecurityUtils
+import com.bink.wallet.utils.SentryErrorType
+import com.bink.wallet.utils.SentryUtils
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class AddPaymentCardRepository(
     private val apiService: ApiService,
@@ -86,7 +87,7 @@ class AddPaymentCardRepository(
                             last_four_digits = response.transaction.payment_method.last_four_digits
                         }
 
-                        encryptCardDetails(card, cardNumber)
+                        encryptCardDetails(card)
 
                         doAddPaymentCard(
                             card,
@@ -94,14 +95,15 @@ class AddPaymentCardRepository(
                             error,
                             addCardRequestMade
                         )
-                    } catch (e: Exception) {
-                        error.value = e
+                    } catch (exception: Exception) {
+                        error.value = exception
+                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                     }
                 }
             }
         } else {
-            encryptCardDetails(card, cardNumber)
-            doAddPaymentCard(card, mutableAddCard, error,addCardRequestMade)
+            encryptCardDetails(card)
+            doAddPaymentCard(card, mutableAddCard, error, addCardRequestMade)
         }
     }
 
@@ -137,41 +139,30 @@ class AddPaymentCardRepository(
         addCardRequestMade: MutableLiveData<Boolean>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val uuid = UUID.randomUUID().toString()
             val request = apiService.addPaymentCardAsync(card)
-            SharedPreferenceManager.addPaymentCardRequestUuid = uuid
             addCardRequestMade.postValue(true)
             withContext(Dispatchers.Main) {
                 try {
                     val response = request.await()
-                    response.uuid = uuid
                     paymentCardDao.store(response)
                     mutableAddCard.value = response
-                } catch (e: Exception) {
-                    error.value = e
+                } catch (exception: Exception) {
+                    error.value = exception
+
+                    SentryUtils.logError(SentryErrorType.API_REJECTED, exception)
                 }
             }
         }
     }
 
-    private fun encryptCardDetails(card: PaymentCardAdd, cardNumber: String) {
+    private fun encryptCardDetails(card: PaymentCardAdd) {
         card.card.month?.let { safeMonth ->
             card.card.year?.let { safeYear ->
-                var paymentCardHash = SecurityUtils.getPaymentCardHash(
-                    cardNumber,
-                    safeMonth,
-                    safeYear
-                )
-
                 val publicEncryptionKey = LocalStoreUtils.getAppSharedPref(
                     LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY
                 )
 
                 publicEncryptionKey?.let { safeKey ->
-                    val encryptedHash = SecurityUtils.encryptMessage(
-                        paymentCardHash,
-                        publicEncryptionKey
-                    )
                     val encryptedMonth =
                         SecurityUtils.encryptMessage(safeMonth, safeKey)
 
@@ -196,24 +187,29 @@ class AddPaymentCardRepository(
                         )
                     }
 
-                    if (encryptedHash.isNotEmpty()) {
-                        card.card.hash = encryptedHash
-                    }
 
                     if (encryptedMonth.isNotEmpty()) {
                         card.card.month = encryptedMonth
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_MONTH.error)
                     }
 
                     if (encryptedYear.isNotEmpty()) {
                         card.card.year = encryptedYear
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_YEAR.error)
                     }
 
                     if (encryptedFirstSix.isNotEmpty()) {
                         card.card.first_six_digits = encryptedFirstSix
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_FIRST_SIX.error)
                     }
 
                     if (encryptedLastFour.isNotEmpty()) {
                         card.card.last_four_digits = encryptedLastFour
+                    } else {
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_LAST_FOUR.error)
                     }
                 }
             }

@@ -86,7 +86,7 @@
 
     <fragment
         android:id="@+id/loyalty_fragment"
-        android:name="com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragment"
+        android:name="com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment"
         android:label="@string/root" >
 
         <action
@@ -116,6 +116,24 @@
         <action
             android:id="@+id/loyalty_to_add_payment_card"
             app:destination="@id/add_payment_card" />
+
+        <action
+            android:id="@+id/loyalty_to_dynamic_action"
+            app:destination="@id/dynamic_action_fragment" />
+
+        <action
+            android:id="@+id/loyalty_to_browse_brands"
+            app:destination="@+id/browse_brands"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dynamic_action_fragment"
+        android:name="com.bink.wallet.scenes.dynamic_actions.DynamicActionFragment">
+
+        <argument
+            android:name="dynamicActionEvent"
+            app:argType="com.bink.wallet.model.DynamicActionEvent" />
 
     </fragment>
 
@@ -147,6 +165,11 @@
         <action
             android:id="@+id/payment_to_loyalty_wallet"
             app:destination="@+id/loyalty_fragment"/>
+
+        <action
+            android:id="@+id/payment_to_dynamic_action"
+            app:destination="@id/dynamic_action_fragment" />
+
     </fragment>
 
     <fragment
@@ -294,7 +317,7 @@
 
     <fragment
         android:id="@+id/barcode_fragment"
-        android:name="com.bink.wallet.scenes.loyalty_wallet.BarcodeFragment">
+        android:name="com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeFragment">
 
         <argument
             android:name="currentMembershipPlan"
@@ -481,7 +504,7 @@
 
     <fragment
         android:id="@+id/maximised_barcode_fragment"
-        android:name="com.bink.wallet.scenes.loyalty_wallet.MaximisedBarcodeFragment">
+        android:name="com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeFragment">
 
         <argument
             android:name="currentMembershipPlan"
@@ -613,6 +636,9 @@
             android:id="@+id/settings_to_preferences"
             app:destination="@+id/preference_fragment" />
         <action
+            android:id="@+id/settings_to_who_are_we"
+            app:destination="@+id/who_are_we_fragment" />
+        <action
             android:id="@+id/settings_to_debug"
             app:destination="@+id/debug_menu_screen"
             app:enterAnim="@anim/slide_in_right"
@@ -624,6 +650,10 @@
             app:destination="@id/binkWebFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/who_are_we_fragment"
+        android:name="com.bink.wallet.scenes.who_we_are.WhoWeAreFragment" />
 
     <fragment
         android:id="@+id/preference_fragment"
@@ -672,6 +702,11 @@
         <argument
             android:name="genericModalParameters"
             app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
+
+        <argument
+            android:name="planUrl"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

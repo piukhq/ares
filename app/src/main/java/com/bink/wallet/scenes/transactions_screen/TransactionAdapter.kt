@@ -13,14 +13,15 @@ class TransactionAdapter(
 ) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder = TransactionViewHolder(
-        DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.transaction_item,
-            parent,
-            false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder =
+        TransactionViewHolder(
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.transaction_item,
+                parent,
+                false
+            )
         )
-    )
 
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {

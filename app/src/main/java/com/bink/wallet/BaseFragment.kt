@@ -11,9 +11,16 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.scenes.loyalty_wallet.LoyaltyWalletFragmentDirections
+import com.bink.wallet.model.DynamicAction
+import com.bink.wallet.model.DynamicActionEvent
+import com.bink.wallet.model.DynamicActionHandler
+import com.bink.wallet.model.DynamicActionLocation
+import com.bink.wallet.model.DynamicActionScreen
+import com.bink.wallet.model.DynamicActionType
+import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
@@ -25,10 +32,14 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_CALL_TO_ACTION_TYPE
 import com.bink.wallet.utils.FirebaseEvents.ANALYTICS_IDENTIFIER
 import com.bink.wallet.utils.FirebaseEvents.ATTEMPTED_EVENT_KEY
+import com.bink.wallet.utils.FirebaseEvents.DYNAMIC_ACTION_NAME
 import com.bink.wallet.utils.FirebaseEvents.FAILED_EVENT_NO_DATA
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ACCOUNT_IS_NEW_KEY
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_CLIENT_ACCOUNT_ID_KEY
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ERROR_CODE
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_ERROR_MESSAGE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_PAYMENT_SCHEME_KEY
+import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TRIGGER
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_STATUS_KEY
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_SUCCESS_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_LINK_ID_KEY
@@ -36,6 +47,7 @@ import com.bink.wallet.utils.FirebaseEvents.PLL_LOYALTY_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_PAYMENT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_KEY
 import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
+import com.bink.wallet.utils.REMOTE_CONFIG_DYNAMIC_ACTIONS
 import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.hideKeyboard
@@ -45,6 +57,9 @@ import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.sentry.core.Sentry
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -59,7 +74,17 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     abstract val viewModel: VM
 
-    open lateinit var binding: DB
+    open fun createDynamicAction(
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
+    }
+
+    private var _binding: DB? = null
+
+    open val binding get() = _binding!!
+
+    private lateinit var destinationListener: NavController.OnDestinationChangedListener
 
     open lateinit var bottomNavigation: BottomNavigationView
 
@@ -72,7 +97,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     private lateinit var keyboardHiddenListener: ViewTreeObserver.OnGlobalLayoutListener
 
     open fun init(inflater: LayoutInflater, container: ViewGroup) {
-        binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
     }
 
     open fun init() {}
@@ -86,6 +111,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             init(inflater, container)
         }
         init()
+        checkForDynamicActions()
         return binding.root
     }
 
@@ -112,17 +138,138 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         if (this.isAdded) {
-            findNavController().addOnDestinationChangedListener { _, destination, _ ->
-                when (destination.id) {
-                    R.id.loyalty_fragment, R.id.payment_card_wallet -> {
-                        bottomNavigation.visibility =
-                            View.VISIBLE
-                        setUpBottomNavListener()
+             destinationListener =
+                NavController.OnDestinationChangedListener { _, destination, _ ->
+                    when (destination.id) {
+                        R.id.loyalty_fragment, R.id.payment_card_wallet -> {
+                            bottomNavigation.visibility =
+                                View.VISIBLE
+                            setUpBottomNavListener()
+                        }
+                        else -> bottomNavigation.visibility = View.GONE
                     }
-                    else -> bottomNavigation.visibility = View.GONE
+                }
+            findNavController().addOnDestinationChangedListener(destinationListener)
+        }
+    }
+
+    private fun checkForDynamicActions() {
+        getDynamicActionScreenForFragment(
+            this.javaClass.canonicalName ?: ""
+        )?.let { currentDynamicActionScreen ->
+            var dynamicActionsList: ArrayList<DynamicAction>
+
+            try {
+                dynamicActionsList = Gson().fromJson(
+                    FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS),
+                    object : TypeToken<ArrayList<DynamicAction?>?>() {}.type
+                )
+            } catch (e: Exception) {
+                return
+            }
+
+            for (dynamicAction in dynamicActionsList) {
+                if (isDynamicActionInDate(dynamicAction)) {
+                    dynamicAction.locations?.let { dynamicActionLocations ->
+
+                        for (dynamicActionLocation in dynamicActionLocations) {
+                            dynamicActionLocation.screen?.let { dynamicActionScreen ->
+
+                                if (dynamicActionScreen == currentDynamicActionScreen) {
+                                    createDynamicAction(dynamicActionLocation, dynamicAction)
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun getDynamicActionScreenForFragment(fragmentName: String): DynamicActionScreen? {
+        val className = try {
+            fragmentName.split(".").last()
+        } catch (e: Exception) {
+            return null
+        }
+
+        when (className) {
+            "LoyaltyWalletFragment" -> return DynamicActionScreen.LOYALTY_WALLET
+            "PaymentCardWalletFragment" -> return DynamicActionScreen.PAYMENT_WALLET
+        }
+
+        return null
+    }
+
+    fun getEmojiByUnicode(unicode: String?): String {
+        try {
+            if (unicode == null) return ""
+            val trimmedUniCode = unicode.removeRange(0, 2)
+            val longUniCode = trimmedUniCode.toLong(16)
+            return String(Character.toChars(longUniCode.toInt()))
+        } catch (e: Exception) {
+            return ""
+        }
+    }
+
+    fun bindEventToDynamicAction(
+        view: View,
+        dynamicActionLocation: DynamicActionLocation,
+        dynamicAction: DynamicAction
+    ) {
+        dynamicActionLocation.action?.let { action ->
+            when (action) {
+                DynamicActionHandler.SINGLE_TAP -> {
+                    view.setOnClickListener {
+                        dynamicAction.event?.let { event ->
+                            launchDynamicActionEvent(
+                                dynamicAction.type,
+                                event,
+                                dynamicAction.name ?: ""
+                            )
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private fun launchDynamicActionEvent(
+        type: DynamicActionType?,
+        event: DynamicActionEvent,
+        dynamicActionName: String
+    ) {
+        when (type) {
+            DynamicActionType.XMAS -> {
+                val directions = when (findNavController().currentDestination?.id) {
+                    R.id.loyalty_fragment -> LoyaltyWalletFragmentDirections.loyaltyToDynamicAction(
+                        event
+                    )
+                    R.id.payment_card_wallet -> PaymentCardWalletFragmentDirections.paymentToDynamicAction(
+                        event
+                    )
+                    else -> null
+                }
+                directions?.let {
+                    logEvent(
+                        FirebaseEvents.DYNAMIC_ACTION_TRIGGER_EVENT,
+                        getRequestReviewMap(dynamicActionName)
+                    )
+                    findNavController().navigateIfAdded(this, directions)
+                }
+            }
+        }
+    }
+
+    private fun isDynamicActionInDate(dynamicAction: DynamicAction): Boolean {
+        if (dynamicAction.start_date == null || dynamicAction.end_date == null) return false
+        val currentTime = System.currentTimeMillis() / 1000
+        //For testing
+        //val currentTime = 1608537601
+        return currentTime > dynamicAction.start_date && currentTime < dynamicAction.end_date
     }
 
     private fun setUpBottomNavListener() {
@@ -273,22 +420,31 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     protected fun getAddPaymentCardGenericMap(paymentSchemeValue: String): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
+        return map
+    }
+
+    protected fun getAddPaymentCardFailMap(
+        paymentSchemeValue: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
         return map
     }
 
     protected fun getAddPaymentCardResponseSuccessMap(
+        paymentCardId: String,
         paymentSchemeValue: String,
         isAccountNew: String,
         paymentStatus: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
 
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = paymentCardId
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-
-            SharedPreferenceManager.addPaymentCardRequestUuid.toString()
         map[FIREBASE_ACCOUNT_IS_NEW_KEY] = isAccountNew
         map[ADD_PAYMENT_CARD_PAYMENT_STATUS_NEW_KEY] = paymentStatus
 
@@ -303,8 +459,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
         map[ADD_LOYALTY_CARD_SCANNED_CARD_KEY] = isAScannedCard
 
@@ -314,6 +468,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getAddLoyaltyResponseSuccessMap(
         journeyValue: String,
+        loyaltyCardId: String,
         loyaltyStatus: String,
         reasonCode: String,
         membershipPlanId: String,
@@ -321,8 +476,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
         map[FIREBASE_ACCOUNT_IS_NEW_KEY] = isAccountNew
         map[ADD_LOYALTY_CARD_LOYALTY_STATUS_KEY] = loyaltyStatus
         map[ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY] = reasonCode
@@ -333,11 +487,41 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getDeletePaymentCardGenericMap(
         paymentSchemeValue: String,
-        uuid: String
+        paymentCardId: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = paymentCardId
+
+        return map
+    }
+
+    protected fun getDeletePaymentCardFailedMap(
+        paymentSchemeValue: String,
+        paymentCardId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[FIREBASE_PAYMENT_SCHEME_KEY] = getPaymentSchemeType(paymentSchemeValue)
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = paymentCardId
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+
+        return map
+    }
+
+    protected fun getAddLoyaltyResponseFailureMap(
+        journeyValue: String,
+        membershipPlanId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
 
         return map
     }
@@ -348,8 +532,6 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_JOURNEY_KEY] = journeyValue
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] =
-            SharedPreferenceManager.addLoyaltyCardRequestUuid.toString()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = membershipPlanId.toInt()
 
         return map
@@ -357,12 +539,39 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
     protected fun getDeleteLoyaltyCardGenericMap(
         loyaltyPlan: String,
-        uuid: String
+        loyaltyCardId: String
     ): Map<String, Any> {
         val map = HashMap<String, Any>()
         map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
-        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = uuid
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
 
+        return map
+    }
+
+    protected fun getDeleteLoyaltyCardFailMap(
+        loyaltyPlan: String,
+        loyaltyCardId: String,
+        error_code: Int,
+        error_message: String
+    ): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY] = loyaltyPlan.toInt()
+        map[FIREBASE_CLIENT_ACCOUNT_ID_KEY] = loyaltyCardId
+        map[FIREBASE_ERROR_CODE] = error_code
+        map[FIREBASE_ERROR_MESSAGE] = error_message
+
+        return map
+    }
+
+    protected fun getRequestReviewMap(reviewTrigger: String): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[FIREBASE_REQUEST_REVIEW_TRIGGER] = reviewTrigger
+        return map
+    }
+
+    protected fun getDynamicActionMap(dynamicActionName: String): Map<String, Any> {
+        val map = HashMap<String, Any>()
+        map[DYNAMIC_ACTION_NAME] = dynamicActionName
         return map
     }
 
@@ -481,4 +690,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+
+        if (this.isAdded) {
+            findNavController().removeOnDestinationChangedListener(destinationListener)
+        }
+    }
 }
