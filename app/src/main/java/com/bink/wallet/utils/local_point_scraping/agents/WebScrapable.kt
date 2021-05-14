@@ -54,5 +54,6 @@ enum class PointScrapeSite(val remoteName: String, val signInURL: String, val sc
     TESCO("tesco", "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home", "https://secure.tesco.com/Clubcard/MyAccount/home/Home"),
     WATERSTONES("waterstones", "https://www.waterstones.com/plus/signin", "https://www.waterstones.com/account/waterstonescard"),
     SUPERDRUG("superdrug", "https://www.superdrug.com/login", "https://www.superdrug.com/login"),
-    MORRISONS("morrisons", "https://my.morrisons.com/more/#/login", "https://my.morrisons.com/more/#/mypoints")
+    MORRISONS("morrisons", "https://my.morrisons.com/more/#/login", "https://my.morrisons.com/more/#/mypoints"),
+    HEATHROW("heathrow", "https://www.heathrow.com/heathrow-rewards/login", "https://www.heathrow.com/rewards/home")
 }
