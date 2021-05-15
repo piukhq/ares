@@ -36,6 +36,7 @@ class CheckboxViewHolder(
     }
 
     private fun handleCheckBoxChange(item: AddAuthItemWrapper, isChecked: Boolean) {
+        addFormField(item.fieldType as PlanField)
         setFieldRequestValue(item, isChecked.toString())
         checkValidation(null)
     }

@@ -56,6 +56,7 @@ class AddAuthAdapter(
                     }
                     is CheckboxViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
+                        holder.position = position
                         holder.bind(addAuthItem)
                     }
                     is DisplayViewHolder -> {

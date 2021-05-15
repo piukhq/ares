@@ -5,6 +5,7 @@ import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.BaseViewHolder
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 
 abstract class BaseAddAuthViewHolder<T>(
     viewDataBinding: ViewDataBinding
@@ -24,5 +25,13 @@ abstract class BaseAddAuthViewHolder<T>(
     override fun bind(item: T) {}
 
     open fun onBarcodeScanSuccess(){}
+
+    open fun addFormField( planField1: PlanField) {
+        position?.let {
+            FormsUtil.addFormField(it,planField1 )
+        }
+    }
+
+
 
 }
