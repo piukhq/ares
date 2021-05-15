@@ -17,6 +17,7 @@ object FormsUtil {
 
     fun clearForms() {
         fields.clear()
+        planDocuments.clear()
     }
 
     fun updateField(position: Int, value: String) {
