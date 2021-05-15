@@ -6,6 +6,7 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
+import com.bink.wallet.utils.enums.FieldType
 
 class CheckboxViewHolder(
     val binding: AddAuthCheckboxItemBinding,
@@ -14,6 +15,9 @@ class CheckboxViewHolder(
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
     override fun bind(item: AddAuthItemWrapper) {
+        if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+            addFormField(item.fieldType as PlanField)
+        }
         with(binding) {
             item.fieldsRequest?.let {
                 contentAddAuthCheckbox.isChecked = if (it.value == true.toString()) {
@@ -23,6 +27,10 @@ class CheckboxViewHolder(
                         it.value = false.toString()
                     }
                     false
+                }
+
+                if (item.getFieldType() == AddAuthItemType.PLAN_DOCUMENT){
+                    addPlanDocument(contentAddAuthCheckbox.isChecked)
                 }
             }
             setDescriptionText(this, item)
@@ -36,7 +44,12 @@ class CheckboxViewHolder(
     }
 
     private fun handleCheckBoxChange(item: AddAuthItemWrapper, isChecked: Boolean) {
-        addFormField(item.fieldType as PlanField)
+        if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+            updateFieldValue(isChecked.toString())
+            if (isChecked) updateValidation(true) else updateValidation(false)
+        } else {
+                addPlanDocument(isChecked)
+        }
         setFieldRequestValue(item, isChecked.toString())
         checkValidation(null)
     }

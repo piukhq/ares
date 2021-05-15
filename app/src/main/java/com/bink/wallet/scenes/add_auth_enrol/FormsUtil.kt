@@ -7,6 +7,7 @@ import com.bink.wallet.utils.UtilFunctions
 object FormsUtil {
 
     private var fields = mutableMapOf<Int, FormField>()
+    private var planDocuments = mutableMapOf<Int, Boolean>()
 
     fun addFormField(position: Int, planField: PlanField) {
         fields.put(position, FormField(planField, PlanFieldsRequest(planField.column, null, null)))
@@ -31,9 +32,29 @@ object FormsUtil {
 
     fun returnForms() = fields
 
+    fun returnPlanDocument() = planDocuments
+
     fun areAllFieldsValid(): Boolean {
+        return areAllFormFieldsValid() && areAllPlanDocumentsValid()
+    }
+
+    fun addPlanDocument(position: Int, hasBeenTicked: Boolean) {
+        planDocuments.put(position, hasBeenTicked)
+    }
+
+    private fun areAllFormFieldsValid(): Boolean {
         fields.forEach { field ->
-            if (!field.value.isValidField){
+            if (!field.value.isValidField) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    private fun areAllPlanDocumentsValid(): Boolean {
+        planDocuments.forEach { planDocument ->
+            if (!planDocument.value) {
                 return false
             }
         }

@@ -70,6 +70,7 @@ class AddAuthAdapter(
                     (holder as DisplayViewHolder).bind(addAuthItem)
                 } else {
                     holder.setFieldRequestValue = ::setFieldRequest
+                    holder.position = position
                     (holder as CheckboxViewHolder).bind(addAuthItem)
                 }
             } else {

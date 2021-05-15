@@ -171,6 +171,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 viewModel.descriptionText.get(),
                 checkValidation = {
                     logDebug("BaseAA","List is "+ FormsUtil.returnForms().toString())
+                    logDebug("BaseAA","PlanDocument "+ FormsUtil.returnPlanDocument().toString())
 //                    if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
 //                        viewModel.haveValidationsPassed.set(false)
 //                        return@AddAuthAdapter
