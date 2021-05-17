@@ -372,9 +372,9 @@ class TextFieldViewHolder(
                     R.string.add_auth_error_message,
                     currentPlanField.column
                 )
-                position?.let { FormsUtil.updateValidation(it,false) }
+//                position?.let { FormsUtil.updateValidation(it,false) }
             } else {
-                position?.let { FormsUtil.updateValidation(it,true) }
+//                position?.let { FormsUtil.updateValidation(it,true) }
 
             }
         }

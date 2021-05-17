@@ -7,6 +7,7 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.BARCODE
 import com.bink.wallet.utils.CARD_NUMBER
@@ -59,17 +60,18 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         membershipCardId: String,
         membershipPlan: MembershipPlan
     ) {
-        val account: Account? = when (SharedPreferenceManager.isNowBarcode) {
-            true -> getBarcodeFieldRequestAccount(
-                addRegisterFieldsRequest.value
-            )
-            else -> if (SharedPreferenceManager.isNowCardNumber) {
-                getCardNumberFieldRequestAccount(addRegisterFieldsRequest.value)
-
-            } else {
-                addRegisterFieldsRequest.value
-            }
-        }
+        val account: Account? = FormsUtil.getAccount()
+//            when (SharedPreferenceManager.isNowBarcode) {
+//            true -> getBarcodeFieldRequestAccount(
+//                addRegisterFieldsRequest.value
+//            )
+//            else -> if (SharedPreferenceManager.isNowCardNumber) {
+//                getCardNumberFieldRequestAccount(addRegisterFieldsRequest.value)
+//
+//            } else {
+//                addRegisterFieldsRequest.value
+//            }
+//        }
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
         val strippedRequest = WebScrapableManager.setUsernameAndPassword(currentRequest)

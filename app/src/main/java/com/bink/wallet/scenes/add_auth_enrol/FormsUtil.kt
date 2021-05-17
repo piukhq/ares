@@ -28,6 +28,8 @@ object FormsUtil {
         val form = fields.get(position)
 
         form?.fieldsRequest?.value = value
+
+        form?.isValidField = UtilFunctions.isValidField(form?.planField?.validation,value)
     }
 
     fun updateValidation(position: Int, isValid: Boolean) {
@@ -110,4 +112,5 @@ object FormsUtil {
 
         return true
     }
+
 }
