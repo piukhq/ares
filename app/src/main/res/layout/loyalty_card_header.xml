@@ -168,7 +168,6 @@
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
                 tools:background="@color/black"
                 tools:layout_height="@dimen/loyalty_card_details_header_min_height">
 
