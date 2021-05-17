@@ -50,6 +50,7 @@ object SharedPreferenceManager {
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
     private const val HAS_BARCODE_BEEN_SCANNED = "has_barcode_been_scanned"
+    private const val LOYALTY_WALLET_POSITION = "loyalty_wallet_position"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -278,6 +279,12 @@ object SharedPreferenceManager {
     set(value) = preferences.edit {
         it.putInt(CARD_ON_BOARDING_STATE,value)
     }
+
+    var loyaltyWalletPosition:Int
+        get() = preferences.getInt(LOYALTY_WALLET_POSITION,0)
+        set(value) = preferences.edit {
+            it.putInt(LOYALTY_WALLET_POSITION,value)
+        }
 
     fun clear() {
         /**
