@@ -32,7 +32,7 @@ class SpinnerViewHolder(
                 )
                 position?.let { position ->
                     FormsUtil.updateField(position,(it.fieldType as PlanField).choice?.get(pos).toString())
-                     FormsUtil.updateValidation(position,false)
+                     FormsUtil.updateValidation(position,true)
                 }
             }
         }
@@ -47,6 +47,7 @@ class SpinnerViewHolder(
         position?.let {
             FormsUtil.addFormField(it,planField)
             FormsUtil.updateField(it,planField.choice?.get(0).toString())
+            FormsUtil.updateValidation(it,true)
         }
 
         setFieldRequestValue(item, planField.choice?.get(0).toString())
