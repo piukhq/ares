@@ -26,9 +26,9 @@ abstract class BaseAddAuthViewHolder<T>(
 
     open fun onBarcodeScanSuccess() {}
 
-    open fun addFormField(planField1: PlanField) {
+    open fun addFormField(planField: PlanField) {
         position?.let {
-            FormsUtil.addFormField(it, planField1)
+            FormsUtil.addFormField(it, planField)
         }
     }
 

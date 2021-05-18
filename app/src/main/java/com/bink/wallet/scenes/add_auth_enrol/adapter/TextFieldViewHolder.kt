@@ -47,12 +47,10 @@ class TextFieldViewHolder(
             p2: Int,
             p3: Int
         ) {
-            //when this changes,update what we have in the form field
-            //We do so by using the position,then updating the request field
             item?.let {
                 setFieldRequestValue(it, currentText.toString())
                 SharedPreferenceManager.cardNumberValue = currentText.toString()
-                position?.let { it1 -> updateField(it1, currentText) }
+                updateFieldValue(currentText.toString())
             }
             checkValidation(fieldValidation)
         }
@@ -91,7 +89,7 @@ class TextFieldViewHolder(
         isCardNumberField = false
         isBarcodeField = false
 
-        position?.let { FormsUtil.addFormField(it,planField) }
+        addFormField(planField)
 
         binding.planField = planField
 
@@ -372,10 +370,6 @@ class TextFieldViewHolder(
                     R.string.add_auth_error_message,
                     currentPlanField.column
                 )
-//                position?.let { FormsUtil.updateValidation(it,false) }
-            } else {
-//                position?.let { FormsUtil.updateValidation(it,true) }
-
             }
         }
     }
@@ -419,9 +413,7 @@ class TextFieldViewHolder(
                     binding.tvDatePicker.text = strDate.toString()
                     item?.let {
                         setFieldRequestValue(it, strDate.toString())
-                        position?.let {
-                            updateField(it,strDate.toString())
-                        }
+                        updateFieldValue(strDate.toString())
                     }
                     checkValidation(null)
                 },
