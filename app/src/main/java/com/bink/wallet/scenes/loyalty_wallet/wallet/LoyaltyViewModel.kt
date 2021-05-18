@@ -16,12 +16,7 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class LoyaltyViewModel constructor(
     private val loyaltyWalletRepository: LoyaltyWalletRepository,

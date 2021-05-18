@@ -64,6 +64,13 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
+    override fun onPause() {
+        binding.paymentCardRecycler.layoutManager?.let { layoutManager ->
+            SharedPreferenceManager.paymentWalletPosition = layoutManager.onSaveInstanceState()
+        }
+        super.onPause()
+    }
+
     private var simpleCallback: ItemTouchHelper.SimpleCallback = object :
         ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP + ItemTouchHelper.DOWN,
@@ -425,5 +432,11 @@ class PaymentCardWalletFragment :
         }
 
         walletAdapter.notifyDataSetChanged()
+
+        SharedPreferenceManager.paymentWalletPosition?.let {
+            binding.paymentCardRecycler.layoutManager?.onRestoreInstanceState(it)
+            SharedPreferenceManager.paymentWalletPosition = null
+        }
+
     }
 }
