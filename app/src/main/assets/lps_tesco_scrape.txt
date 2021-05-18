@@ -1,4 +1,4 @@
-var queryString = ".pointvalue"
+var queryString = "#pointSummary [class*=Points] [class*=Points]"
 
 performPointsScraping()
 
@@ -11,9 +11,12 @@ function performPointsScraping() {
             "error_message": "Element for query string not found."
         }
     } else {
+	var num = p.innerHTML.match(/\d+/);
+
         return {
-            "success": true,
-            "points": p.innerHTML
+	    "success": true,
+            "points": num[0]
         }
+        
     }
 }
