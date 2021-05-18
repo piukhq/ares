@@ -56,10 +56,6 @@ class TextFieldViewHolder(
         }
     }
 
-    private fun updateField(it1: Int, currentText: CharSequence?) {
-        FormsUtil.updateField(it1, value = currentText.toString())
-    }
-
     private val emailTextWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
             currentText: CharSequence?,
@@ -72,10 +68,7 @@ class TextFieldViewHolder(
                     it,
                     currentText.toString().toLowerCase(Locale.ROOT)
                 )
-
-                position?.let { position ->
-                    updateField(position,currentText.toString().toLowerCase(Locale.ROOT))
-                }
+                updateFieldValue(currentText.toString().toLowerCase(Locale.ROOT))
             }
             checkValidation(null)
         }
