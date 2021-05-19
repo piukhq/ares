@@ -27,9 +27,11 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
                 account.add_fields?.forEach { planField ->
                     addPlans.add(planField)
                     if (shouldExcludeBarcode && !planField.common_name.equals(BARCODE)) {
+                        //card field
                         planField.typeOfField = TypeOfField.ADD
                         addPlanField(planField)
                     } else if (!shouldExcludeBarcode && !planField.common_name.equals(CARD_NUMBER)) {
+                        //barcode
                         planField.typeOfField = TypeOfField.ADD
                         addPlanField(planField)
                     }

@@ -95,14 +95,16 @@ class TextFieldViewHolder(
                 createDateAndShowPicker(it)
             }
 
-            setText(planRequest?.value)
-
-
             if (planField.common_name == SignUpFieldTypes.EMAIL.common_name) {
                 addTextChangedListener(emailTextWatcher)
             } else {
                 addTextChangedListener(textWatcher)
             }
+
+            planRequest?.value.let {
+                setText(it)
+            }
+
             if (planRequest?.value.isNullOrBlank()) {
                 error = null
             } else {
