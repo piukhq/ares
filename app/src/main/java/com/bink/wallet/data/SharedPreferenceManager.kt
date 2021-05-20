@@ -2,6 +2,7 @@ package com.bink.wallet.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Parcelable
 
 object SharedPreferenceManager {
 
@@ -278,6 +279,9 @@ object SharedPreferenceManager {
     set(value) = preferences.edit {
         it.putInt(CARD_ON_BOARDING_STATE,value)
     }
+
+    var loyaltyWalletPosition : Parcelable? = null
+    var paymentWalletPosition : Parcelable? = null
 
     fun clear() {
         /**
