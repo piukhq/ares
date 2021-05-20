@@ -13,7 +13,7 @@ object FormsUtil {
     private var planDocuments = mutableMapOf<Int, Boolean>()
 
     fun addFormField(position: Int, planField: PlanField) {
-        fields.put(position, FormField(planField, PlanFieldsRequest(planField.column, null, null)))
+        fields[position] = FormField(planField, PlanFieldsRequest(planField.column, null, null))
     }
 
     fun getSize() = fields.size
@@ -25,7 +25,7 @@ object FormsUtil {
 
     fun updateField(position: Int, value: String) {
         //Update the
-        val form = fields.get(position)
+        val form = fields[position]
 
         form?.fieldsRequest?.value = value
 
@@ -33,7 +33,7 @@ object FormsUtil {
     }
 
     fun updateValidation(position: Int, isValid: Boolean) {
-        fields.get(position)?.isValidField = isValid
+        fields[position]?.isValidField = isValid
     }
 
     fun returnForms() = fields
@@ -45,7 +45,7 @@ object FormsUtil {
     }
 
     fun addPlanDocument(position: Int, hasBeenTicked: Boolean) {
-        planDocuments.put(position, hasBeenTicked)
+        planDocuments[position] = hasBeenTicked
     }
 
     fun getAccount(): Account {
