@@ -10,7 +10,7 @@ object SentryUtils {
 
         when (exception) {
             is HttpException -> {
-                userInfo = "Error code: ${exception.response()?.errorBody()?.string()} - Error Body: ${exception.code()}"
+                userInfo = "Error code: ${exception.code()} - Error Body: ${exception.response()?.errorBody()?.string()}"
             }
             else -> userInfo = "Error code: ${exception.message}"
         }
@@ -29,6 +29,8 @@ object SentryUtils {
 }
 
 enum class SentryErrorType(val localCode: Int, val issue: String) {
+    LOYALTY_INVALID_PAYLOAD(2000, "Could not construct payload"),
+    LOYALTY_API_REJECTED(2001, "Bink API rejected request"),
     INVALID_PAYLOAD(3000, "Could not construct payload for tokenisation"),
     TOKEN_REJECTED(3001, "Tokenisation service rejected request"),
     API_REJECTED(3002, "Bink API rejected request")

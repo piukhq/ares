@@ -119,6 +119,10 @@
     <string name="loyalty_card_delete_error_message">We encountered an error. Please try again later.</string>
     <string name="loyalty_card_details_register">Register</string>
     <string name="loyalty_card_details_header_placeholder_text">%s Membership Card</string>
+    <string name="tap_to_enlarge_qr">Tap to enlarge QR code</string>
+    <string name="tap_to_enlarge_barcode">Tap to enlarge barcode</string>
+    <string name="tap_to_enlarge_aztec">Tap to enlarge Aztec code</string>
+    <string name="bonus_card_number">Bonus Card number:</string>
 
     <!-- 1.1 -->
     <string name="points_prefix_or_suffix">%1$s %2$s</string>
