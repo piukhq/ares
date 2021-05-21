@@ -82,4 +82,5 @@ const val PAYMENT_CARD_STATUS_PENDING = "pending"
 const val REMOTE_CONFIG_REVIEW_ENABLED = "in_app_review_enabled"
 const val REMOTE_CONFIG_DYNAMIC_ACTIONS = "dynamic_actions"
 const val REMOTE_CONFIG_LPC_MASTER_ENABLED = "LPC_master_enabled"
+const val REMOTE_CONFIG_APP_CONFIGURATION = "app_configuration"
 
