@@ -12,13 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.scenes.add.AddFragmentDirections
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
-import com.bink.wallet.utils.getCategories
-import com.bink.wallet.utils.getOwnedMembershipCardsIds
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -89,6 +85,14 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             viewModel.isFilterSelected.set(!viewModel.isFilterSelected.get())
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
         }
+
+        binding.cvScanLoyaltyCard.setOnClickListener {
+            requestCameraPermissionAndNavigate(true) {
+                val directions = BrowseBrandsFragmentDirections.browseToAdd(null, null, null)
+                findNavController().navigateIfAdded(this, directions)
+            }
+        }
+
         initBrowseBrandsList()
     }
 
