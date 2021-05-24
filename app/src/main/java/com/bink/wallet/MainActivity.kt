@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.AppConfiguration
 import com.bink.wallet.model.isNewVersionAvailable
+import com.bink.wallet.model.skipVersion
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseUserProperties
@@ -194,10 +195,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                         DialogInterface.BUTTON_NEUTRAL -> {
-                            //Not This update
-                        }
-                        DialogInterface.BUTTON_NEGATIVE -> {
-                            //Maybe Later
+                            appConfiguration.skipVersion()
                         }
                     }
                 }

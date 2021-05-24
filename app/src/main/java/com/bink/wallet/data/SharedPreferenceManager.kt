@@ -50,6 +50,7 @@ object SharedPreferenceManager {
     private const val CARD_ON_BOARDING_STATE = "card_on_boarding_state"
     private const val HAS_LAUNCHED_AFTER_API_UPDATE = "has_launched_after_api_update"
     private const val HAS_BARCODE_BEEN_SCANNED = "has_barcode_been_scanned"
+    private const val SKIPPED_APP_VERSION = "skipped_app_version"
 
     //----- PAIRS ----
     private val IS_ADD_JOURNEY = Pair(IS_ADD_JOURNEY_KEY, false)
@@ -273,11 +274,17 @@ object SharedPreferenceManager {
             it.putBoolean(HAS_BARCODE_BEEN_SCANNED, value)
         }
 
-    var cardOnBoardingState:Int
-    get() = preferences.getInt(CARD_ON_BOARDING_STATE,0)
-    set(value) = preferences.edit {
-        it.putInt(CARD_ON_BOARDING_STATE,value)
-    }
+    var cardOnBoardingState: Int
+        get() = preferences.getInt(CARD_ON_BOARDING_STATE, 0)
+        set(value) = preferences.edit {
+            it.putInt(CARD_ON_BOARDING_STATE, value)
+        }
+
+    var skippedAppVersion: Int
+        get() = preferences.getInt(SKIPPED_APP_VERSION, 0)
+        set(value) = preferences.edit {
+            it.putInt(SKIPPED_APP_VERSION, value)
+        }
 
     fun clear() {
         /**
