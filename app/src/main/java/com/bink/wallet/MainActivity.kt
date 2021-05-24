@@ -15,6 +15,11 @@ import com.bink.wallet.model.isNewVersionAvailable
 import com.bink.wallet.model.skipVersion
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_ACTION
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_KEY
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_LATER
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_OPEN_STORE
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_SKIP
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMOTE_CONFIG_APP_CONFIGURATION
@@ -194,9 +199,14 @@ class MainActivity : AppCompatActivity() {
                                 this,
                                 UPDATE_REQUEST_CODE
                             )
+                            firebaseAnalytics.logEvent(UPDATE_ACTION, Bundle().apply { putString(UPDATE_KEY, UPDATE_OPEN_STORE) })
+                        }
+                        DialogInterface.BUTTON_NEGATIVE -> {
+                            firebaseAnalytics.logEvent(UPDATE_ACTION, Bundle().apply { putString(UPDATE_KEY, UPDATE_LATER) })
                         }
                         DialogInterface.BUTTON_NEUTRAL -> {
                             appConfiguration.skipVersion()
+                            firebaseAnalytics.logEvent(UPDATE_ACTION, Bundle().apply { putString(UPDATE_KEY, UPDATE_SKIP) })
                         }
                     }
                 }
