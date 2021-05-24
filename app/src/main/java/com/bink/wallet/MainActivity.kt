@@ -18,6 +18,7 @@ import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMOTE_CONFIG_APP_CONFIGURATION
+import com.bink.wallet.utils.UPDATE_REQUEST_CODE
 import com.bink.wallet.utils.enums.BuildTypes
 import com.facebook.login.LoginManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                     appUpdateInfo,
                     IMMEDIATE,
                     this,
-                    1
+                    UPDATE_REQUEST_CODE
                 )
             }
         }
@@ -191,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                                 appUpdateInfo,
                                 IMMEDIATE,
                                 this,
-                                1
+                                UPDATE_REQUEST_CODE
                             )
                         }
                         DialogInterface.BUTTON_NEUTRAL -> {
