@@ -208,5 +208,6 @@
     <!-- On Boarding -->
     <dimen name="card_on_boarding_card_view_elevation">0dp</dimen>
     <dimen name="card_on_boarding_card_view_end_margin">9dp</dimen>
+    <dimen name="scan_icon_size">50dp</dimen>
 
 </resources>
