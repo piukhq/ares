@@ -26,10 +26,10 @@ class SpinnerViewHolder(
             id: Long
         ) {
             item?.let {
-                setFieldRequestValue(
-                    it,
-                    (it.fieldType as PlanField).choice?.get(pos).toString()
-                )
+//                setFieldRequestValue(
+//                    it,
+//                    (it.fieldType as PlanField).choice?.get(pos).toString()
+//                )
                 position?.let { position ->
                     FormsUtil.updateField(position,(it.fieldType as PlanField).choice?.get(pos).toString())
                      FormsUtil.updateValidation(position,true)
@@ -50,7 +50,7 @@ class SpinnerViewHolder(
             FormsUtil.updateValidation(it,true)
         }
 
-        setFieldRequestValue(item, planField.choice?.get(0).toString())
+//        setFieldRequestValue(item, planField.choice?.get(0).toString())
         with(spinner) {
             isFocusable = false
             onItemSelectedListener = itemSelectedListener

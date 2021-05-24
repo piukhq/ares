@@ -48,7 +48,7 @@ class TextFieldViewHolder(
             p3: Int
         ) {
             item?.let {
-                setFieldRequestValue(it, currentText.toString())
+//                setFieldRequestValue(it, currentText.toString())
                 SharedPreferenceManager.cardNumberValue = currentText.toString()
                 updateFieldValue(currentText.toString())
             }
@@ -64,10 +64,10 @@ class TextFieldViewHolder(
             p3: Int
         ) {
             item?.let {
-                setFieldRequestValue(
-                    it,
-                    currentText.toString().toLowerCase(Locale.ROOT)
-                )
+//                setFieldRequestValue(
+//                    it,
+//                    currentText.toString().toLowerCase(Locale.ROOT)
+//                )
                 updateFieldValue(currentText.toString().toLowerCase(Locale.ROOT))
             }
             checkValidation(null)
@@ -407,7 +407,7 @@ class TextFieldViewHolder(
                     val strDate = dateFormatter.format(date)
                     binding.tvDatePicker.text = strDate.toString()
                     item?.let {
-                        setFieldRequestValue(it, strDate.toString())
+//                        setFieldRequestValue(it, strDate.toString())
                         updateFieldValue(strDate.toString())
                     }
                     checkValidation(null)

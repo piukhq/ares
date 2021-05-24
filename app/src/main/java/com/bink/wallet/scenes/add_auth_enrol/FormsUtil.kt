@@ -12,6 +12,7 @@ object FormsUtil {
     private var fields = mutableMapOf<Int, FormField>()
     private var planDocuments = mutableMapOf<Int, Boolean>()
 
+    //Represents an individual formField e.g First name
     fun addFormField(position: Int, planField: PlanField) {
         fields[position] = FormField(planField, PlanFieldsRequest(planField.column, null, null))
     }
@@ -24,7 +25,6 @@ object FormsUtil {
     }
 
     fun updateField(position: Int, value: String) {
-        //Update the
         val form = fields[position]
 
         form?.fieldsRequest?.value = value

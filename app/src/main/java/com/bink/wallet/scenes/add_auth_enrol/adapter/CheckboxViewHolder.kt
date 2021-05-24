@@ -29,6 +29,7 @@ class CheckboxViewHolder(
                 if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
                     addFormField(item.fieldType as PlanField)
                     updateFieldValue(contentAddAuthCheckbox.isChecked.toString())
+                    //As checkbox doesn't have any validation to check against,we manually set it to true
                     updateValidation(true)
                 }
 
