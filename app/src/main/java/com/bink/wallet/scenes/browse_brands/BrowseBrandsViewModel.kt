@@ -148,7 +148,7 @@ class BrowseBrandsViewModel : BaseViewModel() {
 
         if(browseBrandsItems.isNotEmpty()){
             browseBrandsItems.add(0,
-                BrowseBrandsListItem.ScanCardItem("")
+                BrowseBrandsListItem.ScanCardItem()
             )
         }
 

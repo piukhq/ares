@@ -17,5 +17,5 @@ sealed class BrowseBrandsListItem(val id: Int) {
     ) :
         BrowseBrandsListItem(R.layout.item_brands_section_title)
 
-    data class ScanCardItem(val data: String) : BrowseBrandsListItem(R.layout.item_scan_card)
+    class ScanCardItem : BrowseBrandsListItem(R.layout.item_scan_card)
 }
