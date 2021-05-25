@@ -58,6 +58,11 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                     R.id.browse_brands
                 )
             }
+
+            setOnScanItemClickListener(View.OnClickListener {
+                goToScan()
+            })
+
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     if (viewModel.activeFilters.value?.size ==
@@ -84,13 +89,6 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         binding.buttonFilters.setOnClickListener {
             viewModel.isFilterSelected.set(!viewModel.isFilterSelected.get())
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
-        }
-
-        binding.cvScanLoyaltyCard.setOnClickListener {
-            requestCameraPermissionAndNavigate(true) {
-                val directions = BrowseBrandsFragmentDirections.browseToAdd(null, null, null)
-                findNavController().navigateIfAdded(this, directions)
-            }
         }
 
         initBrowseBrandsList()
@@ -128,6 +126,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         val inputMethodManager =
             requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    private fun goToScan() {
+        requestCameraPermissionAndNavigate(true) {
+            val directions = BrowseBrandsFragmentDirections.browseToAdd(null, null, null)
+            findNavController().navigateIfAdded(this, directions)
+        }
     }
 
     companion object {

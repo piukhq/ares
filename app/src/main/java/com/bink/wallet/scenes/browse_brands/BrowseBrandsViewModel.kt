@@ -1,5 +1,6 @@
 package com.bink.wallet.scenes.browse_brands
 
+import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -143,6 +144,12 @@ class BrowseBrandsViewModel : BaseViewModel() {
                     )
                 )
             }
+        }
+
+        if(browseBrandsItems.isNotEmpty()){
+            browseBrandsItems.add(0,
+                BrowseBrandsListItem.ScanCardItem("")
+            )
         }
 
         return browseBrandsItems

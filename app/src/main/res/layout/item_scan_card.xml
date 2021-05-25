@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class=".ScanItemBinding"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_scan_loyalty_card"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_scan_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_padding_size_medium">
+
+                <ImageView
+                    android:id="@+id/iv_scan"
+                    android:layout_width="@dimen/scan_icon_size"
+                    android:layout_height="@dimen/scan_icon_size"
+                    app:srcCompat="@drawable/ic_scan" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_small"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_scan_title"
+                        style="@style/TitleTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scan_loyalty_card"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_scan_subtitle"
+                        style="@style/DescriptionTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scan_loyalty_card_subtitle"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
