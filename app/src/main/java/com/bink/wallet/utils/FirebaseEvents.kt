@@ -90,7 +90,7 @@ object FirebaseEvents {
     const val DYNAMIC_ACTION_NAME = "dynamic_action_name"
     const val DYNAMIC_ACTION_TRIGGER_EVENT = "dynamic_action_triggered"
     const val FIREBASE_ERROR_CODE = "error_code"
-    const val FIREBASE_ERROR_MESSAGE = "earor_message"
+    const val FIREBASE_ERROR_MESSAGE = "error_message"
     const val UPDATE_ACTION = "recommended_app_update_action"
     const val UPDATE_KEY = "user_action"
     const val UPDATE_OPEN_STORE = "open_app_store"
