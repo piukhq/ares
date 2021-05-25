@@ -216,6 +216,7 @@ class MainActivity : AppCompatActivity() {
                 builder.setNeutralButton(getString(R.string.update_skip_version), dialogClickListener)
                 builder.setNegativeButton(getString(R.string.update_maybe_later), dialogClickListener)
                 dialog = builder.create()
+                dialog.setCancelable(false)
                 dialog.show()
 
             }
