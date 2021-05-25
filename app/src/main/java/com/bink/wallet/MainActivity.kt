@@ -26,6 +26,7 @@ import com.bink.wallet.utils.REMOTE_CONFIG_APP_CONFIGURATION
 import com.bink.wallet.utils.UPDATE_REQUEST_CODE
 import com.bink.wallet.utils.enums.BuildTypes
 import com.facebook.login.LoginManager
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
@@ -47,10 +48,12 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
+    private lateinit var appUpdateManager: AppUpdateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
 
         SentryAndroid.init(
@@ -86,7 +89,6 @@ class MainActivity : AppCompatActivity() {
             isFirstLaunch = false
         }
 
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                 appUpdateManager.startUpdateFlowForResult(
@@ -178,7 +180,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkForUpdates() {
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         val appConfiguration: AppConfiguration = Gson().fromJson(FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_APP_CONFIGURATION), object : TypeToken<AppConfiguration>() {}.type)
 
