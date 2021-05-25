@@ -185,7 +185,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 //    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.4.31'
 
-    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+    implementation "androidx.security:security-crypto:1.1.0-alpha01"
 
     // ViewModel & LiveData
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
