@@ -22,16 +22,32 @@ import com.bink.wallet.utils.enums.FieldType
 
 @Suppress("UNCHECKED_CAST")
 class AddAuthAdapter(
-    private val addAuthItems: MutableList<AddAuthItemWrapper>,
-    val membershipPlan: MembershipPlan?,
-    private val headerTitle: String?,
-    private val headerDescription: String?,
+    private var addAuthItems: MutableList<AddAuthItemWrapper>,
+    var membershipPlan: MembershipPlan?,
+    private var headerTitle: String?,
+    private var headerDescription: String?,
     val checkValidation: (String?) -> Unit = {},
     val navigateToHeader: () -> Unit = {},
     val onLinkClickListener: ((String) -> Unit) = {},
     val onNavigateToBarcodeScanListener: ((Account) -> Unit)
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
+
+    private var scannedBarcode: String? = null
+
+    fun setValues(
+        addAuthItems: MutableList<AddAuthItemWrapper>,
+        membershipPlan: MembershipPlan?,
+        headerTitle: String?,
+        headerDescription: String?
+    ) {
+
+        this.addAuthItems = addAuthItems
+        this.membershipPlan = membershipPlan
+        this.headerTitle = headerTitle
+        this.headerDescription = headerDescription
+        notifyDataSetChanged()
+    }
 
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
 
@@ -46,8 +62,9 @@ class AddAuthAdapter(
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.account = membershipPlan?.account
                         holder.position = position
+                        holder.bc = scannedBarcode
                         holder.bind(addAuthItem)
-                        holder.onBarcodeScanSuccess()
+                        holder.onBarcodeScanSuccess(scannedBarcode)
                     }
                     is SpinnerViewHolder -> {
                         holder.setFieldRequestValue = ::setFieldRequest
@@ -76,7 +93,7 @@ class AddAuthAdapter(
             } else {
                 membershipPlan?.let {
                     (holder as HeaderViewHolder).navigateToHeader = navigateToHeader
-                    holder.bind(membershipPlan)
+                    holder.bind(it)
                 }
             }
         }
@@ -88,7 +105,10 @@ class AddAuthAdapter(
         return when (viewType) {
             FieldType.TEXT.type,
             FieldType.SENSITIVE.type -> {
-                TextFieldViewHolder(onNavigateToBarcodeScanListener, (AddAuthTextItemBinding.inflate(inflater)))
+                TextFieldViewHolder(
+                    onNavigateToBarcodeScanListener,
+                    (AddAuthTextItemBinding.inflate(inflater))
+                )
             }
             FieldType.SPINNER.type -> {
                 SpinnerViewHolder(
@@ -150,5 +170,9 @@ class AddAuthAdapter(
 
     private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
         itemWrapper.fieldsRequest?.value = value
+    }
+
+    fun setBc(barcode: String) {
+        scannedBarcode = barcode
     }
 }

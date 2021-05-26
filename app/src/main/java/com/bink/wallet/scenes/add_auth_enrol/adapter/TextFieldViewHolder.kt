@@ -12,7 +12,6 @@ import com.bink.wallet.databinding.AddAuthTextItemBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
-import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.DATE_FORMAT
@@ -130,32 +129,32 @@ class TextFieldViewHolder(
                 false
             }
 
-//            if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
-//                    .isEmpty() && hasBarcodeCommonName()
-//            ) {
-//                isCardNumberField = true
-//                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-//                onTouchListener(false, planField)
-//                SharedPreferenceManager.isNowBarcode = false
-//                SharedPreferenceManager.isScannedCard = true
-//
-//                addTextChangedListener(object : SimplifiedTextWatcher {
-//                    override fun onTextChanged(
-//                        s: CharSequence?,
-//                        start: Int,
-//                        before: Int,
-//                        count: Int
-//                    ) {
-//                        if (s.toString().trim().isNotEmpty()) {
-//                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-//                            onTouchListener(true, planField)
-//                        } else {
-//                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-//                            onTouchListener(false, planField)
-//                        }
-//                    }
-//                })
-//            }
+            if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
+                    .isEmpty() && hasBarcodeCommonName()
+            ) {
+                isCardNumberField = true
+                setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                onTouchListener(false, planField)
+                SharedPreferenceManager.isNowBarcode = false
+                SharedPreferenceManager.isScannedCard = true
+
+                addTextChangedListener(object : SimplifiedTextWatcher {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        if (s.toString().trim().isNotEmpty()) {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                            onTouchListener(true, planField)
+                        } else {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            onTouchListener(false, planField)
+                        }
+                    }
+                })
+            }
 
 //            if (planField.common_name.equals(BARCODE) && text.toString().trim()
 //                    .isNotEmpty() && hasCardNumberCommonName()
@@ -199,17 +198,18 @@ class TextFieldViewHolder(
     }
 
 
-    override fun onBarcodeScanSuccess() {
+    override fun onBarcodeScanSuccess(scannedBarcode: String?) {
 
-        if (isCardNumberField || isBarcodeField) {
-            SharedPreferenceManager.scannedLoyaltyBarCode?.let {
-                updateOnSuccess(binding.contentAddAuthText, it)
-                SharedPreferenceManager.isNowBarcode = true
-                SharedPreferenceManager.isNowCardNumber = false
-            }
-            SharedPreferenceManager.scannedLoyaltyBarCode = null
-
-        }
+        binding.contentAddAuthText.setText( scannedBarcode)
+//        if (isCardNumberField || isBarcodeField) {
+//            SharedPreferenceManager.scannedLoyaltyBarCode?.let {
+//                updateOnSuccess(binding.contentAddAuthText, it)
+//                SharedPreferenceManager.isNowBarcode = true
+//                SharedPreferenceManager.isNowCardNumber = false
+//            }
+//            SharedPreferenceManager.scannedLoyaltyBarCode = null
+//
+//        }
     }
 
     private fun updateOnSuccess(et: TextInputEditText, bc: String) {

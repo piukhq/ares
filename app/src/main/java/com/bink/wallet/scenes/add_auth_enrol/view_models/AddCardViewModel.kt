@@ -22,13 +22,14 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
     override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
         super.addItems(membershipPlan, shouldExcludeBarcode)
         val addPlans = mutableListOf<PlanField>()
-        membershipPlan.let {
-            it.account?.let { account ->
+        membershipPlan.let { plan ->
+            plan.account?.let { account ->
                 account.add_fields?.forEach { planField ->
                     addPlans.add(planField)
                     if (shouldExcludeBarcode && !planField.common_name.equals(BARCODE)) {
                         //card field
                         planField.typeOfField = TypeOfField.ADD
+                        planField.alternativePlanField = account.add_fields.firstOrNull { it.common_name.equals(BARCODE) }
                         addPlanField(planField)
                     } else if (!shouldExcludeBarcode && !planField.common_name.equals(CARD_NUMBER)) {
                         //barcode
