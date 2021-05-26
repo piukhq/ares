@@ -40,6 +40,7 @@ class TextFieldViewHolder(
     private var isBarcodeField = false
     private var fieldValidation: String? = null
     private var editText:TextInputEditText? = null
+    private var cardPlanField:PlanField? = null
     private var barcodePlanField:PlanField? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
@@ -162,34 +163,35 @@ class TextFieldViewHolder(
                 })
             }
 
-//            if (planField.common_name.equals(BARCODE) && text.toString().trim()
-//                    .isNotEmpty() && hasCardNumberCommonName()
-//            ) {
-//                isBarcodeField = true
-//                editTextState(false)
-//                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-//                onTouchListener(true, planField)
-//                SharedPreferenceManager.isNowBarcode = true
-//                SharedPreferenceManager.scannedLoyaltyBarCode = planRequest?.value
-//
-//                addTextChangedListener(object : SimplifiedTextWatcher {
-//                    override fun onTextChanged(
-//                        s: CharSequence?,
-//                        start: Int,
-//                        before: Int,
-//                        count: Int
-//                    ) {
-//                        if (s.toString().trim().isNotEmpty()) {
-//                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
-//                            onTouchListener(true, planField)
-//                        } else {
-//                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
-//                            onTouchListener(false, planField)
-//                            binding.titleAddAuthText.text = columnNameForCardNumber
-//                        }
-//                    }
-//                })
-//            }
+            if (planField.common_name.equals(BARCODE) && text.toString().trim()
+                    .isNotEmpty() && hasCardNumberCommonName()
+            ) {
+                isBarcodeField = true
+                cardPlanField = planField.alternativePlanField
+                editTextState(false)
+                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                onTouchListener(true, planField)
+                SharedPreferenceManager.isNowBarcode = true
+                SharedPreferenceManager.scannedLoyaltyBarCode = planRequest?.value
+
+                addTextChangedListener(object : SimplifiedTextWatcher {
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        if (s.toString().trim().isNotEmpty()) {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                            onTouchListener(true, planField)
+                        } else {
+                            setEndDrawable(context.getDrawable(R.drawable.ic_camera))
+                            onTouchListener(false, planField)
+                            binding.titleAddAuthText.text = columnNameForCardNumber
+                        }
+                    }
+                })
+            }
         }
 
         planRequest?.let { safePlan ->
@@ -256,6 +258,10 @@ class TextFieldViewHolder(
 
     private fun TextInputEditText.clearField() {
         this.setText("")
+        val authItemWrapper = cardPlanField?.let { AddAuthItemWrapper(it) }
+        if (authItemWrapper != null) {
+            bind(authItemWrapper)
+        }
         checkValidation(null)
         SharedPreferenceManager.isScannedCard = false
     }

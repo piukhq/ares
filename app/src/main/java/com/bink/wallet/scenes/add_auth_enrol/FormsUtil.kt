@@ -14,7 +14,8 @@ object FormsUtil {
 
     //Represents an individual formField e.g First name
     fun addFormField(position: Int, planField: PlanField) {
-        fields[position] = FormField(planField, PlanFieldsRequest(planField.column, null, null))
+        val isSensitive = planField.type == FieldType.SENSITIVE.type
+        fields[position] = FormField(planField, PlanFieldsRequest(planField.column, null, null,isSensitive = isSensitive))
     }
 
     fun getSize() = fields.size

@@ -29,14 +29,20 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
                     if (shouldExcludeBarcode && !planField.common_name.equals(BARCODE)) {
                         //card field
                         planField.typeOfField = TypeOfField.ADD
-                        planField.alternativePlanField = account.add_fields.firstOrNull { it.common_name.equals(BARCODE) }
+                        planField.alternativePlanField =
+                            account.add_fields.firstOrNull { it.common_name.equals(BARCODE) }
                         addPlanField(planField)
                     } else if (!shouldExcludeBarcode && !planField.common_name.equals(CARD_NUMBER)) {
                         //barcode
                         planField.typeOfField = TypeOfField.ADD
+                        planField.alternativePlanField =
+                            account.add_fields.firstOrNull { it.common_name.equals(CARD_NUMBER) }
                         addPlanField(planField)
                     }
-                    if (!SharedPreferenceManager.hasBarcodeBeenScanned && planField.common_name.equals(CARD_NUMBER)){
+                    if (!SharedPreferenceManager.hasBarcodeBeenScanned && planField.common_name.equals(
+                            CARD_NUMBER
+                        )
+                    ) {
                         planField.typeOfField = TypeOfField.ADD
 
                     }
