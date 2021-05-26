@@ -44,6 +44,10 @@ import java.net.SocketTimeoutException
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
 
+    companion object {
+        const val currentDestination = R.id.loyalty_fragment
+    }
+
     override val viewModel: LoyaltyViewModel by viewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -559,7 +563,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 )
                             findNavController().navigateIfAdded(
                                 this@LoyaltyWalletFragment,
-                                directions
+                                directions,
+                                currentDestination
                             )
                         }
                     }
