@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthTextItemBinding
+import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
@@ -38,6 +39,8 @@ class TextFieldViewHolder(
     private var isCardNumberField = false
     private var isBarcodeField = false
     private var fieldValidation: String? = null
+    private var editText:TextInputEditText? = null
+    private var barcodePlanField:PlanField? = null
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -104,6 +107,7 @@ class TextFieldViewHolder(
                 setText(it)
             }
 
+
             if (planRequest?.value.isNullOrBlank()) {
                 error = null
             } else {
@@ -132,6 +136,8 @@ class TextFieldViewHolder(
             if (planField.common_name.equals(CARD_NUMBER) && text.toString().trim()
                     .isEmpty() && hasBarcodeCommonName()
             ) {
+                editText = this
+                barcodePlanField = planField.alternativePlanField
                 isCardNumberField = true
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                 onTouchListener(false, planField)
@@ -200,7 +206,20 @@ class TextFieldViewHolder(
 
     override fun onBarcodeScanSuccess(scannedBarcode: String?) {
 
-        binding.contentAddAuthText.setText( scannedBarcode)
+        scannedBarcode?.let{ barcode ->
+            val authItemWrapper = barcodePlanField?.let { AddAuthItemWrapper(it, PlanFieldsRequest(null,barcode,)) }
+            if (authItemWrapper != null) {
+                bind(authItemWrapper)
+            }
+            editText?.setText( scannedBarcode)
+            editText?.apply {
+                setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
+                editTextState(false)
+            }
+        }
+
+//        et.setEndDrawable(et.context.getDrawable(R.drawable.ic_clear_search))
+//        et.editTextState(false)
 //        if (isCardNumberField || isBarcodeField) {
 //            SharedPreferenceManager.scannedLoyaltyBarCode?.let {
 //                updateOnSuccess(binding.contentAddAuthText, it)
@@ -236,7 +255,8 @@ class TextFieldViewHolder(
     }
 
     private fun TextInputEditText.clearField() {
-        this.text?.clear()
+        this.setText("")
+        checkValidation(null)
         SharedPreferenceManager.isScannedCard = false
     }
 
