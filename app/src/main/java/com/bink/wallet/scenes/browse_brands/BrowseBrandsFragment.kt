@@ -130,7 +130,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
     private fun goToScan() {
         requestCameraPermissionAndNavigate(true) {
-            val directions = BrowseBrandsFragmentDirections.browseToAdd(null, null, null)
+            val directions = BrowseBrandsFragmentDirections.browseToAdd(args.membershipPlans, args.membershipCards, null)
             findNavController().navigateIfAdded(this, directions)
         }
     }
