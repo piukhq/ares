@@ -73,6 +73,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 }
             })
         }
+        binding.brandsRecyclerView.itemAnimator?.changeDuration = 0
 
         binding.filtersList.layoutManager = GridLayoutManager(context, FILTERS_COLUMNS_COUNT)
         binding.filtersList.adapter = filtersAdapter.apply {
