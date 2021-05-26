@@ -6,6 +6,6 @@
         android:endColor="@color/blue_dark"
         android:startColor="@color/blue_light" />
 
-    <corners android:radius="8dp" />
+    <corners android:radius="@dimen/margin_padding_size_small" />
 
 </shape>

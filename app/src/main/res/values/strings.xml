@@ -51,7 +51,7 @@
     <string name="filter">Filters</string>
     <string name="search">Search</string>
     <string name="browse_brands_no_match_label_text">No matches</string>
-    <string name="scan_loyalty_card">Scan Loyalty Card</string>
+    <string name="scan_loyalty_card">Scan loyalty card</string>
     <string name="scan_loyalty_card_subtitle">Quickly add a card you already have</string>
 
     <!-- Add Join -->
