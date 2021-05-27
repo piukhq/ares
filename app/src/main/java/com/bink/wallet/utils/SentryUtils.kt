@@ -1,6 +1,6 @@
 package com.bink.wallet.utils
 
-import io.sentry.core.Sentry
+import io.sentry.Sentry
 import retrofit2.HttpException
 
 object SentryUtils {
