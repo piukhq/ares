@@ -18,7 +18,6 @@ object FormsUtil {
         fields[position] = FormField(planField, PlanFieldsRequest(planField.column, null, null,isSensitive = isSensitive))
     }
 
-    fun getSize() = fields.size
 
     fun clearForms() {
         fields.clear()
@@ -36,10 +35,6 @@ object FormsUtil {
     fun updateValidation(position: Int, isValid: Boolean) {
         fields[position]?.isValidField = isValid
     }
-
-    fun returnForms() = fields
-
-    fun returnPlanDocument() = planDocuments
 
     fun areAllFieldsValid(): Boolean {
         return areAllFormFieldsValid() && areAllPlanDocumentsValid()
