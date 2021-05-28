@@ -110,14 +110,16 @@ class TextFieldViewHolder(
                 addTextChangedListener(textWatcher)
             }
 
-//            if (!fieldValue.isNullOrEmpty()){
-//                setText(fieldValue)
-//            }
+            if (!fieldValue.isNullOrEmpty()){
+                setText(fieldValue)
+            }
+
             setFieldValue(this)
 
             if (planRequest?.value.isNullOrBlank()) {
                 error = null
             } else {
+                setText(planRequest?.value)
                 checkIfFieldIsValid(item)
             }
 
