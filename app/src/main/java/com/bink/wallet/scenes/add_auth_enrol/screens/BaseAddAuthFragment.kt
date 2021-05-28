@@ -71,9 +71,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
         SharedPreferenceManager.isLoyaltySelected = true
 
-        logDebug("BaseAA", "Size is " + FormsUtil.getSize())
-
-
         navigationHandler = AuthNavigationHandler(this, args.membershipPlan)
         animationHelper = AuthAnimationHelper(this, binding, RecyclerViewHelper())
 
@@ -90,8 +87,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             null,
             null,
             checkValidation = {
-                logDebug("BaseAA", "List is " + FormsUtil.returnForms().toString())
-                logDebug("BaseAA", "PlanDocument " + FormsUtil.returnPlanDocument().toString())
                 if (FormsUtil.areAllFieldsValid()) {
                     viewModel.haveValidationsPassed.set(true)
                 } else {

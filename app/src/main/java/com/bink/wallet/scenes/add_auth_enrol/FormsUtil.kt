@@ -32,7 +32,7 @@ object FormsUtil {
 
         form?.isValidField = if (value.isEmpty()) false else UtilFunctions.isValidField(form?.planField?.validation,value)
     }
-    //In some situations
+
     fun updateValidation(position: Int, isValid: Boolean) {
         fields[position]?.isValidField = isValid
     }
@@ -49,6 +49,7 @@ object FormsUtil {
         planDocuments[position] = hasBeenTicked
     }
 
+    //The request object which will be sent in api call
     fun getAccount(): Account {
         val account = Account(
             mutableListOf(),
