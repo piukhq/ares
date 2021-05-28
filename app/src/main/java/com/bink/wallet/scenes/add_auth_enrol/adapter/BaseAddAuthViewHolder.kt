@@ -22,7 +22,9 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var position: Int? = null
 
-    var bc:String? = null
+    var bc: String? = null
+
+    var fieldValue: String? = null
 
     override fun bind(item: T) {}
 
@@ -36,6 +38,7 @@ abstract class BaseAddAuthViewHolder<T>(
 
     open fun updateFieldValue(value: String) {
         position?.let {
+            fieldValue = value
             FormsUtil.updateField(it, value)
         }
     }

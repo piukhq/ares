@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddAuthTextItemBinding
@@ -13,6 +14,7 @@ import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.DATE_FORMAT
@@ -39,9 +41,9 @@ class TextFieldViewHolder(
     private var isCardNumberField = false
     private var isBarcodeField = false
     private var fieldValidation: String? = null
-    private var editText:TextInputEditText? = null
-    private var cardPlanField:PlanField? = null
-    private var barcodePlanField:PlanField? = null
+    private var editText: TextInputEditText? = null
+    private var cardPlanField: PlanField? = null
+    private var barcodePlanField: PlanField? = null
     private var hasAlreadyAddedForm = false
 
     private val textWatcher = object : SimplifiedTextWatcher {
@@ -87,7 +89,7 @@ class TextFieldViewHolder(
         isBarcodeField = false
 
         //As bind gets called multiple times,this is to guard against unnecessarily adding the already existing field again
-        if (!hasAlreadyAddedForm){
+        if (!hasAlreadyAddedForm) {
             addFormField(planField)
         }
 
@@ -108,8 +110,10 @@ class TextFieldViewHolder(
                 addTextChangedListener(textWatcher)
             }
 
-//            setText(planRequest?.value)
-
+//            if (!fieldValue.isNullOrEmpty()){
+//                setText(fieldValue)
+//            }
+            setFieldValue(this)
 
             if (planRequest?.value.isNullOrBlank()) {
                 error = null
@@ -211,12 +215,13 @@ class TextFieldViewHolder(
 
     override fun onBarcodeScanSuccess(scannedBarcode: String?) {
 
-        scannedBarcode?.let{ barcode ->
-            val authItemWrapper = barcodePlanField?.let { AddAuthItemWrapper(it, PlanFieldsRequest(null,barcode,)) }
+        scannedBarcode?.let { barcode ->
+            val authItemWrapper =
+                barcodePlanField?.let { AddAuthItemWrapper(it, PlanFieldsRequest(null, barcode)) }
             if (authItemWrapper != null) {
                 bind(authItemWrapper)
             }
-            editText?.setText( scannedBarcode)
+            editText?.setText(scannedBarcode)
             editText?.apply {
                 setEndDrawable(context.getDrawable(R.drawable.ic_clear_search))
                 editTextState(false)
@@ -445,6 +450,7 @@ class TextFieldViewHolder(
                 Calendar.getInstance().get(Calendar.MONTH),
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
             )
+            setFieldValue(binding.tvDatePicker)
             binding.contentAddAuthText.visibility = View.INVISIBLE
             binding.tvDatePicker.visibility = View.VISIBLE
 
@@ -461,6 +467,23 @@ class TextFieldViewHolder(
         }
     }
 
+    private fun setFieldValue(textInput: TextInputEditText){
+        position?.let {
+            val form = FormsUtil.getFormField(it)
+            if (form != null) {
+                textInput.setText(form.fieldsRequest?.value)
+            }
+        }
+    }
+
+    private fun setFieldValue(textInput: TextView){
+        position?.let {
+            val form = FormsUtil.getFormField(it)
+            if (form != null) {
+                textInput.text = form.fieldsRequest?.value
+            }
+        }
+    }
     companion object {
         private const val BARCODE = "barcode"
         private const val CARD_NUMBER = "card_number"

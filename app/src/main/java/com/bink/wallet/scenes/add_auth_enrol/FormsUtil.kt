@@ -94,6 +94,10 @@ object FormsUtil {
         return account
     }
 
+    fun getFormField(position: Int): FormField? {
+        return fields[position]
+    }
+
     private fun areAllFormFieldsValid(): Boolean {
         fields.forEach { field ->
             if (!field.value.isValidField) {
