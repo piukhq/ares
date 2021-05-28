@@ -32,7 +32,7 @@ object FormsUtil {
 
         form?.isValidField = if (value.isEmpty()) false else UtilFunctions.isValidField(form?.planField?.validation,value)
     }
-
+    //In some situations
     fun updateValidation(position: Int, isValid: Boolean) {
         fields[position]?.isValidField = isValid
     }

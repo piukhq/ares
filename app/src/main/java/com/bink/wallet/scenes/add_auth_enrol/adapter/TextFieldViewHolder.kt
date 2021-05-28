@@ -42,6 +42,7 @@ class TextFieldViewHolder(
     private var editText:TextInputEditText? = null
     private var cardPlanField:PlanField? = null
     private var barcodePlanField:PlanField? = null
+    private var hasAlreadyAddedForm = false
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -85,7 +86,10 @@ class TextFieldViewHolder(
         isCardNumberField = false
         isBarcodeField = false
 
-        addFormField(planField)
+        //As bind gets called multiple times,this is to guard against unnecessarily adding the already existing field again
+        if (!hasAlreadyAddedForm){
+            addFormField(planField)
+        }
 
         binding.planField = planField
 
@@ -104,9 +108,7 @@ class TextFieldViewHolder(
                 addTextChangedListener(textWatcher)
             }
 
-            planRequest?.value.let {
-                setText(it)
-            }
+//            setText(planRequest?.value)
 
 
             if (planRequest?.value.isNullOrBlank()) {
@@ -202,6 +204,7 @@ class TextFieldViewHolder(
             }
         }
 
+        hasAlreadyAddedForm = true
         binding.executePendingBindings()
     }
 
