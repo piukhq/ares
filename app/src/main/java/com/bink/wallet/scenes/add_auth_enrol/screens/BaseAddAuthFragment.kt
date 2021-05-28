@@ -71,7 +71,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
         SharedPreferenceManager.isLoyaltySelected = true
 
-        logDebug("BaseAA","Size is "+ FormsUtil.getSize())
+        logDebug("BaseAA", "Size is " + FormsUtil.getSize())
 
 
         navigationHandler = AuthNavigationHandler(this, args.membershipPlan)
@@ -90,17 +90,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             null,
             null,
             checkValidation = {
-                logDebug("BaseAA","List is "+ FormsUtil.returnForms().toString())
-                logDebug("BaseAA","PlanDocument "+ FormsUtil.returnPlanDocument().toString())
-//                    if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
-//                        viewModel.haveValidationsPassed.set(false)
-//                        return@AddAuthAdapter
-//                    }
-//                    if (!viewModel.didPlanFieldsPassValidations(it)) {
-//                        viewModel.haveValidationsPassed.set(false)
-//                        return@AddAuthAdapter
-//                    }
-                if (FormsUtil.areAllFieldsValid()){
+                logDebug("BaseAA", "List is " + FormsUtil.returnForms().toString())
+                logDebug("BaseAA", "PlanDocument " + FormsUtil.returnPlanDocument().toString())
+                if (FormsUtil.areAllFieldsValid()) {
                     viewModel.haveValidationsPassed.set(true)
                 } else {
                     viewModel.haveValidationsPassed.set(false)
@@ -130,11 +122,9 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler(it)
 
             barcode?.let {
-                if (SharedPreferenceManager.hasBarcodeBeenScanned) {
-                    viewModel.setBarcode(it)
-                } else {
-                    barcode = ""
-                }
+
+                viewModel.setBarcode(it)
+
             }
         }
 
@@ -174,11 +164,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 })
     }
 
-    override fun onStart() {
-        super.onStart()
-        SharedPreferenceManager.isScannedCard = false
-    }
-
     override fun onResume() {
         super.onResume()
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)
@@ -198,40 +183,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             }
             viewModel.haveValidationsPassed.set(false)
 
-                addAuthAdapter?.setValues(
-                    viewModel.addAuthItemsList,
-                    currentMembershipPlan,
-                    viewModel.titleText.get(),
-                    viewModel.descriptionText.get())
-//                    checkValidation = {
-//                        logDebug("BaseAA","List is "+ FormsUtil.returnForms().toString())
-//                        logDebug("BaseAA","PlanDocument "+ FormsUtil.returnPlanDocument().toString())
-////                    if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
-////                        viewModel.haveValidationsPassed.set(false)
-////                        return@AddAuthAdapter
-////                    }
-////                    if (!viewModel.didPlanFieldsPassValidations(it)) {
-////                        viewModel.haveValidationsPassed.set(false)
-////                        return@AddAuthAdapter
-////                    }
-//                        if (FormsUtil.areAllFieldsValid()){
-//                            viewModel.haveValidationsPassed.set(true)
-//                        } else {
-//                            viewModel.haveValidationsPassed.set(false)
-//
-//                        }
-//                    },
-//                    navigateToHeader = {
-//                        navigationHandler?.navigateToBrandHeader()
-//                    },
-//                    onLinkClickListener = { url ->
-//                        findNavController().navigate(BaseAddAuthFragmentDirections.globalToWeb(url))
-//                    },
-//                    onNavigateToBarcodeScanListener = { account ->
-//                        onScannerActivated(account)
-//                    }
-//                )
-
+            addAuthAdapter?.setValues(
+                viewModel.addAuthItemsList,
+                currentMembershipPlan,
+                viewModel.titleText.get(),
+                viewModel.descriptionText.get()
+            )
             adapter = addAuthAdapter
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -330,10 +287,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun onResult(result: String) {
-        addAuthAdapter?.setBc( result)
-        if (SharedPreferenceManager.hasBarcodeBeenScanned) {
-            SharedPreferenceManager.scannedLoyaltyBarCode = result
-        }
+        addAuthAdapter?.setBc(result)
     }
 
     override fun onDestroyView() {

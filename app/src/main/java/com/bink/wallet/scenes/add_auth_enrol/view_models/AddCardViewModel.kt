@@ -21,11 +21,9 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
 
     override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
         super.addItems(membershipPlan, shouldExcludeBarcode)
-        val addPlans = mutableListOf<PlanField>()
         membershipPlan.let { plan ->
             plan.account?.let { account ->
                 account.add_fields?.forEach { planField ->
-                    addPlans.add(planField)
                     if (shouldExcludeBarcode && !planField.common_name.equals(BARCODE)) {
                         //card field
                         planField.typeOfField = TypeOfField.ADD
@@ -38,13 +36,6 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
                         planField.alternativePlanField =
                             account.add_fields.firstOrNull { it.common_name.equals(CARD_NUMBER) }
                         addPlanField(planField)
-                    }
-                    if (!SharedPreferenceManager.hasBarcodeBeenScanned && planField.common_name.equals(
-                            CARD_NUMBER
-                        )
-                    ) {
-                        planField.typeOfField = TypeOfField.ADD
-
                     }
                 }
                 account.authorise_fields?.forEach { planField ->
@@ -61,7 +52,6 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
             }
         }
         mapItems(membershipPlan.id)
-        allAddPlans.value = addPlans
     }
 
     fun handleRequest(
@@ -126,66 +116,5 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
             }
         }
         return null
-    }
-
-    private fun getBarcodeFieldRequestAccount(acc: Account?): Account {
-
-        val addFields = mutableListOf<PlanFieldsRequest>()
-
-        val authorizeFields = acc?.authorise_fields
-        val enrolFields = acc?.enrol_fields
-        val registerFields = acc?.registration_fields
-
-        val barCodePlanField = allAddPlans.value?.firstOrNull { planField ->
-            planField.common_name.equals(
-                BARCODE
-            )
-        }
-
-        val barCodeValue = SharedPreferenceManager.barcodeValue
-
-        if (barCodePlanField != null) {
-            val planFieldRequestForBarcode = PlanFieldsRequest(
-                barCodePlanField.column,
-                barCodeValue,
-                isSensitive = barCodePlanField.type == FieldType.SENSITIVE.type
-            )
-            addFields.add(planFieldRequestForBarcode)
-        }
-
-
-        return Account(addFields, authorizeFields, enrolFields, registerFields)
-
-
-    }
-
-    private fun getCardNumberFieldRequestAccount(acc: Account?): Account {
-        val addFields = mutableListOf<PlanFieldsRequest>()
-
-        val authorizeFields = acc?.authorise_fields
-        val enrolFields = acc?.enrol_fields
-        val registerFields = acc?.registration_fields
-
-        val cardNumberPlanField = allAddPlans.value?.firstOrNull { planField ->
-            planField.common_name.equals(
-                CARD_NUMBER
-            )
-        }
-
-        val cardNumberValue = SharedPreferenceManager.cardNumberValue
-
-        if (cardNumberPlanField != null) {
-            val planFieldRequestForCardNumber = PlanFieldsRequest(
-                cardNumberPlanField.column,
-                cardNumberValue,
-                isSensitive = cardNumberPlanField.type == FieldType.SENSITIVE.type
-            )
-
-            addFields.add(planFieldRequestForCardNumber)
-        }
-
-
-        return Account(addFields, authorizeFields, enrolFields, registerFields)
-
     }
 }

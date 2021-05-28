@@ -22,7 +22,7 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var position: Int? = null
 
-    var bc: String? = null
+    var barcode: String? = null
 
     var fieldValue: String? = null
 

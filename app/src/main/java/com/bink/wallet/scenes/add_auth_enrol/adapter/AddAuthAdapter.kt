@@ -62,7 +62,7 @@ class AddAuthAdapter(
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.account = membershipPlan?.account
                         holder.position = position
-                        holder.bc = scannedBarcode
+                        holder.barcode = scannedBarcode
                         holder.bind(addAuthItem)
                         holder.onBarcodeScanSuccess(scannedBarcode)
                     }
