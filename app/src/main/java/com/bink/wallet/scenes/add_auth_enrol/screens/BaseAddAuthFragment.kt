@@ -29,7 +29,6 @@ import com.bink.wallet.utils.displayModalPopup
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException
 import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult

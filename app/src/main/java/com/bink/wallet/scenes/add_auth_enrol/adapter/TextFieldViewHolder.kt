@@ -333,16 +333,16 @@ class TextFieldViewHolder(
         }
     }
 
-    private fun checkIfError(text: TextInputEditText, currentItem: AddAuthItemWrapper) {
+    private fun checkIfError(inputEditText: TextInputEditText, currentItem: AddAuthItemWrapper) {
         if (currentItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
             val currentPlanField = currentItem.fieldType as PlanField
-            val requestValue = text.text.toString()
+            val requestValue = inputEditText.text.toString()
             if (!UtilFunctions.isValidField(
                     currentPlanField.validation,
                     requestValue
                 )
             ) {
-                text.error = text.context.getString(
+                inputEditText.error = inputEditText.context.getString(
                     R.string.add_auth_error_message,
                     currentPlanField.column
                 )

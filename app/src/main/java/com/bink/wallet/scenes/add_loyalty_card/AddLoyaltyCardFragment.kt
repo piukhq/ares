@@ -119,10 +119,7 @@ class AddLoyaltyCardFragment :
 
                 }
             } else {
-               if ( account != null){
                    showUnsupportedBarcodePopup(account!!.company_name!!)
-
-               }
             }
 
         } else {

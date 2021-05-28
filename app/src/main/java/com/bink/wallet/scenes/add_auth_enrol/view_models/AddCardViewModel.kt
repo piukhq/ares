@@ -60,17 +60,6 @@ class AddCardViewModel constructor(loyaltyWalletRepository: LoyaltyWalletReposit
         membershipPlan: MembershipPlan
     ) {
         val account: Account? = FormsUtil.getAccount()
-//            when (SharedPreferenceManager.isNowBarcode) {
-//            true -> getBarcodeFieldRequestAccount(
-//                addRegisterFieldsRequest.value
-//            )
-//            else -> if (SharedPreferenceManager.isNowCardNumber) {
-//                getCardNumberFieldRequestAccount(addRegisterFieldsRequest.value)
-//
-//            } else {
-//                addRegisterFieldsRequest.value
-//            }
-//        }
 
         val currentRequest = MembershipCardRequest(account, membershipPlan.id)
         val strippedRequest = WebScrapableManager.setUsernameAndPassword(currentRequest)
