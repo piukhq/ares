@@ -57,7 +57,6 @@ class AddAuthAdapter(
             if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
                 when (holder) {
                     is TextFieldViewHolder -> {
-                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.account = membershipPlan?.account
@@ -67,12 +66,10 @@ class AddAuthAdapter(
                         holder.onBarcodeScanSuccess(scannedBarcode)
                     }
                     is SpinnerViewHolder -> {
-                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.position = position
                         holder.bind(addAuthItem)
                     }
                     is CheckboxViewHolder -> {
-                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.position = position
                         holder.bind(addAuthItem)
                     }
@@ -86,7 +83,6 @@ class AddAuthAdapter(
                 if (getItemViewType(position) == FieldType.DISPLAY.type) {
                     (holder as DisplayViewHolder).bind(addAuthItem)
                 } else {
-                    holder.setFieldRequestValue = ::setFieldRequest
                     holder.position = position
                     (holder as CheckboxViewHolder).bind(addAuthItem)
                 }
@@ -168,11 +164,7 @@ class AddAuthAdapter(
                             item.fieldType.type == FieldType.SENSITIVE.type)
         }
 
-    private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
-        itemWrapper.fieldsRequest?.value = value
-    }
-
-    fun setBc(barcode: String) {
+    fun setBarcode(barcode: String) {
         scannedBarcode = barcode
     }
 }

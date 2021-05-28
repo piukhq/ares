@@ -287,7 +287,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun onResult(result: String) {
-        addAuthAdapter?.setBc(result)
+        addAuthAdapter?.setBarcode(result)
     }
 
     override fun onDestroyView() {

@@ -14,8 +14,6 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var checkValidation: (String?) -> Unit = {}
 
-    var setFieldRequestValue: (item: AddAuthItemWrapper, value: String) -> Unit = { _, _ -> }
-
     var addFields: List<PlanField>? = null
 
     var account: Account? = null

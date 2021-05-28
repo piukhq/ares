@@ -49,7 +49,6 @@ class TextFieldViewHolder(
             p3: Int
         ) {
             item?.let {
-//                setFieldRequestValue(it, currentText.toString())
                 updateFieldValue(currentText.toString())
             }
             checkValidation(fieldValidation)
@@ -64,10 +63,6 @@ class TextFieldViewHolder(
             p3: Int
         ) {
             item?.let {
-//                setFieldRequestValue(
-//                    it,
-//                    currentText.toString().toLowerCase(Locale.ROOT)
-//                )
                 updateFieldValue(currentText.toString().toLowerCase(Locale.ROOT))
             }
             checkValidation(null)
@@ -101,10 +96,6 @@ class TextFieldViewHolder(
             } else {
                 addTextChangedListener(textWatcher)
             }
-
-//            if (!fieldValue.isNullOrEmpty()){
-//                setText(fieldValue)
-//            }
 
             if (planRequest?.value.isNullOrBlank()) {
                 error = null
@@ -397,7 +388,6 @@ class TextFieldViewHolder(
                     val strDate = dateFormatter.format(date)
                     binding.tvDatePicker.text = strDate.toString()
                     item?.let {
-//                        setFieldRequestValue(it, strDate.toString())
                         updateFieldValue(strDate.toString())
                     }
                     checkValidation(null)
