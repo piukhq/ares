@@ -413,16 +413,17 @@ class TextFieldViewHolder(
         }
     }
 
-    private fun setFieldValue(textInput: TextInputEditText){
+    private fun setFieldValue(textInput: TextInputEditText) {
         position?.let {
             val form = FormsUtil.getFormField(it)
-            if (form != null) {
-                textInput.setText(form.fieldsRequest?.value)
+            val value = form?.fieldsRequest?.value
+            if (value != null) {
+                textInput.setText(form.fieldsRequest.value)
             }
         }
     }
 
-    private fun setFieldValue(textInput: TextView){
+    private fun setFieldValue(textInput: TextView) {
         position?.let {
             val form = FormsUtil.getFormField(it)
             if (form != null) {
@@ -430,6 +431,7 @@ class TextFieldViewHolder(
             }
         }
     }
+
     companion object {
         private const val BARCODE = "barcode"
         private const val CARD_NUMBER = "card_number"
