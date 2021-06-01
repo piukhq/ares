@@ -15,7 +15,10 @@ object FormsUtil {
     //Represents an individual formField e.g First name
     fun addFormField(position: Int, planField: PlanField) {
         val isSensitive = planField.type == FieldType.SENSITIVE.type
-        fields[position] = FormField(planField, PlanFieldsRequest(planField.column, null, null,isSensitive = isSensitive))
+        fields[position] = FormField(
+            planField,
+            PlanFieldsRequest(planField.column, null, null, isSensitive = isSensitive)
+        )
     }
 
 
@@ -29,7 +32,10 @@ object FormsUtil {
 
         form?.fieldsRequest?.value = value
 
-        form?.isValidField = if (value.isEmpty()) false else UtilFunctions.isValidField(form?.planField?.validation,value)
+        form?.isValidField = if (value.isEmpty()) false else UtilFunctions.isValidField(
+            form?.planField?.validation,
+            value
+        )
     }
 
     fun updateValidation(position: Int, isValid: Boolean) {
@@ -42,6 +48,10 @@ object FormsUtil {
 
     fun addPlanDocument(position: Int, hasBeenTicked: Boolean) {
         planDocuments[position] = hasBeenTicked
+    }
+
+    fun doesFieldAlreadyExist(position: Int?): Boolean {
+        return fields[position] == null
     }
 
     //The request object which will be sent in api call

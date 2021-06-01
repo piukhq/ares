@@ -76,7 +76,7 @@ class TextFieldViewHolder(
         val planRequest = item.fieldsRequest
 
         //As bind gets called multiple times,this is to guard against unnecessarily adding the already existing field again
-        if (!hasAlreadyAddedFormField) {
+        if (FormsUtil.doesFieldAlreadyExist(position)) {
             addFormField(planField)
         }
 
@@ -315,7 +315,7 @@ class TextFieldViewHolder(
             }
         }
 
-        return true
+        return false
     }
 
     private fun TextInputEditText.checkIfFieldIsValid(currentItem: AddAuthItemWrapper) {
@@ -417,9 +417,8 @@ class TextFieldViewHolder(
         position?.let {
             val form = FormsUtil.getFormField(it)
             val value = form?.fieldsRequest?.value
-            if (value != null) {
-                textInput.setText(form.fieldsRequest.value)
-            }
+            textInput.setText(value)
+
         }
     }
 
