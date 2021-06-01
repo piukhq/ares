@@ -76,7 +76,7 @@ class TextFieldViewHolder(
         val planRequest = item.fieldsRequest
 
         //As bind gets called multiple times,this is to guard against unnecessarily adding the already existing field again
-        if (FormsUtil.doesFieldAlreadyExist(position)) {
+        if (FormsUtil.fieldHasNotBeenAdded(position)) {
             addFormField(planField)
         }
 

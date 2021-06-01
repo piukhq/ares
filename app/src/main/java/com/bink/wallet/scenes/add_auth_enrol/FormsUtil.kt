@@ -50,7 +50,7 @@ object FormsUtil {
         planDocuments[position] = hasBeenTicked
     }
 
-    fun doesFieldAlreadyExist(position: Int?): Boolean {
+    fun fieldHasNotBeenAdded(position: Int?): Boolean {
         return fields[position] == null
     }
 
