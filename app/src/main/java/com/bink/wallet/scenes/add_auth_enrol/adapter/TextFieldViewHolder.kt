@@ -39,7 +39,6 @@ class TextFieldViewHolder(
     private var editText: TextInputEditText? = null
     private var cardPlanField: PlanField? = null
     private var barcodePlanField: PlanField? = null
-    private var hasAlreadyAddedFormField = false
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -186,7 +185,6 @@ class TextFieldViewHolder(
             }
         }
 
-        hasAlreadyAddedFormField = true
         binding.executePendingBindings()
     }
 
