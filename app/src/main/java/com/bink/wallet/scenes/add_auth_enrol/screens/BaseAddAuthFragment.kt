@@ -13,7 +13,6 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
-import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
@@ -113,7 +112,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
-            populateRecycler(it)
+            populateRecycler()
 
             barcode?.let {
 
