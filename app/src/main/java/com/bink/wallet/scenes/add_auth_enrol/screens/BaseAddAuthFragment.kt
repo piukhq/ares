@@ -118,7 +118,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             barcode?.let {
 
                 viewModel.setBarcode(it)
-
             }
         }
 

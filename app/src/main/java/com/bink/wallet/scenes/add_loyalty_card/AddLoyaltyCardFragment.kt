@@ -61,6 +61,7 @@ class AddLoyaltyCardFragment :
             ?.let { scheduleHapticWithPause(it) }
         isFromAddAuth = args.isFromAddAuth
         account = args.account
+        findNavController().previousBackStackEntry?.savedStateHandle?.remove<String>(ADD_AUTH_BARCODE)
     }
 
     override fun onResume() {
