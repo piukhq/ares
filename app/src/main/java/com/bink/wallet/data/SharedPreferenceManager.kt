@@ -49,7 +49,6 @@ object SharedPreferenceManager {
     private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
     private val IS_PAYMENT_EMPTY = Pair(IS_PAYMENT_EMPTY_KEY, false)
     private val IS_PAYMENT_JOIN_HIDDEN = Pair(IS_PAYMENT_JOIN_KEY, false)
-    private val IS_USER_LOGGED_IN = Pair(IS_USER_LOGGED_IN_KEY, false)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
