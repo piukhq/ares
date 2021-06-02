@@ -162,7 +162,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)
     }
 
-    private fun populateRecycler(addRegisterFieldsRequest: Account) {
+    private fun populateRecycler() {
         binding.authFields.apply {
             layoutManager = object : GridLayoutManager(requireContext(), 1) {
                 override fun requestChildRectangleOnScreen(
