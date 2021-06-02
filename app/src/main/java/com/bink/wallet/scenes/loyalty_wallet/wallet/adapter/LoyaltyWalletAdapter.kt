@@ -116,9 +116,7 @@ class LoyaltyWalletAdapter(
         }
 
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
-
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
@@ -153,7 +151,7 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == CARD_ON_BOARDING_PLL) {
+                if (getItemViewType(toPosition) != MEMBERSHIP_CARD) {
                     notifyItemMoved(fromPosition, toPosition)
                     return false
                 }
