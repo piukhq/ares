@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -69,6 +70,7 @@ class LoyaltyCardDetailsFragment :
     private var scrollY = 0
     private var isFromPll = false
     private var isAnimating = false
+    private var handler = Handler()
 
     override val viewModel: LoyaltyCardDetailsViewModel by viewModel()
     override val layoutRes: Int
@@ -435,7 +437,7 @@ class LoyaltyCardDetailsFragment :
     override fun onResume() {
         super.onResume()
         logScreenView(LOYALTY_DETAIL_VIEW)
-        binding.scrollView.postDelayed({
+        handler.postDelayed({
             binding.scrollView.scrollTo(0, scrollY)
             if (isAnimating) {
                 binding.containerToolbarTitle.visibility = View.VISIBLE
@@ -1011,4 +1013,8 @@ class LoyaltyCardDetailsFragment :
             }
         }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacksAndMessages(null)
+    }
 }
