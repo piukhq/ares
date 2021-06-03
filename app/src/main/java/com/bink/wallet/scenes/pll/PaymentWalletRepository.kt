@@ -18,12 +18,7 @@ import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.generateUuidForPaymentCards
 import com.bink.wallet.utils.generateUuidFromCardLinkageState
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 
 class PaymentWalletRepository(
@@ -205,8 +200,8 @@ class PaymentWalletRepository(
                         response.let {
                             localSuccesses.add(response)
                             unlinkSuccesses.value = localSuccesses
+                            paymentCardDao.updatePaymentCard(card)
                             logDeleteEvent(card, membershipCard)
-
                         }
                     } catch (e: Exception) {
                         localErrors.add(e)
@@ -246,9 +241,8 @@ class PaymentWalletRepository(
                         response.let {
                             localSuccesses.add(response)
                             linkSuccesses.value = localSuccesses
-
+                            paymentCardDao.updatePaymentCard(card)
                             logPatchEvent(card, membershipCard, it)
-
                         }
                     } catch (e: Exception) {
                         localErrors.add(e)
