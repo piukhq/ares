@@ -819,6 +819,8 @@ class LoyaltyCardDetailsFragment :
                         if ((hasCorrectCardType && hasTransactions)
                             || (hasCorrectCardType && hasTransactions && hasVouchers)
                         ) {
+                            viewModel.membershipCard.value?.plan = membershipPlan
+
                             val action =
                                 LoyaltyCardDetailsFragmentDirections.detailToTransactions(
                                     viewModel.membershipCard.value!!,
