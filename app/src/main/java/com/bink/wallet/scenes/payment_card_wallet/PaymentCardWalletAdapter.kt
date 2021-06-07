@@ -98,6 +98,8 @@ class PaymentCardWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
+                if (getItemViewType(toPosition) != PAYMENT_CARD) return false
+
                 if (fromPosition < toPosition) {
                     for (i in fromPosition until toPosition) {
                         Collections.swap(paymentCards, i, i + 1)
