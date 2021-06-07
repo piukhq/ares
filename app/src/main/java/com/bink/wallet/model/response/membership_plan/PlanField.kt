@@ -19,6 +19,8 @@ data class PlanField(
     val alternatives: List<String>?
 ) : Parcelable {
 
+    var alternativePlanField: PlanField? = null
+
     fun isBooleanType(): Boolean =
         type == FieldType.BOOLEAN_OPTIONAL.type || type == FieldType.BOOLEAN_REQUIRED.type
 }
