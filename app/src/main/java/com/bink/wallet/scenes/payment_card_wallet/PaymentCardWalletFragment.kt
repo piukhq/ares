@@ -81,8 +81,19 @@ class PaymentCardWalletFragment :
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
+            val currentPosition = viewHolder.adapterPosition
+            var card: PaymentCard? = null
+            try {
+                card = walletAdapter.paymentCards[currentPosition] as PaymentCard
+            } catch (e: ClassCastException) {
+                //User attempting to drag join plan
+            }
+
+            card?.let {
+                return walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            }
+
+            return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
