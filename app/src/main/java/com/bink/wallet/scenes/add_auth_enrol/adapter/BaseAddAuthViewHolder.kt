@@ -4,7 +4,7 @@ import androidx.databinding.ViewDataBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.BaseViewHolder
-import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 
 abstract class BaseAddAuthViewHolder<T>(
     viewDataBinding: ViewDataBinding
@@ -13,14 +13,43 @@ abstract class BaseAddAuthViewHolder<T>(
 
     var checkValidation: (String?) -> Unit = {}
 
-    var setFieldRequestValue: (item: AddAuthItemWrapper, value: String) -> Unit = { _, _ ->  }
-
-    var addFields : List<PlanField>? = null
+    var addFields: List<PlanField>? = null
 
     var account: Account? = null
 
+    var position: Int? = null
+
+    var barcode: String? = null
+
+    var fieldValue: String? = null
+
     override fun bind(item: T) {}
 
-    open fun onBarcodeScanSuccess(){}
+    open fun onBarcodeScanSuccess(scannedBarcode: String?) {}
+
+    open fun addFormField(planField: PlanField) {
+        position?.let {
+            FormsUtil.addFormField(it, planField)
+        }
+    }
+
+    open fun updateFieldValue(value: String) {
+        position?.let {
+            fieldValue = value
+            FormsUtil.updateField(it, value)
+        }
+    }
+
+    open fun updateValidation(isValid: Boolean) {
+        position?.let {
+            FormsUtil.updateValidation(it, isValid)
+        }
+    }
+
+    open fun addPlanDocument(hasCheckBoxBeenTicked: Boolean) {
+        position?.let {
+            FormsUtil.addPlanDocument(it, hasCheckBoxBeenTicked)
+        }
+    }
 
 }
