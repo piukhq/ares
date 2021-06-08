@@ -114,10 +114,15 @@ fun View.setVisible(isVisible: Boolean) {
 @Parcelize
 data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 
-@BindingAdapter("membershipCard", "viewModel", "isSquare", requireAll = false)
-fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?, isSquare: Boolean = false) {
+@BindingAdapter("membershipCard", "viewModel", requireAll = false)
+fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?) {
     if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
+        val isSquare = when (membershipCard?.membershipCard?.card?.getBarcodeFormat()) {
+            BarcodeFormat.QR_CODE,
+            BarcodeFormat.AZTEC -> true
+            else -> false
+        }
         val heightPx = context.toPixelFromDip(if (isSquare) 100f else 80f)
         val widthPx = context.toPixelFromDip(if (isSquare) 100f else 320f)
         val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
@@ -222,33 +227,27 @@ fun ImageView.loadAlternateHeroImage(plan: MembershipPlan?) {
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
     if (plan?.getCardType() != CardType.PLL && !card?.card?.barcode.isNullOrEmpty()) {
-        var isSquareBarcode = false
 
         binding.container.visibility = View.GONE
-        binding.tapCard.text = when (card?.card?.getBarcodeFormat()) {
-            BarcodeFormat.QR_CODE -> {
-                isSquareBarcode = true
-                context.getString(R.string.tap_to_enlarge_qr)
-            }
-            BarcodeFormat.AZTEC -> {
-                isSquareBarcode = true
-                context.getString(R.string.tap_to_enlarge_aztec)
-            }
-            else -> context.getString(R.string.tap_to_enlarge_barcode)
-        }
 
-        if (isSquareBarcode) {
-            binding.sbBarcodeText.text = card?.card?.barcode!!
-            binding.sbTitle.text = context.getString(R.string.bonus_card_number)
-            binding.sbCompanyLogo.loadImage(plan)
-            binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null, isSquareBarcode)
-            binding.squareBarcodeContainer.visibility = View.VISIBLE
-        } else {
-            binding.rbBarcodeText.text = card?.card?.barcode!!
-            binding.rbTitle.text = context.getString(R.string.bonus_card_number)
-            binding.rbCompanyLogo.loadImage(plan)
-            binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null, isSquareBarcode)
-            binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+        when (card?.card?.getBarcodeFormat()) {
+            BarcodeFormat.QR_CODE,
+            BarcodeFormat.AZTEC -> {
+                binding.tapCard.text = if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(R.string.tap_to_enlarge_aztec)
+                binding.sbBarcodeText.text = card.card?.barcode!!
+                binding.sbTitle.text = context.getString(R.string.bonus_card_number)
+                binding.sbCompanyLogo.loadImage(plan)
+                binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
+                binding.squareBarcodeContainer.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
+                binding.rbBarcodeText.text = card?.card?.barcode!!
+                binding.rbTitle.text = context.getString(R.string.bonus_card_number)
+                binding.rbCompanyLogo.loadImage(plan)
+                binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+                binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+            }
         }
 
     } else {
