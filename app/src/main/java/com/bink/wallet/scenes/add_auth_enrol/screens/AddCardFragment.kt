@@ -190,8 +190,4 @@ class AddCardFragment : BaseAddAuthFragment() {
         }
     }
 
-    override fun onDestroyView() {
-        SharedPreferenceManager.hasBarcodeBeenScanned = false
-        super.onDestroyView()
-    }
 }
