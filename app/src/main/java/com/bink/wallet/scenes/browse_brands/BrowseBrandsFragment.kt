@@ -12,13 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BrowseBrandsBinding
 import com.bink.wallet.R
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.scenes.add.AddFragmentDirections
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.BROWSE_BRANDS_VIEW
-import com.bink.wallet.utils.getCategories
-import com.bink.wallet.utils.getOwnedMembershipCardsIds
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -62,6 +58,11 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                     R.id.browse_brands
                 )
             }
+
+            setOnScanItemClickListener(View.OnClickListener {
+                goToScan()
+            })
+
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     if (viewModel.activeFilters.value?.size ==
@@ -72,6 +73,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
                 }
             })
         }
+        binding.brandsRecyclerView.itemAnimator?.changeDuration = 0
 
         binding.filtersList.layoutManager = GridLayoutManager(context, FILTERS_COLUMNS_COUNT)
         binding.filtersList.adapter = filtersAdapter.apply {
@@ -89,6 +91,7 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
             viewModel.isFilterSelected.set(!viewModel.isFilterSelected.get())
             binding.filtersList.setVisible(binding.filtersList.visibility != View.VISIBLE)
         }
+
         initBrowseBrandsList()
     }
 
@@ -124,6 +127,13 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
         val inputMethodManager =
             requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    private fun goToScan() {
+        requestCameraPermissionAndNavigate(true) {
+            val directions = BrowseBrandsFragmentDirections.browseToAdd(args.membershipPlans, args.membershipCards, null, isFromAddAuth = true)
+            findNavController().navigateIfAdded(this, directions)
+        }
     }
 
     companion object {
