@@ -103,3 +103,6 @@
 -keep class zendesk.support.UploadResponseWrapper { *; }
 -keep class zendesk.support.ZendeskUploadProvider { *; }
 -keep class zendesk.support.Attachment { *; }
+
+# Having minify enabled seems to remove some methods from crypto lib causing a crash on version 1.1.0-alpha01
+-keep class com.google.crypto.** { *; }
