@@ -209,7 +209,6 @@ class LoyaltyWalletRepository(
                     storeMembershipCard(response)
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
-                    logDebug("SentryUtil",(e as HttpException).getErrorBody())
                     createError.value = e
                     SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
                 }
