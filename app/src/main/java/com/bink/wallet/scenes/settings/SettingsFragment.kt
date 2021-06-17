@@ -3,35 +3,43 @@ package com.bink.wallet.scenes.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.lifecycle.Observer
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bink.wallet.BaseFragment
+import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.databinding.SettingsFragmentBinding
 import com.bink.wallet.modal.generic.GenericModalParameters
-import com.bink.wallet.model.ListHolder
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SETTINGS_VIEW
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
-import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.putSessionHandlerNavigationDestination
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.guide.ViewArticleActivity
 
-class SettingsFragment :
-    BaseFragment<SettingsViewModel, SettingsFragmentBinding>(),
-    Observer<ListHolder<SettingsItem>> {
+class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding>() {
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -49,43 +57,120 @@ class SettingsFragment :
         logScreenView(SETTINGS_VIEW)
     }
 
-    override fun onChanged(value: ListHolder<SettingsItem>?) {
-        binding.settingsContainer.adapter?.let {
-            value?.applyChange(it)
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.itemsList.value = ListHolder()
-        for (item in SettingsItemsPopulation.populateItems(resources)) {
-            viewModel.itemsList.addItem(item)
+        binding.composeView.setContent {
+            Surface(color = MaterialTheme.colors.background) {
+                SettingsScreen()
+            }
         }
+
         binding.tvSettingsTitle.text = getString(viewModel.getSettingsTitle())
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
 
-        var email = ""
-
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
-            email = it
-        }
-
-        val settingsAdapter = SettingsAdapter(
-            viewModel.itemsList,
-            itemClickListener = { settingsItemClick(it) },
-            usersEmail = email
-        )
-
-        binding.settingsContainer.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = settingsAdapter
-        }
-        viewModel.itemsList.observe(viewLifecycleOwner, this)
         viewModel.userResponse.observeNonNull(this) {
             setAnalyticsUserId(it.uid)
         }
 
+    }
+
+    @Composable
+    fun SettingsScreen() {
+        Column(modifier = Modifier.fillMaxHeight()) {
+            SettingsList(
+                settings = SettingsItemsPopulation.populateItems(LocalContext.current.resources),
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+
+    @Composable
+    fun SettingsList(settings: List<SettingsItem>, modifier: Modifier = Modifier) {
+        LazyColumn(modifier = modifier, contentPadding = PaddingValues(16.dp)) {
+            items(items = settings) { setting ->
+
+                when (setting.type) {
+                    SettingsItemType.HEADER -> {
+                        Text(
+                            text = setting.title ?: "",
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 24.dp)
+                        )
+                    }
+                    SettingsItemType.FOOTER -> {
+                        VersionNumber()
+                    }
+                    else -> {
+                        SettingCell(setting)
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun VersionNumber() {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
+                Text(text = it, color = Color.Gray)
+            }
+
+            Text(
+                text = getString(
+                    R.string.settings_build_version,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE
+                ), color = Color.Gray
+            )
+        }
+    }
+
+    @Composable
+    fun SettingCell(settingsItem: SettingsItem) {
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+            .clickable {
+                settingsItemClick(settingsItem)
+            }) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = settingsItem.title ?: "",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                if (!settingsItem.value.isNullOrEmpty()) {
+                    Text(
+                        text = settingsItem.value,
+                        fontSize = 15.sp
+                    )
+                }
+            }
+            Row {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_right),
+                    contentDescription = "Right Chevron"
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Divider()
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun DefaultPreview() {
+        Surface(color = MaterialTheme.colors.background) {
+            SettingsScreen()
+        }
     }
 
     private fun settingsItemClick(item: SettingsItem) {
@@ -120,7 +205,7 @@ class SettingsFragment :
                 )
             }
             SettingsItemType.FAQS -> {
-                if (Zendesk.INSTANCE.identity == null){
+                if (Zendesk.INSTANCE.identity == null) {
                     viewModel.setIdentity()
 
                 }
@@ -159,7 +244,7 @@ class SettingsFragment :
                     )
                 findNavController().navigateIfAdded(this, action)
             }
-            SettingsItemType.WHO_WE_ARE ->{
+            SettingsItemType.WHO_WE_ARE -> {
                 findNavController().navigate(
                     SettingsFragmentDirections.settingsToWhoAreWe()
                 )
@@ -180,12 +265,12 @@ class SettingsFragment :
             }
 
             SettingsItemType.LOGOUT -> {
-                if (isNetworkAvailable(requireActivity(), true)) {
+                if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
                     requireContext().displayModalPopup(
                         getString(R.string.settings_menu_log_out),
                         getString(R.string.log_out_confirmation),
                         okAction = {
-                            if (isNetworkAvailable(requireContext(), true)) {
+                            if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
                                 viewModel.logOut()
                             }
                         },
