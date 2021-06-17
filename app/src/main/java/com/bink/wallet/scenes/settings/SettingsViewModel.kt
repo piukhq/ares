@@ -34,7 +34,6 @@ class SettingsViewModel constructor(
     BaseViewModel() {
 
     var loginData = MutableLiveData<LoginData>()
-    val itemsList = ListLiveData<SettingsItem>()
     val logOutResponse = MutableLiveData<ResponseBody>()
     val logOutErrorResponse = MutableLiveData<Exception>()
 
