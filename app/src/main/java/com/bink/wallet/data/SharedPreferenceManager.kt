@@ -26,11 +26,19 @@ object SharedPreferenceManager {
     private const val MEMBERSHIP_CARDS_LAST_SCRAPED_TIME = "membershipCardsLastScrapedTime"
     private const val ZENDESK_REQUEST_UPDATE = "updateAvailable"
     private const val CONTACT_US_CLICKED = "contactUsClicked"
+    private const val SCANNED_LOYALTY_BARCODE = "scannedLoyaltyBarcode"
     private const val DID_ATTEMPT_TO_ADD_PAYMENT_CARD = "didAttemptToAddPaymentCard"
+    private const val BARCODE = "barcode"
+    private const val CARD_NUMBER = "cardNumber"
+    private const val ADD_PAYMENT_CARD_REQUEST_UUID = "add_payment_card_request_uuid"
     private const val ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE = "add_payment_card_success_http_code"
     private const val FIREBASE_UUID = "firebase_uuid"
+    private const val ADD_LOYALTY_CARD_REQUEST_UUID = "add_loyalty_card_request_uuid"
     private const val ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE = "add_loyalty_card_success_http_code"
+    private const val ADD_LOYALTY_CARD_JOURNEY_TYPE = "add_loyalty_card_journey_type"
     private const val IS_SCANNED_CARD = "is_scanned_card"
+    private const val BARCODE_VALUE = "barcode_value"
+    private const val CARD_NUMBER_VALUE = "cardNumber_value"
     private const val HAS_NO_ACTIVE_PAYMENT_CARD = "has_no_active_payment_cards"
     private const val LAST_REVIEW_MINOR = "last_review_minor"
     private const val FIRST_OPEN_DATE = "first_open_date"
@@ -49,6 +57,7 @@ object SharedPreferenceManager {
     private val IS_LOYALTY_SELECTED = Pair(IS_LOYALTY_WALLET, true)
     private val IS_PAYMENT_EMPTY = Pair(IS_PAYMENT_EMPTY_KEY, false)
     private val IS_PAYMENT_JOIN_HIDDEN = Pair(IS_PAYMENT_JOIN_KEY, false)
+    private val IS_USER_LOGGED_IN = Pair(IS_USER_LOGGED_IN_KEY, false)
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(FILE_NAME, MODE)
@@ -150,6 +159,22 @@ object SharedPreferenceManager {
             it.putBoolean(DID_ATTEMPT_TO_ADD_PAYMENT_CARD, value)
         }
 
+    var scannedLoyaltyBarCode: String?
+        get() = preferences.getString(SCANNED_LOYALTY_BARCODE, null)
+        set(value) = preferences.edit {
+            it.putString(SCANNED_LOYALTY_BARCODE, value)
+        }
+    var isNowBarcode: Boolean
+        get() = preferences.getBoolean(BARCODE, false)
+        set(value) = preferences.edit {
+            it.putBoolean(BARCODE, value)
+        }
+    var isNowCardNumber: Boolean
+        get() = preferences.getBoolean(CARD_NUMBER, false)
+        set(value) = preferences.edit {
+            it.putBoolean(CARD_NUMBER, value)
+        }
+
     var addPaymentCardSuccessHttpCode: Int
         get() = preferences.getInt(ADD_PAYMENT_CARD_SUCCESS_HTTP_CODE, 0)
         set(value) = preferences.edit {
@@ -168,11 +193,25 @@ object SharedPreferenceManager {
         set(value) = preferences.edit {
             it.putInt(ADD_LOYALTY_CARD_SUCCESS_HTTP_CODE, value)
         }
-
+    var addLoyaltyCardJourneyType: String?
+        get() = preferences.getString(ADD_LOYALTY_CARD_JOURNEY_TYPE, null)
+        set(value) = preferences.edit {
+            it.putString(ADD_LOYALTY_CARD_JOURNEY_TYPE, value)
+        }
     var isScannedCard: Boolean
         get() = preferences.getBoolean(IS_SCANNED_CARD, false)
         set(value) = preferences.edit {
             it.putBoolean(IS_SCANNED_CARD, value)
+        }
+    var barcodeValue: String?
+        get() = preferences.getString(BARCODE_VALUE, null)
+        set(value) = preferences.edit {
+            it.putString(BARCODE_VALUE, value)
+        }
+    var cardNumberValue: String?
+        get() = preferences.getString(CARD_NUMBER_VALUE, null)
+        set(value) = preferences.edit {
+            it.putString(CARD_NUMBER_VALUE, value)
         }
 
     var lastReviewedMinor: String?

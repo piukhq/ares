@@ -49,6 +49,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     val addLoyaltyCardRequestMade: LiveData<Boolean>
         get() = _addLoyaltyCardRequestMade
 
+    val allAddPlans = MutableLiveData<List<PlanField>>()
+
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
             AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, EMPTY_STRING))
@@ -135,6 +137,58 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         planDocuments.forEach { item -> addAuthItemsList.add(item) }
     }
 
+    fun didPlanDocumentsPassValidations(addRegisterFieldsRequest: Account): Boolean {
+        addRegisterFieldsRequest.plan_documents?.map { planDocument ->
+            var required = true
+            addAuthItemsList.filter { addAuthItem ->
+                addAuthItem.getFieldType() == AddAuthItemType.PLAN_DOCUMENT
+            }.map { addAuthItem ->
+                if (addAuthItem.fieldsRequest?.column == planDocument.column) {
+                    (addAuthItem.fieldType as PlanDocument).checkbox?.let { bool ->
+                        required = bool
+                    }
+                    if (required &&
+                        planDocument.value != true.toString()
+                    ) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    fun didPlanFieldsPassValidations(barcodeValidation: String?): Boolean {
+        addAuthItemsList.filter { item -> item.getFieldType() == AddAuthItemType.PLAN_FIELD }
+            .map { addAuthItem ->
+                val item = addAuthItem.fieldType as PlanField
+                if (item.type != FieldType.BOOLEAN_OPTIONAL.type) {
+                    addAuthItem.fieldsRequest?.let { safeFieldsRequest ->
+                        if (safeFieldsRequest.value.isNullOrEmpty() && !safeFieldsRequest.shouldIgnore) {
+                            return false
+                        }
+                        when (SharedPreferenceManager.isNowBarcode) {
+                            true -> if (!hasPassedBarcodeValidation(
+                                    barcodeValidation,
+                                    safeFieldsRequest.value
+                                )
+                            ) {
+                                return false
+                            }
+                            else -> if (!UtilFunctions.isValidField(
+                                    item.validation,
+                                    safeFieldsRequest.value
+                                ) && !safeFieldsRequest.shouldIgnore
+                            ) {
+                                return false
+                            }
+                        }
+                    }
+                }
+            }
+        return true
+    }
+
     fun updateScrapedCards(cards: List<MembershipCard>) {
         val scrapedCards = cards.filter { it.isScraped == true }
         for (card in scrapedCards) {
@@ -207,5 +261,9 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                 list.remove(it)
             }
         }
+    }
+
+    private fun hasPassedBarcodeValidation(regex: String?, barcode: String?): Boolean {
+        return UtilFunctions.isValidField(regex, barcode)
     }
 }

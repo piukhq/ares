@@ -22,32 +22,16 @@ import com.bink.wallet.utils.enums.FieldType
 
 @Suppress("UNCHECKED_CAST")
 class AddAuthAdapter(
-    private var addAuthItems: MutableList<AddAuthItemWrapper>,
-    var membershipPlan: MembershipPlan?,
-    private var headerTitle: String?,
-    private var headerDescription: String?,
+    private val addAuthItems: MutableList<AddAuthItemWrapper>,
+    val membershipPlan: MembershipPlan?,
+    private val headerTitle: String?,
+    private val headerDescription: String?,
     val checkValidation: (String?) -> Unit = {},
     val navigateToHeader: () -> Unit = {},
     val onLinkClickListener: ((String) -> Unit) = {},
     val onNavigateToBarcodeScanListener: ((Account) -> Unit)
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
-
-    private var scannedBarcode: String? = null
-
-    fun setValues(
-        addAuthItems: MutableList<AddAuthItemWrapper>,
-        membershipPlan: MembershipPlan?,
-        headerTitle: String?,
-        headerDescription: String?
-    ) {
-
-        this.addAuthItems = addAuthItems
-        this.membershipPlan = membershipPlan
-        this.headerTitle = headerTitle
-        this.headerDescription = headerDescription
-        notifyDataSetChanged()
-    }
 
     override fun onBindViewHolder(holder: BaseAddAuthViewHolder<*>, position: Int) {
 
@@ -57,20 +41,19 @@ class AddAuthAdapter(
             if (addAuthItem.getFieldType() == AddAuthItemType.PLAN_FIELD) {
                 when (holder) {
                     is TextFieldViewHolder -> {
+                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.isLastEditText = isLastEditText(addAuthItem)
                         holder.addFields = membershipPlan?.account?.add_fields
                         holder.account = membershipPlan?.account
-                        holder.position = position
-                        holder.barcode = scannedBarcode
                         holder.bind(addAuthItem)
-                        holder.onBarcodeScanSuccess(scannedBarcode)
+                        holder.onBarcodeScanSuccess()
                     }
                     is SpinnerViewHolder -> {
-                        holder.position = position
+                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.bind(addAuthItem)
                     }
                     is CheckboxViewHolder -> {
-                        holder.position = position
+                        holder.setFieldRequestValue = ::setFieldRequest
                         holder.bind(addAuthItem)
                     }
                     is DisplayViewHolder -> {
@@ -83,13 +66,13 @@ class AddAuthAdapter(
                 if (getItemViewType(position) == FieldType.DISPLAY.type) {
                     (holder as DisplayViewHolder).bind(addAuthItem)
                 } else {
-                    holder.position = position
+                    holder.setFieldRequestValue = ::setFieldRequest
                     (holder as CheckboxViewHolder).bind(addAuthItem)
                 }
             } else {
                 membershipPlan?.let {
                     (holder as HeaderViewHolder).navigateToHeader = navigateToHeader
-                    holder.bind(it)
+                    holder.bind(membershipPlan)
                 }
             }
         }
@@ -101,10 +84,7 @@ class AddAuthAdapter(
         return when (viewType) {
             FieldType.TEXT.type,
             FieldType.SENSITIVE.type -> {
-                TextFieldViewHolder(
-                    onNavigateToBarcodeScanListener,
-                    (AddAuthTextItemBinding.inflate(inflater))
-                )
+                TextFieldViewHolder(onNavigateToBarcodeScanListener, (AddAuthTextItemBinding.inflate(inflater)))
             }
             FieldType.SPINNER.type -> {
                 SpinnerViewHolder(
@@ -164,7 +144,7 @@ class AddAuthAdapter(
                             item.fieldType.type == FieldType.SENSITIVE.type)
         }
 
-    fun setBarcode(barcode: String) {
-        scannedBarcode = barcode
+    private fun setFieldRequest(itemWrapper: AddAuthItemWrapper, value: String) {
+        itemWrapper.fieldsRequest?.value = value
     }
 }

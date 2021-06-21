@@ -61,7 +61,6 @@ class AddLoyaltyCardFragment :
             ?.let { scheduleHapticWithPause(it) }
         isFromAddAuth = args.isFromAddAuth
         account = args.account
-        findNavController().previousBackStackEntry?.savedStateHandle?.remove<String>(ADD_AUTH_BARCODE)
     }
 
     override fun onResume() {
@@ -111,6 +110,8 @@ class AddLoyaltyCardFragment :
         cancelHaptic = true
         val savedInstanceState = findNavController().previousBackStackEntry?.savedStateHandle
         savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
+        SharedPreferenceManager.scannedLoyaltyBarCode = null
+        SharedPreferenceManager.hasBarcodeBeenScanned = true
 
         if (isFromAddAuth && account != null && rawResult != null) {
             if (isValidRegex(rawResult.text)) {
@@ -120,7 +121,8 @@ class AddLoyaltyCardFragment :
 
                 }
             } else {
-                   showUnsupportedBarcodePopup(account!!.company_name!!)
+                SharedPreferenceManager.hasBarcodeBeenScanned = false
+                showUnsupportedBarcodePopup(account!!.company_name!!)
             }
 
         } else {

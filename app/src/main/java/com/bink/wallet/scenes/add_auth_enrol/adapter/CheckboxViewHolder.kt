@@ -14,7 +14,6 @@ class CheckboxViewHolder(
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
     override fun bind(item: AddAuthItemWrapper) {
-
         with(binding) {
             item.fieldsRequest?.let {
                 contentAddAuthCheckbox.isChecked = if (it.value == true.toString()) {
@@ -24,16 +23,6 @@ class CheckboxViewHolder(
                         it.value = false.toString()
                     }
                     false
-                }
-                if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-                    addFormField(item.fieldType as PlanField)
-                    updateFieldValue(contentAddAuthCheckbox.isChecked.toString())
-                    //As checkbox doesn't have any validation to check against,we manually set it to true
-                    updateValidation(true)
-                }
-
-                if (item.getFieldType() == AddAuthItemType.PLAN_DOCUMENT) {
-                    addPlanDocument(contentAddAuthCheckbox.isChecked)
                 }
             }
             setDescriptionText(this, item)
@@ -47,18 +36,7 @@ class CheckboxViewHolder(
     }
 
     private fun handleCheckBoxChange(item: AddAuthItemWrapper, isChecked: Boolean) {
-        if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-            updateFieldValue(isChecked.toString())
-            if (!(item.fieldType as PlanField).isBooleanType()) {
-                updateValidation(isChecked)
-            } else {
-                /** As this is an optional type,the validation will always be true as user doesn't have to tick the check box **/
-                updateValidation(true)
-            }
-
-        } else {
-            addPlanDocument(isChecked)
-        }
+        setFieldRequestValue(item, isChecked.toString())
         checkValidation(null)
     }
 

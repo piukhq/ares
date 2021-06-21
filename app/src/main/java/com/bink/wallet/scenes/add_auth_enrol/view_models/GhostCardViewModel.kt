@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.add_auth_enrol.view_models
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 
 class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
@@ -43,7 +42,12 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
         membershipPlan: MembershipPlan
     ) {
         val currentRequest = MembershipCardRequest(
-           FormsUtil.getAccount(),
+            Account(
+                null,
+                null,
+                null,
+                addRegisterFieldsRequest.value?.registration_fields
+            ),
             membershipPlan.id
         )
         ghostMembershipCard(membershipCardId, currentRequest)
@@ -53,7 +57,12 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
         membershipPlan: MembershipPlan
     ) {
         val currentRequest = MembershipCardRequest(
-            FormsUtil.getAccount(),
+            Account(
+                addRegisterFieldsRequest.value?.add_fields,
+                null,
+                null,
+                null
+            ),
             membershipPlan.id
         )
         createMembershipCard(
