@@ -1,138 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data class=".BrowseBrandsBinding">
 
         <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel" />
+            name="viewModel"
+            type="com.bink.wallet.scenes.browse_brands.BrowseBrandsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:navigationIcon="@drawable/ic_back">
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:navigationIcon="@drawable/ic_back">
 
             <TextView
-                    android:id="@+id/title"
-                    style="@style/TitleTextView"
-                    android:layout_gravity="center"
-                    android:text="@string/browse_brands" />
+                android:id="@+id/title"
+                style="@style/TitleTextView"
+                android:layout_gravity="center"
+                android:text="@string/browse_brands" />
 
             <Button
-                    android:id="@+id/button_filters"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:fontFamily="@font/nunito_sans_semibold"
-                    android:foreground="?selectableItemBackground"
-                    android:text="@string/filter"
-                    android:textSize="@dimen/size_sub_headline"
-                    app:isOpen="@{viewModel.isFilterSelected()}" />
+                android:id="@+id/button_filters"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:fontFamily="@font/nunito_sans_semibold"
+                android:foreground="?selectableItemBackground"
+                android:text="@string/filter"
+                android:textSize="@dimen/size_sub_headline"
+                app:isOpen="@{viewModel.isFilterSelected()}" />
 
         </Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/search_bar_wrapper"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/browse_brands_search_bar_height"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                android:animateLayoutChanges="true"
-                android:background="@drawable/rounded_corners_edit_text"
-                android:elevation="@dimen/browse_brands_search_bar_elevation"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar">
+            android:id="@+id/search_bar_wrapper"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/browse_brands_search_bar_height"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/rounded_corners_edit_text"
+            android:elevation="@dimen/browse_brands_search_bar_elevation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <EditText
-                    android:id="@+id/input_search"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/browse_brands_search_bar_height"
-                    android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_search_inactive"
-                    android:drawablePadding="@dimen/margin_padding_size_small"
-                    android:hint="@string/search"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:paddingStart="@dimen/margin_padding_size_small"
-                    android:paddingEnd="@dimen/browse_brands_search_input_padding_end"
-                    android:text="@={viewModel.searchText}"
-                    android:textSize="@dimen/text_size_description_big"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="Autofill,LabelFor" />
-
-            <ImageButton
-                    android:id="@+id/button_clear_search"
-                    style="?actionButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clear_search"
-                    app:isVisible="@{viewModel.isClearButtonVisible}"
-                    app:layout_constraintBottom_toBottomOf="@id/input_search"
-                    app:layout_constraintEnd_toEndOf="@id/input_search"
-                    app:layout_constraintTop_toTopOf="@id/input_search"
-                    tools:ignore="ContentDescription" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/filters_list"
+                android:id="@+id/input_search"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                android:layout_marginEnd="16dp"
-                android:overScrollMode="never"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_bar_wrapper"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_filter"
-                tools:visibility="visible" />
-
-        <TextView
-                android:id="@+id/label_no_match"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                android:fontFamily="@font/nunito_sans_light"
-                android:text="@string/browse_brands_no_match_label_text"
-                android:textSize="@dimen/size_sub_headline"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/filters_list" />
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/brands_recycler_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_padding_size_extra_small"
-                android:overScrollMode="never"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_height="@dimen/browse_brands_search_bar_height"
+                android:background="@android:color/transparent"
+                android:drawableStart="@drawable/ic_search_inactive"
+                android:drawablePadding="@dimen/margin_padding_size_small"
+                android:hint="@string/search"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:paddingStart="@dimen/margin_padding_size_small"
+                android:paddingEnd="@dimen/browse_brands_search_input_padding_end"
+                android:text="@={viewModel.searchText}"
+                android:textSize="@dimen/text_size_description_big"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/filters_list"
-                app:layout_constraintVertical_bias="0"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_brand" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="Autofill,LabelFor" />
+
+            <ImageButton
+                android:id="@+id/button_clear_search"
+                style="?actionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_clear_search"
+                app:isVisible="@{viewModel.isClearButtonVisible}"
+                app:layout_constraintBottom_toBottomOf="@id/input_search"
+                app:layout_constraintEnd_toEndOf="@id/input_search"
+                app:layout_constraintTop_toTopOf="@id/input_search"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filters_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_bar_wrapper"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_filter"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/label_no_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:fontFamily="@font/nunito_sans_light"
+            android:text="@string/browse_brands_no_match_label_text"
+            android:textSize="@dimen/size_sub_headline"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filters_list" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/brands_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filters_list"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_brand" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

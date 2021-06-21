@@ -1,5 +1,6 @@
 package com.bink.wallet.utils
 
+import com.google.gson.Gson
 import io.sentry.Sentry
 import retrofit2.HttpException
 
@@ -10,9 +11,10 @@ object SentryUtils {
 
         when (exception) {
             is HttpException -> {
-                userInfo = "Error code: ${exception.code()} - Error Body: ${exception.response()?.errorBody()?.string()}"
+                val errorBody = Gson().toJson(ErrorBody(exception.getErrorBody()))
+                userInfo = "Error code: ${exception.code()} - Error Body: $errorBody"
             }
-            else -> userInfo = "Error code: ${exception.message}"
+            else -> userInfo = "Error message: ${exception.message}"
         }
 
         logError(sentryError, userInfo)

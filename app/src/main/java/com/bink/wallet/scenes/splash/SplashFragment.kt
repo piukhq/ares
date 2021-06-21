@@ -5,14 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.bink.sdk.BinkCore
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentSplashBinding
-import com.bink.wallet.model.Consent
-import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.network.ApiConfig
 import com.bink.wallet.network.ApiConstants
 import com.bink.wallet.utils.LocalStoreUtils
@@ -80,7 +76,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
-        setAppPrefs()
         persistPaymentCardHashSecret()
         configureZendesk()
         persistBouncerKeys()
@@ -166,41 +161,6 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
                     LocalStoreUtils.KEY_ENCRYPT_PAYMENT_PUBLIC_KEY,
                     paymentCardEncryptionPublicKeyDev()
                 )
-            }
-        }
-    }
-
-    private fun setAppPrefs() {
-        if (!requireContext().let { LocalStoreUtils.isLoggedIn(LocalStoreUtils.KEY_TOKEN) }) {
-            val binkCore = BinkCore(requireContext())
-            val key = binkCore.sessionConfig.apiKey
-            val email = binkCore.sessionConfig.userEmail
-            if (!key.isNullOrEmpty()) {
-                SharedPreferenceManager.isUserLoggedIn = true
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_TOKEN,
-                    getString(R.string.token_api_v1, key)
-                )
-
-                if (!email.isNullOrEmpty()) {
-                    LocalStoreUtils.setAppSharedPref(
-                        LocalStoreUtils.KEY_EMAIL,
-                        email
-                    )
-
-                    viewModel.postService(
-                        PostServiceRequest(
-                            consent = Consent(
-                                email,
-                                System.currentTimeMillis() / 1000
-                            )
-                        )
-                    )
-                } else {
-                    findNavController().navigateIfAdded(this, getDirections())
-                }
-            } else {
-                findNavController().navigateIfAdded(this, getDirections())
             }
         }
     }
