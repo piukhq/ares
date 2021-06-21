@@ -278,7 +278,7 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
 
     /** SENTRY **/
-    implementation 'io.sentry:sentry-android:4.3.0'
+    implementation 'io.sentry:sentry-android:5.0.1'
 
 //    /** LEAK CANARY**/
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'

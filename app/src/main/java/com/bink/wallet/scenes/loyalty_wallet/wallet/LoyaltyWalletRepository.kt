@@ -16,6 +16,7 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlinx.coroutines.*
+import retrofit2.HttpException
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
