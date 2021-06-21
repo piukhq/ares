@@ -16,6 +16,4 @@ sealed class BrowseBrandsListItem(val id: Int) {
         @StringRes val sectionDescription: Int
     ) :
         BrowseBrandsListItem(R.layout.item_brands_section_title)
-
-    class ScanCardItem : BrowseBrandsListItem(R.layout.item_scan_card)
 }

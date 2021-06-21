@@ -4,7 +4,6 @@ import com.bink.wallet.databinding.AddAuthSpinnerItemBinding
 
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
-import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 
 class SpinnerViewHolder(
@@ -16,20 +15,20 @@ class SpinnerViewHolder(
 
     private val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {
-            position?.let { FormsUtil.updateValidation(it,false) }
+
         }
 
         override fun onItemSelected(
             parent: AdapterView<*>?,
             view: View?,
-            pos: Int,
+            position: Int,
             id: Long
         ) {
             item?.let {
-                position?.let { position ->
-                    FormsUtil.updateField(position,(it.fieldType as PlanField).choice?.get(pos).toString())
-                     FormsUtil.updateValidation(position,true)
-                }
+                setFieldRequestValue(
+                    it,
+                    (it.fieldType as PlanField).choice?.get(position).toString()
+                )
             }
         }
 
@@ -40,17 +39,11 @@ class SpinnerViewHolder(
         val spinner = binding.contentAddAuthSpinner
         val planField = item.fieldType as PlanField
         binding.planField = planField
-        position?.let {
-            FormsUtil.addFormField(it,planField)
-            FormsUtil.updateField(it,planField.choice?.get(0).toString())
-            FormsUtil.updateValidation(it,true)
-        }
-
+        setFieldRequestValue(item, planField.choice?.get(0).toString())
         with(spinner) {
             isFocusable = false
             onItemSelectedListener = itemSelectedListener
         }
-
         binding.executePendingBindings()
     }
 }

@@ -258,10 +258,6 @@
             android:id="@+id/browse_to_add_join"
             app:destination="@id/add_join" />
 
-        <action
-            android:id="@+id/browse_to_add"
-            app:destination="@id/add_loyalty_card"/>
-
         <argument
             android:name="membershipPlans"
             app:argType="com.bink.wallet.model.response.membership_plan.MembershipPlan[]" />
