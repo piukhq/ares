@@ -230,23 +230,26 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
         binding.container.visibility = View.GONE
 
+
+        val cardNumber = card?.card?.membership_id ?: card?.card?.barcode ?: ""
+
         when (card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
             BarcodeFormat.AZTEC -> {
                 binding.tapCard.text = if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(R.string.tap_to_enlarge_aztec)
-                binding.sbBarcodeText.text = card.card?.barcode!!
                 binding.sbTitle.text = context.getString(R.string.bonus_card_number)
                 binding.sbCompanyLogo.loadImage(plan)
                 binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
                 binding.squareBarcodeContainer.visibility = View.VISIBLE
+                binding.sbBarcodeText.text = cardNumber
             }
             else -> {
                 binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
-                binding.rbBarcodeText.text = card?.card?.barcode!!
                 binding.rbTitle.text = context.getString(R.string.bonus_card_number)
                 binding.rbCompanyLogo.loadImage(plan)
                 binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
                 binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+                binding.rbBarcodeText.text = cardNumber
             }
         }
 
