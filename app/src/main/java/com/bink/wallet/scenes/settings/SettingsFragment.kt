@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,12 +83,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 settings = SettingsItemsPopulation.populateItems(LocalContext.current.resources),
                 modifier = Modifier.weight(1f)
             )
-        }
+         }
     }
 
     @Composable
     fun SettingsList(settings: List<SettingsItem>, modifier: Modifier = Modifier) {
-        LazyColumn(modifier = modifier, contentPadding = PaddingValues(16.dp)) {
+        LazyColumn(modifier = modifier, contentPadding = PaddingValues(dimensionResource(id = R.dimen.margin_padding_size_medium))) {
             items(items = settings) { setting ->
 
                 when (setting.type) {
@@ -96,7 +97,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                             text = setting.title ?: "",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 24.dp)
+                            modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
                         )
                     }
                     SettingsItemType.FOOTER -> {
@@ -133,7 +134,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     @Composable
     fun SettingCell(settingsItem: SettingsItem) {
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
 
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .clickable {
