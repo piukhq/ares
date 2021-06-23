@@ -182,8 +182,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkForUpdates() {
         try {
-
-
             val appUpdateInfoTask = appUpdateManager.appUpdateInfo
             val appConfiguration: AppConfiguration = Gson().fromJson(
                 FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_APP_CONFIGURATION),
