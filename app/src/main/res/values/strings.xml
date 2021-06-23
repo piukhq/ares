@@ -27,6 +27,11 @@
     <string name="card_number_description">Show this card number in-store just like you would a physical loyalty card.</string>
     <string name="tap_card_to_show_barcode">Tap card to show barcode</string>
     <string name="no_barcode_displayed">This barcode cannot be displayed</string>
+    <string name="update_title">App update available</string>
+    <string name="update_body">Get the latest version of the Bink app.</string>
+    <string name="update_maybe_later">Maybe Later</string>
+    <string name="update_skip_version">Skip this version</string>
+    <string name="update_start_update">Start update</string>
 
     <!-- Error -->
     <string name="error_title">@string/error</string>
