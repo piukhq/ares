@@ -7,5 +7,7 @@
         <value></value>
         <key>LPC_master_enabled_debug</key>
         <value></value>
+        <key>app_configuration</key>
+        <value></value>
     </entry>
 </defaultsMap>
