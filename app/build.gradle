@@ -49,7 +49,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode buildNumber
-        versionName "2.2.4"
+        versionName "2.3.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -185,7 +185,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 //    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.4.31'
 
-    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+    implementation "androidx.security:security-crypto:1.1.0-alpha01"
 
     // ViewModel & LiveData
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
@@ -278,7 +278,7 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
 
     /** SENTRY **/
-    implementation 'io.sentry:sentry-android:2.3.1'
+    implementation 'io.sentry:sentry-android:5.0.1'
 
 //    /** LEAK CANARY**/
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
