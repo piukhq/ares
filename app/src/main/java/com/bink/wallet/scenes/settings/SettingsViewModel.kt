@@ -13,8 +13,6 @@ import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
-import com.bink.wallet.utils.LocalStoreUtils
-import com.facebook.login.LoginManager
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +54,6 @@ class SettingsViewModel constructor(
         loginRepository.logOut(logOutResponse, logOutErrorResponse)
         loyaltyWalletRepository.clearMembershipCards()
         paymentWalletRepository.clearPaymentCards()
-        LoginManager.getInstance().logOut()
     }
 
     fun clearData() {

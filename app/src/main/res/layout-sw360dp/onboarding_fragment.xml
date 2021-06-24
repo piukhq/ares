@@ -37,23 +37,6 @@
             app:piv_unselectedColor="@color/gray_inactive"
             app:piv_viewPager="@id/pager" />
 
-        <com.bink.wallet.FacebookButton
-            android:id="@+id/continue_with_facebook"
-            style="@style/RoundedFacebookButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/buttons_margin"
-            android:layout_marginEnd="@dimen/buttons_margin"
-            android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            android:elevation="@dimen/facebook_button_elevation"
-            android:fontFamily="@font/nunito_sans_bold"
-            android:text="@string/continue_with_facebook"
-            android:textAllCaps="false"
-            app:barrierAllowsGoneWidgets="true"
-            app:layout_constraintBottom_toTopOf="@+id/sign_up_with_email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <Button
             android:id="@+id/sign_up_with_email"
             style="@style/TextAppearance.AppCompat.Button"

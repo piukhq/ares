@@ -37,7 +37,6 @@
 -keep class  androidx.navigation.fragment.NavHostFragment.** { *; }
 -keep class com.bink.wallet.model.** { *; }
 -keep class com.bink.wallet.modal.** { *; }
--keep class com.facebook.AccessToken
 -keep class com.bink.wallet.utils.** { *; }
 -keep class com.bink.wallet.utils.enums.** { *; }
 -keep public class androidx.support.v7.widget.** { *; }

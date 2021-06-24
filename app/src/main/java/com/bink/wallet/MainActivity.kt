@@ -13,10 +13,7 @@ import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.enums.BuildTypes
-import com.facebook.login.LoginManager
 import com.google.firebase.analytics.FirebaseAnalytics
-import io.sentry.android.core.SentryAndroid
-import io.sentry.android.core.SentryAndroidOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
@@ -91,14 +88,6 @@ class MainActivity : AppCompatActivity() {
             R.id.loyalty_fragment,
             R.id.rooted_screen -> {
                 finish()
-            }
-            R.id.add_email_fragment -> {
-                LoginManager.getInstance().logOut()
-                findNavController(R.id.main_fragment).navigate(R.id.add_email_to_onboarding)
-            }
-            R.id.accept_tcs_fragment -> {
-                LoginManager.getInstance().logOut()
-                findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
             }
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
