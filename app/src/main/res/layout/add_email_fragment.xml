@@ -92,6 +92,7 @@
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/size_sub_headline"
+            app:backgroundTint="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

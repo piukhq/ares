@@ -222,7 +222,8 @@
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/add_join_add_card"
                         android:textAllCaps="false"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        app:backgroundTint="@null" />
 
                     <Button
                         android:id="@+id/get_card_button"
@@ -232,7 +233,8 @@
                         android:layout_marginEnd="@dimen/button_margin"
                         android:layout_marginBottom="@dimen/margin_padding_size_small_medium"
                         android:text="@string/add_join_get_new_card"
-                        android:textAllCaps="false" />
+                        android:textAllCaps="false"
+                        app:backgroundTint="@null" />
                 </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
