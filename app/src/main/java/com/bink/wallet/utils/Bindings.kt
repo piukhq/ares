@@ -231,7 +231,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         binding.container.visibility = View.GONE
 
 
-        val cardNumber = card?.card?.membership_id ?: card?.card?.barcode ?: ""
+        val cardNumber = card?.card?.membership_id ?: ""
 
         when (card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
