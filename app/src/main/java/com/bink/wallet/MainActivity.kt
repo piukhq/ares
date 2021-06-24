@@ -1,19 +1,41 @@
 package com.bink.wallet
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.AppConfiguration
+import com.bink.wallet.model.isNewVersionAvailable
+import com.bink.wallet.model.skipVersion
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_ACTION
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_KEY
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_LATER
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_OPEN_STORE
+import com.bink.wallet.utils.FirebaseEvents.UPDATE_SKIP
 import com.bink.wallet.utils.FirebaseUserProperties
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.REMOTE_CONFIG_APP_CONFIGURATION
+import com.bink.wallet.utils.UPDATE_REQUEST_CODE
 import com.bink.wallet.utils.enums.BuildTypes
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
+import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import io.sentry.android.core.SentryAndroid
+import io.sentry.android.core.SentryAndroidOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.reflect.KProperty
@@ -25,10 +47,12 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
+    private lateinit var appUpdateManager: AppUpdateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
 
 //        SentryAndroid.init(
@@ -43,8 +67,11 @@ class MainActivity : AppCompatActivity() {
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
+
         setContentView(R.layout.activity_main)
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
+
+        checkForUpdates()
     }
 
     override fun onResume() {
@@ -59,6 +86,17 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             isFirstLaunch = false
+        }
+
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    IMMEDIATE,
+                    this,
+                    UPDATE_REQUEST_CODE
+                )
+            }
         }
     }
 
@@ -131,6 +169,75 @@ class MainActivity : AppCompatActivity() {
             setUserProperty(firebaseAnalytics, BINK_VERSION, retrieveBinkVersion(this@MainActivity))
         }
     }
+
+    private fun checkForUpdates() {
+        try {
+            val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+            val appConfiguration: AppConfiguration = Gson().fromJson(
+                FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_APP_CONFIGURATION),
+                object : TypeToken<AppConfiguration>() {}.type
+            )
+
+            appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                        IMMEDIATE
+                    ) && appConfiguration.isNewVersionAvailable()
+                ) {
+
+                    lateinit var dialog: AlertDialog
+                    val builder = AlertDialog.Builder(this)
+
+                    builder.setTitle(getString(R.string.update_title))
+                    builder.setMessage(getString(R.string.update_body))
+                    val dialogClickListener = DialogInterface.OnClickListener { _, button ->
+                        when (button) {
+                            DialogInterface.BUTTON_POSITIVE -> {
+                                appUpdateManager.startUpdateFlowForResult(
+                                    appUpdateInfo,
+                                    IMMEDIATE,
+                                    this,
+                                    UPDATE_REQUEST_CODE
+                                )
+                                firebaseAnalytics.logEvent(
+                                    UPDATE_ACTION,
+                                    Bundle().apply { putString(UPDATE_KEY, UPDATE_OPEN_STORE) })
+                            }
+                            DialogInterface.BUTTON_NEGATIVE -> {
+                                firebaseAnalytics.logEvent(
+                                    UPDATE_ACTION,
+                                    Bundle().apply { putString(UPDATE_KEY, UPDATE_LATER) })
+                            }
+                            DialogInterface.BUTTON_NEUTRAL -> {
+                                appConfiguration.skipVersion()
+                                firebaseAnalytics.logEvent(
+                                    UPDATE_ACTION,
+                                    Bundle().apply { putString(UPDATE_KEY, UPDATE_SKIP) })
+                            }
+                        }
+                    }
+
+                    builder.setPositiveButton(
+                        getString(R.string.update_start_update),
+                        dialogClickListener
+                    )
+                    builder.setNeutralButton(
+                        getString(R.string.update_skip_version),
+                        dialogClickListener
+                    )
+                    builder.setNegativeButton(
+                        getString(R.string.update_maybe_later),
+                        dialogClickListener
+                    )
+                    dialog = builder.create()
+                    dialog.setCancelable(false)
+                    dialog.show()
+
+                }
+            }
+        } catch (e: Exception) {
+            return
+        }
+    }
 }
 
 private operator fun Any.setValue(
@@ -138,7 +245,8 @@ private operator fun Any.setValue(
     property: KProperty<*>,
     loginRepository: LoginRepository
 ) {
-
 }
+
+
 
 
