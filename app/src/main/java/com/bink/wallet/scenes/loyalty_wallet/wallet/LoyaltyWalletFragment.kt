@@ -260,7 +260,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchPeriodicMembershipCards(context)
+        context?.let { viewModel.fetchPeriodicMembershipCards(it) }
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -371,6 +371,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         httpException.getErrorBody()
                     )
                 )
+            }
+        }
+
+        viewModel.localMembershipPlanData.observeNonNull(this) {
+            if (!UtilFunctions.isNetworkAvailable(context)) {
+                viewModel.membershipPlanData.value = it
             }
         }
 
@@ -595,7 +601,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            viewModel.fetchPeriodicMembershipCards(context)
+            context?.let { viewModel.fetchPeriodicMembershipCards(it) }
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()

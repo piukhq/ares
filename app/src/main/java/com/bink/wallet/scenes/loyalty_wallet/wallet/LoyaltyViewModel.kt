@@ -14,6 +14,7 @@ import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.utils.DateTimeUtils
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.*
@@ -120,7 +121,7 @@ class LoyaltyViewModel constructor(
     }
 
     private fun checkCardScrape(cards: List<MembershipCard>, context: Context?) {
-        val shouldScrapeCards = DateTimeUtils.haveTwoHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped)
+        val shouldScrapeCards = DateTimeUtils.haveTwoHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(context)
 
         if (shouldScrapeCards) {
             scrapeCards(cards, context)
@@ -136,9 +137,8 @@ class LoyaltyViewModel constructor(
         membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
-    fun fetchPeriodicMembershipCards(context: Context?) {
-        val shouldMakePeriodicCall =
-            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime)
+    fun fetchPeriodicMembershipCards(context: Context) {
+        val shouldMakePeriodicCall = DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(context)
         if (shouldMakePeriodicCall) {
             fetchMembershipCards(context)
         } else {
