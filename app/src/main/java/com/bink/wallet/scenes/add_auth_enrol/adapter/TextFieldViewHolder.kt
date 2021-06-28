@@ -39,6 +39,7 @@ class TextFieldViewHolder(
     private var editText: TextInputEditText? = null
     private var cardPlanField: PlanField? = null
     private var barcodePlanField: PlanField? = null
+    private var isFromBarcodeScan: Boolean = false
 
     private val textWatcher = object : SimplifiedTextWatcher {
         override fun onTextChanged(
@@ -75,7 +76,7 @@ class TextFieldViewHolder(
         val planRequest = item.fieldsRequest
 
         //As bind gets called multiple times,this is to guard against unnecessarily adding the already existing field again
-        if (FormsUtil.fieldHasNotBeenAdded(position)) {
+        if (FormsUtil.fieldHasNotBeenAdded(position) || isFromBarcodeScan) {
             addFormField(planField)
         }
 
@@ -185,6 +186,7 @@ class TextFieldViewHolder(
             }
         }
 
+        isFromBarcodeScan = false
         binding.executePendingBindings()
     }
 
@@ -195,6 +197,7 @@ class TextFieldViewHolder(
             val authItemWrapper =
                 barcodePlanField?.let { AddAuthItemWrapper(it, PlanFieldsRequest(null, barcode)) }
             if (authItemWrapper != null) {
+                isFromBarcodeScan = true
                 bind(authItemWrapper)
             }
             editText?.setText(scannedBarcode)
