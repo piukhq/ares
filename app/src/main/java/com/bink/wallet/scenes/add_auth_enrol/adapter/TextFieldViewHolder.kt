@@ -130,6 +130,7 @@ class TextFieldViewHolder(
             ) {
                 editText = this
                 barcodePlanField = planField.alternativePlanField
+                barcodePlanField?.typeOfField = planField.typeOfField
                 setEndDrawable(context.getDrawable(R.drawable.ic_camera))
                 onTouchListener(false, planField)
 
