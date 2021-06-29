@@ -21,7 +21,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
@@ -83,7 +82,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 settings = SettingsItemsPopulation.populateItems(LocalContext.current.resources),
                 modifier = Modifier.weight(1f)
             )
-         }
+        }
     }
 
     @Composable
@@ -104,7 +103,14 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         VersionNumber()
                     }
                     else -> {
-                        SettingCell(setting)
+                        val shouldShowBottomDivider = try {
+                            val nextSettingType = settings[settings.indexOf(setting) + 1].type
+                            nextSettingType != SettingsItemType.HEADER && nextSettingType != SettingsItemType.FOOTER
+                        } catch (e: Exception) {
+                            false
+                        }
+
+                        SettingCell(setting, shouldShowBottomDivider = shouldShowBottomDivider)
                     }
                 }
             }
@@ -133,7 +139,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
     }
 
     @Composable
-    fun SettingCell(settingsItem: SettingsItem) {
+    fun SettingCell(settingsItem: SettingsItem, shouldShowBottomDivider: Boolean) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
 
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
@@ -163,7 +169,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
 
-        Divider()
+        if (shouldShowBottomDivider) {
+            Divider()
+        }
     }
 
     @Preview(showBackground = true)
