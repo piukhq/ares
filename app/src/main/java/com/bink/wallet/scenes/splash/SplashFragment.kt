@@ -11,13 +11,8 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.FragmentSplashBinding
 import com.bink.wallet.network.ApiConfig
 import com.bink.wallet.network.ApiConstants
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.RequestReviewUtil
-import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.BuildTypes
-import com.bink.wallet.utils.getSessionHandlerNavigationDestination
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -192,11 +187,20 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun goToDashboard() {
-        viewModel.getUserResponse.observeNonNull(this) {
-            findNavController().navigateIfAdded(this, R.id.global_to_home)
-            setAnalyticsUserId(it.uid)
+        context?.let {
+            if (UtilFunctions.isNetworkAvailable(it, false)) {
+                viewModel.getUserResponse.observeNonNull(this) { user ->
+                    findNavController().navigateIfAdded(this, R.id.global_to_home)
+                    setAnalyticsUserId(user.uid)
+                }
+                viewModel.getCurrentUser()
+            } else {
+                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)?.let { uid ->
+                    setAnalyticsUserId(uid)
+                    findNavController().navigateIfAdded(this, R.id.global_to_home)
+                }
+            }
         }
-        viewModel.getCurrentUser()
     }
 
     private fun setUpRemoteConfig() {
