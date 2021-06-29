@@ -161,7 +161,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.margin_padding_size_small_medium)))
 
         Divider()
     }
