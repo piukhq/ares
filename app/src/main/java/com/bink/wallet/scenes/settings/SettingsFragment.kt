@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -51,6 +53,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         get() = R.layout.settings_fragment
 
     override val viewModel: SettingsViewModel by viewModel()
+
+    private val nunitoSans = FontFamily(
+        Font(R.font.nunito_sans, FontWeight.Normal),
+        Font(R.font.nunito_sans_extrabold, FontWeight.ExtraBold),
+        Font(R.font.nunito_sans_light, FontWeight.Light)
+    )
 
     override fun onResume() {
         super.onResume()
@@ -87,6 +95,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     @Composable
     fun SettingsList(settings: List<SettingsItem>, modifier: Modifier = Modifier) {
+
         LazyColumn(modifier = modifier, contentPadding = PaddingValues(dimensionResource(id = R.dimen.margin_padding_size_medium))) {
             items(items = settings) { setting ->
 
@@ -94,8 +103,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                     SettingsItemType.HEADER -> {
                         Text(
                             text = setting.title ?: "",
+                            fontFamily = nunitoSans,
+                            fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp,
-                            fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = dimensionResource(id = R.dimen.margin_padding_size_medium_large))
                         )
                     }
@@ -125,7 +135,12 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
-                Text(text = it, color = Color.Gray)
+                Text(
+                    text = it,
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                )
             }
 
             Text(
@@ -150,11 +165,14 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                 Text(
                     text = settingsItem.title ?: "",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontFamily = nunitoSans,
+                    fontWeight = FontWeight.ExtraBold
                 )
                 if (!settingsItem.value.isNullOrEmpty()) {
                     Text(
                         text = settingsItem.value,
+                        fontFamily = nunitoSans,
+                        fontWeight = FontWeight.Light,
                         fontSize = 15.sp
                     )
                 }
