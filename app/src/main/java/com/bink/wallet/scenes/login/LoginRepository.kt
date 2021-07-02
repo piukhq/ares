@@ -4,8 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.PostServiceRequest
-import com.bink.wallet.model.auth.FacebookAuthRequest
-import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
@@ -45,25 +43,6 @@ class LoginRepository(
                     loginData.value = response.consent
                 } catch (e: Exception) {
                     authErrorResponse.value = e
-                }
-            }
-        }
-    }
-
-    fun authWithFacebook(
-        facebookAuthRequest: FacebookAuthRequest,
-        authResult: MutableLiveData<FacebookAuthResponse>,
-        authError: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.authWithFacebookAsync(facebookAuthRequest)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    SharedPreferenceManager.isUserLoggedIn = true
-                    authResult.value = response
-                } catch (e: Exception) {
-                    authError.value = e
                 }
             }
         }

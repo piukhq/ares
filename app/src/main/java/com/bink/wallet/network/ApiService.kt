@@ -1,8 +1,6 @@
 package com.bink.wallet.network
 
 import com.bink.wallet.model.PostServiceRequest
-import com.bink.wallet.model.auth.FacebookAuthRequest
-import com.bink.wallet.model.auth.FacebookAuthResponse
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
@@ -102,11 +100,6 @@ interface ApiService {
     suspend fun getPaymentCardAsync(
         @Path("payment_id") cardId: String
     ): PaymentCard
-
-    @POST("/users/auth/facebook")
-    fun authWithFacebookAsync(
-        @Body facebookAuthRequest: FacebookAuthRequest
-    ): Deferred<FacebookAuthResponse>
 
     @POST("/users/register")
     fun signUpAsync(

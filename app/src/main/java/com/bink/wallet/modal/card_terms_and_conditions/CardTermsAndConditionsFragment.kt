@@ -14,7 +14,6 @@ import com.bink.wallet.model.response.payment_card.Account
 import com.bink.wallet.model.response.payment_card.BankCard
 import com.bink.wallet.model.response.payment_card.Consent
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
-import com.bink.wallet.scenes.registration.AcceptTCFragmentDirections
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_PAYMENT_CARD_RESPONSE_SUCCESS
@@ -154,7 +153,7 @@ class CardTermsAndConditionsFragment : GenericModalFragment() {
             override fun onClick(textView: View) {
                 findNavController().navigateIfAdded(
                     this@CardTermsAndConditionsFragment,
-                    AcceptTCFragmentDirections.globalToWeb(
+                    CardTermsAndConditionsFragmentDirections.globalToWeb(
                         "https://bink.com/privacy-policy/"
                     ), R.id.card_terms_and_conditions
                 )
