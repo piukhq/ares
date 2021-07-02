@@ -59,6 +59,7 @@
                 android:layout_marginBottom="@dimen/button_margin"
                 android:text="@string/add_card_text"
                 android:textAllCaps="false"
+            app:backgroundTint="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

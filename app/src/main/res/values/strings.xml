@@ -418,7 +418,6 @@
 
     <!-- Onboarding -->
     <string name="skip">Skip</string>
-    <string name="continue_with_facebook">Continue with Facebook</string>
     <string name="sign_up_with_email">Sign up with email</string>
     <string name="log_in_with_email">Log in with email</string>
     <string name="page_1_title">Payment linked loyalty. Magic!</string>
@@ -449,8 +448,6 @@
     <string name="terms_and_conditions_message">I agree to Bink\'s Terms and Conditions\nPlease read the Bink Privacy Policy for further details of how your data will be processed</string>
     <string name="marketing_message_text">Opt in to receive marketing messages\nMake sure you\'re the first to know about available <b>rewards</b>, <b>offers</b> and <b>updates</b>!\nYou can opt out at any time.</string>
     <string name="token_api_v1">Token %1$s</string>
-    <string name="facebook_unavailable">Facebook is currently unavailable.</string>
-    <string name="facebook_cancelled">Facebook login was cancelled.</string>
     <string name="enter_credentials">Enter credentials</string>
     <string name="add_card">Add card</string>
     <string name="please_enter_credentials">Please enter your %1$s credentials below to add this card to your wallet.</string>
@@ -460,17 +457,12 @@
 
     <!-- Accept T&Cs -->
     <string name="one_last_step">One last step...</string>
-    <string name="facebook_failed">Continue with Facebook failed</string>
 
     <!-- Add email -->
     <string name="add_email">Add email</string>
     <string name="add_email_subtitle">Please add your email address below</string>
     <string name="continue_button">Continue</string>
     <string name="email_label">Email</string>
-
-    <!-- Facebook -->
-    <string name="facebook_app_id">736124376499729</string>
-    <string name="fb_login_protocol_scheme">fb736124376499729</string>
 
     <string name="enter_email_text">Enter email address</string>
     <string name="enter_password">Enter password</string>

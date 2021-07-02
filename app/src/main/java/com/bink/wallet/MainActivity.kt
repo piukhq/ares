@@ -25,7 +25,6 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMOTE_CONFIG_APP_CONFIGURATION
 import com.bink.wallet.utils.UPDATE_REQUEST_CODE
 import com.bink.wallet.utils.enums.BuildTypes
-import com.facebook.login.LoginManager
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
@@ -127,14 +126,6 @@ class MainActivity : AppCompatActivity() {
             R.id.loyalty_fragment,
             R.id.rooted_screen -> {
                 finish()
-            }
-            R.id.add_email_fragment -> {
-                LoginManager.getInstance().logOut()
-                findNavController(R.id.main_fragment).navigate(R.id.add_email_to_onboarding)
-            }
-            R.id.accept_tcs_fragment -> {
-                LoginManager.getInstance().logOut()
-                findNavController(R.id.main_fragment).navigate(R.id.accept_to_onboarding)
             }
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)

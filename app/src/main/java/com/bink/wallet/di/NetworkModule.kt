@@ -14,7 +14,6 @@ import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.logError
 import com.bink.wallet.utils.putSessionHandlerNavigationDestination
-import com.facebook.login.LoginManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
@@ -84,7 +83,6 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
 
         if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             SharedPreferenceManager.isUserLoggedIn = false
-            LoginManager.getInstance().logOut()
             LocalStoreUtils.clearPreferences(appContext)
             appContext.startActivity(
                 Intent(appContext, MainActivity::class.java)

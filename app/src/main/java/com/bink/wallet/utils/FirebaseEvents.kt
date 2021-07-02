@@ -56,7 +56,6 @@ object FirebaseEvents {
     const val ONBOARDING_USER_COMPLETE = "onboarding_user_complete"
     const val ONBOARDING_SERVICE_COMPLETE = "onboarding_service_complete"
     const val ONBOARDING_END = "onboarding_end"
-    const val ONBOARDING_JOURNEY_FACEBOOK= "FACEBOOK"
     const val ONBOARDING_JOURNEY_REGISTER = "REGISTER"
     const val ONBOARDING_JOURNEY_LOGIN = "LOGIN"
     const val ONBOARDING_JOURNEY_KEY = "onboarding_journey"

@@ -38,6 +38,7 @@
     <dimen name="voucher_card_bar_bottom_margin">10dp</dimen>
     <dimen name="voucher_card_margin_bottom">24dp</dimen>
     <dimen name="voucher_code_margin_top">12dp</dimen>
+    <dimen name="company_name_margin">30dp</dimen>
 
     <!-- Barcode Screen -->
     <dimen name="button_margin_start">48dp</dimen>
@@ -136,7 +137,6 @@
     <dimen name="image_suggested_pll_size">60dp</dimen>
     <dimen name="page_image_height">200dp</dimen>
     <dimen name="separator_height">1dp</dimen>
-    <dimen name="facebook_button_elevation">4dp</dimen>
 
     <!-- Login Screen -->
     <dimen name="gradient_button_margin">52dp</dimen>
