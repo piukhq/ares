@@ -74,12 +74,12 @@ object UtilFunctions {
 
     @Suppress("DEPRECATION")
     fun isNetworkAvailable(
-        context: Context,
+        context: Context?,
         isUserAction: Boolean = false,
         okButtonAction: () -> Unit = {}
     ): Boolean {
         val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         val isNetworkAvailable = networkInfo != null && networkInfo.isConnected
         if (isUserAction && !isNetworkAvailable) {
