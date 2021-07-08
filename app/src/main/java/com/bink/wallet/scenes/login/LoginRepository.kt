@@ -54,12 +54,11 @@ class LoginRepository(
         signUpErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.signUpAsync(signUpRequest)
+            val requestResult = apiService.signUpAsync(signUpRequest)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
-                    signUpResponse.value = response
+                    signUpResponse.value = requestResult
                 } catch (e: java.lang.Exception) {
                     signUpErrorResponse.value = e
                 }
@@ -73,12 +72,11 @@ class LoginRepository(
         signUpErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.logInAsync(logInRequest)
+            val requestResult = apiService.logInAsync(logInRequest)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
-                    signUpResponse.value = response
+                    signUpResponse.value = requestResult
                 } catch (e: Exception) {
                     signUpErrorResponse.value = e
                 }

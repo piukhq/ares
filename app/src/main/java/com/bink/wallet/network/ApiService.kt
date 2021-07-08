@@ -102,9 +102,9 @@ interface ApiService {
     ): PaymentCard
 
     @POST("/users/register")
-    fun signUpAsync(
+    suspend fun signUpAsync(
         @Body signUpRequest: SignUpRequest
-    ): Deferred<SignUpResponse>
+    ): SignUpResponse
 
     @PUT("/users/me/settings")
     fun checkMarketingPrefAsync(
@@ -112,9 +112,9 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @POST("/users/login")
-    fun logInAsync(
+    suspend fun logInAsync(
         @Body signUpRequest: SignUpRequest
-    ): Deferred<SignUpResponse>
+    ): SignUpResponse
 
     @POST("/users/me/logout")
     fun logOutAsync(): Deferred<ResponseBody>
