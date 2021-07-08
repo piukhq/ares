@@ -90,11 +90,10 @@ class LoginRepository(
         postServiceErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.postServiceAsync(postServiceRequest)
+            val requestResult = apiService.postServiceAsync(postServiceRequest)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    postServiceResponse.value = response
+                    postServiceResponse.value = requestResult
                 } catch (e: Exception) {
                     postServiceErrorResponse.value = e
                 }
@@ -108,11 +107,10 @@ class LoginRepository(
         marketingError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.checkMarketingPrefAsync(checkedOption)
+            val requestResult = apiService.checkMarketingPrefAsync(checkedOption)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    marketingResponse.value = response
+                    marketingResponse.value = requestResult
                 } catch (e: Exception) {
                     marketingError.value = e
                 }
@@ -142,11 +140,10 @@ class LoginRepository(
         logOutErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.logOutAsync()
+            val requestResult = apiService.logOutAsync()
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    logOutResponse.value = response
+                    logOutResponse.value = requestResult
                 } catch (e: Exception) {
                     logOutErrorResponse.value = e
                 }
@@ -159,10 +156,10 @@ class LoginRepository(
         preferenceErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getPreferencesAsync()
+            val requestResult = apiService.getPreferencesAsync()
             withContext(Dispatchers.Main) {
                 try {
-                    preferenceResponse.value = request.await()
+                    preferenceResponse.value = requestResult
                 } catch (e: java.lang.Exception) {
                     preferenceErrorResponse.value = e
                 }
@@ -176,13 +173,12 @@ class LoginRepository(
         preferenceErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.putPreferencesAsync(
+            val requestResult = apiService.putPreferencesAsync(
                RequestBody.create(MediaType.parse(CONTENT_TYPE),
                requestBody)
             )
             try {
-                val response = request.await()
-                preferenceResponse.value = response
+                preferenceResponse.value = requestResult
             } catch (e: Exception) {
                 preferenceErrorResponse.postValue(e)
             }

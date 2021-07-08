@@ -94,7 +94,7 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @POST("/ubiquity/service")
-    fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
+    suspend fun postServiceAsync(@Body requestRequest: PostServiceRequest): ResponseBody
 
     @GET("/ubiquity/payment_card/{payment_id}")
     suspend fun getPaymentCardAsync(
@@ -107,9 +107,9 @@ interface ApiService {
     ): SignUpResponse
 
     @PUT("/users/me/settings")
-    fun checkMarketingPrefAsync(
+    suspend fun checkMarketingPrefAsync(
         @Body checkedOption: MarketingOption
-    ): Deferred<ResponseBody>
+    ): ResponseBody
 
     @POST("/users/login")
     suspend fun logInAsync(
@@ -117,15 +117,15 @@ interface ApiService {
     ): SignUpResponse
 
     @POST("/users/me/logout")
-    fun logOutAsync(): Deferred<ResponseBody>
+    suspend fun logOutAsync(): ResponseBody
 
     @GET("/users/me/settings")
-    fun getPreferencesAsync(): Deferred<List<Preference>>
+    suspend fun getPreferencesAsync(): List<Preference>
 
     @PUT("/users/me/settings")
-    fun putPreferencesAsync(
+    suspend fun putPreferencesAsync(
         @Body preferenceRequest: RequestBody
-    ): Deferred<ResponseBody>
+    ): ResponseBody
 
     @PUT("/users/me")
    suspend fun putUserDetailsAsync(
