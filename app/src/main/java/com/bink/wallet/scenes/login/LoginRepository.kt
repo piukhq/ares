@@ -128,11 +128,10 @@ class LoginRepository(
         forgotPasswordError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
+            val requestResult = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    forgotPasswordResponse.value = response
+                    forgotPasswordResponse.value = requestResult
                 } catch (e: Exception) {
                     forgotPasswordError.value = e
                 }

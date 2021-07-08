@@ -36,9 +36,9 @@ interface ApiService {
     ): Deferred<LoginResponse>
 
     @POST("/users/forgotten_password/")
-    fun forgotPasswordAsync(
+    suspend fun forgotPasswordAsync(
         @Body forgotPasswordRequest: ForgotPasswordRequest
-    ): Deferred<ResponseBody>
+    ): ResponseBody
 
     @GET("/ubiquity/membership_cards")
     suspend fun getMembershipCardsAsync(): List<MembershipCard>
