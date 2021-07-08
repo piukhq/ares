@@ -27,9 +27,6 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("/ubiquity/service")
-    fun checkRegisteredUser(): Deferred<LoginResponse>
-
     @POST("/ubiquity/service")
     fun loginOrRegisterAsync(
         @Body loginResponse: LoginResponse
