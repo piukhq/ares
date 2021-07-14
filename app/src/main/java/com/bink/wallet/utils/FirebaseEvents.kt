@@ -56,7 +56,6 @@ object FirebaseEvents {
     const val ONBOARDING_USER_COMPLETE = "onboarding_user_complete"
     const val ONBOARDING_SERVICE_COMPLETE = "onboarding_service_complete"
     const val ONBOARDING_END = "onboarding_end"
-    const val ONBOARDING_JOURNEY_FACEBOOK= "FACEBOOK"
     const val ONBOARDING_JOURNEY_REGISTER = "REGISTER"
     const val ONBOARDING_JOURNEY_LOGIN = "LOGIN"
     const val ONBOARDING_JOURNEY_KEY = "onboarding_journey"
@@ -91,6 +90,11 @@ object FirebaseEvents {
     const val DYNAMIC_ACTION_TRIGGER_EVENT = "dynamic_action_triggered"
     const val FIREBASE_ERROR_CODE = "error_code"
     const val FIREBASE_ERROR_MESSAGE = "error_message"
+    const val UPDATE_ACTION = "recommended_app_update_action"
+    const val UPDATE_KEY = "user_action"
+    const val UPDATE_OPEN_STORE = "open_app_store"
+    const val UPDATE_SKIP = "skip_this_version"
+    const val UPDATE_LATER = "maybe_later"
 
     fun getFirebaseIdentifier(view: String, buttonTitle: String): String {
         return view + "." + stringToCamelcase(buttonTitle)

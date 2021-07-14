@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel" />
+            name="viewModel"
+            type="com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <Button
-                android:id="@+id/add_auth_cta"
-                isVisible="@{!viewModel.isNoAccountFooter() &amp;&amp; viewModel.isKeyboardHidden()}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_extra_large"
-                android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
-                android:background="@drawable/gradient_button_selector"
-                android:enabled="@{viewModel.haveValidationsPassed}"
-                android:text="@{viewModel.ctaText}"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+            android:id="@+id/add_auth_cta"
+            isVisible="@{!viewModel.isNoAccountFooter() &amp;&amp; viewModel.isKeyboardHidden()}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_padding_size_extra_large"
+            android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
+            android:layout_marginBottom="@dimen/margin_padding_size_medium"
+            android:background="@drawable/gradient_button_selector"
+            android:enabled="@{viewModel.haveValidationsPassed}"
+            android:text="@{viewModel.ctaText}"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <View
-                android:id="@+id/footer_bottom_gradient"
-                isVisible="@{viewModel.isKeyboardHidden()}"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/footer_default_fade_view_height"
-                android:background="@drawable/bg_btn_gradient"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+            android:id="@+id/footer_bottom_gradient"
+            isVisible="@{viewModel.isKeyboardHidden()}"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/footer_default_fade_view_height"
+            android:background="@drawable/bg_btn_gradient"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

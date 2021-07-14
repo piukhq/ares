@@ -12,6 +12,7 @@ object LocalStoreUtils {
     const val KEY_EMAIL = "encrypted_email"
     const val KEY_FIRST_NAME = "encrypted_first_name"
     const val KEY_SECOND_NAME = "encrypted_second_name"
+    const val KEY_UID = "encrypted_uid"
     const val KEY_TOKEN = "encrypted_token"
     const val KEY_SPREEDLY = "encrypted_spreedly_token"
     const val KEY_PAYMENT_HASH_SECRET = "payment_hash_secret"
