@@ -147,6 +147,11 @@ class UITestsWithLogin {
 //        doneBtn.perform(click())
     }
 
+    @Test
+    fun swipeRefresh(){
+        onView(withId(R.id.swipe_layout)).perform(swipeDown())
+    }
+
     private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int
     ): Matcher<View> {
