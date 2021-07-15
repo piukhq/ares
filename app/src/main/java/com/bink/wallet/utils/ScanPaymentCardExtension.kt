@@ -168,7 +168,7 @@ fun Fragment.openScanPaymentCard() {
     CardScanActivity.start(
         this,
         bouncerKey,
-        enableEnterCardManually = false,
+        enableEnterCardManually = true,
         enableExpiryExtraction = false,
         enableNameExtraction = false
     )

@@ -211,4 +211,7 @@
     <dimen name="scan_icon_size">50dp</dimen>
     <dimen name="item_scan_card_height">88dp</dimen>
 
+    <dimen name="bouncerEnterCardManuallyMargin">32dp</dimen>
+
+
 </resources>
