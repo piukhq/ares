@@ -29,7 +29,6 @@ class LoyaltyViewModel constructor(
     val membershipCardData = MutableLiveData<List<MembershipCard>>()
     val deleteCard = MutableLiveData<String>()
     val membershipPlanData = MutableLiveData<List<MembershipPlan>>()
-    val localMembershipPlanData = MutableLiveData<List<MembershipPlan>>()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -240,7 +239,7 @@ class LoyaltyViewModel constructor(
     }
 
     fun fetchLocalMembershipPlans() {
-        loyaltyWalletRepository.retrieveStoredMembershipPlans(localMembershipPlanData)
+        loyaltyWalletRepository.retrieveStoredMembershipPlans(membershipPlanData)
     }
 
     fun fetchDismissedCards() {
