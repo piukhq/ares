@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -14,14 +16,18 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
+import com.bink.wallet.scenes.browse_brands.BrowseBrandsAdapter
+import junit.framework.AssertionFailedError
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.not
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -36,23 +42,20 @@ class UITestsWithLogin {
         logInTest()
     }
 
-    fun logInTest() {
-        try {
-            val logInBtn = onView(withId(R.id.log_in_email))
-            logInBtn.perform(click())
+    private fun logInTest() {
+        val logInBtn = onView(withId(R.id.log_in_email))
+        logInBtn.perform(click())
 
-            val emailEt = onView(withId(R.id.email_field))
-            emailEt.perform(replaceText("joshuitest@bink.com"), closeSoftKeyboard())
-            emailEt.perform(pressImeActionButton())
+        val emailEt = onView(withId(R.id.email_field))
+        emailEt.perform(replaceText("joshuitest@bink.com"), closeSoftKeyboard())
+        emailEt.perform(pressImeActionButton())
 
-            val passwordEt = onView(withId(R.id.password_field))
-            passwordEt.perform(replaceText("Password01"), closeSoftKeyboard())
-            passwordEt.perform(pressImeActionButton())
+        val passwordEt = onView(withId(R.id.password_field))
+        passwordEt.perform(replaceText("Password01"), closeSoftKeyboard())
+        passwordEt.perform(pressImeActionButton())
 
-            val continueBtn = onView(withId(R.id.log_in_button))
-            continueBtn.perform(click())
-        } catch (e: NoMatchingViewException) {
-        }
+        val continueBtn = onView(withId(R.id.log_in_button))
+        continueBtn.perform(click())
     }
 
     @Test
@@ -148,25 +151,55 @@ class UITestsWithLogin {
     }
 
     @Test
-    fun swipeRefresh(){
+    fun swipeRefresh() {
         onView(withId(R.id.swipe_layout)).perform(swipeDown())
     }
 
-    private fun childAtPosition(
-        parentMatcher: Matcher<View>, position: Int
-    ): Matcher<View> {
+    @Test
+    fun goToSiteTest() {
+        val addMenuBtn = onView(withId(R.id.add_menu_item))
+        addMenuBtn.perform(click())
 
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("Child at position $position in parent ")
-                parentMatcher.describeTo(description)
+        val browseBrandsBtn = onView(withId(R.id.browse_brands_container))
+        browseBrandsBtn.perform(scrollTo(), click())
+
+        val recyclerView = mActivityTestRule.activity.findViewById<RecyclerView>(R.id.brands_recycler_view)
+        val itemCount = recyclerView.adapter?.itemCount
+
+        var isFirstItem = true
+
+        for (i in 0 until itemCount!!) {
+
+            if ((recyclerView.adapter as BrowseBrandsAdapter).getItemViewType(i) == BrowseBrandsAdapter.BRAND_ITEM) {
+
+                if (!isFirstItem) {
+                    addMenuBtn.perform(click())
+                    browseBrandsBtn.perform(scrollTo(), click())
+                }
+
+                isFirstItem = false
+
+                val brandsRecyclerView = onView(withId(R.id.brands_recycler_view))
+                brandsRecyclerView.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(i, click()))
+
+                val addJoinReward = onView(withId(R.id.add_join_reward))
+                addJoinReward.perform(scrollTo(), click())
+
+                val goToSite = onView(withId(R.id.first_button))
+                goToSite.perform(scrollTo(), click())
+
+                onView(Matchers.allOf(withId(android.R.id.button3), withText("OK"))).check(doesNotExist())
+
+                val closeWebView = onView(withId(R.id.button_close))
+                closeWebView.perform(click())
+
+                val closeGoToSiteScreen = onView(withId(R.id.close))
+                closeGoToSiteScreen.perform(click())
+
+                val closeMerchantScreen = onView(withId(R.id.close_button))
+                closeMerchantScreen.perform(click())
             }
 
-            public override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent
-                return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
-            }
         }
     }
 
