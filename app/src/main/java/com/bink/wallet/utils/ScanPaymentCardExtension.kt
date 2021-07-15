@@ -16,6 +16,8 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.getbouncer.cardscan.ScanActivity
 import com.getbouncer.cardscan.base.ScanBaseActivity
 import com.getbouncer.cardscan.ui.CardScanActivity
+import com.getbouncer.cardscan.ui.CardScanActivityResult
+import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -92,37 +94,70 @@ fun Fragment.scanResult(
     logPaymentCardSuccess: (Boolean) -> Unit
 ) {
     if (CardScanActivity.isScanResult(requestCode)) {
-        if (resultCode == ScanActivity.RESULT_OK && data != null) {
-            CardScanActivity.parseScanResult(resultCode,data,this)
-            val scanResult = ScanActivity.creditCardFromResult(data)
-            scanResult?.number?.let { safeCardNumber ->
-                logPaymentCardSuccess(true)
-                navigateToAddPaymentCard(safeCardNumber)
+         val cardActivityResultHandler =  object :CardScanActivityResultHandler{
+            override fun analyzerFailure(scanId: String?) {
+                logPaymentCardSuccess(false)
+                DialogFactory.showTryAgainGenericError(requireActivity())
             }
-        } else if (resultCode == ScanActivity.RESULT_CANCELED) {
-            data?.let { safeIntent ->
-                when {
-                    safeIntent.getBooleanExtra(
-                        ScanBaseActivity.RESULT_ENTER_CARD_MANUALLY_REASON,
-                        false
-                    ) -> {
-                        navigateToAddPaymentCard("")
-                    }
-                    safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false) -> {
-                        logPaymentCardSuccess(false)
-                        DialogFactory.showTryAgainGenericError(requireActivity())
-                    }
-                    else -> {
-                        // We don't need to do anything here as this condition is when the user
-                        // has closed the scan screen. In this case, we'll end up back at
-                        // where we currently are which is expected behaviour.
-                    }
+
+            override fun cameraError(scanId: String?) {
+            }
+
+            override fun canceledUnknown(scanId: String?) {
+                logPaymentCardSuccess(false)
+                DialogFactory.showTryAgainGenericError(requireActivity())
+            }
+
+            override fun cardScanned(scanId: String?, scanResult: CardScanActivityResult) {
+                scanResult.pan?.let { safeCardNumber ->
+                    logPaymentCardSuccess(true)
+                    navigateToAddPaymentCard(safeCardNumber)
                 }
             }
+
+            override fun enterManually(scanId: String?) {
+                navigateToAddPaymentCard("")
+            }
+
+            override fun userCanceled(scanId: String?) {
+
+            }
+
         }
+
+        CardScanActivity.parseScanResult(resultCode,data, cardActivityResultHandler)
+
+//        if (resultCode == ScanActivity.RESULT_OK && data != null) {
+//            val scanResult = ScanActivity.creditCardFromResult(data)
+//            scanResult?.number?.let { safeCardNumber ->
+//                logPaymentCardSuccess(true)
+//                navigateToAddPaymentCard(safeCardNumber)
+//            }
+//        } else if (resultCode == ScanActivity.RESULT_CANCELED) {
+//            data?.let { safeIntent ->
+//                when {
+//                    safeIntent.getBooleanExtra(
+//                        ScanBaseActivity.RESULT_ENTER_CARD_MANUALLY_REASON,
+//                        false
+//                    ) -> {
+////                        navigateToAddPaymentCard("")
+//                    }
+//                    safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false) -> {
+////                        logPaymentCardSuccess(false)
+////                        DialogFactory.showTryAgainGenericError(requireActivity())
+//                    }
+//                    else -> {
+//                        // We don't need to do anything here as this condition is when the user
+//                        // has closed the scan screen. In this case, we'll end up back at
+//                        // where we currently are which is expected behaviour.
+//                    }
+//                }
+//            }
+//        }
     }
 
 }
+
 
 
 fun Fragment.openScanPaymentCard() {
