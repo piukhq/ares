@@ -275,6 +275,10 @@ dependencies {
     /** PAYMENT CARD SCANNING **/
     implementation 'com.getbouncer:cardscan-base:1.0.5155'
     implementation 'com.getbouncer:cardscan:1.0.5155'
+    implementation 'com.getbouncer:cardscan-ui:2.1.0004'
+    implementation 'com.getbouncer:tensorflow-lite-arm-only:2.1.0004'
+
+
 
     /** FLEXBOX LAYOUT **/
     implementation 'com.google.android:flexbox:2.0.1'

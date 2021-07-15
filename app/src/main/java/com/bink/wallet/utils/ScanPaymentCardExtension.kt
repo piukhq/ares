@@ -15,6 +15,7 @@ import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.enums.BuildTypes
 import com.getbouncer.cardscan.ScanActivity
 import com.getbouncer.cardscan.base.ScanBaseActivity
+import com.getbouncer.cardscan.ui.CardScanActivity
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -90,8 +91,9 @@ fun Fragment.scanResult(
     navigateToAddPaymentCard: (String) -> Unit,
     logPaymentCardSuccess: (Boolean) -> Unit
 ) {
-    if (ScanActivity.isScanResult(requestCode)) {
+    if (CardScanActivity.isScanResult(requestCode)) {
         if (resultCode == ScanActivity.RESULT_OK && data != null) {
+            CardScanActivity.parseScanResult(resultCode,data,this)
             val scanResult = ScanActivity.creditCardFromResult(data)
             scanResult?.number?.let { safeCardNumber ->
                 logPaymentCardSuccess(true)
@@ -128,13 +130,12 @@ fun Fragment.openScanPaymentCard() {
         LocalStoreUtils.KEY_BOUNCER_KEY
     ) as String
 
-    ScanActivity.start(
+    CardScanActivity.start(
         this,
         bouncerKey,
-        "",
-        requireContext().getString(R.string.payment_card_scanning_position),
-        false,
-        true
+        enableEnterCardManually = false,
+        enableExpiryExtraction = false,
+        enableNameExtraction = false
     )
 }
 
