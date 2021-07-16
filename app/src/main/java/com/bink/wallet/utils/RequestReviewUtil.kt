@@ -51,30 +51,35 @@ object RequestReviewUtil {
     }
 
     private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
-        val reviewManager = ReviewManagerFactory.create(fragment.activity)
+        val activity = fragment.activity
 
-        if (!hasReviewedInThisVersion()) {
-            val remoteConfig = FirebaseRemoteConfig.getInstance()
-            val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
+        if (activity != null) {
+            val reviewManager = ReviewManagerFactory.create(activity)
 
-            if (isReviewEnabled.toLowerCase().equals("true")) {
-                val requestReview = reviewManager.requestReviewFlow()
-                reviewRequested()
+            if (!hasReviewedInThisVersion()) {
+                val remoteConfig = FirebaseRemoteConfig.getInstance()
+                val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
 
-                requestReview.addOnCompleteListener { request ->
-                    if (request.isSuccessful) {
-                        val reviewFlow = reviewManager.launchReviewFlow(fragment.activity, request.result)
+                if (isReviewEnabled.toLowerCase().equals("true")) {
+                    val requestReview = reviewManager.requestReviewFlow()
+                    reviewRequested()
 
-                        reviewFlow.addOnCompleteListener {
+                    requestReview.addOnCompleteListener { request ->
+                        if (request.isSuccessful) {
+                            val reviewFlow = reviewManager.launchReviewFlow(activity, request.result)
 
-                            currentMinorVersion()?.let { currentMinor ->
-                                SharedPreferenceManager.lastReviewedMinor = currentMinor
+                            reviewFlow.addOnCompleteListener {
+
+                                currentMinorVersion()?.let { currentMinor ->
+                                    SharedPreferenceManager.lastReviewedMinor = currentMinor
+                                }
                             }
                         }
                     }
                 }
             }
         }
+
     }
 
     private fun hasReviewedInThisVersion(): Boolean {
