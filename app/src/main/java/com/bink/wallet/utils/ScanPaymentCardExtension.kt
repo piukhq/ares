@@ -9,12 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
-import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.enums.BuildTypes
-import com.getbouncer.cardscan.ScanActivity
-import com.getbouncer.cardscan.base.ScanBaseActivity
 import com.getbouncer.cardscan.ui.CardScanActivity
 import com.getbouncer.cardscan.ui.CardScanActivityResult
 import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
