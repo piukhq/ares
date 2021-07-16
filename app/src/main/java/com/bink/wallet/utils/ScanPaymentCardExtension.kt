@@ -164,7 +164,7 @@ fun Fragment.openScanPaymentCard() {
     val bouncerKey = LocalStoreUtils.getAppSharedPref(
         LocalStoreUtils.KEY_BOUNCER_KEY
     ) as String
-
+    shouldShowLogo()
     CardScanActivity.start(
         this,
         bouncerKey,
@@ -172,6 +172,7 @@ fun Fragment.openScanPaymentCard() {
         enableExpiryExtraction = false,
         enableNameExtraction = false
     )
+
 }
 
 
@@ -191,4 +192,9 @@ fun Fragment.logEvent(name: String, parameters: Map<String, String>) {
 
         (requireActivity() as MainActivity).firebaseAnalytics.logEvent(name, bundle)
     }
+}
+
+private fun shouldShowLogo(shouldShow:Boolean = false){
+    com.getbouncer.scan.framework.Config.displayLogo = shouldShow
+
 }
