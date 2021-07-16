@@ -126,34 +126,6 @@ fun Fragment.scanResult(
         }
 
         CardScanActivity.parseScanResult(resultCode,data, cardActivityResultHandler)
-
-//        if (resultCode == ScanActivity.RESULT_OK && data != null) {
-//            val scanResult = ScanActivity.creditCardFromResult(data)
-//            scanResult?.number?.let { safeCardNumber ->
-//                logPaymentCardSuccess(true)
-//                navigateToAddPaymentCard(safeCardNumber)
-//            }
-//        } else if (resultCode == ScanActivity.RESULT_CANCELED) {
-//            data?.let { safeIntent ->
-//                when {
-//                    safeIntent.getBooleanExtra(
-//                        ScanBaseActivity.RESULT_ENTER_CARD_MANUALLY_REASON,
-//                        false
-//                    ) -> {
-////                        navigateToAddPaymentCard("")
-//                    }
-//                    safeIntent.getBooleanExtra(ScanActivity.RESULT_FATAL_ERROR, false) -> {
-////                        logPaymentCardSuccess(false)
-////                        DialogFactory.showTryAgainGenericError(requireActivity())
-//                    }
-//                    else -> {
-//                        // We don't need to do anything here as this condition is when the user
-//                        // has closed the scan screen. In this case, we'll end up back at
-//                        // where we currently are which is expected behaviour.
-//                    }
-//                }
-//            }
-//        }
     }
 
 }
@@ -196,5 +168,4 @@ fun Fragment.logEvent(name: String, parameters: Map<String, String>) {
 
 private fun shouldShowLogo(shouldShow:Boolean = false){
     com.getbouncer.scan.framework.Config.displayLogo = shouldShow
-
 }
