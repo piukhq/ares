@@ -76,7 +76,8 @@ class UITestsWithLogin {
         settingsList.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(4, click()))
     }
 
-    @Test
+    //@Test
+    //stopped it from running as its WIP
     fun addCard() {
         val addMenuBtn = onView(withId(R.id.add_menu_item))
         addMenuBtn.perform(click())
