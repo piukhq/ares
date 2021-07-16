@@ -51,35 +51,30 @@ object RequestReviewUtil {
     }
 
     private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
-        val activity = fragment.activity
+        val reviewManager = ReviewManagerFactory.create(fragment.activity)
 
-        if (activity != null) {
-            val reviewManager = ReviewManagerFactory.create(activity)
+        if (!hasReviewedInThisVersion()) {
+            val remoteConfig = FirebaseRemoteConfig.getInstance()
+            val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
 
-            if (!hasReviewedInThisVersion()) {
-                val remoteConfig = FirebaseRemoteConfig.getInstance()
-                val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
+            if (isReviewEnabled.toLowerCase().equals("true")) {
+                val requestReview = reviewManager.requestReviewFlow()
+                reviewRequested()
 
-                if (isReviewEnabled.toLowerCase().equals("true")) {
-                    val requestReview = reviewManager.requestReviewFlow()
-                    reviewRequested()
+                requestReview.addOnCompleteListener { request ->
+                    if (request.isSuccessful) {
+                        val reviewFlow = reviewManager.launchReviewFlow(fragment.activity, request.result)
 
-                    requestReview.addOnCompleteListener { request ->
-                        if (request.isSuccessful) {
-                            val reviewFlow = reviewManager.launchReviewFlow(activity, request.result)
+                        reviewFlow.addOnCompleteListener {
 
-                            reviewFlow.addOnCompleteListener {
-
-                                currentMinorVersion()?.let { currentMinor ->
-                                    SharedPreferenceManager.lastReviewedMinor = currentMinor
-                                }
+                            currentMinorVersion()?.let { currentMinor ->
+                                SharedPreferenceManager.lastReviewedMinor = currentMinor
                             }
                         }
                     }
                 }
             }
         }
-
     }
 
     private fun hasReviewedInThisVersion(): Boolean {
