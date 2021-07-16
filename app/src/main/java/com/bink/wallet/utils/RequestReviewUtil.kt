@@ -51,9 +51,9 @@ object RequestReviewUtil {
     }
 
     private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
-        val activity = fragment.activity
+        try{
+            val activity = fragment.requireActivity()
 
-        if (activity != null) {
             val reviewManager = ReviewManagerFactory.create(activity)
 
             if (!hasReviewedInThisVersion()) {
@@ -78,8 +78,10 @@ object RequestReviewUtil {
                     }
                 }
             }
-        }
 
+        } catch (e: IllegalStateException){
+            //not attached to an activity
+        }
     }
 
     private fun hasReviewedInThisVersion(): Boolean {
