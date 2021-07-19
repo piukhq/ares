@@ -274,7 +274,7 @@ dependencies {
 
     /** PAYMENT CARD SCANNING **/
     implementation 'com.getbouncer:cardscan-ui:2.1.0004'
-    implementation 'org.tensorflow:tensorflow-lite:1.11.0'
+    implementation 'org.tensorflow:tensorflow-lite:1.12.0'
 
 
 
