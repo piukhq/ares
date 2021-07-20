@@ -41,6 +41,7 @@ allprojects {
         }
         skipTestGroups=true
         failBuildOnCVSS=9
+        suppressionFile='config/suppression.xml'
         skipConfigurations = [
                 'kaptAndroidTestDebug',
                 'kaptTest',
