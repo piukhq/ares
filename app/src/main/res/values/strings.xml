@@ -588,8 +588,8 @@
 
     <!-- Payment Card Scanning - The following strings are overriding bouncer's library -->
     <string name="card_scan_scan_card"></string>
-    <string name="payment_card_scanning_position">Tap the screen to focus the camera on the card. It will scan automatically.</string>
-    <string name="card_scan_enter_card_manually">Enter Manually</string>
+    <string name="bouncer_card_scan_instructions">Tap the screen to focus the camera on the card. It will scan automatically.</string>
+    <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
 
