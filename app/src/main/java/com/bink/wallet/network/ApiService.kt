@@ -58,10 +58,10 @@ interface ApiService {
     ): PaymentCard
 
     @DELETE("/ubiquity/payment_card/{paymentCardId}/membership_card/{membershipCardId}")
-    fun unlinkFromPaymentCardAsync(
+    suspend fun unlinkFromPaymentCardAsync(
         @Path("paymentCardId") paymentCardId: String,
         @Path("membershipCardId") membershipCardId: String
-    ): Deferred<ResponseBody>
+    ): ResponseBody
 
     @DELETE("/ubiquity/membership_card/{card_id}")
     fun deleteCardAsync(
