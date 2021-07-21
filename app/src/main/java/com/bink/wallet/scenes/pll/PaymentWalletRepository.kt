@@ -36,17 +36,16 @@ class PaymentWalletRepository(
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getPaymentCardsAsync()
+            val requestResult = apiService.getPaymentCardsAsync()
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    storePaymentsCards(response, fetchError)
+                    storePaymentsCards(requestResult, fetchError)
 
                     SharedPreferenceManager.paymentCardsLastRequestTime = System.currentTimeMillis()
-                    SharedPreferenceManager.isPaymentEmpty = response.isNullOrEmpty()
-                    SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(response)
+                    SharedPreferenceManager.isPaymentEmpty = requestResult.isNullOrEmpty()
+                    SharedPreferenceManager.hasNoActivePaymentCards = MembershipPlanUtils.hasNoActiveCards(requestResult)
 
-                    paymentCards.value = response.toMutableList()
+                    paymentCards.value = requestResult.toMutableList()
                 } catch (e: Exception) {
                     fetchError.value = e
                 }
@@ -161,12 +160,11 @@ class PaymentWalletRepository(
         paymentCardMutableLiveData: MutableLiveData<PaymentCard>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request =
+            val requestResult =
                 apiService.unlinkFromPaymentCardAsync(paymentCard.id.toString(), membershipCard.id)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
-                    unlinkedBody?.value = response
+                    unlinkedBody?.value = requestResult
                     val paymentCardValue = paymentCardMutableLiveData.value
                     paymentCardValue?.membership_cards?.forEach {
                         if (it.id == membershipCard.id) {
@@ -193,7 +191,7 @@ class PaymentWalletRepository(
         val localErrors = ArrayList<Exception>()
         paymentCards.forEach { card ->
             CoroutineScope(Dispatchers.IO).launch {
-                val request = async {
+                val requestResult = async {
                     apiService.unlinkFromPaymentCardAsync(
                         card.id.toString(),
                         membershipCard.id
@@ -201,9 +199,8 @@ class PaymentWalletRepository(
                 }
                 withContext(Dispatchers.Main) {
                     try {
-                        val response = request.await()
-                        response.let {
-                            localSuccesses.add(response)
+                        requestResult.let {
+                            localSuccesses.add(requestResult)
                             unlinkSuccesses.value = localSuccesses
                             logDeleteEvent(card, membershipCard)
 
@@ -269,11 +266,10 @@ class PaymentWalletRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             paymentCardDao.deletePaymentCardById(id.toString())
-            val request = id?.let { apiService.deletePaymentCardAsync(it) }
+            val requestResult = id?.let { apiService.deletePaymentCardAsync(it) }
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request?.await()
-                    mutableDeleteCard.value = response
+                    mutableDeleteCard.value = requestResult
                 } catch (e: Exception) {
                     deleteError.value = e
                 }

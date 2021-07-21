@@ -35,12 +35,11 @@ class LoginRepository(
         authErrorResponse: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.loginOrRegisterAsync(loginResponse)
+            val requestResult = apiService.loginOrRegisterAsync(loginResponse)
             withContext(Dispatchers.Main) {
                 try {
-                    val response = request.await()
                     SharedPreferenceManager.isUserLoggedIn = true
-                    loginData.value = response.consent
+                    loginData.value = requestResult.consent
                 } catch (e: Exception) {
                     authErrorResponse.value = e
                 }
