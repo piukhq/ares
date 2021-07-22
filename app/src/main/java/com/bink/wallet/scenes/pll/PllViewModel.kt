@@ -1,15 +1,20 @@
 package com.bink.wallet.scenes.pll
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.utils.DateTimeUtils
+import com.bink.wallet.utils.SentryErrorType
+import com.bink.wallet.utils.SentryUtils
 import okhttp3.ResponseBody
+import retrofit2.HttpException
 
 class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository) : BaseViewModel() {
     val membershipCard = MutableLiveData<MembershipCard>()
@@ -96,5 +101,24 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
             _linkSuccesses,
             _linkErrors
         )
+    }
+
+    fun hasDisplayableError(context: Context, exceptions: ArrayList<Exception>): String? {
+        for (exception in exceptions) {
+            val errorResponse = (exception as HttpException).response()
+            val errorCode = errorResponse?.code()
+            val errorBody = errorResponse?.errorBody()?.string()
+
+            if (errorCode == 403) {
+                SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, exception)
+                return errorBody
+            }
+
+            if (errorCode == 404) {
+                SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, exception)
+                return context.getString(R.string.pll_404_error)
+            }
+        }
+        return null
     }
 }

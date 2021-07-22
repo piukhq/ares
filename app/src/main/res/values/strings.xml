@@ -592,6 +592,7 @@
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+    <string name="pll_404_error">There was a problem communicating with the server. Please try again later</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">
