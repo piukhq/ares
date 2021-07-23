@@ -79,22 +79,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             binding.pager.adapter = it
         }
 
-        binding.logInEmail.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
-                findNavController().navigateIfAdded(
-                    this,
-                    OnboardingFragmentDirections.onboardingToLogIn()
-                )
-            }
-            logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
-            logEvent(ONBOARDING_START, getOnboardingStartMap(ONBOARDING_JOURNEY_LOGIN))
-        }
-
         binding.signUpWithEmail.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
                 findNavController().navigateIfAdded(
                     this,
-                    OnboardingFragmentDirections.onboardingToSignUp()
+                    OnboardingFragmentDirections.onboardingToContinueWithEmail()
                 )
             }
             logEvent(
