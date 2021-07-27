@@ -194,8 +194,12 @@ class LoyaltyViewModel constructor(
                     loyaltyWalletRepository.retrieveMembershipCardsAndPlans()
                 }
 
-                membershipPlanData.value = membershipCardsAndPlans.membershipPlans
-                membershipCardData.value = membershipCardsAndPlans.membershipCards
+                  membershipCardsAndPlans.membershipPlans.let {
+                      membershipPlanData.value = it
+                }
+                 membershipCardsAndPlans.membershipCards.let {
+                     membershipCardData.value = it
+                 }
 
                 membershipCardsAndPlans.membershipCards?.let {
                     checkCardScrape(it, context)
