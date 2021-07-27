@@ -3,20 +3,20 @@ package com.bink.wallet.scenes.login
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.MagicLinkBody
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.utils.CONTENT_TYPE
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -180,8 +180,10 @@ class LoginRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.putPreferencesAsync(
-               RequestBody.create(MediaType.parse(CONTENT_TYPE),
-               requestBody)
+                RequestBody.create(
+                    MediaType.parse(CONTENT_TYPE),
+                    requestBody
+                )
             )
             try {
                 val response = request.await()
@@ -190,6 +192,34 @@ class LoginRepository(
                 preferenceErrorResponse.postValue(e)
             }
         }
+    }
+
+    fun sendMagicLink(
+        magicLinkBody: MagicLinkBody,
+        magicLinkSuccess: MutableLiveData<Any>,
+        magicLinkError: MutableLiveData<Exception>
+    ) {
+        val handler = CoroutineExceptionHandler { _, exception ->
+            logDebug("loginRepository", "Caught $exception")
+        }
+        CoroutineScope(Dispatchers.IO).launch(handler) {
+            val request = async {
+                apiService.postMagicLink(
+                    magicLinkBody
+                )
+            }
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    response.let {
+                        magicLinkSuccess.value = response
+                    }
+                } catch (e: Exception) {
+                    magicLinkError.value = e
+                }
+            }
+        }
+
     }
 
     fun clearData(
