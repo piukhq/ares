@@ -418,7 +418,7 @@
 
     <!-- Onboarding -->
     <string name="skip">Skip</string>
-    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="continue_with_email">Continue with email</string>
     <string name="log_in_with_email">Log in with email</string>
     <string name="page_1_title">Payment linked loyalty. Magic!</string>
     <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
