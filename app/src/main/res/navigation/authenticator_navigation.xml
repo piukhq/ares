@@ -51,7 +51,7 @@
 
         <action
             android:id="@+id/home_to_payment_wallet"
-            app:destination="@+id/payment_card_wallet"/>
+            app:destination="@+id/payment_card_wallet" />
 
     </fragment>
 
@@ -87,7 +87,7 @@
     <fragment
         android:id="@+id/loyalty_fragment"
         android:name="com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment"
-        android:label="@string/root" >
+        android:label="@string/root">
 
         <action
             android:id="@+id/loyalty_to_add"
@@ -107,11 +107,11 @@
 
         <action
             android:id="@+id/loyalty_to_payment_wallet"
-            app:destination="@+id/payment_card_wallet"/>
+            app:destination="@+id/payment_card_wallet" />
 
         <action
             android:id="@+id/loyalty_to_settings_screen"
-            app:destination="@+id/settings_screen"/>
+            app:destination="@+id/settings_screen" />
 
         <action
             android:id="@+id/loyalty_to_add_payment_card"
@@ -123,7 +123,7 @@
 
         <action
             android:id="@+id/loyalty_to_browse_brands"
-            app:destination="@+id/browse_brands"/>
+            app:destination="@+id/browse_brands" />
 
     </fragment>
 
@@ -160,11 +160,11 @@
 
         <action
             android:id="@+id/payment_wallet_to_settings_screen"
-            app:destination="@+id/settings_screen"/>
+            app:destination="@+id/settings_screen" />
 
         <action
             android:id="@+id/payment_to_loyalty_wallet"
-            app:destination="@+id/loyalty_fragment"/>
+            app:destination="@+id/loyalty_fragment" />
 
         <action
             android:id="@+id/payment_to_dynamic_action"
@@ -260,7 +260,7 @@
 
         <action
             android:id="@+id/browse_to_add"
-            app:destination="@id/add_loyalty_card"/>
+            app:destination="@id/add_loyalty_card" />
 
         <argument
             android:name="membershipPlans"
@@ -420,7 +420,7 @@
 
         <action
             android:id="@+id/detail_to_home"
-            app:destination="@+id/home_wallet"/>
+            app:destination="@+id/home_wallet" />
 
     </fragment>
 
@@ -737,11 +737,22 @@
             app:popUpToInclusive="true" />
 
         <action
+            android:id="@+id/onboarding_to_continue_with_email"
+            app:destination="@+id/continue_with_email_fragment" />
+
+        <action
             android:id="@+id/onboarding_to_log_in"
             app:destination="@+id/login_fragment" />
         <action
             android:id="@+id/onboarding_to_debug"
             app:destination="@+id/debug_menu_screen" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/continue_with_email_fragment"
+        android:name="com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailFragment"
+        tools:layout="@layout/continue_with_email_fragment">
+
     </fragment>
 
     <fragment

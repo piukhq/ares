@@ -39,6 +39,7 @@
     <string name="error_server_down_title">Error</string>
     <string name="error_server_down_message">There was a problem communicating with the server. Please try again later.</string>
     <string name="error_sign_up_failed">Registration failed.</string>
+    <string name="error_magic_link_failed">Magic Link is temporarily unavailable, please try again later.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
@@ -418,8 +419,9 @@
 
     <!-- Onboarding -->
     <string name="skip">Skip</string>
-    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="continue_with_email">Continue with email</string>
     <string name="log_in_with_email">Log in with email</string>
+    <string name="use_password">Use a password</string>
     <string name="page_1_title">Payment linked loyalty. Magic!</string>
     <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
     <string name="page_2_title">All your cards in one place</string>
@@ -441,7 +443,10 @@
     <string name="password_not_match">Passwords do not match</string>
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
     <string name="incorrect_email_text">Incorrect email format</string>
-    <string name="sign_up_description">All it takes is an email and password</string>
+    <string name="sign_up_description">Get a link sent to your inbox so you can register or access your existing account instantly!</string>
+    <string name="magic_link_note">Note: </string>
+    <string name="magic_link_full">We will send you a Magic Link</string>
+    <string name="magic_link">Magic Link</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
     <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>

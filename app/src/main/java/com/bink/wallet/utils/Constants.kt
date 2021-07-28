@@ -64,6 +64,7 @@ const val DATE_FORMAT = "dd/MM/yyyy"
 
 const val TERMS_AND_CONDITIONS_URL = "https://bink.com/terms-and-conditions/#privacy-policy"
 const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
+const val MAGIC_LINK_URL = "https://help.bink.com/hc/en-gb/articles/4404303824786"
 
 const val BARCODE = "barcode"
 const val CARD_NUMBER = "card_number"
