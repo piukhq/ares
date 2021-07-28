@@ -31,7 +31,10 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
 
         viewModel.magicLinkSuccess.observeNonNull(this) {
             viewModel.isLoading.value = false
-            //TODO: Go to open inbox
+            findNavController().navigateIfAdded(
+                this,
+                ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox()
+            )
         }
 
         viewModel.magicLinkError.observeNonNull(this) {
