@@ -95,6 +95,13 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
             }
         }
 
+        binding.usePassword.setOnClickListener {
+            findNavController().navigateIfAdded(
+                this,
+                ContinueWithEmailFragmentDirections.contWithEmailToLogIn()
+            )
+        }
+
     }
 
     private fun validateCredentials(isTermsChecked: Boolean) {
