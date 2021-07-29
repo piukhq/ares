@@ -420,6 +420,11 @@
     <!-- Onboarding -->
     <string name="skip">Skip</string>
     <string name="continue_with_email">Continue with email</string>
+    <string name="check_inbox">Check your inbox!</string>
+    <string name="check_inbox_subtitle">We have just emailed a link to <b>%s</b>. Click the link and you will be logged in.</string>
+    <string name="check_inbox_subtitle_part_1">We have just emailed a link to</string>
+    <string name="check_inbox_subtitle_part_2">Click the link and you will be logged in.</string>
+    <string name="open_mail">Open Mail</string>
     <string name="log_in_with_email">Log in with email</string>
     <string name="use_password">Use a password</string>
     <string name="use_magic_link">Use Magic Link</string>

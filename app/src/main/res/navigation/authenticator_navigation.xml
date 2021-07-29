@@ -768,6 +768,10 @@
         android:name="com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxFragment"
         tools:layout="@layout/continue_with_email_fragment">
 
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+
     </fragment>
 
 

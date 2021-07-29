@@ -33,7 +33,7 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
             viewModel.isLoading.value = false
             findNavController().navigateIfAdded(
                 this,
-                ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox()
+                ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
             )
         }
 
