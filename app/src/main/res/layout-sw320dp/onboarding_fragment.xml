@@ -44,33 +44,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/buttons_margin"
             android:layout_marginEnd="@dimen/buttons_margin"
-            android:layout_marginBottom="@dimen/margin_padding_size_extra_small"
             android:background="@drawable/rounded_corners_gradient_button"
             android:fontFamily="@font/nunito_sans_bold"
-            android:text="@string/sign_up_with_email"
+            android:text="@string/continue_with_email"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             app:backgroundTint="@null"
-            app:layout_constraintBottom_toTopOf="@+id/log_in_email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/log_in_email"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/buttons_margin"
-            android:layout_marginEnd="@dimen/buttons_margin"
-            android:layout_marginBottom="@dimen/margin_padding_size_extra_small"
-            android:background="?android:selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/nunito_sans_bold"
-            android:text="@string/log_in_with_email"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pager_indicator" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
