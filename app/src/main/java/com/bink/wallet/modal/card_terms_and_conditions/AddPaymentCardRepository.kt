@@ -72,19 +72,20 @@ class AddPaymentCardRepository(
             )
             val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
             val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)
-            CoroutineScope(Dispatchers.IO).launch {
-                val spreedlyRequest = spreedlyApiService.postPaymentCardToSpreedly(
-                    spreedlyPaymentCard,
-                    spreedlyEnvironmentKey
-                )
+            CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.Main) {
                     try {
-                        val response = spreedlyRequest.await()
+                        val spreedlyRequest = withContext(Dispatchers.IO) {
+                            spreedlyApiService.postPaymentCardToSpreedly(
+                                spreedlyPaymentCard,
+                                spreedlyEnvironmentKey
+                            )
+                        }
                         card.card.apply {
-                            token = response.transaction.payment_method.token
-                            fingerprint = response.transaction.payment_method.fingerprint
-                            first_six_digits = response.transaction.payment_method.first_six_digits
-                            last_four_digits = response.transaction.payment_method.last_four_digits
+                            token = spreedlyRequest.transaction.payment_method.token
+                            fingerprint = spreedlyRequest.transaction.payment_method.fingerprint
+                            first_six_digits = spreedlyRequest.transaction.payment_method.first_six_digits
+                            last_four_digits = spreedlyRequest.transaction.payment_method.last_four_digits
                         }
 
                         encryptCardDetails(card)
