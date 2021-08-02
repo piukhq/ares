@@ -157,16 +157,14 @@ class PaymentWalletRepository(
         paymentCard: PaymentCard,
         membershipCard: MembershipCard,
         unlinkError: MutableLiveData<Exception>?,
-        unlinkedBody: MutableLiveData<ResponseBody>?,
         paymentCardMutableLiveData: MutableLiveData<PaymentCard>
     ) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val responseBody = withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     apiService.unlinkFromPaymentCardAsync(paymentCard.id.toString(), membershipCard.id)
                 }
 
-                unlinkedBody?.value = responseBody
                 val paymentCardValue = paymentCardMutableLiveData.value
                 paymentCardValue?.membership_cards?.forEach {
                     if (it.id == membershipCard.id) {

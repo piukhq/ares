@@ -31,7 +31,6 @@ class PaymentCardsDetailsViewModel(
     val membershipCardData: MutableLiveData<List<MembershipCard>> = MutableLiveData()
     val membershipPlanData: MutableLiveData<List<MembershipPlan>> = MutableLiveData()
     val linkedPaymentCard = MutableLiveData<PaymentCard>()
-    val unlinkedRequestBody = MutableLiveData<ResponseBody>()
     val deleteRequest = MutableLiveData<ResponseBody>()
 
     private val _loadCardsError = MutableLiveData<Exception>()
@@ -84,7 +83,6 @@ class PaymentCardsDetailsViewModel(
                     pCard,
                     mCard,
                     _unlinkError,
-                    unlinkedRequestBody,
                     paymentCard
                 )
             }
