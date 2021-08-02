@@ -73,33 +73,33 @@ class AddPaymentCardRepository(
             val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
             val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)
             CoroutineScope(Dispatchers.Main).launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        val spreedlyRequest = withContext(Dispatchers.IO) {
-                            spreedlyApiService.postPaymentCardToSpreedly(
-                                spreedlyPaymentCard,
-                                spreedlyEnvironmentKey
-                            )
-                        }
-                        card.card.apply {
-                            token = spreedlyRequest.transaction.payment_method.token
-                            fingerprint = spreedlyRequest.transaction.payment_method.fingerprint
-                            first_six_digits = spreedlyRequest.transaction.payment_method.first_six_digits
-                            last_four_digits = spreedlyRequest.transaction.payment_method.last_four_digits
-                        }
-
-                        encryptCardDetails(card)
-
-                        doAddPaymentCard(
-                            card,
-                            mutableAddCard,
-                            error,
-                            addCardRequestMade
+                try {
+                    val spreedlyRequest = withContext(Dispatchers.IO) {
+                        spreedlyApiService.postPaymentCardToSpreedly(
+                            spreedlyPaymentCard,
+                            spreedlyEnvironmentKey
                         )
-                    } catch (exception: Exception) {
-                        error.value = exception
-                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                     }
+                    card.card.apply {
+                        token = spreedlyRequest.transaction.payment_method.token
+                        fingerprint = spreedlyRequest.transaction.payment_method.fingerprint
+                        first_six_digits =
+                            spreedlyRequest.transaction.payment_method.first_six_digits
+                        last_four_digits =
+                            spreedlyRequest.transaction.payment_method.last_four_digits
+                    }
+
+                    encryptCardDetails(card)
+
+                    doAddPaymentCard(
+                        card,
+                        mutableAddCard,
+                        error,
+                        addCardRequestMade
+                    )
+                } catch (exception: Exception) {
+                    error.value = exception
+                    SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                 }
             }
         } else {
@@ -139,16 +139,16 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>,
         addCardRequestMade: MutableLiveData<Boolean>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             try {
-                val requestResult = apiService.addPaymentCardAsync(card)
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.addPaymentCardAsync(card)
+                }
                 addCardRequestMade.postValue(true)
-                withContext(Dispatchers.Main) {
                     paymentCardDao.store(requestResult)
                     mutableAddCard.value = requestResult
-                }
             } catch (exception: Exception) {
-                error.postValue(exception)
+                error.value = exception
                 SentryUtils.logError(SentryErrorType.API_REJECTED, exception)
             }
         }
