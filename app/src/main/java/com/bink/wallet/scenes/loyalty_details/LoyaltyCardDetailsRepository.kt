@@ -26,16 +26,16 @@ class LoyaltyCardDetailsRepository(
         error: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-           id?.let { apiService.deleteCardAsync(it) }
-            withContext(Dispatchers.Main) {
-                try {
+            try {
+                id?.let { apiService.deleteCardAsync(it) }
+                withContext(Dispatchers.Main) {
                     membershipCardDao.deleteCard(id.toString())
                     mutableDeleteCard.value = id
-                } catch (e: HttpException) {
-                    error.value = e
-                } catch (e: Exception) {
-                    error.value = e
                 }
+            } catch (e: HttpException) {
+                error.postValue(e)
+            } catch (e: Exception) {
+                error.postValue(e)
             }
         }
     }
@@ -74,14 +74,14 @@ class LoyaltyCardDetailsRepository(
         fetchError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.getPaymentCardsAsync()
-            withContext(Dispatchers.Main) {
-                try {
+            try {
+                val requestResult = apiService.getPaymentCardsAsync()
+                withContext(Dispatchers.Main) {
                     storePaymentsCards(requestResult, localStoreError)
                     paymentCards.value = requestResult
-                } catch (e: Exception) {
-                    fetchError.value = e
                 }
+            } catch (e: Exception) {
+                fetchError.postValue(e)
             }
         }
     }
