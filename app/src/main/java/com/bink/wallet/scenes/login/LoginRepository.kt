@@ -34,16 +34,17 @@ class LoginRepository(
         loginData: MutableLiveData<LoginBody>,
         authErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.loginOrRegisterAsync(loginResponse)
-            withContext(Dispatchers.Main) {
-                try {
-                    SharedPreferenceManager.isUserLoggedIn = true
-                    loginData.value = requestResult.consent
-                } catch (e: Exception) {
-                    authErrorResponse.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.loginOrRegisterAsync(loginResponse)
                 }
+                SharedPreferenceManager.isUserLoggedIn = true
+                loginData.value = requestResult.consent
+            } catch (e: Exception) {
+                authErrorResponse.value = e
             }
+
         }
     }
 
@@ -52,15 +53,15 @@ class LoginRepository(
         signUpResponse: MutableLiveData<SignUpResponse>,
         signUpErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.signUpAsync(signUpRequest)
-            withContext(Dispatchers.Main) {
-                try {
-                    SharedPreferenceManager.isUserLoggedIn = true
-                    signUpResponse.value = requestResult
-                } catch (e: java.lang.Exception) {
-                    signUpErrorResponse.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.signUpAsync(signUpRequest)
                 }
+                SharedPreferenceManager.isUserLoggedIn = true
+                signUpResponse.value = requestResult
+            } catch (e: java.lang.Exception) {
+                signUpErrorResponse.value = e
             }
         }
     }
@@ -70,15 +71,14 @@ class LoginRepository(
         signUpResponse: MutableLiveData<SignUpResponse>,
         signUpErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.logInAsync(logInRequest)
-            withContext(Dispatchers.Main) {
-                try {
-                    SharedPreferenceManager.isUserLoggedIn = true
-                    signUpResponse.value = requestResult
-                } catch (e: Exception) {
-                    signUpErrorResponse.value = e
-                }
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult =
+                    withContext(Dispatchers.IO) { apiService.logInAsync(logInRequest) }
+                SharedPreferenceManager.isUserLoggedIn = true
+                signUpResponse.value = requestResult
+            } catch (e: Exception) {
+                signUpErrorResponse.value = e
             }
         }
     }
@@ -88,14 +88,13 @@ class LoginRepository(
         postServiceResponse: MutableLiveData<ResponseBody>,
         postServiceErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.postServiceAsync(postServiceRequest)
-            withContext(Dispatchers.Main) {
-                try {
-                    postServiceResponse.value = requestResult
-                } catch (e: Exception) {
-                    postServiceErrorResponse.value = e
-                }
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult =
+                    withContext(Dispatchers.IO) { apiService.postServiceAsync(postServiceRequest) }
+                postServiceResponse.value = requestResult
+            } catch (e: Exception) {
+                postServiceErrorResponse.value = e
             }
         }
     }
@@ -105,14 +104,14 @@ class LoginRepository(
         marketingResponse: MutableLiveData<ResponseBody>,
         marketingError: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.checkMarketingPrefAsync(checkedOption)
-            withContext(Dispatchers.Main) {
-                try {
-                    marketingResponse.value = requestResult
-                } catch (e: Exception) {
-                    marketingError.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.checkMarketingPrefAsync(checkedOption)
                 }
+                marketingResponse.value = requestResult
+            } catch (e: Exception) {
+                marketingError.value = e
             }
         }
     }
@@ -122,14 +121,14 @@ class LoginRepository(
         forgotPasswordResponse: MutableLiveData<ResponseBody>,
         forgotPasswordError: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
-            withContext(Dispatchers.Main) {
-                try {
-                    forgotPasswordResponse.value = requestResult
-                } catch (e: Exception) {
-                    forgotPasswordError.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.forgotPasswordAsync(ForgotPasswordRequest(email))
                 }
+                forgotPasswordResponse.value = requestResult
+            } catch (e: Exception) {
+                forgotPasswordError.value = e
             }
         }
     }
@@ -138,14 +137,14 @@ class LoginRepository(
         logOutResponse: MutableLiveData<ResponseBody>,
         logOutErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.logOutAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    logOutResponse.value = requestResult
-                } catch (e: Exception) {
-                    logOutErrorResponse.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.logOutAsync()
                 }
+                logOutResponse.value = requestResult
+            } catch (e: Exception) {
+                logOutErrorResponse.value = e
             }
         }
     }
@@ -154,14 +153,14 @@ class LoginRepository(
         preferenceResponse: MutableLiveData<List<Preference>>,
         preferenceErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.getPreferencesAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    preferenceResponse.value = requestResult
-                } catch (e: java.lang.Exception) {
-                    preferenceErrorResponse.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.getPreferencesAsync()
                 }
+                preferenceResponse.value = requestResult
+            } catch (e: java.lang.Exception) {
+                preferenceErrorResponse.value = e
             }
         }
     }
@@ -171,15 +170,19 @@ class LoginRepository(
         preferenceResponse: MutableLiveData<ResponseBody>,
         preferenceErrorResponse: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val requestResult = apiService.putPreferencesAsync(
-               RequestBody.create(MediaType.parse(CONTENT_TYPE),
-               requestBody)
-            )
+        CoroutineScope(Dispatchers.Main).launch {
             try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.putPreferencesAsync(
+                        RequestBody.create(
+                            MediaType.parse(CONTENT_TYPE),
+                            requestBody
+                        )
+                    )
+                }
                 preferenceResponse.value = requestResult
             } catch (e: Exception) {
-                preferenceErrorResponse.postValue(e)
+                preferenceErrorResponse.value = e
             }
         }
     }
