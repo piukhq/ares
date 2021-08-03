@@ -32,16 +32,7 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.magicLinkSuccess.observeNonNull(this) {
-            viewModel.isLoading.value = false
-            findNavController().navigateIfAdded(
-                this,
-                ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
-            )
-        }
-
         viewModel.magicLinkError.observeNonNull(this) {
-            viewModel.isLoading.value = false
             showMagicLinkFail()
         }
 
@@ -96,8 +87,12 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
 
         binding.signUpButton.setOnClickListener {
             binding.emailField.text.trim().toString().let { email ->
-                viewModel.isLoading.value = true
-                viewModel.postMagicLink(email)
+                viewModel.postMagicLink(email){
+                    findNavController().navigateIfAdded(
+                    this,
+                    ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
+                    )
+                }
             }
         }
 
