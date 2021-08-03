@@ -150,7 +150,6 @@ fun provideRetrofit(client: OkHttpClient, baseUrl: String): Retrofit {
         .baseUrl(baseUrl)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(client)
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
 
     return retrofitBuilder.build()
 }
