@@ -70,15 +70,6 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
 
         checkForUpdates()
-        checkDeepLink()
-    }
-
-    private fun checkDeepLink(){
-        intent.data?.let { uri ->
-            val token = uri.getQueryParameter("token")
-            Log.d("applinktest", token)
-            Log.d("applinktest", "${token?.let { JWTUtils.decode(it) }}")
-        }
     }
 
     override fun onResume() {

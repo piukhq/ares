@@ -10,6 +10,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
+import com.bink.wallet.scenes.sign_up.SignUpFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_LOGIN
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
@@ -37,6 +38,9 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         logScreenView(ONBOARDING_VIEW)
         with(binding.pager) {
             scrollPagesAutomatically(this)
+        }
+        getMagicLinkToken()?.let {  token ->
+            checkMagicLink(token)
         }
     }
 
@@ -136,6 +140,10 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 pagerHandler.post(update)
             }
         }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
+    }
+
+    private fun checkMagicLink(token: String){
+        findNavController().navigate(OnboardingFragmentDirections.onboardingToMagicLinkResult(token))
     }
 
 }

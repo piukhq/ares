@@ -2,6 +2,7 @@ package com.bink.wallet
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ import com.bink.wallet.model.DynamicActionScreen
 import com.bink.wallet.model.DynamicActionType
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
-import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_REASON_CODE_KEY
@@ -46,12 +47,7 @@ import com.bink.wallet.utils.FirebaseEvents.PLL_LINK_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_LOYALTY_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_PAYMENT_ID_KEY
 import com.bink.wallet.utils.FirebaseEvents.PLL_STATE_KEY
-import com.bink.wallet.utils.KEYBOARD_TO_SCREEN_HEIGHT_RATIO
-import com.bink.wallet.utils.REMOTE_CONFIG_DYNAMIC_ACTIONS
-import com.bink.wallet.utils.WindowFullscreenHandler
 import com.bink.wallet.utils.enums.BuildTypes
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.bink.wallet.utils.toolbar.ToolbarManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -138,7 +134,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         if (this.isAdded) {
-             destinationListener =
+            destinationListener =
                 NavController.OnDestinationChangedListener { _, destination, _ ->
                     when (destination.id) {
                         R.id.loyalty_fragment, R.id.payment_card_wallet -> {
@@ -151,6 +147,15 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 }
             findNavController().addOnDestinationChangedListener(destinationListener)
         }
+    }
+
+    fun getMagicLinkToken(): String? {
+        requireActivity().intent.data?.let { uri ->
+            val token = uri.getQueryParameter("token")
+            return token
+        }
+
+        return null
     }
 
     private fun checkForDynamicActions() {
