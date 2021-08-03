@@ -25,19 +25,18 @@ class LoyaltyCardDetailsRepository(
         mutableDeleteCard: MutableLiveData<String>,
         error: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                id?.let {
-                    withContext(Dispatchers.IO) {
-                        apiService.deleteCardAsync(it)
-                    }
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = id?.let { apiService.deleteCardAsync(it) }
+            withContext(Dispatchers.Main) {
+                try {
+                    request?.await()
+                    membershipCardDao.deleteCard(id.toString())
+                    mutableDeleteCard.value = id
+                } catch (e: HttpException) {
+                    error.value = e
+                } catch (e: Exception) {
+                    error.value = e
                 }
-                membershipCardDao.deleteCard(id.toString())
-                mutableDeleteCard.value = id
-            } catch (e: HttpException) {
-                error.value = e
-            } catch (e: Exception) {
-                error.value = e
             }
         }
     }
@@ -48,20 +47,20 @@ class LoyaltyCardDetailsRepository(
         refreshError: MutableLiveData<Exception>,
         addError: Boolean
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                val membershipCards = withContext(Dispatchers.IO) {
-                    apiService.getMembershipCardsAsync()
+                val membershipCards = apiService.getMembershipCardsAsync()
+                withContext(Dispatchers.Main) {
+                    membershipCard.value = membershipCards.first { card -> card.id == cardId }
+                        .also {
+                            generateUuidForMembershipCardPullToRefresh(
+                                it,
+                                membershipCardDao,
+                                paymentCardDao
+                            )
+                            membershipCardDao.storeMembershipCard(it)
+                        }
                 }
-                membershipCard.value = membershipCards.first { card -> card.id == cardId }
-                    .also {
-                        generateUuidForMembershipCardPullToRefresh(
-                            it,
-                            membershipCardDao,
-                            paymentCardDao
-                        )
-                        membershipCardDao.storeMembershipCard(it)
-                    }
             } catch (e: Exception) {
                 if (addError)
                     refreshError.postValue(e)
@@ -75,15 +74,16 @@ class LoyaltyCardDetailsRepository(
         localStoreError: MutableLiveData<Exception>,
         fetchError: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val requestResult = withContext(Dispatchers.IO) {
-                    apiService.getPaymentCardsAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.getPaymentCardsAsync()
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    storePaymentsCards(response, localStoreError)
+                    paymentCards.value = response
+                } catch (e: Exception) {
+                    fetchError.value = e
                 }
-                storePaymentsCards(requestResult, localStoreError)
-                paymentCards.value = requestResult
-            } catch (e: Exception) {
-                fetchError.value = e
             }
         }
     }

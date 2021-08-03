@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.model.response.payment_card.PaymentCardAdd
 import com.bink.wallet.scenes.login.LoginResponse
+import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
@@ -26,26 +27,29 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+    @GET("/ubiquity/service")
+    fun checkRegisteredUser(): Deferred<LoginResponse>
+
     @POST("/ubiquity/service")
-    suspend fun loginOrRegisterAsync(
+    fun loginOrRegisterAsync(
         @Body loginResponse: LoginResponse
-    ): LoginResponse
+    ): Deferred<LoginResponse>
 
     @POST("/users/forgotten_password/")
-    suspend fun forgotPasswordAsync(
+    fun forgotPasswordAsync(
         @Body forgotPasswordRequest: ForgotPasswordRequest
-    ): ResponseBody
+    ): Deferred<ResponseBody>
 
     @GET("/ubiquity/membership_cards")
     suspend fun getMembershipCardsAsync(): List<MembershipCard>
 
     @GET("/ubiquity/payment_cards")
-    suspend fun getPaymentCardsAsync(): List<PaymentCard>
+    fun getPaymentCardsAsync(): Deferred<List<PaymentCard>>
 
     @POST("/ubiquity/payment_cards")
-    suspend fun addPaymentCardAsync(
+    fun addPaymentCardAsync(
         @Body cardAdd: PaymentCardAdd,@Query("autoLink") autoLink:Boolean = true
-    ): PaymentCard
+    ): Deferred<PaymentCard>
 
     @PATCH("/ubiquity/membership_card/{membershipCardId}/payment_card/{paymentCardId}")
     suspend fun linkToPaymentCardAsync(
@@ -54,43 +58,43 @@ interface ApiService {
     ): PaymentCard
 
     @DELETE("/ubiquity/payment_card/{paymentCardId}/membership_card/{membershipCardId}")
-    suspend fun unlinkFromPaymentCardAsync(
+    fun unlinkFromPaymentCardAsync(
         @Path("paymentCardId") paymentCardId: String,
         @Path("membershipCardId") membershipCardId: String
-    ): ResponseBody
+    ): Deferred<ResponseBody>
 
     @DELETE("/ubiquity/membership_card/{card_id}")
-    suspend fun deleteCardAsync(
+    fun deleteCardAsync(
         @Path("card_id") cardId: String
-    ): ResponseBody
+    ): Deferred<ResponseBody>
 
     @GET("/ubiquity/membership_plans")
     suspend fun getMembershipPlansAsync(): List<MembershipPlan>
 
     @POST("/ubiquity/membership_cards")
-    suspend fun createMembershipCardAsync(
+    fun createMembershipCardAsync(
         @Body membershipCardRequest: MembershipCardRequest
-    ): MembershipCard
+    ): Deferred<MembershipCard>
 
     @PUT("/ubiquity/membership_card/{card_id}")
-    suspend fun updateMembershipCardAsync(
+    fun updateMembershipCardAsync(
         @Path("card_id") cardId: String,
         @Body membershipCardRequest: MembershipCardRequest
-    ): MembershipCard
+    ): Deferred<MembershipCard>
 
     @PATCH("/ubiquity/membership_card/{card_id}")
-    suspend fun ghostMembershipCardAsync(
+    fun ghostMembershipCardAsync(
         @Path("card_id") cardId: String,
         @Body membershipCardRequest: MembershipCardRequest
-    ): MembershipCard
+    ): Deferred<MembershipCard>
 
     @DELETE("/ubiquity/payment_card/{payment_id}")
-    suspend fun deletePaymentCardAsync(
+    fun deletePaymentCardAsync(
         @Path("payment_id") cardId: String
-    ): ResponseBody
+    ): Deferred<ResponseBody>
 
     @POST("/ubiquity/service")
-    suspend fun postServiceAsync(@Body requestRequest: PostServiceRequest): ResponseBody
+    fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
 
     @GET("/ubiquity/payment_card/{payment_id}")
     suspend fun getPaymentCardAsync(
@@ -98,30 +102,30 @@ interface ApiService {
     ): PaymentCard
 
     @POST("/users/register")
-    suspend fun signUpAsync(
+    fun signUpAsync(
         @Body signUpRequest: SignUpRequest
-    ): SignUpResponse
+    ): Deferred<SignUpResponse>
 
     @PUT("/users/me/settings")
-    suspend fun checkMarketingPrefAsync(
+    fun checkMarketingPrefAsync(
         @Body checkedOption: MarketingOption
-    ): ResponseBody
+    ): Deferred<ResponseBody>
 
     @POST("/users/login")
-    suspend fun logInAsync(
+    fun logInAsync(
         @Body signUpRequest: SignUpRequest
-    ): SignUpResponse
+    ): Deferred<SignUpResponse>
 
     @POST("/users/me/logout")
-    suspend fun logOutAsync(): ResponseBody
+    fun logOutAsync(): Deferred<ResponseBody>
 
     @GET("/users/me/settings")
-    suspend fun getPreferencesAsync(): List<Preference>
+    fun getPreferencesAsync(): Deferred<List<Preference>>
 
     @PUT("/users/me/settings")
-    suspend fun putPreferencesAsync(
+    fun putPreferencesAsync(
         @Body preferenceRequest: RequestBody
-    ): ResponseBody
+    ): Deferred<ResponseBody>
 
     @PUT("/users/me")
    suspend fun putUserDetailsAsync(
