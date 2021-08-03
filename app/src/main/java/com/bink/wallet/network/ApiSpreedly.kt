@@ -12,8 +12,8 @@ interface ApiSpreedly {
 
     @Headers("Content-Type: application/json")
     @POST("https://core.spreedly.com/v1/payment_methods.json")
-    suspend fun postPaymentCardToSpreedly(
+    fun postPaymentCardToSpreedly(
         @Body spreedlyCard: SpreedlyPaymentCard,
         @Query("environment_key") environmentKey: String
-    ): SpreedlyResponse
+    ): Deferred<SpreedlyResponse>
 }

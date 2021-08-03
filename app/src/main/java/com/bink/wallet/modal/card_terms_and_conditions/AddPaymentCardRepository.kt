@@ -72,34 +72,33 @@ class AddPaymentCardRepository(
             )
             val spreedlyPaymentMethod = SpreedlyPaymentMethod(spreedlyCreditCard, "true")
             val spreedlyPaymentCard = SpreedlyPaymentCard(spreedlyPaymentMethod)
-            CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    val spreedlyRequest = withContext(Dispatchers.IO) {
-                        spreedlyApiService.postPaymentCardToSpreedly(
-                            spreedlyPaymentCard,
-                            spreedlyEnvironmentKey
+            CoroutineScope(Dispatchers.IO).launch {
+                val spreedlyRequest = spreedlyApiService.postPaymentCardToSpreedly(
+                    spreedlyPaymentCard,
+                    spreedlyEnvironmentKey
+                )
+                withContext(Dispatchers.Main) {
+                    try {
+                        val response = spreedlyRequest.await()
+                        card.card.apply {
+                            token = response.transaction.payment_method.token
+                            fingerprint = response.transaction.payment_method.fingerprint
+                            first_six_digits = response.transaction.payment_method.first_six_digits
+                            last_four_digits = response.transaction.payment_method.last_four_digits
+                        }
+
+                        encryptCardDetails(card)
+
+                        doAddPaymentCard(
+                            card,
+                            mutableAddCard,
+                            error,
+                            addCardRequestMade
                         )
+                    } catch (exception: Exception) {
+                        error.value = exception
+                        SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                     }
-                    card.card.apply {
-                        token = spreedlyRequest.transaction.payment_method.token
-                        fingerprint = spreedlyRequest.transaction.payment_method.fingerprint
-                        first_six_digits =
-                            spreedlyRequest.transaction.payment_method.first_six_digits
-                        last_four_digits =
-                            spreedlyRequest.transaction.payment_method.last_four_digits
-                    }
-
-                    encryptCardDetails(card)
-
-                    doAddPaymentCard(
-                        card,
-                        mutableAddCard,
-                        error,
-                        addCardRequestMade
-                    )
-                } catch (exception: Exception) {
-                    error.value = exception
-                    SentryUtils.logError(SentryErrorType.TOKEN_REJECTED, exception.message)
                 }
             }
         } else {
@@ -139,17 +138,19 @@ class AddPaymentCardRepository(
         error: MutableLiveData<Exception>,
         addCardRequestMade: MutableLiveData<Boolean>
     ) {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val requestResult = withContext(Dispatchers.IO) {
-                    apiService.addPaymentCardAsync(card)
+        CoroutineScope(Dispatchers.IO).launch {
+            val request = apiService.addPaymentCardAsync(card)
+            addCardRequestMade.postValue(true)
+            withContext(Dispatchers.Main) {
+                try {
+                    val response = request.await()
+                    paymentCardDao.store(response)
+                    mutableAddCard.value = response
+                } catch (exception: Exception) {
+                    error.value = exception
+
+                    SentryUtils.logError(SentryErrorType.API_REJECTED, exception)
                 }
-                addCardRequestMade.postValue(true)
-                    paymentCardDao.store(requestResult)
-                    mutableAddCard.value = requestResult
-            } catch (exception: Exception) {
-                error.value = exception
-                SentryUtils.logError(SentryErrorType.API_REJECTED, exception)
             }
         }
     }
@@ -190,37 +191,25 @@ class AddPaymentCardRepository(
                     if (encryptedMonth.isNotEmpty()) {
                         card.card.month = encryptedMonth
                     } else {
-                        SentryUtils.logError(
-                            SentryErrorType.INVALID_PAYLOAD,
-                            InvalidPayloadType.INVALID_MONTH.error
-                        )
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_MONTH.error)
                     }
 
                     if (encryptedYear.isNotEmpty()) {
                         card.card.year = encryptedYear
                     } else {
-                        SentryUtils.logError(
-                            SentryErrorType.INVALID_PAYLOAD,
-                            InvalidPayloadType.INVALID_YEAR.error
-                        )
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_YEAR.error)
                     }
 
                     if (encryptedFirstSix.isNotEmpty()) {
                         card.card.first_six_digits = encryptedFirstSix
                     } else {
-                        SentryUtils.logError(
-                            SentryErrorType.INVALID_PAYLOAD,
-                            InvalidPayloadType.INVALID_FIRST_SIX.error
-                        )
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_FIRST_SIX.error)
                     }
 
                     if (encryptedLastFour.isNotEmpty()) {
                         card.card.last_four_digits = encryptedLastFour
                     } else {
-                        SentryUtils.logError(
-                            SentryErrorType.INVALID_PAYLOAD,
-                            InvalidPayloadType.INVALID_LAST_FOUR.error
-                        )
+                        SentryUtils.logError(SentryErrorType.INVALID_PAYLOAD, InvalidPayloadType.INVALID_LAST_FOUR.error)
                     }
                 }
             }
