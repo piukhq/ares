@@ -14,7 +14,6 @@ import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.logError
 import com.bink.wallet.utils.putSessionHandlerNavigationDestination
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
