@@ -193,9 +193,12 @@ class LoyaltyViewModel constructor(
                     loyaltyWalletRepository.retrieveMembershipCardsAndPlans()
                 }
 
-                membershipCardsAndPlans.membershipPlans?.let {
-                    membershipPlanData.value = it
+                  membershipCardsAndPlans.membershipPlans.let {
+                      membershipPlanData.value = it
                 }
+                 membershipCardsAndPlans.membershipCards.let {
+                     membershipCardData.value = it
+                 }
 
                 membershipCardsAndPlans.membershipCards?.let {
                     membershipCardData.value = it
