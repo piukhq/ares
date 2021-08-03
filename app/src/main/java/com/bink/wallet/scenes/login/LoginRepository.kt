@@ -194,32 +194,8 @@ class LoginRepository(
         }
     }
 
-    fun sendMagicLink(
-        magicLinkBody: MagicLinkBody,
-        magicLinkSuccess: MutableLiveData<Any>,
-        magicLinkError: MutableLiveData<Exception>
-    ) {
-        val handler = CoroutineExceptionHandler { _, exception ->
-            logDebug("loginRepository", "Caught $exception")
-        }
-        CoroutineScope(Dispatchers.IO).launch(handler) {
-            val request = async {
-                apiService.postMagicLink(
-                    magicLinkBody
-                )
-            }
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    response.let {
-                        magicLinkSuccess.value = response
-                    }
-                } catch (e: Exception) {
-                    magicLinkError.value = e
-                }
-            }
-        }
-
+    suspend fun sendMagicLink(magicLinkBody: MagicLinkBody) {
+        apiService.postMagicLink(magicLinkBody)
     }
 
     fun clearData(
