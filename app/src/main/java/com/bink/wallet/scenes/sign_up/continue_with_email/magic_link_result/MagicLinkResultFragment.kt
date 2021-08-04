@@ -25,6 +25,7 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
 
         arguments?.let { bundle ->
             val token = MagicLinkResultFragmentArgs.fromBundle(bundle).token
+            viewModel.postMagicLinkToken(token){}
         }
 
     }

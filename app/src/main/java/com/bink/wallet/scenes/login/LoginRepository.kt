@@ -3,7 +3,9 @@ package com.bink.wallet.scenes.login
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.MagicLinkAccessToken
 import com.bink.wallet.model.MagicLinkBody
+import com.bink.wallet.model.MagicLinkToken
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
@@ -196,6 +198,10 @@ class LoginRepository(
 
     suspend fun sendMagicLink(magicLinkBody: MagicLinkBody) {
         apiService.postMagicLink(magicLinkBody)
+    }
+
+    suspend fun sendMagicLinkToken(magicLinkToken: MagicLinkToken): MagicLinkAccessToken{
+        return apiService.postMagicLinkToken(magicLinkToken)
     }
 
     fun clearData(
