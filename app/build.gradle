@@ -49,7 +49,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 29
         versionCode buildNumber
-        versionName "2.3.3"
+        versionName "2.3.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
