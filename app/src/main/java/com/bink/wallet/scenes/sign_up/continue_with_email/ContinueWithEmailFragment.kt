@@ -36,13 +36,11 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
             showMagicLinkFail()
         }
 
-        viewModel.isSuccessful.observeNonNull(this){
-                viewModel.postMagicLink(email){
-                    findNavController().navigateIfAdded(
-                    this,
-                    ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
-                    )
-                }
+        viewModel.isSuccessful.observeNonNull(this) {
+            findNavController().navigateIfAdded(
+                this,
+                ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
+            )
         }
 
         viewModel.isLoading.observeNonNull(this) {
