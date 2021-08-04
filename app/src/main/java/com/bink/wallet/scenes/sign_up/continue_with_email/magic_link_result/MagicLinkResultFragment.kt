@@ -4,6 +4,10 @@ import android.os.Bundle
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.MagicLinkResultFragmentBinding
+import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,7 +29,19 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
 
         arguments?.let { bundle ->
             val token = MagicLinkResultFragmentArgs.fromBundle(bundle).token
-            viewModel.postMagicLinkToken(token){}
+            viewModel.postMagicLinkToken(requireContext(), token)
+        }
+
+        viewModel.user.observeNonNull(this) {
+            logDebug("responseToken", "user $it")
+            setAnalyticsUserId(it.uid)
+        }
+
+        viewModel.email.observeNonNull(this) {
+            LocalStoreUtils.setAppSharedPref(
+                LocalStoreUtils.KEY_EMAIL,
+                it
+            )
         }
 
     }

@@ -1,26 +1,61 @@
 package com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result
 
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.R
 import com.bink.wallet.model.MagicLinkToken
+import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.login.LoginRepository
-import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.*
+import com.bink.wallet.scenes.settings.UserRepository
+import com.bink.wallet.utils.JWTUtils
+import com.bink.wallet.utils.LocalStoreUtils
+import kotlinx.coroutines.launch
+import org.json.JSONException
+import org.json.JSONObject
 
-class MagicLinkResultViewModel(val loginRepository: LoginRepository) : BaseViewModel() {
+class MagicLinkResultViewModel(val loginRepository: LoginRepository, val userRepository: UserRepository) : BaseViewModel() {
 
-    private val job = Job()
-    private val scope = CoroutineScope(job + Dispatchers.Main)
+    private val _user = MutableLiveData<User>()
+    val user: LiveData<User>
+        get() = _user
 
-    fun postMagicLinkToken(token: String, isSent: () -> Unit) {
+    private val _email = MutableLiveData<String>()
+    val email: LiveData<String>
+        get() = _email
+
+    fun postMagicLinkToken(context: Context, token: String) {
         val magicLinkToken = MagicLinkToken(token)
-        val handler = CoroutineExceptionHandler { _, _ -> }
-        scope.launch(handler) {
+        viewModelScope.launch {
             try {
-                logDebug("responseToken", "sent $token")
                 val responseToken = loginRepository.sendMagicLinkToken(magicLinkToken)
-                logDebug("responseToken", responseToken.access_token)
+                logInUser(context, responseToken.access_token)
             } catch (e: Exception) {
-                logDebug("responseToken", "$e")
+            }
+        }
+    }
+
+    private fun logInUser(context: Context, token: String) {
+        LocalStoreUtils.setAppSharedPref(
+            LocalStoreUtils.KEY_TOKEN,
+            context.getString(R.string.token_api_v1, token)
+        )
+
+        try {
+            JWTUtils.decode(token)?.let { tokenJson ->
+                val emailFromJson = JSONObject(tokenJson).getString("user_id")
+                _email.value = emailFromJson
+            }
+        } catch (e: JSONException) {
+        }
+
+        viewModelScope.launch {
+            try {
+                val user = userRepository.getUserDetails()
+                _user.value = user
+            } catch (e: Exception) {
             }
         }
     }
