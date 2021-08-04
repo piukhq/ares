@@ -36,6 +36,15 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
             showMagicLinkFail()
         }
 
+        viewModel.isSuccessful.observeNonNull(this){
+                viewModel.postMagicLink(email){
+                    findNavController().navigateIfAdded(
+                    this,
+                    ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
+                    )
+                }
+        }
+
         viewModel.isLoading.observeNonNull(this) {
             with(binding) {
                 progressSpinner.visibility = when (it) {
@@ -87,12 +96,7 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
 
         binding.signUpButton.setOnClickListener {
             binding.emailField.text.trim().toString().let { email ->
-                viewModel.postMagicLink(email){
-                    findNavController().navigateIfAdded(
-                    this,
-                    ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(binding.emailField.text.trim().toString())
-                    )
-                }
+                viewModel.postMagicLink(email)
             }
         }
 

@@ -450,7 +450,7 @@
     <string name="password_description">Password should be 8 or more characters, with at least 1 uppercase. 1 lowercase and a number</string>
     <string name="incorrect_email_text">Incorrect email format</string>
     <string name="sign_up_description">Get a link sent to your inbox so you can register or access your existing account instantly!</string>
-    <string name="magic_link_note">Note: </string>
+    <string name="magic_link_note">Note:&#160;</string>
     <string name="magic_link_full">We will send you a Magic Link</string>
     <string name="magic_link">Magic Link</string>
     <string name="password_text">Password</string>
