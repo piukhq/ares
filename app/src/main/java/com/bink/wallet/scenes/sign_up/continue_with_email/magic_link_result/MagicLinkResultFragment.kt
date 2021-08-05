@@ -1,10 +1,11 @@
 package com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result
 
 import android.os.Bundle
+import android.text.Html
+import android.view.View
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.MagicLinkResultFragmentBinding
-import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.observeNonNull
@@ -35,6 +36,7 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
         viewModel.user.observeNonNull(this) {
             logDebug("responseToken", "user $it")
             setAnalyticsUserId(it.uid)
+            showSuccessUi()
         }
 
         viewModel.email.observeNonNull(this) {
@@ -44,6 +46,30 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
             )
         }
 
+        viewModel.isLoading.observeNonNull(this) {
+            with(binding) {
+                progressSpinner.visibility = when (it) {
+                    true -> {
+                        View.VISIBLE
+                    }
+                    else -> {
+                        View.GONE
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun showSuccessUi() {
+        val subtitlePartOne = getString(R.string.magic_link_success_part_one)
+        val subtitlePartTwo = getString(R.string.magic_link_success_part_two)
+        val subtitleText = "$subtitlePartOne <b>${viewModel.email.value}.</b> $subtitlePartTwo"
+
+        with(binding) {
+            title.text = getString(R.string.magic_link_success)
+            subtitle.text = Html.fromHtml(subtitleText)
+        }
     }
 
 }

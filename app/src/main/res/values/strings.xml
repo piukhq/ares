@@ -453,6 +453,10 @@
     <string name="magic_link_note">Note:&#160;</string>
     <string name="magic_link_full">We will send you a Magic Link</string>
     <string name="magic_link">Magic Link</string>
+    <string name="choose_email_client">Choose email client</string>
+    <string name="magic_link_success">Success</string>
+    <string name="magic_link_success_part_one">you are now logged in with&#160;</string>
+    <string name="magic_link_success_part_two">&#160;and will remain logged in on this device until you chose to log out. You can log out from settings</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
     <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>
@@ -603,7 +607,6 @@
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
-    <string name="choose_email_client">Choose email client</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

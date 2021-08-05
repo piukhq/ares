@@ -26,13 +26,19 @@ class MagicLinkResultViewModel(val loginRepository: LoginRepository, val userRep
     val email: LiveData<String>
         get() = _email
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     fun postMagicLinkToken(context: Context, token: String) {
+        _isLoading.value = true
         val magicLinkToken = MagicLinkToken(token)
         viewModelScope.launch {
             try {
                 val responseToken = loginRepository.sendMagicLinkToken(magicLinkToken)
                 logInUser(context, responseToken.access_token)
             } catch (e: Exception) {
+                _isLoading.value = false
             }
         }
     }
@@ -49,13 +55,16 @@ class MagicLinkResultViewModel(val loginRepository: LoginRepository, val userRep
                 _email.value = emailFromJson
             }
         } catch (e: JSONException) {
+            _isLoading.value = false
         }
 
         viewModelScope.launch {
             try {
                 val user = userRepository.getUserDetails()
                 _user.value = user
+                _isLoading.value = false
             } catch (e: Exception) {
+                _isLoading.value = false
             }
         }
     }
