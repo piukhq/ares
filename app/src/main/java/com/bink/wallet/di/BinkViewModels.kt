@@ -157,7 +157,7 @@ val viewModelModules = module {
 
     viewModel { ContinueWithEmailViewModel(get()) }
 
-    viewModel { MagicLinkResultViewModel(get(), get()) }
+    viewModel { MagicLinkResultViewModel(get(), get(), get()) }
 }
 
 fun provideZendeskRepository() = ZendeskRepository()

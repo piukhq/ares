@@ -97,7 +97,7 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @POST("/ubiquity/service")
-    fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
+    suspend fun postServiceAsync(@Body requestRequest: PostServiceRequest): ResponseBody
 
     @GET("/ubiquity/payment_card/{payment_id}")
     suspend fun getPaymentCardAsync(

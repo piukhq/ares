@@ -3,9 +3,12 @@ package com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result
 import android.os.Bundle
 import android.text.Html
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.MagicLinkResultFragmentBinding
+import com.bink.wallet.scenes.login.LoginFragmentDirections
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.observeNonNull
@@ -59,6 +62,10 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
             }
         }
 
+        viewModel.membershipPlans.observeNonNull(this) {
+            findNavController().navigate(LoginFragmentDirections.globalToHome(true))
+        }
+
     }
 
     private fun showSuccessUi() {
@@ -69,6 +76,15 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
         with(binding) {
             title.text = getString(R.string.magic_link_success)
             subtitle.text = Html.fromHtml(subtitleText)
+
+            continueButton.setOnClickListener {
+                if (marketingCheckbox.isChecked) {
+                    viewModel.postConsent()
+                }
+
+                viewModel.getMembershipPlans()
+            }
+
             successLayout.visibility = View.VISIBLE
             animationView.playAnimation()
         }

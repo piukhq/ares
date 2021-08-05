@@ -88,22 +88,8 @@ class LoginRepository(
         }
     }
 
-    fun postService(
-        postServiceRequest: PostServiceRequest,
-        postServiceResponse: MutableLiveData<ResponseBody>,
-        postServiceErrorResponse: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.postServiceAsync(postServiceRequest)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    postServiceResponse.value = response
-                } catch (e: Exception) {
-                    postServiceErrorResponse.value = e
-                }
-            }
-        }
+    suspend fun postService(postServiceRequest: PostServiceRequest): ResponseBody {
+        return apiService.postServiceAsync(postServiceRequest)
     }
 
     fun checkMarketingPref(
@@ -200,7 +186,7 @@ class LoginRepository(
         apiService.postMagicLink(magicLinkBody)
     }
 
-    suspend fun sendMagicLinkToken(magicLinkToken: MagicLinkToken): MagicLinkAccessToken{
+    suspend fun sendMagicLinkToken(magicLinkToken: MagicLinkToken): MagicLinkAccessToken {
         return apiService.postMagicLinkToken(magicLinkToken)
     }
 
