@@ -64,11 +64,13 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
     private fun showSuccessUi() {
         val subtitlePartOne = getString(R.string.magic_link_success_part_one)
         val subtitlePartTwo = getString(R.string.magic_link_success_part_two)
-        val subtitleText = "$subtitlePartOne <b>${viewModel.email.value}.</b> $subtitlePartTwo"
+        val subtitleText = "$subtitlePartOne <b>${viewModel.email.value}</b> $subtitlePartTwo"
 
         with(binding) {
             title.text = getString(R.string.magic_link_success)
             subtitle.text = Html.fromHtml(subtitleText)
+            successLayout.visibility = View.VISIBLE
+            animationView.playAnimation()
         }
     }
 
