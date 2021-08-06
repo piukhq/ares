@@ -6,7 +6,6 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.MagicLinkResultFragmentBinding
 import com.bink.wallet.scenes.login.LoginFragmentDirections
 import com.bink.wallet.utils.LocalStoreUtils
