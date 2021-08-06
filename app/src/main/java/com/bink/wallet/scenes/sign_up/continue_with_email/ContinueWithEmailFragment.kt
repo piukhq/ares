@@ -1,12 +1,19 @@
 package com.bink.wallet.scenes.sign_up.continue_with_email
 
+import android.app.AlertDialog
+import android.os.Bundle
+import android.view.View
+import androidx.core.widget.doAfterTextChanged
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.ContinueWithEmailFragmentBinding
+import com.bink.wallet.scenes.sign_up.SignUpFragmentDirections
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ContinueWithEmailFragment: BaseFragment<ContinueWithEmailViewModel, ContinueWithEmailFragmentBinding>() {
+class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, ContinueWithEmailFragmentBinding>() {
 
     override val layoutRes = R.layout.continue_with_email_fragment
 
