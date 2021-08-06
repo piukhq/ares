@@ -86,3 +86,7 @@ const val REMOTE_CONFIG_DYNAMIC_ACTIONS = "dynamic_actions"
 const val REMOTE_CONFIG_LPC_MASTER_ENABLED = "LPC_master_enabled"
 const val REMOTE_CONFIG_APP_CONFIGURATION = "app_configuration"
 
+const val MAGIC_LINK_LOCALE = "en_GB"
+const val MAGIC_LINK_BUNDLE_ID = "com.bink.wallet"
+const val MAGIC_LINK_DEBUG_SLUG = "iceland-bonus-card-mock"
+const val MAGIC_LINK_PROD_SLUG = "matalan-reward-card"

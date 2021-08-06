@@ -192,6 +192,10 @@ class LoginRepository(
         }
     }
 
+    suspend fun sendMagicLink(magicLinkBody: MagicLinkBody) {
+        apiService.postMagicLink(magicLinkBody)
+    }
+
     fun clearData(
         clearResponse: MutableLiveData<Unit>,
         clearDataError: MutableLiveData<Exception>
