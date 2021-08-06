@@ -12,14 +12,13 @@ import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
+import com.bink.wallet.model.response.membership_card.MembershipCard
+import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.utils.CONTENT_TYPE
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -169,8 +168,10 @@ class LoginRepository(
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val request = apiService.putPreferencesAsync(
-               RequestBody.create(MediaType.parse(CONTENT_TYPE),
-               requestBody)
+                RequestBody.create(
+                    MediaType.parse(CONTENT_TYPE),
+                    requestBody
+                )
             )
             try {
                 val response = request.await()

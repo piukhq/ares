@@ -45,5 +45,4 @@ class ContinueWithEmailViewModel(val loginRepository: LoginRepository) : BaseVie
         }
     }
 
-class ContinueWithEmailViewModel : BaseViewModel() {
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
@@ -21,7 +22,7 @@
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -30,7 +31,180 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <TextView
+                    android:id="@+id/sign_up_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/continue_with_email"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_headline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/sign_up_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:text="@string/sign_up_description"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sign_up_title" />
+
+                <TextView
+                    android:id="@+id/magic_link_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_large"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/magic_link_note"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sign_up_description" />
+
+
+                <TextView
+                    android:id="@+id/magic_link_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_large"
+                    android:fontFamily="@font/nunito_sans"
+                    android:text="@string/magic_link_full"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/blue_accent"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintStart_toEndOf="@+id/magic_link_note"
+                    app:layout_constraintTop_toBottomOf="@+id/sign_up_description" />
+
+                <TextView
+                    android:id="@+id/email_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_large"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/email_text"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_body_large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/magic_link_note" />
+
+                <EditText
+                    android:id="@+id/email_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:fontFamily="@font/nunito_sans"
+                    android:hint="@string/enter_email_text"
+                    android:importantForAutofill="no"
+                    android:inputType="textEmailAddress"
+                    android:textSize="@dimen/text_size_description_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/email_description"
+                    tools:ignore="Autofill" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_terms_conditions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:buttonTint="@color/black"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:gravity="top"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/blue_accent"
+                    android:textSize="@dimen/size_body"
+                    app:layout_constraintStart_toStartOf="@+id/email_field"
+                    app:layout_constraintTop_toBottomOf="@+id/email_field" />
+
+                <TextView
+                    android:id="@+id/terms_and_conditions_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/nunito_sans_light"
+                    android:text="@string/terms_and_conditions_message"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/blue_accent"
+                    android:textSize="@dimen/size_body"
+                    app:layout_constraintEnd_toEndOf="@+id/email_field"
+                    app:layout_constraintStart_toEndOf="@+id/checkbox_terms_conditions"
+                    app:layout_constraintTop_toBottomOf="@+id/email_field" />
+
+                <Button
+                    android:id="@+id/sign_up_button"
+                    style="@style/TextAppearance.AppCompat.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/gradient_button_margin"
+                    android:layout_marginEnd="@dimen/gradient_button_margin"
+                    android:layout_marginBottom="@dimen/button_vertical_margin_size_large"
+                    android:background="@drawable/gradient_button_selector"
+                    android:enabled="false"
+                    android:fontFamily="@font/nunito_sans_bold"
+                    android:text="@string/continue_text"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@null"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/use_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_small"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/use_password"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/blue_accent"
+                    android:textSize="@dimen/size_sub_headline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sign_up_button" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/progress_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@color/white_50_alpha"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ProgressBar
+                        style="@style/ProgressSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
