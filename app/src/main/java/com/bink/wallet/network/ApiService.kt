@@ -1,6 +1,5 @@
 package com.bink.wallet.network
 
-import com.bink.wallet.model.MagicLinkBody
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
@@ -119,9 +118,6 @@ interface ApiService {
 
     @POST("/users/me/logout")
     fun logOutAsync(): Deferred<ResponseBody>
-
-    @POST("/users/magic_links")
-    suspend fun postMagicLink(@Body magicLinkBody: MagicLinkBody)
 
     @GET("/users/me/settings")
     fun getPreferencesAsync(): Deferred<List<Preference>>
