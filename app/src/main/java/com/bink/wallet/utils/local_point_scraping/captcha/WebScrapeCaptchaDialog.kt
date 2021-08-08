@@ -6,21 +6,24 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.webkit.WebView
-import com.bink.wallet.R
+import com.bink.wallet.databinding.WebscrapeCaptchaFragmentBinding
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.readFileText
 
 class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebView?, private val loginJavascript: String) : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 
     private var timer: CountDownTimer? = null
+    private lateinit var binding:WebscrapeCaptchaFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.webscrape_captcha_fragment)
+        binding = WebscrapeCaptchaFragmentBinding.inflate(layoutInflater)
+        val view  = binding.root
+        setContentView(view)
 
         captchaWebView?.apply {
             visibility = View.VISIBLE
-            webview_layout.addView(this)
+            binding.webviewLayout.addView(this)
         }
 
         val captchaJs = "lps_morrisons_captcha.txt".readFileText(context)
