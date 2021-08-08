@@ -1,5 +1,6 @@
 package com.bink.wallet.utils.local_point_scraping
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.view.View
@@ -15,6 +16,7 @@ import com.bink.wallet.utils.readFileText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+@SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
 
     var lastSeenURL: String? = null
@@ -55,24 +57,26 @@ object PointScrapingUtil {
                         pointScrapeSite.let { site ->
                             getJavascript(context, url, site, email, password).let { js ->
                                 logDebug("LocalPointScrape", "Evaluating JS")
-                                webView?.evaluateJavascript(js) { response ->
-                                    logDebug("LocalPointScrape", "JS Response $response")
-                                    processResponse(response) { pointScrapeResponse ->
-                                        logDebug("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
-                                        if (pointScrapeResponse.isDone()) {
-                                            webView?.destroy()
-                                            webView = null
-                                            lastSeenURL = null
-                                            hasSignedIn = false
+                                js?.let {
+                                    webView?.evaluateJavascript(it) { response ->
+                                        logDebug("LocalPointScrape", "JS Response $response")
+                                        processResponse(response) { pointScrapeResponse ->
+                                            logDebug("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
+                                            if (pointScrapeResponse.isDone()) {
+                                                webView?.destroy()
+                                                webView = null
+                                                lastSeenURL = null
+                                                hasSignedIn = false
 
-                                            callback(pointScrapeResponse)
-                                        }
+                                                callback(pointScrapeResponse)
+                                            }
 
-                                        if (pointScrapeResponse.user_action_required) {
-                                            val dialog = WebScrapeCaptchaDialog(context, webView, js ?: "")
-                                            dialog.show()
-                                            dialog.setOnDismissListener {
-                                                webView?.loadUrl(pointScrapeSite.scrapeURL)
+                                            if (pointScrapeResponse.user_action_required) {
+                                                val dialog = WebScrapeCaptchaDialog(context, webView, js ?: "")
+                                                dialog.show()
+                                                dialog.setOnDismissListener {
+                                                    webView?.loadUrl(pointScrapeSite.scrapeURL)
+                                                }
                                             }
                                         }
                                     }
