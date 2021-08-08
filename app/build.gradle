@@ -1,11 +1,12 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("io.sentry.android.gradle")
+    id("kotlin-parcelize")
+
 }
 
 repositories {
@@ -159,11 +160,7 @@ android {
         kotlinCompilerVersion '1.5.10'
     }
     ndkVersion '21.3.6528147'
-
-    androidExtensions {
-        experimental = true
-    }
-
+    
     repositories {
         mavenCentral()
         maven {
