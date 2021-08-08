@@ -27,7 +27,6 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -146,8 +145,8 @@ class PaymentCardWalletFragment :
                     }
 
                     dX < 0 -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.GONE
-                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.barcodeLayout.visibility = View.GONE
+                        viewHolder.binding.deleteLayout.visibility = View.VISIBLE
                         getDefaultUIUtil().onDraw(
                             c,
                             recyclerView,

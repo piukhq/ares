@@ -9,7 +9,6 @@ import android.webkit.WebView
 import com.bink.wallet.R
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.readFileText
-import kotlinx.android.synthetic.main.webscrape_captcha_fragment.*
 
 class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebView?, private val loginJavascript: String) : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 
