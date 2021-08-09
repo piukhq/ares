@@ -110,7 +110,6 @@ class PllViewModel(private val paymentWalletRepository: PaymentWalletRepository)
             val errorBody = errorResponse?.errorBody()?.string()
 
             if (errorCode == 403) {
-                SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, exception)
                 return errorBody
             }
 
