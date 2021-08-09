@@ -116,6 +116,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 card?.let { card ->
                     if (direction == RIGHT) {
                         val membershipPlanData = viewModel.membershipPlanData.value
+                            ?: viewModel.localMembershipPlanData.value
                         val plan = membershipPlanData?.firstOrNull {
                             it.id == card.membership_plan
                         }
@@ -373,6 +374,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
+        viewModel.localMembershipPlanData.observeNonNull(this) {
+            if (!UtilFunctions.isNetworkAvailable(context)) {
+                viewModel.membershipPlanData.value = it
+            }
+        }
+
         WebScrapableManager.updatedCards.observeNonNull(this) {
             viewModel.membershipCardData.value = it
         }
@@ -551,7 +558,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         when (item) {
             is MembershipCard -> {
                 val list =
-                    viewModel.membershipPlanData.value
+                    viewModel.localMembershipPlanData.value ?: viewModel.membershipPlanData.value
                 list?.let {
                     for (membershipPlan in it) {
                         if (item.membership_plan == membershipPlan.id) {
