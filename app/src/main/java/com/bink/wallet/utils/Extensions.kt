@@ -355,6 +355,27 @@ fun TextView.setTermsAndPrivacyUrls(
     movementMethod = LinkMovementMethod.getInstance()
 }
 
+fun TextView.setMagicLinkUrl(
+    magicLinkText: String,
+    urlText: String,
+    urlClickListener: (String) -> Unit
+) {
+    val magicLinkSpannable = SpannableString(magicLinkText)
+    magicLinkSpannable.setSpan(
+        object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                urlClickListener(MAGIC_LINK_URL)
+            }
+        },
+        magicLinkText.indexOf(urlText, ignoreCase = true),
+        magicLinkText.indexOf(urlText, ignoreCase = true) + urlText.length,
+        Spannable.SPAN_INCLUSIVE_INCLUSIVE
+    )
+
+    text = magicLinkSpannable
+    movementMethod = LinkMovementMethod.getInstance()
+}
+
 fun HttpException.getErrorBody(): String {
     val errorBody = response()?.errorBody()?.string() ?: "Error body is null or empty"
 

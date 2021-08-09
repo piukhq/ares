@@ -753,6 +753,10 @@
         android:name="com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailFragment"
         tools:layout="@layout/continue_with_email_fragment">
 
+        <action
+            android:id="@+id/cont_with_email_to_log_in"
+            app:destination="@+id/login_fragment" />
+
     </fragment>
 
     <fragment
