@@ -39,7 +39,6 @@
     <string name="error_server_down_title">Error</string>
     <string name="error_server_down_message">There was a problem communicating with the server. Please try again later.</string>
     <string name="error_sign_up_failed">Registration failed.</string>
-    <string name="error_magic_link_failed">Magic Link is temporarily unavailable, please try again later.</string>
 
     <!-- Barcode Screen -->
     <string name="barcode_maximize">Maximise barcode</string>
@@ -421,7 +420,6 @@
     <string name="skip">Skip</string>
     <string name="continue_with_email">Continue with email</string>
     <string name="log_in_with_email">Log in with email</string>
-    <string name="use_password">Use a password</string>
     <string name="page_1_title">Payment linked loyalty. Magic!</string>
     <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
     <string name="page_2_title">All your cards in one place</string>
