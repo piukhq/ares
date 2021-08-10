@@ -7,6 +7,7 @@ enum class SignUpFieldTypes(val common_name: String) {
     LAST_NAME("last_name"),
     CARD_NUMBER("card_number"),
     PASSWORD("password"),
+    PASSWORD_2("password_2"),
     BARCODE("barcode"),
     DATE_OF_BIRTH("date_of_birth"),
     MEMORABLE_DATE("memorable_date"),
