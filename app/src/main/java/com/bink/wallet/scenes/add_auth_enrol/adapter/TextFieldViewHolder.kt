@@ -356,7 +356,7 @@ class TextFieldViewHolder(
         when (commonName) {
             SignUpFieldTypes.PASSWORD.common_name,
             SignUpFieldTypes.PASSWORD_2.common_name -> {
-                inputType = InputType.TYPE_CLASS_TEXT
+                inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 transformationMethod = PasswordTransformationMethod()
             }
             SignUpFieldTypes.PHONE.common_name,
