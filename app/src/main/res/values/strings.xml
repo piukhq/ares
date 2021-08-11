@@ -422,6 +422,7 @@
     <string name="continue_with_email">Continue with email</string>
     <string name="log_in_with_email">Log in with email</string>
     <string name="use_password">Use a password</string>
+    <string name="use_magic_link">Use Magic Link</string>
     <string name="page_1_title">Payment linked loyalty. Magic!</string>
     <string name="page_1_description">Link your payment cards to selected loyalty cards and earn rewards and benefits automatically when you pay.</string>
     <string name="page_2_title">All your cards in one place</string>
