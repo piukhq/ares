@@ -36,7 +36,6 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -176,6 +175,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 actionState,
                                 isCurrentlyActive
                             )
+                            (viewHolder as LoyaltyWalletViewHolder)
                         }
 
                         dX == 0f && dY == 0f -> {
@@ -183,8 +183,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
 
                         dX > 0 -> {
-                            viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                            viewHolder.itemView.delete_layout.visibility = View.GONE
+                            (viewHolder as LoyaltyWalletViewHolder).binding.barcodeLayout.visibility =
+                                View.VISIBLE
+                            viewHolder.binding.deleteLayout.visibility = View.GONE
                             getDefaultUIUtil().onDraw(
                                 c,
                                 recyclerView,
@@ -197,8 +198,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
 
                         dX < 0 -> {
-                            viewHolder.itemView.barcode_layout.visibility = View.GONE
-                            viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                            (viewHolder as LoyaltyWalletViewHolder).binding.barcodeLayout.visibility =
+                                View.GONE
+                            viewHolder.binding.deleteLayout.visibility = View.VISIBLE
                             getDefaultUIUtil().onDraw(
                                 c,
                                 recyclerView,
