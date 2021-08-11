@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
     private lateinit var appUpdateManager: AppUpdateManager
+    var newIntent: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +97,11 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        newIntent = intent
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

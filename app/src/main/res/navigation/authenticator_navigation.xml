@@ -741,10 +741,6 @@
             app:destination="@+id/continue_with_email_fragment" />
 
         <action
-            android:id="@+id/onboarding_to_magic_link_result"
-            app:destination="@+id/magic_link_result_fragment" />
-
-        <action
             android:id="@+id/onboarding_to_log_in"
             app:destination="@+id/login_fragment" />
         <action
@@ -771,6 +767,10 @@
         android:id="@+id/check_inbox_fragment"
         android:name="com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxFragment"
         tools:layout="@layout/continue_with_email_fragment">
+
+        <action
+            android:id="@+id/check_inbox_to_magic_link_result"
+            app:destination="@+id/magic_link_result_fragment" />
 
         <argument
             android:name="userEmail"

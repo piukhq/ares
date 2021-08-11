@@ -2,7 +2,6 @@ package com.bink.wallet
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.DynamicAction
-import com.bink.wallet.model.DynamicActionEvent
-import com.bink.wallet.model.DynamicActionHandler
-import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.DynamicActionScreen
-import com.bink.wallet.model.DynamicActionType
+import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
 import com.bink.wallet.utils.*
@@ -150,13 +144,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
     }
 
     fun getMagicLinkToken(): String? {
-        requireActivity().intent.data?.let { uri ->
+        (requireActivity() as MainActivity).newIntent?.data?.let { uri ->
             val token = uri.getQueryParameter("token")
             return token
         }
-
         return null
     }
+
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(

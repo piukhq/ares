@@ -39,9 +39,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         with(binding.pager) {
             scrollPagesAutomatically(this)
         }
-        getMagicLinkToken()?.let {  token ->
-            checkMagicLink(token)
-        }
     }
 
     override fun onPause() {
@@ -140,10 +137,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 pagerHandler.post(update)
             }
         }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
-    }
-
-    private fun checkMagicLink(token: String){
-        findNavController().navigate(OnboardingFragmentDirections.onboardingToMagicLinkResult(token))
     }
 
 }

@@ -36,7 +36,6 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
         }
 
         viewModel.user.observeNonNull(this) {
-            logDebug("responseToken", "user $it")
             setAnalyticsUserId(it.uid)
             showSuccessUi()
         }
