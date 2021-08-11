@@ -125,7 +125,6 @@ class BinkWebFragment : BaseFragment<BinkWebViewModel, BinkWebViewBinding>() {
     }
 
     override fun onDestroyView() {
-        binding.webView.webViewClient = null
         if (hasEncounteredError) {
             findNavController().navigateUp()
         }
