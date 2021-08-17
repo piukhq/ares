@@ -52,6 +52,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.sentry.Sentry
 import io.sentry.protocol.User
+import org.json.JSONException
+import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
@@ -143,14 +145,44 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getMagicLinkToken()?.let {
+            shouldShowSwitchDialog(it)
+        }
+    }
+
     fun getMagicLinkToken(): String? {
         (requireActivity() as MainActivity).newIntent?.data?.let { uri ->
             val token = uri.getQueryParameter("token")
+            (requireActivity() as MainActivity).newIntent = null
             return token
         }
+
         return null
     }
 
+    fun shouldShowSwitchDialog(token: String) {
+        try {
+            JWTUtils.decode(token)?.let { tokenJson ->
+                val emailFromJson = JSONObject(tokenJson).getString("email")
+                val emailFromLocal = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+
+                if (emailFromJson != emailFromLocal) {
+                    requireContext().displayModalPopup(
+                        getString(R.string.already_logged_in_title),
+                        getString(R.string.already_logged_in_subtitle, emailFromJson),
+                        okAction = {
+                            //Log user out
+                        },
+                        hasNegativeButton = true
+                    )
+                }
+            }
+        } catch (e: JSONException) {
+            logDebug("responseToken", "$e")
+        }
+    }
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(

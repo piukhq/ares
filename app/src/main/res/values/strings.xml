@@ -393,6 +393,8 @@
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
     <string name="payment_card_footer_faq_title">FAQS</string>
     <string name="payment_card_footer_faq_description">Learn more</string>
+    <string name="already_logged_in_title">Already Logged In</string>
+    <string name="already_logged_in_subtitle">Would you like to log in with %s?</string>
 
 
     <!-- Payment Card entry -->
