@@ -62,9 +62,9 @@
 
         <Button
             android:id="@+id/button_add_card"
-            style="@style/RoundedGradientButton"
-            android:layout_width="@dimen/add_card_button_width"
-            android:layout_height="@dimen/add_card_button_height"
+            android:background="@drawable/rounded_corners_gradient_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
