@@ -51,7 +51,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
     override fun onResume() {
         super.onResume()
-        getMagicLinkToken()?.let { token ->
+        getMagicLinkToken(true)?.let { token ->
             checkMagicLink(token)
         }
     }
@@ -100,7 +100,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
     }
 
     private fun checkMagicLink(token: String) {
-        findNavController().navigate(CheckInboxFragmentDirections.checkInboxToMagicLinkResult(token))
+        findNavController().navigate(CheckInboxFragmentDirections.checkInboxToMagicLinkResult(token, false))
     }
 
 

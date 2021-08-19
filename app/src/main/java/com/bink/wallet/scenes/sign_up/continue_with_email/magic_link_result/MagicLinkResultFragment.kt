@@ -32,7 +32,13 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
 
         arguments?.let { bundle ->
             val token = MagicLinkResultFragmentArgs.fromBundle(bundle).token
-            viewModel.postMagicLinkToken(requireContext(), token)
+            val isLogoutNeeded = MagicLinkResultFragmentArgs.fromBundle(bundle).isLogoutNeeded
+            if(isLogoutNeeded){
+                viewModel.token = token
+                viewModel.logOut()
+            } else {
+                viewModel.postMagicLinkToken(requireContext(), token)
+            }
         }
 
         viewModel.user.observeNonNull(this) {
@@ -62,6 +68,14 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
 
         viewModel.membershipPlans.observeNonNull(this) {
             findNavController().navigate(LoginFragmentDirections.globalToHome(true))
+        }
+
+        viewModel.hasLoggedOut.observeNonNull(this){ hasLoggedOut ->
+            if(hasLoggedOut){
+                viewModel.token?.let {
+                    viewModel.postMagicLinkToken(requireContext(), it)
+                }
+            }
         }
 
     }

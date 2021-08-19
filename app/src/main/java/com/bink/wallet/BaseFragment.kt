@@ -17,6 +17,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
+import com.bink.wallet.scenes.settings.SettingsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
@@ -152,28 +153,34 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun getMagicLinkToken(): String? {
+    fun getMagicLinkToken(shouldNullifyToken: Boolean? = false): String? {
         (requireActivity() as MainActivity).newIntent?.data?.let { uri ->
             val token = uri.getQueryParameter("token")
-            (requireActivity() as MainActivity).newIntent = null
+            if (shouldNullifyToken == true) {
+                (requireActivity() as MainActivity).newIntent = null
+            }
             return token
         }
 
         return null
     }
 
-    fun shouldShowSwitchDialog(token: String) {
+    private fun shouldShowSwitchDialog(token: String) {
         try {
             JWTUtils.decode(token)?.let { tokenJson ->
                 val emailFromJson = JSONObject(tokenJson).getString("email")
                 val emailFromLocal = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
 
-                if (emailFromJson != emailFromLocal) {
+                if (emailFromLocal.isNullOrEmpty()) return
+
+                (requireActivity() as MainActivity).newIntent = null
+
+                if (emailFromJson.toLowerCase() != emailFromLocal.toLowerCase()) {
                     requireContext().displayModalPopup(
                         getString(R.string.already_logged_in_title),
                         getString(R.string.already_logged_in_subtitle, emailFromJson),
                         okAction = {
-                            //Log user out
+                            findNavController().navigateIfAdded(this, SettingsFragmentDirections.globalToMagicLink(token, true))
                         },
                         hasNegativeButton = true
                     )
