@@ -180,7 +180,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                         getString(R.string.already_logged_in_title),
                         getString(R.string.already_logged_in_subtitle, emailFromJson),
                         okAction = {
-                            findNavController().navigateIfAdded(this, SettingsFragmentDirections.globalToMagicLink(token, true))
+                            findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, true))
                         },
                         hasNegativeButton = true
                     )

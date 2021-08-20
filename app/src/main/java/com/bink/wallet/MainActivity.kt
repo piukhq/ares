@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
 
         checkForUpdates()
+
+        intent.data?.let {
+            newIntent = intent
+        }
     }
 
     override fun onResume() {
