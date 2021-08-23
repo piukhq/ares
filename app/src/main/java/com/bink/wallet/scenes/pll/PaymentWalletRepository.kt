@@ -157,19 +157,17 @@ class PaymentWalletRepository(
         paymentCard: PaymentCard,
         membershipCard: MembershipCard,
         unlinkError: MutableLiveData<Exception>?,
-        unlinkedBody: MutableLiveData<ResponseBody>?,
         paymentCardMutableLiveData: MutableLiveData<PaymentCard>
     ) {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val requestResult =
-                    withContext(Dispatchers.IO) {
-                        apiService.unlinkFromPaymentCardAsync(
-                            paymentCard.id.toString(),
-                            membershipCard.id
-                        )
-                    }
-                unlinkedBody?.value = requestResult
+                withContext(Dispatchers.IO) {
+                    apiService.unlinkFromPaymentCardAsync(
+                        paymentCard.id.toString(),
+                        membershipCard.id
+                    )
+                }
+
                 val paymentCardValue = paymentCardMutableLiveData.value
                 paymentCardValue?.membership_cards?.forEach {
                     if (it.id == membershipCard.id) {
@@ -178,6 +176,7 @@ class PaymentWalletRepository(
                 }
                 paymentCardMutableLiveData.value = paymentCardValue
                 logDeleteEvent(paymentCard, membershipCard)
+
             } catch (e: Exception) {
                 unlinkError?.value = e
                 logPllFailure(paymentCard, membershipCard, false)
@@ -218,6 +217,7 @@ class PaymentWalletRepository(
                     }
 
                 }
+
             }
         }
 
@@ -270,17 +270,17 @@ class PaymentWalletRepository(
         deleteError: MutableLiveData<Exception>
     ) {
         CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    paymentCardDao.deletePaymentCardById(id.toString())
-                    val requestResult = id?.let {
-                        withContext(Dispatchers.IO) {
-                            apiService.deletePaymentCardAsync(it)
-                        }
+            try {
+                paymentCardDao.deletePaymentCardById(id.toString())
+                val requestResult = id?.let {
+                    withContext(Dispatchers.IO) {
+                        apiService.deletePaymentCardAsync(it)
                     }
-                    mutableDeleteCard.value = requestResult
-                } catch (e: Exception) {
-                    deleteError.value = e
                 }
+                mutableDeleteCard.value = requestResult
+            } catch (e: Exception) {
+                deleteError.value = e
+            }
         }
     }
 
