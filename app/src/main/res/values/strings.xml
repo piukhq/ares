@@ -609,6 +609,11 @@
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+    <string name="magic_link_retry">Retry</string>
+    <string name="magic_link_expiry_subtitle">To keep your account safe, links are only valid for a short period of time. Enter your email again and we will send you another!</string>
+    <string name="magic_link_error_subtitle">There was a problem authenticating you. Please try again</string>
+    <string name="magic_link_expiry_title">Link Expired</string>
+    <string name="magic_link_error_title">Something went wrong</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

@@ -47,8 +47,27 @@ class MagicLinkResultViewModel(
     val hasLoggedOut: MutableLiveData<Boolean>
         get() = _hasLoggedOut
 
+    private val _hasErrorWithExpiry = MutableLiveData<Boolean>()
+    val hasErrorWithExpiry: MutableLiveData<Boolean>
+        get() = _hasErrorWithExpiry
+
     fun postMagicLinkToken(context: Context, token: String) {
         _isLoading.value = true
+
+        try {
+            JWTUtils.decode(token)?.let { tokenJson ->
+                val expiryFromJson = JSONObject(tokenJson).getString("exp")
+                if ((expiryFromJson.toInt() * 1000) < System.currentTimeMillis()) {
+                    _hasErrorWithExpiry.value = true
+                    _isLoading.value = false
+
+                    return
+                }
+            }
+        } catch (e: Exception) {
+            _isLoading.value = false
+        }
+
         val magicLinkToken = MagicLinkToken(token)
         viewModelScope.launch {
             try {
