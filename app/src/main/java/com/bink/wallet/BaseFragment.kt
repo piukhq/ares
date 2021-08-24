@@ -143,14 +143,17 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
-    fun getMagicLinkToken(): String? {
+    fun getMagicLinkToken(shouldNullifyToken: Boolean? = false): String? {
         (requireActivity() as MainActivity).newIntent?.data?.let { uri ->
             val token = uri.getQueryParameter("token")
+            if (shouldNullifyToken == true) {
+                (requireActivity() as MainActivity).newIntent = null
+            }
             return token
         }
+
         return null
     }
-
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(

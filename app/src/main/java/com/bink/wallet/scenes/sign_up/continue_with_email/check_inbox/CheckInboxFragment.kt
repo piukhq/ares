@@ -51,7 +51,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
     override fun onResume() {
         super.onResume()
-        getMagicLinkToken()?.let { token ->
+        getMagicLinkToken(true)?.let { token ->
             checkMagicLink(token)
         }
     }
