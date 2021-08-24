@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result
 import android.os.Bundle
 import android.text.Html
 import android.view.View
+import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -19,8 +20,7 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
-            .with(binding.toolbar)
-            .shouldDisplayBack(requireActivity())
+            .with(Toolbar(requireContext()))
             .build()
     }
 
