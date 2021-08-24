@@ -17,6 +17,7 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.utils.JWTUtils
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -57,7 +58,7 @@ class MagicLinkResultViewModel(
         try {
             JWTUtils.decode(token)?.let { tokenJson ->
                 val expiryFromJson = JSONObject(tokenJson).getString("exp")
-                if ((expiryFromJson.toInt() * 1000) < System.currentTimeMillis()) {
+                if ((expiryFromJson.toLong() * 1000) < System.currentTimeMillis()) {
                     _hasErrorWithExpiry.value = true
                     _isLoading.value = false
 
@@ -65,6 +66,7 @@ class MagicLinkResultViewModel(
                 }
             }
         } catch (e: Exception) {
+            _hasErrorWithExpiry.value = false
             _isLoading.value = false
         }
 
@@ -74,6 +76,7 @@ class MagicLinkResultViewModel(
                 val responseToken = loginRepository.sendMagicLinkToken(magicLinkToken)
                 getUser(context, responseToken.access_token)
             } catch (e: Exception) {
+                _hasErrorWithExpiry.value = false
                 _isLoading.value = false
             }
         }
@@ -91,6 +94,7 @@ class MagicLinkResultViewModel(
                 _email.value = emailFromJson
             }
         } catch (e: JSONException) {
+            _hasErrorWithExpiry.value = false
             _isLoading.value = false
         }
 
@@ -100,6 +104,7 @@ class MagicLinkResultViewModel(
                 _user.value = user
                 _isLoading.value = false
             } catch (e: Exception) {
+                _hasErrorWithExpiry.value = false
                 _isLoading.value = false
             }
         }
@@ -114,9 +119,7 @@ class MagicLinkResultViewModel(
                         PostServiceRequest(Consent(it, System.currentTimeMillis() / 1000))
                     )
                 }
-            } catch (e: Exception) {
-
-            }
+            } catch (e: Exception) { }
         }
     }
 

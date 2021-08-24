@@ -119,7 +119,7 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
             }
 
             errorCancel.setOnClickListener {
-                //TODO Go to onboarding
+                //Go to onboarding
             }
 
             errorLayout.visibility = View.VISIBLE
