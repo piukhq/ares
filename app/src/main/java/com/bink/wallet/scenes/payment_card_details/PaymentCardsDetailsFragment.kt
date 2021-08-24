@@ -33,6 +33,7 @@ import com.bink.wallet.utils.goToContactUsForm
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeErrorNonNull
 import com.bink.wallet.utils.observeNonNull
+import com.bink.wallet.utils.showUnLinkErrorMessage
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -173,7 +174,6 @@ class PaymentCardsDetailsFragment :
         viewModel.membershipCardData.observeNonNull(this) {
             cardState(viewModel.paymentCard.value, it)
         }
-        viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
 
         viewModel.getCardError.observeErrorNonNull(requireContext(), false, this)
 
@@ -199,7 +199,12 @@ class PaymentCardsDetailsFragment :
             }
         }
 
-        viewModel.unlinkError.observeErrorNonNull(requireContext(), true, this)
+        viewModel.unlinkError.observeNonNull(this){
+            val exception = it as HttpException
+            when(exception.code()){
+                403 -> showUnLinkErrorMessage()
+            }
+        }
 
     }
 
