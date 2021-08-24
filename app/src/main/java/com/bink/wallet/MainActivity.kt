@@ -131,6 +131,7 @@ class MainActivity : AppCompatActivity() {
             R.id.rooted_screen -> {
                 finish()
             }
+            R.id.magic_link_result_fragment,
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
             }
