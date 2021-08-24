@@ -165,7 +165,7 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             if (it.size == selectedCards.size) {
                 navigateToLCD()
             } else if (linkFailureCards > 0 && totalCards == selectedCards.size) {
-                showLinkErrorMessage(isPlanAlreadyExistsError(viewModel.linkErrors.value))
+                showLinkErrorMessage(isPlanAlreadyExistsError(viewModel.linkErrors.value), null)
             }
         }
 
@@ -275,8 +275,19 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
             if (totalCards == selectedCards.size) {
                 val shouldShowPlanAlreadyExists =
                     isPlanAlreadyExistsError(it)
+                if (shouldShowPlanAlreadyExists) {
+                    showLinkErrorMessage(shouldShowPlanAlreadyExists, null)
+                } else {
+                    viewModel.hasDisplayableError(requireContext(), it as ArrayList<Exception>)?.let { errorMessage ->
+                        showLinkErrorMessage(false, errorMessage)
+                    }
+                }
+            }
+        }
 
-                showLinkErrorMessage(shouldShowPlanAlreadyExists)
+        viewModel.unlinkErrors.observeNonNull(this) {
+            viewModel.hasDisplayableError(requireContext(), it)?.let { errorMessage ->
+                showLinkErrorMessage(false, errorMessage)
             }
         }
     }
@@ -299,25 +310,29 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
         recyclerViewHelper.removeFooterListener(binding.root)
     }
 
-    private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?) {
+    private fun showLinkErrorMessage(shouldShowPlanAlreadyExists: Boolean?, errorText: String?) {
         val membershipPlan = viewModel.membershipPlan.value
         val planName = membershipPlan?.account?.plan_name ?: ""
         val planNameCard = membershipPlan?.account?.plan_name_card ?: ""
 
-        val title =
-            if (shouldShowPlanAlreadyExists!!) getString(R.string.payment_card_link_already_exists_title) else getString(
-                R.string.pll_error_title
-            )
-        val message =
-            if (shouldShowPlanAlreadyExists) getString(
+        val title = if (shouldShowPlanAlreadyExists!!) {
+            getString(R.string.payment_card_link_already_exists_title)
+        } else {
+            getString(R.string.pll_error_title)
+        }
+
+        val message = if (shouldShowPlanAlreadyExists) {
+            getString(
                 R.string.payment_card_link_already_exists_message,
                 planName,
                 planNameCard,
                 planName,
                 planNameCard
-            ) else getString(
-                R.string.pll_error_message
             )
+        } else errorText ?: getString(
+            R.string.pll_error_message
+        )
+
         AlertDialog.Builder(requireContext())
             .setTitle(title)
             .setMessage(message)
