@@ -192,8 +192,11 @@ class PaymentWalletRepository(
     ) {
         val localSuccesses = ArrayList<Any>()
         val localErrors = ArrayList<Exception>()
+        val handler = CoroutineExceptionHandler { _, exception ->
+            logDebug("paymentWalletRepository", "Caught $exception")
+        }
         paymentCards.forEach { card ->
-            CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch(handler) {
                 val request = async {
                     apiService.unlinkFromPaymentCardAsync(
                         card.id.toString(),
