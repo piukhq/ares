@@ -170,21 +170,25 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             JWTUtils.decode(token)?.let { tokenJson ->
                 val emailFromJson = JSONObject(tokenJson).getString("email")
                 val emailFromLocal = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
-
-                if (emailFromLocal.isNullOrEmpty()) return
-
                 (requireActivity() as MainActivity).newIntent = null
 
-                if (emailFromJson.toLowerCase() != emailFromLocal.toLowerCase()) {
-                    requireContext().displayModalPopup(
-                        getString(R.string.already_logged_in_title),
-                        getString(R.string.already_logged_in_subtitle, emailFromJson),
-                        okAction = {
-                            findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, true))
-                        },
-                        hasNegativeButton = true
-                    )
+                if (emailFromLocal.isNullOrEmpty()) {
+                    findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, false))
+                } else {
+
+                    if (emailFromJson.toLowerCase() != emailFromLocal.toLowerCase()) {
+                        requireContext().displayModalPopup(
+                            getString(R.string.already_logged_in_title),
+                            getString(R.string.already_logged_in_subtitle, emailFromJson),
+                            okAction = {
+                                findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, true))
+                            },
+                            hasNegativeButton = true
+                        )
+                    }
                 }
+
+
             }
         } catch (e: JSONException) {
             logDebug("responseToken", "$e")
