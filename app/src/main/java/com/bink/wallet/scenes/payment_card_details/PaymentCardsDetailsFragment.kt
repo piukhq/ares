@@ -200,12 +200,12 @@ class PaymentCardsDetailsFragment :
         }
 
         viewModel.unlinkError.observeNonNull(this){
-            val exception = it as HttpException
+            val exception = (it as HttpException)
+            val errorText = exception.response()?.errorBody()?.string()
             when(exception.code()){
-                403 -> showUnLinkErrorMessage()
+                403 -> errorText?.let { message -> showUnLinkErrorMessage(message) }
+                }
             }
-        }
-
     }
 
     private fun cardState(paymentCard: PaymentCard?, membershipCard: List<MembershipCard>?) {

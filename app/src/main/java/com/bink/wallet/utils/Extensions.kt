@@ -395,17 +395,14 @@ fun String.readFileText(context: Context): String {
     }
 }
 
-fun Fragment.showUnLinkErrorMessage() {
+fun Fragment.showUnLinkErrorMessage(errorText: String) {
 
     val title =
         getString(R.string.pll_error_title)
 
-    val message =
-        getString(R.string.pll_403_message_body)
-
     AlertDialog.Builder(requireContext())
         .setTitle(title)
-        .setMessage(message)
+        .setMessage(errorText)
         .setPositiveButton(
             getString(R.string.ok)
         ) { dialog, _ ->
