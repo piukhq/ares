@@ -11,6 +11,7 @@ import com.bink.wallet.utils.MAGIC_LINK_BUNDLE_ID
 import com.bink.wallet.utils.MAGIC_LINK_DEBUG_SLUG
 import com.bink.wallet.utils.MAGIC_LINK_LOCALE
 import com.bink.wallet.utils.MAGIC_LINK_PROD_SLUG
+import com.bink.wallet.utils.SingleLiveEvent
 import com.bink.wallet.utils.enums.BuildTypes
 import kotlinx.coroutines.*
 import java.util.*
@@ -21,8 +22,8 @@ class ContinueWithEmailViewModel(val loginRepository: LoginRepository) : BaseVie
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    private val _isSuccessful = MutableLiveData<Boolean>()
-    val isSuccessful: LiveData<Boolean>
+    private val _isSuccessful = SingleLiveEvent<Boolean>()
+    val isSuccessful: SingleLiveEvent<Boolean>
         get() = _isSuccessful
 
     private val _magicLinkError = MutableLiveData<Exception>()
@@ -41,6 +42,8 @@ class ContinueWithEmailViewModel(val loginRepository: LoginRepository) : BaseVie
             } catch (e: Exception) {
                 _magicLinkError.value = e
                 _isLoading.value = false
+                _isSuccessful.value = false
+
             }
         }
     }

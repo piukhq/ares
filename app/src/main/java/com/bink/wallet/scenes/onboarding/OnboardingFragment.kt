@@ -10,6 +10,7 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
+import com.bink.wallet.scenes.sign_up.SignUpFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_LOGIN
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
