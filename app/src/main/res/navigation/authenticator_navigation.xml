@@ -770,7 +770,7 @@
     <fragment
         android:id="@+id/check_inbox_fragment"
         android:name="com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxFragment"
-        tools:layout="@layout/continue_with_email_fragment">
+        tools:layout="@layout/check_inbox_fragment">
 
         <action
             android:id="@+id/check_inbox_to_magic_link_result"
@@ -780,12 +780,22 @@
             android:name="userEmail"
             app:argType="string" />
 
+        <argument
+            android:name="isRepost"
+            app:argType="boolean"/>
+
     </fragment>
 
     <fragment
         android:id="@+id/magic_link_result_fragment"
         android:name="com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.MagicLinkResultFragment"
         tools:layout="@layout/magic_link_result_fragment">
+
+        <action
+            android:id="@+id/magic_link_result_to_check_inbox"
+            app:destination="@id/check_inbox_fragment"
+            app:popUpTo="@+id/main_nav_graph"
+            app:popUpToInclusive="true"/>
 
         <argument
             android:name="token"

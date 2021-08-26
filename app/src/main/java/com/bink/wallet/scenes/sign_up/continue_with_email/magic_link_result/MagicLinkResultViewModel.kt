@@ -57,6 +57,9 @@ class MagicLinkResultViewModel(
 
         try {
             JWTUtils.decode(token)?.let { tokenJson ->
+                val emailFromJson = JWTUtils.getEmailFromJson(tokenJson) ?: ""
+                _email.value = emailFromJson
+
                 val expiryFromJson = JSONObject(tokenJson).getString("exp")
                 if ((expiryFromJson.toLong() * 1000) < System.currentTimeMillis()) {
                     _hasErrorWithExpiry.value = true
@@ -87,16 +90,6 @@ class MagicLinkResultViewModel(
             LocalStoreUtils.KEY_TOKEN,
             context.getString(R.string.token_api_v1, token)
         )
-
-        try {
-            JWTUtils.decode(token)?.let { tokenJson ->
-                val emailFromJson = JSONObject(tokenJson).getString("user_id")
-                _email.value = emailFromJson
-            }
-        } catch (e: JSONException) {
-            _hasErrorWithExpiry.value = false
-            _isLoading.value = false
-        }
 
         viewModelScope.launch {
             try {

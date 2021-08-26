@@ -45,6 +45,7 @@ import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailViewModel
+import com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.MagicLinkResultViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
@@ -158,6 +159,8 @@ val viewModelModules = module {
     viewModel { ContinueWithEmailViewModel(get()) }
 
     viewModel { MagicLinkResultViewModel(get(), get(), get(), get()) }
+
+    viewModel { CheckInboxViewModel(get()) }
 }
 
 fun provideZendeskRepository() = ZendeskRepository()

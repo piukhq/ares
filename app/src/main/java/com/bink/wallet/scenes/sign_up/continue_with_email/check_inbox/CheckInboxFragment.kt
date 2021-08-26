@@ -32,7 +32,10 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
         arguments?.let { bundle ->
             val email = CheckInboxFragmentArgs.fromBundle(bundle).userEmail
+            val isRepost = CheckInboxFragmentArgs.fromBundle(bundle).isRepost
             setSubtitle(email)
+
+            if(isRepost) viewModel.rePostMagicLink(email)
         }
 
         binding.goToInbox.setOnClickListener {
