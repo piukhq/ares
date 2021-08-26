@@ -128,9 +128,6 @@ interface ApiService {
     @POST("/users/magic_links/access_tokens")
     suspend fun postMagicLinkToken(@Body magicLinkToken: MagicLinkToken): MagicLinkAccessToken
 
-    @POST("/users/magic_links")
-    suspend fun postMagicLink(@Body magicLinkBody: MagicLinkBody)
-
     @GET("/users/me/settings")
     fun getPreferencesAsync(): Deferred<List<Preference>>
 
