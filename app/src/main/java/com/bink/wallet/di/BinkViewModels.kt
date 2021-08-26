@@ -45,7 +45,10 @@ import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
 import com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailViewModel
+<<<<<<< app/src/main/java/com/bink/wallet/di/BinkViewModels.kt
 import com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.MagicLinkResultViewModel
+=======
+>>>>>>> app/src/main/java/com/bink/wallet/di/BinkViewModels.kt
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
@@ -156,7 +159,7 @@ val viewModelModules = module {
     viewModel { SplashViewModel(get(), get()) }
 
     viewModel { ContinueWithEmailViewModel(get()) }
-
+    
     viewModel { MagicLinkResultViewModel(get(), get(), get()) }
 }
 
