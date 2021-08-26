@@ -21,6 +21,7 @@ import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.HttpException
 
 class MagicLinkResultViewModel(
     val loginRepository: LoginRepository, val userRepository: UserRepository, val loyaltyWalletRepository: LoyaltyWalletRepository, val paymentWalletRepository: PaymentWalletRepository
@@ -59,14 +60,6 @@ class MagicLinkResultViewModel(
             JWTUtils.decode(token)?.let { tokenJson ->
                 val emailFromJson = JWTUtils.getEmailFromJson(tokenJson) ?: ""
                 _email.value = emailFromJson
-
-                val expiryFromJson = JSONObject(tokenJson).getString("exp")
-                if ((expiryFromJson.toLong() * 1000) < System.currentTimeMillis()) {
-                    _hasErrorWithExpiry.value = true
-                    _isLoading.value = false
-
-                    return
-                }
             }
         } catch (e: Exception) {
             _hasErrorWithExpiry.value = false
@@ -79,8 +72,20 @@ class MagicLinkResultViewModel(
                 val responseToken = loginRepository.sendMagicLinkToken(magicLinkToken)
                 getUser(context, responseToken.access_token)
             } catch (e: Exception) {
-                _hasErrorWithExpiry.value = false
-                _isLoading.value = false
+                logDebug("magicLink", "$e")
+                try {
+                    if ((e as HttpException).code() == 401) {
+                        _hasErrorWithExpiry.value = true
+                        _isLoading.value = false
+                    } else {
+                        _hasErrorWithExpiry.value = false
+                        _isLoading.value = false
+                    }
+                } catch (e: Exception) {
+                    _hasErrorWithExpiry.value = false
+                    _isLoading.value = false
+                }
+
             }
         }
     }
@@ -112,7 +117,8 @@ class MagicLinkResultViewModel(
                         PostServiceRequest(Consent(it, System.currentTimeMillis() / 1000))
                     )
                 }
-            } catch (e: Exception) { }
+            } catch (e: Exception) {
+            }
         }
     }
 
