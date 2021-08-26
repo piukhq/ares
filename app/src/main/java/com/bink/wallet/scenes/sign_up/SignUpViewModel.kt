@@ -1,6 +1,9 @@
 package com.bink.wallet.scenes.sign_up
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
@@ -13,7 +16,6 @@ import com.bink.wallet.utils.EMAIL_REGEX
 import com.bink.wallet.utils.PASSWORD_REGEX
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.combineNonNull
-import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 
 class SignUpViewModel(
@@ -115,13 +117,10 @@ class SignUpViewModel(
     }
 
     fun postService(postServiceRequest: PostServiceRequest) {
-        viewModelScope.launch {
-            try{
-                val response = loginRepository.postService(postServiceRequest)
-                _postServiceResponse.value = response
-            } catch (e: Exception){
-                _postServiceErrorResponse.value = e
-            }
-        }
+        loginRepository.postService(
+            postServiceRequest,
+            _postServiceResponse,
+            _postServiceErrorResponse
+        )
     }
 }

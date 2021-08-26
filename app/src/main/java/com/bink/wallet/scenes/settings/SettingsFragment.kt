@@ -337,7 +337,15 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
         LocalStoreUtils.clearPreferences(requireContext())
         try {
-            (requireActivity() as MainActivity).forceRunApp()
+            startActivity(
+                Intent(requireContext(), MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .apply {
+                        putSessionHandlerNavigationDestination(
+                            SESSION_HANDLER_DESTINATION_ONBOARDING
+                        )
+                    }
+            )
         } catch (e: Exception) {
             (requireActivity() as MainActivity).forceRunApp()
         }
