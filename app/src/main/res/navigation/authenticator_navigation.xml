@@ -794,7 +794,7 @@
         <action
             android:id="@+id/magic_link_result_to_check_inbox"
             app:destination="@id/check_inbox_fragment"
-            app:popUpTo="@+id/main_nav_graph"
+            app:popUpTo="@+id/onboarding_fragment"
             app:popUpToInclusive="true"/>
 
         <argument
