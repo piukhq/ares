@@ -195,6 +195,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             logDebug("responseToken", "$e")
         }
     }
+    
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(
