@@ -17,6 +17,7 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
+import com.bink.wallet.scenes.settings.SettingsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
@@ -52,6 +53,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.sentry.Sentry
 import io.sentry.protocol.User
+import org.json.JSONException
+import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import java.util.*
@@ -143,6 +146,13 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getMagicLinkToken()?.let {
+            shouldShowSwitchDialog(it)
+        }
+    }
+
     fun getMagicLinkToken(shouldNullifyToken: Boolean? = false): String? {
         (requireActivity() as MainActivity).newIntent?.data?.let { uri ->
             val token = uri.getQueryParameter("token")
@@ -154,6 +164,36 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
 
         return null
         
+    }
+
+    private fun shouldShowSwitchDialog(token: String) {
+        try {
+            JWTUtils.decode(token)?.let { tokenJson ->
+                val emailFromJson = JSONObject(tokenJson).getString("email")
+                val emailFromLocal = LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)
+                (requireActivity() as MainActivity).newIntent = null
+
+                if (emailFromLocal.isNullOrEmpty()) {
+                    findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, false))
+                } else {
+
+                    if (emailFromJson.toLowerCase() != emailFromLocal.toLowerCase()) {
+                        requireContext().displayModalPopup(
+                            getString(R.string.already_logged_in_title),
+                            getString(R.string.already_logged_in_subtitle, emailFromJson),
+                            okAction = {
+                                findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, true))
+                            },
+                            hasNegativeButton = true
+                        )
+                    }
+                }
+
+
+            }
+        } catch (e: JSONException) {
+            logDebug("responseToken", "$e")
+        }
     }
 
     private fun checkForDynamicActions() {

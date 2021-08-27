@@ -120,7 +120,7 @@ interface ApiService {
     ): Deferred<SignUpResponse>
 
     @POST("/users/me/logout")
-    fun logOutAsync(): Deferred<ResponseBody>
+    suspend fun logOutAsync(): ResponseBody
 
     @POST("/users/magic_links")
     suspend fun postMagicLink(@Body magicLinkBody: MagicLinkBody)

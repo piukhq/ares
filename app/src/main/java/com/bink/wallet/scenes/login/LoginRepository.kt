@@ -128,21 +128,8 @@ class LoginRepository(
         }
     }
 
-    fun logOut(
-        logOutResponse: MutableLiveData<ResponseBody>,
-        logOutErrorResponse: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.logOutAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    logOutResponse.value = response
-                } catch (e: Exception) {
-                    logOutErrorResponse.value = e
-                }
-            }
-        }
+    suspend fun logOut() : ResponseBody {
+        return apiService.logOutAsync()
     }
 
     fun getPreferences(
