@@ -1,9 +1,6 @@
 package com.bink.wallet.scenes.sign_up.continue_with_email
 
 import android.app.AlertDialog
-import android.content.Intent
-import android.content.pm.LabeledIntent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
@@ -111,7 +108,6 @@ class ContinueWithEmailFragment :
         }
 
     }
-
 
     private fun validateCredentials(isTermsChecked: Boolean) {
         binding.emailField.text.trim().toString().let {

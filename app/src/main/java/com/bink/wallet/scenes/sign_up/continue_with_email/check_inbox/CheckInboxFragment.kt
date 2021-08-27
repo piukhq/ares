@@ -6,9 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.CheckInboxFragmentBinding
+import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,10 +43,17 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
             }
         }
 
-        if(showEmailClients() == null){
+        if (showEmailClients() == null) {
             binding.goToInbox.visibility = View.GONE
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getMagicLinkToken(true)?.let { token ->
+            checkMagicLink(token)
+        }
     }
 
     private fun setSubtitle(email: String) {
@@ -89,5 +98,10 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
         return null
     }
+
+    private fun checkMagicLink(token: String) {
+        findNavController().navigate(CheckInboxFragmentDirections.checkInboxToMagicLinkResult(token))
+    }
+
 
 }

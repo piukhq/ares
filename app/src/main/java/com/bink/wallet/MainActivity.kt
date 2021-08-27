@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
     private lateinit var appUpdateManager: AppUpdateManager
+    var newIntent: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,15 +71,6 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
 
         checkForUpdates()
-        checkDeepLink()
-    }
-
-    private fun checkDeepLink(){
-        intent.data?.let { uri ->
-            val token = uri.getQueryParameter("token")
-            Log.d("applinktest", token)
-            Log.d("applinktest", "${token?.let { JWTUtils.decode(it) }}")
-        }
     }
 
     override fun onResume() {
@@ -105,6 +97,11 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        newIntent = intent
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -134,6 +131,7 @@ class MainActivity : AppCompatActivity() {
             R.id.rooted_screen -> {
                 finish()
             }
+            R.id.magic_link_result_fragment,
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
             }
