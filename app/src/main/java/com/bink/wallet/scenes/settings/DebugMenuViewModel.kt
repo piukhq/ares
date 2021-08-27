@@ -2,12 +2,14 @@ package com.bink.wallet.scenes.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.DebugItem
 import com.bink.wallet.model.ListLiveData
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.pll.PaymentWalletRepository
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 
 class DebugMenuViewModel(
@@ -32,9 +34,15 @@ class DebugMenuViewModel(
         get() = _clearErrorResponse
 
     fun logOut() {
-        loginRepository.logOut(_logOutResponse, _logOutErrorResponse)
-        loyaltyWalletRepository.clearMembershipCards()
-        paymentWalletRepository.clearPaymentCards()
+        viewModelScope.launch {
+            try{
+                _logOutResponse.value = loginRepository.logOut()
+                loyaltyWalletRepository.clearMembershipCards()
+                paymentWalletRepository.clearPaymentCards()
+            } catch (e: Exception){
+                _logOutErrorResponse.value = e
+            }
+        }
     }
 
     fun clearData() {

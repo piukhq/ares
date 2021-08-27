@@ -13,6 +13,7 @@ import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
+import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.utils.JWTUtils
 import com.bink.wallet.utils.LocalStoreUtils
@@ -21,8 +22,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class MagicLinkResultViewModel(
-    val loginRepository: LoginRepository, val userRepository: UserRepository, val loyaltyWalletRepository: LoyaltyWalletRepository
+    val loginRepository: LoginRepository, val userRepository: UserRepository, val loyaltyWalletRepository: LoyaltyWalletRepository, val paymentWalletRepository: PaymentWalletRepository
 ) : BaseViewModel() {
+
+    var token: String? = null
 
     private val _user = MutableLiveData<User>()
     val user: LiveData<User>
@@ -39,6 +42,10 @@ class MagicLinkResultViewModel(
     private val _membershipPlans = MutableLiveData<List<MembershipPlan>>()
     val membershipPlans: LiveData<List<MembershipPlan>>
         get() = _membershipPlans
+
+    private val _hasLoggedOut = MutableLiveData<Boolean>()
+    val hasLoggedOut: MutableLiveData<Boolean>
+        get() = _hasLoggedOut
 
     fun postMagicLinkToken(context: Context, token: String) {
         _isLoading.value = true
@@ -103,6 +110,23 @@ class MagicLinkResultViewModel(
                 loyaltyWalletRepository.storeAllMembershipPlans(plans)
                 _membershipPlans.value = plans
             } catch (e: Exception) {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun logOut() {
+        _isLoading.value = true
+        viewModelScope.launch {
+            try {
+                loginRepository.logOut()
+                loyaltyWalletRepository.clearMembershipCards()
+                paymentWalletRepository.clearPaymentCards()
+
+                hasLoggedOut.value = true
+                _isLoading.value = false
+            } catch (e: Exception) {
+                hasLoggedOut.value = false
                 _isLoading.value = false
             }
         }

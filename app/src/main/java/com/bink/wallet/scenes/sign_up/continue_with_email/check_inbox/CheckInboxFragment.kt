@@ -49,13 +49,6 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        getMagicLinkToken(true)?.let { token ->
-            checkMagicLink(token)
-        }
-    }
-
     private fun setSubtitle(email: String) {
         val subtitlePartOne = getString(R.string.check_inbox_subtitle_part_1)
         val subtitlePartTwo = getString(R.string.check_inbox_subtitle_part_2)
@@ -98,10 +91,5 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
         return null
     }
-
-    private fun checkMagicLink(token: String) {
-        findNavController().navigate(CheckInboxFragmentDirections.checkInboxToMagicLinkResult(token))
-    }
-
 
 }
