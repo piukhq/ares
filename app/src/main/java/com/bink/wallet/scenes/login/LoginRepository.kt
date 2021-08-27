@@ -3,7 +3,9 @@ package com.bink.wallet.scenes.login
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.data.BinkDatabase
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.MagicLinkAccessToken
 import com.bink.wallet.model.MagicLinkBody
+import com.bink.wallet.model.MagicLinkToken
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.request.Preference
@@ -86,22 +88,8 @@ class LoginRepository(
         }
     }
 
-    fun postService(
-        postServiceRequest: PostServiceRequest,
-        postServiceResponse: MutableLiveData<ResponseBody>,
-        postServiceErrorResponse: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.postServiceAsync(postServiceRequest)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    postServiceResponse.value = response
-                } catch (e: Exception) {
-                    postServiceErrorResponse.value = e
-                }
-            }
-        }
+    suspend fun postService(postServiceRequest: PostServiceRequest): ResponseBody {
+        return apiService.postServiceAsync(postServiceRequest)
     }
 
     fun checkMarketingPref(
@@ -140,21 +128,8 @@ class LoginRepository(
         }
     }
 
-    fun logOut(
-        logOutResponse: MutableLiveData<ResponseBody>,
-        logOutErrorResponse: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.logOutAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    logOutResponse.value = response
-                } catch (e: Exception) {
-                    logOutErrorResponse.value = e
-                }
-            }
-        }
+    suspend fun logOut() : ResponseBody {
+        return apiService.logOutAsync()
     }
 
     fun getPreferences(
@@ -196,6 +171,10 @@ class LoginRepository(
 
     suspend fun sendMagicLink(magicLinkBody: MagicLinkBody) {
         apiService.postMagicLink(magicLinkBody)
+    }
+
+    suspend fun sendMagicLinkToken(magicLinkToken: MagicLinkToken): MagicLinkAccessToken {
+        return apiService.postMagicLinkToken(magicLinkToken)
     }
 
     fun clearData(

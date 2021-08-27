@@ -16,7 +16,6 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.MembershipCardStatus
 import kotlinx.coroutines.*
-import retrofit2.HttpException
 
 class LoyaltyWalletRepository(
     private val apiService: ApiService,
@@ -97,6 +96,11 @@ class LoyaltyWalletRepository(
         }
     }
 
+    suspend fun retrieveMembershipPlans(): List<MembershipPlan> {
+        SharedPreferenceManager.membershipPlansLastRequestTime = System.currentTimeMillis()
+        return apiService.getMembershipPlansAsync()
+    }
+
     suspend fun retrieveMembershipCardsAndPlans(): MembershipCardAndPlan {
         //Wrap it in a coroutine Scope for the following reasons:
         //To ensure that when the calling scope of this method is cancelled this will also be canceled
@@ -172,6 +176,10 @@ class LoyaltyWalletRepository(
         }
     }
 
+    suspend fun storeAllMembershipPlans(plans: List<MembershipPlan>){
+        membershipPlanDao.storeAll(plans)
+    }
+
     fun storeMembershipCard(card: MembershipCard) {
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
@@ -210,7 +218,7 @@ class LoyaltyWalletRepository(
                     mutableMembershipCard.value = response
                 } catch (e: Exception) {
                     createError.value = e
-                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
+                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
                 }
             }
         }
@@ -236,7 +244,7 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
-                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
+                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
                 }
             }
         }
@@ -258,7 +266,7 @@ class LoyaltyWalletRepository(
                     membershipCardData.value = response
                 } catch (e: Exception) {
                     createCardError.value = e
-                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED,e)
+                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
                 }
             }
         }
@@ -373,7 +381,7 @@ class LoyaltyWalletRepository(
                             val encryptedValue =
                                 SecurityUtils.encryptMessage(safeValue, safePubKey)
 
-                            if(encryptedValue.isEmpty()){
+                            if (encryptedValue.isEmpty()) {
                                 SentryUtils.logError(SentryErrorType.LOYALTY_INVALID_PAYLOAD, Exception("Failed to encrypt ${planFieldRequest.column}"))
                             }
 

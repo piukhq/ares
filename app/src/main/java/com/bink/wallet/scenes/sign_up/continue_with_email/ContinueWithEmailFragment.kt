@@ -13,7 +13,8 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, ContinueWithEmailFragmentBinding>() {
+class ContinueWithEmailFragment :
+    BaseFragment<ContinueWithEmailViewModel, ContinueWithEmailFragmentBinding>() {
 
     override val layoutRes = R.layout.continue_with_email_fragment
 
@@ -33,8 +34,16 @@ class ContinueWithEmailFragment : BaseFragment<ContinueWithEmailViewModel, Conti
             showMagicLinkFail()
         }
 
-        viewModel.isSuccessful.observeNonNull(this){
-            
+        viewModel.isSuccessful.observeNonNull(this) {
+            if (it) {
+                findNavController().navigateIfAdded(
+                    this,
+                    ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(
+                        binding.emailField.text.trim().toString(),
+                        false
+                    )
+                )
+            }
         }
 
         viewModel.isLoading.observeNonNull(this) {

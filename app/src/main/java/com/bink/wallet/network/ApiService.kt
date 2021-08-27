@@ -1,6 +1,8 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.MagicLinkAccessToken
 import com.bink.wallet.model.MagicLinkBody
+import com.bink.wallet.model.MagicLinkToken
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
@@ -95,7 +97,7 @@ interface ApiService {
     ): Deferred<ResponseBody>
 
     @POST("/ubiquity/service")
-    fun postServiceAsync(@Body requestRequest: PostServiceRequest): Deferred<ResponseBody>
+    suspend fun postServiceAsync(@Body requestRequest: PostServiceRequest): ResponseBody
 
     @GET("/ubiquity/payment_card/{payment_id}")
     suspend fun getPaymentCardAsync(
@@ -118,10 +120,13 @@ interface ApiService {
     ): Deferred<SignUpResponse>
 
     @POST("/users/me/logout")
-    fun logOutAsync(): Deferred<ResponseBody>
+    suspend fun logOutAsync(): ResponseBody
 
     @POST("/users/magic_links")
     suspend fun postMagicLink(@Body magicLinkBody: MagicLinkBody)
+
+    @POST("/users/magic_links/access_tokens")
+    suspend fun postMagicLinkToken(@Body magicLinkToken: MagicLinkToken): MagicLinkAccessToken
 
     @GET("/users/me/settings")
     fun getPreferencesAsync(): Deferred<List<Preference>>

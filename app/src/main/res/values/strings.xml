@@ -393,6 +393,8 @@
     <string name="payment_card_link_already_exists_message">This payment card is already linked to a different %s %s. Please unlink the other %s %s before proceeding, but be aware this may only be possible from another application. </string>
     <string name="payment_card_footer_faq_title">FAQS</string>
     <string name="payment_card_footer_faq_description">Learn more</string>
+    <string name="already_logged_in_title">Already Logged In</string>
+    <string name="already_logged_in_subtitle">Would you like to log in with %s?</string>
 
 
     <!-- Payment Card entry -->
@@ -420,6 +422,11 @@
     <!-- Onboarding -->
     <string name="skip">Skip</string>
     <string name="continue_with_email">Continue with email</string>
+    <string name="check_inbox">Check your inbox!</string>
+    <string name="check_inbox_subtitle">We have just emailed a link to <b>%s</b>. Click the link and you will be logged in.</string>
+    <string name="check_inbox_subtitle_part_1">We have just emailed a link to</string>
+    <string name="check_inbox_subtitle_part_2">Click the link and you will be logged in.</string>
+    <string name="open_mail">Open Mail</string>
     <string name="log_in_with_email">Log in with email</string>
     <string name="use_password">Use a password</string>
     <string name="use_magic_link">Use Magic Link</string>
@@ -448,6 +455,10 @@
     <string name="magic_link_note">Note:&#160;</string>
     <string name="magic_link_full">We will send you a Magic Link</string>
     <string name="magic_link">Magic Link</string>
+    <string name="choose_email_client">Choose email client</string>
+    <string name="magic_link_success">Success</string>
+    <string name="magic_link_success_part_one">you are now logged in with&#160;</string>
+    <string name="magic_link_success_part_two">&#160;and will remain logged in on this device until you chose to log out. You can log out from settings</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm password</string>
     <string name="terms_and_conditions_message_text">I agree to Bink\'s <a href="https://bink.com/terms-and-conditions/#privacy-policy">Terms and Conditions</a>\nPlease read the Bink <a href="https://bink.com/privacy-policy/">Privacy Policy</a> for further details of how your data will be processed</string>
@@ -585,6 +596,7 @@
     <string name="scan_failure_body">The card you scanned was not correct, please scan your %1$s card </string>
     <string name="add_loyalty_card_permissions_denied_title">Please allow camera access</string>
     <string name="add_loyalty_card_permissions_denied_message">To scan your cards, you’ll need to allow Bink access to your device’s camera.</string>
+
     <string name="add_loyalty_card_permissions_denied_cta_allow">Allow Access</string>
     <string name="add_loyalty_card_permissions_denied_cta_enter">Enter Manually</string>
 
@@ -598,6 +610,11 @@
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+    <string name="magic_link_retry">Retry</string>
+    <string name="magic_link_expiry_subtitle">To keep your account safe, links are only valid for a short period of time. Tap Retry and we will send you another.</string>
+    <string name="magic_link_error_subtitle">There was a problem authenticating you. Please try again</string>
+    <string name="magic_link_expiry_title">Link Expired</string>
+    <string name="magic_link_error_title">Something went wrong</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">
