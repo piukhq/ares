@@ -163,6 +163,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         return null
+        
     }
 
     private fun shouldShowSwitchDialog(token: String) {
