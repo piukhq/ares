@@ -607,6 +607,7 @@
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+    <string name="magic_link_open_mail">Open Mail</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

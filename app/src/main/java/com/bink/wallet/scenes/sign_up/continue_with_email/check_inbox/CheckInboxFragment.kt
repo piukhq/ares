@@ -59,7 +59,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
     private fun setSubtitle(email: String) {
         val subtitlePartOne = getString(R.string.check_inbox_subtitle_part_1)
         val subtitlePartTwo = getString(R.string.check_inbox_subtitle_part_2)
-        val subtitle = "$subtitlePartOne <b>$email.</b> $subtitlePartTwo"
+        val subtitle = "$subtitlePartOne <b>$email</b>. $subtitlePartTwo"
         binding.subtitle.text = Html.fromHtml(subtitle)
     }
 
