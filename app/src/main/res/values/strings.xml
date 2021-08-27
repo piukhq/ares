@@ -596,6 +596,7 @@
     <string name="scan_failure_body">The card you scanned was not correct, please scan your %1$s card </string>
     <string name="add_loyalty_card_permissions_denied_title">Please allow camera access</string>
     <string name="add_loyalty_card_permissions_denied_message">To scan your cards, you’ll need to allow Bink access to your device’s camera.</string>
+
     <string name="add_loyalty_card_permissions_denied_cta_allow">Allow Access</string>
     <string name="add_loyalty_card_permissions_denied_cta_enter">Enter Manually</string>
 
@@ -610,6 +611,11 @@
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
     <string name="magic_link_open_mail">Open Mail</string>
+    <string name="magic_link_retry">Retry</string>
+    <string name="magic_link_expiry_subtitle">To keep your account safe, links are only valid for a short period of time. Tap Retry and we will send you another.</string>
+    <string name="magic_link_error_subtitle">There was a problem authenticating you. Please try again</string>
+    <string name="magic_link_expiry_title">Link Expired</string>
+    <string name="magic_link_error_title">Something went wrong</string>
 
     <!-- Dev Names -->
     <string-array name="dev_names">

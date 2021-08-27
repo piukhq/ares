@@ -17,111 +17,198 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/success_layout"
+                android:id="@+id/scroll_view_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/animationView"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/success_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/magic_link_success_height"
-                    android:layout_marginTop="@dimen/margin_padding_size_large"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:lottie_autoPlay="false"
-                    app:lottie_fileName="success.json"
-                    app:lottie_loop="false"
-                    app:lottie_url="REPLACE_JSON_URL" />
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:fontFamily="@font/nunito_sans_extrabold"
-                    android:gravity="center"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/size_headline"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/animationView" />
-
-                <TextView
-                    android:id="@+id/subtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_padding_size_medium"
-                    android:layout_marginTop="@dimen/margin_padding_size_small"
-                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_description_big"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title" />
-
-                <CheckBox
-                    android:id="@+id/marketing_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                    android:buttonTint="@color/black"
-                    android:fontFamily="@font/nunito_sans_light"
-                    android:gravity="top"
-                    android:textColor="@color/black"
-                    android:textColorLink="@color/blue_accent"
-                    android:textSize="@dimen/size_body"
-                    app:layout_constraintStart_toStartOf="@+id/subtitle"
-                    app:layout_constraintTop_toBottomOf="@+id/subtitle" />
-
-                <TextView
-                    android:id="@+id/marketing_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:fontFamily="@font/nunito_sans_light"
-                    android:text="@string/marketing_message_text"
-                    android:textColor="@color/black"
-                    android:textColorLink="@color/blue_accent"
-                    android:textSize="@dimen/size_body"
-                    app:layout_constraintEnd_toEndOf="@+id/subtitle"
-                    app:layout_constraintStart_toEndOf="@+id/marketing_checkbox"
-                    app:layout_constraintTop_toBottomOf="@+id/subtitle" />
-
-
-                <Button
-                    android:id="@+id/continue_button"
-                    style="@style/TextAppearance.AppCompat.Button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/gradient_button_margin"
-                    android:layout_marginTop="@dimen/margin_padding_size_large"
-                    android:layout_marginEnd="@dimen/gradient_button_margin"
-                    android:layout_marginBottom="@dimen/margin_padding_size_large"
-                    android:background="@drawable/gradient_button_selector"
-                    android:fontFamily="@font/nunito_sans_bold"
-                    android:text="@string/continue_text"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="@null"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/terms_and_conditions_text"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/animationView"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/magic_link_success_height"
+                        android:layout_marginTop="@dimen/margin_padding_size_large"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:lottie_autoPlay="false"
+                        app:lottie_fileName="success.json"
+                        app:lottie_loop="false"
+                        app:lottie_url="REPLACE_JSON_URL" />
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        android:gravity="center"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/size_headline"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/animationView" />
+
+                    <TextView
+                        android:id="@+id/subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_description_big"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+                    <CheckBox
+                        android:id="@+id/marketing_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                        android:buttonTint="@color/black"
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:gravity="top"
+                        android:textColor="@color/black"
+                        android:textColorLink="@color/blue_accent"
+                        android:textSize="@dimen/size_body"
+                        app:layout_constraintStart_toStartOf="@+id/subtitle"
+                        app:layout_constraintTop_toBottomOf="@+id/subtitle" />
+
+                    <TextView
+                        android:id="@+id/marketing_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium_large"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/nunito_sans_light"
+                        android:text="@string/marketing_message_text"
+                        android:textColor="@color/black"
+                        android:textColorLink="@color/blue_accent"
+                        android:textSize="@dimen/size_body"
+                        app:layout_constraintEnd_toEndOf="@+id/subtitle"
+                        app:layout_constraintStart_toEndOf="@+id/marketing_checkbox"
+                        app:layout_constraintTop_toBottomOf="@+id/subtitle" />
+
+
+                    <Button
+                        android:id="@+id/continue_button"
+                        style="@style/TextAppearance.AppCompat.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/gradient_button_margin"
+                        android:layout_marginTop="@dimen/margin_padding_size_large"
+                        android:layout_marginEnd="@dimen/gradient_button_margin"
+                        android:layout_marginBottom="@dimen/margin_padding_size_large"
+                        android:background="@drawable/gradient_button_selector"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:text="@string/continue_text"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@null"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/marketing_text"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/error_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/size_headline"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/error_subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_padding_size_medium"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_description_big"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/error_title" />
+
+                    <Button
+                        android:id="@+id/error_retry"
+                        style="@style/TextAppearance.AppCompat.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/gradient_button_margin"
+                        android:layout_marginEnd="@dimen/gradient_button_margin"
+                        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                        android:background="@drawable/gradient_button_selector"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:text="@string/magic_link_retry"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="@null"
+                        app:layout_constraintBottom_toTopOf="@+id/error_cancel"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/error_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_padding_size_large"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        android:text="@string/cancel_text"
+                        android:textColor="@color/black"
+                        android:textColorLink="@color/blue_accent"
+                        android:textSize="@dimen/size_sub_headline"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/progress_spinner"

@@ -17,9 +17,11 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.utils.JWTUtils
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.HttpException
 
 class MagicLinkResultViewModel(
     val loginRepository: LoginRepository, val userRepository: UserRepository, val loyaltyWalletRepository: LoyaltyWalletRepository, val paymentWalletRepository: PaymentWalletRepository
@@ -47,15 +49,43 @@ class MagicLinkResultViewModel(
     val hasLoggedOut: MutableLiveData<Boolean>
         get() = _hasLoggedOut
 
+    private val _hasErrorWithExpiry = MutableLiveData<Boolean>()
+    val hasErrorWithExpiry: MutableLiveData<Boolean>
+        get() = _hasErrorWithExpiry
+
     fun postMagicLinkToken(context: Context, token: String) {
         _isLoading.value = true
+
+        try {
+            JWTUtils.decode(token)?.let { tokenJson ->
+                val emailFromJson = JWTUtils.getEmailFromJson(tokenJson) ?: ""
+                _email.value = emailFromJson
+            }
+        } catch (e: Exception) {
+            _hasErrorWithExpiry.value = false
+            _isLoading.value = false
+        }
+
         val magicLinkToken = MagicLinkToken(token)
         viewModelScope.launch {
             try {
                 val responseToken = loginRepository.sendMagicLinkToken(magicLinkToken)
                 getUser(context, responseToken.access_token)
             } catch (e: Exception) {
-                _isLoading.value = false
+                logDebug("magicLink", "$e")
+                try {
+                    if ((e as HttpException).code() == 401) {
+                        _hasErrorWithExpiry.value = true
+                        _isLoading.value = false
+                    } else {
+                        _hasErrorWithExpiry.value = false
+                        _isLoading.value = false
+                    }
+                } catch (e: Exception) {
+                    _hasErrorWithExpiry.value = false
+                    _isLoading.value = false
+                }
+
             }
         }
     }
@@ -66,21 +96,13 @@ class MagicLinkResultViewModel(
             context.getString(R.string.token_api_v1, token)
         )
 
-        try {
-            JWTUtils.decode(token)?.let { tokenJson ->
-                val emailFromJson = JSONObject(tokenJson).getString("user_id")
-                _email.value = emailFromJson
-            }
-        } catch (e: JSONException) {
-            _isLoading.value = false
-        }
-
         viewModelScope.launch {
             try {
                 val user = userRepository.getUserDetails()
                 _user.value = user
                 _isLoading.value = false
             } catch (e: Exception) {
+                _hasErrorWithExpiry.value = false
                 _isLoading.value = false
             }
         }
@@ -96,7 +118,6 @@ class MagicLinkResultViewModel(
                     )
                 }
             } catch (e: Exception) {
-
             }
         }
     }

@@ -39,7 +39,8 @@ class ContinueWithEmailFragment :
                 findNavController().navigateIfAdded(
                     this,
                     ContinueWithEmailFragmentDirections.contWithEmailToCheckInbox(
-                        binding.emailField.text.trim().toString()
+                        binding.emailField.text.trim().toString(),
+                        false
                     )
                 )
             }
