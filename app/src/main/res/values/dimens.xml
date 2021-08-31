@@ -127,7 +127,7 @@
     <dimen name="payment_card_number_top_margin">54dp</dimen>
     <dimen name="payment_card_spacing_margin">16dp</dimen>
     <dimen name="add_card_button_width">82dp</dimen>
-    <dimen name="add_card_button_height">28dp</dimen>
+    <dimen name="add_card_button_height">36dp</dimen>
     <dimen name="link_icon_size">14.4dp</dimen>
     <dimen name="loyalty_margins_vertical">30dp</dimen>
     <dimen name="page_height">320dp</dimen>
