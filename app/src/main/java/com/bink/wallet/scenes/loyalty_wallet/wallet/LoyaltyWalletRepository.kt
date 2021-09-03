@@ -113,7 +113,8 @@ class LoyaltyWalletRepository(
             val membershipPlansResult = membershipPlansRequest.await()
             val membershipCardsResult = membershipCardsRequest.await()
 
-            val remappedCards = WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCardsResult)
+            val remappedCards =
+                WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCardsResult)
 
             processMembershipCardsResult(remappedCards)
 
@@ -143,16 +144,18 @@ class LoyaltyWalletRepository(
         mutableDeleteCard: MutableLiveData<String>,
         deleteCardError: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            membershipCardDao.deleteCard(id.toString())
-            val request = id?.let { apiService.deleteCardAsync(it) }
-            withContext(Dispatchers.Main) {
-                try {
-                    request?.await()
-                    mutableDeleteCard.value = id
-                } catch (e: Exception) {
-                    deleteCardError.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+
+            try {
+                membershipCardDao.deleteCard(id.toString())
+                id?.let {
+                    withContext(Dispatchers.IO) {
+                        apiService.deleteCardAsync(it)
+                    }
                 }
+                mutableDeleteCard.value = id
+            } catch (e: Exception) {
+                deleteCardError.value = e
             }
         }
     }
@@ -205,21 +208,20 @@ class LoyaltyWalletRepository(
             encryptMembershipCardFields(safeAccount)
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.createMembershipCardAsync(membershipCardRequest)
-            addLoyaltyCardRequestMade.postValue(true)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    if (WebScrapableManager.isCardScrapable(response.membership_plan)) {
-                        response.status = CardStatus(null, MembershipCardStatus.PENDING.status)
-                    }
-                    storeMembershipCard(response)
-                    mutableMembershipCard.value = response
-                } catch (e: Exception) {
-                    createError.value = e
-                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.createMembershipCardAsync(membershipCardRequest)
                 }
+                addLoyaltyCardRequestMade.postValue(true)
+                if (WebScrapableManager.isCardScrapable(requestResult.membership_plan)) {
+                    requestResult.status = CardStatus(null, MembershipCardStatus.PENDING.status)
+                }
+                storeMembershipCard(requestResult)
+                mutableMembershipCard.value = requestResult
+            } catch (e: Exception) {
+                createError.value = e
+                SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
             }
         }
     }
@@ -235,17 +237,16 @@ class LoyaltyWalletRepository(
             encryptMembershipCardFields(safeAccount)
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
-            addLoyaltyCardRequestMade.postValue(true)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    membershipCardData.value = response
-                } catch (e: Exception) {
-                    createCardError.value = e
-                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.updateMembershipCardAsync(cardId, membershipCardRequest)
                 }
+                addLoyaltyCardRequestMade.postValue(true)
+                membershipCardData.value = requestResult
+            } catch (e: Exception) {
+                createCardError.value = e
+                SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
             }
         }
     }
@@ -257,17 +258,16 @@ class LoyaltyWalletRepository(
         createCardError: MutableLiveData<Exception>,
         addLoyaltyCardRequestMade: MutableLiveData<Boolean>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.ghostMembershipCardAsync(cardId, membershipCardRequest)
-            addLoyaltyCardRequestMade.postValue(true)
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    membershipCardData.value = response
-                } catch (e: Exception) {
-                    createCardError.value = e
-                    SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.ghostMembershipCardAsync(cardId, membershipCardRequest)
                 }
+                addLoyaltyCardRequestMade.postValue(true)
+                membershipCardData.value = requestResult
+            } catch (e: Exception) {
+                createCardError.value = e
+                SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
             }
         }
     }
@@ -276,15 +276,14 @@ class LoyaltyWalletRepository(
         paymentCards: MutableLiveData<List<PaymentCard>>,
         fetchError: MutableLiveData<Exception>
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val request = apiService.getPaymentCardsAsync()
-            withContext(Dispatchers.Main) {
-                try {
-                    val response = request.await()
-                    paymentCards.postValue(response)
-                } catch (e: Exception) {
-                    fetchError.value = e
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val requestResult = withContext(Dispatchers.IO) {
+                    apiService.getPaymentCardsAsync()
                 }
+                paymentCards.postValue(requestResult)
+            } catch (e: Exception) {
+                fetchError.value = e
             }
         }
     }
@@ -299,23 +298,6 @@ class LoyaltyWalletRepository(
                     localPaymentCards.value = paymentCardDao.getAllAsync()
                 } catch (e: Exception) {
                     localFetchError.value = e
-                }
-            }
-        }
-    }
-
-    fun addBannerAsDismissed(
-        id: String,
-        addError: MutableLiveData<Exception>,
-        dismissedBannerDisplay: MutableLiveData<String> = MutableLiveData()
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    bannersDisplayDao.addBannerAsDismissed(BannerDisplay(id))
-                    dismissedBannerDisplay.value = id
-                } catch (e: Exception) {
-                    addError.value = e
                 }
             }
         }
@@ -382,7 +364,10 @@ class LoyaltyWalletRepository(
                                 SecurityUtils.encryptMessage(safeValue, safePubKey)
 
                             if (encryptedValue.isEmpty()) {
-                                SentryUtils.logError(SentryErrorType.LOYALTY_INVALID_PAYLOAD, Exception("Failed to encrypt ${planFieldRequest.column}"))
+                                SentryUtils.logError(
+                                    SentryErrorType.LOYALTY_INVALID_PAYLOAD,
+                                    Exception("Failed to encrypt ${planFieldRequest.column}")
+                                )
                             }
 
                             planFieldRequest.value = encryptedValue
@@ -417,7 +402,8 @@ class LoyaltyWalletRepository(
                 )
             }
 
-            val mappedFromScrapedCards = WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCards)
+            val mappedFromScrapedCards =
+                WebScrapableManager.mapOldToNewCards(cardsFromDb, membershipCards)
             membershipCardDao.storeAll(mappedFromScrapedCards)
 
             SharedPreferenceManager.membershipCardsLastRequestTime =

@@ -7,7 +7,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_scan_loyalty_card"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_scan_card_height"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_padding_size_medium"
         android:layout_marginEnd="@dimen/margin_padding_size_medium"
         app:cardCornerRadius="@dimen/margin_padding_size_small"
@@ -32,11 +32,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_padding_size_small"
                 android:layout_marginEnd="@dimen/margin_padding_size_small"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <TextView

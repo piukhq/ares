@@ -610,6 +610,7 @@
     <string name="bouncer_enter_card_manually">Enter Manually</string>
     <string name="payment_card_scanning_scan_failed_title">Error</string>
     <string name="payment_card_scanning_scan_failed">There was a problem scanning your payment card, please try again or enter your details manually.</string>
+    <string name="pll_404_error">There was a problem communicating with the server. Please try again later</string>
     <string name="magic_link_open_mail">Open Mail</string>
     <string name="magic_link_retry">Retry</string>
     <string name="magic_link_expiry_subtitle">To keep your account safe, links are only valid for a short period of time. Tap Retry and we will send you another.</string>
@@ -617,6 +618,7 @@
     <string name="magic_link_expiry_title">Link Expired</string>
     <string name="magic_link_error_title">Something went wrong</string>
 
+    <string name="pll_403_message_body">Unable to remove link. Payment and Loyalty card combination exists in other wallets.</string>
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

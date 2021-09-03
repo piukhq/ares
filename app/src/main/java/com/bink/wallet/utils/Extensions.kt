@@ -396,11 +396,12 @@ fun HttpException.getErrorBody(): String {
 }
 
 fun String.getSuffixForLPS(): String {
-    val debugSuffix = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
-        "_debug"
-    } else {
-        ""
-    }
+    val debugSuffix =
+        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+            "_debug"
+        } else {
+            ""
+        }
 
     return "$this${debugSuffix}"
 }
@@ -413,4 +414,21 @@ fun String.readFileText(context: Context): String {
     } catch (e: Exception) {
         e.localizedMessage ?: ""
     }
+}
+
+fun Fragment.showUnLinkErrorMessage(errorText: String) {
+
+    val title =
+        getString(R.string.pll_error_title)
+
+    AlertDialog.Builder(requireContext())
+        .setTitle(title)
+        .setMessage(errorText)
+        .setPositiveButton(
+            getString(R.string.ok)
+        ) { dialog, _ ->
+            dialog.dismiss()
+        }
+        .setCancelable(false)
+        .show()
 }
