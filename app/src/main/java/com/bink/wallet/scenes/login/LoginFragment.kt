@@ -195,6 +195,10 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
             logEvent(getFirebaseIdentifier(LOGIN_VIEW, binding.logInButton.text.toString()))
         }
 
+        binding.useMagicLink.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         initMembershipPlansObserver()
         initUserDetailsObserver()
     }
