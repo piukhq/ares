@@ -72,11 +72,11 @@ class PaymentCardWalletAdapter(
 
         return when (viewType) {
             PAYMENT_CARD -> {
-                val binding = PaymentCardWalletItemBinding.inflate(inflater)
+                val binding = PaymentCardWalletItemBinding.inflate(inflater,parent,false)
                 PaymentCardWalletHolder(binding)
             }
             else -> {
-                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
+                val binding = EmptyLoyaltyItemBinding.inflate(inflater,parent,false)
                 PaymentCardWalletJoinHolder(binding)
             }
         }

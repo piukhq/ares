@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -283,7 +284,7 @@ class PaymentCardWalletFragment :
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
-            layoutManager = GridLayoutManager(context, 1)
+            layoutManager = LinearLayoutManager(context)
             adapter = walletAdapter
 
             ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
