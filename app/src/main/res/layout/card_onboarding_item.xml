@@ -9,8 +9,8 @@
         style="@style/ShadowedCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_card_on_boarding"
-        android:layout_marginEnd="@dimen/margin_card_on_boarding"
+        android:layout_marginStart="@dimen/margin_padding_size_small"
+        android:layout_marginEnd="@dimen/margin_padding_size_small"
         app:cardCornerRadius="@dimen/margin_card_on_boarding">
 
         <androidx.appcompat.widget.LinearLayoutCompat

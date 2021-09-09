@@ -539,7 +539,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.loyaltyWalletList.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = walletAdapter
-
+            setItemDecorationSpacing(2f)
             simpleCallback.attachToRecyclerView(this)
         }
     }
