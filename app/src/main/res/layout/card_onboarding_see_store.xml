@@ -49,16 +49,16 @@
                 android:id="@+id/rv_see_store_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_small_medium"
                 android:layout_marginTop="@dimen/margin_padding_size_small_medium"
                 android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                android:layout_marginStart="@dimen/margin_padding_size_medium"
                 android:layout_marginBottom="@dimen/margin_padding_size_small_medium"
                 app:itemDecorationSpacing="@{@dimen/margin_padding_size_medium}"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_see_store_description"
-                app:layout_constraintVertical_bias="0.059"
                 app:spanCount="5"
                 tools:listitem="@layout/card_onboarding_see_store_item" />
         </androidx.constraintlayout.widget.ConstraintLayout>
