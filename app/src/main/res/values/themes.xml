@@ -42,4 +42,7 @@
         <item name="colorAccent">#000</item>
     </style>
 
+    <style name="DialogBackground" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/global_background </item>
+    </style>
 </resources>
