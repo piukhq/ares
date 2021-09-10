@@ -30,6 +30,7 @@
     <color name="expired_background">#ccffff</color>
     <color name="voucher_background">#26000000</color>
     <color name="voucher_progress">#f5a623</color>
+    <color name="global_background">#f7f7f7</color>
 
     <color name="separator_color">#e5e5e5</color>
 

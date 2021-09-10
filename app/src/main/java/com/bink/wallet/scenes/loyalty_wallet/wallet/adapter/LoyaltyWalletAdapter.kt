@@ -53,21 +53,21 @@ class LoyaltyWalletAdapter(
         return when (viewType) {
 
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(
-                LoyaltyWalletItemBinding.inflate(inflater),
+                LoyaltyWalletItemBinding.inflate(inflater,parent,false),
                 onClickListener,
                 membershipPlans,
                 paymentCards
             )
 
             CARD_ON_BOARDING_SEE -> CardOnBoardingSeeViewHolder(
-                CardOnboardingSeeStoreBinding.inflate(inflater),
+                CardOnboardingSeeStoreBinding.inflate(inflater,parent,false),
                 onClickListener,
                 onCardLinkClickListener,
                 membershipPlans
             )
 
             CARD_ON_BOARDING_STORE -> CardOnBoardingStoreViewHolder(
-                CardOnboardingSeeStoreBinding.inflate(inflater),
+                CardOnboardingSeeStoreBinding.inflate(inflater,parent,false),
                 onClickListener,
                 onCardLinkClickListener,
                 onPlaceholderClickListener,
@@ -75,7 +75,7 @@ class LoyaltyWalletAdapter(
             )
 
             else -> CardOnBoardingLinkViewHolder(
-                CardOnboardingItemBinding.inflate(inflater),
+                CardOnboardingItemBinding.inflate(inflater,parent,false),
                 onClickListener,
                 onCardLinkClickListener,
                 membershipPlans
