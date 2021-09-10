@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="membershipPlan"
             type="com.bink.wallet.model.response.membership_plan.MembershipPlan" />
@@ -74,6 +75,7 @@
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:paddingBottom="@dimen/voucher_details_code_padding_bottom"
                     android:textColor="@color/grey_50"
+                    android:textIsSelectable="true"
                     android:textSize="@dimen/text_size_title_big"
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@id/main_title"
