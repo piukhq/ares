@@ -2,15 +2,12 @@ package com.bink.wallet.utils.local_point_scraping
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
-import android.view.View
 import android.webkit.CookieManager
 import android.webkit.WebStorage
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.bink.wallet.model.PointScrapeResponse
+import com.bink.wallet.model.PointScrapingResponse
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
-import com.bink.wallet.utils.local_point_scraping.captcha.WebScrapeCaptchaDialog
 import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.readFileText
 import com.google.gson.Gson
@@ -24,70 +21,50 @@ object PointScrapingUtil {
 
     private var hasSignedIn = false
 
-    fun performScrape(context: Context, pointScrapeSite: PointScrapeSite?, email: String?, password: String?, callback: (PointScrapeResponse) -> Unit) {
+    fun performNewScrape(context: Context, pointScrapeSite: PointScrapeSite?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
+        if (pointScrapeSite == null || email == null || password == null) return
 
-        hasSignedIn = false
-
-        if (pointScrapeSite == null || email == null || password == null) {
-            return
-        }
-
-        webView = WebView(context).apply {
-            visibility = View.GONE
-            settings.apply {
-                javaScriptEnabled = true
-            }
-            clearCache(true)
-            clearFormData()
-            clearHistory()
-            clearSslPreferences()
-        }
-
-        WebStorage.getInstance().deleteAllData()
-
-        CookieManager.getInstance().removeAllCookies(null)
-        CookieManager.getInstance().flush()
+        webView = getWebView(context)
+        clearWebViewCookies()
 
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                if (!lastSeenURL.equals(url) || pointScrapeSite == PointScrapeSite.SUPERDRUG || pointScrapeSite == PointScrapeSite.MORRISONS) {
-                    Handler().postDelayed({
-                        pointScrapeSite.let { site ->
-                            getJavascript(context, url, site, email, password).let { js ->
-                                logDebug("LocalPointScrape", "Evaluating JS")
-                                js?.let {
-                                    webView?.evaluateJavascript(it) { response ->
-                                        logDebug("LocalPointScrape", "JS Response $response")
-                                        processResponse(response) { pointScrapeResponse ->
-                                            logDebug("LocalPointScrape", "is Done ${pointScrapeResponse.isDone()}")
-                                            if (pointScrapeResponse.isDone()) {
-                                                webView?.destroy()
-                                                webView = null
-                                                lastSeenURL = null
-                                                hasSignedIn = false
+                logDebug("LocalPointScrape", "URL: $url")
 
-                                                callback(pointScrapeResponse)
-                                            }
+                getJavaScriptForMerchant(context, pointScrapeSite, email, password).let { javascript ->
 
-                                            if (pointScrapeResponse.user_action_required) {
-                                                val dialog = WebScrapeCaptchaDialog(context, webView, js ?: "")
-                                                dialog.show()
-                                                dialog.setOnDismissListener {
-                                                    webView?.loadUrl(pointScrapeSite.scrapeURL)
-                                                }
-                                            }
-                                        }
-                                    }
+                    logDebug("LocalPointScrape", "js acquired")
+
+                    webView?.evaluateJavascript(javascript) { responseFromSite ->
+
+                        logDebug("LocalPointScrape", "responseFromSite $responseFromSite")
+
+                        processResponse(responseFromSite) { serializedResponse ->
+
+                            logDebug("LocalPointScrape", "responseFromSite $serializedResponse")
+
+                            with(serializedResponse) {
+                                if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
+                                    //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
+                                    webView?.evaluateJavascript(javascript) {}
+                                }
+
+                                if (pointsString != null) {
+                                    webView?.destroy()
+                                    webView = null
+                                    lastSeenURL = null
+                                    hasSignedIn = false
+
+                                    callback(serializedResponse)
                                 }
                             }
-                        }
-                    }, 1000)
 
+                        }
+                    }
                 }
 
-                lastSeenURL = url
             }
         }
 
@@ -122,18 +99,44 @@ object PointScrapingUtil {
 
     }
 
-    private fun processResponse(response: String, callback: (PointScrapeResponse) -> Unit) {
+    private fun getWebView(context: Context): WebView {
+        return WebView(context).apply {
+            //visibility = View.GONE
+            settings.apply {
+                javaScriptEnabled = true
+            }
+            clearCache(true)
+            clearFormData()
+            clearHistory()
+            clearSslPreferences()
+        }
+    }
+
+    private fun clearWebViewCookies() {
+        WebStorage.getInstance().deleteAllData()
+
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().flush()
+    }
+
+    private fun getJavaScriptForMerchant(context: Context, site: PointScrapeSite, email: String, password: String): String {
+        val javascriptClass = "lps_${site.remoteName}_navigate.txt".readFileText(context)
+        val replacedEmail = javascriptClass.replaceFirst("%@", email)
+        val replacedPassword = replacedEmail.replaceFirst("%@", password)
+        return replacedPassword
+    }
+
+    private fun processResponse(response: String, callback: (PointScrapingResponse) -> Unit) {
         /**
          * Once we have a response it's being mapped to an object so we can check whether it has
          * any messages to display to the user
          */
         try {
-            (Gson().fromJson(response, object : TypeToken<PointScrapeResponse?>() {}.type) as PointScrapeResponse).let { pointScrapeResponse ->
+            (Gson().fromJson(response, object : TypeToken<PointScrapingResponse?>() {}.type) as PointScrapingResponse).let { pointScrapeResponse ->
                 callback(pointScrapeResponse)
             }
         } catch (e: Exception) {
             //Either an issue with casting to a PointScrapeResponse or in Parsing the JSON
         }
     }
-
 }

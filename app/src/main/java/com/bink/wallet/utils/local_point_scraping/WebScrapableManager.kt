@@ -11,11 +11,11 @@ import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
-import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
 import com.bink.wallet.utils.getSuffixForLPS
 import com.bink.wallet.utils.local_point_scraping.agents.MorrisonsScrapableAgent
 import com.bink.wallet.utils.local_point_scraping.agents.SuperdrugScrapableAgent
+import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
+import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
 import com.bink.wallet.utils.logDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
@@ -141,7 +141,7 @@ object WebScrapableManager {
                     logDebug("LocalPointScrape", "Credentials null, agent null")
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
-                    PointScrapingUtil.performScrape(
+                    PointScrapingUtil.performNewScrape(
                         context,
                         agent.merchant,
                         credentials.email,
@@ -152,7 +152,7 @@ object WebScrapableManager {
 
                             logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
-                            pointScrapeResponse.points?.let { points ->
+                            pointScrapeResponse.pointsString?.let { points ->
                                 if (membershipCards != null) {
                                     val balance = CardBalance(
                                         points,
