@@ -3,6 +3,7 @@ package com.bink.wallet.scenes.settings
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.ListLiveData
@@ -51,9 +52,15 @@ class SettingsViewModel constructor(
     private val scope = CoroutineScope(job + Dispatchers.Main)
 
     fun logOut() {
-        loginRepository.logOut(logOutResponse, logOutErrorResponse)
-        loyaltyWalletRepository.clearMembershipCards()
-        paymentWalletRepository.clearPaymentCards()
+        viewModelScope.launch {
+            try {
+                logOutResponse.value = loginRepository.logOut()
+                loyaltyWalletRepository.clearMembershipCards()
+                paymentWalletRepository.clearPaymentCards()
+            } catch (e: Exception) {
+                logOutErrorResponse.value = e
+            }
+        }
     }
 
     fun clearData() {

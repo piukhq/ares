@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,16 +15,13 @@ import com.bink.wallet.model.AppConfiguration
 import com.bink.wallet.model.isNewVersionAvailable
 import com.bink.wallet.model.skipVersion
 import com.bink.wallet.scenes.login.LoginRepository
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.SPLASH_VIEW
 import com.bink.wallet.utils.FirebaseEvents.UPDATE_ACTION
 import com.bink.wallet.utils.FirebaseEvents.UPDATE_KEY
 import com.bink.wallet.utils.FirebaseEvents.UPDATE_LATER
 import com.bink.wallet.utils.FirebaseEvents.UPDATE_OPEN_STORE
 import com.bink.wallet.utils.FirebaseEvents.UPDATE_SKIP
-import com.bink.wallet.utils.FirebaseUserProperties
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.REMOTE_CONFIG_APP_CONFIGURATION
-import com.bink.wallet.utils.UPDATE_REQUEST_CODE
 import com.bink.wallet.utils.enums.BuildTypes
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -48,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var firebaseAnalytics: FirebaseAnalytics
     private var isFirstLaunch = true
     private lateinit var appUpdateManager: AppUpdateManager
+    var newIntent: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         LocalStoreUtils.createEncryptedPrefs(applicationContext)
 
         checkForUpdates()
+
+        intent.data?.let {
+            newIntent = intent
+        }
     }
 
     override fun onResume() {
@@ -98,6 +101,11 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        newIntent = intent
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -127,6 +135,7 @@ class MainActivity : AppCompatActivity() {
             R.id.rooted_screen -> {
                 finish()
             }
+            R.id.magic_link_result_fragment,
             R.id.pll_empty_fragment -> {
                 //do nothing (back button action is prohibited here)
             }
