@@ -6,6 +6,7 @@ import android.webkit.CookieManager
 import android.webkit.WebStorage
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.PointScrapingResponse
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.logDebug
@@ -16,15 +17,13 @@ import com.google.gson.reflect.TypeToken
 @SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
 
-    var lastSeenURL: String? = null
     private var webView: WebView? = null
 
-    private var hasSignedIn = false
-
-    fun performNewScrape(context: Context, pointScrapeSite: PointScrapeSite?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
+    fun performNewScrape(view: ConstraintLayout?, context: Context, pointScrapeSite: PointScrapeSite?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
         if (pointScrapeSite == null || email == null || password == null) return
 
         webView = getWebView(context)
+        view?.addView(webView)
         clearWebViewCookies()
 
         webView?.webViewClient = object : WebViewClient() {
@@ -54,8 +53,6 @@ object PointScrapingUtil {
                                 if (pointsString != null) {
                                     webView?.destroy()
                                     webView = null
-                                    lastSeenURL = null
-                                    hasSignedIn = false
 
                                     callback(serializedResponse)
                                 }
@@ -71,37 +68,8 @@ object PointScrapingUtil {
         webView?.loadUrl(pointScrapeSite.signInURL)
     }
 
-    private fun getJavascript(context: Context, url: String?, pointScrapeSite: PointScrapeSite, email: String, password: String): String? {
-        if (url == null) return null
-
-        logDebug("LocalPointScrape", "URL: $url")
-
-        for (agent in WebScrapableManager.scrapableAgents) {
-            if (agent.merchant == pointScrapeSite) {
-                val merchantName = agent.merchant.remoteName
-                return when {
-                    url.toLowerCase().contains(agent.merchant.signInURL.toLowerCase()) && !hasSignedIn -> {
-                        hasSignedIn = true
-                        val javascriptClass = "lps_${merchantName}_login.txt".readFileText(context)
-                        val replacedEmail = javascriptClass.replaceFirst("%@", email)
-                        val replacedPassword = replacedEmail.replaceFirst("%@", password)
-                        replacedPassword
-                    }
-                    url.toLowerCase().contains(agent.merchant.scrapeURL.toLowerCase()) -> {
-                        "lps_${merchantName}_scrape.txt".readFileText(context)
-                    }
-                    else -> null
-                }
-            }
-        }
-
-        return null
-
-    }
-
     private fun getWebView(context: Context): WebView {
         return WebView(context).apply {
-            //visibility = View.GONE
             settings.apply {
                 javaScriptEnabled = true
             }

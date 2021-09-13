@@ -142,6 +142,7 @@ object WebScrapableManager {
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
                     PointScrapingUtil.performNewScrape(
+                        null,
                         context,
                         agent.merchant,
                         credentials.email,
@@ -183,7 +184,6 @@ object WebScrapableManager {
             logDebug("LocalPointScrape", "Index out of bounds")
             timer?.cancel()
             timer = null
-            PointScrapingUtil.lastSeenURL = null
 
             if (isAddCard) {
                 membershipCards?.get(0)?.let { newCard ->
