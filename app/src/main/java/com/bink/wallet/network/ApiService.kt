@@ -1,5 +1,8 @@
 package com.bink.wallet.network
 
+import com.bink.wallet.model.MagicLinkAccessToken
+import com.bink.wallet.model.MagicLinkBody
+import com.bink.wallet.model.MagicLinkToken
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.model.request.MarketingOption
@@ -114,6 +117,12 @@ interface ApiService {
 
     @POST("/users/me/logout")
     suspend fun logOutAsync(): ResponseBody
+
+    @POST("/users/magic_links")
+    suspend fun postMagicLink(@Body magicLinkBody: MagicLinkBody)
+
+    @POST("/users/magic_links/access_tokens")
+    suspend fun postMagicLinkToken(@Body magicLinkToken: MagicLinkToken): MagicLinkAccessToken
 
     @GET("/users/me/settings")
     suspend fun getPreferencesAsync(): List<Preference>

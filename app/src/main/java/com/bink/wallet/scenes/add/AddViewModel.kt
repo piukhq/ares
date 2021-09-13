@@ -31,10 +31,10 @@ class AddViewModel(
     fun getLocalMembershipCards() {
         viewModelScope.launch {
             try {
-                val membershipCards = membershipCardDao.getAllAsync()
-                val membershipPlans = membershipPlanDao.getAllAsync()
-                _membershipCards.value = membershipCards
-                _membershipPlans.value = membershipPlans
+                val membershipCards = async(Dispatchers.IO) { membershipCardDao.getAllAsync() }
+                val membershipPlans = async(Dispatchers.IO) { membershipPlanDao.getAllAsync() }
+                _membershipCards.value = membershipCards.await()
+                _membershipPlans.value = membershipPlans.await()
             } catch (e: Exception) {
 
             }

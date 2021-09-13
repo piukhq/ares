@@ -211,4 +211,5 @@
     <dimen name="scan_icon_size">50dp</dimen>
 
     <dimen name="bouncerEnterCardManuallyMargin">200dp</dimen>
+    <dimen name="magic_link_success_height">200dp</dimen>
 </resources>
