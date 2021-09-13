@@ -159,7 +159,7 @@ android {
         kotlinCompilerExtensionVersion compose_version
         kotlinCompilerVersion '1.5.10'
     }
-    ndkVersion '21.3.6528147'
+    android.ndkVersion '21.3.6528147'
     
     repositories {
         mavenCentral()

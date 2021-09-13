@@ -9,9 +9,9 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
@@ -25,6 +25,7 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.LoyaltyWalletAdapter
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyWalletViewHolder
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
@@ -537,9 +538,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun manageRecyclerView() {
         binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = walletAdapter
-
+            addItemDecoration(RecyclerViewItemDecoration())
             simpleCallback.attachToRecyclerView(this)
         }
     }
