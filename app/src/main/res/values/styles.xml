@@ -111,4 +111,10 @@
         <item name="fontFamily">@font/nunitosans</item>
     </style>
 
+    <style name="TextAppearance.Progress.Button" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/nunito_sans_bold</item>
+        <item name="android:textSize">@dimen/size_sub_headline</item>
+        <item name="textColor">@color/white</item>
+        <item name="android:background">@drawable/gradient_button_selector</item>
+    </style>
 </resources>
