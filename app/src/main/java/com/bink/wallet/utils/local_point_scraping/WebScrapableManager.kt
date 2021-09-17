@@ -141,8 +141,21 @@ object WebScrapableManager {
                     logDebug("LocalPointScrape", "Credentials null, agent null")
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
+
+//                    var isPriorityCard = false
+//
+//                    (cards.filter { membershipCard -> membershipCard.membership_plan == card.membership_plan }).let { filteredCards ->
+//                        if (filteredCards.size > 1) {
+//                            //Multiple cards with the same membershipPlanId
+//                            filteredCards.sortedBy { it.id.toInt() }.let { sortedCards ->
+//                                if (sortedCards[0].id == card.id) {
+//                                    isPriorityCard = true
+//                                }
+//                            }
+//                        }
+//                    }
+
                     PointScrapingUtil.performNewScrape(
-                        null,
                         context,
                         agent.merchant,
                         credentials.email,

@@ -2,11 +2,7 @@ package com.bink.wallet.utils.local_point_scraping
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.webkit.CookieManager
-import android.webkit.WebStorage
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.webkit.*
 import com.bink.wallet.model.PointScrapingResponse
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.logDebug
@@ -19,29 +15,30 @@ object PointScrapingUtil {
 
     private var webView: WebView? = null
 
-    fun performNewScrape(view: ConstraintLayout?, context: Context, pointScrapeSite: PointScrapeSite?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
+    fun performNewScrape(
+        context: Context,
+        pointScrapeSite: PointScrapeSite?,
+        email: String?,
+        password: String?,
+        callback: (PointScrapingResponse) -> Unit
+    ) {
         if (pointScrapeSite == null || email == null || password == null) return
 
         webView = getWebView(context)
-        view?.addView(webView)
         clearWebViewCookies()
 
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-
                 logDebug("LocalPointScrape", "URL: $url")
 
                 getJavaScriptForMerchant(context, pointScrapeSite, email, password).let { javascript ->
-
                     logDebug("LocalPointScrape", "js acquired")
 
                     webView?.evaluateJavascript(javascript) { responseFromSite ->
-
                         logDebug("LocalPointScrape", "responseFromSite $responseFromSite")
 
                         processResponse(responseFromSite) { serializedResponse ->
-
                             logDebug("LocalPointScrape", "responseFromSite $serializedResponse")
 
                             with(serializedResponse) {
@@ -72,6 +69,8 @@ object PointScrapingUtil {
         return WebView(context).apply {
             settings.apply {
                 javaScriptEnabled = true
+                cacheMode = WebSettings.LOAD_NO_CACHE;
+                setAppCacheEnabled(false);
             }
             clearCache(true)
             clearFormData()
