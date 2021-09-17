@@ -385,13 +385,13 @@ fun String.getSuffixForLPS(): String {
     return "$this${debugSuffix}"
 }
 
-fun String.readFileText(context: Context): String {
+fun String.readFileText(context: Context): String? {
     return try {
         context.assets?.open(this)?.bufferedReader().use {
             it?.readText() ?: "JS Error"
         }
     } catch (e: Exception) {
-        e.localizedMessage ?: ""
+        return null
     }
 }
 

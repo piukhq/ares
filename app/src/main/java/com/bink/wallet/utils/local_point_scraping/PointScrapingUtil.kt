@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.webkit.*
 import com.bink.wallet.model.PointScrapingResponse
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.readFileText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -30,28 +29,43 @@ object PointScrapingUtil {
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                logDebug("LocalPointScrape", "URL: $url")
 
                 getJavaScriptForMerchant(context, pointScrapeSite, email, password).let { javascript ->
-                    logDebug("LocalPointScrape", "js acquired")
+
+                    if (javascript == null) {
+                        SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue)
+                        return
+                    }
 
                     webView?.evaluateJavascript(javascript) { responseFromSite ->
-                        logDebug("LocalPointScrape", "responseFromSite $responseFromSite")
 
                         processResponse(responseFromSite) { serializedResponse ->
-                            logDebug("LocalPointScrape", "responseFromSite $serializedResponse")
 
-                            with(serializedResponse) {
-                                if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
-                                    //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
-                                    webView?.evaluateJavascript(javascript) {}
-                                }
+                            logDebug("LocalPointScrape", "serializedResponse: $serializedResponse")
 
-                                if (pointsString != null) {
-                                    webView?.destroy()
-                                    webView = null
+                            if (serializedResponse == null) {
+                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue)
+                            } else {
+                                with(serializedResponse) {
+                                    if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
+                                        //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
+                                        webView?.evaluateJavascript(javascript) {}
+                                    }
 
-                                    callback(serializedResponse)
+                                    if (errorMessage != null) {
+                                        if (didAttemptLogin == true) {
+                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage")
+                                        } else {
+                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage")
+                                        }
+                                    }
+
+                                    if (pointsString != null) {
+                                        webView?.destroy()
+                                        webView = null
+
+                                        callback(serializedResponse)
+                                    }
                                 }
                             }
 
@@ -86,14 +100,19 @@ object PointScrapingUtil {
         CookieManager.getInstance().flush()
     }
 
-    private fun getJavaScriptForMerchant(context: Context, site: PointScrapeSite, email: String, password: String): String {
+    private fun getJavaScriptForMerchant(context: Context, site: PointScrapeSite, email: String, password: String): String? {
         val javascriptClass = "lps_${site.remoteName}_navigate.txt".readFileText(context)
-        val replacedEmail = javascriptClass.replaceFirst("%@", email)
-        val replacedPassword = replacedEmail.replaceFirst("%@", password)
-        return replacedPassword
+        return if (javascriptClass == null) {
+            null
+        } else {
+            val replacedEmail = javascriptClass.replaceFirst("%@", email)
+            val replacedPassword = replacedEmail.replaceFirst("%@", password)
+            replacedPassword
+        }
+
     }
 
-    private fun processResponse(response: String, callback: (PointScrapingResponse) -> Unit) {
+    private fun processResponse(response: String, callback: (PointScrapingResponse?) -> Unit) {
         /**
          * Once we have a response it's being mapped to an object so we can check whether it has
          * any messages to display to the user
@@ -103,6 +122,7 @@ object PointScrapingUtil {
                 callback(pointScrapeResponse)
             }
         } catch (e: Exception) {
+            callback(null)
             //Either an issue with casting to a PointScrapeResponse or in Parsing the JSON
         }
     }
