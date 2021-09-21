@@ -42,8 +42,9 @@ class ProgressButton @JvmOverloads constructor(
     }
 
     fun setLoading(loading: Boolean) {
-        logDebug("ACF","Sclicked-loading is $loading")
         isClickable = !loading //Disable clickable when loading
+        logDebug("ACF","loading is $loading,clickable is $isClickable")
+
         if (loading) {
             buttonTextView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
@@ -63,7 +64,7 @@ class ProgressButton @JvmOverloads constructor(
         buttonTextView.isEnabled = enabled
     }
 
-    fun getText() = buttonTextView.text
+    fun getText(): CharSequence = buttonTextView.text
 
 
 }
