@@ -26,15 +26,15 @@ class AuthAnimationHelper(
             fragment.handleKeyboardVisibleListener(binding.layout, onStartTransition)
         }
         footerLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+//            recyclerViewHelper.handleFooterFadeEffect(
+//                mutableListOf(binding.footerSimple.addAuthCta),
+//                binding.authFields,
+//                binding.footerSimple.footerBottomGradient,
+//                true,
+//                quotientFooterSimple
+//            )
             recyclerViewHelper.handleFooterFadeEffect(
-                mutableListOf(binding.footerSimple.addAuthCta),
-                binding.authFields,
-                binding.footerSimple.footerBottomGradient,
-                true,
-                quotientFooterSimple
-            )
-            recyclerViewHelper.handleFooterFadeEffect(
-                mutableListOf(binding.footerComposed.addAuthCta),
+                mutableListOf(binding.footerComposed.progressBtnContainer),
                 binding.authFields,
                 binding.footerComposed.footerBottomGradient,
                 true,

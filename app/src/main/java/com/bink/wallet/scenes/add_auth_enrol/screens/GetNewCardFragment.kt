@@ -96,6 +96,12 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
             }
         }
+
+        viewModel.loading.observeNonNull(this){
+            logDebug("ACF","loading livedata hit")
+            binding.footerComposed.progressBtnContainer.setLoading(it)
+        }
+
     }
 
     override fun onResume() {
