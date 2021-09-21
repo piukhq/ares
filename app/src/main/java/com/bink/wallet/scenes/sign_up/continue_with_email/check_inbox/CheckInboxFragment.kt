@@ -6,11 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.View
-import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.CheckInboxFragmentBinding
-import com.bink.wallet.utils.logDebug
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -35,7 +33,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
             val isRepost = CheckInboxFragmentArgs.fromBundle(bundle).isRepost
             setSubtitle(email)
 
-            if(isRepost) viewModel.rePostMagicLink(email)
+            if (isRepost) viewModel.rePostMagicLink(email)
         }
 
         binding.goToInbox.setOnClickListener {
@@ -66,27 +64,30 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
         val activitiesHandlingEmails = packageManager?.queryIntentActivities(emailIntent, 0)
         if (activitiesHandlingEmails != null) {
             if (activitiesHandlingEmails.isNotEmpty()) {
+                try {
+                    val firstEmailPackageName = activitiesHandlingEmails.first().activityInfo.packageName
+                    val firstEmailInboxIntent = packageManager.getLaunchIntentForPackage(firstEmailPackageName)
+                    val emailAppChooserIntent = Intent.createChooser(firstEmailInboxIntent, getString(R.string.choose_email_client))
 
-                val firstEmailPackageName = activitiesHandlingEmails.first().activityInfo.packageName
-                val firstEmailInboxIntent = packageManager.getLaunchIntentForPackage(firstEmailPackageName)
-                val emailAppChooserIntent = Intent.createChooser(firstEmailInboxIntent, getString(R.string.choose_email_client))
-
-                val emailInboxIntents = mutableListOf<LabeledIntent>()
-                for (i in 1 until activitiesHandlingEmails.size) {
-                    val activityHandlingEmail = activitiesHandlingEmails[i]
-                    val packageName = activityHandlingEmail.activityInfo.packageName
-                    val intent = packageManager.getLaunchIntentForPackage(packageName)
-                    emailInboxIntents.add(
-                        LabeledIntent(
-                            intent,
-                            packageName,
-                            activityHandlingEmail.loadLabel(packageManager),
-                            activityHandlingEmail.icon
+                    val emailInboxIntents = mutableListOf<LabeledIntent>()
+                    for (i in 1 until activitiesHandlingEmails.size) {
+                        val activityHandlingEmail = activitiesHandlingEmails[i]
+                        val packageName = activityHandlingEmail.activityInfo.packageName
+                        val intent = packageManager.getLaunchIntentForPackage(packageName)
+                        emailInboxIntents.add(
+                            LabeledIntent(
+                                intent,
+                                packageName,
+                                activityHandlingEmail.loadLabel(packageManager),
+                                activityHandlingEmail.icon
+                            )
                         )
-                    )
+                    }
+                    val extraEmailInboxIntents = emailInboxIntents.toTypedArray()
+                    return emailAppChooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraEmailInboxIntents)
+                } catch (e: Exception) {
+                    return null
                 }
-                val extraEmailInboxIntents = emailInboxIntents.toTypedArray()
-                return emailAppChooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraEmailInboxIntents)
             } else {
                 return null
             }
