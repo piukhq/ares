@@ -114,6 +114,10 @@ class AddCardFragment : BaseAddAuthFragment() {
 
         }
 
+        viewModel.loading.observeNonNull(this){
+            binding.footerComposed.progressBtnContainer.setLoading(it)
+        }
+
     }
 
     override fun onResume() {

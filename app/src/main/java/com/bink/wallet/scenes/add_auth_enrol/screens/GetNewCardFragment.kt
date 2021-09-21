@@ -57,7 +57,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
 
 
         }
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding.footerComposed.progressBtnContainer.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()
         }
@@ -98,7 +98,6 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.loading.observeNonNull(this){
-            logDebug("ACF","loading livedata hit")
             binding.footerComposed.progressBtnContainer.setLoading(it)
         }
 

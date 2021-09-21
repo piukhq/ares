@@ -37,7 +37,7 @@ class GhostCardFragment : BaseAddAuthFragment() {
 
         setViewsContent()
 
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding.footerComposed.progressBtnContainer.setOnClickListener {
             logCTAClick(it)
             handleCtaRequest()
         }
@@ -103,6 +103,10 @@ class GhostCardFragment : BaseAddAuthFragment() {
                 )
             }
 
+        }
+
+        viewModel.loading.observeNonNull(this){
+            binding.footerComposed.progressBtnContainer.setLoading(it)
         }
     }
 
