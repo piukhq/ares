@@ -13,12 +13,12 @@ import com.bink.wallet.utils.readFileText
 class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebView?, private val loginJavascript: String) : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 
     private var timer: CountDownTimer? = null
-    private lateinit var binding:WebscrapeCaptchaFragmentBinding
+    private lateinit var binding: WebscrapeCaptchaFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = WebscrapeCaptchaFragmentBinding.inflate(layoutInflater)
-        val view  = binding.root
+        val view = binding.root
         setContentView(view)
 
         captchaWebView?.apply {
@@ -26,7 +26,7 @@ class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebVi
             binding.webviewLayout.addView(this)
         }
 
-        val captchaJs = "lps_morrisons_captcha.txt".readFileText(context)
+        val captchaJs = "lps_morrisons_captcha.txt".readFileText(context) ?: return
 
         timer = object : CountDownTimer(60000, 1000) {
             override fun onFinish() {
