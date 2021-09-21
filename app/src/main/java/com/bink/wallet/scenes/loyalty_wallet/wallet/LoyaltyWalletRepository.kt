@@ -211,7 +211,6 @@ class LoyaltyWalletRepository(
 
         CoroutineScope(Dispatchers.Main).launch {
             loading.value = true
-            delay(5000)
             try {
                 val requestResult = withContext(Dispatchers.IO) {
                     apiService.createMembershipCardAsync(membershipCardRequest)

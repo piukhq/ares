@@ -6,7 +6,6 @@ import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.enums.SignUpFormType
 import com.bink.wallet.utils.enums.TypeOfField
-import com.bink.wallet.utils.logDebug
 
 class GetNewCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
     AddAuthViewModel(loyaltyWalletRepository) {
@@ -33,7 +32,6 @@ class GetNewCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
         membershipCardId: String,
         currentMembershipPlan: MembershipPlan
     ) {
-        logDebug("GNC","handleRequest called")
         val currentRequest = MembershipCardRequest(
             FormsUtil.getAccount(),
             currentMembershipPlan.id

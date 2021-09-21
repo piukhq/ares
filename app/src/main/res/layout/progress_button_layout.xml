@@ -18,7 +18,7 @@
             android:id="@+id/progress_btn_container"
             style="@style/TextAppearance.Progress.Button"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
+            android:layout_height="@dimen/margin_progress_button_height"
             android:layout_marginStart="@dimen/button_margin"
             android:layout_marginEnd="@dimen/button_margin"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"

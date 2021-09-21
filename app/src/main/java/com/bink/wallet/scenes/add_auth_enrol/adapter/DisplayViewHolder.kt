@@ -5,7 +5,6 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
-import com.bink.wallet.utils.logDebug
 
 class DisplayViewHolder(
     val binding: AddAuthDisplayItemBinding, val onLinkClickListener: ((String) -> Unit)
