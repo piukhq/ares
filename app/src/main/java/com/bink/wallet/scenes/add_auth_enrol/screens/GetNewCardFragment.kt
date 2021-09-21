@@ -15,6 +15,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
+import com.bink.wallet.utils.ProgressButton
 import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -127,7 +128,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         logEvent(
             FirebaseEvents.getFirebaseIdentifier(
                 ENROL_FORM_VIEW,
-                (button as Button).text.toString()
+                (button as ProgressButton).getText().toString()
             )
         )
     }

@@ -22,7 +22,7 @@
             android:layout_marginStart="@dimen/margin_padding_size_extra_large"
             android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            app:enabled="false"
+            app:enabled="@{viewModel.haveValidationsPassed}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
