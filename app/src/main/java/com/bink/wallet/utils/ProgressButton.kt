@@ -43,8 +43,6 @@ class ProgressButton @JvmOverloads constructor(
 
     fun setLoading(loading: Boolean) {
         isClickable = !loading //Disable clickable when loading
-        logDebug("ACF","loading is $loading,clickable is $isClickable")
-
         if (loading) {
             buttonTextView.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
