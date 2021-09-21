@@ -47,12 +47,7 @@ class AddCardFragment : BaseAddAuthFragment() {
 //            logNoAccountClick()
 //        }
 
-        binding.footerComposed.addAuthCta.setOnClickListener {
-            logCTAClick(it)
-            handleAuthCtaRequest()
-        }
-
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding.footerComposed.progressBtnContainer.setOnClickListener {
             logCTAClick(it)
             handleAuthCtaRequest()
         }
