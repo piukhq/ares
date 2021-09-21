@@ -35,7 +35,18 @@ enum class SentryErrorType(val localCode: Int, val issue: String) {
     LOYALTY_API_REJECTED(2001, "Bink API rejected request"),
     INVALID_PAYLOAD(3000, "Could not construct payload for tokenisation"),
     TOKEN_REJECTED(3001, "Tokenisation service rejected request"),
-    API_REJECTED(3002, "Bink API rejected request")
+    API_REJECTED(3002, "Bink API rejected request"),
+    LOCAL_POINTS_SCRAPE_CLIENT(4001, "Local points collection failed"),
+    LOCAL_POINTS_SCRAPE_SITE(4002, "Local points collection failed"),
+    LOCAL_POINTS_SCRAPE_USER(4003, "Local points collection failed")
+}
+
+enum class LocalPointScrapingError(val issue: String) {
+    SCRIPT_NOT_FOUND("Script file not found"),
+    UNHANDLED_IDLING("Unhandled idling"),
+    JS_DECODE_FAILED("Failed to decode javascript response"),
+    INCORRECT_CRED("Login failed - incorrect credentials"),
+    GENERIC_FAILURE("Local points collection uncategorized failure.")
 }
 
 enum class InvalidPayloadType(val error: String) {

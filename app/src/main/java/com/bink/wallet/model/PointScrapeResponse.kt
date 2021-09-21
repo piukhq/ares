@@ -1,13 +1,16 @@
 package com.bink.wallet.model
 
-data class PointScrapeResponse(var success: Boolean = false, val error_message: String?, val points: String?, var user_action_required: Boolean) {
-    fun isDone(): Boolean {
-        if (success) {
-            if (points != null) {
-                return true
-            }
-        }
+import com.google.gson.annotations.SerializedName
 
-        return false
-    }
-}
+data class PointScrapingResponse(
+    @SerializedName("points")
+    var pointsString: String?,
+    @SerializedName("did_attempt_login")
+    var didAttemptLogin: Boolean?,
+    @SerializedName("error_message")
+    var errorMessage: String?
+//    @SerializedName("points")
+//    var userActionRequired: Boolean?,
+//    @SerializedName("points")
+//    var userActionComplete: Boolean
+)

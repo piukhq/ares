@@ -7,16 +7,13 @@ import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.model.response.membership_card.CardStatus
 import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.REMOTE_CONFIG_LPC_MASTER_ENABLED
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
-import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
-import com.bink.wallet.utils.getSuffixForLPS
 import com.bink.wallet.utils.local_point_scraping.agents.MorrisonsScrapableAgent
 import com.bink.wallet.utils.local_point_scraping.agents.SuperdrugScrapableAgent
-import com.bink.wallet.utils.logDebug
+import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
+import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 object WebScrapableManager {
@@ -108,6 +105,9 @@ object WebScrapableManager {
                         } catch (e: IndexOutOfBoundsException) {
                         }
                     }
+
+                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue)
+
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 }
 
@@ -141,7 +141,21 @@ object WebScrapableManager {
                     logDebug("LocalPointScrape", "Credentials null, agent null")
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 } else {
-                    PointScrapingUtil.performScrape(
+
+//                    var isPriorityCard = false
+//
+//                    (cards.filter { membershipCard -> membershipCard.membership_plan == card.membership_plan }).let { filteredCards ->
+//                        if (filteredCards.size > 1) {
+//                            //Multiple cards with the same membershipPlanId
+//                            filteredCards.sortedBy { it.id.toInt() }.let { sortedCards ->
+//                                if (sortedCards[0].id == card.id) {
+//                                    isPriorityCard = true
+//                                }
+//                            }
+//                        }
+//                    }
+
+                    PointScrapingUtil.performNewScrape(
                         context,
                         agent.merchant,
                         credentials.email,
@@ -152,7 +166,7 @@ object WebScrapableManager {
 
                             logDebug("LocalPointScrape", "Scrape returned $pointScrapeResponse")
 
-                            pointScrapeResponse.points?.let { points ->
+                            pointScrapeResponse.pointsString?.let { points ->
                                 if (membershipCards != null) {
                                     val balance = CardBalance(
                                         points,
@@ -183,7 +197,6 @@ object WebScrapableManager {
             logDebug("LocalPointScrape", "Index out of bounds")
             timer?.cancel()
             timer = null
-            PointScrapingUtil.lastSeenURL = null
 
             if (isAddCard) {
                 membershipCards?.get(0)?.let { newCard ->
