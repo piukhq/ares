@@ -76,7 +76,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
         binding.viewModel = viewModel
         binding.membershipPlan = args.membershipPlan
-        binding.footerSimple.viewModel = viewModel
         binding.footerComposed.viewModel = viewModel
 
         addAuthAdapter = AddAuthAdapter(

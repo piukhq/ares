@@ -21,6 +21,7 @@
     <dimen name="debug_menu_guideline_begin_smaller_device">500dp</dimen>
     <dimen name="margin_card_on_boarding">18dp</dimen>
     <dimen name="margin_card_on_boarding_padding_bottom">12dp</dimen>
+    <dimen name="margin_progress_button_height">46dp</dimen>
 
     <!-- Card Item -->
     <dimen name="card_height">112dp</dimen>

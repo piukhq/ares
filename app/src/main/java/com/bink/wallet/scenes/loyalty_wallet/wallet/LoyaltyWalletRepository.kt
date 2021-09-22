@@ -201,7 +201,8 @@ class LoyaltyWalletRepository(
         membershipCardRequest: MembershipCardRequest,
         mutableMembershipCard: MutableLiveData<MembershipCard>,
         createError: MutableLiveData<Exception>,
-        addLoyaltyCardRequestMade: MutableLiveData<Boolean>
+        addLoyaltyCardRequestMade: MutableLiveData<Boolean>,
+        loading: MutableLiveData<Boolean>
     ) {
 
         membershipCardRequest.account?.let { safeAccount ->
@@ -209,6 +210,7 @@ class LoyaltyWalletRepository(
         }
 
         CoroutineScope(Dispatchers.Main).launch {
+            loading.value = true
             try {
                 val requestResult = withContext(Dispatchers.IO) {
                     apiService.createMembershipCardAsync(membershipCardRequest)
@@ -218,8 +220,10 @@ class LoyaltyWalletRepository(
                     requestResult.status = CardStatus(null, MembershipCardStatus.PENDING.status)
                 }
                 storeMembershipCard(requestResult)
+                loading.value = false
                 mutableMembershipCard.value = requestResult
             } catch (e: Exception) {
+                loading.value = false
                 createError.value = e
                 SentryUtils.logError(SentryErrorType.LOYALTY_API_REJECTED, e)
             }
