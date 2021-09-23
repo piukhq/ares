@@ -22,6 +22,8 @@ object WebScrapableManager {
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
     val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent(), MorrisonsScrapableAgent())
 
+    val deletedCards = ArrayList<String>()
+
     private var userName: String? = null
     private var password: String? = null
 
@@ -206,7 +208,18 @@ object WebScrapableManager {
                 updatedCards.value = membershipCards
             }
 
-            callback(membershipCards)
+            var nonDeletedCards = ArrayList<MembershipCard>()
+
+            if(membershipCards != null){
+                membershipCards?.forEach { membershipCard ->
+                    if(!deletedCards.contains(membershipCard.id)){
+                        nonDeletedCards.add(membershipCard)
+                    }
+                }
+            }
+
+            deletedCards.clear()
+            callback(nonDeletedCards)
         }
 
 
@@ -250,10 +263,11 @@ object WebScrapableManager {
     fun removeCredentials(cardId: String) {
         LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.USERNAME))
         LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
+
+        deletedCards.add(cardId)
     }
 
     private fun encryptedKeyForCardId(cardId: String, credentialType: CredentialType): String {
-
         return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, cardId, credentialType.name)
     }
 
