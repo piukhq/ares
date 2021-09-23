@@ -200,28 +200,33 @@ object WebScrapableManager {
             timer?.cancel()
             timer = null
 
-            if (isAddCard) {
-                membershipCards?.get(0)?.let { newCard ->
-                    newlyAddedCard.value = newCard
-                }
-            } else {
-                updatedCards.value = membershipCards
-            }
-
             var nonDeletedCards = ArrayList<MembershipCard>()
 
-            if(membershipCards != null){
+            if (membershipCards != null) {
                 membershipCards?.forEach { membershipCard ->
-                    if(!deletedCards.contains(membershipCard.id)){
+                    if (!deletedCards.contains(membershipCard.id)) {
                         nonDeletedCards.add(membershipCard)
                     }
                 }
             }
 
+            //Check to see if we're using the add card journey
+            //If we are we return the first card in the list to add in to the loyalty wallet
+            //If we aren't then we return the whole list
+
+            if (isAddCard) {
+                if (!nonDeletedCards.isNullOrEmpty()) {
+                    nonDeletedCards[0].let { newCard ->
+                        newlyAddedCard.value = newCard
+                    }
+                }
+            } else {
+                updatedCards.value = nonDeletedCards
+            }
+
             deletedCards.clear()
             callback(nonDeletedCards)
         }
-
 
     }
 

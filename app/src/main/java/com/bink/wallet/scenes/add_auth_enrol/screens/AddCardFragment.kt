@@ -78,7 +78,7 @@ class AddCardFragment : BaseAddAuthFragment() {
             WebScrapableManager.storeCredentialsFromRequest(it.id)
 
             WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
-                if (cards != null) {
+                if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }
             }
