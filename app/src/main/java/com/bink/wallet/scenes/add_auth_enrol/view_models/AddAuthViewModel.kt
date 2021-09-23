@@ -5,7 +5,6 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
-import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
@@ -17,7 +16,6 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
@@ -48,6 +46,9 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     private val _addLoyaltyCardRequestMade = MutableLiveData<Boolean>()
     val addLoyaltyCardRequestMade: LiveData<Boolean>
         get() = _addLoyaltyCardRequestMade
+    private val _loading = MutableLiveData<Boolean>()
+    val loading :LiveData<Boolean>
+    get() = _loading
 
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
@@ -148,7 +149,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             membershipCardRequest,
             _newMembershipCard,
             _createCardError,
-            _addLoyaltyCardRequestMade
+            _addLoyaltyCardRequestMade,
+            _loading
         )
     }
 
