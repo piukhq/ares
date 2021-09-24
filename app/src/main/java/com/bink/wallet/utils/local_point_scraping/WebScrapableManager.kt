@@ -22,6 +22,8 @@ object WebScrapableManager {
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
     val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent(), MorrisonsScrapableAgent())
 
+    val deletedCards = ArrayList<String>()
+
     private var userName: String? = null
     private var password: String? = null
 
@@ -198,17 +200,33 @@ object WebScrapableManager {
             timer?.cancel()
             timer = null
 
-            if (isAddCard) {
-                membershipCards?.get(0)?.let { newCard ->
-                    newlyAddedCard.value = newCard
+            var nonDeletedCards = ArrayList<MembershipCard>()
+
+            if (membershipCards != null) {
+                membershipCards?.forEach { membershipCard ->
+                    if (!deletedCards.contains(membershipCard.id)) {
+                        nonDeletedCards.add(membershipCard)
+                    }
                 }
-            } else {
-                updatedCards.value = membershipCards
             }
 
-            callback(membershipCards)
-        }
+            //Check to see if we're using the add card journey
+            //If we are we return the first card in the list to add in to the loyalty wallet
+            //If we aren't then we return the whole list
 
+            if (isAddCard) {
+                if (!nonDeletedCards.isNullOrEmpty()) {
+                    nonDeletedCards[0].let { newCard ->
+                        newlyAddedCard.value = newCard
+                    }
+                }
+            } else {
+                updatedCards.value = nonDeletedCards
+            }
+
+            deletedCards.clear()
+            callback(nonDeletedCards)
+        }
 
     }
 
@@ -250,10 +268,11 @@ object WebScrapableManager {
     fun removeCredentials(cardId: String) {
         LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.USERNAME))
         LocalStoreUtils.removeKey(encryptedKeyForCardId(cardId, CredentialType.PASSWORD))
+
+        deletedCards.add(cardId)
     }
 
     private fun encryptedKeyForCardId(cardId: String, credentialType: CredentialType): String {
-
         return String.format(BASE_ENCRYPTED_KEY_SHARED_PREFERENCES, cardId, credentialType.name)
     }
 
