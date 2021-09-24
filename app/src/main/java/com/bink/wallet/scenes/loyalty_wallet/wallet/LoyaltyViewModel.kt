@@ -121,7 +121,7 @@ class LoyaltyViewModel constructor(
     }
 
     private fun checkCardScrape(cards: List<MembershipCard>, context: Context?) {
-        val shouldScrapeCards = DateTimeUtils.haveTweleveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(context)
+        val shouldScrapeCards = DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(context)
 
         if (shouldScrapeCards) {
             scrapeCards(cards, context)

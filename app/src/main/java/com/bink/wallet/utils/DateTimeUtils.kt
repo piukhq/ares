@@ -26,7 +26,7 @@ class DateTimeUtils {
             return minutes > TWO_MINUTES
         }
 
-        fun haveTweleveHoursElapsed(time: Long): Boolean {
+        fun haveTwelveHoursElapsed(time: Long): Boolean {
             val difference = System.currentTimeMillis() - time
             val minutes = TimeUnit.MILLISECONDS.toMinutes(difference)
             return minutes > 720
