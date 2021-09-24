@@ -10,7 +10,7 @@ class DateTimeUtils {
 
         private const val ONE_HOUR = 60
         private const val TWO_MINUTES = 2
-        private const val TWO_HOURS = 120
+        private const val TWELVE_HOURS = 720
 
         fun hasAnHourElapsed(time: Long): Boolean {
             val currentTime = System.currentTimeMillis()
@@ -25,10 +25,10 @@ class DateTimeUtils {
             return minutes > TWO_MINUTES
         }
 
-        fun haveTwoHoursElapsed(time: Long): Boolean {
+        fun haveTwelveHoursElapsed(time: Long): Boolean {
             val difference = System.currentTimeMillis() - time
             val minutes = TimeUnit.MILLISECONDS.toMinutes(difference)
-            return minutes > TWO_HOURS
+            return minutes > TWELVE_HOURS
         }
 
         fun dateTimeFormatTransactionTime(timeStamp: Long) =
