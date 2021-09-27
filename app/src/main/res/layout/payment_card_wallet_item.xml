@@ -40,9 +40,7 @@
                 android:id="@+id/delete_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="@drawable/bg_delete"
-                android:gravity="end"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -75,10 +73,11 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/main_payment"
+            style="@style/ShadowedCardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +87,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/payment_card_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:backgroundGradient="@{paymentCard}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -198,6 +197,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.cardview.widget.CardView>
 </layout>
