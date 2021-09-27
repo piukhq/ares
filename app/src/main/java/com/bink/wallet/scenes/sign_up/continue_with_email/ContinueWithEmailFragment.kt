@@ -3,7 +3,6 @@ package com.bink.wallet.scenes.sign_up.continue_with_email
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -88,11 +87,13 @@ class ContinueWithEmailFragment :
 
         binding.checkboxTermsConditions.setOnCheckedChangeListener { _, isChecked ->
             binding.signUpButton.isEnabled = false
-            validateCredentials(isChecked)
+            validateCredentials()
         }
 
-        binding.emailField.doAfterTextChanged {
-            validateCredentials(binding.checkboxTermsConditions.isChecked)
+        binding.emailField.setOnFocusChangeListener { _, focus ->
+            if (!focus) {
+                validateCredentials()
+            }
         }
 
         binding.signUpButton.setOnClickListener {
@@ -110,7 +111,19 @@ class ContinueWithEmailFragment :
 
     }
 
-    private fun validateCredentials(isTermsChecked: Boolean) {
+    override fun onResume() {
+        super.onResume()
+        setupKeyboardHiddenListener(binding.container, ::validateCredentials)
+        registerKeyboardHiddenLayoutListener(binding.container)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        removeKeyboardHiddenLayoutListener(binding.container)
+    }
+
+    private fun validateCredentials() {
+        val isTermsChecked = binding.checkboxTermsConditions.isChecked
         binding.emailField.text.trim().toString().let {
             if (it.isNotEmpty()) {
                 binding.emailField.error =
@@ -123,7 +136,6 @@ class ContinueWithEmailFragment :
                     }
             }
         }
-
     }
 
     private fun showMagicLinkFail() {
