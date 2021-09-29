@@ -10,17 +10,14 @@ import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardCodes
 import com.bink.wallet.utils.enums.MembershipCardStatus
-import com.bink.wallet.utils.local_point_scraping.agents.MorrisonsScrapableAgent
-import com.bink.wallet.utils.local_point_scraping.agents.SuperdrugScrapableAgent
-import com.bink.wallet.utils.local_point_scraping.agents.TescoScrapableAgent
-import com.bink.wallet.utils.local_point_scraping.agents.WaterstoneScrapableAgent
+import com.bink.wallet.utils.local_point_scraping.agents.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 object WebScrapableManager {
 
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
-    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent(), MorrisonsScrapableAgent())
+    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent(), MorrisonsScrapableAgent(), StarbucksScrapableAgent())
 
     val deletedCards = ArrayList<String>()
 
