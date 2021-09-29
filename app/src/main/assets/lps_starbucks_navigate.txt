@@ -1,5 +1,5 @@
-var username = "Jbest@bink.com"
-var password = "Password01!"
+var username = "%@"
+var password = "%@"
 var configurator = "%@"
 
 var formQuery = "form#starbucks-login-form"
