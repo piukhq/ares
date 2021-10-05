@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.databinding.PreferenceItemLayoutBinding
 import com.bink.wallet.model.request.Preference
 import com.bink.wallet.utils.UtilFunctions
+import java.lang.NumberFormatException
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,
@@ -31,13 +32,20 @@ class PreferenceAdapter(
         fun bind(item: Preference) {
             with(binding) {
                 preference = item
+
+                preferenceItem.isChecked = try {
+                    item.value?.toInt() == 1
+                } catch (e: NumberFormatException) {
+                    false
+                }
+
                 preferenceItem.setOnClickListener {
                     if (UtilFunctions.isNetworkAvailable(it.context, true)) {
-                            onClickListener(
-                                item,
-                                preferenceItem.isChecked,
-                                preferenceItem
-                            )
+                        onClickListener(
+                            item,
+                            preferenceItem.isChecked,
+                            preferenceItem
+                        )
                     }
                 }
                 executePendingBindings()
