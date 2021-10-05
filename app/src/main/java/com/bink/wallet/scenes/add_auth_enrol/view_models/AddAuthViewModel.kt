@@ -15,11 +15,12 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
+import com.bink.wallet.utils.REMEMBERABLE_FIELD_NAMES
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
+import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
@@ -47,8 +48,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     val addLoyaltyCardRequestMade: LiveData<Boolean>
         get() = _addLoyaltyCardRequestMade
     private val _loading = MutableLiveData<Boolean>()
-    val loading :LiveData<Boolean>
-    get() = _loading
+    val loading: LiveData<Boolean>
+        get() = _loading
 
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
@@ -98,7 +99,27 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             }
         }
         arrangeAuthItems()
+
+        getSaveCredentialsField()?.let {
+            addAuthItemsList.add(it)
+        }
+
         _addRegisterFieldsRequest.value = addRegisterFieldsRequest
+    }
+
+    private fun getSaveCredentialsField(): AddAuthItemWrapper? {
+        addAuthItemsList.forEach { item ->
+            if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+                if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase())) {
+                    val planField = PlanField("Remember my Details", null, "remember_my_details", 3, null, "test desc", null, null)
+                    return AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, EMPTY_STRING))
+                }
+            } else {
+            }
+
+        }
+
+        return null
     }
 
     private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
