@@ -1,9 +1,11 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
 import com.bink.wallet.model.request.membership_card.Account
+import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.REMEMBER_DETAILS_COMMON_NAME
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.TypeOfField
@@ -120,12 +122,17 @@ object FormsUtil {
         }
 
         value?.let { fieldValue ->
-            if(!existingData.contains(fieldValue)){
+            if (!existingData.contains(fieldValue)) {
                 existingData.add(fieldValue)
             }
         }
 
         commonName?.let { LocalStoreUtils.setAppSharedPref(it, Gson().toJson(existingData)) }
+    }
+
+    fun stripRememberDetailsField(request: MembershipCardRequest): MembershipCardRequest {
+        request.account?.registration_fields!!.removeAll { it.common_name == REMEMBER_DETAILS_COMMON_NAME }
+        return request
     }
 
     fun getFormFields(commonName: String): ArrayList<String>? {
