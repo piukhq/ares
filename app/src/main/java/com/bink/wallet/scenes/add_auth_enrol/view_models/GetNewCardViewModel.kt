@@ -36,6 +36,9 @@ class GetNewCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
             FormsUtil.getAccount(),
             currentMembershipPlan.id
         )
+
+        checkDetailsToSave(currentRequest)
+
         if (isRetryJourney) {
             updateMembershipCard(membershipCardId, currentRequest)
         } else {

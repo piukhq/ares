@@ -3,9 +3,14 @@ package com.bink.wallet.scenes.add_auth_enrol
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.TypeOfField
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import java.util.*
 
 object FormsUtil {
 
@@ -17,7 +22,7 @@ object FormsUtil {
         val isSensitive = planField.type == FieldType.SENSITIVE.type
         fields[position] = FormField(
             planField,
-            PlanFieldsRequest(planField.column, null, null, isSensitive = isSensitive)
+            PlanFieldsRequest(planField.column, null, null, isSensitive = isSensitive, common_name = planField.common_name)
         )
     }
 
@@ -65,6 +70,7 @@ object FormsUtil {
 
         fields.forEach { field ->
             val typeOfField = field.value.planField.typeOfField
+            field.value.planField.common_name
             field.value.fieldsRequest?.isSensitive =
                 field.value.planField.type == FieldType.SENSITIVE.type
 
@@ -102,6 +108,33 @@ object FormsUtil {
 
     fun getFormField(position: Int): FormField? {
         return fields[position]
+    }
+
+    fun saveFormField(commonName: String?, value: String?) {
+        var existingData = ArrayList<String>()
+
+        commonName?.let { fieldName ->
+            getFormFields(fieldName)?.let {
+                existingData = it
+            }
+        }
+
+        value?.let { fieldValue ->
+            if(!existingData.contains(fieldValue)){
+                existingData.add(fieldValue)
+            }
+        }
+
+        commonName?.let { LocalStoreUtils.setAppSharedPref(it, Gson().toJson(existingData)) }
+    }
+
+    fun getFormFields(commonName: String): ArrayList<String>? {
+        LocalStoreUtils.getAppSharedPref(commonName)?.let { formFieldsAsString ->
+            val gson = GsonBuilder().create()
+            return gson.fromJson(formFieldsAsString, object : TypeToken<ArrayList<String>>() {}.type)
+        }
+
+        return null
     }
 
     private fun areAllFormFieldsValid(): Boolean {

@@ -13,6 +13,7 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
 import com.bink.wallet.utils.REMEMBERABLE_FIELD_NAMES
@@ -21,6 +22,7 @@ import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
+import com.bink.wallet.utils.logDebug
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
@@ -111,15 +113,27 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         addAuthItemsList.forEach { item ->
             if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
                 if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase())) {
-                    val planField = PlanField("Remember my Details", null, "remember_my_details", 3, null, "test desc", null, null)
+                    val planField = PlanField("Remember my Details", null, "remember_my_details", 3, null, "Remember my Details", null, null)
                     return AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, EMPTY_STRING))
                 }
-            } else {
             }
-
         }
 
         return null
+    }
+
+    fun checkDetailsToSave(membershipCardRequest: MembershipCardRequest){
+        membershipCardRequest.account?.authorise_fields?.forEach { authField ->
+            if (REMEMBERABLE_FIELD_NAMES.contains(authField.common_name?.toLowerCase())) {
+                FormsUtil.saveFormField(authField.common_name?.toLowerCase(), authField.value)
+            }
+        }
+
+        membershipCardRequest.account?.enrol_fields?.forEach { enrolField ->
+            if (REMEMBERABLE_FIELD_NAMES.contains(enrolField.common_name?.toLowerCase())) {
+                FormsUtil.saveFormField(enrolField.common_name?.toLowerCase(), enrolField.value)
+            }
+        }
     }
 
     private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
