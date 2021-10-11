@@ -18,10 +18,10 @@ import zendesk.support.requestlist.RequestListActivity
 class ZendeskRepository {
 
     fun launchZendesk(fragment: Fragment, callbackUser: (User) -> Unit) {
-
         if (shouldShowUserDetailsDialog()) {
             buildAndShowUserDetailsDialog(fragment, callbackUser)
         } else {
+            setIdentity()
             fragment.context?.let { context ->
                 RequestListActivity.builder()
                     .show(context)
@@ -32,7 +32,7 @@ class ZendeskRepository {
     private fun buildAndShowUserDetailsDialog(fragment: Fragment, callbackUser: (User) -> Unit) {
         val dialog: AlertDialog
         fragment.context?.let { context ->
-        val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(context)
             builder.setTitle(fragment.getString(R.string.zendesk_user_details_prompt_title))
             val container = fragment.layoutInflater.inflate(R.layout.layout_zendesk_user_details, null)
             val etFirstName = container.findViewById<EditText>(R.id.et_first_name)
