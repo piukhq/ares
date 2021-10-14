@@ -619,6 +619,8 @@
     <string name="magic_link_error_title">Something went wrong</string>
 
     <string name="pll_403_message_body">Unable to remove link. Payment and Loyalty card combination exists in other wallets.</string>
+    <string name="clear_stored_cred_title">Clear Stored Credentials</string>
+    <string name="clear_stored_cred_message">Would you like to also remove stored credentials from this device?</string>
     <!-- Dev Names -->
     <string-array name="dev_names">
         <item>Paul Batty</item>

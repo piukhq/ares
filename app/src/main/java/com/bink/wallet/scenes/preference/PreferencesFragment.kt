@@ -10,11 +10,9 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
-import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,8 +79,8 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             lateinit var dialog: AlertDialog
             val builder = context?.let { AlertDialog.Builder(it) }
             if (builder != null) {
-                builder.setTitle("Clear Stored Credentials")
-                builder.setMessage("Would you like to also remove stored credentials from this device?")
+                builder.setTitle(getString(R.string.clear_stored_cred_title))
+                builder.setMessage(getString(R.string.clear_stored_cred_message))
                 val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                     when (which) {
                         DialogInterface.BUTTON_POSITIVE -> {
