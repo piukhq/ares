@@ -16,12 +16,9 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.adapter.BaseAddAuthViewHolder
-import com.bink.wallet.utils.DATE_FORMAT
-import com.bink.wallet.utils.SimplifiedTextWatcher
-import com.bink.wallet.utils.UtilFunctions
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
-import com.bink.wallet.utils.logError
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,7 +26,8 @@ import java.util.*
 
 class TextFieldViewHolder(
     val onNavigateToBarcodeScan: ((Account) -> Unit),
-    val binding: AddAuthTextItemBinding
+    val binding: AddAuthTextItemBinding,
+    val autoCompleteToggle: (Int?, ArrayList<String>?) -> Unit
 ) :
     BaseAddAuthViewHolder<AddAuthItemWrapper>(binding) {
 
@@ -115,7 +113,16 @@ class TextFieldViewHolder(
 
             setOnFocusChangeListener { _, isFocus ->
                 if (!isFocus) {
+                    autoCompleteToggle(null, null)
                     checkIfFieldIsValid(item)
+                } else {
+                    planField.common_name?.let { commonName ->
+                        if (REMEMBERABLE_FIELD_NAMES.contains(commonName)) {
+                            FormsUtil.getFormFields(commonName)?.let {
+                                autoCompleteToggle(position, it)
+                            }
+                        }
+                    }
                 }
             }
             setOnEditorActionListener { _, actionId, _ ->
