@@ -75,7 +75,7 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
     }
 
     private fun promptPreferenceClear(preferenceSlug: String, isChecked: Boolean) {
-        if (preferenceSlug == REMEMBER_DETAILS_KEY && !isChecked) {
+        if ((preferenceSlug == REMEMBER_DETAILS_KEY || preferenceSlug == CLEAR_PREF_KEY) && !isChecked) {
             lateinit var dialog: AlertDialog
             val builder = context?.let { AlertDialog.Builder(it) }
             if (builder != null) {
@@ -86,6 +86,10 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
                         DialogInterface.BUTTON_POSITIVE -> {
                             REMEMBERABLE_FIELD_NAMES.forEach { fieldName ->
                                 LocalStoreUtils.removeKey(fieldName)
+                            }
+
+                            if (isNetworkAvailable(requireContext(), true)) {
+                                viewModel.getPreferences()
                             }
                         }
                         DialogInterface.BUTTON_NEUTRAL -> {

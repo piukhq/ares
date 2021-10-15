@@ -94,4 +94,5 @@ const val MAGIC_LINK_PROD_SLUG = "matalan-reward-card"
 
 val REMEMBERABLE_FIELD_NAMES = arrayListOf("email", "first_name", "last_name", "phone", "date of birth")
 val REMEMBER_DETAILS_KEY = "remember-my-details"
+val CLEAR_PREF_KEY = "clear_preferences"
 val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"

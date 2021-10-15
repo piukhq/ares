@@ -115,12 +115,6 @@ object FormsUtil {
     fun saveFormField(commonName: String?, value: String?) {
         var existingData = ArrayList<String>()
 
-        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
-            if (commonName == "email" && it == value) {
-                return
-            }
-        }
-
         commonName?.let { fieldName ->
             getFormFields(fieldName)?.let {
                 existingData = it
@@ -133,6 +127,9 @@ object FormsUtil {
             }
         }
 
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
+            existingData.remove(it)
+        }
 
         commonName?.let { LocalStoreUtils.setAppSharedPref(it, Gson().toJson(existingData)) }
     }
