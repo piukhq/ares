@@ -115,6 +115,12 @@ object FormsUtil {
     fun saveFormField(commonName: String?, value: String?) {
         var existingData = ArrayList<String>()
 
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
+            if (commonName == "email" && it == value) {
+                return
+            }
+        }
+
         commonName?.let { fieldName ->
             getFormFields(fieldName)?.let {
                 existingData = it
@@ -127,6 +133,7 @@ object FormsUtil {
             }
         }
 
+
         commonName?.let { LocalStoreUtils.setAppSharedPref(it, Gson().toJson(existingData)) }
     }
 
@@ -136,12 +143,22 @@ object FormsUtil {
     }
 
     fun getFormFields(commonName: String): ArrayList<String>? {
-        LocalStoreUtils.getAppSharedPref(commonName)?.let { formFieldsAsString ->
-            val gson = GsonBuilder().create()
-            return gson.fromJson(formFieldsAsString, object : TypeToken<ArrayList<String>>() {}.type)
+        var fields: ArrayList<String>? = null
+
+        if (commonName == "email") {
+            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { loggedInEmail ->
+                fields = arrayListOf(loggedInEmail)
+            }
         }
 
-        return null
+        LocalStoreUtils.getAppSharedPref(commonName)?.let { formFieldsAsString ->
+            val gson = GsonBuilder().create()
+            if (fields == null) fields = ArrayList<String>()
+            fields?.addAll(gson.fromJson(formFieldsAsString, object : TypeToken<ArrayList<String>>() {}.type))
+            return fields
+        }
+
+        return fields
     }
 
     private fun areAllFormFieldsValid(): Boolean {
