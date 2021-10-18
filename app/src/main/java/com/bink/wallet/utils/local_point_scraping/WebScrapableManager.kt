@@ -21,6 +21,8 @@ object WebScrapableManager {
 
     val deletedCards = ArrayList<String>()
 
+    var currentAgent: WebScrapable? = null
+
     private var userName: String? = null
     private var password: String? = null
 
@@ -89,6 +91,7 @@ object WebScrapableManager {
         logDebug("LocalPointScrape", "tryScrapeCards index: $index")
         timer?.cancel()
         timer = null
+        currentAgent = null
 
         if (timer == null) {
             timer = object : CountDownTimer(60000, 1000) {
@@ -105,7 +108,7 @@ object WebScrapableManager {
                         }
                     }
 
-                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue)
+                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant?.remoteName, isAddCard)
 
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 }
@@ -125,6 +128,8 @@ object WebScrapableManager {
                 val agent = scrapableAgents.firstOrNull {
                     it.membershipPlanId.toString().equals(card.membership_plan)
                 }
+
+                currentAgent = agent
 
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
@@ -158,7 +163,8 @@ object WebScrapableManager {
                         context,
                         agent.merchant,
                         credentials.email,
-                        credentials.password
+                        credentials.password,
+                        isAddCard
                     ) { pointScrapeResponse ->
 
                         if (agent.isEnabled(remoteConfig)) {
