@@ -20,9 +20,19 @@ object SentryUtils {
         logError(sentryError, userInfo)
     }
 
-    fun logError(sentryError: SentryErrorType, userInfo: String?) {
+    fun logError(sentryError: SentryErrorType, errorMessage: String?) {
         Sentry.withScope { scope ->
-            userInfo?.let { info -> scope.setExtra("userInfo", info) }
+            errorMessage?.let { info -> scope.setExtra("error_message", info) }
+            Sentry.captureException(Exception("${sentryError.localCode} - ${sentryError.issue}"))
+            scope.clear()
+        }
+    }
+
+    fun logError(sentryError: SentryErrorType, errorMessage: String?, merchant: String?, isRefresh: Boolean?) {
+        Sentry.withScope { scope ->
+            isRefresh?.let { scope.setExtra("balance_refresh", (!it).toString()) }
+            errorMessage?.let { scope.setExtra("error_message", it) }
+            merchant?.let { scope.setExtra("merchant", it) }
             Sentry.captureException(Exception("${sentryError.localCode} - ${sentryError.issue}"))
             scope.clear()
         }
