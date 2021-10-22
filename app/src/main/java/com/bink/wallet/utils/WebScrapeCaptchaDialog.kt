@@ -1,4 +1,4 @@
-package com.bink.wallet.utils.local_point_scraping.captcha
+package com.bink.wallet.utils
 
 import android.app.Dialog
 import android.content.Context
@@ -7,8 +7,6 @@ import android.os.CountDownTimer
 import android.view.View
 import android.webkit.WebView
 import com.bink.wallet.databinding.WebscrapeCaptchaFragmentBinding
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.readFileText
 
 class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebView?, private val loginJavascript: String) : Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 

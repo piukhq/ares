@@ -5,6 +5,9 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.currentAgent
+import com.bink.wallet.model.getRemoteAuthFields
+import com.bink.wallet.model.isEnabled
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
@@ -15,6 +18,7 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.RemoteConfigUtil
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
@@ -47,8 +51,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     val addLoyaltyCardRequestMade: LiveData<Boolean>
         get() = _addLoyaltyCardRequestMade
     private val _loading = MutableLiveData<Boolean>()
-    val loading :LiveData<Boolean>
-    get() = _loading
+    val loading: LiveData<Boolean>
+        get() = _loading
 
     fun addPlanField(planField: PlanField) {
         val addAuthItemWrapper =
@@ -102,16 +106,9 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     }
 
     private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
-
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
-
-        for (agent in WebScrapableManager.scrapableAgents) {
-            membershipPlanId.toIntOrNull()?.let { planId ->
-                if (agent.isEnabled(remoteConfig)) {
-                    if (agent.membershipPlanId == planId) {
-                        return agent.getRemoteAuthFields(remoteConfig)
-                    }
-                }
+        RemoteConfigUtil().localPointsCollection?.currentAgent(membershipPlanId.toIntOrNull())?.let { agent ->
+            if (agent.isEnabled()) {
+                return agent.fields.getRemoteAuthFields()
             }
         }
 

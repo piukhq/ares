@@ -3,9 +3,9 @@ package com.bink.wallet.utils.local_point_scraping
 import android.annotation.SuppressLint
 import android.content.Context
 import android.webkit.*
+import com.bink.wallet.model.LocalPointsAgent
 import com.bink.wallet.model.PointScrapingResponse
 import com.bink.wallet.utils.*
-import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -16,12 +16,12 @@ object PointScrapingUtil {
 
     fun performNewScrape(
         context: Context,
-        pointScrapeSite: PointScrapeSite?,
+        localPointsAgent: LocalPointsAgent?,
         email: String?,
         password: String?,
         callback: (PointScrapingResponse) -> Unit
     ) {
-        if (pointScrapeSite == null || email == null || password == null) return
+        if (localPointsAgent == null || email == null || password == null) return
 
         webView = getWebView(context)
         clearWebViewCookies()
@@ -30,7 +30,7 @@ object PointScrapingUtil {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                getJavaScriptForMerchant(context, pointScrapeSite, email, password).let { javascript ->
+                getJavaScriptForMerchant(context, localPointsAgent, email, password).let { javascript ->
 
                     if (javascript == null) {
                         SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue)
@@ -47,7 +47,7 @@ object PointScrapingUtil {
                                 SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue)
                             } else {
                                 with(serializedResponse) {
-                                    if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
+                                    if (localPointsAgent.merchant == "tesco" && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
                                         //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
                                         webView?.evaluateJavascript(javascript) {}
                                     }
@@ -76,7 +76,7 @@ object PointScrapingUtil {
             }
         }
 
-        webView?.loadUrl(pointScrapeSite.signInURL)
+        webView?.loadUrl(localPointsAgent.points_collection_url)
     }
 
     private fun getWebView(context: Context): WebView {
@@ -100,8 +100,8 @@ object PointScrapingUtil {
         CookieManager.getInstance().flush()
     }
 
-    private fun getJavaScriptForMerchant(context: Context, site: PointScrapeSite, email: String, password: String): String? {
-        val javascriptClass = "lps_${site.remoteName}_navigate.txt".readFileText(context)
+    private fun getJavaScriptForMerchant(context: Context, site: LocalPointsAgent, email: String, password: String): String? {
+        val javascriptClass = "lps_${site.merchant}_navigate.txt".readFileText(context)
         return if (javascriptClass == null) {
             null
         } else {

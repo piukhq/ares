@@ -19,7 +19,6 @@ import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.ApiVersion
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.local_point_scraping.PointScrapingUtil
-import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -125,15 +124,15 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             dialog = builder.create()
 
             dialog.show()
-            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-                    PointScrapingUtil
-                        .performNewScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
-                            logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
-                        }
-                    dialog.dismiss()
-                }
-            }
+//            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+//                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
+//                    PointScrapingUtil
+//                        .performNewScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
+//                            logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
+//                        }
+//                    dialog.dismiss()
+//                }
+//            }
         }
 
     }
