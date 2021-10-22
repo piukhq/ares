@@ -46,10 +46,10 @@ object WebScrapableManager {
                     request.account?.authorise_fields?.let { authoriseFields ->
 
                         userName = authoriseFields.firstOrNull {
-                            (it.column ?: "") == scrapableAgent.fields.username_field_common_name
+                            (it.column ?: "").toLowerCase() == scrapableAgent.fields.username_field_common_name
                         }?.value
                         password = authoriseFields.firstOrNull {
-                            (it.column ?: "") == "password"
+                            (it.column ?: "").toLowerCase() == "password"
                         }?.value
 
                         request.account.authorise_fields!!.removeAll { it.value == userName }
