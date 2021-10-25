@@ -213,4 +213,5 @@
 
     <dimen name="bouncerEnterCardManuallyMargin">200dp</dimen>
     <dimen name="magic_link_success_height">200dp</dimen>
+    <dimen name="checkbox_margin_top">13dp</dimen>
 </resources>
