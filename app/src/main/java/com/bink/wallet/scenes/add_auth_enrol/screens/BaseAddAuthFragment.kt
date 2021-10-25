@@ -200,7 +200,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             adapter = AutoCompleteAdapter(autoCompleteFields) { value ->
                 formPos?.let {
                     viewModel.addAuthItemsList[it].fieldsRequest?.value = value
-                    addAuthAdapter?.notifyDataSetChanged()
+                    addAuthAdapter?.notifyItemChanged(it)
                 }
             }
             visibility = View.VISIBLE
