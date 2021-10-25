@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.LabeledIntent
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Html
 import android.view.View
 import com.bink.wallet.BaseFragment
@@ -48,6 +49,20 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
             binding.goToInbox.visibility = View.GONE
         }
 
+        startButtonFadeInCountdown()
+    }
+
+    private fun startButtonFadeInCountdown() {
+        val countdown = object : CountDownTimer(3000, 1000) {
+            override fun onFinish() {
+                binding.goToInbox.animate().alpha(1.0f)
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+            }
+        }
+
+        countdown.start()
     }
 
     private fun setSubtitle(email: String) {
