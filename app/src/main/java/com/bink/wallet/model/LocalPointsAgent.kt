@@ -14,7 +14,7 @@ data class LocalPointsAgent(
     val merchant: String,
     val membership_plan_id: AgentMembershipPlanId,
     val enabled: AgentEnabled,
-    val loyaltyScheme: AgentLoyaltyScheme,
+    val loyalty_scheme: AgentLoyaltyScheme,
     val points_collection_url: String,
     val fields: AgentFields,
     val script_file_name: String

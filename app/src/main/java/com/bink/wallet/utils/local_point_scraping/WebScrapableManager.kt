@@ -120,7 +120,7 @@ object WebScrapableManager {
 
             retrieveCredentials(card.id).let { credentials ->
 
-                val agent = localPointsCollection?.currentAgent(card.id.toIntOrNull())
+                val agent = localPointsCollection?.currentAgent(card.membership_plan?.toIntOrNull())
 
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
@@ -152,9 +152,9 @@ object WebScrapableManager {
                                 if (membershipCards != null) {
                                     val balance = CardBalance(
                                         points,
-                                        agent.loyaltyScheme.balance_currency,
-                                        agent.loyaltyScheme.balance_prefix,
-                                        agent.loyaltyScheme.balance_suffix,
+                                        agent.loyalty_scheme.balance_currency,
+                                        agent.loyalty_scheme.balance_prefix,
+                                        agent.loyalty_scheme.balance_suffix,
                                         (System.currentTimeMillis() / 1000)
                                     )
                                     membershipCards!![index].balances = arrayListOf(balance)
