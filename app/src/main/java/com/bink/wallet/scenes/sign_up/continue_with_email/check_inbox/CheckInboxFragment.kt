@@ -17,6 +17,8 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
 
     override val layoutRes = R.layout.check_inbox_fragment
 
+    private var countDownTimer: CountDownTimer? = null
+
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .with(binding.toolbar)
@@ -52,8 +54,14 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
         startButtonFadeInCountdown()
     }
 
+    override fun onPause() {
+        super.onPause()
+        countDownTimer?.cancel()
+        countDownTimer = null
+    }
+
     private fun startButtonFadeInCountdown() {
-        val countdown = object : CountDownTimer(3000, 1000) {
+        countDownTimer = object : CountDownTimer(3000, 1000) {
             override fun onFinish() {
                 binding.goToInbox.animate().alpha(1.0f)
             }
@@ -62,7 +70,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
             }
         }
 
-        countdown.start()
+        countDownTimer?.start()
     }
 
     private fun setSubtitle(email: String) {
