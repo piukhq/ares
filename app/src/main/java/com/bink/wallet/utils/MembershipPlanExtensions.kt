@@ -1,15 +1,13 @@
 package com.bink.wallet.utils
 
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import java.util.Locale
-import kotlin.Comparator
 
 fun List<MembershipPlan>.sortedByCardTypeAndCompany(): List<MembershipPlan> =
     this.sortedWith(
         Comparator<MembershipPlan> { membershipPlan1, membershipPlan2 ->
             membershipPlan1.comparePlans(membershipPlan2)
         }.thenBy {
-            it.account?.company_name?.toLowerCase(Locale.ENGLISH)
+            it.account?.company_name?.lowercase()
         }
     )
 
