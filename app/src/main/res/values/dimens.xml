@@ -213,4 +213,5 @@
 
     <dimen name="bouncerEnterCardManuallyMargin">200dp</dimen>
     <dimen name="magic_link_success_height">200dp</dimen>
+    <dimen name="auto_complete_corner_radius">4dp</dimen>
 </resources>

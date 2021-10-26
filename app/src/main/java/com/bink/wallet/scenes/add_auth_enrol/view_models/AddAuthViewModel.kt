@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.add_auth_enrol.view_models
 
-import android.annotation.SuppressLint
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -18,20 +17,20 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.REMEMBERABLE_FIELD_NAMES
-import com.bink.wallet.utils.REMEMBER_DETAILS_COMMON_NAME
-import com.bink.wallet.utils.REMEMBER_DETAILS_KEY
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.util.*
 
-@SuppressLint("DefaultLocale")
 open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository, private var loginRepository: LoginRepository) :
     BaseViewModel() {
 
@@ -122,8 +121,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         isRememberDetailsChecked { isChecked ->
             addAuthItemsList.forEach { item ->
                 if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-                    if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase())) {
-                        val planField = PlanField("Remember my Details", null, REMEMBER_DETAILS_COMMON_NAME, 3, null, "Remember my Details", null, null)
+                    if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase(Locale.ENGLISH))) {
+                        val planField = PlanField(REMEMBER_DETAILS_DISPLAY_NAME, null, REMEMBER_DETAILS_COMMON_NAME, 3, null, REMEMBER_DETAILS_DISPLAY_NAME, null, null)
                         callback(AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, isChecked.toString())))
                         return@isRememberDetailsChecked
                     }
@@ -137,29 +136,45 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         val shouldSaveDetails = membershipCardRequest.account?.registration_fields?.filter { it.common_name == REMEMBER_DETAILS_COMMON_NAME }
 
         if (!shouldSaveDetails.isNullOrEmpty()) {
-            if (shouldSaveDetails[0].value == "true") {
+            if (shouldSaveDetails[0].value == true.toString()) {
+                membershipCardRequest.account.add_fields?.forEach { addField ->
+                    if (REMEMBERABLE_FIELD_NAMES.contains(addField.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(addField.common_name?.toLowerCase(Locale.ENGLISH), addField.value)
+                    }
+                }
+
                 membershipCardRequest.account.authorise_fields?.forEach { authField ->
-                    if (REMEMBERABLE_FIELD_NAMES.contains(authField.common_name?.toLowerCase())) {
-                        FormsUtil.saveFormField(authField.common_name?.toLowerCase(), authField.value)
+                    if (REMEMBERABLE_FIELD_NAMES.contains(authField.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(authField.common_name?.toLowerCase(Locale.ENGLISH), authField.value)
                     }
                 }
 
                 membershipCardRequest.account.enrol_fields?.forEach { enrolField ->
-                    if (REMEMBERABLE_FIELD_NAMES.contains(enrolField.common_name?.toLowerCase())) {
-                        FormsUtil.saveFormField(enrolField.common_name?.toLowerCase(), enrolField.value)
+                    if (REMEMBERABLE_FIELD_NAMES.contains(enrolField.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(enrolField.common_name?.toLowerCase(Locale.ENGLISH), enrolField.value)
+                    }
+                }
+
+                membershipCardRequest.account.registration_fields?.forEach { registrationFields ->
+                    if (REMEMBERABLE_FIELD_NAMES.contains(registrationFields.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(registrationFields.common_name?.toLowerCase(Locale.ENGLISH), registrationFields.value)
                     }
                 }
             }
 
             viewModelScope.launch {
                 try {
-                    loginRepository.setPreference(
-                        requestBody = JSONObject().put(
-                            REMEMBER_DETAILS_KEY,
-                            if (shouldSaveDetails[0].value == "true") 1 else 0
-                        ).toString()
-                    )
+                    withContext(Dispatchers.IO) {
+                        loginRepository.setPreference(
+                            requestBody = JSONObject().put(
+                                REMEMBER_DETAILS_KEY,
+                                if (shouldSaveDetails[0].value == true.toString()) 1 else 0
+                            ).toString()
+                        )
+                    }
+
                 } catch (e: Exception) {
+
                 }
             }
 
@@ -169,9 +184,8 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     private fun isRememberDetailsChecked(callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                loginRepository.getPreferences().filter { it.slug == REMEMBER_DETAILS_KEY }.let {
-                    callback((it[0].value == "1"))
-                }
+                val preferences = withContext(Dispatchers.IO) { loginRepository.getPreferences() }
+                callback((preferences.filter { it.slug == REMEMBER_DETAILS_KEY }[0].value == "1"))
             } catch (e: Exception) {
                 callback(false)
             }

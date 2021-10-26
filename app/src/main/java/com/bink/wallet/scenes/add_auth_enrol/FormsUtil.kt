@@ -4,6 +4,7 @@ import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.utils.EMAIL_COMMON_NAME
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.REMEMBER_DETAILS_COMMON_NAME
 import com.bink.wallet.utils.UtilFunctions
@@ -142,7 +143,7 @@ object FormsUtil {
     fun getFormFields(commonName: String): ArrayList<String>? {
         var fields: ArrayList<String>? = null
 
-        if (commonName == "email") {
+        if (commonName == EMAIL_COMMON_NAME) {
             LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { loggedInEmail ->
                 fields = arrayListOf(loggedInEmail)
             }

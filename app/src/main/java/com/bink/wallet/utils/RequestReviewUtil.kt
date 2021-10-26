@@ -5,6 +5,7 @@ import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.SharedPreferenceManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import java.util.*
 
 
 object RequestReviewUtil {
@@ -60,7 +61,7 @@ object RequestReviewUtil {
                 val remoteConfig = FirebaseRemoteConfig.getInstance()
                 val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
 
-                if (isReviewEnabled.toLowerCase().equals("true")) {
+                if (isReviewEnabled.toLowerCase(Locale.ENGLISH).equals("true")) {
                     val requestReview = reviewManager.requestReviewFlow()
                     reviewRequested()
 
