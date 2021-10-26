@@ -51,6 +51,10 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
             binding.goToInbox.visibility = View.GONE
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         startButtonFadeInCountdown()
     }
 
@@ -61,6 +65,7 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
     }
 
     private fun startButtonFadeInCountdown() {
+        if(binding.goToInbox.alpha == 1.0f) return
         countDownTimer = object : CountDownTimer(3000, 1000) {
             override fun onFinish() {
                 binding.goToInbox.animate().alpha(1.0f)
