@@ -128,7 +128,7 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
                     PointScrapingUtil
-                        .performNewScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
+                        .performNewScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString(), false) { pointScrapeResponse ->
                             logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
                         }
                     dialog.dismiss()

@@ -19,6 +19,7 @@ object PointScrapingUtil {
         pointScrapeSite: PointScrapeSite?,
         email: String?,
         password: String?,
+        isAddCardJourney: Boolean?,
         callback: (PointScrapingResponse) -> Unit
     ) {
         if (pointScrapeSite == null || email == null || password == null) return
@@ -33,7 +34,7 @@ object PointScrapingUtil {
                 getJavaScriptForMerchant(context, pointScrapeSite, email, password).let { javascript ->
 
                     if (javascript == null) {
-                        SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue)
+                        SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue, pointScrapeSite.remoteName, isAddCardJourney)
                         return
                     }
 
@@ -44,7 +45,7 @@ object PointScrapingUtil {
                             logDebug("LocalPointScrape", "serializedResponse: $serializedResponse")
 
                             if (serializedResponse == null) {
-                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue)
+                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue, pointScrapeSite.remoteName, isAddCardJourney)
                             } else {
                                 with(serializedResponse) {
                                     if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
@@ -54,9 +55,9 @@ object PointScrapingUtil {
 
                                     if (errorMessage != null) {
                                         if (didAttemptLogin == true) {
-                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage")
+                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage", pointScrapeSite.remoteName, isAddCardJourney)
                                         } else {
-                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage")
+                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage", pointScrapeSite.remoteName, isAddCardJourney)
                                         }
                                     }
 
