@@ -26,6 +26,7 @@ object PointScrapingUtil {
         localPointsAgent: LocalPointsAgent?,
         email: String?,
         password: String?,
+        isAddCardJourney: Boolean?,
         callback: (PointScrapingResponse) -> Unit
     ) {
         if (localPointsAgent == null || email == null || password == null) return
@@ -57,12 +58,20 @@ object PointScrapingUtil {
                                             webView?.evaluateJavascript(javascript) {}
                                         }
 
-                                        if (errorMessage != null) {
-                                            if (didAttemptLogin == true) {
-                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage")
-                                            } else {
-                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage")
-                                            }
+                            if (serializedResponse == null) {
+                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue)
+                            } else {
+                                with(serializedResponse) {
+                                    if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
+                                        //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
+                                        webView?.evaluateJavascript(javascript) {}
+                                    }
+
+                                    if (errorMessage != null) {
+                                        if (didAttemptLogin == true) {
+                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage")
+                                        } else {
+                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage")
                                         }
 
                                         if (pointsString != null) {

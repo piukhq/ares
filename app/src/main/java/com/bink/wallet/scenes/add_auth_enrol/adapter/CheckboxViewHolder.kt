@@ -7,6 +7,7 @@ import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.AddAuthItemType
 
+
 class CheckboxViewHolder(
     val binding: AddAuthCheckboxItemBinding,
     val onLinkClickListener: ((String) -> Unit)
