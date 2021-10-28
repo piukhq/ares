@@ -119,15 +119,18 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
 
     private fun getSaveCredentialsField(callback: (AddAuthItemWrapper?) -> Unit) {
         isRememberDetailsChecked { isChecked ->
-            addAuthItemsList.forEach { item ->
-                if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
-                    if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase(Locale.ENGLISH))) {
-                        val planField = PlanField(REMEMBER_DETAILS_DISPLAY_NAME, null, REMEMBER_DETAILS_COMMON_NAME, 3, null, REMEMBER_DETAILS_DISPLAY_NAME, null, null)
-                        callback(AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, isChecked.toString())))
-                        return@isRememberDetailsChecked
+            if (isChecked != null) {
+                addAuthItemsList.forEach { item ->
+                    if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+                        if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase(Locale.ENGLISH))) {
+                            val planField = PlanField(REMEMBER_DETAILS_DISPLAY_NAME, null, REMEMBER_DETAILS_COMMON_NAME, 3, null, REMEMBER_DETAILS_DISPLAY_NAME, null, null)
+                            callback(AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, isChecked.toString())))
+                            return@isRememberDetailsChecked
+                        }
                     }
                 }
             }
+
             callback(null)
         }
     }
@@ -181,13 +184,13 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         }
     }
 
-    private fun isRememberDetailsChecked(callback: (Boolean) -> Unit) {
+    private fun isRememberDetailsChecked(callback: (Boolean?) -> Unit) {
         viewModelScope.launch {
             try {
                 val preferences = withContext(Dispatchers.IO) { loginRepository.getPreferences() }
                 callback((preferences.filter { it.slug == REMEMBER_DETAILS_KEY }[0].value == "1"))
             } catch (e: Exception) {
-                callback(false)
+                callback(null)
             }
         }
     }
