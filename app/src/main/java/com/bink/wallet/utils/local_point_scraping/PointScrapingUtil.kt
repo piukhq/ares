@@ -15,20 +15,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.charset.StandardCharsets
 
-
 @SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
 
     private var webView: WebView? = null
 
-    fun performNewScrape(
-        context: Context,
-        localPointsAgent: LocalPointsAgent?,
-        email: String?,
-        password: String?,
-        isAddCardJourney: Boolean?,
-        callback: (PointScrapingResponse) -> Unit
-    ) {
+    fun performNewScrape(context: Context, isAddCard: Boolean, localPointsAgent: LocalPointsAgent?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
         if (localPointsAgent == null || email == null || password == null) return
 
         webView = getWebView(context)
@@ -41,7 +33,7 @@ object PointScrapingUtil {
                 getJavaScriptForMerchant(localPointsAgent, email, password) { javascript ->
 
                     if (javascript == null) {
-                        SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue)
+                        SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.SCRIPT_NOT_FOUND.issue, WebScrapableManager.currentAgent?.merchant, isAddCard)
                     } else {
                         webView?.evaluateJavascript(javascript) { responseFromSite ->
 
@@ -50,7 +42,7 @@ object PointScrapingUtil {
                                 logDebug("LocalPointScrape", "serializedResponse: $serializedResponse")
 
                                 if (serializedResponse == null) {
-                                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue)
+                                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue, WebScrapableManager.currentAgent?.merchant, isAddCard)
                                 } else {
                                     with(serializedResponse) {
                                         if (localPointsAgent.merchant == "tesco" && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
@@ -58,20 +50,12 @@ object PointScrapingUtil {
                                             webView?.evaluateJavascript(javascript) {}
                                         }
 
-                            if (serializedResponse == null) {
-                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_CLIENT, LocalPointScrapingError.JS_DECODE_FAILED.issue)
-                            } else {
-                                with(serializedResponse) {
-                                    if (pointScrapeSite == PointScrapeSite.TESCO && pointsString.isNullOrEmpty() && didAttemptLogin == true && errorMessage.isNullOrEmpty()) {
-                                        //There's an issue with Tesco where it will attempt to log in, but the first time it doesn't fill in the password field.
-                                        webView?.evaluateJavascript(javascript) {}
-                                    }
-
-                                    if (errorMessage != null) {
-                                        if (didAttemptLogin == true) {
-                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage")
-                                        } else {
-                                            SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage")
+                                        if (errorMessage != null) {
+                                            if (didAttemptLogin == true) {
+                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.INCORRECT_CRED.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                            } else {
+                                                SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_USER, "${LocalPointScrapingError.GENERIC_FAILURE.issue}. Error Message: $errorMessage", WebScrapableManager.currentAgent?.merchant, isAddCard)
+                                            }
                                         }
 
                                         if (pointsString != null) {
@@ -82,6 +66,7 @@ object PointScrapingUtil {
                                         }
                                     }
                                 }
+
                             }
                         }
                     }

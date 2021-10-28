@@ -3,6 +3,7 @@ package com.bink.wallet.utils.local_point_scraping
 import android.content.Context
 import android.os.CountDownTimer
 import androidx.lifecycle.MutableLiveData
+import com.bink.wallet.model.LocalPointsAgent
 import com.bink.wallet.model.currentAgent
 import com.bink.wallet.model.getId
 import com.bink.wallet.model.isEnabled
@@ -24,7 +25,7 @@ object WebScrapableManager {
 
     val deletedCards = ArrayList<String>()
 
-    var currentAgent: WebScrapable? = null
+    var currentAgent: LocalPointsAgent? = null
 
     private var userName: String? = null
     private var password: String? = null
@@ -106,7 +107,7 @@ object WebScrapableManager {
                         }
                     }
 
-                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant?.remoteName, isAddCard)
+                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant, isAddCard)
 
                     tryScrapeCards(index + 1, cards, context, isAddCard, callback)
                 }
@@ -144,10 +145,10 @@ object WebScrapableManager {
 
                     PointScrapingUtil.performNewScrape(
                         context,
+                        isAddCard,
                         agent,
                         credentials.email,
-                        credentials.password,
-                        isAddCard
+                        credentials.password
                     ) { pointScrapeResponse ->
 
                         if (agent.isEnabled()) {
