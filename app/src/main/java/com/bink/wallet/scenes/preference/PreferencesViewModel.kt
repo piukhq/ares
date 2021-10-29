@@ -51,10 +51,12 @@ class PreferencesViewModel(private var loginRepository: LoginRepository) : BaseV
         REMEMBERABLE_FIELD_NAMES.forEach { fieldName ->
             FormsUtil.getFormFields(fieldName)?.let {
                 //Making sure email is specifically more than 1 because it will always return logged in email
-                return if (fieldName == EMAIL_COMMON_NAME) {
-                    it.size > 1
+                if (fieldName == EMAIL_COMMON_NAME) {
+                    if (it.size > 1) {
+                        true
+                    }
                 } else {
-                    true
+                    return true
                 }
             }
         }
