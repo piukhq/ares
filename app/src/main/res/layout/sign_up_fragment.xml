@@ -234,17 +234,11 @@
 
                 <Button
                     android:id="@+id/sign_up_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/gradient_button_margin"
+                    style="@style/RoundedGradientButton"
                     android:layout_marginTop="@dimen/margin_padding_size_medium_large"
-                    android:layout_marginEnd="@dimen/gradient_button_margin"
                     android:layout_marginBottom="@dimen/margin_padding_size_medium_large"
-                    android:background="@drawable/gradient_button_selector"
                     android:enabled="@{viewModel.isSignUpEnabled}"
                     android:text="@string/continue_text"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
                     app:backgroundTint="@null"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

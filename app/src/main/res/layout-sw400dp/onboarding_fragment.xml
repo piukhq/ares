@@ -39,16 +39,10 @@
 
         <Button
             android:id="@+id/sign_up_with_email"
-            style="@style/TextAppearance.AppCompat.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/RoundedGradientButton"
             android:layout_marginStart="@dimen/buttons_margin"
             android:layout_marginEnd="@dimen/buttons_margin"
-            android:background="@drawable/rounded_corners_gradient_button"
-            android:fontFamily="@font/nunito_sans_bold"
             android:text="@string/continue_with_email"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

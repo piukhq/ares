@@ -92,12 +92,8 @@
                 <Button
                     android:id="@+id/first_button"
                     style="@style/RoundedGradientButton"
-                    android:layout_width="0dp"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:background="@drawable/rounded_corners_gradient_button"
                     android:text="@string/accept_button_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
                     app:backgroundTint="@null"
                     app:layout_constraintBottom_toTopOf="@id/second_button"
                     app:layout_constraintEnd_toEndOf="parent"
