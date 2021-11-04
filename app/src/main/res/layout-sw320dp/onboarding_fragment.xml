@@ -42,12 +42,12 @@
             style="@style/RoundedGradientButton"
             android:layout_marginStart="@dimen/buttons_margin"
             android:layout_marginEnd="@dimen/buttons_margin"
+            android:layout_marginBottom="@dimen/button_vertical_margin_size_large"
             android:text="@string/continue_with_email"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pager_indicator" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
