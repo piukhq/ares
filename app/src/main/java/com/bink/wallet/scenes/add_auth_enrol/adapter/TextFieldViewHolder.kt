@@ -355,6 +355,8 @@ class TextFieldViewHolder(
                     R.string.add_auth_error_message,
                     currentPlanField.column
                 )
+            } else {
+                inputEditText.error = null
             }
         }
     }
