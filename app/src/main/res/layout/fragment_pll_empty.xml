@@ -102,8 +102,8 @@
             android:id="@+id/rv_pending_cards"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:layout_marginTop="@dimen/margin_padding_size_small"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,8 +125,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_pending_cards"
-             />
+            app:layout_constraintTop_toBottomOf="@id/rv_pending_cards" />
 
 
         <Button
@@ -160,7 +159,7 @@
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_large"
-            android:fontFamily="@font/nunito_sans_bold"
+            android:fontFamily="@font/nunito_sans_extrabold"
             android:gravity="center_horizontal"
             android:text="@string/add_payment_cards"
             android:textColor="@color/black"
