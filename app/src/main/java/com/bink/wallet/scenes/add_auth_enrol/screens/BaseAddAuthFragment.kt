@@ -1,9 +1,11 @@
 package com.bink.wallet.scenes.add_auth_enrol.screens
 
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,18 +22,13 @@ import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
-import com.bink.wallet.utils.ADD_AUTH_BARCODE
-import com.bink.wallet.utils.ApiErrorUtils
-import com.bink.wallet.utils.ExceptionHandlingUtils
-import com.bink.wallet.utils.RecyclerViewHelper
-import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -45,6 +42,14 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .build()
+    }
+
+    private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
+        handleGalleryResult(uri){
+            if (it != null) {
+                addAuthAdapter?.setBarcode(it)
+            }
+        }
     }
 
     private val args: BaseAddAuthFragmentArgs by navArgs()
@@ -237,6 +242,7 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             requestCode,
             permissions,
             grantResults,
+            activityResult,
             { navigateToScanLoyaltyCard() },
             null,
             null

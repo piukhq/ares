@@ -1,20 +1,28 @@
 package com.bink.wallet.utils
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.MainActivity
 import com.bink.wallet.data.SharedPreferenceManager
+import com.bink.wallet.model.PointScrapingResponse
 import com.bink.wallet.ui.factory.DialogFactory
 import com.bink.wallet.utils.enums.BuildTypes
 import com.getbouncer.cardscan.ui.CardScanActivity
 import com.getbouncer.cardscan.ui.CardScanActivityResult
 import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -48,6 +56,7 @@ fun Fragment.requestPermissionsResult(
     requestCode: Int,
     permissions: Array<out String>,
     grantResults: IntArray,
+    activityResult: ActivityResultLauncher<String>?,
     navigateToScanLoyaltyCard: (() -> Unit)?,
     navigateToAddPaymentCard: (() -> Unit)?,
     navigateToBrowseBrands: (() -> Unit)?
@@ -69,18 +78,36 @@ fun Fragment.requestPermissionsResult(
                 )
 
             if (!shouldShowPermissionExplanation) {
-                DialogFactory.showPermissionsSettingsDialog(requireActivity()) {
+
+                DialogFactory.showPermissionsSettingsDialog(requireActivity(), activityResult) {
                     if (SharedPreferenceManager.didAttemptToAddPaymentCard) {
                         navigateToAddPaymentCard?.invoke()
                     } else {
                         navigateToBrowseBrands?.invoke()
                     }
                 }
+
             }
         }
     }
 
+}
 
+fun Fragment.handleGalleryResult(uri: Uri, callback: (String?) -> Unit){
+    val inputImage = InputImage.fromFilePath(requireContext(), uri)
+    val scanner = BarcodeScanning.getClient()
+
+    scanner.process(inputImage)
+        .addOnSuccessListener {
+            if(it.isNullOrEmpty()) {
+                callback(null)
+            } else {
+                callback(it[0].displayValue)
+            }
+        }
+        .addOnFailureListener {
+            callback(null)
+        }
 }
 
 fun Fragment.scanResult(
