@@ -44,6 +44,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/magic_link_success_height"
+            android:layout_marginTop="@dimen/margin_padding_size_large"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/subtitle"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="paperplane.json"
+            app:lottie_loop="true" />
 
         <Button
             android:id="@+id/go_to_inbox"
@@ -53,6 +65,7 @@
             android:layout_marginStart="@dimen/gradient_button_margin"
             android:layout_marginEnd="@dimen/gradient_button_margin"
             android:layout_marginBottom="@dimen/button_vertical_margin_size_large"
+            android:alpha="0"
             android:background="@drawable/gradient_button_selector"
             android:fontFamily="@font/nunito_sans_bold"
             android:text="@string/magic_link_open_mail"
