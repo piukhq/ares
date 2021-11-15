@@ -599,7 +599,6 @@
 
     <string name="add_loyalty_card_permissions_denied_cta_allow">Allow Access</string>
     <string name="add_loyalty_card_permissions_denied_cta_enter">Enter Manually</string>
-    <string name="add_loyalty_card_permissions_denied_cta_gallery">Add from Photo Library</string>
 
     <!-- WebView -->
     <string name="webview_error_title">Error</string>

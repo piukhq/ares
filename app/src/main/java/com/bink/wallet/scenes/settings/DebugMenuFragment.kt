@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.settings
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
@@ -23,19 +22,6 @@ import com.bink.wallet.utils.local_point_scraping.PointScrapingUtil
 import com.bink.wallet.utils.local_point_scraping.agents.PointScrapeSite
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import android.content.Intent
-import androidx.core.app.ActivityCompat
-
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.app.ActivityCompat.startActivityForResult
-import android.graphics.BitmapFactory
-
-import android.graphics.Bitmap
-import java.nio.ByteBuffer
-import android.provider.MediaStore
-import androidx.activity.result.contract.ActivityResultContracts
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
 
 
 class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBinding>() {
@@ -122,9 +108,6 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             }
             DebugItemType.CARD_ON_BOARDING -> {
                 displayStatePicker()
-            }
-            DebugItemType.BARCODE_FROM_IMAGE -> {
-                openImagePicker()
             }
         }
     }
@@ -245,35 +228,6 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
         }
         adb.setNegativeButton(getString(R.string.cancel_text), null)
         adb.show()
-    }
-
-    private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, 1)
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
-//            val imageUri = data.data
-//            val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, imageUri)
-            val inputImage = InputImage.fromFilePath(requireContext(), data.data)
-            val scanner = BarcodeScanning.getClient()
-
-            scanner.process(inputImage)
-                .addOnSuccessListener {
-                    it.forEach { barcode ->
-                        logDebug("barcodeoutput", barcode.displayValue)
-                    }
-                }
-                .addOnFailureListener {
-                    logDebug("barcodeoutput", it.toString())
-                }
-
-        }
     }
 
     private fun applyChanges() {

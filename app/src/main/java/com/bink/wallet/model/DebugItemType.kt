@@ -12,6 +12,5 @@ enum class DebugItemType : Parcelable {
     COLOR_SWATCHES,
     FORCE_CRASH,
     TESCO_LPS,
-    CARD_ON_BOARDING,
-    BARCODE_FROM_IMAGE
+    CARD_ON_BOARDING
 }

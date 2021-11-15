@@ -23,8 +23,8 @@
             app:borderColor="@color/white"
             app:borderLength="@dimen/border_length"
             app:borderOffset="@dimen/border_offset"
-            app:borderWidth="2dp"
             app:cornerRadius="@dimen/corner_radius"
+            app:borderWidth="2dp"
             app:laserEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,9 +34,7 @@
             app:outerBorderWidth="0dp"
             app:outerCornerRadius="@dimen/outer_border_radius"
             app:topOffset="@dimen/camera_top_offset"
-            app:viewfinderSideMargin="@dimen/margin_padding_size_really_small">
-
-        </me.dm7.barcodescanner.zxing.ZXingScannerView>
+            app:viewfinderSideMargin="@dimen/margin_padding_size_really_small" />
 
         <include
             android:id="@+id/bottom_view"
@@ -46,17 +44,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-        <TextView
-            android:id="@+id/pick_from_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito_sans_extrabold"
-            android:paddingBottom="@dimen/margin_padding_size_medium_large"
-            android:text="@string/add_loyalty_card_permissions_denied_cta_gallery"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

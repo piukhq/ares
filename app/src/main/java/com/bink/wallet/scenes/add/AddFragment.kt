@@ -1,48 +1,25 @@
 package com.bink.wallet.scenes.add
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
-import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.add_loyalty_card.AddLoyaltyCardFragmentDirections
-import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
+import com.bink.wallet.utils.INT_ONE_HUNDRED
+import com.bink.wallet.utils.logPaymentCardSuccess
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.requestCameraPermissionAndNavigate
+import com.bink.wallet.utils.requestPermissionsResult
+import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
-import com.google.zxing.Result
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
-
-    private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
-        handleGalleryResult(uri) {
-//            val membershipPlan: MembershipPlan? = findMembershipPlan(rawResult)
-//
-//            membershipPlan?.also {
-//
-//                val membershipCardId = ""
-//                val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
-//                    membershipPlan = it,
-//                    membershipCardId = membershipCardId,
-//                    barcode = rawResult.toString()
-//                )
-//                findNavController().navigateIfAdded(this, action)
-//
-//            } ?: run {
-//                showUnsupportedBarcodePopup()
-//            }
-        }
-    }
-
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
             .withId(FragmentToolbar.NO_TOOLBAR)
@@ -111,7 +88,6 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
             requestCode,
             permissions,
             grantResults,
-            activityResult,
             { navigateToScanLoyaltyCard() },
             { navigateToAddPaymentCard() },
             { navigateToBrowseBrands() })
@@ -145,13 +121,13 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
     private fun navigateToScanLoyaltyCard() {
         viewModel.membershipCards.value?.let { membershipCards ->
             viewModel.membershipPlans.value?.let { membershipPlans ->
-                val directions = AddFragmentDirections.addToAddLoyalty(
-                    membershipPlans.toTypedArray(),
-                    membershipCards.toTypedArray(),
-                    null
-                )
-                findNavController().navigateIfAdded(this, directions)
-            }
+            val directions = AddFragmentDirections.addToAddLoyalty(
+                membershipPlans.toTypedArray(),
+                membershipCards.toTypedArray(),
+                null
+            )
+            findNavController().navigateIfAdded(this, directions)
+        }
         }
     }
 

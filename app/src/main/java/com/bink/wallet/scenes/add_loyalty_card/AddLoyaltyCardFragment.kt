@@ -2,21 +2,27 @@ package com.bink.wallet.scenes.add_loyalty_card
 
 import android.app.Activity
 import android.content.Context
-import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.animation.AnimationUtils
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.AddLoyaltyCardFragmentBinding
 import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.*
+import com.bink.wallet.utils.ADD_AUTH_BARCODE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_VIEW
+import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.SignUpFieldTypes
+import com.bink.wallet.utils.navigateIfAdded
+import com.bink.wallet.utils.setVisible
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -34,12 +40,6 @@ class AddLoyaltyCardFragment :
     var cancelHaptic = false
     private var isFromAddAuth = false
     private var account: Account? = null
-
-    private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
-        handleGalleryResult(uri) {
-            handleResultText(it)
-        }
-    }
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -108,32 +108,23 @@ class AddLoyaltyCardFragment :
     }
 
     override fun handleResult(rawResult: Result?) {
-        handleResultText(rawResult?.text)
-    }
-
-    private fun handleResultText(text: String?) {
         cancelHaptic = true
         val savedInstanceState = findNavController().previousBackStackEntry?.savedStateHandle
         savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
 
-        if (text == null) {
-            showUnsupportedBarcodePopup(account!!.company_name!!)
-            return
-        }
-
-        if (isFromAddAuth && account != null) {
-            if (isValidRegex(text)) {
-                savedInstanceState?.set(ADD_AUTH_BARCODE, text)
-                if (text != null) {
+        if (isFromAddAuth && account != null && rawResult != null) {
+            if (isValidRegex(rawResult.text)) {
+                savedInstanceState?.set(ADD_AUTH_BARCODE, rawResult.text)
+                if (rawResult.text != null) {
                     findNavController().popBackStack()
 
                 }
             } else {
-                showUnsupportedBarcodePopup(account!!.company_name!!)
+                   showUnsupportedBarcodePopup(account!!.company_name!!)
             }
 
         } else {
-            val membershipPlan: MembershipPlan? = findMembershipPlan(text)
+            val membershipPlan: MembershipPlan? = findMembershipPlan(rawResult)
 
             membershipPlan?.also {
 
@@ -141,7 +132,7 @@ class AddLoyaltyCardFragment :
                 val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
                     membershipPlan = it,
                     membershipCardId = membershipCardId,
-                    barcode = text
+                    barcode = rawResult.toString()
                 )
                 findNavController().navigateIfAdded(this, action)
 
@@ -149,6 +140,7 @@ class AddLoyaltyCardFragment :
                 showUnsupportedBarcodePopup()
             }
         }
+
     }
 
     private fun setBottomLayout() {
@@ -169,21 +161,18 @@ class AddLoyaltyCardFragment :
                 findNavController().popBackStack()
             } else {
                 goToBrowseBrands()
-            }
-        }
 
-        binding.pickFromGallery.setOnClickListener {
-            activityResult.launch("image/*")
+            }
         }
     }
 
-    private fun findMembershipPlan(text: String?): MembershipPlan? {
+    private fun findMembershipPlan(rawResult: Result?): MembershipPlan? {
         var foundPlan: MembershipPlan? = null
 
         for ((planId, validation) in validators) {
             if (!validation.isNullOrEmpty() && UtilFunctions.isValidField(
                     validation,
-                    text
+                    rawResult?.text
                 )
             ) {
                 foundPlan = brands.find { plan -> plan.id == (planId) }

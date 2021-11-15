@@ -3,10 +3,8 @@ package com.bink.wallet.scenes.payment_card_wallet
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Canvas
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -29,8 +27,6 @@ import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -386,7 +382,6 @@ class PaymentCardWalletFragment :
             requestCode,
             permissions,
             grantResults,
-            null,
             null,
             { navigateToPaymentAddPaymentCard() },
             null
