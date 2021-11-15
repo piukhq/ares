@@ -71,6 +71,14 @@ object DebugItemsPopulation {
                 DebugItemType.CARD_ON_BOARDING
             )
         )
+
+        itemsList.add(
+            DebugItem(
+                "Open image picker",
+                "Barcode detection",
+                DebugItemType.BARCODE_FROM_IMAGE
+            )
+        )
         return itemsList
     }
 

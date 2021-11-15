@@ -1,15 +1,15 @@
 package com.bink.wallet.scenes.add_join
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.modal.generic.GenericModalFragment
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
+import com.bink.wallet.utils.*
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 
 class PaymentCardNeededFragment : GenericModalFragment() {
 
@@ -43,6 +43,7 @@ class PaymentCardNeededFragment : GenericModalFragment() {
             requestCode,
             permissions,
             grantResults,
+            null,
             null,
             { navigateToAddPaymentCard() },
             null
