@@ -141,12 +141,12 @@ class PaymentCardWalletFragment :
                     }
 
                     dX == 0f && dY == 0f -> {
+                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.deleteLayout.visibility = View.GONE
                         binding.swipeRefresh.isEnabled = true
                     }
 
                     dX < 0 -> {
-                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.barcodeLayout.visibility = View.GONE
-                        viewHolder.binding.deleteLayout.visibility = View.VISIBLE
+                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.deleteLayout.visibility = View.VISIBLE
                         getDefaultUIUtil().onDraw(
                             c,
                             recyclerView,
