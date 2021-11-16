@@ -84,7 +84,7 @@ class BrowseBrandsAdapter :
     }
 
     companion object {
-        private const val BRAND_ITEM = R.layout.item_brand
+        const val BRAND_ITEM = R.layout.item_brand
         private const val SECTION_TITLE_ITEM = R.layout.item_brands_section_title
         private const val SCAN_CARD_ITEM = R.layout.item_scan_card
     }
