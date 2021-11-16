@@ -148,7 +148,7 @@
             android:layout_marginTop="@dimen/margin_padding_size_small"
             android:clickable="true"
             android:focusable="true"
-            android:fontFamily="@font/nunito_sans_extrabold"
+            android:fontFamily="@font/nunito_sans_bold"
             android:text="@string/use_magic_link"
             android:textColor="@color/black"
             android:textColorLink="@color/blue_accent"

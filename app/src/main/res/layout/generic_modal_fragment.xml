@@ -111,7 +111,7 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
                     android:layout_marginBottom="@dimen/margin_padding_size_large"
-                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:fontFamily="@font/nunito_sans_bold"
                     android:foreground="?selectableItemBackground"
                     android:text="@string/decline_button_text"
                     android:textAllCaps="false"

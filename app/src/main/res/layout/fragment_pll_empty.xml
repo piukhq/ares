@@ -159,7 +159,7 @@
             android:layout_marginStart="@dimen/margin_padding_size_medium"
             android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:layout_marginBottom="@dimen/margin_padding_size_large"
-            android:fontFamily="@font/nunito_sans_extrabold"
+            android:fontFamily="@font/nunito_sans_bold"
             android:gravity="center_horizontal"
             android:text="@string/add_payment_cards"
             android:textColor="@color/black"
