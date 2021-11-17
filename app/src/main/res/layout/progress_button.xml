@@ -11,19 +11,17 @@
             android:id="@+id/tv_button_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_small"
             android:layout_marginTop="@dimen/add_card_margin_end"
             android:layout_marginBottom="@dimen/margin_padding_size_small"
+            android:fontFamily="@font/nunito_sans_bold"
             android:gravity="center"
             android:textAllCaps="false"
-            android:textAppearance="?android:attr/textAppearanceButton"
             android:textColor="@color/white"
+            android:textSize="@dimen/size_sub_headline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="TextView"
-            tools:textColor="@color/black" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/pg_button_progress_bar"

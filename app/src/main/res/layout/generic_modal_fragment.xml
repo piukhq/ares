@@ -83,21 +83,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    app:layout_goneMarginTop="@dimen/margin_padding_size_extra_small"
                     android:textColorLink="@color/blue_accent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/description" />
+                    app:layout_constraintTop_toBottomOf="@+id/description"
+                    app:layout_goneMarginTop="@dimen/margin_padding_size_extra_small" />
 
                 <Button
                     android:id="@+id/first_button"
                     style="@style/RoundedGradientButton"
-                    android:layout_width="0dp"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
-                    android:background="@drawable/rounded_corners_gradient_button"
                     android:text="@string/accept_button_text"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
                     app:backgroundTint="@null"
                     app:layout_constraintBottom_toTopOf="@id/second_button"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -115,6 +111,7 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
                     android:layout_marginBottom="@dimen/margin_padding_size_large"
+                    android:fontFamily="@font/nunito_sans_bold"
                     android:foreground="?selectableItemBackground"
                     android:text="@string/decline_button_text"
                     android:textAllCaps="false"
