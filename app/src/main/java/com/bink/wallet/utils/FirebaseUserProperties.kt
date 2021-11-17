@@ -11,7 +11,6 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.bink.wallet.utils.enums.ConnectionType
 import com.bink.wallet.utils.enums.DeviceZoom
 import com.google.firebase.analytics.FirebaseAnalytics
-import java.util.*
 
 object FirebaseUserProperties {
     const val OS_VERSION = "osVersion"
@@ -20,7 +19,7 @@ object FirebaseUserProperties {
     const val BINK_VERSION = "binkVersion"
 
     fun setUserProperty(firebaseAnalytics: FirebaseAnalytics, key: String, value: String) {
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type) {
             firebaseAnalytics.setUserProperty(key, value)
         }
     }

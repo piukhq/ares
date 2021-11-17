@@ -1,11 +1,19 @@
 package com.bink.wallet.scenes.add_auth_enrol
 
 import com.bink.wallet.model.request.membership_card.Account
+import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
 import com.bink.wallet.model.response.membership_plan.PlanField
+import com.bink.wallet.utils.EMAIL_COMMON_NAME
+import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.REMEMBER_DETAILS_COMMON_NAME
 import com.bink.wallet.utils.UtilFunctions
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.TypeOfField
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import java.util.*
 
 object FormsUtil {
 
@@ -17,7 +25,7 @@ object FormsUtil {
         val isSensitive = planField.type == FieldType.SENSITIVE.type
         fields[position] = FormField(
             planField,
-            PlanFieldsRequest(planField.column, null, null, isSensitive = isSensitive)
+            PlanFieldsRequest(planField.column, null, null, isSensitive = isSensitive, common_name = planField.common_name)
         )
     }
 
@@ -65,6 +73,7 @@ object FormsUtil {
 
         fields.forEach { field ->
             val typeOfField = field.value.planField.typeOfField
+            field.value.planField.common_name
             field.value.fieldsRequest?.isSensitive =
                 field.value.planField.type == FieldType.SENSITIVE.type
 
@@ -102,6 +111,52 @@ object FormsUtil {
 
     fun getFormField(position: Int): FormField? {
         return fields[position]
+    }
+
+    fun saveFormField(commonName: String?, value: String?) {
+        var existingData = ArrayList<String>()
+
+        commonName?.let { fieldName ->
+            getFormFields(fieldName)?.let {
+                existingData = it
+            }
+        }
+
+        value?.let { fieldValue ->
+            if (!existingData.contains(fieldValue)) {
+                existingData.add(fieldValue)
+            }
+        }
+
+        LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let {
+            existingData.remove(it)
+        }
+
+        commonName?.let { LocalStoreUtils.setAppSharedPref(it, Gson().toJson(existingData)) }
+    }
+
+    fun stripRememberDetailsField(request: MembershipCardRequest): MembershipCardRequest {
+        request.account?.registration_fields!!.removeAll { it.common_name == REMEMBER_DETAILS_COMMON_NAME }
+        return request
+    }
+
+    fun getFormFields(commonName: String): ArrayList<String>? {
+        var fields: ArrayList<String>? = null
+
+        if (commonName == EMAIL_COMMON_NAME) {
+            LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_EMAIL)?.let { loggedInEmail ->
+                fields = arrayListOf(loggedInEmail)
+            }
+        }
+
+        LocalStoreUtils.getAppSharedPref(commonName)?.let { formFieldsAsString ->
+            val gson = GsonBuilder().create()
+            if (fields == null) fields = ArrayList<String>()
+            fields?.addAll(gson.fromJson(formFieldsAsString, object : TypeToken<ArrayList<String>>() {}.type))
+            return fields
+        }
+
+        return fields
     }
 
     private fun areAllFormFieldsValid(): Boolean {

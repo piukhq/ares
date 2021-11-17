@@ -15,8 +15,6 @@ import com.bink.wallet.utils.enums.BuildTypes
 import com.getbouncer.cardscan.ui.CardScanActivity
 import com.getbouncer.cardscan.ui.CardScanActivityResult
 import com.getbouncer.cardscan.ui.CardScanActivityResultHandler
-import java.util.*
-import kotlin.collections.HashMap
 
 fun Fragment.requestCameraPermissionAndNavigate(
     shouldNavigateToScanLoyaltyCard: Boolean,
@@ -152,7 +150,7 @@ fun Fragment.logPaymentCardSuccess(wasSuccess: Boolean) {
 }
 
 fun Fragment.logEvent(name: String, parameters: Map<String, String>) {
-    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type) {
         val bundle = Bundle()
 
         for (entry: Map.Entry<String, String> in parameters) {

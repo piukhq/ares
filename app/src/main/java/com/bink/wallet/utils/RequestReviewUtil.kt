@@ -60,7 +60,7 @@ object RequestReviewUtil {
                 val remoteConfig = FirebaseRemoteConfig.getInstance()
                 val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
 
-                if (isReviewEnabled.toLowerCase().equals("true")) {
+                if (isReviewEnabled.lowercase().equals("true")) {
                     val requestReview = reviewManager.requestReviewFlow()
                     reviewRequested()
 
