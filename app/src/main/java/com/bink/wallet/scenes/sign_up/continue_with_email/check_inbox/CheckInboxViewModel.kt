@@ -11,12 +11,11 @@ import com.bink.wallet.utils.MAGIC_LINK_LOCALE
 import com.bink.wallet.utils.MAGIC_LINK_PROD_SLUG
 import com.bink.wallet.utils.enums.BuildTypes
 import kotlinx.coroutines.launch
-import java.util.*
 
 class CheckInboxViewModel(val loginRepository: LoginRepository) : BaseViewModel() {
 
     fun rePostMagicLink(email: String) {
-        val slug = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) MAGIC_LINK_DEBUG_SLUG else MAGIC_LINK_PROD_SLUG
+        val slug = if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) MAGIC_LINK_DEBUG_SLUG else MAGIC_LINK_PROD_SLUG
 
         viewModelScope.launch {
             try {

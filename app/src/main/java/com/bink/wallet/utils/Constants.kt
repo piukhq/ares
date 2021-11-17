@@ -91,3 +91,11 @@ const val MAGIC_LINK_LOCALE = "en_GB"
 const val MAGIC_LINK_BUNDLE_ID = "com.bink.wallet"
 const val MAGIC_LINK_DEBUG_SLUG = "iceland-bonus-card-mock"
 const val MAGIC_LINK_PROD_SLUG = "matalan-reward-card"
+
+val REMEMBERABLE_FIELD_NAMES = arrayListOf("email", "first_name", "last_name", "phone", "date of birth")
+val REMEMBER_DETAILS_KEY = "remember-my-details"
+val CLEAR_PREF_KEY = "clear_preferences"
+val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
+val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
+val EMAIL_COMMON_NAME = "email"
+val CLEAR_CREDS_TITLE = "Clear Stored Credentials"

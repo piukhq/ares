@@ -1,13 +1,13 @@
 package com.bink.wallet.scenes.add_auth_enrol.view_models
 
-import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
+import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 
-class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
-    AddAuthViewModel(loyaltyWalletRepository) {
+class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository, loginRepository: LoginRepository) :
+    AddAuthViewModel(loyaltyWalletRepository, loginRepository) {
 
     override fun addItems(membershipPlan: MembershipPlan, shouldExcludeBarcode: Boolean) {
         super.addItems(membershipPlan, shouldExcludeBarcode)
@@ -43,9 +43,12 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
         membershipPlan: MembershipPlan
     ) {
         val currentRequest = MembershipCardRequest(
-           FormsUtil.getAccount(),
+            FormsUtil.getAccount(),
             membershipPlan.id
         )
+
+        checkDetailsToSave(currentRequest)
+
         ghostMembershipCard(membershipCardId, currentRequest)
     }
 
@@ -56,6 +59,9 @@ class GhostCardViewModel(loyaltyWalletRepository: LoyaltyWalletRepository) :
             FormsUtil.getAccount(),
             membershipPlan.id
         )
+
+        checkDetailsToSave(currentRequest)
+
         createMembershipCard(
             currentRequest
         )

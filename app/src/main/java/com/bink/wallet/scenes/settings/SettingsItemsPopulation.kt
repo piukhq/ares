@@ -6,8 +6,6 @@ import com.bink.wallet.R
 import com.bink.wallet.model.SettingsItem
 import com.bink.wallet.model.SettingsItemType
 import com.bink.wallet.utils.enums.BuildTypes
-import java.util.*
-import kotlin.collections.ArrayList
 
 object SettingsItemsPopulation {
     fun populateItems(res: Resources): ArrayList<SettingsItem> {
@@ -125,7 +123,7 @@ object SettingsItemsPopulation {
             )
         )
 
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
             itemsList.add(
                 SettingsItem(
                     res.getString(R.string.settings_menu_debug),
