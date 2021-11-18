@@ -1,12 +1,12 @@
 package com.bink.wallet.utils
 
+import android.app.Activity
+import androidx.appcompat.app.AlertDialog
+import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
-import com.bink.wallet.utils.enums.CardCodes
-import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.enums.LinkStatus
-import com.bink.wallet.utils.enums.LoginStatus
+import com.bink.wallet.utils.enums.*
 import com.bink.wallet.utils.enums.MembershipCardStatus.*
 
 object MembershipPlanUtils {
@@ -155,7 +155,7 @@ object MembershipPlanUtils {
         }
     }
 
-     fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
+    fun hasNoActiveCards(paymentCards: List<PaymentCard>): Boolean {
         val originalSize = paymentCards.size
         val filteredCards = paymentCards.filter { card -> card.status == PAYMENT_CARD_STATUS_PENDING }
 
@@ -163,4 +163,63 @@ object MembershipPlanUtils {
 
 
     }
+
+    fun findMembershipPlan(brands: Array<MembershipPlan>, text: String?): MembershipPlan? {
+        var foundPlan: MembershipPlan? = null
+        val validators = getValidators(brands)
+
+        for ((planId, validation) in validators) {
+            if (!validation.isNullOrEmpty() && UtilFunctions.isValidField(
+                    validation,
+                    text
+                )
+            ) {
+                foundPlan = brands.find { plan -> plan.id == (planId) }
+                break
+            }
+        }
+        return foundPlan
+    }
+
+    fun showTryAgainGenericError(
+        activity: Activity,
+        message: String? = null,
+        callback: () -> Unit = {}
+
+    ) {
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle(activity.getString(R.string.payment_card_scanning_scan_failed_title))
+        builder.setMessage(message)
+        builder.setPositiveButton(activity.getString(android.R.string.ok)) { dialogInterface, _ ->
+            dialogInterface.cancel()
+            callback()
+        }
+
+        builder.create().show()
+    }
+
+    private fun getValidators(brands: Array<MembershipPlan>): HashMap<String, String?> {
+        val validators = HashMap<String, String?>()
+
+        for (plan in brands) {
+            var foundInAddFields = false
+            plan.account?.add_fields?.map { field ->
+                if (field.common_name == SignUpFieldTypes.BARCODE.common_name && !field.validation.isNullOrEmpty()) {
+                    validators[plan.id] = field.validation
+                    foundInAddFields = true
+                }
+            }
+            if (!foundInAddFields) {
+                plan.account?.authorise_fields?.map { field ->
+                    if (field.common_name == SignUpFieldTypes.BARCODE.common_name) {
+                        validators[plan.id] = field.validation
+                        foundInAddFields = true
+                    }
+                }
+            }
+        }
+
+        return validators
+    }
+
 }

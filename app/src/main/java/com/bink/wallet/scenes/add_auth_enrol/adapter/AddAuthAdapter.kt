@@ -95,7 +95,6 @@ class AddAuthAdapter(
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseAddAuthViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {

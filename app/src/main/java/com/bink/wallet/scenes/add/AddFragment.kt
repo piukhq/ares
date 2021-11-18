@@ -24,22 +24,22 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
 
     private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
-        handleGalleryResult(uri) {
-//            val membershipPlan: MembershipPlan? = findMembershipPlan(rawResult)
-//
-//            membershipPlan?.also {
-//
-//                val membershipCardId = ""
-//                val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
-//                    membershipPlan = it,
-//                    membershipCardId = membershipCardId,
-//                    barcode = rawResult.toString()
-//                )
-//                findNavController().navigateIfAdded(this, action)
-//
-//            } ?: run {
-//                showUnsupportedBarcodePopup()
-//            }
+        handleGalleryResult(uri) { barcode ->
+            val membershipPlan: MembershipPlan? = viewModel.membershipPlans.value?.let { MembershipPlanUtils.findMembershipPlan(it.toTypedArray(), barcode) }
+
+            membershipPlan?.also {
+
+                val membershipCardId = ""
+                val action = AddFragmentDirections.addToAddCard(
+                    membershipPlan = it,
+                    membershipCardId = membershipCardId,
+                    barcode = barcode.toString()
+                )
+                findNavController().navigateIfAdded(this, action)
+
+            } ?: run {
+                MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_failure_body, ""))
+            }
         }
     }
 

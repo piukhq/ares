@@ -45,9 +45,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
-        handleGalleryResult(uri){
+        handleGalleryResult(uri) {
             if (it != null) {
                 addAuthAdapter?.setBarcode(it)
+                addAuthAdapter?.notifyDataSetChanged()
             }
         }
     }

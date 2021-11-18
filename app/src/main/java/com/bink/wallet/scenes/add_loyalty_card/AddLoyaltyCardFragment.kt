@@ -26,8 +26,7 @@ class AddLoyaltyCardFragment :
     BaseFragment<AddLoyaltyCardViewModel, AddLoyaltyCardFragmentBinding>(),
     ZXingScannerView.ResultHandler {
     private val args by navArgs<AddLoyaltyCardFragmentArgs>()
-    private lateinit var brands: Array<MembershipPlan>
-    private var validators = HashMap<String, String?>()
+    private var brands: Array<MembershipPlan>? = null
     var resumeTimerFromMillis: Long = -1
     var isPaused = false
     var hapticTimerWithPause = true
@@ -56,10 +55,10 @@ class AddLoyaltyCardFragment :
         super.onActivityCreated(savedInstanceState)
         cancelHaptic = false
         setBottomLayout()
-        getValidators()
         context?.resources?.getInteger(R.integer.add_loyalty_haptic_delay)?.toLong()
             ?.let { scheduleHapticWithPause(it) }
         isFromAddAuth = args.isFromAddAuth
+        brands = args.membershipPlans
         account = args.account
         findNavController().previousBackStackEntry?.savedStateHandle?.remove<String>(ADD_AUTH_BARCODE)
     }
@@ -82,29 +81,6 @@ class AddLoyaltyCardFragment :
 
     private fun stopScanning() {
         binding.scannerView.stopCameraPreview()
-    }
-
-    private fun getValidators() {
-        args.membershipPlans?.let {
-            brands = it
-            for (plan in brands) {
-                var foundInAddFields = false
-                plan.account?.add_fields?.map { field ->
-                    if (field.common_name == SignUpFieldTypes.BARCODE.common_name && !field.validation.isNullOrEmpty()) {
-                        validators[plan.id] = field.validation
-                        foundInAddFields = true
-                    }
-                }
-                if (!foundInAddFields) {
-                    plan.account?.authorise_fields?.map { field ->
-                        if (field.common_name == SignUpFieldTypes.BARCODE.common_name) {
-                            validators[plan.id] = field.validation
-                            foundInAddFields = true
-                        }
-                    }
-                }
-            }
-        }
     }
 
     override fun handleResult(rawResult: Result?) {
@@ -133,20 +109,22 @@ class AddLoyaltyCardFragment :
             }
 
         } else {
-            val membershipPlan: MembershipPlan? = findMembershipPlan(text)
+            if (brands != null) {
+                val membershipPlan: MembershipPlan? = MembershipPlanUtils.findMembershipPlan(brands!!, text)
 
-            membershipPlan?.also {
+                membershipPlan?.also {
 
-                val membershipCardId = ""
-                val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
-                    membershipPlan = it,
-                    membershipCardId = membershipCardId,
-                    barcode = text
-                )
-                findNavController().navigateIfAdded(this, action)
+                    val membershipCardId = ""
+                    val action = AddLoyaltyCardFragmentDirections.addLoyaltyToAddCardFragment(
+                        membershipPlan = it,
+                        membershipCardId = membershipCardId,
+                        barcode = text
+                    )
+                    findNavController().navigateIfAdded(this, action)
 
-            } ?: run {
-                showUnsupportedBarcodePopup()
+                } ?: run {
+                    showUnsupportedBarcodePopup()
+                }
             }
         }
     }
@@ -177,22 +155,6 @@ class AddLoyaltyCardFragment :
         }
     }
 
-    private fun findMembershipPlan(text: String?): MembershipPlan? {
-        var foundPlan: MembershipPlan? = null
-
-        for ((planId, validation) in validators) {
-            if (!validation.isNullOrEmpty() && UtilFunctions.isValidField(
-                    validation,
-                    text
-                )
-            ) {
-                foundPlan = brands.find { plan -> plan.id == (planId) }
-                break
-            }
-        }
-        return foundPlan
-    }
-
     private fun goToBrowseBrands() {
         val directions = args.membershipPlans?.let { plans ->
             args.membershipCards?.let { cards ->
@@ -209,9 +171,9 @@ class AddLoyaltyCardFragment :
 
     private fun showUnsupportedBarcodePopup(companyName: String = "") {
         if (isFromAddAuth) {
-            showTryAgainGenericError(
-                requireActivity(), getString(R.string.scan_failure_body, companyName)
-            )
+            MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_failure_body, companyName)) {
+                startScanning()
+            }
         }
         performHaptic(
             getString(R.string.unrecognized_barcode_title),
@@ -301,22 +263,6 @@ class AddLoyaltyCardFragment :
         }
         return false
 
-    }
-
-    private fun showTryAgainGenericError(
-        activity: Activity,
-        message: String
-
-    ) {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(activity.getString(R.string.payment_card_scanning_scan_failed_title))
-        builder.setMessage(message)
-        builder.setPositiveButton(activity.getString(android.R.string.ok)) { dialogInterface, _ ->
-            dialogInterface.cancel()
-            startScanning()
-        }
-
-        builder.create().show()
     }
 
     companion object {
