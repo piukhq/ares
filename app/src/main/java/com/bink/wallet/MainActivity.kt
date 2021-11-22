@@ -63,8 +63,16 @@ class MainActivity : AppCompatActivity() {
             options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
         }
 
+        val secureFlagEnabled: Boolean = try {
+            System.getenv(SECURE_FLAG)!!.toBooleanStrict()
+        } catch (e: Exception){
+            true
+        }
+
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            if(secureFlagEnabled){
+                window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
         }
 
         setContentView(R.layout.activity_main)
