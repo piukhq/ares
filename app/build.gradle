@@ -55,7 +55,7 @@ android {
         versionCode buildNumber
         versionName "2.3.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "boolean", "SECURE_FLAGS",secureFlags
+        buildConfigField "boolean", "SECURE_FLAGS", secureFlags
     }
     buildTypes {
         release {
@@ -164,7 +164,7 @@ android {
         kotlinCompilerVersion '1.5.10'
     }
     android.ndkVersion '21.3.6528147'
-    
+
     repositories {
         mavenCentral()
         maven {
