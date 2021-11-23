@@ -63,14 +63,8 @@ class MainActivity : AppCompatActivity() {
             options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
         }
 
-        val secureFlagEnabled: Boolean = try {
-            System.getenv(SECURE_FLAG)!!.toBooleanStrict()
-        } catch (e: Exception){
-            true
-        }
-
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
-            if(secureFlagEnabled){
+            if (BuildConfig.SECURE_FLAGS) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
             }
         }
