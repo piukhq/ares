@@ -32,6 +32,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import io.sentry.android.core.SentryAndroid
 import io.sentry.android.core.SentryAndroidOptions
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
         logDebug("mixPanel",Keys.mixPanelApiKey())
+
+        val mixpanel = MixpanelAPI.getInstance(this,Keys.mixPanelApiKey())
 
         SentryAndroid.init(
             this
