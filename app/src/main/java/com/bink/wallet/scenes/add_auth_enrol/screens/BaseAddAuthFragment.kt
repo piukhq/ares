@@ -95,11 +95,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             },
             autoCompleteToggle = { position, autoCompleteSuggestions ->
                 if (autoCompleteSuggestions == null) {
-                    binding.autocompleteRecyclerview.visibility = View.GONE
-                    binding.footerComposed.progressBtnContainer.visibility = View.VISIBLE
+                    hideRememberMyDetailsView()
                 } else {
                     setUpAutoCompleteRecyclerView(position, autoCompleteSuggestions)
-                    binding.footerComposed.progressBtnContainer.visibility = View.GONE
+                    showRememberMyDetailsView()
                 }
             }
         )
@@ -294,6 +293,16 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun onResult(result: String) {
         addAuthAdapter?.setBarcode(result)
+    }
+
+    private fun showRememberMyDetailsView(){
+        binding.autocompleteRecyclerview.visibility = View.VISIBLE
+        binding.footerComposed.progressBtnContainer.visibility = View.GONE
+    }
+
+    private fun hideRememberMyDetailsView(){
+        binding.autocompleteRecyclerview.visibility = View.GONE
+        binding.footerComposed.progressBtnContainer.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
