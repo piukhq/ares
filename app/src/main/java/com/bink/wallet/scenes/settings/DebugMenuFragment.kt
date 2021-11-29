@@ -102,39 +102,10 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
             DebugItemType.FORCE_CRASH -> {
                 throw RuntimeException()
             }
-            DebugItemType.TESCO_LPS -> {
-                launchTescoLPSDialog()
-            }
             DebugItemType.CARD_ON_BOARDING -> {
                 displayStatePicker()
             }
         }
-    }
-
-    private fun launchTescoLPSDialog() {
-        val dialog: androidx.appcompat.app.AlertDialog
-        context?.let { context ->
-            val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-            builder.setTitle("Enter Tesco Credentials")
-            val container = layoutInflater.inflate(R.layout.layout_lps_login, null)
-            val etFirstName = container.findViewById<EditText>(R.id.et_email)
-            val etSecondName = container.findViewById<EditText>(R.id.et_password)
-
-            builder.setView(container).setPositiveButton("Okay", null)
-            dialog = builder.create()
-
-            dialog.show()
-//            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-//                if (etFirstName.text.isNotEmpty() && etSecondName.text.isNotEmpty()) {
-//                    PointScrapingUtil
-//                        .performNewScrape(context, PointScrapeSite.TESCO, etFirstName.text.toString(), etSecondName.text.toString()) { pointScrapeResponse ->
-//                            logDebug("LocalPointScrape", "isDone $pointScrapeResponse")
-//                        }
-//                    dialog.dismiss()
-//                }
-//            }
-        }
-
     }
 
     private fun displayVersionPicker() {
