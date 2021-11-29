@@ -4,6 +4,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.model.currentAgent
 import com.bink.wallet.model.getRemoteAuthFields
@@ -16,17 +17,21 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.membership_plan.PlanDocument
 import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.scenes.add_auth_enrol.AddAuthItemWrapper
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
+import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.RemoteConfigUtil
-import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.util.*
 
-open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository) :
+open class AddAuthViewModel constructor(private val loyaltyWalletRepository: LoyaltyWalletRepository, private var loginRepository: LoginRepository) :
     BaseViewModel() {
 
     val ctaText = ObservableField<String>()
@@ -102,7 +107,14 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
             }
         }
         arrangeAuthItems()
-        _addRegisterFieldsRequest.value = addRegisterFieldsRequest
+
+        getSaveCredentialsField { checkbox ->
+            checkbox?.let {
+                addAuthItemsList.add(it)
+            }
+            _addRegisterFieldsRequest.value = addRegisterFieldsRequest
+        }
+
     }
 
     private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
@@ -113,6 +125,84 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         }
 
         return arrayListOf()
+    }
+
+    private fun getSaveCredentialsField(callback: (AddAuthItemWrapper?) -> Unit) {
+        isRememberDetailsChecked { isChecked ->
+            if (isChecked != null) {
+                addAuthItemsList.forEach { item ->
+                    if (item.getFieldType() == AddAuthItemType.PLAN_FIELD) {
+                        if (REMEMBERABLE_FIELD_NAMES.contains((item.fieldType as PlanField).common_name?.toLowerCase(Locale.ENGLISH))) {
+                            val planField = PlanField(REMEMBER_DETAILS_DISPLAY_NAME, null, REMEMBER_DETAILS_COMMON_NAME, 3, null, REMEMBER_DETAILS_DISPLAY_NAME, null, null)
+                            callback(AddAuthItemWrapper(planField, PlanFieldsRequest(planField.column, isChecked.toString())))
+                            return@isRememberDetailsChecked
+                        }
+                    }
+                }
+            }
+
+            callback(null)
+        }
+    }
+
+    fun checkDetailsToSave(membershipCardRequest: MembershipCardRequest) {
+        val shouldSaveDetails = membershipCardRequest.account?.registration_fields?.filter { it.common_name == REMEMBER_DETAILS_COMMON_NAME }
+
+        if (!shouldSaveDetails.isNullOrEmpty()) {
+            if (shouldSaveDetails[0].value == true.toString()) {
+                membershipCardRequest.account.add_fields?.forEach { addField ->
+                    if (REMEMBERABLE_FIELD_NAMES.contains(addField.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(addField.common_name?.toLowerCase(Locale.ENGLISH), addField.value)
+                    }
+                }
+
+                membershipCardRequest.account.authorise_fields?.forEach { authField ->
+                    if (REMEMBERABLE_FIELD_NAMES.contains(authField.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(authField.common_name?.toLowerCase(Locale.ENGLISH), authField.value)
+                    }
+                }
+
+                membershipCardRequest.account.enrol_fields?.forEach { enrolField ->
+                    if (REMEMBERABLE_FIELD_NAMES.contains(enrolField.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(enrolField.common_name?.toLowerCase(Locale.ENGLISH), enrolField.value)
+                    }
+                }
+
+                membershipCardRequest.account.registration_fields?.forEach { registrationFields ->
+                    if (REMEMBERABLE_FIELD_NAMES.contains(registrationFields.common_name?.toLowerCase(Locale.ENGLISH))) {
+                        FormsUtil.saveFormField(registrationFields.common_name?.toLowerCase(Locale.ENGLISH), registrationFields.value)
+                    }
+                }
+            }
+
+            viewModelScope.launch {
+                try {
+                    withContext(Dispatchers.IO) {
+                        loginRepository.setPreference(
+                            requestBody = JSONObject().put(
+                                REMEMBER_DETAILS_KEY,
+                                if (shouldSaveDetails[0].value == true.toString()) 1 else 0
+                            ).toString()
+                        )
+                    }
+
+                } catch (e: Exception) {
+
+                }
+            }
+
+        }
+    }
+
+    private fun isRememberDetailsChecked(callback: (Boolean?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val preferences = withContext(Dispatchers.IO) { loginRepository.getPreferences() }
+                callback((preferences.filter { it.slug == REMEMBER_DETAILS_KEY }[0].value == "1"))
+            } catch (e: Exception) {
+                callback(null)
+            }
+        }
     }
 
     private fun arrangeAuthItems() {
@@ -143,7 +233,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
     fun createMembershipCard(membershipCardRequest: MembershipCardRequest) {
         clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.createMembershipCard(
-            membershipCardRequest,
+            FormsUtil.stripRememberDetailsField(membershipCardRequest),
             _newMembershipCard,
             _createCardError,
             _addLoyaltyCardRequestMade,
@@ -155,9 +245,10 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         membershipCardId: String,
         membershipCardRequest: MembershipCardRequest
     ) {
+
         loyaltyWalletRepository.updateMembershipCard(
             membershipCardId,
-            membershipCardRequest,
+            FormsUtil.stripRememberDetailsField(membershipCardRequest),
             _newMembershipCard,
             _createCardError,
             _addLoyaltyCardRequestMade
@@ -171,7 +262,7 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
         clearIgnoredFields(membershipCardRequest)
         loyaltyWalletRepository.ghostMembershipCard(
             membershipCardId,
-            membershipCardRequest,
+            FormsUtil.stripRememberDetailsField(membershipCardRequest),
             _newMembershipCard,
             _createCardError,
             _addLoyaltyCardRequestMade

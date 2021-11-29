@@ -1,12 +1,18 @@
 package com.bink.wallet.scenes.preference
 
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
+import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferenceItemLayoutBinding
 import com.bink.wallet.model.request.Preference
+import com.bink.wallet.utils.CLEAR_PREF_KEY
 import com.bink.wallet.utils.UtilFunctions
+import java.lang.NumberFormatException
 
 class PreferenceAdapter(
     private var preferences: List<Preference>,
@@ -31,16 +37,44 @@ class PreferenceAdapter(
         fun bind(item: Preference) {
             with(binding) {
                 preference = item
-                preferenceItem.setOnClickListener {
-                    if (UtilFunctions.isNetworkAvailable(it.context, true)) {
+
+                if (item.slug == CLEAR_PREF_KEY) {
+                    preferenceItem.visibility = View.GONE
+                    preferenceText.visibility = View.VISIBLE
+
+                    val spannedText = SpannableString(preferenceText.text)
+                    spannedText.setSpan(UnderlineSpan(), 0, spannedText.length, 0)
+                    preferenceText.text = spannedText
+
+                    preferenceText.setOnClickListener {
+                        onClickListener(
+                            item,
+                            false,
+                            preferenceItem
+                        )
+                    }
+
+                } else {
+                    preferenceItem.visibility = View.VISIBLE
+                    preferenceText.visibility = View.GONE
+                    preferenceItem.isChecked = try {
+                        item.value?.toInt() == 1
+                    } catch (e: NumberFormatException) {
+                        false
+                    }
+
+                    preferenceItem.setOnClickListener {
+                        if (UtilFunctions.isNetworkAvailable(it.context, true)) {
                             onClickListener(
                                 item,
                                 preferenceItem.isChecked,
                                 preferenceItem
                             )
+                        }
                     }
+                    executePendingBindings()
                 }
-                executePendingBindings()
+
             }
         }
     }

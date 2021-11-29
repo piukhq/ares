@@ -307,7 +307,7 @@ fun CardBalance?.formatBalance(): String {
 }
 
 fun logError(tag: String?, message: String?, exception: Exception? = null) {
-    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
         tag?.let {
             message?.let {
                 Log.e(tag, message, exception)
@@ -317,7 +317,7 @@ fun logError(tag: String?, message: String?, exception: Exception? = null) {
 }
 
 fun logDebug(tag: String?, message: String?) {
-    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
         message?.let {
             Log.d(tag, it)
         }
@@ -397,7 +397,7 @@ fun HttpException.getErrorBody(): String {
 
 fun String.getSuffixForLPS(): String {
     val debugSuffix =
-        if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+        if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
             "_debug"
         } else {
             ""

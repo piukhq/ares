@@ -21,7 +21,6 @@ import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
 import zendesk.support.Support
-import java.util.*
 
 class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     override val layoutRes: Int
@@ -162,7 +161,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     private fun configureZendesk() {
         val isProduction =
-            BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type
+            BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
         Zendesk.INSTANCE.init(
             requireActivity(),
             if (isProduction) zendeskProdUrl() else zendeskSandboxUrl(),
@@ -176,7 +175,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private fun persistBouncerKeys() {
         var bouncerKey = bouncerDevKey()
 
-        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH)) {
+        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().lowercase()) {
             bouncerKey = bouncerProdKey()
         }
 

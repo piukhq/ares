@@ -177,7 +177,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, false))
                 } else {
 
-                    if (emailFromJson?.toLowerCase() != emailFromLocal.toLowerCase()) {
+                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(Locale.ENGLISH)) {
                         requireContext().displayModalPopup(
                             getString(R.string.already_logged_in_title),
                             getString(R.string.already_logged_in_subtitle, emailFromJson),

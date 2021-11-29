@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.LabeledIntent
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Html
 import android.view.View
 import com.bink.wallet.BaseFragment
@@ -15,6 +16,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentBinding>() {
 
     override val layoutRes = R.layout.check_inbox_fragment
+
+    private var countDownTimer: CountDownTimer? = null
 
     override fun builder(): FragmentToolbar {
         return FragmentToolbar.Builder()
@@ -48,6 +51,31 @@ class CheckInboxFragment : BaseFragment<CheckInboxViewModel, CheckInboxFragmentB
             binding.goToInbox.visibility = View.GONE
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startButtonFadeInCountdown()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        countDownTimer?.cancel()
+        countDownTimer = null
+    }
+
+    private fun startButtonFadeInCountdown() {
+        if(binding.goToInbox.alpha == 1.0f) return
+        countDownTimer = object : CountDownTimer(3000, 1000) {
+            override fun onFinish() {
+                binding.goToInbox.animate().alpha(1.0f)
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+            }
+        }
+
+        countDownTimer?.start()
     }
 
     private fun setSubtitle(email: String) {

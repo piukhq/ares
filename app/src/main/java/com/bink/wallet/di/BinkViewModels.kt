@@ -73,10 +73,10 @@ val viewModelModules = module {
     }
     viewModel { LoyaltyViewModel(get(), get(), get()) }
 
-    viewModel { AddAuthViewModel(get()) }
-    viewModel { AddCardViewModel(get()) }
-    viewModel { GetNewCardViewModel(get()) }
-    viewModel { GhostCardViewModel(get()) }
+    viewModel { AddAuthViewModel(get(), get()) }
+    viewModel { AddCardViewModel(get(), get()) }
+    viewModel { GetNewCardViewModel(get(), get()) }
+    viewModel { GhostCardViewModel(get(), get()) }
 
     viewModel { BrowseBrandsViewModel() }
 

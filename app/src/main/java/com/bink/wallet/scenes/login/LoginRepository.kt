@@ -12,13 +12,14 @@ import com.bink.wallet.model.request.Preference
 import com.bink.wallet.model.request.SignUpRequest
 import com.bink.wallet.model.request.forgot_password.ForgotPasswordRequest
 import com.bink.wallet.model.response.SignUpResponse
-import com.bink.wallet.model.response.membership_card.MembershipCard
-import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.utils.CONTENT_TYPE
 import com.bink.wallet.utils.logDebug
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -123,46 +124,16 @@ class LoginRepository(
         }
     }
 
-    suspend fun logOut() : ResponseBody {
+    suspend fun logOut(): ResponseBody {
         return apiService.logOutAsync()
     }
 
-    fun getPreferences(
-        preferenceResponse: MutableLiveData<List<Preference>>,
-        preferenceErrorResponse: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val requestResult = withContext(Dispatchers.IO) {
-                    apiService.getPreferencesAsync()
-                }
-                preferenceResponse.value = requestResult
-            } catch (e: java.lang.Exception) {
-                preferenceErrorResponse.value = e
-            }
-        }
+    suspend fun getPreferences(): List<Preference> {
+        return apiService.getPreferencesAsync()
     }
 
-    fun setPreference(
-        requestBody: String,
-        preferenceResponse: MutableLiveData<ResponseBody>,
-        preferenceErrorResponse: MutableLiveData<Exception>
-    ) {
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                val requestResult = withContext(Dispatchers.IO) {
-                    apiService.putPreferencesAsync(
-                        RequestBody.create(
-                            MediaType.parse(CONTENT_TYPE),
-                            requestBody
-                        )
-                    )
-                }
-                preferenceResponse.value = requestResult
-            } catch (e: Exception) {
-                preferenceErrorResponse.value = e
-            }
-        }
+    suspend fun setPreference(requestBody: String) {
+        apiService.putPreferencesAsync(RequestBody.create(MediaType.parse(CONTENT_TYPE), requestBody))
     }
 
     suspend fun sendMagicLink(magicLinkBody: MagicLinkBody) {

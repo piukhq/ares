@@ -16,17 +16,11 @@
 
         <Button
             android:id="@+id/add_auth_cta"
+            style="@style/RoundedGradientButton"
             isVisible="@{!viewModel.isNoAccountFooter() &amp;&amp; viewModel.isKeyboardHidden()}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_padding_size_extra_large"
-            android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
             android:layout_marginBottom="@dimen/margin_padding_size_medium"
-            android:background="@drawable/gradient_button_selector"
             android:enabled="@{viewModel.haveValidationsPassed}"
             android:text="@{viewModel.ctaText}"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
