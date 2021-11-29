@@ -260,10 +260,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
+        showRememberMyDetailsView()
     }
 
     private fun endTransition() {
         viewModel.isKeyboardHidden.set(true)
+        hideRememberMyDetailsView()
+
     }
 
     private fun setKeyboardTypeToAdjustResize() {
