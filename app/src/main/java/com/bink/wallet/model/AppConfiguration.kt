@@ -1,27 +1,17 @@
 package com.bink.wallet.model
 
-import com.bink.wallet.BuildConfig
-import com.bink.wallet.data.SharedPreferenceManager
+data class ConfigFile(val local_points_collection: LocalPointsCollection, val app_config: AppConfiguration, val dynamic_actions: ArrayList<DynamicAction>)
 
-data class AppConfiguration(val recommended_live_app_version: RecommendedLiveAppVersion)
+data class AppConfiguration(val in_app_review_enabled: Boolean, val recommended_live_app_version: RecommendedLiveAppVersion)
 
-data class RecommendedLiveAppVersion(val android_version: String)
+data class LocalPointsCollection(val idle_threshold: Int, val idle_retry_limit: Int, val agents: ArrayList<LocalPointsAgent>)
 
-fun AppConfiguration.isNewVersionAvailable(): Boolean {
-    return try {
-        val appVersion = BuildConfig.VERSION_NAME.replace(".", "").toInt()
-        val newVersion = this.recommended_live_app_version.android_version.replace(".", "").toInt()
-
-        (SharedPreferenceManager.skippedAppVersion < newVersion) && (appVersion < newVersion)
-    } catch (e: Exception) {
-        return false
+fun LocalPointsCollection.currentAgent(membershipPlanId: Int?) : LocalPointsAgent? {
+    val currentAgent = agents.filter { it.membership_plan_id.getId() == membershipPlanId }
+    if (!currentAgent.isNullOrEmpty()) {
+        return currentAgent[0]
     }
+
+    return null
 }
 
-fun AppConfiguration.skipVersion() {
-    try {
-        val newVersion = this.recommended_live_app_version.android_version.replace(".", "").toInt()
-        SharedPreferenceManager.skippedAppVersion = newVersion
-    } catch (e: Exception) {
-    }
-}
