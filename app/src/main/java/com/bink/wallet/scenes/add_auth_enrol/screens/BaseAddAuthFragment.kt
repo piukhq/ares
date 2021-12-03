@@ -95,11 +95,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             },
             autoCompleteToggle = { position, autoCompleteSuggestions ->
                 if (autoCompleteSuggestions == null) {
-                    binding.autocompleteRecyclerview.visibility = View.GONE
-                    binding.footerComposed.progressBtnContainer.visibility = View.VISIBLE
+                    hideRememberMyDetailsView()
+                    setUpAutoCompleteRecyclerView(null, arrayListOf())
+
                 } else {
                     setUpAutoCompleteRecyclerView(position, autoCompleteSuggestions)
-                    binding.footerComposed.progressBtnContainer.visibility = View.GONE
+                    showRememberMyDetailsView()
                 }
             }
         )
@@ -194,9 +195,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
     }
 
-    private fun setUpAutoCompleteRecyclerView(formPos: Int?, autoCompleteFields: ArrayList<String>) {
+    private fun setUpAutoCompleteRecyclerView(
+        formPos: Int?,
+        autoCompleteFields: ArrayList<String>
+    ) {
         binding.autocompleteRecyclerview.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = AutoCompleteAdapter(autoCompleteFields) { value ->
                 formPos?.let {
                     viewModel.addAuthItemsList[it].fieldsRequest?.value = value
@@ -261,10 +266,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
+        showRememberMyDetailsView()
     }
 
     private fun endTransition() {
         viewModel.isKeyboardHidden.set(true)
+        hideRememberMyDetailsView()
     }
 
     private fun setKeyboardTypeToAdjustResize() {
@@ -294,6 +301,16 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun onResult(result: String) {
         addAuthAdapter?.setBarcode(result)
+    }
+
+    private fun showRememberMyDetailsView() {
+        binding.autocompleteRecyclerview.visibility = View.VISIBLE
+        binding.footerComposed.progressBtnContainer.visibility = View.GONE
+    }
+
+    private fun hideRememberMyDetailsView() {
+        binding.autocompleteRecyclerview.visibility = View.GONE
+        binding.footerComposed.progressBtnContainer.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
