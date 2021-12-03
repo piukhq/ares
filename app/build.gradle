@@ -303,4 +303,9 @@ dependencies {
     /** Lottie **/
     implementation 'com.airbnb.android:lottie:4.0.0'
 
+    /** MixPanel**/
+    implementation 'com.mixpanel.android:mixpanel-android:5.+'
+
+
+
 }
