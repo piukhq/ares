@@ -6,4 +6,6 @@ object Keys {
             System.loadLibrary("api_keys-lib")
         }
     external fun mixPanelApiKey():String
+
+    external fun binkTestAuthToken():String
 }
