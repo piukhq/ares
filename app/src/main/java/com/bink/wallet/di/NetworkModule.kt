@@ -9,7 +9,9 @@ import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.network.ApiService
 import com.bink.wallet.network.ApiSpreedly
 import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.Keys
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.RELEASE_BUILD_TYPE
 import com.bink.wallet.utils.SESSION_HANDLER_DESTINATION_ONBOARDING
 import com.bink.wallet.utils.enums.BackendVersion
 import com.bink.wallet.utils.logError
@@ -63,9 +65,14 @@ fun provideDefaultOkHttpClient(appContext: Context): OkHttpClient {
             .header("Accept", SharedPreferenceManager.storedBackendVersion ?: BackendVersion.VERSION_3.version)
             .header("Authorization", jwtToken ?: EMPTY_STRING)
             .header("User-Agent", "Bink / Android ${BuildConfig.VERSION_CODE} / ${android.os.Build.VERSION.SDK_INT}")
-            .url(request)
-            .build()
-        val response = chain.proceed(newRequest)
+        //We don't want to add this token in any production request
+        if (BuildConfig.BUILD_TYPE != RELEASE_BUILD_TYPE) {
+            newRequest.header("Bink-Test-Auth", Keys.binkTestAuthToken()).url(request)
+        } else {
+            newRequest.url(request)
+        }
+
+        val response = chain.proceed(newRequest.build())
         response.networkResponse()?.request()?.url()?.let {
             if (it.toString() == ADD_PAYMENT_CARD_URL) {
                 if (response.code() == 200 || response.code() == 201) {

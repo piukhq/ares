@@ -70,6 +70,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
+        Keys
         persistPaymentCardHashSecret()
         configureZendesk()
         persistBouncerKeys()
