@@ -38,7 +38,7 @@ class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
                 findNavController().navigateIfAdded(this, action)
 
             } ?: run {
-                MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_failure_body, ""))
+                MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_non_supported_body))
             }
         }
     }

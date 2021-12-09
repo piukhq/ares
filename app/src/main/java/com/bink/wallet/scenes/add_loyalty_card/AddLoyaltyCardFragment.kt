@@ -93,7 +93,7 @@ class AddLoyaltyCardFragment :
         savedInstanceState?.remove<String>(ADD_AUTH_BARCODE)
 
         if (text == null) {
-            showUnsupportedBarcodePopup(account!!.company_name!!)
+            showUnsupportedBarcodePopup(account?.company_name)
             return
         }
 
@@ -105,7 +105,7 @@ class AddLoyaltyCardFragment :
 
                 }
             } else {
-                showUnsupportedBarcodePopup(account!!.company_name!!)
+                showUnsupportedBarcodePopup(account?.company_name)
             }
 
         } else {
@@ -123,7 +123,7 @@ class AddLoyaltyCardFragment :
                     findNavController().navigateIfAdded(this, action)
 
                 } ?: run {
-                    showUnsupportedBarcodePopup()
+                    showUnsupportedBarcodePopup(null)
                 }
             }
         }
@@ -169,12 +169,19 @@ class AddLoyaltyCardFragment :
         }
     }
 
-    private fun showUnsupportedBarcodePopup(companyName: String = "") {
+    private fun showUnsupportedBarcodePopup(companyName: String?) {
         if (isFromAddAuth) {
-            MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_failure_body, companyName)) {
-                startScanning()
+            if(companyName != null){
+                MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_failure_body, companyName)) {
+                    startScanning()
+                }
+            } else {
+                MembershipPlanUtils.showTryAgainGenericError(requireActivity(), getString(R.string.scan_non_supported_body)) {
+                    startScanning()
+                }
             }
         }
+
         performHaptic(
             getString(R.string.unrecognized_barcode_title),
             getString(R.string.unrecognized_barcode_body)

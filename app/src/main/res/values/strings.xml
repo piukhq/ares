@@ -594,6 +594,7 @@
     <string name="unrecognized_barcode_body">Please try adding the card manually.</string>
     <string name="scan_failure_title">Error</string>
     <string name="scan_failure_body">The card you scanned was not correct, please scan your %1$s card </string>
+    <string name="scan_non_supported_body">The card you scanned was not supported by Bink</string>
     <string name="add_loyalty_card_permissions_denied_title">Please allow camera access</string>
     <string name="add_loyalty_card_permissions_denied_message">To scan your cards, you’ll need to allow Bink access to your device’s camera.</string>
 
