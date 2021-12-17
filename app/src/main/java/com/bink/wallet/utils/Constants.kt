@@ -96,3 +96,6 @@ val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
 val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
 val EMAIL_COMMON_NAME = "email"
 val CLEAR_CREDS_TITLE = "Clear Stored Credentials"
+
+val LINKING_SUPPORT_ADD = "ADD"
+val LINKING_SUPPORT_ENROL = "ENROL"

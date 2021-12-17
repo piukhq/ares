@@ -487,7 +487,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                     disableIndicators()
                 }
-                val joinablePlans = userDataResult.result.second.filter { it.feature_set?.linking_support?.contains("ADD") == true || it.feature_set?.linking_support?.contains("ENROL") == true }
+                val joinablePlans = userDataResult.result.second.filter { it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ADD) == true || it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ENROL) == true }
                 walletAdapter.membershipPlans = joinablePlans as ArrayList<MembershipPlan>
                 walletAdapter.notifyDataSetChanged()
 
