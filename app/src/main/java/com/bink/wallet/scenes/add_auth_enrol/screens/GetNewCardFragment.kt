@@ -7,7 +7,7 @@ import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.scenes.add_auth_enrol.view_models.GetNewCardViewModel
-import com.bink.wallet.utils.FirebaseEvents
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_ENROL_JOURNEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
@@ -15,9 +15,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.ENROL_FORM_VIEW
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
-import com.bink.wallet.utils.ProgressButton
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.observeNonNull
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -64,6 +62,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.addLoyaltyCardRequestMade.observeNonNull(this) {
+            logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_ADD, JSONObject().put("Brand name", currentMembershipPlan?.account?.company_name ?: "Unknown"))
             val mPlanId = membershipPlanId
 
             if (mPlanId == null) {
