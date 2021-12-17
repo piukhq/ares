@@ -84,8 +84,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
         membershipCardIds: List<String>
     ): List<BrowseBrandsListItem> {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
-
-        val (pllCards, RestOfCards) = membershipPlans.partition { it.isPlanPLL() }
+        val joinablePlans = membershipPlans.filter { it.feature_set?.linking_support?.contains("ADD") == true || it.feature_set?.linking_support?.contains("ENROL") == true }
+        val (pllCards, RestOfCards) = joinablePlans.partition { it.isPlanPLL() }
 
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
             .partition { WebScrapableManager.isCardScrapable(it.id) }
