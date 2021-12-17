@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -40,11 +39,11 @@ import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.system.exitProcess
 
-
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
     lateinit var firebaseAnalytics: FirebaseAnalytics
+    lateinit var mixpanel: MixpanelAPI
     private var isFirstLaunch = true
     private lateinit var appUpdateManager: AppUpdateManager
     var newIntent: Intent? = null
@@ -54,9 +53,8 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
-        logDebug("mixPanel",Keys.mixPanelApiKey())
-
-        val mixpanel = MixpanelAPI.getInstance(this,Keys.mixPanelApiKey())
+        logDebug("mixPanel", Keys.mixPanelApiKey())
+        mixpanel = MixpanelAPI.getInstance(this, Keys.mixPanelApiKey())
 
         SentryAndroid.init(
             this

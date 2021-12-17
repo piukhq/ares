@@ -17,7 +17,6 @@ import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.model.*
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragmentDirections
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletFragmentDirections
-import com.bink.wallet.scenes.settings.SettingsFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_JOURNEY_KEY
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_LOYALTY_PLAN_KEY
@@ -163,7 +162,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         return null
-        
+
     }
 
     private fun shouldShowSwitchDialog(token: String) {
@@ -195,7 +194,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             logDebug("responseToken", "$e")
         }
     }
-    
+
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(
@@ -391,6 +390,20 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                 screenName,
                 screenName
             )
+        }
+    }
+
+    fun startMixpanelEventTimer(eventTitle: String) {
+        val mixpanel = (requireActivity() as MainActivity).mixpanel
+        mixpanel.timeEvent(eventTitle)
+    }
+
+    fun logMixpanelEvent(eventTitle: String, properties: JSONObject? = null) {
+        val mixpanel = (requireActivity() as MainActivity).mixpanel
+        if (properties == null) {
+            mixpanel.track(eventTitle)
+        } else {
+            mixpanel.track(eventTitle, properties)
         }
     }
 
