@@ -487,7 +487,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                     disableIndicators()
                 }
-                walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
+                val joinablePlans = userDataResult.result.second.filter { it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ADD) == true || it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ENROL) == true }
+                walletAdapter.membershipPlans = joinablePlans as ArrayList<MembershipPlan>
                 walletAdapter.notifyDataSetChanged()
 
                 SharedPreferenceManager.loyaltyWalletPosition?.let {
