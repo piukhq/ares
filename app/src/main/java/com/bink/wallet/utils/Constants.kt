@@ -91,3 +91,6 @@ const val MAGIC_LINK_LOCALE = "en_GB"
 const val MAGIC_LINK_BUNDLE_ID = "com.bink.wallet"
 const val MAGIC_LINK_DEBUG_SLUG = "iceland-bonus-card-mock"
 const val MAGIC_LINK_PROD_SLUG = "matalan-reward-card"
+
+val LINKING_SUPPORT_ADD = "ADD"
+val LINKING_SUPPORT_ENROL = "ENROL"
