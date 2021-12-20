@@ -3,4 +3,5 @@ package com.bink.wallet.utils
 object MixpanelEvents {
     const val LOYALTY_CARD_ADD = "Loyalty card add"
     const val LOYALTY_CARD_ADD_FAIL = "Loyalty card add failed"
+    const val LOYALTY_CARD_REORDER = "Loyalty card manually reordered"
 }

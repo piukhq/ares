@@ -37,6 +37,7 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -76,6 +77,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private lateinit var plans: List<MembershipPlan>
     private lateinit var handler: Handler
 
+    private var lastTouchedBrand: String? = null
 
     private var simpleCallback =
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP + DOWN, LEFT + RIGHT) {
@@ -89,10 +91,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                 try {
                     card = walletAdapter.membershipCards[currentPosition] as MembershipCard
+                    lastTouchedBrand = card.plan?.account?.company_name
                 } catch (e: ClassCastException) {
                     //User attempting to drag join plan
                 }
 
+                //Store current card being moved
                 card?.let {
                     return walletAdapter.onItemMove(currentPosition, target.adapterPosition)
                 }
@@ -239,6 +243,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
+                    logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_REORDER, JSONObject().put("Brand name", lastTouchedBrand ?: "Unknown"))
                 }
 
             }
