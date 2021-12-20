@@ -60,6 +60,7 @@ class LoyaltyViewModel constructor(
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
+    val lpsCardStatus = MutableLiveData<MembershipCard>()
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private val _hasZendeskResponse = MutableLiveData<Boolean>()
@@ -217,7 +218,7 @@ class LoyaltyViewModel constructor(
     }
 
     private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
-        WebScrapableManager.tryScrapeCards(0, cards, context, false) { scrapedCards ->
+        WebScrapableManager.tryScrapeCards(0, cards, context, false, lpsCardStatus) { scrapedCards ->
             if (scrapedCards != null) {
                 updateScrapedCards(scrapedCards)
             }

@@ -2,6 +2,7 @@ package com.bink.wallet.utils.local_point_scraping
 
 import android.content.Context
 import android.os.CountDownTimer
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.response.membership_card.CardBalance
@@ -78,6 +79,7 @@ object WebScrapableManager {
         cards: List<MembershipCard>,
         context: Context?,
         isAddCard: Boolean,
+        cardStatus: MutableLiveData<MembershipCard>,
         callback: (List<MembershipCard>?) -> Unit
     ) {
         if (context == null) return
@@ -104,13 +106,14 @@ object WebScrapableManager {
                                 MembershipCardStatus.FAILED.status
                             )
                             membershipCards!![index].isScraped = true
+                            cardStatus.value = membershipCards!![index]
                         } catch (e: IndexOutOfBoundsException) {
                         }
                     }
 
                     SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant?.remoteName, isAddCard)
 
-                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
                 }
 
                 override fun onTick(millisUntilFinished: Long) {
@@ -134,7 +137,7 @@ object WebScrapableManager {
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
                         if (!isScraped) {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
                             return
                         }
                     }
@@ -143,7 +146,7 @@ object WebScrapableManager {
                 if (credentials == null || agent == null) {
                     //Try next card
                     logDebug("LocalPointScrape", "Credentials null, agent null")
-                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
                 } else {
 
 //                    var isPriorityCard = false
@@ -158,6 +161,7 @@ object WebScrapableManager {
 //                            }
 //                        }
 //                    }
+                    cardStatus.value = card
 
                     PointScrapingUtil.performNewScrape(
                         context,
@@ -185,12 +189,14 @@ object WebScrapableManager {
                                         CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
-                                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                                    cardStatus.value = membershipCards!![index]
+
+                                    tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
                                 }
                             }
 
                         } else {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
                         }
 
                     }

@@ -388,6 +388,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
+        viewModel.lpsCardStatus.observeNonNull(this) {
+            logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS, JSONObject().put("Status", it.status?.state ?: "Unknown").put("Brand Name", it.plan?.account?.company_name ?: "Unknown"))
+        }
+
         WebScrapableManager.updatedCards.observeNonNull(this) {
             viewModel.membershipCardData.value = it
         }

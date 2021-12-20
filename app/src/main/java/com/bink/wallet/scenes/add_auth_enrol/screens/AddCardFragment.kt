@@ -70,10 +70,14 @@ class AddCardFragment : BaseAddAuthFragment() {
 
             WebScrapableManager.storeCredentialsFromRequest(it.id)
 
-            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
+            WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true, viewModel.lpsCardStatus) { cards ->
                 if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }
+            }
+
+            viewModel.lpsCardStatus.observeNonNull(this) {
+                logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS, JSONObject().put("Status", it.status?.state ?: "Unknown").put("Brand Name", it.plan?.account?.company_name ?: "Unknown"))
             }
 
         }
