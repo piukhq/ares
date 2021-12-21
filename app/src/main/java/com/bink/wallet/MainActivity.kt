@@ -53,16 +53,15 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
-        logDebug("mixPanel",Keys.mixPanelApiKey())
 
-//        SentryAndroid.init(
-//            this
-//        ) { options: SentryAndroidOptions ->
-//            options.environment =
-//                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
-//            options.setDebug(BuildConfig.DEBUG)
-//            options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
-//        }
+        SentryAndroid.init(
+            this
+        ) { options: SentryAndroidOptions ->
+            options.environment =
+                if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) "prod" else "beta"
+            options.setDebug(BuildConfig.DEBUG)
+            options.release = "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
+        }
 
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
             if (BuildConfig.SECURE_FLAGS) {
