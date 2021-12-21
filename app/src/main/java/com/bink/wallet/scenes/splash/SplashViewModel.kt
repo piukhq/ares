@@ -33,7 +33,7 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
 
                 _getUserResponse.value = user
             } catch (e: Exception) {
-
+                _postServiceErrorResponse.value = e
             }
 
         }
