@@ -60,7 +60,6 @@ class LoyaltyViewModel constructor(
     private val _dismissedBannerDisplay = MutableLiveData<String>()
     val dismissedBannerDisplay: LiveData<String>
         get() = _dismissedBannerDisplay
-    val lpsCardStatus = MutableLiveData<MembershipCard>()
     private val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.Main)
     private val _hasZendeskResponse = MutableLiveData<Boolean>()
@@ -115,17 +114,24 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
-    fun fetchMembershipCards(context: Context?) {
+    fun fetchMembershipCards(context: Context?, lpsCardStatus: (MembershipCard) -> Unit) {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
-            checkCardScrape(it, context)
+            checkCardScrape(it, context, lpsCardStatus)
         }
     }
 
-    private fun checkCardScrape(cards: List<MembershipCard>, context: Context?) {
-        val shouldScrapeCards = DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(context)
+    private fun checkCardScrape(
+        cards: List<MembershipCard>,
+        context: Context?,
+        lpsCardStatus: (MembershipCard) -> Unit
+    ) {
+        val shouldScrapeCards =
+            DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(
+                context
+            )
 
         if (shouldScrapeCards) {
-            scrapeCards(cards, context)
+            scrapeCards(cards, context, lpsCardStatus)
             SharedPreferenceManager.membershipCardsLastScraped = System.currentTimeMillis()
         } else {
             fetchLocalMembershipCards { cardsFromDb ->
@@ -134,17 +140,23 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    private fun setMembershipCardsFromDb(cardsFromDb: List<MembershipCard>, cards: List<MembershipCard>) {
+    private fun setMembershipCardsFromDb(
+        cardsFromDb: List<MembershipCard>,
+        cards: List<MembershipCard>
+    ) {
         membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
-    fun fetchPeriodicMembershipCards(context: Context) {
-        val shouldMakePeriodicCall = DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(context)
+    fun fetchPeriodicMembershipCards(context: Context, lpsCardStatus: (MembershipCard) -> Unit) {
+        val shouldMakePeriodicCall =
+            DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(
+                context
+            )
         if (shouldMakePeriodicCall) {
-            fetchMembershipCards(context)
+            fetchMembershipCards(context, lpsCardStatus)
         } else {
             fetchLocalMembershipCards {
-                checkCardScrape(it, context)
+                checkCardScrape(it, context, lpsCardStatus)
             }
         }
     }
@@ -165,7 +177,8 @@ class LoyaltyViewModel constructor(
     fun fetchLocalMembershipCards(callback: ((List<MembershipCard>) -> Unit?)? = null) {
         scope.launch {
             try {
-                val localCards = withContext(Dispatchers.IO) { loyaltyWalletRepository.retrieveStoredMembershipCards() }
+                val localCards =
+                    withContext(Dispatchers.IO) { loyaltyWalletRepository.retrieveStoredMembershipCards() }
                 membershipCardData.value = localCards
                 callback?.let { returnData -> returnData(localCards) }
             } catch (e: Exception) {
@@ -175,7 +188,10 @@ class LoyaltyViewModel constructor(
 
     }
 
-    fun fetchMembershipCardsAndPlansForRefresh(context: Context?) {
+    fun fetchMembershipCardsAndPlansForRefresh(
+        context: Context?,
+        lpsCardStatus: (MembershipCard) -> Unit
+    ) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
         }
@@ -204,7 +220,7 @@ class LoyaltyViewModel constructor(
 
                 membershipCardsAndPlans.membershipCards?.let {
                     membershipCardData.value = it
-                    checkCardScrape(it, context)
+                    checkCardScrape(it, context, lpsCardStatus)
                 }
 
                 _isLoading.value = false
@@ -217,8 +233,18 @@ class LoyaltyViewModel constructor(
         }
     }
 
-    private fun scrapeCards(cards: List<MembershipCard>, context: Context?) {
-        WebScrapableManager.tryScrapeCards(0, cards, context, false, lpsCardStatus) { scrapedCards ->
+    private fun scrapeCards(
+        cards: List<MembershipCard>,
+        context: Context?,
+        lpsCardStatus: (MembershipCard) -> Unit
+    ) {
+        WebScrapableManager.tryScrapeCards(
+            0,
+            cards,
+            context,
+            false,
+            lpsCardStatus
+        ) { scrapedCards ->
             if (scrapedCards != null) {
                 updateScrapedCards(scrapedCards)
             }

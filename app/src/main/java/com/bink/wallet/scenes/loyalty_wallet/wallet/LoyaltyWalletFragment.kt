@@ -243,7 +243,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
-                    logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_REORDER, JSONObject().put("Brand name", lastTouchedBrand ?: "Unknown"))
+                    logMixpanelEvent(
+                        MixpanelEvents.LOYALTY_CARD_REORDER,
+                        JSONObject().put("Brand name", lastTouchedBrand ?: "Unknown")
+                    )
                 }
 
             }
@@ -268,7 +271,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        context?.let { viewModel.fetchPeriodicMembershipCards(it) }
+        context?.let { context ->
+            viewModel.fetchPeriodicMembershipCards(context) {
+                logMixPanelCardStatus(it)
+            }
+        }
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -337,7 +344,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context)
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context) {
+
+                }
             } else {
                 isRefresh = false
                 disableIndicators()
@@ -386,10 +395,6 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             if (!UtilFunctions.isNetworkAvailable(context)) {
                 viewModel.membershipPlanData.value = it
             }
-        }
-
-        viewModel.lpsCardStatus.observeNonNull(this) {
-            logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS, JSONObject().put("Status", it.status?.state ?: "Unknown").put("Brand Name", it.plan?.account?.company_name ?: "Unknown"))
         }
 
         WebScrapableManager.updatedCards.observeNonNull(this) {
@@ -613,7 +618,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            context?.let { viewModel.fetchPeriodicMembershipCards(it) }
+            context?.let {
+                viewModel.fetchPeriodicMembershipCards(it) { card ->
+                    logMixPanelCardStatus(card)
+                }
+            }
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()
@@ -766,6 +775,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 plans.toTypedArray(),
                 cards.toTypedArray()
             )
+        )
+    }
+
+    private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
+        logMixpanelEvent(
+            MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
+            JSONObject().put("Status", membershipCard.status?.state ?: "Unknown")
+                .put("Loyalty Card ID", membershipCard.membership_plan ?: "Unknown")
         )
     }
 

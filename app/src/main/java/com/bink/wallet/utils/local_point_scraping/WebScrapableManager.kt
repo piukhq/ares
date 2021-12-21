@@ -18,7 +18,13 @@ object WebScrapableManager {
 
     val newlyAddedCard = MutableLiveData<MembershipCard>()
     val updatedCards = MutableLiveData<List<MembershipCard>?>()
-    val scrapableAgents = arrayListOf(TescoScrapableAgent(), WaterstoneScrapableAgent(), SuperdrugScrapableAgent(), MorrisonsScrapableAgent(), StarbucksScrapableAgent())
+    val scrapableAgents = arrayListOf(
+        TescoScrapableAgent(),
+        WaterstoneScrapableAgent(),
+        SuperdrugScrapableAgent(),
+        MorrisonsScrapableAgent(),
+        StarbucksScrapableAgent()
+    )
 
     val deletedCards = ArrayList<String>()
 
@@ -79,7 +85,7 @@ object WebScrapableManager {
         cards: List<MembershipCard>,
         context: Context?,
         isAddCard: Boolean,
-        cardStatus: MutableLiveData<MembershipCard>,
+        cardStatus: (MembershipCard) -> Unit,
         callback: (List<MembershipCard>?) -> Unit
     ) {
         if (context == null) return
@@ -106,12 +112,17 @@ object WebScrapableManager {
                                 MembershipCardStatus.FAILED.status
                             )
                             membershipCards!![index].isScraped = true
-                            cardStatus.value = membershipCards!![index]
+                            cardStatus(membershipCards!![index])
                         } catch (e: IndexOutOfBoundsException) {
                         }
                     }
 
-                    SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant?.remoteName, isAddCard)
+                    SentryUtils.logError(
+                        SentryErrorType.LOCAL_POINTS_SCRAPE_SITE,
+                        LocalPointScrapingError.UNHANDLED_IDLING.issue,
+                        currentAgent?.merchant?.remoteName,
+                        isAddCard
+                    )
 
                     tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
                 }
@@ -137,7 +148,14 @@ object WebScrapableManager {
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
                         if (!isScraped) {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
+                            tryScrapeCards(
+                                index + 1,
+                                cards,
+                                context,
+                                isAddCard,
+                                cardStatus,
+                                callback
+                            )
                             return
                         }
                     }
@@ -161,7 +179,7 @@ object WebScrapableManager {
 //                            }
 //                        }
 //                    }
-                    cardStatus.value = card
+                    cardStatus(card)
 
                     PointScrapingUtil.performNewScrape(
                         context,
@@ -189,14 +207,28 @@ object WebScrapableManager {
                                         CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
-                                    cardStatus.value = membershipCards!![index]
+                                    cardStatus(membershipCards!![index])
 
-                                    tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
+                                    tryScrapeCards(
+                                        index + 1,
+                                        cards,
+                                        context,
+                                        isAddCard,
+                                        cardStatus,
+                                        callback
+                                    )
                                 }
                             }
 
                         } else {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
+                            tryScrapeCards(
+                                index + 1,
+                                cards,
+                                context,
+                                isAddCard,
+                                cardStatus,
+                                callback
+                            )
                         }
 
                     }
