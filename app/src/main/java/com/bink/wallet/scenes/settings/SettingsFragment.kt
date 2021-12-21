@@ -298,6 +298,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
                         getString(R.string.log_out_confirmation),
                         okAction = {
                             if (UtilFunctions.isNetworkAvailable(requireContext(), true)) {
+                                logMixpanelEvent(MixpanelEvents.LOGOUT)
                                 viewModel.logOut()
                             }
                         },

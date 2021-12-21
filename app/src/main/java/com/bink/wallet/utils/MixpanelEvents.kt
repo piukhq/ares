@@ -6,4 +6,5 @@ object MixpanelEvents {
     const val LOYALTY_CARD_REORDER = "Loyalty card manually reordered"
     const val LOYALTY_CARD_SCRAPE_STATUS = "Local points collection status"
     const val LOGIN = "User logged in"
+    const val LOGOUT = "User logged out"
 }
