@@ -5,7 +5,6 @@ import com.bink.wallet.network.ApiService
 import com.bink.wallet.utils.LocalStoreUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 class UserRepository(private val apiService: ApiService) {
 
@@ -36,6 +35,6 @@ class UserRepository(private val apiService: ApiService) {
         user.last_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME, it) }
         user.uid.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_UID, it) }
 
-        throw IllegalArgumentException()
+        return user
     }
 }
