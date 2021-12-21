@@ -10,9 +10,11 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.MagicLinkResultFragmentBinding
 import com.bink.wallet.scenes.login.LoginFragmentDirections
 import com.bink.wallet.utils.LocalStoreUtils
+import com.bink.wallet.utils.MixpanelEvents
 import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLinkResultFragmentBinding>() {
@@ -68,6 +70,7 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
         }
 
         viewModel.membershipPlans.observeNonNull(this) {
+            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put("Method", "Magic link"))
             findNavController().navigate(LoginFragmentDirections.globalToHome(true))
         }
 
