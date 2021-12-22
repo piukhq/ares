@@ -62,7 +62,7 @@ class GetNewCardFragment : BaseAddAuthFragment() {
         }
 
         viewModel.addLoyaltyCardRequestMade.observeNonNull(this) {
-            logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_ADD, JSONObject().put("Brand name", currentMembershipPlan?.account?.company_name ?: "Unknown"))
+            logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_ADD, JSONObject().put(MixpanelEvents.BRAND_NAME, currentMembershipPlan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN))
             val mPlanId = membershipPlanId
 
             if (mPlanId == null) {

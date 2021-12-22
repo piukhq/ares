@@ -93,8 +93,8 @@ class AddCardFragment : BaseAddAuthFragment() {
             logMixpanelEvent(
                 MixpanelEvents.LOYALTY_CARD_ADD,
                 JSONObject().put(
-                    "Brand name",
-                    currentMembershipPlan?.account?.company_name ?: "Unknown"
+                    MixpanelEvents.BRAND_NAME,
+                    currentMembershipPlan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
                 )
             )
 
@@ -211,8 +211,8 @@ class AddCardFragment : BaseAddAuthFragment() {
     private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
         logMixpanelEvent(
             MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
-            JSONObject().put("Status", membershipCard.status?.state ?: "Unknown")
-                .put("Loyalty Card ID", membershipCard.membership_plan ?: "Unknown")
+            JSONObject().put(MixpanelEvents.LPS_STATUS, membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN)
+                .put(MixpanelEvents.LC_ID, membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN)
         )
     }
 

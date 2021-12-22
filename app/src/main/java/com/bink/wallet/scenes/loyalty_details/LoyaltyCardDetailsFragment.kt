@@ -257,7 +257,7 @@ class LoyaltyCardDetailsFragment :
             WebScrapableManager.newlyAddedCard.value = null
         }
 
-        logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_DETAIL, JSONObject().put("Brand Name", viewModel.membershipPlan.value?.account?.company_name ?: "Unknown"))
+        logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_DETAIL, JSONObject().put(MixpanelEvents.BRAND_NAME, viewModel.membershipPlan.value?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN))
 
         /**
          *

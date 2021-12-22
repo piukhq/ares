@@ -123,7 +123,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.createCardError.observeNonNull(this) { exception ->
-            logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_ADD_FAIL, JSONObject().put("Brand name", currentMembershipPlan?.account?.company_name ?: "Unknown").put("Error", "$exception"))
+            logMixpanelEvent(
+                MixpanelEvents.LOYALTY_CARD_ADD_FAIL,
+                JSONObject().put(
+                    MixpanelEvents.BRAND_NAME,
+                    currentMembershipPlan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN
+                ).put(MixpanelEvents.ERROR, "$exception")
+            )
 
             binding.loadingIndicator.visibility = View.GONE
             when (ExceptionHandlingUtils.onHttpException(exception)) {
@@ -197,9 +203,13 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
     }
 
-    private fun setUpAutoCompleteRecyclerView(formPos: Int?, autoCompleteFields: ArrayList<String>) {
+    private fun setUpAutoCompleteRecyclerView(
+        formPos: Int?,
+        autoCompleteFields: ArrayList<String>
+    ) {
         binding.autocompleteRecyclerview.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = AutoCompleteAdapter(autoCompleteFields) { value ->
                 formPos?.let {
                     viewModel.addAuthItemsList[it].fieldsRequest?.value = value

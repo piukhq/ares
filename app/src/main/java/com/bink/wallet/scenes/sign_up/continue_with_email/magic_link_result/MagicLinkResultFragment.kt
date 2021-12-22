@@ -70,7 +70,7 @@ class MagicLinkResultFragment : BaseFragment<MagicLinkResultViewModel, MagicLink
         }
 
         viewModel.membershipPlans.observeNonNull(this) {
-            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put("Method", "Magic link"))
+            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put(MixpanelEvents.METHOD, MixpanelEvents.LOGIN_ML))
             findNavController().navigate(LoginFragmentDirections.globalToHome(true))
         }
 

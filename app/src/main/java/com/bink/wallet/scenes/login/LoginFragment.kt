@@ -213,7 +213,7 @@ class LoginFragment : BaseFragment<LoginViewModel, LoginFragmentBinding>() {
 
     private fun finishLogInProcess() {
         if (SharedPreferenceManager.isUserLoggedIn) {
-            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put("Method", "Password"))
+            logMixpanelEvent(MixpanelEvents.LOGIN, JSONObject().put(MixpanelEvents.METHOD, MixpanelEvents.LOGIN_PASSWORD))
             findNavController().navigate(LoginFragmentDirections.globalToHome(true))
         }
     }
