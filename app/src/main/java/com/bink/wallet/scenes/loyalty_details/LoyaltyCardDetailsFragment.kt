@@ -31,6 +31,7 @@ import com.bink.wallet.utils.enums.VoucherStates
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.util.*
@@ -255,6 +256,8 @@ class LoyaltyCardDetailsFragment :
             viewModel.updatedMembershipCard.value = it
             WebScrapableManager.newlyAddedCard.value = null
         }
+
+        logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_DETAIL, JSONObject().put("Brand Name", viewModel.membershipPlan.value?.account?.company_name ?: "Unknown"))
 
         /**
          *
