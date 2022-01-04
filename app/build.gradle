@@ -262,7 +262,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
 
-    implementation 'com.auth0.android:jwtdecode:2.0.0'
+    implementation 'com.auth0.android:jwtdecode:2.0.1'
 
     /** ZENDESK **/
     implementation group: 'com.zendesk', name: 'support', version: '5.0.0'
