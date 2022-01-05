@@ -8,10 +8,11 @@
     <color name="pale_grey">#e9ecf6</color>
     <color name="cool_grey">#99a7ae</color>
     <color name="green_blue">#00c176</color>
-    <color name="light_purple">#b46fea</color>
-    <color name="light_purple_inactive">#4Db46fea</color>
-    <color name="blue_accent">#4371fe</color>
-    <color name="blue_accent_inactive">#4D4371fe</color>
+    <color name="blue_dark">#194B53</color>
+    <color name="blue_dark_inactive">#80194B53</color>
+    <color name="blue_light">#3D908F</color>
+    <color name="blue_light_inactive">#803D908F</color>
+    <color name="blue_accent">#438086</color>
     <color name="blue_inactive">#b1c2cb</color>
     <color name="grey_50">#7f7f7f</color>
     <color name="red_attention">#eb001b</color>
@@ -44,7 +45,6 @@
     <color name="unknown_left">#4371fe</color>
     <color name="white_50_alpha">#B3FFFFFF</color>
     <color name="voucher_redeemed_background">#4371fe</color>
-    <color name="browse_brands_filters_text_color">#4371fe</color>
 
     <color name="camera_view_mask">#99F5F5F5</color>
     <color name="camera_view_foreground">#99000000</color>

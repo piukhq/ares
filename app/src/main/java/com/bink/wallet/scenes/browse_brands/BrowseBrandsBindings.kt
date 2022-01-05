@@ -7,7 +7,7 @@ import com.bink.wallet.R
 @BindingAdapter("isOpen")
 fun Button.isOpen(isSelected: Boolean) {
     if (!isSelected) {
-        setTextColor(resources.getColor(R.color.browse_brands_filters_text_color))
+        setTextColor(resources.getColor(R.color.blue_light))
     } else {
         setTextColor(resources.getColor(R.color.black))
     }
