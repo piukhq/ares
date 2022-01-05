@@ -1,11 +1,7 @@
 package com.bink.wallet.di
 
 import com.bink.wallet.MainViewModel
-import com.bink.wallet.data.BannersDisplayDao
-import com.bink.wallet.data.BinkDatabase
-import com.bink.wallet.data.MembershipCardDao
-import com.bink.wallet.data.MembershipPlanDao
-import com.bink.wallet.data.PaymentCardDao
+import com.bink.wallet.data.*
 import com.bink.wallet.di.qualifier.network.NetworkQualifiers
 import com.bink.wallet.modal.card_terms_and_conditions.AddPaymentCardRepository
 import com.bink.wallet.modal.card_terms_and_conditions.CardTermsAndConditionsViewModel
@@ -31,11 +27,11 @@ import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsRepository
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardDetailsViewModel
 import com.bink.wallet.scenes.loyalty_details.LoyaltyCardRewardsHistoryViewModel
 import com.bink.wallet.scenes.loyalty_details.VoucherDetailsViewModel
+import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
+import com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
-import com.bink.wallet.scenes.loyalty_wallet.barcode.MaximisedBarcodeViewModel
-import com.bink.wallet.scenes.loyalty_wallet.ZendeskRepository
 import com.bink.wallet.scenes.onboarding.OnboardingViewModel
 import com.bink.wallet.scenes.payment_card_details.PaymentCardsDetailsViewModel
 import com.bink.wallet.scenes.payment_card_wallet.PaymentCardWalletViewModel
@@ -43,13 +39,14 @@ import com.bink.wallet.scenes.pll.PaymentWalletRepository
 import com.bink.wallet.scenes.pll.PllEmptyViewModel
 import com.bink.wallet.scenes.pll.PllViewModel
 import com.bink.wallet.scenes.preference.PreferencesViewModel
-import com.bink.wallet.scenes.registration.AcceptTCViewModel
-import com.bink.wallet.scenes.registration.AddEmailViewModel
 import com.bink.wallet.scenes.settings.DebugColorSwatchesViewModel
 import com.bink.wallet.scenes.settings.DebugMenuViewModel
 import com.bink.wallet.scenes.settings.SettingsViewModel
 import com.bink.wallet.scenes.settings.UserRepository
 import com.bink.wallet.scenes.sign_up.SignUpViewModel
+import com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailViewModel
+import com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxViewModel
+import com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.MagicLinkResultViewModel
 import com.bink.wallet.scenes.splash.SplashViewModel
 import com.bink.wallet.scenes.transactions_screen.TransactionViewModel
 import com.bink.wallet.scenes.wallets.WalletsViewModel
@@ -76,10 +73,10 @@ val viewModelModules = module {
     }
     viewModel { LoyaltyViewModel(get(), get(), get()) }
 
-    viewModel { AddAuthViewModel(get()) }
-    viewModel { AddCardViewModel(get()) }
-    viewModel { GetNewCardViewModel(get()) }
-    viewModel { GhostCardViewModel(get()) }
+    viewModel { AddAuthViewModel(get(), get()) }
+    viewModel { AddCardViewModel(get(), get()) }
+    viewModel { GetNewCardViewModel(get(), get()) }
+    viewModel { GhostCardViewModel(get(), get()) }
 
     viewModel { BrowseBrandsViewModel() }
 
@@ -149,10 +146,6 @@ val viewModelModules = module {
     }
     viewModel { CardTermsAndConditionsViewModel(get()) }
 
-    viewModel { AcceptTCViewModel(get(), get(), get()) }
-
-    viewModel { AddEmailViewModel() }
-
     viewModel { ForgotPasswordViewModel(get()) }
 
     viewModel { PreferencesViewModel(get()) }
@@ -162,6 +155,12 @@ val viewModelModules = module {
     viewModel { MainViewModel(get()) }
 
     viewModel { SplashViewModel(get(), get()) }
+
+    viewModel { ContinueWithEmailViewModel(get()) }
+
+    viewModel { MagicLinkResultViewModel(get(), get(), get(), get()) }
+
+    viewModel { CheckInboxViewModel(get()) }
 }
 
 fun provideZendeskRepository() = ZendeskRepository()

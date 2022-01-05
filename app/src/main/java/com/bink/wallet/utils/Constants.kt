@@ -64,6 +64,7 @@ const val DATE_FORMAT = "dd/MM/yyyy"
 
 const val TERMS_AND_CONDITIONS_URL = "https://bink.com/terms-and-conditions/#privacy-policy"
 const val PRIVACY_POLICY_URL = "https://bink.com/privacy-policy/"
+const val MAGIC_LINK_URL = "https://help.bink.com/hc/en-gb/articles/4404303824786"
 
 const val BARCODE = "barcode"
 const val CARD_NUMBER = "card_number"
@@ -79,7 +80,22 @@ const val SANDBOX_ARTICLE_ID = 360016721639
 
 const val PAYMENT_CARD_STATUS_PENDING = "pending"
 
+const val UPDATE_REQUEST_CODE = 102
+
 const val REMOTE_CONFIG_REVIEW_ENABLED = "in_app_review_enabled"
 const val REMOTE_CONFIG_DYNAMIC_ACTIONS = "dynamic_actions"
 const val REMOTE_CONFIG_LPC_MASTER_ENABLED = "LPC_master_enabled"
+const val REMOTE_CONFIG_APP_CONFIGURATION = "app_configuration"
 
+const val MAGIC_LINK_LOCALE = "en_GB"
+const val MAGIC_LINK_BUNDLE_ID = "com.bink.wallet"
+const val MAGIC_LINK_DEBUG_SLUG = "iceland-bonus-card-mock"
+const val MAGIC_LINK_PROD_SLUG = "matalan-reward-card"
+
+val REMEMBERABLE_FIELD_NAMES = arrayListOf("email", "first_name", "last_name", "phone", "date of birth")
+val REMEMBER_DETAILS_KEY = "remember-my-details"
+val CLEAR_PREF_KEY = "clear_preferences"
+val REMEMBER_DETAILS_COMMON_NAME = "remember_my_details"
+val REMEMBER_DETAILS_DISPLAY_NAME = "Remember my details"
+val EMAIL_COMMON_NAME = "email"
+val CLEAR_CREDS_TITLE = "Clear Stored Credentials"

@@ -37,7 +37,6 @@
 -keep class  androidx.navigation.fragment.NavHostFragment.** { *; }
 -keep class com.bink.wallet.model.** { *; }
 -keep class com.bink.wallet.modal.** { *; }
--keep class com.facebook.AccessToken
 -keep class com.bink.wallet.utils.** { *; }
 -keep class com.bink.wallet.utils.enums.** { *; }
 -keep public class androidx.support.v7.widget.** { *; }
@@ -103,3 +102,6 @@
 -keep class zendesk.support.UploadResponseWrapper { *; }
 -keep class zendesk.support.ZendeskUploadProvider { *; }
 -keep class zendesk.support.Attachment { *; }
+
+# Having minify enabled seems to remove some methods from crypto lib causing a crash on version 1.1.0-alpha01
+-keep class com.google.crypto.** { *; }

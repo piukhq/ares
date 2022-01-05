@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -37,7 +37,6 @@ import com.bink.wallet.utils.requestCameraPermissionAndNavigate
 import com.bink.wallet.utils.requestPermissionsResult
 import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -74,6 +73,13 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
+    override fun onPause() {
+        binding.paymentCardRecycler.layoutManager?.let { layoutManager ->
+            SharedPreferenceManager.paymentWalletPosition = layoutManager.onSaveInstanceState()
+        }
+        super.onPause()
+    }
+
     private var simpleCallback: ItemTouchHelper.SimpleCallback = object :
         ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP + ItemTouchHelper.DOWN,
@@ -84,8 +90,19 @@ class PaymentCardWalletFragment :
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
+            val currentPosition = viewHolder.adapterPosition
+            var card: PaymentCard? = null
+            try {
+                card = walletAdapter.paymentCards[currentPosition] as PaymentCard
+            } catch (e: ClassCastException) {
+                //User attempting to drag join plan
+            }
+
+            card?.let {
+                return walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            }
+
+            return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -152,8 +169,8 @@ class PaymentCardWalletFragment :
                     }
 
                     dX < 0 -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.GONE
-                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.barcodeLayout.visibility = View.GONE
+                        viewHolder.binding.deleteLayout.visibility = View.VISIBLE
                         getDefaultUIUtil().onDraw(
                             c,
                             recyclerView,
@@ -290,7 +307,7 @@ class PaymentCardWalletFragment :
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
-            layoutManager = GridLayoutManager(context, 1)
+            layoutManager = LinearLayoutManager(context)
             adapter = walletAdapter
 
             ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
@@ -449,5 +466,11 @@ class PaymentCardWalletFragment :
         }
 
         walletAdapter.notifyDataSetChanged()
+
+        SharedPreferenceManager.paymentWalletPosition?.let {
+            binding.paymentCardRecycler.layoutManager?.onRestoreInstanceState(it)
+            SharedPreferenceManager.paymentWalletPosition = null
+        }
+
     }
 }

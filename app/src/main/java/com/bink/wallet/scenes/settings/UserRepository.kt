@@ -33,6 +33,7 @@ class UserRepository(private val apiService: ApiService) {
 
         user.first_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_FIRST_NAME, it) }
         user.last_name?.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_SECOND_NAME, it) }
+        user.uid.let { LocalStoreUtils.setAppSharedPref(LocalStoreUtils.KEY_UID, it) }
 
         return user
     }

@@ -19,6 +19,10 @@
         android:id="@+id/global_to_web"
         app:destination="@id/binkWebFragment" />
 
+    <action
+        android:id="@+id/global_to_magic_link"
+        app:destination="@id/magic_link_result_fragment" />
+
     <fragment
         android:id="@+id/splash"
         android:name="com.bink.wallet.scenes.splash.SplashFragment">
@@ -51,7 +55,7 @@
 
         <action
             android:id="@+id/home_to_payment_wallet"
-            app:destination="@+id/payment_card_wallet"/>
+            app:destination="@+id/payment_card_wallet" />
 
     </fragment>
 
@@ -87,7 +91,7 @@
     <fragment
         android:id="@+id/loyalty_fragment"
         android:name="com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletFragment"
-        android:label="@string/root" >
+        android:label="@string/root">
 
         <action
             android:id="@+id/loyalty_to_add"
@@ -107,11 +111,11 @@
 
         <action
             android:id="@+id/loyalty_to_payment_wallet"
-            app:destination="@+id/payment_card_wallet"/>
+            app:destination="@+id/payment_card_wallet" />
 
         <action
             android:id="@+id/loyalty_to_settings_screen"
-            app:destination="@+id/settings_screen"/>
+            app:destination="@+id/settings_screen" />
 
         <action
             android:id="@+id/loyalty_to_add_payment_card"
@@ -123,7 +127,7 @@
 
         <action
             android:id="@+id/loyalty_to_browse_brands"
-            app:destination="@+id/browse_brands"/>
+            app:destination="@+id/browse_brands" />
 
     </fragment>
 
@@ -160,11 +164,11 @@
 
         <action
             android:id="@+id/payment_wallet_to_settings_screen"
-            app:destination="@+id/settings_screen"/>
+            app:destination="@+id/settings_screen" />
 
         <action
             android:id="@+id/payment_to_loyalty_wallet"
-            app:destination="@+id/loyalty_fragment"/>
+            app:destination="@+id/loyalty_fragment" />
 
         <action
             android:id="@+id/payment_to_dynamic_action"
@@ -257,6 +261,10 @@
         <action
             android:id="@+id/browse_to_add_join"
             app:destination="@id/add_join" />
+
+        <action
+            android:id="@+id/browse_to_add"
+            app:destination="@id/add_loyalty_card" />
 
         <argument
             android:name="membershipPlans"
@@ -416,7 +424,7 @@
 
         <action
             android:id="@+id/detail_to_home"
-            app:destination="@+id/home_wallet"/>
+            app:destination="@+id/home_wallet" />
 
     </fragment>
 
@@ -733,12 +741,8 @@
             app:popUpToInclusive="true" />
 
         <action
-            android:id="@+id/onboarding_to_accept_tc"
-            app:destination="@id/accept_tcs_fragment" />
-
-        <action
-            android:id="@+id/onboarding_to_add_email"
-            app:destination="@+id/add_email_fragment" />
+            android:id="@+id/onboarding_to_continue_with_email"
+            app:destination="@+id/continue_with_email_fragment" />
 
         <action
             android:id="@+id/onboarding_to_log_in"
@@ -747,6 +751,62 @@
             android:id="@+id/onboarding_to_debug"
             app:destination="@+id/debug_menu_screen" />
     </fragment>
+
+    <fragment
+        android:id="@+id/continue_with_email_fragment"
+        android:name="com.bink.wallet.scenes.sign_up.continue_with_email.ContinueWithEmailFragment"
+        tools:layout="@layout/continue_with_email_fragment">
+
+        <action
+            android:id="@+id/cont_with_email_to_log_in"
+            app:destination="@+id/login_fragment" />
+
+        <action
+            android:id="@+id/cont_with_email_to_check_inbox"
+            app:destination="@+id/check_inbox_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/check_inbox_fragment"
+        android:name="com.bink.wallet.scenes.sign_up.continue_with_email.check_inbox.CheckInboxFragment"
+        tools:layout="@layout/check_inbox_fragment">
+
+        <action
+            android:id="@+id/check_inbox_to_magic_link_result"
+            app:destination="@+id/magic_link_result_fragment" />
+
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+
+        <argument
+            android:name="isRepost"
+            app:argType="boolean"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/magic_link_result_fragment"
+        android:name="com.bink.wallet.scenes.sign_up.continue_with_email.magic_link_result.MagicLinkResultFragment"
+        tools:layout="@layout/magic_link_result_fragment">
+
+        <action
+            android:id="@+id/magic_link_result_to_check_inbox"
+            app:destination="@id/check_inbox_fragment"
+            app:popUpTo="@+id/onboarding_fragment"
+            app:popUpToInclusive="true"/>
+
+        <argument
+            android:name="token"
+            app:argType="string" />
+
+        <argument
+            android:name="isLogoutNeeded"
+            app:argType="boolean"/>
+
+    </fragment>
+
 
     <fragment
         android:id="@+id/forgot_password"
@@ -776,48 +836,6 @@
             app:argType="com.bink.wallet.modal.generic.GenericModalParameters" />
     </fragment>
 
-    <fragment
-        android:id="@+id/accept_tcs_fragment"
-        android:name="com.bink.wallet.scenes.registration.AcceptTCFragment"
-        tools:layout="@layout/accept_tc_fragment">
-
-        <argument
-            android:name="accessToken"
-            app:argType="com.facebook.AccessToken"
-            app:nullable="true" />
-
-        <argument
-            android:name="email"
-            app:argType="string" />
-
-        <action
-            android:id="@+id/accept_to_onboarding"
-            app:destination="@+id/onboarding_fragment" />
-
-        <action
-            android:id="@+id/accept_to_lcd"
-            app:destination="@+id/home_wallet" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/add_email_fragment"
-        android:name="com.bink.wallet.scenes.registration.AddEmailFragment"
-        tools:layout="@layout/add_email_fragment">
-
-        <action
-            android:id="@+id/add_email_to_accept_terms"
-            app:destination="@+id/accept_tcs_fragment" />
-
-        <action
-            android:id="@+id/add_email_to_onboarding"
-            app:destination="@+id/onboarding_fragment" />
-
-        <argument
-            android:name="accessToken"
-            app:argType="com.facebook.AccessToken"
-            app:nullable="true" />
-    </fragment>
     <fragment
         android:id="@+id/add_payment_card_privacy_fragment"
         android:name="com.bink.wallet.scenes.add_payment_card.AddPaymentCardPrivacyFragment"

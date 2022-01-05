@@ -8,7 +8,7 @@ var password = "%@"
 // Form selector queries
 
 var formQuery = "form#loginForm"
-var usernameInputQuery = "form#login-form input[name=j_username]"
+var usernameInputQuery = "form#login-form input[name=username]"
 var passwordInputQuery = "form#login-form input[type=password]"
 var submitButtonQuery = "form#login-form button[type=submit]"
 

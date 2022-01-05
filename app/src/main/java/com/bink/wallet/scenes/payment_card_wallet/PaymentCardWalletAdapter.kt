@@ -72,11 +72,11 @@ class PaymentCardWalletAdapter(
 
         return when (viewType) {
             PAYMENT_CARD -> {
-                val binding = PaymentCardWalletItemBinding.inflate(inflater)
+                val binding = PaymentCardWalletItemBinding.inflate(inflater,parent,false)
                 PaymentCardWalletHolder(binding)
             }
             else -> {
-                val binding = EmptyLoyaltyItemBinding.inflate(inflater)
+                val binding = EmptyLoyaltyItemBinding.inflate(inflater,parent,false)
                 PaymentCardWalletJoinHolder(binding)
             }
         }
@@ -98,6 +98,8 @@ class PaymentCardWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
+                if (getItemViewType(toPosition) != PAYMENT_CARD) return false
+
                 if (fromPosition < toPosition) {
                     for (i in fromPosition until toPosition) {
                         Collections.swap(paymentCards, i, i + 1)

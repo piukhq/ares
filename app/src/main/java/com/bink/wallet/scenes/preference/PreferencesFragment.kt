@@ -1,17 +1,18 @@
 package com.bink.wallet.scenes.preference
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.PreferencesFragmentBinding
 import com.bink.wallet.model.request.Preference
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.PREFERENCES_VIEW
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,12 +47,13 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
                 adapter = PreferenceAdapter(
                     preferences,
                     onClickListener = { preference: Preference, isChecked: Boolean, _ ->
+                        promptPreferenceClear(preference.slug!!, isChecked)
                         val state = if (isChecked) 1 else 0
                         viewModel.savePreference(
-                           requestBody = JSONObject().put(
-                               preference.slug!!,
-                               state
-                           ).toString()
+                            requestBody = JSONObject().put(
+                                preference.slug,
+                                state
+                            ).toString()
                         )
                     })
                 layoutManager = GridLayoutManager(requireContext(), 1)
@@ -69,6 +71,37 @@ class PreferencesFragment : BaseFragment<PreferencesViewModel, PreferencesFragme
             viewModel.getPreferences()
         } else {
             binding.progressSpinner.visibility = View.GONE
+        }
+    }
+
+    private fun promptPreferenceClear(preferenceSlug: String, isChecked: Boolean) {
+        if ((preferenceSlug == REMEMBER_DETAILS_KEY || preferenceSlug == CLEAR_PREF_KEY) && !isChecked) {
+            lateinit var dialog: AlertDialog
+            val builder = context?.let { AlertDialog.Builder(it) }
+            if (builder != null) {
+                builder.setTitle(getString(R.string.clear_stored_cred_title))
+                builder.setMessage(getString(R.string.clear_stored_cred_message))
+                val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                    when (which) {
+                        DialogInterface.BUTTON_POSITIVE -> {
+                            REMEMBERABLE_FIELD_NAMES.forEach { fieldName ->
+                                LocalStoreUtils.removeKey(fieldName)
+                            }
+
+                            if (isNetworkAvailable(requireContext(), true)) {
+                                viewModel.getPreferences()
+                            }
+                        }
+                        DialogInterface.BUTTON_NEUTRAL -> {
+                            dialog.cancel()
+                        }
+                    }
+                }
+                builder.setPositiveButton(getString(R.string.ok), dialogClickListener)
+                builder.setNeutralButton(getString(R.string.cancel_text_upper), dialogClickListener)
+                dialog = builder.create()
+                dialog.show()
+            }
         }
     }
 

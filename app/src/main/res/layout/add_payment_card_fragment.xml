@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:navigationIcon="@drawable/ic_back"/>
+            tools:navigationIcon="@drawable/ic_back" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -130,11 +130,11 @@
                     android:id="@+id/card_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:digits="0123456789 "
                     android:fontFamily="@font/nunito_sans_light"
                     android:hint="@string/card_number_hint"
                     android:imeOptions="actionNext"
                     android:importantForAutofill="no"
-                    android:digits="0123456789 "
                     android:inputType="number"
                     android:maxLength="19"
                     android:nextFocusDown="@id/card_expiry"
@@ -205,16 +205,11 @@
                 <Button
                     android:id="@+id/add_button"
                     style="@style/RoundedGradientButton"
-                    android:layout_width="match_parent"
-                    android:layout_marginStart="@dimen/custom_text_card_margin"
                     android:layout_marginTop="@dimen/margin_padding_size_large"
                     android:layout_marginEnd="@dimen/custom_text_card_margin"
-                    android:layout_marginBottom="@dimen/margin_padding_size_large"
-                    android:background="@drawable/gradient_button_selector"
                     android:enabled="@{viewModel.isAddButtonEnabled}"
-                    android:fontFamily="@font/nunito_sans_bold"
                     android:text="@string/add"
-                    android:textAllCaps="false" />
+                    app:backgroundTint="@null" />
             </LinearLayout>
         </ScrollView>
 

@@ -101,11 +101,14 @@ class LoginViewModel constructor(
     }
 
     fun postService(postServiceRequest: PostServiceRequest) {
-        loginRepository.postService(
-            postServiceRequest,
-            _postServiceResponse,
-            _postServiceErrorResponse
-        )
+        viewModelScope.launch {
+            try{
+                val response = loginRepository.postService(postServiceRequest)
+                _postServiceResponse.value = response
+            } catch (e: Exception){
+                _postServiceErrorResponse.value = e
+            }
+        }
     }
 
     fun getCurrentUser() {

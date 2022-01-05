@@ -53,21 +53,21 @@ class LoyaltyWalletAdapter(
         return when (viewType) {
 
             MEMBERSHIP_CARD -> LoyaltyWalletViewHolder(
-                LoyaltyWalletItemBinding.inflate(inflater),
+                LoyaltyWalletItemBinding.inflate(inflater,parent,false),
                 onClickListener,
                 membershipPlans,
                 paymentCards
             )
 
             CARD_ON_BOARDING_SEE -> CardOnBoardingSeeViewHolder(
-                CardOnboardingSeeStoreBinding.inflate(inflater),
+                CardOnboardingSeeStoreBinding.inflate(inflater,parent,false),
                 onClickListener,
                 onCardLinkClickListener,
                 membershipPlans
             )
 
             CARD_ON_BOARDING_STORE -> CardOnBoardingStoreViewHolder(
-                CardOnboardingSeeStoreBinding.inflate(inflater),
+                CardOnboardingSeeStoreBinding.inflate(inflater,parent,false),
                 onClickListener,
                 onCardLinkClickListener,
                 onPlaceholderClickListener,
@@ -75,7 +75,7 @@ class LoyaltyWalletAdapter(
             )
 
             else -> CardOnBoardingLinkViewHolder(
-                CardOnboardingItemBinding.inflate(inflater),
+                CardOnboardingItemBinding.inflate(inflater,parent,false),
                 onClickListener,
                 onCardLinkClickListener,
                 membershipPlans
@@ -116,9 +116,7 @@ class LoyaltyWalletAdapter(
         }
 
     private fun notifyChanges(oldList: List<Any>, newList: List<Any>) {
-
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val currentOldItem = oldList[oldItemPosition]
                 val currentNewItem = newList[newItemPosition]
@@ -153,10 +151,7 @@ class LoyaltyWalletAdapter(
     fun onItemMove(fromPosition: Int?, toPosition: Int?): Boolean {
         fromPosition?.let {
             toPosition?.let {
-                if (getItemViewType(toPosition) == CARD_ON_BOARDING_PLL) {
-                    notifyItemMoved(fromPosition, toPosition)
-                    return false
-                }
+                if (getItemViewType(toPosition) != MEMBERSHIP_CARD) return false
 
                 if (fromPosition < toPosition) {
                     for (i in fromPosition until toPosition) {

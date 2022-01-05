@@ -9,23 +9,23 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.MainViewModel
 import com.bink.wallet.R
+import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.FragmentLoyaltyWalletBinding
 import com.bink.wallet.model.DynamicAction
 import com.bink.wallet.model.DynamicActionArea
 import com.bink.wallet.model.DynamicActionLocation
-import com.bink.wallet.model.JoinCardItem
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_card.UserDataResult
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.ApiErrorUtils
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.LoyaltyWalletAdapter
+import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.viewholders.LoyaltyWalletViewHolder
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_LOYALTY_CARD_REQUEST
@@ -36,27 +36,17 @@ import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_ADD
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_REQUEST_REVIEW_TIME
 import com.bink.wallet.utils.FirebaseEvents.LOYALTY_WALLET_VIEW
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.RequestReviewUtil
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.WalletOrderingUtil
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.logDebug
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
 class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWalletBinding>() {
+
+    companion object {
+        const val currentDestination = R.id.loyalty_fragment
+    }
 
     override val viewModel: LoyaltyViewModel by viewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
@@ -187,6 +177,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 actionState,
                                 isCurrentlyActive
                             )
+                            (viewHolder as LoyaltyWalletViewHolder)
                         }
 
                         dX == 0f && dY == 0f -> {
@@ -194,8 +185,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
 
                         dX > 0 -> {
-                            viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                            viewHolder.itemView.delete_layout.visibility = View.GONE
+                            (viewHolder as LoyaltyWalletViewHolder).binding.barcodeLayout.visibility =
+                                View.VISIBLE
+                            viewHolder.binding.deleteLayout.visibility = View.GONE
                             getDefaultUIUtil().onDraw(
                                 c,
                                 recyclerView,
@@ -208,8 +200,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                         }
 
                         dX < 0 -> {
-                            viewHolder.itemView.barcode_layout.visibility = View.GONE
-                            viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                            (viewHolder as LoyaltyWalletViewHolder).binding.barcodeLayout.visibility =
+                                View.GONE
+                            viewHolder.binding.deleteLayout.visibility = View.VISIBLE
                             getDefaultUIUtil().onDraw(
                                 c,
                                 recyclerView,
@@ -242,7 +235,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     handler.postDelayed({
                         try {
                             binding.swipeLayout.isEnabled = true
-                        } catch (e:Exception){}
+                        } catch (e: Exception) {
+                        }
                     }, 1000)
                     getDefaultUIUtil().clearView(foregroundView)
                 }
@@ -269,7 +263,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchPeriodicMembershipCards(context)
+        context?.let { viewModel.fetchPeriodicMembershipCards(it) }
         viewModel.checkZendeskResponse()
         RequestReviewUtil.triggerViaWallet(this) {
             logEvent(FIREBASE_REQUEST_REVIEW, getRequestReviewMap(FIREBASE_REQUEST_REVIEW_ADD))
@@ -383,6 +377,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
             }
         }
 
+        viewModel.localMembershipPlanData.observeNonNull(this) {
+            if (!UtilFunctions.isNetworkAvailable(context)) {
+                viewModel.membershipPlanData.value = it
+            }
+        }
+
         WebScrapableManager.updatedCards.observeNonNull(this) {
             viewModel.membershipCardData.value = it
         }
@@ -413,6 +413,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     override fun onPause() {
         disableIndicators()
+        binding.loyaltyWalletList.layoutManager?.let { layoutManager ->
+            SharedPreferenceManager.loyaltyWalletPosition = layoutManager.onSaveInstanceState()
+        }
         super.onPause()
     }
 
@@ -487,6 +490,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
 
+                SharedPreferenceManager.loyaltyWalletPosition?.let {
+                    binding.loyaltyWalletList.layoutManager?.onRestoreInstanceState(it)
+                    SharedPreferenceManager.loyaltyWalletPosition = null
+                }
+
                 if (userDataResult.result.first.size > 4) {
                     RequestReviewUtil.triggerViaCards(this) {
                         logEvent(
@@ -537,9 +545,9 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
     private fun manageRecyclerView() {
         binding.loyaltyWalletList.apply {
-            layoutManager = GridLayoutManager(requireContext(), 1)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = walletAdapter
-
+            addItemDecoration(RecyclerViewItemDecoration())
             simpleCallback.attachToRecyclerView(this)
         }
     }
@@ -564,7 +572,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 )
                             findNavController().navigateIfAdded(
                                 this@LoyaltyWalletFragment,
-                                directions
+                                directions,
+                                currentDestination
                             )
                         }
                     }
@@ -595,7 +604,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         viewModel.fetchDismissedCards()
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
-            viewModel.fetchPeriodicMembershipCards(context)
+            context?.let { viewModel.fetchPeriodicMembershipCards(it) }
         } else {
             viewModel.fetchLocalMembershipPlans()
             viewModel.fetchLocalMembershipCards()

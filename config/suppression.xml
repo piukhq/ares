@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes><![CDATA[
+      file name: jetified-tensorflow-lite-2.5.0-api.jar
+      ]]></notes>
+        <sha1>05cdb6d50d148a10472820f14448df7e1e54da51</sha1>
+        <cve>CVE-2021-35958</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: tensorflow-lite-2.5.0.aar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.tensorflow/tensorflow\-lite@.*$</packageUrl>
+        <cve>CVE-2021-35958</cve>
+    </suppress>
+</suppressions>

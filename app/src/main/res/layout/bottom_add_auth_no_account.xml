@@ -1,47 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-                name="viewModel"
-                type="com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel" />
+            name="viewModel"
+            type="com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            isVisible="@{viewModel.isNoAccountFooter() &amp;&amp; viewModel.isKeyboardHidden()}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        isVisible="@{viewModel.isNoAccountFooter() &amp;&amp; viewModel.isKeyboardHidden()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <Button
-                android:id="@+id/add_auth_cta"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_extra_large"
-                android:layout_marginEnd="@dimen/margin_padding_size_extra_large"
-                android:layout_marginBottom="@dimen/cta_margin_bottom"
-                android:background="@drawable/gradient_button_selector"
-                android:enabled="@{viewModel.haveValidationsPassed}"
-                android:fontFamily="@font/nunito_sans_bold"
-                android:text="@{viewModel.ctaText}"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/size_sub_headline"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="AuthCta" />
+            android:id="@+id/add_auth_cta"
+            style="@style/RoundedGradientButton"
+            android:layout_marginBottom="@dimen/cta_margin_bottom"
+            android:enabled="@{viewModel.haveValidationsPassed}"
+            android:text="@{viewModel.ctaText}"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="AuthCta" />
 
         <View
-                android:id="@+id/footer_bottom_gradient"
-                isVisible="@{viewModel.isKeyboardHidden()}"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/footer_default_fade_view_height"
-                android:background="@drawable/bg_btn_gradient"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+            android:id="@+id/footer_bottom_gradient"
+            isVisible="@{viewModel.isKeyboardHidden()}"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/footer_default_fade_view_height"
+            android:background="@drawable/bg_btn_gradient"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

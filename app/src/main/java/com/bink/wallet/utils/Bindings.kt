@@ -5,12 +5,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -26,6 +21,7 @@ import com.bink.wallet.model.response.membership_plan.PlanField
 import com.bink.wallet.model.response.payment_card.PaymentCard
 import com.bink.wallet.scenes.loyalty_wallet.barcode.BarcodeViewModel
 import com.bink.wallet.scenes.loyalty_wallet.wallet.adapter.RecyclerViewItemDecoration
+import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.ImageType
 import com.bink.wallet.utils.enums.LoginStatus
 import com.bumptech.glide.Glide
@@ -121,23 +117,18 @@ data class BarcodeWrapper(val membershipCard: MembershipCard?) : Parcelable
 fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeViewModel?) {
     if (!membershipCard?.membershipCard?.card?.barcode.isNullOrEmpty()) {
         val multiFormatWriter = MultiFormatWriter()
-        val heightPx = context.toPixelFromDip(80f)
-        val widthPx = context.toPixelFromDip(320f)
-        var format: BarcodeFormat? = null
+        val isSquare = when (membershipCard?.membershipCard?.card?.getBarcodeFormat()) {
+            BarcodeFormat.QR_CODE,
+            BarcodeFormat.AZTEC -> true
+            else -> false
+        }
+        val heightPx = context.toPixelFromDip(if (isSquare) 100f else 80f)
+        val widthPx = context.toPixelFromDip(if (isSquare) 100f else 320f)
+        val format = membershipCard?.membershipCard?.card?.getBarcodeFormat()
         var shouldShowBarcodeImage = true
         val barcodeNumberLength = membershipCard?.membershipCard?.card?.barcode?.length
         val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
 
-        when (membershipCard?.membershipCard?.card?.barcode_type) {
-            0, null -> format = BarcodeFormat.CODE_128
-            1 -> format = BarcodeFormat.QR_CODE
-            2 -> format = BarcodeFormat.AZTEC
-            3 -> format = BarcodeFormat.PDF_417
-            4 -> format = BarcodeFormat.EAN_13
-            5 -> format = BarcodeFormat.DATA_MATRIX
-            6 -> format = BarcodeFormat.ITF
-            7 -> format = BarcodeFormat.CODE_39
-        }
         membershipCard?.membershipCard?.card?.barcode?.let { barcode ->
             barcodeNumberLength?.let {
                 when (format) {
@@ -220,74 +211,105 @@ fun ImageView.image(plan: MembershipPlan?) {
 
 @BindingAdapter("cardOnBoarding")
 fun ImageView.loadAlternateHeroImage(plan: MembershipPlan?) {
-        try {
-            Glide.with(context)
-                .load(getAlternateHeroTypeFromPlan(plan))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(this)
-        } catch (e: NoSuchElementException) {
-            logError("loadImage", e.localizedMessage, e)
-        }
+    try {
+        Glide.with(context)
+            .load(getAlternateHeroTypeFromPlan(plan))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(this)
+    } catch (e: NoSuchElementException) {
+        logError("loadImage", e.localizedMessage, e)
+    }
 
 }
 
 @BindingAdapter("membershipCard", "membershipPlan", requireAll = true)
 fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
-    binding.container.setBackgroundColor(Color.parseColor(card?.card?.colour))
-    binding.cardPlaceholderText.text = context.getString(
-        R.string.loyalty_card_details_header_placeholder_text,
-        plan?.account?.company_name
-    )
 
-    var brandImage: String? = card?.getHeroImage()?.url
-    card?.isAuthorised()?.let { safeAuthorised ->
-        if (safeAuthorised) {
-            card.getTierImage()?.let { safeTierImage ->
-                brandImage = safeTierImage.url
+    if (plan?.getCardType() != CardType.PLL && !card?.card?.barcode.isNullOrEmpty()) {
+
+        binding.container.visibility = View.GONE
+
+
+        val cardNumber = card?.card?.membership_id ?: ""
+
+        when (card?.card?.getBarcodeFormat()) {
+            BarcodeFormat.QR_CODE,
+            BarcodeFormat.AZTEC -> {
+                binding.tapCard.text = if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(R.string.tap_to_enlarge_aztec)
+                binding.sbTitle.text = context.getString(R.string.barcode_card_number)
+                binding.sbCompanyLogo.loadImage(plan)
+                binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
+                binding.squareBarcodeContainer.visibility = View.VISIBLE
+                binding.sbBarcodeText.text = cardNumber
+            }
+            else -> {
+                binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
+                binding.rbTitle.text = context.getString(R.string.barcode_card_number)
+                binding.rbCompanyLogo.loadImage(plan)
+                binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+                binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+                binding.rbBarcodeText.text = cardNumber
             }
         }
-    }
-    Glide.with(context)
-        .load(brandImage)
-        .listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean = false
 
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                binding.container.layoutParams = FrameLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                (binding.brandImage.layoutParams as ConstraintLayout.LayoutParams)
-                    .dimensionRatio = "${resource?.minimumWidth}:${resource?.minimumHeight}"
-                binding.container.setBackgroundColor(Color.TRANSPARENT)
-                binding.cardPlaceholderText.visibility = View.GONE
-                return false
+    } else {
+        binding.cardPlaceholderText.text = context.getString(
+            R.string.loyalty_card_details_header_placeholder_text,
+            plan?.account?.company_name
+        )
+        binding.container.setBackgroundColor(Color.parseColor(card?.card?.colour))
+
+        var brandImage: String? = card?.getHeroImage()?.url
+        card?.isAuthorised()?.let { safeAuthorised ->
+            if (safeAuthorised) {
+                card.getTierImage()?.let { safeTierImage ->
+                    brandImage = safeTierImage.url
+                }
             }
-
-        })
-        .into(binding.image)
-
-    binding.tapCard.text = when {
-        !card?.card?.barcode.isNullOrEmpty() -> {
-            context.getString(R.string.tap_card_to_show_barcode)
         }
-        !card?.card?.membership_id.isNullOrEmpty() -> {
-            context.getString(R.string.tap_card_to_show_card_number)
-        }
-        else -> {
-            binding.tapCard.visibility = View.GONE
-            EMPTY_STRING
+
+        Glide.with(context)
+            .load(brandImage)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean = false
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    binding.container.layoutParams = FrameLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    (binding.brandImage.layoutParams as ConstraintLayout.LayoutParams)
+                        .dimensionRatio = "${resource?.minimumWidth}:${resource?.minimumHeight}"
+                    binding.container.setBackgroundColor(Color.TRANSPARENT)
+                    binding.cardPlaceholderText.visibility = View.GONE
+                    return false
+                }
+
+            })
+            .into(binding.image)
+
+        binding.tapCard.text = when {
+            !card?.card?.barcode.isNullOrEmpty() -> {
+                context.getString(R.string.tap_card_to_show_barcode)
+            }
+            !card?.card?.membership_id.isNullOrEmpty() -> {
+                context.getString(R.string.tap_card_to_show_card_number)
+            }
+            else -> {
+                binding.tapCard.visibility = View.GONE
+                EMPTY_STRING
+            }
         }
     }
 }
@@ -619,7 +641,7 @@ fun TextView.setFaqHyperLink(hyperlinkClick: (() -> Unit)?) {
 }
 
 @BindingAdapter("itemDecorationSpacing")
-fun RecyclerView.setItemDecorationSpacing(spacingPx:Float){
+fun RecyclerView.setItemDecorationSpacing(spacingPx: Float) {
     addItemDecoration(
         RecyclerViewItemDecoration()
     )
