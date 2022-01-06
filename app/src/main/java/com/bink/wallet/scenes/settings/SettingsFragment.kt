@@ -336,6 +336,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
 
     private fun clearUserDetails() {
         viewModel.logOutResponse.removeObservers(this@SettingsFragment)
+        logoutMixpanel()
         LocalStoreUtils.clearPreferences(requireContext())
         try {
             (requireActivity() as MainActivity).forceRunApp()

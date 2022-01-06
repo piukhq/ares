@@ -354,6 +354,8 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         user.id = uid
         Sentry.setUser(user)
         (requireActivity() as MainActivity).firebaseAnalytics.setUserId(uid)
+        (requireActivity() as MainActivity).mixpanel.people.identify(uid)
+        (requireActivity() as MainActivity).mixpanel.identify(uid)
     }
 
     protected fun logEvent(identifierValue: String) {
@@ -398,6 +400,12 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         mixpanel.timeEvent(eventTitle)
     }
 
+    fun setMixpanelProperty(propertyTitle: String, propertyValue: String){
+        val mixpanel = (requireActivity() as MainActivity).mixpanel
+        mixpanel.people.identify(mixpanel.people.distinctId)
+        mixpanel.people.set(propertyTitle, propertyValue)
+    }
+
     fun logMixpanelEvent(eventTitle: String, properties: JSONObject? = null) {
         val mixpanel = (requireActivity() as MainActivity).mixpanel
         if (properties == null) {
@@ -405,6 +413,11 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         } else {
             mixpanel.track(eventTitle, properties)
         }
+    }
+
+    fun logoutMixpanel(){
+        val mixpanel = (requireActivity() as MainActivity).mixpanel
+        mixpanel.reset()
     }
 
     private fun logFirebaseEvent(identifierValue: String) {

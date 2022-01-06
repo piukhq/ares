@@ -245,7 +245,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     getDefaultUIUtil().clearView(foregroundView)
                     logMixpanelEvent(
                         MixpanelEvents.LOYALTY_CARD_REORDER,
-                        JSONObject().put(MixpanelEvents.BRAND_NAME, lastTouchedBrand ?: MixpanelEvents.VALUE_UNKNOWN)
+                        JSONObject().put(
+                            MixpanelEvents.BRAND_NAME,
+                            lastTouchedBrand ?: MixpanelEvents.VALUE_UNKNOWN
+                        )
                     )
                 }
 
@@ -487,6 +490,10 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         isRefresh = false
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
+                setMixpanelProperty(
+                    "Total Cards",
+                    "${userDataResult.result.first.size}"
+                )
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
@@ -781,8 +788,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
         logMixpanelEvent(
             MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
-            JSONObject().put(MixpanelEvents.LPS_STATUS, membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN)
-                .put(MixpanelEvents.LC_ID, membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN)
+            JSONObject().put(
+                MixpanelEvents.LPS_STATUS,
+                membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN
+            )
+                .put(
+                    MixpanelEvents.LC_ID,
+                    membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN
+                )
         )
     }
 
