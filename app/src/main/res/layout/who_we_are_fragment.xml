@@ -46,7 +46,7 @@
                         android:id="@+id/logo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_bink_icon" />
+                        app:srcCompat="@drawable/ic_bink_icon_large" />
 
                 </androidx.cardview.widget.CardView>
 

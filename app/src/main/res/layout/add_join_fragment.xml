@@ -83,7 +83,7 @@
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_icons_svl_store_active"
+                            android:src="@drawable/ic_browse"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="ContentDescription" />
@@ -131,7 +131,7 @@
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_icons_svl_view_active"
+                            android:src="@drawable/ic_payment_icon"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="ContentDescription" />
@@ -180,7 +180,7 @@
                             android:layout_marginStart="@dimen/margin_padding_size_medium"
                             android:layout_marginTop="@dimen/margin_padding_size_small"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_icons_svl_link_active"
+                            android:src="@drawable/ic_active_link"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="ContentDescription" />
@@ -216,23 +216,17 @@
                     <Button
                         android:id="@+id/add_card_button"
                         style="@style/RoundedGradientButton"
-                        android:layout_width="match_parent"
-                        android:layout_marginStart="@dimen/button_margin"
-                        android:layout_marginEnd="@dimen/button_margin"
                         android:layout_marginBottom="@dimen/margin_padding_size_medium"
                         android:text="@string/add_join_add_card"
-                        android:textAllCaps="false"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        app:backgroundTint="@null" />
 
                     <Button
                         android:id="@+id/get_card_button"
                         style="@style/RoundedGradientButton"
-                        android:layout_width="match_parent"
-                        android:layout_marginStart="@dimen/button_margin"
-                        android:layout_marginEnd="@dimen/button_margin"
                         android:layout_marginBottom="@dimen/margin_padding_size_small_medium"
                         android:text="@string/add_join_get_new_card"
-                        android:textAllCaps="false" />
+                        app:backgroundTint="@null" />
                 </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>

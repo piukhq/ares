@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -20,24 +20,13 @@ import com.bink.wallet.model.DynamicActionLocation
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.model.response.payment_card.PaymentCard
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_REQUEST
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.DELETE_PAYMENT_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.PAYMENT_WALLET_VIEW
-import com.bink.wallet.utils.JOIN_CARD
-import com.bink.wallet.utils.MembershipPlanUtils
 import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.WalletOrderingUtil
-import com.bink.wallet.utils.getErrorBody
-import com.bink.wallet.utils.logPaymentCardSuccess
-import com.bink.wallet.utils.navigateIfAdded
-import com.bink.wallet.utils.observeErrorNonNull
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
-import com.bink.wallet.utils.scanResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import kotlinx.android.synthetic.main.loyalty_wallet_item.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
 
@@ -74,6 +63,13 @@ class PaymentCardWalletFragment :
         logScreenView(PAYMENT_WALLET_VIEW)
     }
 
+    override fun onPause() {
+        binding.paymentCardRecycler.layoutManager?.let { layoutManager ->
+            SharedPreferenceManager.paymentWalletPosition = layoutManager.onSaveInstanceState()
+        }
+        super.onPause()
+    }
+
     private var simpleCallback: ItemTouchHelper.SimpleCallback = object :
         ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP + ItemTouchHelper.DOWN,
@@ -84,8 +80,19 @@ class PaymentCardWalletFragment :
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-            return true
+            val currentPosition = viewHolder.adapterPosition
+            var card: PaymentCard? = null
+            try {
+                card = walletAdapter.paymentCards[currentPosition] as PaymentCard
+            } catch (e: ClassCastException) {
+                //User attempting to drag join plan
+            }
+
+            card?.let {
+                return walletAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+            }
+
+            return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -137,23 +144,9 @@ class PaymentCardWalletFragment :
                         binding.swipeRefresh.isEnabled = true
                     }
 
-                    dX > 0 -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.VISIBLE
-                        viewHolder.itemView.delete_layout.visibility = View.GONE
-                        getDefaultUIUtil().onDraw(
-                            c,
-                            recyclerView,
-                            foregroundView,
-                            dX,
-                            dY,
-                            actionState,
-                            isCurrentlyActive
-                        )
-                    }
-
                     dX < 0 -> {
-                        viewHolder.itemView.barcode_layout.visibility = View.GONE
-                        viewHolder.itemView.delete_layout.visibility = View.VISIBLE
+                        (viewHolder as PaymentCardWalletAdapter.PaymentCardWalletHolder).binding.barcodeLayout.visibility = View.GONE
+                        viewHolder.binding.deleteLayout.visibility = View.VISIBLE
                         getDefaultUIUtil().onDraw(
                             c,
                             recyclerView,
@@ -192,7 +185,7 @@ class PaymentCardWalletFragment :
             val hasMultipleCards = walletAdapter.paymentCards.size > 1
             return ItemTouchHelper.Callback.makeMovementFlags(
                 if (hasMultipleCards) ItemTouchHelper.UP + ItemTouchHelper.DOWN else 0,
-                ItemTouchHelper.LEFT + ItemTouchHelper.RIGHT
+                ItemTouchHelper.LEFT
             )
         }
     }
@@ -290,7 +283,7 @@ class PaymentCardWalletFragment :
         viewModel.deleteCardError.observeErrorNonNull(requireContext(), true, this)
 
         binding.paymentCardRecycler.apply {
-            layoutManager = GridLayoutManager(context, 1)
+            layoutManager = LinearLayoutManager(context)
             adapter = walletAdapter
 
             ItemTouchHelper(simpleCallback).attachToRecyclerView(this)
@@ -449,5 +442,11 @@ class PaymentCardWalletFragment :
         }
 
         walletAdapter.notifyDataSetChanged()
+
+        SharedPreferenceManager.paymentWalletPosition?.let {
+            binding.paymentCardRecycler.layoutManager?.onRestoreInstanceState(it)
+            SharedPreferenceManager.paymentWalletPosition = null
+        }
+
     }
 }

@@ -15,6 +15,7 @@ import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_FAILURE
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_RESPONSE_SUCCESS
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_FALSE
 import com.bink.wallet.utils.FirebaseEvents.FIREBASE_TRUE
+import com.bink.wallet.utils.ProgressButton
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
 import com.bink.wallet.utils.getErrorBody
 import com.bink.wallet.utils.observeNonNull
@@ -47,12 +48,7 @@ class AddCardFragment : BaseAddAuthFragment() {
 //            logNoAccountClick()
 //        }
 
-        binding.footerComposed.addAuthCta.setOnClickListener {
-            logCTAClick(it)
-            handleAuthCtaRequest()
-        }
-
-        binding.footerSimple.addAuthCta.setOnClickListener {
+        binding.footerComposed.progressBtnContainer.setOnClickListener {
             logCTAClick(it)
             handleAuthCtaRequest()
         }
@@ -78,7 +74,7 @@ class AddCardFragment : BaseAddAuthFragment() {
             WebScrapableManager.storeCredentialsFromRequest(it.id)
 
             WebScrapableManager.tryScrapeCards(0, arrayListOf(it), context, true) { cards ->
-                if (cards != null) {
+                if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }
             }
@@ -117,6 +113,10 @@ class AddCardFragment : BaseAddAuthFragment() {
                 )
             }
 
+        }
+
+        viewModel.loading.observeNonNull(this){
+            binding.footerComposed.progressBtnContainer.setLoading(it)
         }
 
     }
@@ -164,7 +164,7 @@ class AddCardFragment : BaseAddAuthFragment() {
         logEvent(
             FirebaseEvents.getFirebaseIdentifier(
                 ADD_AUTH_FORM_VIEW,
-                (button as Button).text.toString()
+                (button as ProgressButton).getText().toString()
             )
         )
     }
@@ -190,8 +190,4 @@ class AddCardFragment : BaseAddAuthFragment() {
         }
     }
 
-    override fun onDestroyView() {
-        SharedPreferenceManager.hasBarcodeBeenScanned = false
-        super.onDestroyView()
-    }
 }

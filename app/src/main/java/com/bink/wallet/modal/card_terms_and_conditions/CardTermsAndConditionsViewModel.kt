@@ -19,7 +19,6 @@ class CardTermsAndConditionsViewModel(private val repository: AddPaymentCardRepo
         get() = _addCardRequestMade
 
     fun sendAddCard(card: PaymentCardAdd, cardNumber: String) {
-        error.value = null
         repository.sendAddCard(card, cardNumber, paymentCard, error,_addCardRequestMade)
     }
 

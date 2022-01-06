@@ -51,29 +51,36 @@ object RequestReviewUtil {
     }
 
     private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
-        val reviewManager = ReviewManagerFactory.create(fragment.activity)
+        try{
+            val activity = fragment.requireActivity()
 
-        if (!hasReviewedInThisVersion()) {
-            val remoteConfig = FirebaseRemoteConfig.getInstance()
-            val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
+            val reviewManager = ReviewManagerFactory.create(activity)
 
-            if (isReviewEnabled.toLowerCase().equals("true")) {
-                val requestReview = reviewManager.requestReviewFlow()
-                reviewRequested()
+            if (!hasReviewedInThisVersion()) {
+                val remoteConfig = FirebaseRemoteConfig.getInstance()
+                val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
 
-                requestReview.addOnCompleteListener { request ->
-                    if (request.isSuccessful) {
-                        val reviewFlow = reviewManager.launchReviewFlow(fragment.activity, request.result)
+                if (isReviewEnabled.lowercase().equals("true")) {
+                    val requestReview = reviewManager.requestReviewFlow()
+                    reviewRequested()
 
-                        reviewFlow.addOnCompleteListener {
+                    requestReview.addOnCompleteListener { request ->
+                        if (request.isSuccessful) {
+                            val reviewFlow = reviewManager.launchReviewFlow(activity, request.result)
 
-                            currentMinorVersion()?.let { currentMinor ->
-                                SharedPreferenceManager.lastReviewedMinor = currentMinor
+                            reviewFlow.addOnCompleteListener {
+
+                                currentMinorVersion()?.let { currentMinor ->
+                                    SharedPreferenceManager.lastReviewedMinor = currentMinor
+                                }
                             }
                         }
                     }
                 }
             }
+
+        } catch (e: IllegalStateException){
+            //not attached to an activity
         }
     }
 

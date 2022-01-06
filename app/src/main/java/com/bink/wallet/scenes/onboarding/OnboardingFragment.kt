@@ -1,6 +1,5 @@
 package com.bink.wallet.scenes.onboarding
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toolbar
@@ -11,31 +10,14 @@ import com.bink.wallet.R
 import com.bink.wallet.databinding.OnboardingFragmentBinding
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.FIRST_PAGE_INDEX
 import com.bink.wallet.scenes.onboarding.OnboardingPagerAdapter.Companion.ONBOARDING_PAGES_NUMBER
-import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_FACEBOOK
+import com.bink.wallet.scenes.sign_up.SignUpFragmentDirections
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_LOGIN
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_JOURNEY_REGISTER
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_START
 import com.bink.wallet.utils.FirebaseEvents.ONBOARDING_VIEW
 import com.bink.wallet.utils.FirebaseEvents.getFirebaseIdentifier
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.ONBOARDING_SCROLL_DURATION_SECONDS
-import com.bink.wallet.utils.PAGE_1
-import com.bink.wallet.utils.PAGE_2
-import com.bink.wallet.utils.PAGE_3
-import com.bink.wallet.utils.UtilFunctions.isNetworkAvailable
-import com.bink.wallet.utils.displayModalPopup
-import com.bink.wallet.utils.navigateIfAdded
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.FacebookSdk
-import com.facebook.GraphRequest
-import com.facebook.login.LoginBehavior
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import org.json.JSONException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -49,20 +31,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         return FragmentToolbar.Builder()
             .with(Toolbar(requireContext()))
             .build()
-    }
-
-    private val EMAIL_KEY = "email"
-    private val FIELDS_KEY = "fields"
-    private lateinit var callbackManager: CallbackManager
-    private lateinit var facebookEmail: String
-    private var accessToken: AccessToken? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        FacebookSdk.sdkInitialize(context)
-        LoginManager.getInstance().loginBehavior = LoginBehavior.WEB_VIEW_ONLY
-        callbackManager = CallbackManager.Factory.create()
-        clearFacebookLogin()
     }
 
     override fun onResume() {
@@ -88,7 +56,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_1,
-                    R.drawable.onboarding_page_1,
+                    R.drawable.ic_onboarding_page1,
                     getString(R.string.page_1_title),
                     getString(R.string.page_1_description)
                 )
@@ -96,7 +64,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_2,
-                    R.drawable.onboarding_page_2,
+                    R.drawable.ic_onboarding_page2,
                     getString(R.string.page_2_title),
                     getString(R.string.page_2_description)
                 )
@@ -104,7 +72,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             it.addFragment(
                 OnboardingPageFragment.newInstance(
                     PAGE_3,
-                    R.drawable.onboarding_page_3,
+                    R.drawable.ic_onboarding_page3,
                     getString(R.string.page_3_title),
                     getString(R.string.page_3_description)
                 )
@@ -112,61 +80,11 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
             binding.pager.adapter = it
         }
 
-        binding.logInEmail.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
-                findNavController().navigateIfAdded(
-                    this,
-                    OnboardingFragmentDirections.onboardingToLogIn()
-                )
-            }
-            logEvent(getFirebaseIdentifier(ONBOARDING_VIEW, binding.logInEmail.text.toString()))
-            logEvent(ONBOARDING_START, getOnboardingStartMap(ONBOARDING_JOURNEY_LOGIN))
-        }
-
-        binding.continueWithFacebook.setOnClickListener {
-            binding.continueWithFacebook.apply {
-                fragment = this@OnboardingFragment
-                setReadPermissions(listOf(EMAIL_KEY))
-                loginBehavior = LoginBehavior.WEB_VIEW_ONLY
-                registerCallback(
-                    callbackManager,
-                    object : FacebookCallback<LoginResult> {
-                        override fun onSuccess(result: LoginResult?) {
-                            result?.accessToken?.let {
-                                retrieveFacebookLoginInformation(it)
-                            }
-                        }
-
-                        override fun onCancel() {
-                            requireContext().displayModalPopup(
-                                null,
-                                getString(R.string.facebook_cancelled)
-                            )
-                        }
-
-                        override fun onError(error: FacebookException?) {
-                            requireContext().displayModalPopup(
-                                null,
-                                getString(R.string.facebook_unavailable)
-                            )
-                        }
-                    })
-
-                logEvent(
-                    getFirebaseIdentifier(
-                        ONBOARDING_VIEW,
-                        binding.continueWithFacebook.text.toString()
-                    )
-                )
-            }
-            //ONBOARDING JOUNRNEY STAR FOR FACEBOOK
-            logEvent(ONBOARDING_START,getOnboardingStartMap(ONBOARDING_JOURNEY_FACEBOOK))
-        }
         binding.signUpWithEmail.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
                 findNavController().navigateIfAdded(
                     this,
-                    OnboardingFragmentDirections.onboardingToSignUp()
+                    OnboardingFragmentDirections.onboardingToContinueWithEmail()
                 )
             }
             logEvent(
@@ -176,7 +94,7 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                 )
             )
             //ONBOARDING START FOR REGISTER
-            logEvent(ONBOARDING_START,getOnboardingStartMap(ONBOARDING_JOURNEY_REGISTER))
+            logEvent(ONBOARDING_START, getOnboardingStartMap(ONBOARDING_JOURNEY_REGISTER))
         }
         with(binding.pager) {
             addOnPageChangeListener(object :
@@ -190,12 +108,6 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
                     scrollPagesAutomatically(this@with)
                 }
             })
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (isNetworkAvailable(requireActivity(), true)) {
-            callbackManager.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -227,69 +139,4 @@ class OnboardingFragment : BaseFragment<OnboardingViewModel, OnboardingFragmentB
         }, 0, ONBOARDING_SCROLL_DURATION_SECONDS)
     }
 
-    private fun retrieveFacebookLoginInformation(accessToken: AccessToken) {
-        val request = GraphRequest.newMeRequest(
-            accessToken
-        ) { jsonObject, _ ->
-            try {
-                this.accessToken = accessToken
-                facebookEmail = jsonObject.getString(EMAIL_KEY)
-
-                LocalStoreUtils.setAppSharedPref(
-                    LocalStoreUtils.KEY_EMAIL,
-                    facebookEmail
-                )
-
-            } catch (e: JSONException) {
-                if (!::facebookEmail.isInitialized) {
-                    facebookEmail = getString(R.string.empty_string)
-                }
-                e.printStackTrace()
-            }
-            handleFacebookNavigation(facebookEmail)
-        }
-        val parameters = Bundle()
-        parameters.putString(FIELDS_KEY, EMAIL_KEY)
-        request.parameters = parameters
-        request.executeAsync()
-    }
-
-
-    private fun handleFacebookNavigation(email: String?) {
-        if (email.isNullOrEmpty()) {
-            val directions =
-                accessToken?.let { OnboardingFragmentDirections.onboardingToAddEmail(it) }
-            directions?.let {
-                if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
-                    findNavController().navigateIfAdded(this, it)
-                }
-            }
-        } else {
-            val directions =
-                accessToken?.let {
-                    OnboardingFragmentDirections.onboardingToAcceptTc(
-                        it,
-                        facebookEmail
-                    )
-                }
-
-            directions.let { _ ->
-                directions?.let {
-                    if (findNavController().currentDestination?.id == R.id.onboarding_fragment) {
-                        findNavController().navigateIfAdded(this, it)
-                    }
-                }
-            }
-        }
-    }
-
-    // There is a scenario in which a user logs in with Facebook, but then does not accept
-    // terms and conditions (force quits the app). If the user returns to the app the Facebook
-    // login button will show 'Log Out' which is a bug. So this is just a safety check
-    // to log the user out of Facebook in that case.
-    private fun clearFacebookLogin() {
-        if (AccessToken.getCurrentAccessToken() != null) {
-            LoginManager.getInstance().logOut()
-        }
-    }
 }

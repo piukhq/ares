@@ -25,14 +25,6 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
     val getUserResponse: LiveData<User>
         get() = _getUserResponse
 
-    fun postService(postServiceRequest: PostServiceRequest) {
-        loginRepository.postService(
-            postServiceRequest,
-            _postServiceResponse,
-            _postServiceErrorResponse
-        )
-    }
-
     fun getCurrentUser() {
         viewModelScope.launch {
             try {

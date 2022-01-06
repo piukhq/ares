@@ -307,7 +307,7 @@ fun CardBalance?.formatBalance(): String {
 }
 
 fun logError(tag: String?, message: String?, exception: Exception? = null) {
-    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
         tag?.let {
             message?.let {
                 Log.e(tag, message, exception)
@@ -317,7 +317,7 @@ fun logError(tag: String?, message: String?, exception: Exception? = null) {
 }
 
 fun logDebug(tag: String?, message: String?) {
-    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
         message?.let {
             Log.d(tag, it)
         }
@@ -355,6 +355,27 @@ fun TextView.setTermsAndPrivacyUrls(
     movementMethod = LinkMovementMethod.getInstance()
 }
 
+fun TextView.setMagicLinkUrl(
+    magicLinkText: String,
+    urlText: String,
+    urlClickListener: (String) -> Unit
+) {
+    val magicLinkSpannable = SpannableString(magicLinkText)
+    magicLinkSpannable.setSpan(
+        object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                urlClickListener(MAGIC_LINK_URL)
+            }
+        },
+        magicLinkText.indexOf(urlText, ignoreCase = true),
+        magicLinkText.indexOf(urlText, ignoreCase = true) + urlText.length,
+        Spannable.SPAN_INCLUSIVE_INCLUSIVE
+    )
+
+    text = magicLinkSpannable
+    movementMethod = LinkMovementMethod.getInstance()
+}
+
 fun HttpException.getErrorBody(): String {
     val errorBody = response()?.errorBody()?.string() ?: "Error body is null or empty"
 
@@ -375,21 +396,39 @@ fun HttpException.getErrorBody(): String {
 }
 
 fun String.getSuffixForLPS(): String {
-    val debugSuffix = if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.RELEASE.type) {
-        "_debug"
-    } else {
-        ""
-    }
+    val debugSuffix =
+        if (BuildConfig.BUILD_TYPE.lowercase() != BuildTypes.RELEASE.type) {
+            "_debug"
+        } else {
+            ""
+        }
 
     return "$this${debugSuffix}"
 }
 
-fun String.readFileText(context: Context): String {
+fun String.readFileText(context: Context): String? {
     return try {
         context.assets?.open(this)?.bufferedReader().use {
             it?.readText() ?: "JS Error"
         }
     } catch (e: Exception) {
-        e.localizedMessage ?: ""
+        return null
     }
+}
+
+fun Fragment.showUnLinkErrorMessage(errorText: String) {
+
+    val title =
+        getString(R.string.pll_error_title)
+
+    AlertDialog.Builder(requireContext())
+        .setTitle(title)
+        .setMessage(errorText)
+        .setPositiveButton(
+            getString(R.string.ok)
+        ) { dialog, _ ->
+            dialog.dismiss()
+        }
+        .setCancelable(false)
+        .show()
 }

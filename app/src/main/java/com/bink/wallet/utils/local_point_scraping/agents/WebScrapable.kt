@@ -50,9 +50,10 @@ abstract class WebScrapable {
 
 }
 
-enum class PointScrapeSite(val remoteName: String, val signInURL: String, val scrapeURL: String) {
-    TESCO("tesco", "https://secure.tesco.com/account/en-GB/login?from=https://secure.tesco.com/Clubcard/MyAccount/home/Home", "https://secure.tesco.com/Clubcard/MyAccount/home/Home"),
-    WATERSTONES("waterstones", "https://www.waterstones.com/plus/signin", "https://www.waterstones.com/account/waterstonescard"),
-    SUPERDRUG("superdrug", "https://www.superdrug.com/login", "https://www.superdrug.com/login"),
-    MORRISONS("morrisons", "https://my.morrisons.com/more/#/login", "https://my.morrisons.com/more/#/mypoints")
+enum class PointScrapeSite(val remoteName: String, val signInURL: String) {
+    TESCO("tesco", "https://secure.tesco.com/Clubcard/MyAccount/home/Home"),
+    WATERSTONES("waterstones", "https://www.waterstones.com/plus/signin"),
+    SUPERDRUG("superdrug", "https://www.superdrug.com/login"),
+    MORRISONS("morrisons", "https://my.morrisons.com/more/#/login"),
+    STARBUCKS("starbucks", "https://www.starbucks.co.uk/account/login")
 }

@@ -8,29 +8,23 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
 import com.bink.wallet.databinding.BaseAddAuthFragmentBinding
-import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
+import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
+import com.bink.wallet.scenes.add_auth_enrol.adapter.AutoCompleteAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
-import com.bink.wallet.utils.ADD_AUTH_BARCODE
-import com.bink.wallet.utils.ApiErrorUtils
-import com.bink.wallet.utils.ExceptionHandlingUtils
-import com.bink.wallet.utils.RecyclerViewHelper
-import com.bink.wallet.utils.displayModalPopup
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
 import com.bink.wallet.utils.enums.HandledException
-import com.bink.wallet.utils.hideKeyboard
-import com.bink.wallet.utils.observeNonNull
-import com.bink.wallet.utils.requestCameraPermissionAndNavigate
-import com.bink.wallet.utils.requestPermissionsResult
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.HttpException
@@ -76,8 +70,40 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
         binding.viewModel = viewModel
         binding.membershipPlan = args.membershipPlan
-        binding.footerSimple.viewModel = viewModel
         binding.footerComposed.viewModel = viewModel
+
+        addAuthAdapter = AddAuthAdapter(
+            mutableListOf(),
+            null,
+            null,
+            null,
+            checkValidation = {
+                if (FormsUtil.areAllFieldsValid()) {
+                    viewModel.haveValidationsPassed.set(true)
+                } else {
+                    viewModel.haveValidationsPassed.set(false)
+                }
+            },
+            navigateToHeader = {
+                navigationHandler?.navigateToBrandHeader()
+            },
+            onLinkClickListener = { url ->
+                findNavController().navigate(BaseAddAuthFragmentDirections.globalToWeb(url))
+            },
+            onNavigateToBarcodeScanListener = { account ->
+                onScannerActivated(account)
+            },
+            autoCompleteToggle = { position, autoCompleteSuggestions ->
+                if (autoCompleteSuggestions == null) {
+                    hideRememberMyDetailsView()
+                    setUpAutoCompleteRecyclerView(null, arrayListOf())
+
+                } else {
+                    setUpAutoCompleteRecyclerView(position, autoCompleteSuggestions)
+                    showRememberMyDetailsView()
+                }
+            }
+        )
 
         binding.toolbar.setNavigationOnClickListener {
             handleToolbarAction()
@@ -89,14 +115,10 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
         }
 
         viewModel.addRegisterFieldsRequest.observeNonNull(this) {
-            populateRecycler(it)
+            populateRecycler()
 
             barcode?.let {
-                if (SharedPreferenceManager.hasBarcodeBeenScanned) {
-                    viewModel.setBarcode(it)
-                } else {
-                    barcode = ""
-                }
+                viewModel.setBarcode(it)
             }
         }
 
@@ -136,17 +158,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 })
     }
 
-    override fun onStart() {
-        super.onStart()
-        SharedPreferenceManager.isScannedCard = false
-    }
-
     override fun onResume() {
         super.onResume()
         animationHelper?.enableGlobalListeners(::endTransition, ::beginTransition)
     }
 
-    private fun populateRecycler(addRegisterFieldsRequest: Account) {
+    private fun populateRecycler() {
         binding.authFields.apply {
             layoutManager = object : GridLayoutManager(requireContext(), 1) {
                 override fun requestChildRectangleOnScreen(
@@ -159,31 +176,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                 }
             }
             viewModel.haveValidationsPassed.set(false)
-            addAuthAdapter = AddAuthAdapter(
+
+            addAuthAdapter?.setValues(
                 viewModel.addAuthItemsList,
                 currentMembershipPlan,
                 viewModel.titleText.get(),
-                viewModel.descriptionText.get(),
-                checkValidation = {
-                    if (!viewModel.didPlanDocumentsPassValidations(addRegisterFieldsRequest)) {
-                        viewModel.haveValidationsPassed.set(false)
-                        return@AddAuthAdapter
-                    }
-                    if (!viewModel.didPlanFieldsPassValidations(it)) {
-                        viewModel.haveValidationsPassed.set(false)
-                        return@AddAuthAdapter
-                    }
-                    viewModel.haveValidationsPassed.set(true)
-                },
-                navigateToHeader = {
-                    navigationHandler?.navigateToBrandHeader()
-                },
-                onLinkClickListener = { url ->
-                    findNavController().navigate(BaseAddAuthFragmentDirections.globalToWeb(url))
-                },
-                onNavigateToBarcodeScanListener = { account ->
-                    onScannerActivated(account)
-                }
+                viewModel.descriptionText.get()
             )
             adapter = addAuthAdapter
 
@@ -194,6 +192,23 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                     }
                 }
             })
+        }
+    }
+
+    private fun setUpAutoCompleteRecyclerView(
+        formPos: Int?,
+        autoCompleteFields: ArrayList<String>
+    ) {
+        binding.autocompleteRecyclerview.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = AutoCompleteAdapter(autoCompleteFields) { value ->
+                formPos?.let {
+                    viewModel.addAuthItemsList[it].fieldsRequest?.value = value
+                    addAuthAdapter?.notifyItemChanged(it)
+                }
+            }
+            visibility = View.VISIBLE
         }
     }
 
@@ -251,10 +266,12 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
 
     private fun beginTransition() {
         viewModel.isKeyboardHidden.set(false)
+        showRememberMyDetailsView()
     }
 
     private fun endTransition() {
         viewModel.isKeyboardHidden.set(true)
+        hideRememberMyDetailsView()
     }
 
     private fun setKeyboardTypeToAdjustResize() {
@@ -283,8 +300,21 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
     }
 
     private fun onResult(result: String) {
-        if (SharedPreferenceManager.hasBarcodeBeenScanned) {
-            SharedPreferenceManager.scannedLoyaltyBarCode = result
-        }
+        addAuthAdapter?.setBarcode(result)
+    }
+
+    private fun showRememberMyDetailsView() {
+        binding.autocompleteRecyclerview.visibility = View.VISIBLE
+        binding.footerComposed.progressBtnContainer.visibility = View.GONE
+    }
+
+    private fun hideRememberMyDetailsView() {
+        binding.autocompleteRecyclerview.visibility = View.GONE
+        binding.footerComposed.progressBtnContainer.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        FormsUtil.clearForms()
+        super.onDestroyView()
     }
 }

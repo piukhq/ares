@@ -21,6 +21,152 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/square_barcode_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/margin_padding_size_medium"
+                    android:paddingTop="@dimen/margin_padding_size_medium"
+                    android:paddingEnd="@dimen/margin_padding_size_medium"
+                    android:paddingBottom="@dimen/margin_padding_size_medium"
+                    android:weightSum="10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/sb_barcode_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/sb_company_logo"
+                            android:layout_width="@dimen/margin_padding_size_extra_large"
+                            android:layout_height="@dimen/margin_padding_size_extra_large"
+                            tools:ignore="ContentDescription"
+                            tools:src="@tools:sample/avatars" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/sb_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito_sans"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/size_body"
+                                tools:text="@string/bonus_card_number"
+                                tools:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/sb_barcode_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito_sans_extrabold"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/size_body"
+                                tools:textColor="@color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/sb_barcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:scaleType="fitCenter"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rectangle_barcode_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:background="@color/white"
+                tools:layout_height="@dimen/loyalty_card_details_header_min_height">
+
+
+                <LinearLayout
+                    android:id="@+id/rb_barcode_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/rb_company_logo"
+                        android:layout_width="@dimen/margin_padding_size_extra_large"
+                        android:layout_height="@dimen/margin_padding_size_extra_large"
+                        android:layout_gravity="center"
+                        tools:ignore="ContentDescription"
+                        tools:src="@tools:sample/avatars" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_padding_size_small"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/rb_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_sans"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/size_sub_headline"
+                            tools:text="@string/bonus_card_number"
+                            tools:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/rb_barcode_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nunito_sans_extrabold"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/size_sub_headline"
+                            tools:textColor="@color/black" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <ImageView
+                    android:id="@+id/rb_barcode"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginEnd="@dimen/margin_padding_size_medium"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rb_barcode_container"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
