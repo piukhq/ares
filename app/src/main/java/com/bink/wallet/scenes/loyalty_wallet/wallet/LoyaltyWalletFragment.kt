@@ -494,6 +494,12 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     "Total Cards",
                     "${userDataResult.result.first.size}"
                 )
+
+                setMixpanelProperty(
+                    "Total PLL Cards",
+                    userDataResult.result.first.filter { it.plan?.isPlanPLL() == true }.size.toString()
+                )
+
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
                 // We should only stop loading & show membership cards if we have membership plans too
