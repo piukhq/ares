@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -498,6 +499,11 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 setMixpanelProperty(
                     "Total PLL Cards",
                     userDataResult.result.first.filter { it.plan?.isPlanPLL() == true }.size.toString()
+                )
+
+                setMixpanelProperty(
+                    "Total Linked PLL Cards",
+                    userDataResult.result.first.filter { (it.plan?.isPlanPLL() == true) && (it.payment_cards != null) && (it.isAuthorised()) }.size.toString()
                 )
 
                 walletItems = ArrayList()
