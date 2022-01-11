@@ -10,6 +10,7 @@ import com.bink.wallet.model.Consent
 import com.bink.wallet.model.MagicLinkToken
 import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
+import com.bink.wallet.model.request.MarketingOption
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
@@ -19,12 +20,13 @@ import com.bink.wallet.utils.JWTUtils
 import com.bink.wallet.utils.LocalStoreUtils
 import com.bink.wallet.utils.logDebug
 import kotlinx.coroutines.launch
-import org.json.JSONException
-import org.json.JSONObject
 import retrofit2.HttpException
 
 class MagicLinkResultViewModel(
-    val loginRepository: LoginRepository, val userRepository: UserRepository, val loyaltyWalletRepository: LoyaltyWalletRepository, val paymentWalletRepository: PaymentWalletRepository
+    val loginRepository: LoginRepository,
+    val userRepository: UserRepository,
+    val loyaltyWalletRepository: LoyaltyWalletRepository,
+    val paymentWalletRepository: PaymentWalletRepository
 ) : BaseViewModel() {
 
     var token: String? = null
@@ -118,6 +120,16 @@ class MagicLinkResultViewModel(
                     )
                 }
             } catch (e: Exception) {
+            }
+        }
+    }
+
+    fun putMarketingPref(isChecked: Boolean) {
+        viewModelScope.launch {
+            try {
+                loginRepository.putMarketingPref(MarketingOption(if (isChecked) 1 else 0))
+            } catch (e: Exception) {
+
             }
         }
     }

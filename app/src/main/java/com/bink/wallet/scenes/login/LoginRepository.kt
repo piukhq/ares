@@ -90,6 +90,10 @@ class LoginRepository(
         return apiService.postServiceAsync(postServiceRequest)
     }
 
+    suspend fun putMarketingPref(marketingOption: MarketingOption): ResponseBody {
+        return apiService.checkMarketingPrefAsync(marketingOption)
+    }
+
     fun checkMarketingPref(
         checkedOption: MarketingOption,
         marketingResponse: MutableLiveData<ResponseBody>,
