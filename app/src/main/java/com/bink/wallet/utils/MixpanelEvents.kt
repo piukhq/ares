@@ -17,4 +17,9 @@ object MixpanelEvents {
     const val LOYALTY_CARD_DETAIL = "Loyalty card detail viewed"
     const val LOGIN = "User logged in"
     const val LOGOUT = "User logged out"
+
+    const val TOTAL_CARDS_PROP = "Total Cards"
+    const val TOTAL_PLL_CARDS_PROP = "Total PLL Cards"
+    const val TOTAL_LINKED_PLL_CARDS_PROP = "Total Linked PLL Cards"
+    const val TOTAL_DUPE_CARDS_PROP = "Total Duplicate Cards"
 }

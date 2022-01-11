@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -491,20 +490,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         isRefresh = false
         when (userDataResult) {
             is UserDataResult.UserDataSuccess -> {
-                setMixpanelProperty(
-                    "Total Cards",
-                    "${userDataResult.result.first.size}"
-                )
-
-                setMixpanelProperty(
-                    "Total PLL Cards",
-                    userDataResult.result.first.filter { it.plan?.isPlanPLL() == true }.size.toString()
-                )
-
-                setMixpanelProperty(
-                    "Total Linked PLL Cards",
-                    userDataResult.result.first.filter { (it.plan?.isPlanPLL() == true) && (it.payment_cards != null) && (it.isAuthorised()) }.size.toString()
-                )
+                setMixpanelCardProperties(userDataResult.result.first)
 
                 walletItems = ArrayList()
                 walletItems.addAll(userDataResult.result.third)
@@ -809,6 +795,42 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                     membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN
                 )
         )
+    }
+
+    private fun setMixpanelCardProperties(membershipCards: List<MembershipCard>) {
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_CARDS_PROP,
+            "${membershipCards.size}"
+        )
+
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_PLL_CARDS_PROP,
+            membershipCards.filter { it.plan?.isPlanPLL() == true }.size.toString()
+        )
+
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_LINKED_PLL_CARDS_PROP,
+            membershipCards.filter { (it.plan?.isPlanPLL() == true) && (it.payment_cards != null) && (it.isAuthorised()) }.size.toString()
+        )
+
+        setMixpanelProperty(
+            MixpanelEvents.TOTAL_DUPE_CARDS_PROP,
+            getTotalDuplicateCards(membershipCards).toString()
+        )
+    }
+
+    private fun getTotalDuplicateCards(membershipCards: List<MembershipCard>): Int {
+        var totalDupes = 0
+        var checkedIds = ArrayList<String?>()
+        membershipCards.forEach { card ->
+            if (!checkedIds.contains(card.membership_plan)) {
+                checkedIds.add(card.membership_plan)
+                val totalOfCard =
+                    membershipCards.filter { it.membership_plan == card.membership_plan }.size
+                if (totalOfCard > 1) totalDupes++
+            }
+        }
+        return totalDupes
     }
 
     override fun onDestroyView() {
