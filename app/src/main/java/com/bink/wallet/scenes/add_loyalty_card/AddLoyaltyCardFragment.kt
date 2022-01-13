@@ -1,12 +1,10 @@
 package com.bink.wallet.scenes.add_loyalty_card
 
-import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.*
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.BaseFragment
@@ -16,7 +14,6 @@ import com.bink.wallet.model.response.membership_plan.Account
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_LOYALTY_CARD_VIEW
-import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.toolbar.FragmentToolbar
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
@@ -34,7 +31,7 @@ class AddLoyaltyCardFragment :
     private var isFromAddAuth = false
     private var account: Account? = null
 
-    private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri ->
+    private val activityResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         handleGalleryResult(uri) {
             handleResultText(it)
         }

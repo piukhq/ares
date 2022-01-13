@@ -12,13 +12,9 @@ import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
 import com.bink.wallet.databinding.AddFragmentBinding
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.scenes.add_loyalty_card.AddLoyaltyCardFragmentDirections
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_OPTIONS_VIEW
 import com.bink.wallet.utils.toolbar.FragmentToolbar
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
-import com.google.zxing.Result
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFragment : BaseFragment<AddViewModel, AddFragmentBinding>() {
