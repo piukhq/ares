@@ -239,6 +239,6 @@ class DebugMenuFragment : BaseFragment<DebugMenuViewModel, FragmentDebugMenuBind
     }
 
     private fun restartApplication() {
-        (requireActivity() as MainActivity).forceRunApp()
+        getMainActivity().forceRunApp()
     }
 }

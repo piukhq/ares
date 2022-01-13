@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         appUpdateManager = AppUpdateManagerFactory.create(this)
         logUserPropertiesAtStartUp()
-        logDebug("mixPanel", Keys.mixPanelApiKey())
         mixpanel = MixpanelAPI.getInstance(this, Keys.mixPanelApiKey())
 
         SentryAndroid.init(

@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import com.bink.wallet.BuildConfig
+import com.bink.wallet.MainActivity
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_card.CardBalance
 import com.bink.wallet.utils.enums.BuildTypes
@@ -431,4 +432,8 @@ fun Fragment.showUnLinkErrorMessage(errorText: String) {
         }
         .setCancelable(false)
         .show()
+}
+
+fun Fragment.getMainActivity() : MainActivity{
+    return requireActivity() as MainActivity
 }

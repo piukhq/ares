@@ -339,9 +339,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel, SettingsFragmentBinding
         logoutMixpanel()
         LocalStoreUtils.clearPreferences(requireContext())
         try {
-            (requireActivity() as MainActivity).forceRunApp()
+            getMainActivity().forceRunApp()
         } catch (e: Exception) {
-            (requireActivity() as MainActivity).forceRunApp()
+            getMainActivity().forceRunApp()
         }
     }
 
