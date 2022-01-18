@@ -7,35 +7,35 @@ import retrofit2.HttpException
 object SentryUtils {
 
     fun logError(sentryError: SentryErrorType, exception: Exception) {
-        var userInfo: String? = null
-
-        when (exception) {
-            is HttpException -> {
-                val errorBody = Gson().toJson(ErrorBody(exception.getErrorBody()))
-                userInfo = "Error code: ${exception.code()} - Error Body: $errorBody"
-            }
-            else -> userInfo = "Error message: ${exception.message}"
-        }
-
-        logError(sentryError, userInfo)
+//        var userInfo: String? = null
+//
+//        when (exception) {
+//            is HttpException -> {
+//                val errorBody = Gson().toJson(ErrorBody(exception.getErrorBody()))
+//                userInfo = "Error code: ${exception.code()} - Error Body: $errorBody"
+//            }
+//            else -> userInfo = "Error message: ${exception.message}"
+//        }
+//
+//        logError(sentryError, userInfo)
     }
 
     fun logError(sentryError: SentryErrorType, errorMessage: String?) {
-        Sentry.withScope { scope ->
-            errorMessage?.let { info -> scope.setExtra("error_message", info) }
-            Sentry.captureException(Exception("${sentryError.localCode} - ${sentryError.issue}"))
-            scope.clear()
-        }
+//        Sentry.withScope { scope ->
+//            errorMessage?.let { info -> scope.setExtra("error_message", info) }
+//            Sentry.captureException(Exception("${sentryError.localCode} - ${sentryError.issue}"))
+//            scope.clear()
+//        }
     }
 
     fun logError(sentryError: SentryErrorType, errorMessage: String?, merchant: String?, isRefresh: Boolean?) {
-        Sentry.withScope { scope ->
-            isRefresh?.let { scope.setExtra("balance_refresh", (!it).toString()) }
-            errorMessage?.let { scope.setExtra("error_message", it) }
-            merchant?.let { scope.setExtra("merchant", it) }
-            Sentry.captureException(Exception("${sentryError.localCode} - ${sentryError.issue}"))
-            scope.clear()
-        }
+//        Sentry.withScope { scope ->
+//            isRefresh?.let { scope.setExtra("balance_refresh", (!it).toString()) }
+//            errorMessage?.let { scope.setExtra("error_message", it) }
+//            merchant?.let { scope.setExtra("merchant", it) }
+//            Sentry.captureException(Exception("${sentryError.localCode} - ${sentryError.issue}"))
+//            scope.clear()
+//        }
     }
 
 }

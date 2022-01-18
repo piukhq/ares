@@ -2,7 +2,10 @@ package com.bink.wallet.utils.local_point_scraping
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.webkit.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bink.wallet.model.LocalPointsAgent
 import com.bink.wallet.model.PointScrapingResponse
 import com.bink.wallet.utils.LocalPointScrapingError
@@ -14,16 +17,21 @@ import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.nio.charset.StandardCharsets
+import zendesk.support.requestlist.RequestListViewModule_ViewFactory.view
 
 @SuppressLint("StaticFieldLeak")
 object PointScrapingUtil {
 
     private var webView: WebView? = null
 
-    fun performNewScrape(context: Context, isAddCard: Boolean, localPointsAgent: LocalPointsAgent?, email: String?, password: String?, callback: (PointScrapingResponse) -> Unit) {
+    fun performNewScrape(context: Context, isAddCard: Boolean, localPointsAgent: LocalPointsAgent?, email: String?, password: String?,view: ConstraintLayout? = null, callback: (PointScrapingResponse) -> Unit) {
         if (localPointsAgent == null || email == null || password == null) return
 
         webView = getWebView(context)
+        val lp = ConstraintLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+        webView!!.layoutParams = lp
+        webView!!.visibility = View.VISIBLE
+        view?.addView(webView)
         clearWebViewCookies()
 
         webView?.webViewClient = object : WebViewClient() {
