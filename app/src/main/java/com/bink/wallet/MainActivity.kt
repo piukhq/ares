@@ -64,7 +64,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) != BuildTypes.MR.type) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            if (BuildConfig.SECURE_FLAGS) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            }
         }
 
         setContentView(R.layout.activity_main)
@@ -182,67 +184,66 @@ class MainActivity : AppCompatActivity() {
     private fun checkForUpdates() {
         try {
             val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-            val appConfiguration: AppConfiguration = Gson().fromJson(
-                FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_APP_CONFIGURATION),
-                object : TypeToken<AppConfiguration>() {}.type
-            )
+            RemoteConfigUtil().appConfig?.let { appConfiguration ->
 
-            appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-                if (appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
-                        IMMEDIATE
-                    ) && appConfiguration.isNewVersionAvailable()
-                ) {
+                appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+                    if (appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                            IMMEDIATE
+                        ) && appConfiguration.isNewVersionAvailable()
+                    ) {
 
-                    lateinit var dialog: AlertDialog
-                    val builder = AlertDialog.Builder(this)
+                        lateinit var dialog: AlertDialog
+                        val builder = AlertDialog.Builder(this)
 
-                    builder.setTitle(getString(R.string.update_title))
-                    builder.setMessage(getString(R.string.update_body))
-                    val dialogClickListener = DialogInterface.OnClickListener { _, button ->
-                        when (button) {
-                            DialogInterface.BUTTON_POSITIVE -> {
-                                appUpdateManager.startUpdateFlowForResult(
-                                    appUpdateInfo,
-                                    IMMEDIATE,
-                                    this,
-                                    UPDATE_REQUEST_CODE
-                                )
-                                firebaseAnalytics.logEvent(
-                                    UPDATE_ACTION,
-                                    Bundle().apply { putString(UPDATE_KEY, UPDATE_OPEN_STORE) })
-                            }
-                            DialogInterface.BUTTON_NEGATIVE -> {
-                                firebaseAnalytics.logEvent(
-                                    UPDATE_ACTION,
-                                    Bundle().apply { putString(UPDATE_KEY, UPDATE_LATER) })
-                            }
-                            DialogInterface.BUTTON_NEUTRAL -> {
-                                appConfiguration.skipVersion()
-                                firebaseAnalytics.logEvent(
-                                    UPDATE_ACTION,
-                                    Bundle().apply { putString(UPDATE_KEY, UPDATE_SKIP) })
+                        builder.setTitle(getString(R.string.update_title))
+                        builder.setMessage(getString(R.string.update_body))
+                        val dialogClickListener = DialogInterface.OnClickListener { _, button ->
+                            when (button) {
+                                DialogInterface.BUTTON_POSITIVE -> {
+                                    appUpdateManager.startUpdateFlowForResult(
+                                        appUpdateInfo,
+                                        IMMEDIATE,
+                                        this,
+                                        UPDATE_REQUEST_CODE
+                                    )
+                                    firebaseAnalytics.logEvent(
+                                        UPDATE_ACTION,
+                                        Bundle().apply { putString(UPDATE_KEY, UPDATE_OPEN_STORE) })
+                                }
+                                DialogInterface.BUTTON_NEGATIVE -> {
+                                    firebaseAnalytics.logEvent(
+                                        UPDATE_ACTION,
+                                        Bundle().apply { putString(UPDATE_KEY, UPDATE_LATER) })
+                                }
+                                DialogInterface.BUTTON_NEUTRAL -> {
+                                    appConfiguration.skipVersion()
+                                    firebaseAnalytics.logEvent(
+                                        UPDATE_ACTION,
+                                        Bundle().apply { putString(UPDATE_KEY, UPDATE_SKIP) })
+                                }
                             }
                         }
+
+                        builder.setPositiveButton(
+                            getString(R.string.update_start_update),
+                            dialogClickListener
+                        )
+                        builder.setNeutralButton(
+                            getString(R.string.update_skip_version),
+                            dialogClickListener
+                        )
+                        builder.setNegativeButton(
+                            getString(R.string.update_maybe_later),
+                            dialogClickListener
+                        )
+                        dialog = builder.create()
+                        dialog.setCancelable(false)
+                        dialog.show()
+
                     }
-
-                    builder.setPositiveButton(
-                        getString(R.string.update_start_update),
-                        dialogClickListener
-                    )
-                    builder.setNeutralButton(
-                        getString(R.string.update_skip_version),
-                        dialogClickListener
-                    )
-                    builder.setNegativeButton(
-                        getString(R.string.update_maybe_later),
-                        dialogClickListener
-                    )
-                    dialog = builder.create()
-                    dialog.setCancelable(false)
-                    dialog.show()
-
                 }
             }
+
         } catch (e: Exception) {
             return
         }

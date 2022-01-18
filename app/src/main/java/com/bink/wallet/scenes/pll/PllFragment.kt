@@ -329,9 +329,15 @@ class PllFragment : BaseFragment<PllViewModel, FragmentPllBinding>() {
                 planName,
                 planNameCard
             )
-        } else errorText ?: getString(
-            R.string.pll_error_message
-        )
+        } else {
+            if (errorText.isNullOrBlank()) {
+                getString(
+                    R.string.pll_error_message
+                )
+            } else {
+                errorText
+            }
+        }
 
         AlertDialog.Builder(requireContext())
             .setTitle(title)
