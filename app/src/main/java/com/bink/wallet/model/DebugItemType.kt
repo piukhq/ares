@@ -14,4 +14,5 @@ enum class DebugItemType : Parcelable {
     TESCO_LPS,
     CARD_ON_BOARDING,
     BARCODE_FROM_IMAGE
+
 }

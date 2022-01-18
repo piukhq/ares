@@ -29,7 +29,8 @@ class AddAuthAdapter(
     val checkValidation: (String?) -> Unit = {},
     val navigateToHeader: () -> Unit = {},
     val onLinkClickListener: ((String) -> Unit) = {},
-    val onNavigateToBarcodeScanListener: ((Account) -> Unit)
+    val onNavigateToBarcodeScanListener: ((Account) -> Unit),
+    val autoCompleteToggle: (Int?, ArrayList<String>?) -> Unit
 ) :
     RecyclerView.Adapter<BaseAddAuthViewHolder<*>>() {
 
@@ -102,7 +103,8 @@ class AddAuthAdapter(
             FieldType.SENSITIVE.type -> {
                 TextFieldViewHolder(
                     onNavigateToBarcodeScanListener,
-                    (AddAuthTextItemBinding.inflate(inflater))
+                    (AddAuthTextItemBinding.inflate(inflater)),
+                    autoCompleteToggle
                 )
             }
             FieldType.SPINNER.type -> {

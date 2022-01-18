@@ -21,7 +21,6 @@ import com.scottyab.rootbeer.RootBeer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import zendesk.core.Zendesk
 import zendesk.support.Support
-import java.util.*
 
 class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     override val layoutRes: Int
@@ -71,6 +70,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
+        Keys
         persistPaymentCardHashSecret()
         configureZendesk()
         persistBouncerKeys()
@@ -162,7 +162,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
 
     private fun configureZendesk() {
         val isProduction =
-            BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type
+            BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type
         Zendesk.INSTANCE.init(
             requireActivity(),
             if (isProduction) zendeskProdUrl() else zendeskSandboxUrl(),
@@ -176,7 +176,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     private fun persistBouncerKeys() {
         var bouncerKey = bouncerDevKey()
 
-        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().toLowerCase(Locale.ENGLISH)) {
+        if (BuildConfig.BUILD_TYPE == BuildTypes.RELEASE.toString().lowercase()) {
             bouncerKey = bouncerProdKey()
         }
 
@@ -187,20 +187,11 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun goToDashboard() {
-        context?.let {
-            if (UtilFunctions.isNetworkAvailable(it, false)) {
-                viewModel.getUserResponse.observeNonNull(this) { user ->
-                    findNavController().navigateIfAdded(this, R.id.global_to_home)
-                    setAnalyticsUserId(user.uid)
-                }
-                viewModel.getCurrentUser()
-            } else {
-                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)?.let { uid ->
-                    setAnalyticsUserId(uid)
-                    findNavController().navigateIfAdded(this, R.id.global_to_home)
-                }
-            }
+        viewModel.getUserResponse.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            setAnalyticsUserId(it.uid)
         }
+        viewModel.getCurrentUser()
     }
 
     private fun setUpRemoteConfig() {

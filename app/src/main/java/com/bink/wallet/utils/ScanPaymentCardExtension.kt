@@ -178,7 +178,7 @@ fun Fragment.logPaymentCardSuccess(wasSuccess: Boolean) {
 }
 
 fun Fragment.logEvent(name: String, parameters: Map<String, String>) {
-    if (BuildConfig.BUILD_TYPE.toLowerCase(Locale.ENGLISH) == BuildTypes.RELEASE.type) {
+    if (BuildConfig.BUILD_TYPE.lowercase() == BuildTypes.RELEASE.type) {
         val bundle = Bundle()
 
         for (entry: Map.Entry<String, String> in parameters) {

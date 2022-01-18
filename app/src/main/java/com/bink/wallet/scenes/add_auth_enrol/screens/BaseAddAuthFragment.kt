@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bink.wallet.BaseFragment
 import com.bink.wallet.R
@@ -21,6 +22,7 @@ import com.bink.wallet.scenes.add_auth_enrol.AuthAnimationHelper
 import com.bink.wallet.scenes.add_auth_enrol.AuthNavigationHandler
 import com.bink.wallet.scenes.add_auth_enrol.FormsUtil
 import com.bink.wallet.scenes.add_auth_enrol.adapter.AddAuthAdapter
+import com.bink.wallet.scenes.add_auth_enrol.adapter.AutoCompleteAdapter
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddAuthViewModel
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
@@ -91,7 +93,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                     viewModel.haveValidationsPassed.set(true)
                 } else {
                     viewModel.haveValidationsPassed.set(false)
-
                 }
             },
             navigateToHeader = {
@@ -102,8 +103,18 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             },
             onNavigateToBarcodeScanListener = { account ->
                 onScannerActivated(account)
+            },
+            autoCompleteToggle = { position, autoCompleteSuggestions ->
+                if (autoCompleteSuggestions == null) {
+                    binding.autocompleteRecyclerview.visibility = View.GONE
+                    binding.footerComposed.progressBtnContainer.visibility = View.VISIBLE
+                } else {
+                    setUpAutoCompleteRecyclerView(position, autoCompleteSuggestions)
+                    binding.footerComposed.progressBtnContainer.visibility = View.GONE
+                }
             }
         )
+
         binding.toolbar.setNavigationOnClickListener {
             handleToolbarAction()
             findNavController().navigateUp()
@@ -117,7 +128,6 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
             populateRecycler()
 
             barcode?.let {
-
                 viewModel.setBarcode(it)
             }
         }
@@ -192,6 +202,19 @@ open class BaseAddAuthFragment : BaseFragment<AddAuthViewModel, BaseAddAuthFragm
                     }
                 }
             })
+        }
+    }
+
+    private fun setUpAutoCompleteRecyclerView(formPos: Int?, autoCompleteFields: ArrayList<String>) {
+        binding.autocompleteRecyclerview.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = AutoCompleteAdapter(autoCompleteFields) { value ->
+                formPos?.let {
+                    viewModel.addAuthItemsList[it].fieldsRequest?.value = value
+                    addAuthAdapter?.notifyItemChanged(it)
+                }
+            }
+            visibility = View.VISIBLE
         }
     }
 

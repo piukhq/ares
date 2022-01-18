@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>in_app_review_enabled</key>
-        <value>false</value>
-        <key>dynamic_actions</key>
-        <value></value>
-        <key>LPC_master_enabled_debug</key>
-        <value></value>
-        <key>app_configuration</key>
+        <key>config_file</key>
         <value></value>
     </entry>
 </defaultsMap>

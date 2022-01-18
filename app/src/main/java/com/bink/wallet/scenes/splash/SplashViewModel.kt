@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
-import com.bink.wallet.model.PostServiceRequest
 import com.bink.wallet.model.auth.User
 import com.bink.wallet.scenes.login.LoginRepository
 import com.bink.wallet.scenes.settings.UserRepository
@@ -33,7 +32,7 @@ class SplashViewModel(val loginRepository: LoginRepository, val userRepository: 
 
                 _getUserResponse.value = user
             } catch (e: Exception) {
-
+                _postServiceErrorResponse.value = e
             }
 
         }

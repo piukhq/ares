@@ -163,7 +163,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         }
 
         return null
-        
+
     }
 
     private fun shouldShowSwitchDialog(token: String) {
@@ -177,7 +177,7 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
                     findNavController().navigate(LoyaltyWalletFragmentDirections.globalToMagicLink(token, false))
                 } else {
 
-                    if (emailFromJson?.toLowerCase() != emailFromLocal.toLowerCase()) {
+                    if (emailFromJson?.toLowerCase(Locale.ENGLISH) != emailFromLocal.toLowerCase(Locale.ENGLISH)) {
                         requireContext().displayModalPopup(
                             getString(R.string.already_logged_in_title),
                             getString(R.string.already_logged_in_subtitle, emailFromJson),
@@ -195,37 +195,27 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
             logDebug("responseToken", "$e")
         }
     }
-    
 
     private fun checkForDynamicActions() {
         getDynamicActionScreenForFragment(
             this.javaClass.canonicalName ?: ""
         )?.let { currentDynamicActionScreen ->
-            var dynamicActionsList: ArrayList<DynamicAction>
+            RemoteConfigUtil().dynamicActionList?.let { dynamicActionsList ->
+                for (dynamicAction in dynamicActionsList) {
+                    if (isDynamicActionInDate(dynamicAction)) {
+                        dynamicAction.locations?.let { dynamicActionLocations ->
 
-            try {
-                dynamicActionsList = Gson().fromJson(
-                    FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS),
-                    object : TypeToken<ArrayList<DynamicAction?>?>() {}.type
-                )
-            } catch (e: Exception) {
-                return
-            }
+                            for (dynamicActionLocation in dynamicActionLocations) {
+                                dynamicActionLocation.screen?.let { dynamicActionScreen ->
 
-            for (dynamicAction in dynamicActionsList) {
-                if (isDynamicActionInDate(dynamicAction)) {
-                    dynamicAction.locations?.let { dynamicActionLocations ->
+                                    if (dynamicActionScreen == currentDynamicActionScreen) {
+                                        createDynamicAction(dynamicActionLocation, dynamicAction)
+                                    }
 
-                        for (dynamicActionLocation in dynamicActionLocations) {
-                            dynamicActionLocation.screen?.let { dynamicActionScreen ->
-
-                                if (dynamicActionScreen == currentDynamicActionScreen) {
-                                    createDynamicAction(dynamicActionLocation, dynamicAction)
                                 }
-
                             }
-                        }
 
+                        }
                     }
                 }
             }
