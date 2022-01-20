@@ -58,8 +58,6 @@ class AddLoyaltyCardFragment :
         brands = args.membershipPlans
         account = args.account
         findNavController().previousBackStackEntry?.savedStateHandle?.remove<String>(ADD_AUTH_BARCODE)
-        logDebug("Addloyal"," on actiivty created")
-
     }
 
     override fun onResume() {
@@ -70,8 +68,6 @@ class AddLoyaltyCardFragment :
         if (resumeTimerFromMillis > 0) {
             scheduleHapticWithPause(resumeTimerFromMillis)
         }
-        logDebug("Addloyal"," on resume")
-
     }
 
     override fun onPause() {
@@ -282,21 +278,4 @@ class AddLoyaltyCardFragment :
     override val binding: AddLoyaltyCardFragmentBinding
         get() = super.binding
 
-    override fun onStart() {
-        super.onStart()
-        logDebug("Addloyal"," on start")
-    }
-
-
-
-    override fun onStop() {
-        super.onStop()
-        logDebug("Addloyal ","on stop")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        logDebug("Addloyal"," on destroyView")
-
-    }
 }
