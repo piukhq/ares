@@ -131,9 +131,23 @@ class BrowseBrandsFragment : BaseFragment<BrowseBrandsViewModel, BrowseBrandsBin
 
     private fun goToScan() {
         requestCameraPermissionAndNavigate(true) {
-            val directions = BrowseBrandsFragmentDirections.browseToAdd(args.membershipPlans, args.membershipCards, null, isFromAddAuth = true)
-            findNavController().navigateIfAdded(this, directions)
+            navigateToScan()
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        requestPermissionsResult(requestCode,permissions,grantResults,
+        null,{navigateToScan()},null,null)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun navigateToScan(){
+        val directions = BrowseBrandsFragmentDirections.browseToAdd(args.membershipPlans, args.membershipCards, null, isFromAddAuth = true)
+        findNavController().navigateIfAdded(this, directions)
     }
 
     companion object {
