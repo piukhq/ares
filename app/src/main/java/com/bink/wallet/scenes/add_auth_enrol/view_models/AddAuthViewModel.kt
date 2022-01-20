@@ -6,6 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bink.wallet.BaseViewModel
+import com.bink.wallet.model.currentAgent
+import com.bink.wallet.model.getRemoteAuthFields
+import com.bink.wallet.model.isEnabled
 import com.bink.wallet.model.request.membership_card.Account
 import com.bink.wallet.model.request.membership_card.MembershipCardRequest
 import com.bink.wallet.model.request.membership_card.PlanFieldsRequest
@@ -22,10 +25,7 @@ import com.bink.wallet.utils.enums.AddAuthItemType
 import com.bink.wallet.utils.enums.FieldType
 import com.bink.wallet.utils.enums.SignUpFieldTypes
 import com.bink.wallet.utils.enums.TypeOfField
-import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -117,6 +117,16 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
 
     }
 
+    private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
+        RemoteConfigUtil().localPointsCollection?.currentAgent(membershipPlanId.toIntOrNull())?.let { agent ->
+            if (agent.isEnabled()) {
+                return agent.fields.getRemoteAuthFields()
+            }
+        }
+
+        return arrayListOf()
+    }
+
     private fun getSaveCredentialsField(callback: (AddAuthItemWrapper?) -> Unit) {
         isRememberDetailsChecked { isChecked ->
             if (isChecked != null) {
@@ -193,22 +203,6 @@ open class AddAuthViewModel constructor(private val loyaltyWalletRepository: Loy
                 callback(null)
             }
         }
-    }
-
-    private fun getWebScrapeFields(membershipPlanId: String): List<AddAuthItemWrapper> {
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
-
-        for (agent in WebScrapableManager.scrapableAgents) {
-            membershipPlanId.toIntOrNull()?.let { planId ->
-                if (agent.isEnabled(remoteConfig)) {
-                    if (agent.membershipPlanId == planId) {
-                        return agent.getRemoteAuthFields(remoteConfig)
-                    }
-                }
-            }
-        }
-
-        return arrayListOf()
     }
 
     private fun arrangeAuthItems() {

@@ -200,31 +200,22 @@ abstract class BaseFragment<VM : BaseViewModel, DB : ViewDataBinding> : Fragment
         getDynamicActionScreenForFragment(
             this.javaClass.canonicalName ?: ""
         )?.let { currentDynamicActionScreen ->
-            var dynamicActionsList: ArrayList<DynamicAction>
+            RemoteConfigUtil().dynamicActionList?.let { dynamicActionsList ->
+                for (dynamicAction in dynamicActionsList) {
+                    if (isDynamicActionInDate(dynamicAction)) {
+                        dynamicAction.locations?.let { dynamicActionLocations ->
 
-            try {
-                dynamicActionsList = Gson().fromJson(
-                    FirebaseRemoteConfig.getInstance().getString(REMOTE_CONFIG_DYNAMIC_ACTIONS),
-                    object : TypeToken<ArrayList<DynamicAction?>?>() {}.type
-                )
-            } catch (e: Exception) {
-                return
-            }
+                            for (dynamicActionLocation in dynamicActionLocations) {
+                                dynamicActionLocation.screen?.let { dynamicActionScreen ->
 
-            for (dynamicAction in dynamicActionsList) {
-                if (isDynamicActionInDate(dynamicAction)) {
-                    dynamicAction.locations?.let { dynamicActionLocations ->
+                                    if (dynamicActionScreen == currentDynamicActionScreen) {
+                                        createDynamicAction(dynamicActionLocation, dynamicAction)
+                                    }
 
-                        for (dynamicActionLocation in dynamicActionLocations) {
-                            dynamicActionLocation.screen?.let { dynamicActionScreen ->
-
-                                if (dynamicActionScreen == currentDynamicActionScreen) {
-                                    createDynamicAction(dynamicActionLocation, dynamicAction)
                                 }
-
                             }
-                        }
 
+                        }
                     }
                 }
             }

@@ -70,6 +70,7 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
         LocalStoreUtils.setAppSharedPref(
             LocalStoreUtils.KEY_SPREEDLY, spreedlyKey()
         )
+        Keys
         persistPaymentCardHashSecret()
         configureZendesk()
         persistBouncerKeys()
@@ -186,20 +187,11 @@ class SplashFragment : BaseFragment<SplashViewModel, FragmentSplashBinding>() {
     }
 
     private fun goToDashboard() {
-        context?.let {
-            if (UtilFunctions.isNetworkAvailable(it, false)) {
-                viewModel.getUserResponse.observeNonNull(this) { user ->
-                    findNavController().navigateIfAdded(this, R.id.global_to_home)
-                    setAnalyticsUserId(user.uid)
-                }
-                viewModel.getCurrentUser()
-            } else {
-                LocalStoreUtils.getAppSharedPref(LocalStoreUtils.KEY_UID)?.let { uid ->
-                    setAnalyticsUserId(uid)
-                    findNavController().navigateIfAdded(this, R.id.global_to_home)
-                }
-            }
+        viewModel.getUserResponse.observeNonNull(this) {
+            findNavController().navigateIfAdded(this, R.id.global_to_home)
+            setAnalyticsUserId(it.uid)
         }
+        viewModel.getCurrentUser()
     }
 
     private fun setUpRemoteConfig() {

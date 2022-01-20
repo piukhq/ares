@@ -15,15 +15,8 @@ import com.bink.wallet.model.response.membership_plan.MembershipPlan
 import com.bink.wallet.scenes.login.LoginRepository.Companion.DEFAULT_LOGIN_ID
 import com.bink.wallet.scenes.loyalty_wallet.wallet.LoyaltyWalletRepository
 import com.bink.wallet.scenes.settings.UserRepository
-import com.bink.wallet.utils.EMAIL_REGEX
-import com.bink.wallet.utils.EMPTY_STRING
-import com.bink.wallet.utils.LocalStoreUtils
-import com.bink.wallet.utils.PASSWORD_REGEX
-import com.bink.wallet.utils.UtilFunctions
-import com.bink.wallet.utils.combineNonNull
-import kotlinx.coroutines.Dispatchers
+import com.bink.wallet.utils.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 
 class LoginViewModel constructor(
@@ -119,7 +112,6 @@ class LoginViewModel constructor(
 
                 _getUserResponse.value = user
             } catch (e: Exception) {
-
             }
 
         }

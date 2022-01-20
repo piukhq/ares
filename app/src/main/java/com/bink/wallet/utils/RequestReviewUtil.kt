@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import com.bink.wallet.BuildConfig
 import com.bink.wallet.data.SharedPreferenceManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 
 
 object RequestReviewUtil {
@@ -51,16 +50,15 @@ object RequestReviewUtil {
     }
 
     private fun requestReviewFlow(fragment: Fragment, reviewRequested: () -> Unit) {
-        try{
+        try {
             val activity = fragment.requireActivity()
 
             val reviewManager = ReviewManagerFactory.create(activity)
 
             if (!hasReviewedInThisVersion()) {
-                val remoteConfig = FirebaseRemoteConfig.getInstance()
-                val isReviewEnabled = remoteConfig.getString(REMOTE_CONFIG_REVIEW_ENABLED)
+                val isReviewEnabled = RemoteConfigUtil().appConfig?.in_app_review_enabled
 
-                if (isReviewEnabled.lowercase().equals("true")) {
+                if (isReviewEnabled == true) {
                     val requestReview = reviewManager.requestReviewFlow()
                     reviewRequested()
 
@@ -79,7 +77,7 @@ object RequestReviewUtil {
                 }
             }
 
-        } catch (e: IllegalStateException){
+        } catch (e: IllegalStateException) {
             //not attached to an activity
         }
     }
