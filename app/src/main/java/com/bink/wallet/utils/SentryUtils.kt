@@ -48,7 +48,8 @@ enum class SentryErrorType(val localCode: Int, val issue: String) {
     API_REJECTED(3002, "Bink API rejected request"),
     LOCAL_POINTS_SCRAPE_CLIENT(4001, "Local points collection failed"),
     LOCAL_POINTS_SCRAPE_SITE(4002, "Local points collection failed"),
-    LOCAL_POINTS_SCRAPE_USER(4003, "Local points collection failed")
+    LOCAL_POINTS_SCRAPE_USER(4003, "Local points collection failed"),
+    GALLERY_IMPORT(0,"Failed to retrieve image")
 }
 
 enum class LocalPointScrapingError(val issue: String) {

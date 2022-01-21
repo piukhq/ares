@@ -127,29 +127,34 @@ class AddLoyaltyCardFragment :
     }
 
     private fun setBottomLayout() {
-        binding.scannerView.setViewFinderMeasureCallback {
-            val topPadding = binding.scannerView.totalPreviewHeight
-            binding.bottomView.root.post {
-                binding.bottomView.root.setPadding(0, topPadding, 0, 0)
-                binding.bottomView.root.alpha = 0f
-                binding.bottomView.root.setVisible(true)
-                binding.bottomView.root.animate().alpha(1f)
+        try {
+            binding.scannerView.setViewFinderMeasureCallback {
+                val topPadding = binding.scannerView.totalPreviewHeight
+                binding.bottomView.root.post {
+                    binding.bottomView.root.setPadding(0, topPadding, 0, 0)
+                    binding.bottomView.root.alpha = 0f
+                    binding.bottomView.root.setVisible(true)
+                    binding.bottomView.root.animate().alpha(1f)
 
+                }
             }
-        }
-        binding.bottomView.enterManuallyContainer.setOnClickListener()
-        {
-            cancelHaptic = true
-            if (isFromAddAuth) {
-                findNavController().popBackStack()
-            } else {
-                goToBrowseBrands()
+            binding.bottomView.enterManuallyContainer.setOnClickListener()
+            {
+                cancelHaptic = true
+                if (isFromAddAuth) {
+                    findNavController().popBackStack()
+                } else {
+                    goToBrowseBrands()
+                }
             }
+
+            binding.pickFromGallery.setOnClickListener {
+                activityResult.launch("image/*")
+            }
+        } catch (exception:Exception){
+            SentryUtils.logError(SentryErrorType.GALLERY_IMPORT,exception.message)
         }
 
-        binding.pickFromGallery.setOnClickListener {
-            activityResult.launch("image/*")
-        }
     }
 
     private fun goToBrowseBrands() {
