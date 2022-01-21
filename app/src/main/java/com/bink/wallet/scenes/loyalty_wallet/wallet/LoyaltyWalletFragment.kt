@@ -131,6 +131,17 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                                 displayNoBarcodeDialog(position)
                             } else {
                                 plan?.let {
+                                    logMixpanelEvent(
+                                        MixpanelEvents.BARCODE_VIEWED,
+                                        JSONObject().put(
+                                            MixpanelEvents.BRAND_NAME,
+                                            plan.account?.company_name
+                                                ?: MixpanelEvents.VALUE_UNKNOWN
+                                        ).put(
+                                            MixpanelEvents.ROUTE,
+                                            MixpanelEvents.ROUTE_WALLET
+                                        )
+                                    )
                                     findNavController().navigate(
                                         LoyaltyWalletFragmentDirections.loyaltyToBarcode(
                                             plan,
@@ -643,6 +654,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
+                            logMixpanelEvent(MixpanelEvents.CARD_DELETED, JSONObject().put(MixpanelEvents.BRAND_NAME, membershipCard.plan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET))
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard

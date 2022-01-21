@@ -9,7 +9,6 @@ object MixpanelEvents {
     const val METHOD = "Method"
     const val LOGIN_PASSWORD = "Password"
     const val LOGIN_ML = "Magic link"
-
     const val LOYALTY_CARD_ADD = "Loyalty card add"
     const val LOYALTY_CARD_ADD_FAIL = "Loyalty card add failed"
     const val LOYALTY_CARD_REORDER = "Loyalty card manually reordered"
@@ -17,9 +16,13 @@ object MixpanelEvents {
     const val LOYALTY_CARD_DETAIL = "Loyalty card detail viewed"
     const val LOGIN = "User logged in"
     const val LOGOUT = "User logged out"
-
     const val TOTAL_CARDS_PROP = "Total Cards"
     const val TOTAL_PLL_CARDS_PROP = "Total PLL Cards"
     const val TOTAL_LINKED_PLL_CARDS_PROP = "Total Linked PLL Cards"
     const val TOTAL_DUPE_CARDS_PROP = "Total Duplicate Cards"
+    const val BARCODE_VIEWED = "Barcode Viewed"
+    const val ROUTE = "Route"
+    const val ROUTE_WALLET = "Wallet"
+    const val ROUTE_LCD = "Loyalty Card Detail"
+    const val CARD_DELETED = "Card Deleted"
 }

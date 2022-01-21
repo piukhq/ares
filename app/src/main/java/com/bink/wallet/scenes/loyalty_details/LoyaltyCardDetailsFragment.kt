@@ -257,7 +257,7 @@ class LoyaltyCardDetailsFragment :
             WebScrapableManager.newlyAddedCard.value = null
         }
 
-        logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_DETAIL, JSONObject().put(MixpanelEvents.BRAND_NAME, viewModel.membershipPlan.value?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN))
+        logMixpanelEvent(MixpanelEvents.LOYALTY_CARD_DETAIL, JSONObject().put(MixpanelEvents.BRAND_NAME, viewModel.membershipPlan.value?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET))
 
         /**
          *
@@ -469,6 +469,7 @@ class LoyaltyCardDetailsFragment :
                 setPositiveButton(getString(R.string.yes_text)) { dialog, _ ->
                     if (isNetworkAvailable(requireActivity(), true)) {
                         runBlocking {
+                            logMixpanelEvent(MixpanelEvents.CARD_DELETED, JSONObject().put(MixpanelEvents.BRAND_NAME, viewModel.membershipCard.value?.plan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD))
                             viewModel.deleteCard(viewModel.membershipCard.value?.id)
                             val planId = viewModel.membershipCard.value?.membership_plan
                             val uuid = viewModel.membershipCard.value?.uuid
@@ -767,6 +768,7 @@ class LoyaltyCardDetailsFragment :
             ) {
                 binding.cardHeader.setOnClickListener {
                     viewModel.membershipPlan.value?.let { plan ->
+                        logMixpanelEvent(MixpanelEvents.BARCODE_VIEWED, JSONObject().put(MixpanelEvents.BRAND_NAME, plan.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_LCD))
                         findNavController().navigateIfAdded(
                             this,
                             LoyaltyCardDetailsFragmentDirections.detailToBarcode(
