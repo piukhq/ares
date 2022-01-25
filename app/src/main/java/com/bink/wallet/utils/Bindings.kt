@@ -142,7 +142,8 @@ fun ImageView.loadBarcode(membershipCard: BarcodeWrapper?, viewModel: BarcodeVie
                     BarcodeFormat.EAN_13 -> {
                         // For the EAN_13 barcode format, the library will cause a crash if trying to generate a barcode
                         // that has a length below or above the specified limits
-                        shouldShowBarcodeImage = (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
+                        shouldShowBarcodeImage =
+                            (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
                     }
                     else -> {
                     }
@@ -236,7 +237,10 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         when (card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
             BarcodeFormat.AZTEC -> {
-                binding.tapCard.text = if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(R.string.tap_to_enlarge_aztec)
+                binding.tapCard.text =
+                    if (card.card?.getBarcodeFormat() == BarcodeFormat.QR_CODE) context.getString(R.string.tap_to_enlarge_qr) else context.getString(
+                        R.string.tap_to_enlarge_aztec
+                    )
                 binding.sbTitle.text = context.getString(R.string.barcode_card_number)
                 binding.sbCompanyLogo.loadImage(plan)
                 binding.sbBarcode.loadBarcode(BarcodeWrapper(card), null)
@@ -252,6 +256,16 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 binding.rbBarcodeText.text = cardNumber
             }
         }
+
+    } else if (plan?.getCardType() != CardType.PLL && card?.card?.barcode.isNullOrEmpty()) {
+        binding.container.visibility = View.GONE
+        binding.noBarcodeCompanyLogo.loadImage(plan)
+        binding.noBarcodeCardNumber.text = card?.card?.membership_id ?: ""
+        binding.noBarcodeContainer. visibility = View.VISIBLE
+        binding.tapCard.text = context.getString(R.string.tap_card_to_show_card_number)
+
+
+
 
     } else {
         binding.cardPlaceholderText.text = context.getString(
