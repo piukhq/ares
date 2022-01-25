@@ -214,8 +214,11 @@
 
                 <ImageView
                     android:id="@+id/no_barcode_company_logo"
-                    android:layout_width="@dimen/margin_padding_size_extra_large"
-                    android:layout_height="@dimen/margin_padding_size_extra_large"
+                    android:layout_width="@dimen/no_barcode_width"
+                    android:layout_height="@dimen/no_barcode_height"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:scaleType="fitXY"
                     tools:ignore="ContentDescription"
                     tools:src="@tools:sample/avatars" />
 
@@ -225,6 +228,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_sans"
                     android:textColor="@color/black"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:textSize="@dimen/size_sub_headline"
                     tools:text="@string/barcode_card_number"
                     tools:textColor="@color/black" />
@@ -234,6 +239,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_sans_extrabold"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
                     android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline"
                     tools:textColor="@color/black" />

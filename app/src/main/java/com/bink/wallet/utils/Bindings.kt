@@ -259,7 +259,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
     } else if (plan?.getCardType() != CardType.PLL && card?.card?.barcode.isNullOrEmpty()) {
         binding.container.visibility = View.GONE
-        binding.noBarcodeCompanyLogo.loadImage(plan)
+        binding.noBarcodeCompanyLogo.loadAlternateHeroImage(plan)
+        binding.noBarcodeCardNumberTitle.text = context.getString(R.string.barcode_card_number)
         binding.noBarcodeCardNumber.text = card?.card?.membership_id ?: ""
         binding.noBarcodeContainer. visibility = View.VISIBLE
         binding.tapCard.text = context.getString(R.string.tap_card_to_show_card_number)
