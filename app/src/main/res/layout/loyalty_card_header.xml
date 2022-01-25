@@ -98,7 +98,7 @@
                 android:id="@+id/rectangle_barcode_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:background="@color/white"
                 tools:layout_height="@dimen/loyalty_card_details_header_min_height">
 
@@ -165,7 +165,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/rb_barcode_container"
                     tools:ignore="ContentDescription" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container"
