@@ -202,7 +202,6 @@
                     tools:ignore="ContentDescription" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <LinearLayout
                 android:id="@+id/no_barcode_container"
                 android:layout_width="match_parent"
@@ -242,7 +241,6 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/size_sub_headline"
                     tools:textColor="@color/black" />
-
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

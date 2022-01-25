@@ -262,11 +262,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         binding.noBarcodeCompanyLogo.loadAlternateHeroImage(plan)
         binding.noBarcodeCardNumberTitle.text = context.getString(R.string.barcode_card_number)
         binding.noBarcodeCardNumber.text = card?.card?.membership_id ?: ""
-        binding.noBarcodeContainer. visibility = View.VISIBLE
+        binding.noBarcodeContainer.visibility = View.VISIBLE
         binding.tapCard.text = context.getString(R.string.tap_card_to_show_card_number)
-
-
-
 
     } else {
         binding.cardPlaceholderText.text = context.getString(
