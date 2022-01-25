@@ -286,8 +286,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
     override fun onResume() {
         super.onResume()
         context?.let { context ->
-            viewModel.fetchPeriodicMembershipCards(context) {
-                logMixPanelCardStatus(it)
+            viewModel.fetchPeriodicMembershipCards(context) { isStartTimer, brandName, isFail, reason ->
+                logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
             }
         }
         viewModel.checkZendeskResponse()
@@ -358,8 +358,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         binding.swipeLayout.setOnRefreshListener {
             isRefresh = true
             if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                viewModel.fetchMembershipCardsAndPlansForRefresh(context) {
-
+                viewModel.fetchMembershipCardsAndPlansForRefresh(context) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
                 }
             } else {
                 isRefresh = false
@@ -635,8 +635,8 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
         if (UtilFunctions.isNetworkAvailable(requireActivity())) {
             viewModel.fetchMembershipPlans(true)
             context?.let {
-                viewModel.fetchPeriodicMembershipCards(it) { card ->
-                    logMixPanelCardStatus(card)
+                viewModel.fetchPeriodicMembershipCards(it) { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(isStartTimer, brandName, isFail, reason)
                 }
             }
         } else {
@@ -654,7 +654,14 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
                 when (which) {
                     DialogInterface.BUTTON_POSITIVE -> {
                         if (UtilFunctions.isNetworkAvailable(requireActivity(), true)) {
-                            logMixpanelEvent(MixpanelEvents.CARD_DELETED, JSONObject().put(MixpanelEvents.BRAND_NAME, membershipCard.plan?.account?.company_name ?: MixpanelEvents.VALUE_UNKNOWN).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET))
+                            logMixpanelEvent(
+                                MixpanelEvents.CARD_DELETED,
+                                JSONObject().put(
+                                    MixpanelEvents.BRAND_NAME,
+                                    membershipCard.plan?.account?.company_name
+                                        ?: MixpanelEvents.VALUE_UNKNOWN
+                                ).put(MixpanelEvents.ROUTE, MixpanelEvents.ROUTE_WALLET)
+                            )
                             viewModel.deleteCard(membershipCard.id)
                             WebScrapableManager.removeCredentials(membershipCard.id)
                             deletedCard = membershipCard

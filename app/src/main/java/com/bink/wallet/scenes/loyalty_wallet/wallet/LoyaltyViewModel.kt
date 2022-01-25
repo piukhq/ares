@@ -114,7 +114,10 @@ class LoyaltyViewModel constructor(
         loyaltyWalletRepository.deleteMembershipCard(id, deleteCard, deleteCardError)
     }
 
-    fun fetchMembershipCards(context: Context?, lpsCardStatus: (MembershipCard) -> Unit) {
+    fun fetchMembershipCards(
+        context: Context?,
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+    ) {
         loyaltyWalletRepository.retrieveMembershipCards(membershipCardData, _loadCardsError) {
             checkCardScrape(it, context, lpsCardStatus)
         }
@@ -123,7 +126,7 @@ class LoyaltyViewModel constructor(
     private fun checkCardScrape(
         cards: List<MembershipCard>,
         context: Context?,
-        lpsCardStatus: (MembershipCard) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
     ) {
         val shouldScrapeCards =
             DateTimeUtils.haveTwelveHoursElapsed(SharedPreferenceManager.membershipCardsLastScraped) && UtilFunctions.isNetworkAvailable(
@@ -147,7 +150,10 @@ class LoyaltyViewModel constructor(
         membershipCardData.value = WebScrapableManager.mapOldToNewCards(cardsFromDb, cards)
     }
 
-    fun fetchPeriodicMembershipCards(context: Context, lpsCardStatus: (MembershipCard) -> Unit) {
+    fun fetchPeriodicMembershipCards(
+        context: Context,
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
+    ) {
         val shouldMakePeriodicCall =
             DateTimeUtils.haveTwoMinutesElapsed(SharedPreferenceManager.membershipCardsLastRequestTime) && UtilFunctions.isNetworkAvailable(
                 context
@@ -190,7 +196,7 @@ class LoyaltyViewModel constructor(
 
     fun fetchMembershipCardsAndPlansForRefresh(
         context: Context?,
-        lpsCardStatus: (MembershipCard) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
     ) {
         val handler = CoroutineExceptionHandler { _, _ ->
             _isLoading.value = false
@@ -236,7 +242,7 @@ class LoyaltyViewModel constructor(
     private fun scrapeCards(
         cards: List<MembershipCard>,
         context: Context?,
-        lpsCardStatus: (MembershipCard) -> Unit
+        lpsCardStatus: (Boolean, String, Boolean, String?) -> Unit
     ) {
         WebScrapableManager.tryScrapeCards(
             0,

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.bink.wallet.R
 import com.bink.wallet.data.SharedPreferenceManager
-import com.bink.wallet.model.response.membership_card.MembershipCard
 import com.bink.wallet.scenes.add_auth_enrol.view_models.AddCardViewModel
 import com.bink.wallet.utils.*
 import com.bink.wallet.utils.FirebaseEvents.ADD_AUTH_FORM_VIEW
@@ -81,7 +80,14 @@ class AddCardFragment : BaseAddAuthFragment() {
                 arrayListOf(newMembershipCard),
                 context,
                 true,
-                { logMixPanelCardStatus(it) }) { cards ->
+                { isStartTimer, brandName, isFail, reason ->
+                    logMixpanelLPSEvent(
+                        isStartTimer,
+                        brandName,
+                        isFail,
+                        reason
+                    )
+                }) { cards ->
                 if (!cards.isNullOrEmpty()) {
                     viewModel.updateScrapedCards(cards)
                 }
@@ -206,14 +212,6 @@ class AddCardFragment : BaseAddAuthFragment() {
                 viewModel.handleRequest(isRetryJourney, it, plan)
             }
         }
-    }
-
-    private fun logMixPanelCardStatus(membershipCard: MembershipCard) {
-        logMixpanelEvent(
-            MixpanelEvents.LOYALTY_CARD_SCRAPE_STATUS,
-            JSONObject().put(MixpanelEvents.LPS_STATUS, membershipCard.status?.state ?: MixpanelEvents.VALUE_UNKNOWN)
-                .put(MixpanelEvents.LC_ID, membershipCard.membership_plan ?: MixpanelEvents.VALUE_UNKNOWN)
-        )
     }
 
 }
