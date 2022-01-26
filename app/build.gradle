@@ -13,7 +13,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021336"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021337"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 def secureFlags = System.getenv("SECURE_FLAGS") ?: "true"
 
