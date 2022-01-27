@@ -13,7 +13,7 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021338"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021339"
 def buildNumber = Integer.parseInt(rawBuildNumber)
 def secureFlags = System.getenv("SECURE_FLAGS") ?: "true"
 
@@ -53,7 +53,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode buildNumber
-        versionName "2.3.12"
+        versionName "2.3.13"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "boolean", "SECURE_FLAGS", secureFlags
     }
