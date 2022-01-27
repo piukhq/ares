@@ -248,15 +248,10 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 binding.squareBarcodeContainer.visibility = View.VISIBLE
                 binding.sbBarcodeText.text = cardNumber
             }
-            BarcodeFormat.ITF -> if (!shouldShowBarcode(BarcodeFormat.ITF, barcode)) loadNoBarcodeState(plan, card)
-            BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(BarcodeFormat.EAN_13, barcode))loadNoBarcodeState(plan, card)
+            BarcodeFormat.ITF -> if (!shouldShowBarcode(BarcodeFormat.ITF, barcode)) loadNoBarcodeState(plan, card) else loadRectangularBarcode(plan, card, cardNumber)
+            BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(BarcodeFormat.EAN_13, barcode))loadNoBarcodeState(plan, card) else loadRectangularBarcode(plan, card, cardNumber)
             else -> {
-                binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
-                binding.rbTitle.text = context.getString(R.string.barcode_card_number)
-                binding.rbCompanyLogo.loadImage(plan)
-                binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
-                binding.rectangleBarcodeContainer.visibility = View.VISIBLE
-                binding.rbBarcodeText.text = cardNumber
+                loadRectangularBarcode(plan, card, cardNumber)
             }
         }
 
@@ -323,6 +318,19 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
             }
         }
     }
+}
+
+private fun LoyaltyCardHeader.loadRectangularBarcode(
+    plan: MembershipPlan?,
+    card: MembershipCard?,
+    cardNumber: String
+) {
+    binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
+    binding.rbTitle.text = context.getString(R.string.barcode_card_number)
+    binding.rbCompanyLogo.loadImage(plan)
+    binding.rbBarcode.loadBarcode(BarcodeWrapper(card), null)
+    binding.rectangleBarcodeContainer.visibility = View.VISIBLE
+    binding.rbBarcodeText.text = cardNumber
 }
 
 private fun LoyaltyCardHeader.loadNoBarcodeState(
