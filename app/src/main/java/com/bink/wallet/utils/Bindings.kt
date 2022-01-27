@@ -233,6 +233,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
 
         val cardNumber = card?.card?.membership_id ?: ""
+        val barcode = card?.card?.barcode ?: ""
 
         when (card?.card?.getBarcodeFormat()) {
             BarcodeFormat.QR_CODE,
@@ -247,6 +248,8 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 binding.squareBarcodeContainer.visibility = View.VISIBLE
                 binding.sbBarcodeText.text = cardNumber
             }
+            BarcodeFormat.ITF -> if (!shouldShowBarcode(BarcodeFormat.ITF, barcode)) loadNoBarcodeState(plan, card)
+            BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(BarcodeFormat.EAN_13, barcode))loadNoBarcodeState(plan, card)
             else -> {
                 binding.tapCard.text = context.getString(R.string.tap_to_enlarge_barcode)
                 binding.rbTitle.text = context.getString(R.string.barcode_card_number)
@@ -258,12 +261,7 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
         }
 
     } else if (plan?.getCardType() != CardType.PLL && card?.card?.barcode.isNullOrEmpty()) {
-        binding.container.visibility = View.GONE
-        binding.noBarcodeCompanyLogo.loadAlternateHeroImage(plan)
-        binding.noBarcodeCardNumberTitle.text = context.getString(R.string.barcode_card_number)
-        binding.noBarcodeCardNumber.text = card?.card?.membership_id ?: ""
-        binding.noBarcodeContainer.visibility = View.VISIBLE
-        binding.tapCard.text = context.getString(R.string.tap_card_to_show_card_number)
+        loadNoBarcodeState(plan, card)
 
     } else {
         binding.cardPlaceholderText.text = context.getString(
@@ -324,6 +322,30 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 EMPTY_STRING
             }
         }
+    }
+}
+
+private fun LoyaltyCardHeader.loadNoBarcodeState(
+    plan: MembershipPlan?,
+    card: MembershipCard?
+) {
+    binding.container.visibility = View.GONE
+    binding.noBarcodeCompanyLogo.loadAlternateHeroImage(plan)
+    binding.noBarcodeCardNumberTitle.text = context.getString(R.string.barcode_card_number)
+    binding.noBarcodeCardNumber.text = card?.card?.membership_id ?: ""
+    binding.noBarcodeContainer.visibility = View.VISIBLE
+    binding.tapCard.text = context.getString(R.string.tap_card_to_show_card_number)
+}
+
+private fun shouldShowBarcode(barcodeFormat: BarcodeFormat, barcode: String): Boolean {
+    val EAN_13_BARCODE_LENGTH_LIMIT = 12..13
+    val barcodeNumberLength = barcode.length
+
+    return when (barcodeFormat) {
+        BarcodeFormat.ITF -> !(barcodeNumberLength.rem(2) != 0 ||
+                barcode.contains(LETTER_REGEX))
+        BarcodeFormat.EAN_13 -> (barcodeNumberLength in EAN_13_BARCODE_LENGTH_LIMIT)
+        else -> false
     }
 }
 
