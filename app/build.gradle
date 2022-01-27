@@ -13,8 +13,10 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
 }
 
-def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021192"
+def rawBuildNumber = System.getenv("BITRISE_BUILD_NUMBER") ?: "20021338"
 def buildNumber = Integer.parseInt(rawBuildNumber)
+def secureFlags = System.getenv("SECURE_FLAGS") ?: "true"
+
 android {
     externalNativeBuild {
         cmake {
@@ -53,6 +55,7 @@ android {
         versionCode buildNumber
         versionName "2.3.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "boolean", "SECURE_FLAGS", secureFlags
     }
     buildTypes {
         release {
@@ -161,7 +164,7 @@ android {
         kotlinCompilerVersion '1.5.10'
     }
     android.ndkVersion '21.3.6528147'
-    
+
     repositories {
         mavenCentral()
         maven {
@@ -257,8 +260,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-config-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
-    implementation 'com.auth0.android:jwtdecode:2.0.0'
+    implementation 'com.auth0.android:jwtdecode:2.0.1'
 
     /** ZENDESK **/
     implementation group: 'com.zendesk', name: 'support', version: '5.0.0'
@@ -298,5 +302,10 @@ dependencies {
 
     /** Lottie **/
     implementation 'com.airbnb.android:lottie:4.0.0'
+
+    /** MixPanel**/
+    implementation 'com.mixpanel.android:mixpanel-android:5.+'
+
+
 
 }
