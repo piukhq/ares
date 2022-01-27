@@ -234,8 +234,9 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
 
         val cardNumber = card?.card?.membership_id ?: ""
         val barcode = card?.card?.barcode ?: ""
+        val barcodeFormat = card?.card?.getBarcodeFormat()
 
-        when (card?.card?.getBarcodeFormat()) {
+        when (barcodeFormat) {
             BarcodeFormat.QR_CODE,
             BarcodeFormat.AZTEC -> {
                 binding.tapCard.text =
@@ -248,8 +249,11 @@ fun LoyaltyCardHeader.linkCard(card: MembershipCard?, plan: MembershipPlan?) {
                 binding.squareBarcodeContainer.visibility = View.VISIBLE
                 binding.sbBarcodeText.text = cardNumber
             }
-            BarcodeFormat.ITF -> if (!shouldShowBarcode(BarcodeFormat.ITF, barcode)) loadNoBarcodeState(plan, card) else loadRectangularBarcode(plan, card, cardNumber)
-            BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(BarcodeFormat.EAN_13, barcode))loadNoBarcodeState(plan, card) else loadRectangularBarcode(plan, card, cardNumber)
+            BarcodeFormat.ITF, BarcodeFormat.EAN_13 -> if (!shouldShowBarcode(
+                    barcodeFormat,
+                    barcode
+                )
+            ) loadNoBarcodeState(plan, card) else loadRectangularBarcode(plan, card, cardNumber)
             else -> {
                 loadRectangularBarcode(plan, card, cardNumber)
             }
