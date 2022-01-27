@@ -487,6 +487,7 @@ class LoyaltyWalletFragment : BaseFragment<LoyaltyViewModel, FragmentLoyaltyWall
 
                     disableIndicators()
                 }
+
                 walletAdapter.membershipPlans = ArrayList(userDataResult.result.second)
                 walletAdapter.notifyDataSetChanged()
 

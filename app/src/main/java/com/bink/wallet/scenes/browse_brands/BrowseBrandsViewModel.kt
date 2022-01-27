@@ -8,11 +8,9 @@ import androidx.lifecycle.Transformations
 import com.bink.wallet.BaseViewModel
 import com.bink.wallet.R
 import com.bink.wallet.model.response.membership_plan.MembershipPlan
-import com.bink.wallet.utils.EMPTY_STRING
+import com.bink.wallet.utils.*
 import com.bink.wallet.utils.enums.CardType
-import com.bink.wallet.utils.getCategories
 import com.bink.wallet.utils.local_point_scraping.WebScrapableManager
-import com.bink.wallet.utils.sortedByCardTypeAndCompany
 import java.util.*
 
 class BrowseBrandsViewModel : BaseViewModel() {
@@ -84,8 +82,8 @@ class BrowseBrandsViewModel : BaseViewModel() {
         membershipCardIds: List<String>
     ): List<BrowseBrandsListItem> {
         val browseBrandsItems = mutableListOf<BrowseBrandsListItem>()
-
-        val (pllCards, RestOfCards) = membershipPlans.partition { it.isPlanPLL() }
+        val joinablePlans = membershipPlans.filter { it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ADD) == true || it.feature_set?.linking_support?.contains(LINKING_SUPPORT_ENROL) == true }
+        val (pllCards, RestOfCards) = joinablePlans.partition { it.isPlanPLL() }
 
         val (scrapableCards, storeCards) = RestOfCards.distinctBy { it.id }
             .partition { WebScrapableManager.isCardScrapable(it.id) }
