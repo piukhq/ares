@@ -280,7 +280,4 @@ class AddLoyaltyCardFragment :
 
     }
 
-    override val binding: AddLoyaltyCardFragmentBinding
-        get() = super.binding
-
 }
