@@ -83,7 +83,7 @@ object WebScrapableManager {
         cards: List<MembershipCard>,
         context: Context?,
         isAddCard: Boolean,
-        cardStatus: (Boolean, String, Boolean, String?) -> Unit,
+        currentStatus: (Boolean, String, Boolean, String?) -> Unit,
         callback: (List<MembershipCard>?) -> Unit
     ) {
         if (context == null) return
@@ -116,7 +116,7 @@ object WebScrapableManager {
                         isAddCard
                     )
 
-                    tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, currentStatus, callback)
                 }
 
                 override fun onTick(millisUntilFinished: Long) {
@@ -143,7 +143,7 @@ object WebScrapableManager {
                                 cards,
                                 context,
                                 isAddCard,
-                                cardStatus,
+                                currentStatus,
                                 callback
                             )
                             return
@@ -154,10 +154,10 @@ object WebScrapableManager {
                 if (credentials == null || agent == null) {
                     //Try next card
                     logDebug("LocalPointScrape", "Credentials null, agent null")
-                    tryScrapeCards(index + 1, cards, context, isAddCard, cardStatus, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, currentStatus, callback)
                 } else {
 
-                    cardStatus(true, "", false, "")
+                    currentStatus(true, "", false, "")
 
                     PointScrapingUtil.performNewScrape(
                         context,
@@ -166,7 +166,7 @@ object WebScrapableManager {
                         credentials.email,
                         credentials.password,
                         {
-                            cardStatus(
+                            currentStatus(
                                 false,
                                 agent.merchant,
                                 false,
@@ -193,7 +193,7 @@ object WebScrapableManager {
                                         CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
-                                    cardStatus(
+                                    currentStatus(
                                         false,
                                         agent.merchant,
                                         true,
@@ -205,7 +205,7 @@ object WebScrapableManager {
                                         cards,
                                         context,
                                         isAddCard,
-                                        cardStatus,
+                                        currentStatus,
                                         callback
                                     )
                                 }
@@ -217,7 +217,7 @@ object WebScrapableManager {
                                 cards,
                                 context,
                                 isAddCard,
-                                cardStatus,
+                                currentStatus,
                                 callback
                             )
                         }
