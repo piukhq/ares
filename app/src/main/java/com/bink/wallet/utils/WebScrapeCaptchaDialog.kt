@@ -32,7 +32,7 @@ class WebScrapeCaptchaDialog(context: Context, private val captchaWebView: WebVi
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                captchaWebView?.evaluateJavascript(captchaJs) { response ->
+                captchaWebView?.evaluateJavascript(loginJavascript) { response ->
                     logDebug("LocalPointScrape", "success: $response")
 
                     if (response.contains("true")) {

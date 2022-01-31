@@ -2,6 +2,7 @@ package com.bink.wallet.utils.local_point_scraping
 
 import android.content.Context
 import android.os.CountDownTimer
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import com.bink.wallet.model.LocalPointsAgent
 import com.bink.wallet.model.currentAgent
@@ -82,6 +83,7 @@ object WebScrapableManager {
         cards: List<MembershipCard>,
         context: Context?,
         isAddCard: Boolean,
+        attachableView: ConstraintLayout? = null,
         callback: (List<MembershipCard>?) -> Unit
     ) {
         if (context == null) return
@@ -109,7 +111,7 @@ object WebScrapableManager {
 
                     SentryUtils.logError(SentryErrorType.LOCAL_POINTS_SCRAPE_SITE, LocalPointScrapingError.UNHANDLED_IDLING.issue, currentAgent?.merchant, isAddCard)
 
-                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                 }
 
                 override fun onTick(millisUntilFinished: Long) {
@@ -131,7 +133,7 @@ object WebScrapableManager {
                 if (!isAddCard) {
                     card.isScraped?.let { isScraped ->
                         if (!isScraped) {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                             return
                         }
                     }
@@ -140,7 +142,7 @@ object WebScrapableManager {
                 if (credentials == null || agent == null) {
                     //Try next card
                     logDebug("LocalPointScrape", "Credentials null, agent null")
-                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                    tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                 } else {
 
                     PointScrapingUtil.performNewScrape(
@@ -148,7 +150,8 @@ object WebScrapableManager {
                         isAddCard,
                         agent,
                         credentials.email,
-                        credentials.password
+                        credentials.password,
+                        attachableView
                     ) { pointScrapeResponse ->
 
                         if (agent.isEnabled()) {
@@ -169,12 +172,12 @@ object WebScrapableManager {
                                         CardStatus(null, MembershipCardStatus.AUTHORISED.status)
                                     membershipCards!![index].isScraped = true
 
-                                    tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                                    tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                                 }
                             }
 
                         } else {
-                            tryScrapeCards(index + 1, cards, context, isAddCard, callback)
+                            tryScrapeCards(index + 1, cards, context, isAddCard, attachableView, callback)
                         }
 
                     }

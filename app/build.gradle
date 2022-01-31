@@ -37,6 +37,9 @@ android {
     signingConfigs {
         binkSigningConfig {
             storeFile file('bink-keystore.jks')
+            keyPassword '-j2VdA=9.ckusV_\\'
+            storePassword '-j2VdA=9.ckusV_\\'
+            keyAlias 'bink'
             if (System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")) {
                 keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
                 keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
@@ -59,9 +62,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            debuggable false
+            signingConfig signingConfigs.binkSigningConfig
+            minifyEnabled false
+            shrinkResources false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
